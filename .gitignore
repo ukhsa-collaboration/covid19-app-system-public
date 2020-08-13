@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+
+#gaudi
+out/
+
+# Terraform
+.terraform/
+.terraform.*
+*.tfstate
+*.tfstate.backup
+
+# Lambda functions
+src/terraform/*.zip
+
+# Python
+.pytest_cache
+__pycache__/
+packages/
+
+# JetBrains
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+src/aws/lambdas/incremental_distribution/.factorypath
+
+# Maven
+.m2/

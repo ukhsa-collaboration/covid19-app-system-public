@@ -1,0 +1,27 @@
+variable "submission_bucket_name" {
+}
+
+variable "distribution_bucket_name" {
+}
+
+variable "distribution_id" {
+  description = "The CloudFront distribution ID used for cache invalidation"
+}
+
+variable "distribution_pattern_daily" {
+}
+
+variable "distribution_pattern_2hourly" {
+}
+
+variable "mobile_app_bundle" {
+  description = " The app bundle ID used to register the mobile apps that correspond to the target environments in this account"
+}
+
+variable "lambda_repository_bucket" {
+  description = "The name of the bucket which contains the lambda jar"
+}
+
+variable "lambda_object_key" {
+  description = "The object key of the lambda jar in the s3 bucket"
+}

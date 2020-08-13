@@ -1,0 +1,33 @@
+@startuml system-flow_virology-test-result-verification
+
+Actor User
+Actor TestCenter
+Actor TestLab
+Actor BSA
+
+User -> TestCenter: goes for test
+TestLab <- TestCenter: sends swab test
+TestLab -> BSA: informs on test result
+
+BSA -> TokenAPI: [positive result] create test verification code
+TokenAPI -> VirologyTestingAPI: create and register new positive test verification code
+VirologyTestingAPI -> VirologyTestingAPI: create cta and diag key submission token
+TokenAPI <- VirologyTestingAPI: pos test verification code (cta)
+BSA <- TokenAPI: return new verification token
+
+...
+BSA -> User: [positive result] send SMS or Mail with verification code
+...
+
+User -> App: enter verification code
+App -> VirologyTestingAPI: verify code
+App <- VirologyTestingAPI: [code ok] return diag key submission token
+App -> User: ask for diag key submission
+App -> SubmitAPI: [user ok] submission of diagnosis keys (w submission token)
+App -> User: show/update isolation screen
+...
+
+VirologyTestingAPI -> VirologyTestingAPI: clean up unused tokens (retention time?)
+
+
+@enduml

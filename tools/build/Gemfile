@@ -1,0 +1,16 @@
+source "http://rubygems.org"
+
+gem "aws-sdk", "~>3", :require => false
+gem "bcrypt", "~> 3.1", :require => false
+gem "down", "~>5.1", :require => false
+gem "erubis", "~>2.7", :require => false
+gem "faraday", "~>1.0", :require => false
+gem "google-protobuf", "~> 3.12", :require => false
+gem "graph", "~>2.10", :require => false
+gem "highline", "~>2.0", :require => false
+gem "inifile", "~>3.0", :require => false
+gem "json", "~>2.3", :require => false
+gem "minitar", "~>0.9", :require => false
+gem "patir", "~>0.9", :require => false
+gem "rake", "~>13.0", :require => false
+gem "rubyzip", "~>1.3", :require => false

@@ -1,0 +1,46 @@
+@startuml system-flow_check-in
+
+Actor User
+
+group Check in
+App -> App : scan venue QR code (check in)
+App -> App : local secure storage (visited venues)
+end
+...
+group Check out (UX ongoing discussions)
+App -> App : check out
+  note right : user button | check in other venue | auto check out after some time
+end
+...
+group Match at risk venues and alert user
+  App -> DistributionAPI : get identified risk venues
+  App <- DistributionAPI : list of identified risk venues
+
+  App -> App : check, matches found
+  App -> App : analyse risk (matched-venues), trigger alert (matched-venues)
+
+  App -> CircuitBreaker : confirm alert (matched-venues)
+  App <- CircuitBreaker : wait(token)
+  ...
+  CircuitBreaker -> CircuitBreaker : collect and aggregate other requests (may take up to eg. 2h)
+  CircuitBreaker -> ControlAPI : alert threshold reached
+
+  ControlAPI -> ControlPanel : decision needed
+  note right: TBD ADR NEW-2 decision mechanism
+
+  App -> CircuitBreaker : poll confirmation, at x time (token)
+  note right: TBD ADR NEW-3: polling configuration mechanism
+  Actor Operator
+  ControlPanel -> Operator :  human decision needed
+  ControlPanel <- Operator :  decision
+
+  ControlAPI <- ControlPanel : decision
+  CircuitBreaker <- ControlAPI : decision
+
+  App -> CircuitBreaker : poll confirmation, at x time (token)
+  App <- CircuitBreaker : decision
+  CircuitBreaker -> AnalyticsAPI : update analytics
+
+  App -> User : alert user (matched-venues)
+end
+@enduml

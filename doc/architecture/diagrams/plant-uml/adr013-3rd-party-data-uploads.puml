@@ -1,0 +1,39 @@
+@startuml
+
+participant Client
+participant API
+participant Secrets_Manager
+participant Configuration
+participant S3
+participant Result_URL
+Actor Administrator
+
+
+== Setup ==
+Administrator -> Secrets_Manager: Add API Key for 3rd Party Integration
+Administrator -> Configuration: Add Validity Period for pre-signed URL
+destroy Administrator
+
+...
+== Preparation ==
+Client -> API: POST prepare-upload
+API -> Secrets_Manager: Retrieve API Key & Verify
+API -> Configuration: Retrieve Pre-signed URL validity period
+API -> Client: AWS S3 Pre-Signed URL / Result URL
+
+
+== Upload ==
+Client -> S3: POST to Pre-Signed URL
+note right: Ensure operation can be completed within validity period
+
+== Process ==
+S3 -> API: Notify Upload & Process
+...
+API -> Result_URL: Set Result
+
+== Await ==
+loop until timeout / result
+Client -> Result_URL: Retrieve result
+end
+
+@enduml

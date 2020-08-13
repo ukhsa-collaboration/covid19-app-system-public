@@ -1,0 +1,21 @@
+@startuml
+
+participant Client
+participant API
+participant Secrets_Manager
+Actor Administrator
+
+== Setup ==
+Administrator -> Secrets_Manager: Add API Key for 3rd Party Integration
+destroy Administrator
+
+...
+
+== Upload ==
+Client -> API: POST to API URL (body limit 6MB)
+API -> Secrets_Manager: Retrieve API Key
+API -> API: Validate API Key in Request
+API -> API: Process Upload
+API -> Client: Return result
+
+@enduml

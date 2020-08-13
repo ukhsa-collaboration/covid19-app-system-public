@@ -1,0 +1,43 @@
+@startuml system-flow_matching-diagnosis-keys-trigger-exposure-notification
+
+Actor User
+
+...
+group Match diagnosis keys
+  App -> DistributionAPI : get diagnosis keys (eg. 2h increment)
+  App <- DistributionAPI : diagnosis key histories (for that increment)
+
+  App -> App : check, matches found, analyse risk (matched-diag-keys)
+end
+group Circuit breaker
+  App -> CircuitBreaker : confirm exposure notification (data)
+  App <- CircuitBreaker : wait(token)
+  ...
+  CircuitBreaker -> CircuitBreaker : collect and aggregate other requests (may take up to eg. 2h)
+  CircuitBreaker -> ControlAPI : notification threshold reached
+
+  ControlAPI -> ControlPanel : decision needed
+  
+  App -> CircuitBreaker : poll confirmation, at x time (token)
+    Actor Operator
+  ControlPanel -> Operator :  human decision needed
+  ControlPanel <- Operator :  decision
+
+  ControlAPI <- ControlPanel : decision
+  CircuitBreaker <- ControlAPI : decision
+
+  App -> CircuitBreaker : poll confirmation, at x time (token)
+  App <- CircuitBreaker : decision
+
+  CircuitBreaker -> AnalyticsAPI : update analytics
+end
+
+group Trigger notification
+  App -> User : trigger exposure notification for user (matched-diag-keys)
+end
+
+group Isolation advice
+  App -> User : isolation advice for exposed user (14d)
+end 
+
+@enduml

@@ -1,0 +1,31 @@
+@startuml system-flow_interoperability
+
+Actor NHSCV19AppUser
+
+group submission and upload
+  NHSCV19AppUser -> NHSCV19App: positive test result
+  NHSCV19App -> NHSCV19APIServices: submit diagnosis keys [on positive test results]
+  NHSCV19APIServices -> FederationServer: upload NHSCV19 diagnosis keys [every x hours]
+  note left: DP1
+  NationalBackend -> FederationServer: upload other nation diagnosis keys [on positive test results]
+  note over NationalBackend: new keys per country, typically < 10-20MB
+  ...
+end
+
+group download and distribution
+  NHSCV19App -> NHSCV19APIServices: poll diagnosis keys [every x hours]
+  note left: DP3
+  ...
+  NHSCV19APIServices <- FederationServer: download diagnosis keys of all participating countries [every x hours, or on callback]
+  note left: DP2
+  ...
+  NHSCV19App -> NHSCV19APIServices: poll diagnosis keys [every x hours]
+  NHSCV19App <- NHSCV19APIServices: receive diagnosis keys including countries of interest
+end
+
+group match including keys from countries of interest
+  NHSCV19App -> NHSCV19App: match diagnosis keys (GAEN Framework)
+  NHSCV19AppUser <- NHSCV19App: [match found] exposure notification
+end
+
+@enduml

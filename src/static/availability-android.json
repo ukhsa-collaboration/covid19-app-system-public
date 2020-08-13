@@ -1,0 +1,14 @@
+{
+  "minimumSDKVersion": {
+    "value": 23,
+    "description": {
+      "en-GB": ""
+    }
+  },
+  "minimumAppVersion": {
+    "value": 8,
+    "description": {
+      "en-GB": ""
+    }
+  }
+}

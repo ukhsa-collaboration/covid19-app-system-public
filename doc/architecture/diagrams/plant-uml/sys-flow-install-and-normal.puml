@@ -1,0 +1,54 @@
+@startuml system-flow_install-and-normal
+
+Actor User 
+
+group Installation
+App -> App : install
+App -> DistributeAPI : get config (language, device-type)
+App <- DistributeAPI : configuration
+App -> User : ask postal district
+App -> AnalyticsAPI: send install analytics
+App <- AnalyticsAPI: ok
+end
+
+group Distribution for new install
+App -> DistributeAPI: get diagnosis keys
+App <- DistributeAPI: keys (full set)
+
+App -> DistributeAPI: get venue hotspots
+App <- DistributeAPI: hotspots (full set)
+
+App -> DistributeAPI: get postal district risk list
+App <- DistributeAPI: postal districts (full set) 
+end
+
+App -> App: check matches, none found
+
+group Check diagnosis keys all 2h
+App -> DistributeAPI: get diagnosis keys
+App <- DistributeAPI: keys (incremental)
+end
+
+App -> App: check matches, none found
+
+group Update hotspots and postal district risks daily
+App -> DistributeAPI: get venue hotspots
+App <- DistributeAPI: hotspots (full set)
+
+App -> DistributeAPI: get postal district risk list
+App <- DistributeAPI: postal districts (full set) 
+end
+
+App -> App: check matches, none found
+
+group Send daily analytics 
+App -> AnalyticsAPI: send daily analytics
+App <- AnalyticsAPI: ok
+end
+
+group Check for new config daily 
+App -> DistributeAPI : check config (current config)
+App <- DistributeAPI : no new config
+end
+
+@enduml

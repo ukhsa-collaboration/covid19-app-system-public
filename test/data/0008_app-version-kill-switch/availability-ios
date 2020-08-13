@@ -1,0 +1,14 @@
+{
+  "minimumOSVersion": {
+    "value": "13.5.0",
+    "description": {
+      "en-GB": "old iOS OS version"
+    }
+  },
+  "minimumAppVersion": {
+    "value": "3.0.0",
+    "description": {
+      "en-GB": "old iOS app version"
+    }
+  }
+}

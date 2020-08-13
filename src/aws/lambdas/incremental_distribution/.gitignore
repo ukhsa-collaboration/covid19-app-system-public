@@ -1,0 +1,7 @@
+.classpath
+.project
+.settings
+target
+.gradle
+!.idea/codeStyles
+!.idea/runConfigurations
