@@ -28,7 +28,8 @@ public class RiskyPostCodesHandlerTest {
             "\"CODE3\", \"L\"";
 
 
-    private final Map<String, String> environmentSettings = new HashMap<String, String>() {{
+    @SuppressWarnings("serial")
+	private final Map<String, String> environmentSettings = new HashMap<String, String>() {{
         put("BUCKET_NAME", "my-bucket");
         put("DISTRIBUTION_ID", "my-distribution");
         put("DISTRIBUTION_INVALIDATION_PATTERN", "invalidation-pattern");

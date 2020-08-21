@@ -4,40 +4,40 @@ import com.amazonaws.HttpMethod
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import uk.nhs.nhsx.ContextBuilder
 import uk.nhs.nhsx.ProxyRequestBuilder
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
+import uk.nhs.nhsx.core.aws.ssm.Parameter
+import uk.nhs.nhsx.core.aws.ssm.ParameterName
+import uk.nhs.nhsx.core.aws.ssm.Parameters
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import java.util.*
+import java.util.function.Function
 
 class ExposureNotificationHandlerTest {
 
-    private val contentSigner = mock(Signer::class.java)
-    private val signer = AwsResponseSigner(RFC2616DatedSigner(SystemClock.CLOCK, contentSigner))
-    private val handler = ExposureNotificationHandler(Authenticator { true }, signer)
-
-    @Before
-    fun setUpMock() {
-        `when`(contentSigner.sign(ArgumentMatchers.any()))
-            .thenReturn(
-                Signature(
-                    KeyId.of("some-id"),
-                    SigningAlgorithmSpec.ECDSA_SHA_256,
-                    "TEST_SIGNATURE".toByteArray()
-                )
-            )
+    private val contentSigner = Signer {
+        Signature(
+            KeyId.of("some-id"),
+            SigningAlgorithmSpec.ECDSA_SHA_256,
+            "TEST_SIGNATURE".toByteArray()
+        )
     }
+
+    private val signer = AwsResponseSigner(RFC2616DatedSigner(SystemClock.CLOCK, contentSigner))
+
+    private val initial = Parameter { ApprovalStatus.PENDING }
+    private val poll = Parameter { ApprovalStatus.YES }
+
+    private val breaker = CircuitBreakerService(initial, poll)
+    private val handler = ExposureNotificationHandler(Authenticator { true }, signer, breaker )
 
     @Test
     fun handleCircuitBreakerRequestSuccess() {
@@ -48,7 +48,7 @@ class ExposureNotificationHandlerTest {
             .withJson("""{
                 "matchedKeyCount": 2,
                 "daysSinceLastExposure": 3,
-                "maximumRiskScore": 150
+                "maximumRiskScore": 150.123456
             }"""
             ).build()
 
@@ -58,7 +58,7 @@ class ExposureNotificationHandlerTest {
 
         val tokenResponse = Jackson.deserializeMaybe(response.body, TokenResponse::class.java)
             .orElse(TokenResponse())
-        assertThat(tokenResponse.approval).matches("yes")
+        assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
     }
 

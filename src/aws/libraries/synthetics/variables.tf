@@ -99,3 +99,9 @@ variable "xray_enabled" {
   description = "If true, set lambda tracing configuration to Active, else PassThrough"
   default     = false
 }
+
+variable "dependency_ref" {
+  description = "Supply reference from another resource/module if there's a need to build dependency. Replace with depends_on once migrate to Terraform v0.13 or later"
+  type        = string
+  default     = ""
+}

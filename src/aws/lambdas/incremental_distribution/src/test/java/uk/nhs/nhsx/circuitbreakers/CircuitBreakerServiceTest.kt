@@ -10,53 +10,53 @@ import uk.nhs.nhsx.core.exceptions.ApiResponseException
 
 class CircuitBreakerServiceTest {
 
+    private val initial = { ApprovalStatus.PENDING }
+    private val poll = { ApprovalStatus.NO }
+
+    private val circuitBreakerService = CircuitBreakerService(initial, poll)
+
     @Test
     fun testGetApprovalTokenForValidPayloadForVenues() {
-        val circuitBreakerService = CircuitBreakerService()
         val responseEvent = circuitBreakerService.approvalToken
         val tokenResponse = tokenFromResponse(responseEvent)
 
         assertThat(responseEvent.statusCode).isEqualTo(200)
-        assertThat(tokenResponse.approval).isEqualTo(ApprovalStatus.YES.getName()) // TODO: Change this to pending when tokens are implemented
+        assertThat(tokenResponse.approval).isEqualTo(ApprovalStatus.PENDING.getName())
         assertThat(tokenResponse.approvalToken).isNotEmpty()
     }
 
     @Test
     fun testGetApprovalTokenForValidPayloadForExposure() {
-        val circuitBreakerService = CircuitBreakerService()
         val responseEvent = circuitBreakerService.approvalToken
         val tokenResponse = tokenFromResponse(responseEvent)
 
         assertThat(responseEvent.statusCode).isEqualTo(200)
-        assertThat(tokenResponse.approval).isEqualTo(ApprovalStatus.YES.getName()) // TODO: Change this to pending when tokens are implemented
+        assertThat(tokenResponse.approval).isEqualTo(ApprovalStatus.PENDING.getName())
         assertThat(tokenResponse.approvalToken).isNotEmpty()
     }
 
     @Test
     fun testGetResolutionWithValidTokenForVenues() {
-        val circuitBreakerService = CircuitBreakerService()
         val path = "/circuit-breaker/venue/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg"
         val responseEvent = circuitBreakerService.getResolution(path)
         val resolutionResponse = resolutionFromResponse(responseEvent)
 
         assertThat(responseEvent.statusCode).isEqualTo(200)
-        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.YES.getName()) // TODO: Change this to pending when tokens are implemented
+        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.getName())
     }
 
     @Test
     fun testGetResolutionWithValidTokenForExposure() {
-        val circuitBreakerService = CircuitBreakerService()
         val path = "/circuit-breaker/exposure-notification/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg"
         val responseEvent = circuitBreakerService.getResolution(path)
         val resolutionResponse = resolutionFromResponse(responseEvent)
 
         assertThat(responseEvent.statusCode).isEqualTo(200)
-        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.YES.getName())
+        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.getName())
     }
 
     @Test
     fun testGetResolutionWithEmptyTokenForVenues() {
-        val circuitBreakerService = CircuitBreakerService()
         val path = "/circuit-breaker/venue/resolution/"
 
         assertThatThrownBy { circuitBreakerService.getResolution(path) }
@@ -66,7 +66,6 @@ class CircuitBreakerServiceTest {
 
     @Test
     fun testGetResolutionWithEmptyTokenForExposure() {
-        val circuitBreakerService = CircuitBreakerService()
         val path = "/circuit-breaker/exposure-notification/resolution/"
 
         assertThatThrownBy { circuitBreakerService.getResolution(path) }
@@ -76,7 +75,6 @@ class CircuitBreakerServiceTest {
 
     @Test
     fun testGetResolutionWithNullTokenForVenues() {
-        val circuitBreakerService = CircuitBreakerService()
         val path = "/circuit-breaker/venue/resolution"
 
         assertThatThrownBy { circuitBreakerService.getResolution(path) }
@@ -86,7 +84,6 @@ class CircuitBreakerServiceTest {
 
     @Test
     fun testGetResolutionWithNullTokenForExposure() {
-        val circuitBreakerService = CircuitBreakerService()
         val path = "/circuit-breaker/exposure-notification/resolution"
 
         assertThatThrownBy { circuitBreakerService.getResolution(path) }

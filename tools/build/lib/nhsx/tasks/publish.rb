@@ -11,10 +11,16 @@ namespace :publish do
     publish_doreto_image($configuration)
   end
 
-  desc "Publish the control panel docker image to the registry"
-  task :conpan => [:"build:conpan"] do
-    include NHSx::Docker
-    publish_conpan_image($configuration)
+  namespace :conpan do
+    NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+      tgt_envs.each do |tgt_env|
+        desc "Publish the Control Panel to #{tgt_env}"
+        task :"#{tgt_env}" do
+          include NHSx::Publish
+          publish_conpan_website(account, "src/control_panel/build", "conpan_store", tgt_env, $configuration)
+        end
+      end
+    end
   end
 
   namespace :data do

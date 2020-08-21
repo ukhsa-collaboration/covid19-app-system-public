@@ -24,7 +24,7 @@ module "diagnosis_keys_processing" {
 module "advanced_analytics" {
   source                     = "./modules/advanced_analytics"
   name                       = "advanced-analytics"
-  lambda_handler             = "advancedAnalytics.handler"
+  lambda_handler             = "handler.handler"
   lambda_timeout             = 500
   analytics_submission_store = module.analytics_submission.store
   aae_environment            = var.aae_environment

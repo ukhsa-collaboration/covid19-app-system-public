@@ -69,8 +69,10 @@ resource "aws_athena_named_query" "create_table" {
 
 # Metric: onboardingCompletedToday
 
-resource "aws_athena_named_query" "onboardingCompletedToday_beginningOfTime" {
-  name      = "${var.database_name}_onboardingCompletedToday_beginningOfTime"
+# completedOnboarding is an int, meaning that the same person can onboard multiple time (a day)
+# note that this is unexpected behaviour and should not be an issue (though is worth noting)
+resource "aws_athena_named_query" "onboardingCompletedToday" {
+  name      = "${var.database_name}_onboardingCompletedToday"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
@@ -78,27 +80,16 @@ resource "aws_athena_named_query" "onboardingCompletedToday_beginningOfTime" {
       SUBSTRING(endDate, 1, 10) AS date,
       CAST(SUM(completedOnboarding) AS DECIMAL) AS onboarding_completed_today
     FROM ${var.table_name}
+    WHERE TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
     GROUP BY SUBSTRING(endDate, 1, 10)
     ORDER BY date DESC
   EOF
 }
 
-# completedOnboarding is an int, meaning that the same person can onboard multiple time (a day)
-# note that this is unexpected behaviour and should not be an issue (though is worth noting)
-resource "aws_athena_named_query" "onboardingCompletedToday_total" {
-  name      = "${var.database_name}_onboardingCompletedToday_total"
-  database  = aws_athena_database.this.name
-  workgroup = aws_athena_workgroup.this.name
-  query     = <<EOF
-    SELECT CAST(SUM(completedOnboarding) AS DECIMAL) AS total_onboarding_completed
-    FROM ${var.table_name}
-  EOF
-}
-
 # Metric: activeUsers
 
-resource "aws_athena_named_query" "activeUsers_beginningOfTime" {
-  name      = "${var.database_name}_activeUsers_beginningOfTime"
+resource "aws_athena_named_query" "activeUsers" {
+  name      = "${var.database_name}_activeUsers"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
@@ -107,7 +98,7 @@ resource "aws_athena_named_query" "activeUsers_beginningOfTime" {
     CAST(COUNT(CASE WHEN deviceModel NOT LIKE 'iPhone%' THEN 1 ELSE NULL END) AS DECIMAL) AS active_users_android,
     CAST(COUNT(totalBackgroundTasks) AS DECIMAL) AS active_users_total
   FROM ${var.table_name}
-  WHERE totalBackgroundTasks > 0
+  WHERE totalBackgroundTasks > 0 AND TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
   GROUP BY SUBSTRING(endDate, 1, 10)
   ORDER BY date DESC
   EOF
@@ -115,8 +106,8 @@ resource "aws_athena_named_query" "activeUsers_beginningOfTime" {
 
 # Metric: dataDownloadUsageBytes
 
-resource "aws_athena_named_query" "dataUsageBytes_beginningOfTime" {
-  name      = "${var.database_name}_dataUsageBytes_beginningOfTime"
+resource "aws_athena_named_query" "dataUsageBytes" {
+  name      = "${var.database_name}_dataUsageBytes"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
@@ -124,6 +115,7 @@ resource "aws_athena_named_query" "dataUsageBytes_beginningOfTime" {
       CAST(SUM(cumulativeDownloadBytes) AS DECIMAL) AS total_data_download_usage,
       CAST(SUM(cumulativeUploadBytes) AS DECIMAL) AS total_data_upload_usage
     FROM ${var.table_name}
+    WHERE TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
     GROUP BY SUBSTRING(endDate, 1, 10)
     ORDER BY date DESC
   EOF
@@ -132,8 +124,8 @@ resource "aws_athena_named_query" "dataUsageBytes_beginningOfTime" {
 
 # Metric: dataDownloadUsageBytesAverage
 
-resource "aws_athena_named_query" "dataUsageBytesAverage_beginningOfTime" {
-  name      = "${var.database_name}_dataUsageBytesAverage_beginningOfTime"
+resource "aws_athena_named_query" "dataUsageBytesAverage" {
+  name      = "${var.database_name}_dataUsageBytesAverage"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
@@ -141,30 +133,16 @@ resource "aws_athena_named_query" "dataUsageBytesAverage_beginningOfTime" {
       CAST(AVG(cumulativeDownloadBytes) AS DECIMAL) AS average_download_usage,
       CAST(AVG(cumulativeUploadBytes) AS DECIMAL) AS average_upload_usage
     FROM ${var.table_name}
+    WHERE TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
     GROUP BY SUBSTRING(endDate, 1, 10)
     ORDER BY date DESC
-  EOF
-}
-
-resource "aws_athena_named_query" "dataUsageBytesAverage_lastDay" {
-  name      = "${var.database_name}_dataUsageBytesAverage_lastDay"
-  database  = aws_athena_database.this.name
-  workgroup = aws_athena_workgroup.this.name
-  query     = <<EOF
-    SELECT SUBSTRING(endDate, 1, 10) AS date,
-      CAST(AVG(cumulativeDownloadBytes) AS DECIMAL) AS average_download_usage,
-      CAST(AVG(cumulativeUploadBytes) AS DECIMAL) AS average_upload_usage
-    FROM ${var.table_name}
-    GROUP BY SUBSTRING(endDate, 1, 10)
-    ORDER BY date DESC
-    LIMIT 1
   EOF
 }
 
 # Metric: qrCodeCheckInCounts
 
-resource "aws_athena_named_query" "qrCodeCheckInCounts_beginningOfTime" {
-  name      = "${var.database_name}_qrCodeCheckInCounts_beginningOfTime"
+resource "aws_athena_named_query" "qrCodeCheckInCounts" {
+  name      = "${var.database_name}_qrCodeCheckInCounts"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
@@ -172,61 +150,32 @@ resource "aws_athena_named_query" "qrCodeCheckInCounts_beginningOfTime" {
       CAST(SUM(checkedIn) AS DECIMAL) AS total_qr_checkins,
       CAST(SUM(canceledCheckIn) AS DECIMAL) AS total_canceled_qr_checkins
     FROM ${var.table_name}
+    WHERE TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
     GROUP BY SUBSTRING(endDate, 1, 10)
     ORDER BY date DESC
-  EOF
-}
-
-resource "aws_athena_named_query" "qrCodeCheckInCounts_lastSevenDays" {
-  name      = "${var.database_name}_qrCodeCheckInCounts_lastSevenDays"
-  database  = aws_athena_database.this.name
-  workgroup = aws_athena_workgroup.this.name
-  query     = <<EOF
-    SELECT SUBSTRING(endDate, 1, 10) AS date,
-      CAST(SUM(checkedIn) AS DECIMAL) AS total_qr_checkins,
-      CAST(SUM(canceledCheckIn) AS DECIMAL) AS total_canceled_qr_checkins
-    FROM ${var.table_name}
-    GROUP BY SUBSTRING(endDate, 1, 10)
-    ORDER BY date DESC
-    LIMIT 7
   EOF
 }
 
 # Metric: isolationStatus
 # currently assumes that isIsolatingBackgroundTick > 0 counts as a day isolated
-resource "aws_athena_named_query" "isolationStatus_beginningOfTime" {
-  name      = "${var.database_name}_isolationStatus_beginningOfTime"
+resource "aws_athena_named_query" "isolationStatus" {
+  name      = "${var.database_name}_isolationStatus"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
     SELECT SUBSTRING(endDate, 1, 10) AS date,
       CAST(COUNT(isIsolatingBackgroundTick) AS DECIMAL) AS total_isolations
     FROM ${var.table_name}
-    WHERE isIsolatingBackgroundTick>0
+    WHERE isIsolatingBackgroundTick>0 AND TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
     GROUP BY SUBSTRING(endDate, 1, 10)
     ORDER BY date DESC
-  EOF
-}
-
-resource "aws_athena_named_query" "isolationStatus_lastSevenDays" {
-  name      = "${var.database_name}_isolationStatus_lastSevenDays"
-  database  = aws_athena_database.this.name
-  workgroup = aws_athena_workgroup.this.name
-  query     = <<EOF
-    SELECT SUBSTRING(endDate, 1, 10) AS date,
-      CAST(COUNT(isIsolatingBackgroundTick) AS DECIMAL) AS total_isolations
-    FROM ${var.table_name}
-    WHERE isIsolatingBackgroundTick>0
-    GROUP BY SUBSTRING(endDate, 1, 10)
-    ORDER BY date DESC
-    LIMIT 7
   EOF
 }
 
 # Metric: symptomaticQuestionnaireResults
 
-resource "aws_athena_named_query" "symptomaticQuestionnaireResults_beginningOfTime" {
-  name      = "${var.database_name}_symptomaticQuestionnaireResults_beginningOfTime"
+resource "aws_athena_named_query" "symptomaticQuestionnaireResults" {
+  name      = "${var.database_name}_symptomaticQuestionnaireResults"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
@@ -235,31 +184,16 @@ resource "aws_athena_named_query" "symptomaticQuestionnaireResults_beginningOfTi
       CAST(COUNT(CASE WHEN completedQuestionnaireAndStartedIsolation>0 THEN 1 END) AS DECIMAL) AS positive,
       CAST(COUNT(CASE WHEN completedQuestionnaireButDidNotStartIsolation>0 THEN 1 END) AS DECIMAL) AS negative
     FROM ${var.table_name}
+    WHERE TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
     GROUP BY SUBSTRING(endDate, 1, 10)
     ORDER BY date DESC
-  EOF
-}
-
-resource "aws_athena_named_query" "symptomaticQuestionnaireResults_lastSevenDays" {
-  name      = "${var.database_name}_symptomaticQuestionnaireResults_lastSevenDays"
-  database  = aws_athena_database.this.name
-  workgroup = aws_athena_workgroup.this.name
-  query     = <<EOF
-    SELECT
-      SUBSTRING(endDate, 1, 10) AS date,
-      CAST(COUNT(CASE WHEN completedQuestionnaireAndStartedIsolation>0 THEN 1 END) AS DECIMAL) AS positive,
-      CAST(COUNT(CASE WHEN completedQuestionnaireButDidNotStartIsolation>0 THEN 1 END) AS DECIMAL) AS negative
-    FROM ${var.table_name}
-    GROUP BY SUBSTRING(endDate, 1, 10)
-    ORDER BY date DESC
-    LIMIT 7
   EOF
 }
 
 # Metric: virologyExamination
 
-resource "aws_athena_named_query" "virologyExamination_beginningOfTime" {
-  name      = "${var.database_name}_virologyExamination_beginningOfTime"
+resource "aws_athena_named_query" "virologyExamination" {
+  name      = "${var.database_name}_virologyExamination"
   database  = aws_athena_database.this.name
   workgroup = aws_athena_workgroup.this.name
   query     = <<EOF
@@ -269,26 +203,8 @@ resource "aws_athena_named_query" "virologyExamination_beginningOfTime" {
       CAST(COUNT(receivednegativetestresult) AS DECIMAL) AS negative_test_result,
       CAST(SUM(IF(completedQuestionnaireAndStartedIsolation>0,1,0)) AS DECIMAL) AS recommended_to_take_test
     FROM ${var.table_name}
-    WHERE completedQuestionnaireAndStartedIsolation>0
+    WHERE completedQuestionnaireAndStartedIsolation>0 AND TO_DATE(SUBSTRING(endDate,1,10),'yyyy-mm-dd') <= current_date
     GROUP BY SUBSTRING(endDate, 1, 10)
     ORDER BY date DESC
-  EOF
-}
-
-resource "aws_athena_named_query" "virologyExamination_lastSevenDays" {
-  name      = "${var.database_name}_virologyExamination_lastSevenDays"
-  database  = aws_athena_database.this.name
-  workgroup = aws_athena_workgroup.this.name
-  query     = <<EOF
-    SELECT SUBSTRING(endDate, 1, 10) AS date,
-      CAST(COUNT(receivedVoidTestResult) AS DECIMAL) AS void_test_result,
-      CAST(COUNT(receivedPositiveTestResult) AS DECIMAL) AS positive_test_result,
-      CAST(COUNT(receivedNegativeTestResult) AS DECIMAL) AS negative_test_result,
-      CAST(SUM(IF(completedQuestionnaireAndStartedIsolation>0,1,0)) AS DECIMAL) AS recommended_to_take_test
-    FROM ${var.table_name}
-    WHERE completedQuestionnaireAndStartedIsolation>0
-    GROUP BY SUBSTRING(endDate, 1, 10)
-    ORDER BY date DESC
-    LIMIT 7
   EOF
 }

@@ -150,7 +150,9 @@ public class CrockfordDammRandomStringGeneratorTest {
      * Random that is more predictable for unit tests without having to sacrifice the type safety of the generator
      */
     private class MockSecureRandom extends SecureRandom {
-        final Random random;
+		private static final long serialVersionUID = 1L;
+		
+		final Random random;
         MockSecureRandom(long seed) {
             this.random = new Random(seed);
         }

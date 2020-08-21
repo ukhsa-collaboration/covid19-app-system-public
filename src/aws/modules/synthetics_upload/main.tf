@@ -44,6 +44,7 @@ module "probe_risky_post_districts_upload" {
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_risky_venues_upload.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_virology_upload" {
@@ -60,4 +61,5 @@ module "probe_virology_upload" {
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_risky_post_districts_upload.function_name # create canaries one at a time to avoid 429 errors
 }

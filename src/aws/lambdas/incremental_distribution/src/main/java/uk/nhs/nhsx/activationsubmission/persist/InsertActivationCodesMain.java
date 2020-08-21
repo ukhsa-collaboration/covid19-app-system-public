@@ -34,6 +34,9 @@ public class InsertActivationCodesMain {
         @Parameter(names = "--input", description = "Load codes from file")
         private String input;
 
+        @Parameter(names = "--region", description = "AWS Region (default eu-west-2")
+        private String region = "eu-west-2";
+
         @Parameter(names = "--generate-only", description = "Only generate the codes, don't load them")
         private boolean generateOnly = false;
 
@@ -125,6 +128,7 @@ public class InsertActivationCodesMain {
 
         AmazonDynamoDB db = AmazonDynamoDBClientBuilder
             .standard()
+            .withRegion(commandLine.region)
             .build();
 
         Supplier<Instant> clock = SystemClock.CLOCK;

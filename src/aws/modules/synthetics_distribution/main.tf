@@ -44,6 +44,7 @@ module "probe_risky_post_district_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_exposure_configuration_distribution.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_risky_venues_distribution" {
@@ -60,6 +61,7 @@ module "probe_risky_venues_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_risky_post_district_distribution.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_self_isolation_distribution" {
@@ -76,6 +78,7 @@ module "probe_self_isolation_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_risky_venues_distribution.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_symptomatic_questionnaire_distribution" {
@@ -92,6 +95,7 @@ module "probe_symptomatic_questionnaire_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_self_isolation_distribution.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_availability_android_distribution" {
@@ -108,6 +112,7 @@ module "probe_availability_android_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_symptomatic_questionnaire_distribution.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_availability_ios_distribution" {
@@ -124,6 +129,7 @@ module "probe_availability_ios_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_availability_android_distribution.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_diagnosis_keys_daily_distribution" {
@@ -140,6 +146,7 @@ module "probe_diagnosis_keys_daily_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_availability_ios_distribution.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_diagnosis_keys_2hourly_distribution" {
@@ -156,4 +163,5 @@ module "probe_diagnosis_keys_2hourly_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_diagnosis_keys_daily_distribution.function_name # create canaries one at a time to avoid 429 errors
 }

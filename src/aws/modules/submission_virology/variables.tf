@@ -14,6 +14,10 @@ variable "test_results_table_id" {
   description = "The DynamoDB table that contains the test results"
 }
 
+variable "virology_submission_tokens_table_id" {
+  description = "The DynamoDB table that contains the virology submissions diagnosis keys tokens"
+}
+
 variable "rate_limit" {
   description = "The requests per second limit for this API gateway"
 }

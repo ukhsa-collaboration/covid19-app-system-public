@@ -1,5 +1,7 @@
 package uk.nhs.nhsx.analyticssubmission.model;
 
+import static uk.nhs.nhsx.analyticssubmission.PostCodeDeserializer.mergeSmallPostcodes;
+
 public class StoredAnalyticsSubmissionPayload {
 
     //    Window
@@ -94,7 +96,7 @@ public class StoredAnalyticsSubmissionPayload {
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload) {
         return new StoredAnalyticsSubmissionPayload(
-                clientPayload.metadata.postalDistrict,
+                mergeSmallPostcodes(clientPayload.metadata.postalDistrict),
                 clientPayload.metadata.deviceModel,
                 clientPayload.metadata.operatingSystemVersion,
                 clientPayload.metadata.latestApplicationVersion,

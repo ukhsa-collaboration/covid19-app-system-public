@@ -7,7 +7,6 @@ import org.http4k.core.Request
 import org.http4k.core.Status
 import org.slf4j.LoggerFactory
 import smoke.env.EnvConfig
-import uk.nhs.nhsx.testkitorder.TestOrderResponse
 
 class RiskyVenuesUploadClient(private val client: JavaHttpClient,
                               private val config: EnvConfig) {

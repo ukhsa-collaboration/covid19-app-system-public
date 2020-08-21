@@ -44,7 +44,7 @@ module "processing_lambda" {
 
 resource "aws_cloudwatch_event_rule" "cron" {
   name                = "${local.identifier_prefix}-cron"
-  schedule_expression = "cron(*/10 * * * ? *)"
+  schedule_expression = "cron(12 1,5,7,9,11,13,15,17,19,21 * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "target_lambda" {

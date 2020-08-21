@@ -1,28 +1,21 @@
 locals {
-  function_name      = "${terraform.workspace}-${var.name}"
-  secret_name_prefix = "/aae/advanced_analytics"
-  secret_names = {
-    private_certificate             = "${local.secret_name_prefix}/private-certificate-10593"
-    private_key                     = "${local.secret_name_prefix}/private-key-10593"
-    certificate_encryption_password = "${local.secret_name_prefix}/certificate-encryption-password-10593"
-    subscription_key                = "${local.secret_name_prefix}/subscription-key-10593"
-  }
+  function_name = "${terraform.workspace}-${var.name}"
 }
 
 data "aws_secretsmanager_secret" "private_certificate" {
-  name = local.secret_names.private_certificate
+  name = "/aae/advanced_analytics/private-certificate-10593"
 }
 
 data "aws_secretsmanager_secret" "private_key" {
-  name = local.secret_names.private_key
+  name = "/aae/advanced_analytics/private-key-10593"
 }
 
 data "aws_secretsmanager_secret" "certificate_encryption_password" {
-  name = local.secret_names.certificate_encryption_password
+  name = "/aae/advanced_analytics/certificate-encryption-password-10593"
 }
 
 data "aws_secretsmanager_secret" "subscription_key" {
-  name = local.secret_names.subscription_key
+  name = "/aae/advanced_analytics/subscription-key-10593"
 }
 
 module "iam_advanced_analytics_lambda" {
@@ -42,6 +35,5 @@ module "advanced_analytics_lambda" {
   lambda_handler                    = var.lambda_handler
   iam_advanced_analytics_lambda_arn = module.iam_advanced_analytics_lambda.arn
   analytics_submission_store        = var.analytics_submission_store
-  secret_names                      = local.secret_names
   aae_environment                   = var.aae_environment
 }

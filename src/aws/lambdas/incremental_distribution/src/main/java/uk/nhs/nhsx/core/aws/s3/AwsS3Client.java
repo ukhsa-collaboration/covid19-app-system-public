@@ -26,7 +26,6 @@ public class AwsS3Client implements AwsS3 {
     private static final Supplier<AmazonS3> client =
         Suppliers.memoize(AmazonS3ClientBuilder::defaultClient);
 
-    @SuppressWarnings("UnstableApiUsage")
     @Override
     public void upload(Locator locator, ContentType contentType, ByteSource bytes, MetaHeader... meta) {
         ObjectMetadata metadata = new ObjectMetadata();

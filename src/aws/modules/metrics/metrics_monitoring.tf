@@ -119,7 +119,7 @@ resource "aws_cloudwatch_dashboard" "errors_dashboard" {
           "region": "eu-west-2",
           "stacked": false,
           "stat": "Sum",
-          "title": "No. Errors and Warnings in internal lambdas",
+          "title": "# Errors and Warnings in internal lambdas",
           "view": "timeSeries"
         }
       },
@@ -143,7 +143,7 @@ resource "aws_cloudwatch_dashboard" "errors_dashboard" {
           "region": "eu-west-2",
           "stacked": false,
           "stat": "Sum",
-          "title": "No. Errors and Warnings in external faced lambdas",
+          "title": "# Errors and Warnings in external faced lambdas",
           "view": "timeSeries"
         }
       },
@@ -167,7 +167,7 @@ resource "aws_cloudwatch_dashboard" "errors_dashboard" {
           "region": "eu-west-2",
           "stacked": false,
           "stat": "Sum",
-          "title": "No. Errors and Warnings in app facing lambdas",
+          "title": "# Errors and Warnings in app facing lambdas",
           "view": "timeSeries"
         }
       },
@@ -320,7 +320,7 @@ resource "aws_cloudwatch_dashboard" "errors_dashboard" {
           "region": "eu-west-2",
           "stat": "Sum",
           "period": 60,
-          "title": "No. of requests / No. of lambda invocations"
+          "title": "Number of requests / Number of lambda invocations"
         }
       }
     ]

@@ -6,9 +6,9 @@ module NHSx
     LAMBDAS_LOCATION = "src/aws/lambdas"
     # Python commandlines in use by automation scripts
     module Commandlines
-      # Command line for pip installing to a specific target directory
-      def self.vendor_package(package, vendor_location)
-        "pip3 install --target #{vendor_location} #{package}"
+      # Command line for pip installing from requirements to a specific target directory
+      def self.requirements(requirements_location, target_location)
+        "pip3 install --target #{target_location} -r #{requirements_location}"
       end
 
       # Call flake8 with the given configuration file and force it to return an exit code of 1 if there are errors.
@@ -19,13 +19,11 @@ module NHSx
       end
     end
 
-    # Vendor a Python library within a lambda function's directory to make it available during deployment
-    #
-    # This methods relies on the placement and naming conventions for lambdas - change it when the conventions change
-    def vendor_package_in_lambda(python_package, lambda_function, system_config)
-      lambda_function_location = File.join(system_config.base, LAMBDAS_LOCATION, lambda_function, "packages")
-      cmdline = NHSx::Python::Commandlines.vendor_package(python_package, lambda_function_location)
-      run_command("Vendor #{python_package} in #{lambda_function}", cmdline, system_config)
+    def install_requirements(lambda_function, output_path,system_config)
+      requirements_location = File.join(lambda_function, "requirements.txt")
+      cmdline = NHSx::Python::Commandlines.requirements(requirements_location, output_path)
+      run_command("Installing requirements from #{requirements_location} for #{lambda_function}", cmdline, system_config)
     end
+
   end
 end

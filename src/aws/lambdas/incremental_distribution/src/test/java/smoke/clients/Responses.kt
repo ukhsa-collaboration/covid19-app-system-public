@@ -49,7 +49,7 @@ private fun Response.requireSignatureDate(): Response {
 
     try {
         DateTimeFormatter
-            .ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz")
+            .ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz", java.util.Locale.ENGLISH)
             .parse(signatureDate)
     } catch (e: DateTimeParseException) {
         throw IllegalStateException("Invalid signature date header", e)

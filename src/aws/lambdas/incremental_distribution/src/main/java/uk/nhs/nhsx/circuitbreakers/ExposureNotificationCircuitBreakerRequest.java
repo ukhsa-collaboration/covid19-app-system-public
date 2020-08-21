@@ -7,13 +7,13 @@ public class ExposureNotificationCircuitBreakerRequest {
 
     public final int matchedKeyCount;
     public final int daysSinceLastExposure;
-    public final int maximumRiskScore;
+    public final double maximumRiskScore;
 
     @JsonCreator
     public ExposureNotificationCircuitBreakerRequest(
         @JsonProperty int matchedKeyCount,
         @JsonProperty int daysSinceLastExposure,
-        @JsonProperty int maximumRiskScore
+        @JsonProperty double maximumRiskScore
     ) {
 
         this.matchedKeyCount = matchedKeyCount;

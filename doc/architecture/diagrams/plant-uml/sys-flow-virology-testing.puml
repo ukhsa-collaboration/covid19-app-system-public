@@ -1,33 +1,38 @@
-@startuml system-flow_virology-test-result-verification
+@startuml system-flow_virology-testing
 
 Actor User
-Actor TestCenter
-Actor TestLab
-Actor BSA
 
-User -> TestCenter: goes for test
-TestLab <- TestCenter: sends swab test
-TestLab -> BSA: informs on test result
+App -> VirologyTestingAPI: get test URL and token
+App <- VirologyTestingAPI: test URL and token
+VirologyTestingAPI -> AnalyticsAPI: send anonymous data
+App -> App: store token
 
-BSA -> TokenAPI: [positive result] create test verification code
-TokenAPI -> VirologyTestingAPI: create and register new positive test verification code
-VirologyTestingAPI -> VirologyTestingAPI: create cta and diag key submission token
-TokenAPI <- VirologyTestingAPI: pos test verification code (cta)
-BSA <- TokenAPI: return new verification token
 
+App -> User: show URL to user
+App -> VirologyWebsite: launch browser window and pass token ID as query parameter
+User <- VirologyWebsite: website interaction for ordering a test
+User -> VirologyWebsite: test ordered 
+VirologyWebsite -> VirologyWebsite: do testing (hours to days)
+App -> VirologyTestingAPI: poll at x time intervals (token)
 ...
-BSA -> User: [positive result] send SMS or Mail with verification code
+VirologyWebsite -> TestLab: send result (result, token)
+TestLab -> TestLabAPI: send result (result, token)
+
+TestLabAPI->VirologyTestingAPI: send result (result, token)
+...
+App -> VirologyTestingAPI: poll at x time intervals (token)
+App <- VirologyTestingAPI: test result 
+VirologyTestingAPI -> AnalyticsAPI: send anonymous data
+
+App->App: take test result action
+App->User: on positive result get user permission to upload exposure keys
+User->App: ok
+
+App->SubmitAPI: submit exposure key history (diagnosis keys)
+User<-App: show isolation advice for positive test result
+SubmitAPI -> SubmitAPI: batch for distribution
 ...
 
-User -> App: enter verification code
-App -> VirologyTestingAPI: verify code
-App <- VirologyTestingAPI: [code ok] return diag key submission token
-App -> User: ask for diag key submission
-App -> SubmitAPI: [user ok] submission of diagnosis keys (w submission token)
-App -> User: show/update isolation screen
-...
-
-VirologyTestingAPI -> VirologyTestingAPI: clean up unused tokens (retention time?)
 
 
 @enduml

@@ -7,16 +7,35 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.JSONParser;
+import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.exceptions.ApiResponseException;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
-import uk.nhs.nhsx.testkitorder.TestOrderResponseFactory.TestKitRequestType;
+import uk.nhs.nhsx.testkitorder.lookup.TestLookupRequest;
+import uk.nhs.nhsx.testkitorder.lookup.TestResult;
+import uk.nhs.nhsx.testkitorder.order.TestOrderResponseFactory;
+import uk.nhs.nhsx.testkitorder.order.TestOrderResponseFactory.TestKitRequestType;
+import uk.nhs.nhsx.testkitorder.order.TokensGenerator;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class TestKitOrderServiceTest {
+
+    private final Instant now = Instant.ofEpochSecond(0);
+    private final Supplier<Instant> clock = () -> now;
+    private final TestKitOrderPersistenceService persistenceService = mock(TestKitOrderPersistenceService.class);
+    private final TestOrderResponseFactory testOrderResponseFactory =
+        new TestOrderResponseFactory(
+            "https://example.order-a-test.uk",
+            "https://example.register-a-test.uk"
+        );
 
     @Test
     public void asJson() throws Exception {
@@ -29,32 +48,45 @@ public class TestKitOrderServiceTest {
     public void invalidDateThrowsException() {
         TestResult testResult = new TestResult("abc", "2020-04-23-ZZZ", "POSITIVE", "available");
         Assertions.assertThatThrownBy(() -> TestKitOrderService.asJsonResponse(testResult))
-                .isInstanceOf(ApiResponseException.class)
-                .hasMessage("Unexpected date format");
+            .isInstanceOf(ApiResponseException.class)
+            .hasMessage("Unexpected date format");
     }
 
     @Test
     public void invalidTestResultThrowsException() {
         TestResult testResult = new TestResult("abc", "2020-04-23T18:34:03Z", "A", "available");
         Assertions.assertThatThrownBy(() -> TestKitOrderService.asJsonResponse(testResult))
-                .isInstanceOf(ApiResponseException.class)
-                .hasMessage("Unexpected test result");
+            .isInstanceOf(ApiResponseException.class)
+            .hasMessage("Unexpected test result");
     }
 
     @Test
     public void handleTestResultRequestSuccess() {
+        when(persistenceService.getTestResult(any()))
+            .thenReturn(Optional.of(new TestResult(
+                "abc", "2020-04-23T18:34:03Z", "POSITIVE", "available"
+            )));
+
         TestKitOrderService service = new TestKitOrderService(
-            new MockTestKitOrderPersistenceService(
-                new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
-            ),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            persistenceService,
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            clock
         );
 
         TestResultPollingToken pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7");
         TestLookupRequest request = new TestLookupRequest(pollingToken);
         APIGatewayProxyResponseEvent response = service.handleTestResultRequest(request);
         assertThat(response.getStatusCode()).isEqualTo(200);
+
+        verify(persistenceService, times(1))
+            .getTestResult(pollingToken);
+        verify(persistenceService, times(1))
+            .markForDeletion(new VirologyDataTimeToLive(
+                pollingToken,
+                Duration.ofHours(4).toMillis() / 1000,
+                Duration.ofDays(4).toMillis() / 1000
+            ));
     }
 
     @Test
@@ -63,8 +95,10 @@ public class TestKitOrderServiceTest {
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "pending")
             ),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
+
         );
 
         TestResultPollingToken pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7");
@@ -77,8 +111,9 @@ public class TestKitOrderServiceTest {
     public void handleTestResultRequestThatDoesNotExist() {
         TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(null),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
 
         TestResultPollingToken pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7");
@@ -90,12 +125,14 @@ public class TestKitOrderServiceTest {
 
     @Test
     public void handleTestOrderRequestSuccess() throws Exception {
-        TestKitOrderService service = new TestKitOrderService(
-            new MockTestKitOrderPersistenceService(
-                new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
-            ),
-            new TestOrderResponseFactory("https://example.order-a-test.uk", "https://example.register-a-test.uk"),
-            new TokensGenerator()
+        var persistenceService = new MockTestKitOrderPersistenceService(
+            new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
+        );
+        var service = new TestKitOrderService(
+            persistenceService,
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            clock
         );
         APIGatewayProxyResponseEvent response = service.handleTestOrderRequest(TestKitRequestType.ORDER);
         assertThat(response.getStatusCode()).isEqualTo(200);
@@ -105,16 +142,20 @@ public class TestKitOrderServiceTest {
         assertThat((String) jsonObject.get("testResultPollingToken")).isNotBlank();
         assertThat((String) jsonObject.get("tokenParameterValue")).matches("[a-z0-9]{8}");
         assertThat((String) jsonObject.get("websiteUrlWithQuery")).matches("https://example\\.order-a-test\\.uk\\?ctaToken=[a-z0-9]{8}");
+        assertThat(persistenceService.expireAt).isEqualTo(Duration.ofDays(4 * 7).getSeconds());
     }
 
     @Test
     public void handleTestRegisterRequestSuccess() throws Exception {
-        TestKitOrderService service = new TestKitOrderService(
-            new MockTestKitOrderPersistenceService(
-                new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
-            ),
-            new TestOrderResponseFactory("https://example.order-a-test.uk", "https://example.register-a-test.uk"),
-            new TokensGenerator()
+        var persistenceService = new MockTestKitOrderPersistenceService(
+            new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
+        );
+        var service = new TestKitOrderService(
+            persistenceService,
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            clock
+
         );
         APIGatewayProxyResponseEvent response = service.handleTestOrderRequest(TestKitRequestType.REGISTER);
         assertThat(response.getStatusCode()).isEqualTo(200);
@@ -124,26 +165,12 @@ public class TestKitOrderServiceTest {
         assertThat((String) jsonObject.get("testResultPollingToken")).isNotBlank();
         assertThat((String) jsonObject.get("tokenParameterValue")).matches("[a-z0-9]{8}");
         assertThat((String) jsonObject.get("websiteUrlWithQuery")).matches("https://example\\.register-a-test\\.uk\\?ctaToken=[a-z0-9]{8}");
+        assertThat(persistenceService.expireAt).isEqualTo(Duration.ofDays(4 * 7).getSeconds());
     }
 
-    @Test
-    public void handleTestRegisterError() {
-        TestKitOrderService service = new TestKitOrderService(
-            new MockTestKitOrderPersistenceService(
-                new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
-            ),
-            new TestOrderResponseFactory("https://example.order-a-test.uk", "https://example.register-a-test.uk"),
-            new TokensGenerator()
-        );
-
-        assertThatThrownBy(() -> service.handleTestOrderRequest(null))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessage("Did not specify a test kit request type");
-    }
-
-
-    class MockTestKitOrderPersistenceService implements TestKitOrderPersistenceService {
+    static class MockTestKitOrderPersistenceService implements TestKitOrderPersistenceService {
         TestResult testResultItem;
+        private long expireAt;
 
         MockTestKitOrderPersistenceService(TestResult testResultItem) {
             this.testResultItem = testResultItem;
@@ -155,7 +182,14 @@ public class TestKitOrderServiceTest {
         }
 
         @Override
-        public void persistTestOrder(TokensGenerator.TestOrderTokens tokens) {
+        public TokensGenerator.TestOrderTokens persistTestOrder(Supplier<TokensGenerator.TestOrderTokens> tokens,
+                                                                long expireAt) {
+            this.expireAt = expireAt;
+            return tokens.get();
+        }
+
+        @Override
+        public void markForDeletion(VirologyDataTimeToLive virologyDataTimeToLive) {
 
         }
     }

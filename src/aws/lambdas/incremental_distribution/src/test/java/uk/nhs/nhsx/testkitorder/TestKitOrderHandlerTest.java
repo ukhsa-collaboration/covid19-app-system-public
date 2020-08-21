@@ -17,10 +17,14 @@ import uk.nhs.nhsx.core.signature.KeyId;
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner;
 import uk.nhs.nhsx.core.signature.Signature;
 import uk.nhs.nhsx.core.signature.Signer;
+import uk.nhs.nhsx.testkitorder.lookup.TestResult;
+import uk.nhs.nhsx.testkitorder.order.TestOrderResponseFactory;
+import uk.nhs.nhsx.testkitorder.order.TokensGenerator;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,25 +33,30 @@ import static org.mockito.Mockito.when;
 import static uk.nhs.nhsx.ContextBuilder.aContext;
 
 public class TestKitOrderHandlerTest {
+
     private final Signer contentSigner = mock(Signer.class);
     private final AwsResponseSigner signer = new AwsResponseSigner(new RFC2616DatedSigner(SystemClock.CLOCK, contentSigner));
+    private final TestOrderResponseFactory testOrderResponseFactory =
+        new TestOrderResponseFactory("orderWebsite", "registerWebsite");
 
     @Before
     public void setUpMock() {
         when(contentSigner.sign(any())).thenReturn(
             new Signature(KeyId.of("TEST_KEY_ID"), SigningAlgorithmSpec.ECDSA_SHA_256, "TEST_SIGNATURE".getBytes()));
     }
+
     @Test
     public void handleTestResultRequestSuccess() throws Exception {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
             ),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -64,15 +73,16 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestResultRequestSuccessNoContent() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "pending")
             ),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -89,15 +99,16 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestResultRequestMissingToken() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "pending")
             ),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -113,15 +124,16 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestResultRequestNullToken() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "pending")
             ),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -137,15 +149,16 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleEmptyTestResultRequestToken() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "pending")
             ),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -161,13 +174,14 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestResultRequestThatDoesNotExist() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(null),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -183,20 +197,21 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestResultRequestForIncorrectRequestJson() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(null),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
 
+        Handler handler = new Handler((e) -> true, signer, service);
+
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
-                .withMethod(HttpMethod.POST)
-                .withPath("/virology-test/results")
-                .withBearerToken("anything")
-                .withJson("{\"invalidField\":\"98cff3dd-882c-417b-a00a-350a205378c7\"}")
-                .build();
+            .withMethod(HttpMethod.POST)
+            .withPath("/virology-test/results")
+            .withBearerToken("anything")
+            .withJson("{\"invalidField\":\"98cff3dd-882c-417b-a00a-350a205378c7\"}")
+            .build();
 
         APIGatewayProxyResponseEvent response = handler.handleRequest(requestEvent, aContext());
         assertThat(response.getStatusCode()).isEqualTo(422);
@@ -205,13 +220,14 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestResultRequestForMissingBody() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(null),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -226,15 +242,16 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestOrderRequestSuccess() throws Exception {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
             ),
             new TestOrderResponseFactory("https://example.order-a-test.uk", "https://example.register-a-test.uk"),
-            new TokensGenerator()
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -255,22 +272,22 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestRegisterRequestSuccess() throws Exception {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
             ),
             new TestOrderResponseFactory("https://example.order-a-test.uk", "https://example.register-a-test.uk"),
-            new TokensGenerator()
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
 
-        APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
-                .withMethod(HttpMethod.POST)
-                .withPath("/virology-test/home-kit/register")
-                .withBearerToken("anything")
-                .build();
+        Handler handler = new Handler((e) -> true, signer, service);
 
+        APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
+            .withMethod(HttpMethod.POST)
+            .withPath("/virology-test/home-kit/register")
+            .withBearerToken("anything")
+            .build();
 
         APIGatewayProxyResponseEvent response = handler.handleRequest(requestEvent, aContext());
         assertThat(response.getStatusCode()).isEqualTo(200);
@@ -285,21 +302,22 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleUnknownPath() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockTestKitOrderPersistenceService(
                 new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available")
             ),
             new TestOrderResponseFactory("https://example.order-a-test.uk", "https://example.register-a-test.uk"),
-            new TokensGenerator()
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
 
+        Handler handler = new Handler((e) -> true, signer, service);
+
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
-                .withMethod(HttpMethod.POST)
-                .withPath("/unknown/path")
-                .withBearerToken("anything")
-                .build();
+            .withMethod(HttpMethod.POST)
+            .withPath("/unknown/path")
+            .withBearerToken("anything")
+            .build();
 
         APIGatewayProxyResponseEvent response = handler.handleRequest(requestEvent, aContext());
         assertThat(response.getStatusCode()).isEqualTo(404);
@@ -308,13 +326,14 @@ public class TestKitOrderHandlerTest {
 
     @Test
     public void handleTestResultUnknownException() {
-        Handler handler = new Handler(
-            (e) -> true,
-            signer,
+        TestKitOrderService service = new TestKitOrderService(
             new MockThrowsTestKitOrderPersistenceService(),
-            new TestOrderResponseFactory(null, null),
-            new TokensGenerator()
+            testOrderResponseFactory,
+            new TokensGenerator(),
+            SystemClock.CLOCK
         );
+
+        Handler handler = new Handler((e) -> true, signer, service);
 
         APIGatewayProxyRequestEvent requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)
@@ -332,7 +351,7 @@ public class TestKitOrderHandlerTest {
         return Optional.ofNullable(response.getHeaders()).orElse(Collections.emptyMap());
     }
 
-    class MockThrowsTestKitOrderPersistenceService implements TestKitOrderPersistenceService {
+    static class MockThrowsTestKitOrderPersistenceService implements TestKitOrderPersistenceService {
 
         @Override
         public Optional<TestResult> getTestResult(TestResultPollingToken testResultPollingToken) {
@@ -340,12 +359,18 @@ public class TestKitOrderHandlerTest {
         }
 
         @Override
-        public void persistTestOrder(TokensGenerator.TestOrderTokens tokens) {
+        public TokensGenerator.TestOrderTokens persistTestOrder(Supplier<TokensGenerator.TestOrderTokens> tokens,
+                                                                long expireAt) {
             throw new RuntimeException("persistence error");
+        }
+
+        @Override
+        public void markForDeletion(VirologyDataTimeToLive virologyDataTimeToLive) {
+
         }
     }
 
-    class MockTestKitOrderPersistenceService implements TestKitOrderPersistenceService {
+    static class MockTestKitOrderPersistenceService implements TestKitOrderPersistenceService {
         TestResult testResultItem;
 
         MockTestKitOrderPersistenceService(TestResult testResultItem) {
@@ -358,7 +383,13 @@ public class TestKitOrderHandlerTest {
         }
 
         @Override
-        public void persistTestOrder(TokensGenerator.TestOrderTokens tokens) {
+        public TokensGenerator.TestOrderTokens persistTestOrder(Supplier<TokensGenerator.TestOrderTokens> tokens,
+                                                                long expireAt) {
+            return tokens.get();
+        }
+
+        @Override
+        public void markForDeletion(VirologyDataTimeToLive virologyDataTimeToLive) {
 
         }
     }

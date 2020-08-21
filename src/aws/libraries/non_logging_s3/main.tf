@@ -55,6 +55,7 @@ data "aws_iam_policy_document" "this" {
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  bucket = aws_s3_bucket.this.id
-  policy = data.aws_iam_policy_document.this.json
+  depends_on = [aws_s3_bucket_public_access_block.this] # in terraform v0.12.29 we encounter conflict when this is executed concurrently with setting public access block
+  bucket     = aws_s3_bucket.this.id
+  policy     = data.aws_iam_policy_document.this.json
 }

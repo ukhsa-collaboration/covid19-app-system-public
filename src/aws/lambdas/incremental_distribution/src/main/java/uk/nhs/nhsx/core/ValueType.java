@@ -16,7 +16,8 @@ public abstract class ValueType<T extends ValueType<T>> implements Comparable<T>
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ValueType that = (ValueType) o;
+        @SuppressWarnings("rawtypes")
+		ValueType that = (ValueType) o;
 
         return value.equals(that.value);
 

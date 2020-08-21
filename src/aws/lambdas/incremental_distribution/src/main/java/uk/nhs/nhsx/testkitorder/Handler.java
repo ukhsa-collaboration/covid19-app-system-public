@@ -3,7 +3,6 @@ package uk.nhs.nhsx.testkitorder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import uk.nhs.nhsx.activationsubmission.persist.Environment;
 import uk.nhs.nhsx.core.HttpResponses;
-import uk.nhs.nhsx.core.StandardSigning;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.auth.ApiName;
 import uk.nhs.nhsx.core.auth.Authenticator;
@@ -11,12 +10,16 @@ import uk.nhs.nhsx.core.auth.ResponseSigner;
 import uk.nhs.nhsx.core.routing.Routing;
 import uk.nhs.nhsx.core.routing.Routing.Method;
 import uk.nhs.nhsx.core.routing.RoutingHandler;
-import uk.nhs.nhsx.testkitorder.TestOrderResponseFactory.TestKitRequestType;
+import uk.nhs.nhsx.testkitorder.lookup.TestLookupRequest;
+import uk.nhs.nhsx.testkitorder.order.TestOrderResponseFactory;
+import uk.nhs.nhsx.testkitorder.order.TestOrderResponseFactory.TestKitRequestType;
+import uk.nhs.nhsx.testkitorder.order.TokensGenerator;
 
 import java.time.Instant;
 import java.util.function.Supplier;
 
 import static uk.nhs.nhsx.core.Jackson.deserializeMaybe;
+import static uk.nhs.nhsx.core.StandardSigning.signResponseWithKeyGivenInSsm;
 import static uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication;
 import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
@@ -50,6 +53,8 @@ import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
  */
 public class Handler extends RoutingHandler {
 
+    private static final int MAX_TOKEN_PERSISTENCE_RETRY_COUNT = 3;
+
     private final Routing.Handler handler;
 
     public Handler() {
@@ -59,28 +64,12 @@ public class Handler extends RoutingHandler {
     public Handler(Environment environment, Supplier<Instant> clock) {
         this(
             awsAuthentication(ApiName.Mobile),
-            StandardSigning.signResponseWithKeyGivenInSsm(clock, environment),
-            new TestKitOrderDynamoPersistenceService(
-                AmazonDynamoDBClientBuilder.defaultClient(),
-                environment.access.required("test_orders_table"),
-                environment.access.required("test_results_table")
-            ),
-            new TestOrderResponseFactory(
-                environment.access.required("order_website"),
-                environment.access.required("register_website")
-            ),
-            new TokensGenerator()
+            signResponseWithKeyGivenInSsm(clock, environment),
+            testKitOrderService(clock, environment)
         );
     }
 
-    public Handler(
-        Authenticator authenticator,
-        ResponseSigner signer,
-        TestKitOrderPersistenceService persistenceService,
-        TestOrderResponseFactory responseFactory,
-        TokensGenerator tokensGenerator
-    ) {
-        TestKitOrderService service = new TestKitOrderService(persistenceService, responseFactory, tokensGenerator);
+    public Handler(Authenticator authenticator, ResponseSigner signer, TestKitOrderService service) {
         this.handler = withSignedResponses(
             authenticator,
             signer,
@@ -89,8 +78,10 @@ public class Handler extends RoutingHandler {
                     deserializeMaybe(r.getBody(), TestLookupRequest.class)
                         .map(service::handleTestResultRequest)
                         .orElse(HttpResponses.unprocessableEntity())),
-                path(Method.POST, "/virology-test/home-kit/order", (r) -> service.handleTestOrderRequest(TestKitRequestType.ORDER)),
-                path(Method.POST, "/virology-test/home-kit/register", (r) -> service.handleTestOrderRequest(TestKitRequestType.REGISTER))
+                path(Method.POST, "/virology-test/home-kit/order", (r) ->
+                    service.handleTestOrderRequest(TestKitRequestType.ORDER)),
+                path(Method.POST, "/virology-test/home-kit/register", (r) ->
+                    service.handleTestOrderRequest(TestKitRequestType.REGISTER))
             )
         );
     }
@@ -98,5 +89,29 @@ public class Handler extends RoutingHandler {
     @Override
     public Routing.Handler handler() {
         return handler;
+    }
+
+    private static TestKitOrderService testKitOrderService(Supplier<Instant> clock, Environment environment) {
+        var config = testOrderConfig(environment);
+        return new TestKitOrderService(
+            new TestKitOrderDynamoService(
+                AmazonDynamoDBClientBuilder.defaultClient(),
+                config
+            ),
+            new TestOrderResponseFactory(config.orderWebsite, config.registerWebsite),
+            new TokensGenerator(),
+            clock
+        );
+    }
+
+    private static TestKitOrderConfig testOrderConfig(Environment environment) {
+        return new TestKitOrderConfig(
+            environment.access.required("test_orders_table"),
+            environment.access.required("test_results_table"),
+            environment.access.required("virology_submission_tokens_table"),
+            environment.access.required("order_website"),
+            environment.access.required("register_website"),
+            MAX_TOKEN_PERSISTENCE_RETRY_COUNT
+        );
     }
 }

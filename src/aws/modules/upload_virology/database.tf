@@ -8,6 +8,10 @@ resource "aws_dynamodb_table" "test_orders" {
     name = "ctaToken"
     type = "S"
   }
+  ttl {
+    attribute_name = "expireAt"
+    enabled        = true
+  }
 }
 
 resource "aws_dynamodb_table" "test_results" {
@@ -19,6 +23,10 @@ resource "aws_dynamodb_table" "test_results" {
     name = "testResultPollingToken"
     type = "S"
   }
+  ttl {
+    attribute_name = "expireAt"
+    enabled        = true
+  }
 }
 
 resource "aws_dynamodb_table" "submission_tokens" {
@@ -29,5 +37,9 @@ resource "aws_dynamodb_table" "submission_tokens" {
   attribute {
     name = "diagnosisKeySubmissionToken"
     type = "S"
+  }
+  ttl {
+    attribute_name = "expireAt"
+    enabled        = true
   }
 }

@@ -6,6 +6,7 @@ import com.amazonaws.services.kms.model.MessageType;
 import com.amazonaws.services.kms.model.SignRequest;
 import com.amazonaws.services.kms.model.SignResult;
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec;
+import uk.nhs.nhsx.core.exceptions.Defect;
 import uk.nhs.nhsx.core.signature.KeyId;
 import uk.nhs.nhsx.core.signature.Signature;
 
@@ -48,7 +49,7 @@ public class KmsKeySigner implements KeySigner {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             return digest.digest(content);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException("Failed to digest message", e);
+            throw new Defect("Failed to digest message", e);
         }
     }
 }

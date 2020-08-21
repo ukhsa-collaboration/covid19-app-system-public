@@ -1,23 +1,19 @@
 locals {
   secret_name_prefix = "/aae/dev"
-  lambda_path        = "${path.module}/../../lambdas/advanced_analytics/advancedAnalytics.py"
-  vars = {
-    certificate_secret_name         = var.secret_names.private_certificate
-    key_secret_name                 = var.secret_names.private_key
-    encryption_password_secret_name = var.secret_names.certificate_encryption_password
-    subscription_key_name           = var.secret_names.subscription_key
-    aae_environment                 = var.aae_environment
-  }
-  lambda_source = templatefile(local.lambda_path, local.vars)
+  lambda_path        = "${path.module}/../../../../out/python/build/advanced_analytics"
 }
 
 data "archive_file" "this" {
-  type = "zip"
-  source {
-    content  = local.lambda_source
-    filename = basename(local.lambda_path)
-  }
+  type        = "zip"
+  source_dir  = local.lambda_path
   output_path = "${path.root}/../../../../out/python/${var.name}.zip"
+
+  excludes = [
+    ".pytest_cache/*",
+    "__pycache__/*",
+    "test/*",
+    "test_*",
+  ]
 }
 
 resource "aws_cloudwatch_log_group" "this" {
@@ -25,14 +21,21 @@ resource "aws_cloudwatch_log_group" "this" {
 }
 
 resource "aws_lambda_function" "this" {
-  function_name    = var.name
-  runtime          = "python3.8"
-  timeout          = var.lambda_timeout
-  handler          = var.lambda_handler
-  role             = var.iam_advanced_analytics_lambda_arn
-  filename         = data.archive_file.this.output_path
-  source_code_hash = data.archive_file.this.output_base64sha256
-  depends_on       = [aws_cloudwatch_log_group.this]
+  function_name                  = var.name
+  runtime                        = "python3.8"
+  timeout                        = var.lambda_timeout
+  handler                        = var.lambda_handler
+  role                           = var.iam_advanced_analytics_lambda_arn
+  filename                       = data.archive_file.this.output_path
+  source_code_hash               = data.archive_file.this.output_base64sha256
+  reserved_concurrent_executions = 100
+  depends_on                     = [aws_cloudwatch_log_group.this]
+
+  environment {
+    variables = {
+      AAE_ENVIRONMENT = var.aae_environment
+    }
+  }
 
   tracing_config {
     mode = "Active"

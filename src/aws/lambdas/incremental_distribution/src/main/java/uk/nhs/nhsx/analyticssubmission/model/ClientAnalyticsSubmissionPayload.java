@@ -19,5 +19,4 @@ public class ClientAnalyticsSubmissionPayload {
         this.metrics = metrics;
         this.includesMultipleApplicationVersions = includesMultipleApplicationVersions;
     }
-    
 }

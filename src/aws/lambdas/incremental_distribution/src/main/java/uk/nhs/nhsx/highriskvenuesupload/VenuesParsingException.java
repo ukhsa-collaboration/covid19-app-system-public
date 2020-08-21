@@ -1,8 +1,9 @@
 package uk.nhs.nhsx.highriskvenuesupload;
 
 public class VenuesParsingException extends RuntimeException {
-    
-    public VenuesParsingException(String message) {
+	private static final long serialVersionUID = 1L;
+
+	public VenuesParsingException(String message) {
         super(message);
     }
 }

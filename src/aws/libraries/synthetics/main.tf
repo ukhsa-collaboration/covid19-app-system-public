@@ -1,5 +1,6 @@
 locals {
-  function_name = "${terraform.workspace}-${var.name}"
+  function_name          = "${terraform.workspace}-${var.name}"
+  dependency_anchor_char = length(var.dependency_ref) > 0 ? substr(var.dependency_ref, 0, 1) : "a"
   vars = {
     base_domain = var.base_domain
     hostname    = var.hostname
@@ -21,7 +22,7 @@ resource "random_string" "force_new_lambda_file" {
 
 data "archive_file" "lambda_exporter" {
   type        = "zip"
-  output_path = "${path.root}/../../../../out/gen/synthetics/${var.name}-${random_string.force_new_lambda_file.result}.zip"
+  output_path = "${path.root}/../../../../out/gen/synthetics/${var.name}-${random_string.force_new_lambda_file.result}${local.dependency_anchor_char}.zip"
   source {
     content  = local.lambda_source
     filename = "nodejs/node_modules/canary.js"

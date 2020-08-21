@@ -70,8 +70,13 @@ public class CrockfordDammRandomStringGenerator {
         }
 
         public boolean validate(String string) {
-            if (string == null || string.length() > 10) return false;
-            return checksum(string) == '0';
+            try {
+                if (string == null || string.length() == 0 || string.length() > 10) return false;
+                return checksum(string) == '0';
+            } catch (StringIndexOutOfBoundsException e) {
+                // character given was not in allowed character set
+                return false;
+            }
         }
 
         // See https://stackoverflow.com/questions/23431621/extending-the-damm-algorithm-to-base-32

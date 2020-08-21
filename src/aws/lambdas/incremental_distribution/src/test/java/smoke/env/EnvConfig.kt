@@ -13,6 +13,8 @@ data class EnvConfig(
     @JsonProperty("availability_ios_distribution_endpoint") val availabilityIosDistUrl: String,
     @JsonProperty("availability_ios_distribution_store") val availability_ios_distribution_store: String,
     @JsonProperty("base_distribution_endpoint") val base_distribution_endpoint: String,
+    @JsonProperty("conpan_endpoint") val conpan_endpoint: String,
+    @JsonProperty("conpan_store") val conpan_store: String,
     @JsonProperty("diagnosis_keys_distribution_2hourly_endpoint") val diagnosisKeysDist2hourlyEndpoint: String,
     @JsonProperty("diagnosis_keys_distribution_daily_endpoint") val diagnosis_keys_distribution_daily_endpoint: String,
     @JsonProperty("diagnosis_keys_distribution_store") val diagnosis_keys_distribution_store: String,

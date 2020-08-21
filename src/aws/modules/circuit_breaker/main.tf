@@ -19,7 +19,8 @@ module "circuit_breaker_lambda" {
   lambda_timeout            = 20
   lambda_memory             = 1024
   lambda_environment_variables = {
-    SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
+    SSM_KEY_ID_PARAMETER_NAME     = "/app/kms/ContentSigningKeyArn"
+    SSM_CIRCUIT_BREAKER_BASE_NAME = "/app/${terraform.workspace}/cb"
   }
 }
 
@@ -30,4 +31,16 @@ module "circuit_breaker_gateway" {
   lambda_function_name = module.circuit_breaker_lambda.lambda_function_name
   burst_limit          = var.burst_limit
   rate_limit           = var.rate_limit
+}
+
+resource "aws_ssm_parameter" "initial" {
+  name  = "/app/${terraform.workspace}/cb/${var.ssm_parameter}-initial"
+  type  = "String"
+  value = "YES"
+}
+
+resource "aws_ssm_parameter" "poll" {
+  name  = "/app/${terraform.workspace}/cb/${var.ssm_parameter}-poll"
+  type  = "String"
+  value = "YES"
 }

@@ -11,6 +11,7 @@ import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
+import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 import uk.nhs.nhsx.core.signature.KeyId;
 import uk.nhs.nhsx.core.signature.Signature;
 import uk.nhs.nhsx.core.signature.Signer;
@@ -53,8 +54,8 @@ public class DistributionServiceTest {
         "dis-id",
         "dist-pattern-daily",
         "dist-pattern-2hourly",
-        "ssmKeyIdParameterName",
-        "ssmContentKeyIdParameterName");
+        ParameterName.of("ssmKeyIdParameterName"),
+        ParameterName.of("ssmContentKeyIdParameterName"));
 
     private final Signer signer = (c) -> new Signature(KeyId.of("key-id"), SigningAlgorithmSpec.ECDSA_SHA_256, new byte[]{1, 2, 3});
 
@@ -102,7 +103,7 @@ public class DistributionServiceTest {
             signer,
             awsCloudFront,
             awsS3,
-            new BatchProcessingConfig(false, BucketName.of("dist-zip-bucket-name"), "", "", "", "", "")
+            new BatchProcessingConfig(false, BucketName.of("dist-zip-bucket-name"), "", "", "", ParameterName.of(""), ParameterName.of(""))
         ).distributeKeys(date);
 
         assertDailyExportBatchExists();
@@ -208,7 +209,8 @@ public class DistributionServiceTest {
         assertThat(tekSignatureList.getSignaturesList().get(0).getSignatureInfo()).isEqualTo(expectedSignatureInfo);
     }
 
-    @Test
+    @SuppressWarnings("serial")
+	@Test
     public void deletesOldObjectsThatDontMatchUploaded() throws Exception {
         Date date = utcDate(2020, 7, 16, 7, 46, 0, 0);
         ObjectKey notMatchedObjectKey = ObjectKey.of("obj-key-not-uploaded");
@@ -233,7 +235,8 @@ public class DistributionServiceTest {
         assertThat(awsS3.deleted).contains(new AbstractMap.SimpleEntry<>(batchProcessingConfig.zipBucketName, notMatchedObjectKey));
     }
 
-    @Test
+    @SuppressWarnings("serial")
+	@Test
     public void noDeletionIfObjectKeyMatchesUploaded() throws Exception {
         Date date = utcDate(2020, 7, 16, 7, 46, 0, 0);
         ObjectKey matchedObjectKey = ObjectKey.of("distribution/daily/2020070300.zip");

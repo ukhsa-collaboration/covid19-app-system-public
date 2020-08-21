@@ -2,6 +2,7 @@ package uk.nhs.nhsx.diagnosiskeydist;
 
 import uk.nhs.nhsx.activationsubmission.persist.Environment;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
+import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 
 public class BatchProcessingConfig {
 
@@ -10,16 +11,16 @@ public class BatchProcessingConfig {
     public final String cloudFrontDistributionId;
     public final String distributionPatternDaily;
     public final String distributionPattern2Hourly;
-    public final String ssmAGSigningKeyParameterName;
-    public final String ssmMetaDataSigningKeyParameterName;
+    public final ParameterName ssmAGSigningKeyParameterName;
+    public final ParameterName ssmMetaDataSigningKeyParameterName;
 
     public BatchProcessingConfig(boolean shouldAbortOutsideTimeWindow,
                                  BucketName zipBucketName,
                                  String cloudFrontDistributionId,
                                  String distributionPatternDaily,
                                  String distributionPattern2Hourly,
-                                 String ssmAGSigningKeyParameterName,
-                                 String ssmMetaDataSigningKeyParameterName) {
+                                 ParameterName ssmAGSigningKeyParameterName,
+                                 ParameterName ssmMetaDataSigningKeyParameterName) {
         this.shouldAbortOutsideTimeWindow = shouldAbortOutsideTimeWindow;
         this.zipBucketName = zipBucketName;
         this.cloudFrontDistributionId = cloudFrontDistributionId;
@@ -36,8 +37,9 @@ public class BatchProcessingConfig {
             e.access.required("DISTRIBUTION_ID"),
             e.access.required("DISTRIBUTION_PATTERN_DAILY"),
             e.access.required("DISTRIBUTION_PATTERN_2HOURLY"),
-            e.access.required("SSM_AG_SIGNING_KEY_ID_PARAMETER_NAME"),
-            e.access.required("SSM_METADATA_SIGNING_KEY_ID_PARAMETER_NAME")
+            ParameterName.of(e.access.required("SSM_AG_SIGNING_KEY_ID_PARAMETER_NAME")),
+            ParameterName.of(e.access.required("SSM_METADATA_SIGNING_KEY_ID_PARAMETER_NAME")
+            )
         );
     }
 }

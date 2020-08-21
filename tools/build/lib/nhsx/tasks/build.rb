@@ -26,19 +26,8 @@ namespace :build do
     run_command("Build #{full_tag} container image", cmdline, $configuration)
   end
 
-  desc "Builds the docker image for the control panel"
-  task :conpan do
-    include Zuehlke::Execution
-    docker_tag = NHSx::Docker::CONPAN
-    docker_image_version = "latest"
-    full_tag = "#{docker_tag}-#{docker_image_version}"
-    dockerfile_dir = File.join($configuration.base, "src/control_panel")
-    cmdline = "docker build \"#{dockerfile_dir}\" -t #{full_tag}"
-    run_command("Build #{full_tag} container image", cmdline, $configuration)
-  end
-
   desc "Adds the external package dependencies to the lambdas"
-  task :dependencies => [:"gen:version", :"build:java"]
+  task :dependencies => [:"gen:version", :"build:java", :"build:python"]
 
   task :batch_creation => [:"gen:proto:java"] do
     java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
@@ -55,4 +44,39 @@ namespace :build do
   end
 
   task :java => [:"build:batch_creation"]
+
+  desc "Builds the source code for the Control Panel"
+  task :conpan => [:"conpan:dependencies"] do
+    include Zuehlke::Execution
+    Dir.chdir(File.join($configuration.base, "src/control_panel"))
+    cmdline = "npm rebuild node-sass"
+    run_command("Rebuild node sass", cmdline, $configuration)
+    cmdline = "npm run build"
+    run_command("Install Control Panel dependencies", cmdline, $configuration)
+    puts "Build"
+    Dir.chdir($configuration.base)
+  end
+
+  task :"conpan:dependencies" do
+    include Zuehlke::Execution
+    Dir.chdir(File.join($configuration.base, "src/control_panel"))
+    cmdline = "npm ci"
+    run_command("Install Control Panel dependencies", cmdline, $configuration)
+    Dir.chdir($configuration.base)
+  end
+
+
+  desc "Install python packages for AdvancedAnalytics before zipping"
+  task :python do
+    include NHSx::Python
+    include Zuehlke::Execution
+    python_project_path = File.join($configuration.base, "src/aws/lambdas/advanced_analytics")
+    python_out = File.join($configuration.out, "python/build/advanced_analytics")
+    mkdir_p(python_out)
+
+    cp_r("#{python_project_path}/.", python_out)
+    install_requirements(python_project_path, python_out, $configuration)
+  end
+
+
 end

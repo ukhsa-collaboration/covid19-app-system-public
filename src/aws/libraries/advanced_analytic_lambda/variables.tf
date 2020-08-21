@@ -18,10 +18,6 @@ variable iam_advanced_analytics_lambda_arn {
   description = "The iam role to assign to this lambda"
 }
 
-variable secret_names {
-  description = "Dictionary with all the secret names used by this lambda"
-}
-
 variable aae_environment {
   description = "The name of the AAE endpoint base domain in DNS (set in main.tf in the appropriate src/aws/accounts subdirectory)"
 }

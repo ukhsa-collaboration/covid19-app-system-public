@@ -18,6 +18,16 @@ public class CrockfordActivationCodeValidatorTest {
     }
 
     @Test
+    public void doesNotValidateAnEmptyCode() throws Exception {
+        assertThat(validator.validate(ActivationCode.of("")), is(false));
+    }
+
+    @Test
+    public void doesNotValidateAUnicode() throws Exception {
+        assertThat(validator.validate(ActivationCode.of("∞")), is(false));
+    }
+
+    @Test
     public void doesNotValidateIncorrectCode() throws Exception {
         assertThat(validator.validate(ActivationCode.of("f3dzcfdx")), is(false));
         assertThat(validator.validate(ActivationCode.of("8vb7xehb")), is(false));

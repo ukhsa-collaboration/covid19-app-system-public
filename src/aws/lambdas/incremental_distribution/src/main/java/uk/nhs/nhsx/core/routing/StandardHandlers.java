@@ -30,6 +30,7 @@ public class StandardHandlers {
 
     public static Routing.Handler authorisedBy(Authenticator authenticator, Routing.Handler delegate) {
         return (r) -> {
+            logger.info("Received http request: method={}, path={}", r.getHttpMethod(), r.getPath());
             String authorization = r.getHeaders().get("authorization");
             if (authorization == null) return HttpResponses.forbidden();
             return !authenticator.isAuthenticated(authorization) ? HttpResponses.forbidden() : delegate.handle(r);

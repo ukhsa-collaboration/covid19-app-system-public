@@ -48,6 +48,13 @@ module NHSx
         "aws s3 cp --content-type #{content_type} #{local_source} s3://#{object_name}"
       end
 
+      # Upload, recursively, to S3 from the local source.
+      #
+      # object_name is the full path to the object (including the bucket name)
+      def self.upload_to_s3_recursively(local_source, object_name)
+        "aws s3 cp #{local_source} s3://#{object_name} --recursive"
+      end
+
       # Delete an object from S3.
       #
       # object_name is the full path to the object (including the bucket name)

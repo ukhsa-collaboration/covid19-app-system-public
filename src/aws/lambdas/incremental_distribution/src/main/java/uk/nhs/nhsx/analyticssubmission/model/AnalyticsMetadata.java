@@ -7,8 +7,7 @@ public class AnalyticsMetadata {
     public final String operatingSystemVersion;
     public final String latestApplicationVersion;
 
-    public AnalyticsMetadata(String postalDistrict, 
-                             String deviceModel, 
+    public AnalyticsMetadata(String postalDistrict, String deviceModel,
                              String operatingSystemVersion,
                              String latestApplicationVersion) {
         this.postalDistrict = postalDistrict;

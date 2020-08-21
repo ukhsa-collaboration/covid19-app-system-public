@@ -140,7 +140,8 @@ public class ActivationSubmissionHandlerTest {
                 });
     }
 
-    @Test
+    @SuppressWarnings("serial")
+	@Test
     public void canAtLeastConstructMain() throws Exception {
         new Handler(Environment.fromEnvironment(Environment.Access.TEST.apply(
             new HashMap<String, String>() {{

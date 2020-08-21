@@ -10,7 +10,7 @@ import smoke.env.EnvConfig
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
-import uk.nhs.nhsx.testkitorder.TestOrderResponse
+import uk.nhs.nhsx.testkitorder.order.TestOrderResponse
 import java.time.*
 import java.util.*
 

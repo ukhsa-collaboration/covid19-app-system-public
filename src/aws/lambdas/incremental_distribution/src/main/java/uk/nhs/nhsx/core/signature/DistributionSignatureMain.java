@@ -1,11 +1,15 @@
 package uk.nhs.nhsx.core.signature;
 
+import com.amazonaws.xray.strategy.ContextMissingStrategy;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.google.common.io.Files;
 import uk.nhs.nhsx.core.StandardSigning;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.SystemObjectMapper;
+import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters;
+import uk.nhs.nhsx.core.aws.ssm.ParameterName;
+import uk.nhs.nhsx.core.aws.ssm.Parameters;
 
 import java.io.*;
 import java.util.Arrays;
@@ -31,6 +35,8 @@ public class DistributionSignatureMain {
 
     public static void main(String[] args) throws IOException {
 
+        System.setProperty(ContextMissingStrategy.CONTEXT_MISSING_STRATEGY_SYSTEM_PROPERTY_OVERRIDE_KEY, "LOG_ERROR");
+
         CommandLine commandLine = new DistributionSignatureMain.CommandLine();
         JCommander commander = JCommander.newBuilder().addObject(commandLine).build();
         commander.parse(args);
@@ -40,7 +46,9 @@ public class DistributionSignatureMain {
             System.exit(1);
         }
 
-        RFC2616DatedSigner signer = StandardSigning.datedSigner(SystemClock.CLOCK, commandLine.ssmKeyId);
+        Parameters parameters = new AwsSsmParameters();
+
+        RFC2616DatedSigner signer = StandardSigning.datedSigner(SystemClock.CLOCK, parameters, ParameterName.of(commandLine.ssmKeyId));
 
         DatedSignature signature = signer.sign(new DistributionSignature(Files.asByteSource(new File(commandLine.input))));
 

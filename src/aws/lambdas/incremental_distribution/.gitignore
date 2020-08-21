@@ -3,5 +3,5 @@
 .settings
 target
 .gradle
-!.idea/codeStyles
-!.idea/runConfigurations
+!.idea/codeStyles/
+!.idea/runConfigurations/

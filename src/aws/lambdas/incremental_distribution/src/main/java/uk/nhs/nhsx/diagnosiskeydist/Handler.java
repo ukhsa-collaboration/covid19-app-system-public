@@ -6,10 +6,11 @@ import com.amazonaws.services.lambda.runtime.events.ScheduledEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.nhs.nhsx.activationsubmission.persist.Environment;
-import uk.nhs.nhsx.core.StandardSigning;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFrontClient;
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
+import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters;
+import uk.nhs.nhsx.core.aws.ssm.Parameters;
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.UploadToS3KeyDistributor;
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository;
 
@@ -17,7 +18,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.function.Supplier;
 
-import static uk.nhs.nhsx.core.StandardSigning.signContentWithKeyGivenInSsm;
+import static uk.nhs.nhsx.core.StandardSigning.datedSigner;
+import static uk.nhs.nhsx.core.StandardSigning.signContentWithKeyFromParameter;
 
 /**
  * Scheduling strategy:
@@ -57,12 +59,13 @@ public class Handler implements RequestHandler<ScheduledEvent, String> {
             logger.info("Begin: Key distribution batch");
 
             AwsS3Client awsS3Client = new AwsS3Client();
+            Parameters parameters = new AwsSsmParameters();
 
             new DistributionService(
                 new SubmissionFromS3Repository(awsS3Client),
                 new ExposureProtobuf(environment.access.required(MOBILE_APP_BUNDLE_ID), SystemClock.CLOCK),
-                new UploadToS3KeyDistributor(awsS3Client, StandardSigning.datedSigner(clock, batchProcessingConfig.ssmMetaDataSigningKeyParameterName)),
-                signContentWithKeyGivenInSsm(batchProcessingConfig.ssmAGSigningKeyParameterName),
+                new UploadToS3KeyDistributor(awsS3Client, datedSigner(clock, parameters, batchProcessingConfig.ssmMetaDataSigningKeyParameterName)),
+                signContentWithKeyFromParameter(parameters, batchProcessingConfig.ssmAGSigningKeyParameterName),
                 new AwsCloudFrontClient(),
                 awsS3Client,
                 batchProcessingConfig

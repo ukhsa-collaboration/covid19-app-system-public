@@ -35,15 +35,16 @@ module "activation_keys_submission" {
 }
 
 module "virology_submission" {
-  source                   = "./modules/submission_virology"
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  burst_limit              = var.burst_limit
-  rate_limit               = var.rate_limit
-  test_order_website       = var.virology_test_order_website
-  test_register_website    = var.virology_test_register_website
-  test_orders_table_id     = module.virology_upload.test_orders_table
-  test_results_table_id    = module.virology_upload.results_table
+  source                              = "./modules/submission_virology"
+  lambda_repository_bucket            = module.artifact_repository.bucket_name
+  lambda_object_key                   = module.artifact_repository.lambda_object_key
+  burst_limit                         = var.burst_limit
+  rate_limit                          = var.rate_limit
+  test_order_website                  = var.virology_test_order_website
+  test_register_website               = var.virology_test_register_website
+  test_orders_table_id                = module.virology_upload.test_orders_table
+  test_results_table_id               = module.virology_upload.results_table
+  virology_submission_tokens_table_id = module.virology_upload.submission_tokens_table
 }
 
 module "submission_apis" {

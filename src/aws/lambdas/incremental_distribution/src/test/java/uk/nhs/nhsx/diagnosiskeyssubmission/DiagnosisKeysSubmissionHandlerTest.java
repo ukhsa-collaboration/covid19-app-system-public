@@ -47,7 +47,8 @@ public class DiagnosisKeysSubmissionHandlerTest {
         "  ]" +
         "}";
 
-    private final Map<String, String> environmentSettings = new HashMap<String, String>() {{
+    @SuppressWarnings("serial")
+	private final Map<String, String> environmentSettings = new HashMap<String, String>() {{
         put("submission_tokens_table", "stt");
         put("SUBMISSION_STORE", "store");
     }};

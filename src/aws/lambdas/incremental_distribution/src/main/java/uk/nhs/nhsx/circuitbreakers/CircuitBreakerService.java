@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.circuitbreakers.utils.TokenGenerator;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.Jackson;
+import uk.nhs.nhsx.core.aws.ssm.Parameter;
 import uk.nhs.nhsx.core.exceptions.ApiResponseException;
 
 import java.util.Optional;
@@ -17,15 +18,22 @@ public class CircuitBreakerService {
 
     private static final Pattern CIRCUIT_BREAKER_RESOLUTION_PATH_PATTERN = Pattern.compile("/circuit-breaker/[\\-\\w]+/resolution/(?<pollingToken>.*)");
 
+    private final Parameter<ApprovalStatus> initial;
+    private final Parameter<ApprovalStatus> poll;
+
+    public CircuitBreakerService(Parameter<ApprovalStatus> initial, Parameter<ApprovalStatus> poll) {
+        this.initial = initial;
+        this.poll = poll;
+    }
+
     public APIGatewayProxyResponseEvent getApprovalToken() {
-        final String token = TokenGenerator.getToken();
+        String token = TokenGenerator.getToken();
 
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setApprovalToken(token);
-        tokenResponse.setApproval(ApprovalStatus.YES.getName());
+        tokenResponse.setApproval(initial.value().getName());
 
         return HttpResponses.ok(Jackson.toJson(tokenResponse));
-
     }
 
     public APIGatewayProxyResponseEvent getResolution(String path) {
@@ -35,7 +43,8 @@ public class CircuitBreakerService {
             throw new ApiResponseException(NOT_FOUND_404, "Circuit Breaker request submitted without approval token");
         }
         ResolutionResponse resolutionResponse = new ResolutionResponse();
-        resolutionResponse.setApproval(ApprovalStatus.YES.getName());
+        ApprovalStatus status = poll.value();
+        resolutionResponse.setApproval(status.getName());
 
         return HttpResponses.ok(Jackson.toJson(resolutionResponse));
     }

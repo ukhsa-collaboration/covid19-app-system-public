@@ -44,6 +44,7 @@ module "probe_diag_keys" {
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_analytics.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_exp_notif_circ_brkr" {
@@ -60,6 +61,7 @@ module "probe_exp_notif_circ_brkr" {
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_diag_keys.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_rsky_vnue_circ_brkr" {
@@ -76,6 +78,7 @@ module "probe_rsky_vnue_circ_brkr" {
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_exp_notif_circ_brkr.function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_virology_test" {
@@ -87,9 +90,10 @@ module "probe_virology_test" {
   hostname              = "submission-${terraform.workspace}"
   uri_path              = "/virology-test/home-kit/order"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.mobile
-  expc_status           = "200"
+  auth_header           = "None"
+  expc_status           = "403"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = module.probe_rsky_vnue_circ_brkr.function_name # create canaries one at a time to avoid 429 errors
 }

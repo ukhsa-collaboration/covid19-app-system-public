@@ -24,6 +24,7 @@ General information on [AWS API GW rate limits](https://docs.aws.amazon.com/apig
 - Payload content-type: application/json
 - Authorisation: ```Authorization: Bearer <API KEY>```
 - One API KEY for all mobile-facing APIs
+- [Security](#Security) for external system submissions
 
 ## Distribution
 
@@ -74,8 +75,11 @@ External systems will upload files periodically
 - All-or-nothing: No partial processing (no row-by-row processing)
 - Fast-fail: stop processing after first validation exception
 - API GW Rate limit: 100 RPS, max concurrency of 10
+- [Security](#Security) for external system upload
 
-### Security
+## Security
+
+For external system access via Upload or Submission.
 
 Based on [ADR-022 Security for external system integration](../../architecture/decisions/ADR022-security-ext-system-integration.md)
 
@@ -90,7 +94,7 @@ Based on [ADR-022 Security for external system integration](../../architecture/d
 - Note that details of the particular security implementation may differ from dev to prod
 
 
-### Default HTTP response codes
+## Default HTTP response codes
 
 - `202` iff uploaded file successfully processed, response text similar to `successfully processed`
 - `403` forbidden (API key invalid), response text similar to `authentication error: <summary, no details>`
