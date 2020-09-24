@@ -2,28 +2,25 @@ namespace :build do
   desc "Builds the docker image for the development environment"
   task :devenv do
     include Zuehlke::Execution
+    include NHSx::Docker
     docker_out = File.join($configuration.out, "docker")
-    docker_tag = NHSx::Docker::DEVENV
-    docker_image_version = "latest"
-    full_tag = "#{docker_tag}-#{docker_image_version}"
-    mkdir_p(docker_out)
-    cp_r("#{$configuration.base}/tools/build/Gemfile", docker_out)
-    cp_r("#{$configuration.base}/tools/provisioning/python/requirements.txt", docker_out)
-    cp_r("#{$configuration.base}/tools/provisioning/dev/Dockerfile", docker_out)
-    cp_r("#{$configuration.base}/src/aws/lambdas/incremental_distribution/pom.xml", docker_out)
-    cmdline = "docker build \"#{docker_out}\" -t #{full_tag}"
-    run_command("Build #{full_tag} container image", cmdline, $configuration)
-  end
 
-  desc "Builds the docker image for the document reporting tool"
-  task :doreto do
-    include Zuehlke::Execution
-    docker_tag = NHSx::Docker::DORETO
-    docker_image_version = "latest"
-    full_tag = "#{docker_tag}-#{docker_image_version}"
-    dockerfile_dir = File.join($configuration.base, "src/document_reporting")
-    cmdline = "docker build \"#{dockerfile_dir}\" -t #{full_tag}"
-    run_command("Build #{full_tag} container image", cmdline, $configuration)
+    mkdir_p(docker_out)
+    docker_image_sourcefiles($configuration).each do |f|
+      cp_r(f, docker_out)
+    end
+
+    begin
+      content_tag = full_tag(content_version($configuration))
+      pull_repository_image($configuration, content_tag)
+      tag_content_version_as_latest($configuration, content_tag)
+    rescue GaudiError
+      # image doesn't exist, build it
+      tags = [DEFAULT_VERSION, content_version($configuration)].map { |x| full_tag(x) }
+      tag_cmds = tags.map { |label| "-t #{label}" }.join(" ")
+      cmdline = "docker build \"#{docker_out}\" #{tag_cmds}"
+      run_command("Build #{tags} container image", cmdline, $configuration)
+    end
   end
 
   desc "Adds the external package dependencies to the lambdas"
@@ -65,7 +62,6 @@ namespace :build do
     Dir.chdir($configuration.base)
   end
 
-
   desc "Install python packages for AdvancedAnalytics before zipping"
   task :python do
     include NHSx::Python
@@ -77,6 +73,4 @@ namespace :build do
     cp_r("#{python_project_path}/.", python_out)
     install_requirements(python_project_path, python_out, $configuration)
   end
-
-
 end

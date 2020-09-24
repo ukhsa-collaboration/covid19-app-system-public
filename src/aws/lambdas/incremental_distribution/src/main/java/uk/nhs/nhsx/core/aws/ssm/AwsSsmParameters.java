@@ -10,8 +10,8 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.*;
 import java.util.function.Function;
@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 public class AwsSsmParameters implements Parameters {
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
-    private static final Logger logger = LoggerFactory.getLogger(AwsSsmParameters.class);
+    private static final Logger logger = LogManager.getLogger(AwsSsmParameters.class);
 
     // cannot construct in class, as tests fail, but not sure how often this is constructed, so compromise here
     private static final Supplier<AWSSimpleSystemsManagement> ssmClient = Suppliers.memoize(AWSSimpleSystemsManagementClientBuilder::defaultClient);

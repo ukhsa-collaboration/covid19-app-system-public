@@ -2,8 +2,8 @@ package uk.nhs.nhsx.diagnosiskeydist;
 
 import batchZipCreation.Exposure;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.aws.s3.AwsS3;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
@@ -22,17 +22,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
 import java.util.*;
 
 /**
  * Batch job to generate and upload daily and two-hourly Diagnosis Key Distribution ZIPs every two hours during a 15' window
  */
 public class DistributionService {
-	private static final Logger logger = LoggerFactory.getLogger(DistributionService.class);
+	private static final Logger logger = LogManager.getLogger(DistributionService.class);
 
 	private static final int MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES = 6;
 
-	private static final String EK_EXPORT_V1_HEADER = "EK Export v1    ";
+	static final String EK_EXPORT_V1_HEADER = "EK Export v1    ";
 
 	private final SubmissionRepository submissionRepository;
 
@@ -82,7 +83,7 @@ public class DistributionService {
 				DailyZIPSubmissionPeriod.periodForSubmissionDate(now),
 				TwoHourlyZIPSubmissionPeriod.periodForSubmissionDate(now))) {
 
-			try (ConcurrentExecution pool = new ConcurrentExecution("Distribution: " + lastZipPeriod.getClass().getSimpleName(), MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES)) {
+			try (ConcurrentExecution pool = new ConcurrentExecution("Distribution: " + lastZipPeriod.getClass().getSimpleName(), Duration.ofMinutes(MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES))) {
 				for (ZIPSubmissionPeriod zipPeriod : lastZipPeriod.allPeriodsToGenerate()) {
 					pool.execute(() -> distributeKeys(allSubmissions, window, zipPeriod));
 				}
@@ -122,7 +123,7 @@ public class DistributionService {
 		File sigFile = File.createTempFile("export", ".sig");
 
 		try {
-			byte[] binFileContent = generateExportFileContentFrom(temporaryExposureKeys);
+			byte[] binFileContent = generateExportFileContentFrom(temporaryExposureKeys, zipPeriod, DistributionServiceWindow.ZIP_SUBMISSION_PERIOD_OFFSET_MINUTES);
 			KeyFileUtility.writeToFile(binFile, binFileContent);
 
 			byte[] sigFileContent = generateSigFileContentFrom(binFileContent);
@@ -164,10 +165,10 @@ public class DistributionService {
 		return temporaryExposureKeys;
 	}
 
-	private byte[] generateExportFileContentFrom(List<StoredTemporaryExposureKey> temporaryExposureKeys) throws IOException {
+	private byte[] generateExportFileContentFrom(List<StoredTemporaryExposureKey> temporaryExposureKeys, ZIPSubmissionPeriod period, int periodOffsetMinutes) throws IOException {
 		ByteArrayOutputStream bout = new ByteArrayOutputStream();
 		bout.write(EK_EXPORT_V1_HEADER.getBytes());
-		Exposure.TemporaryExposureKeyExport export = exposureProtobuf.buildTemporaryExposureKeyExport(temporaryExposureKeys);
+		Exposure.TemporaryExposureKeyExport export = exposureProtobuf.buildTemporaryExposureKeyExport(temporaryExposureKeys, period, periodOffsetMinutes);
 		bout.write(export.toByteArray());
 		return bout.toByteArray();
 	}

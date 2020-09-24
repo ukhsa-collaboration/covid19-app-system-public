@@ -1,25 +1,26 @@
 package uk.nhs.nhsx.diagnosiskeydist;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcurrentExecution implements AutoCloseable {
-	private static final Logger logger = LoggerFactory.getLogger(ConcurrentExecution.class);
+	private static final Logger logger = LogManager.getLogger(ConcurrentExecution.class);
 
 	private final String name;
-	private final long timeoutMinutes;
+	private final Duration timeout;
 	private final AtomicInteger counter;
 	private final long start;
 	private final ExecutorService pool;
 
-	public ConcurrentExecution(String name, long timeoutMinutes) {
+	public ConcurrentExecution(String name, Duration timeout) {
 		this.name = name;
-		this.timeoutMinutes = timeoutMinutes;
+		this.timeout = timeout;
 		counter = new AtomicInteger();
 		start = System.currentTimeMillis();
 		pool = Executors.newFixedThreadPool(15);
@@ -28,18 +29,15 @@ public class ConcurrentExecution implements AutoCloseable {
 	}
 
 	public void execute(Concurrent c) {
-		pool.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					c.run();
+		pool.execute(() -> {
+			try {
+				c.run();
 
-					counter.incrementAndGet();
-				} catch (Exception e) {
-					logger.error("Error: " + name + ". Terminating lambda.", e);
+				counter.incrementAndGet();
+			} catch (Exception e) {
+				logger.error("Error: " + name + ". Terminating lambda.", e);
 
-					System.exit(-1); //hacky but effective: stop Lambda immediately (e.g. all threads) after in an error in one thread
-				}
+				System.exit(-1); //hacky but effective: stop Lambda immediately (e.g. all threads) after in an error in one thread
 			}
 		});
 	}
@@ -47,12 +45,18 @@ public class ConcurrentExecution implements AutoCloseable {
 	@Override
 	public void close() throws Exception {
 		pool.shutdown();
-		pool.awaitTermination(timeoutMinutes, TimeUnit.MINUTES);
+		boolean terminatedGracefully = pool.awaitTermination(timeout.getSeconds(), TimeUnit.SECONDS);
+		if (!terminatedGracefully) {
+			logger.error("Error: {}. Timed-out while waiting for executor service to shutdown", name);
+			pool.shutdownNow();
+			throw new IllegalStateException("Timed-out while waiting for executor service to shutdown");
+		} else {
+			logger.info("Success: {}. Count={}. Duration={} ms", name, counter.get(), (System.currentTimeMillis() - start));
+		}
 
-		logger.info("Success: {}. Count={}. Duration={} ms", name, counter.get(), (System.currentTimeMillis() - start));
 	}
 
 	public interface Concurrent {
-		public void run() throws Exception;
+		void run() throws Exception;
 	}
 }

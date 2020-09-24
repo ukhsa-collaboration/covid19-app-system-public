@@ -33,3 +33,20 @@ variable "domain" {
 variable "web_acl_arn" {
   description = "The ARN of the WAFv2 web acl to filter CloudFront requests"
 }
+
+variable "custom_oai" {
+  description = "Secret shared between CloudFront Distribution and Lambda"
+}
+
+variable "enable_shield_protection" {
+  description = "Flag to enable/disable shield protection"
+  type        = bool
+}
+
+variable "risky-post-districts-upload-health-path" {
+  description = "The route to the risky post districts health endpoint"
+}
+
+variable "risky-venues-upload-health-path" {
+  description = "The route to the risky venues health endpoint"
+}

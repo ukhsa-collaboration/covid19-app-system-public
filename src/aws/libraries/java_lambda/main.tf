@@ -14,7 +14,7 @@ resource "aws_lambda_function" "this" {
   depends_on    = [aws_cloudwatch_log_group.this]
 
   environment {
-    variables = merge({ WORKSPACE = terraform.workspace }, var.lambda_environment_variables)
+    variables = merge({ WORKSPACE = terraform.workspace, MAINTENANCE_MODE = false }, var.lambda_environment_variables)
   }
 
   tracing_config {
@@ -28,7 +28,7 @@ resource "aws_cloudwatch_log_group" "this" {
 
 resource "aws_cloudwatch_log_metric_filter" "this" {
   name           = "ErrorLogCount"
-  pattern        = "ERROR"
+  pattern        = "[date,thread,awsRequestId,logLevel = ERROR,className, description]"
   log_group_name = aws_cloudwatch_log_group.this.name
 
   metric_transformation {
@@ -40,7 +40,7 @@ resource "aws_cloudwatch_log_metric_filter" "this" {
 
 resource "aws_cloudwatch_log_metric_filter" "warning_lambda_metric" {
   name           = "WarningLogCount"
-  pattern        = "WARN"
+  pattern        = "[date,thread,awsRequestId,logLevel = WARN,className, description]"
   log_group_name = aws_cloudwatch_log_group.this.name
 
   metric_transformation {
@@ -49,3 +49,18 @@ resource "aws_cloudwatch_log_metric_filter" "warning_lambda_metric" {
     value     = "1"
   }
 }
+
+resource "aws_cloudwatch_metric_alarm" "this" {
+  alarm_name          = "${var.lambda_function_name}-Errors"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = aws_cloudwatch_log_metric_filter.this.metric_transformation[0].name
+  namespace           = aws_cloudwatch_log_metric_filter.this.metric_transformation[0].namespace
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "This metric monitors the error logs in Lambda ${var.lambda_function_name}"
+  alarm_actions       = [var.app_alarms_topic]
+  treat_missing_data  = "notBreaching"
+}
+

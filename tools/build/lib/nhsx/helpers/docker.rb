@@ -1,3 +1,6 @@
+require "rake/file_list"
+require "digest"
+
 module NHSx
   # Helpers that codify the use of Docker within the NHSx project
   module Docker
@@ -13,32 +16,70 @@ module NHSx
       def self.push_image(image_tag)
         "docker image push #{image_tag}"
       end
+
+      def self.tag_existing(existing_tag, new_tag)
+        "docker tag #{existing_tag} #{new_tag}"
+      end
     end
 
     # The tag used for the devenv container image, minus the version
-    DEVENV = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:devenv".freeze
-    DORETO = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:doreto".freeze
+    REGISTRY = "123456789012.dkr.ecr.eu-west-2.amazonaws.com".freeze
+    SERVICE = "nhsx-covid19".freeze
+
+    DEFAULT_VERSION = "devenv-latest".freeze
+
+    # Calculate the SHA256 hash of the content of some files
+    def sha256(files)
+      sha = Digest::SHA2.new
+      files.each do |f|
+        sha << File.binread(f)
+      end
+      sha.hexdigest
+    end
+
+    def docker_image_sourcefiles(system_config)
+      Rake::FileList["#{system_config.base}/tools/build/Gemfile",
+                     "#{system_config.base}/tools/provisioning/python/requirements.txt",
+                     "#{system_config.base}/tools/provisioning/dev/Dockerfile"]
+    end
+
+    def content_version(system_config)
+      "content-#{sha256(docker_image_sourcefiles(system_config))}"
+    end
+
+    def full_tag(version)
+      "#{REGISTRY}/#{SERVICE}:#{version}"
+    end
+
+    def pull_repository_image(system_config, tag)
+      registry_login(system_config)
+      cmdline = Commandlines.pull_image(tag)
+      run_command("Pull #{tag}", cmdline, system_config)
+    end
 
     # Pulls the docker image for the development environment
     def pull_devenv_image(system_config)
       # doing it like this avoids leaking the login token in the logs
       registry_login(system_config)
-      cmdline = Commandlines.pull_image("#{DEVENV}-latest")
-      run_command("Pull #{DEVENV}-latest", cmdline, system_config)
+      tag = full_tag(content_version($configuration))
+      cmdline = Commandlines.pull_image(tag)
+      run_command("Pull #{tag}", cmdline, system_config)
+      tag_content_version_as_latest(system_config, tag)
+    end
+
+    def tag_content_version_as_latest(system_config, existing_tag)
+      tag = full_tag(DEFAULT_VERSION)
+      cmdline = Commandlines.tag_existing(existing_tag, tag)
+      run_command("Tag #{existing_tag} as #{tag}", cmdline, system_config)
     end
 
     # Publish the docker container image to the ECR registry
     def publish_devenv_image(system_config)
       registry_login(system_config)
-      cmdline = Commandlines.push_image("#{DEVENV}-latest")
-      run_command("Publish #{DEVENV}-latest", cmdline, system_config)
-    end
-
-    # Publish the document reporting tool docker container image to the ECR registry
-    def publish_doreto_image(system_config)
-      registry_login(system_config)
-      cmdline = Commandlines.push_image("#{DORETO}-latest")
-      run_command("Publish #{DORETO}-latest", cmdline, system_config)
+      [content_version($configuration), DEFAULT_VERSION].map { |t| full_tag(t) }.each do |tag|
+        cmdline = Commandlines.push_image(tag)
+        run_command("Publish #{tag}", cmdline, system_config)
+      end
     end
 
     # Logins to the AWS-based docker registry using a temporary ECR login token

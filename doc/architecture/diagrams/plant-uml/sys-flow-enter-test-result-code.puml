@@ -1,0 +1,32 @@
+@startuml system-flow_enter-test-result-code
+
+Actor User
+Actor TestCenter
+Actor TestLab
+Participant "BSA/PHW"
+
+User -> TestCenter: goes for test
+TestLab <- TestCenter: sends swab test
+TestLab -> "BSA/PHW": informs on test result
+
+"BSA/PHW" -> TokenAPI: [positive result] upload test results
+TokenAPI -> TokenAPI: create and store \n CTA and Submission token
+"BSA/PHW" <- TokenAPI: return CTA
+
+...
+"BSA/PHW" -> User: [positive result] send SMS or Mail with test result and \n verification code (CTA)
+...
+
+User -> App: enter test result code (CTA)
+App -> VirologyTestingAPI: verify code
+App <- VirologyTestingAPI: [code ok] return Submission token
+App -> User: ask for diagnosis key submission
+User -> App : ok
+App -> SubmissionAPI: submit diagnosis keys (w Submission token)
+App -> User: show/update isolation screen
+...
+TokenAPI -> TokenAPI: clean up unused tokens \n (retention time)
+VirologyTestingAPI -> VirologyTestingAPI: clean up unused tokens \n (retention time)
+
+
+@enduml

@@ -8,6 +8,7 @@ module "conpan_website_s3" {
   service                     = "website"
   logs_bucket_id              = var.logs_bucket_id
   origin_access_identity_path = aws_cloudfront_origin_access_identity.this.iam_arn
+  force_destroy_s3_buckets    = var.force_destroy_s3_buckets
 }
 
 module "distribution_conpan" {
@@ -19,4 +20,5 @@ module "distribution_conpan" {
   bucket_regional_domain_name = module.conpan_website_s3.bucket.bucket_regional_domain_name
   conpan_path                 = "/*"
   origin_access_identity_path = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
+  enable_shield_protection    = var.enable_shield_protection
 }

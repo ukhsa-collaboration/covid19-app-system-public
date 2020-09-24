@@ -2,53 +2,47 @@
 
 Actor User 
 
-group Installation
+Participant AppStores order 30 #LightGrey
+
+group Installation and Onboarding
 App -> App : install
-App -> DistributeAPI : get config (language, device-type)
-App <- DistributeAPI : configuration
 App -> User : ask postal district
-App -> AnalyticsAPI: send install analytics
-App <- AnalyticsAPI: ok
+App -> User : ask consent encounter detection, ...
+App -> DistributionAPI: get initial config and data
+App -> App:  show home screen
 end
 
-group Distribution for new install
-App -> DistributeAPI: get diagnosis keys
-App <- DistributeAPI: keys (full set)
+group Normal Use
+User -> App : (re)open app
+App -> AppStores : check bundle version
+App <- AppStores : send bundle meta data
+App -> AppAvailability : check app version
+App <- AppAvailability : send minimum OS and App version
+App -> App: no update needed
 
-App -> DistributeAPI: get venue hotspots
-App <- DistributeAPI: hotspots (full set)
+App -> DistributionAPI: poll exposure risk configuration
+App <- DistributionAPI: 
+App -> DistributionAPI: poll self isolation configuration
+App <- DistributionAPI
 
-App -> DistributeAPI: get postal district risk list
-App <- DistributeAPI: postal districts (full set) 
-end
+App -> DistributionAPI: poll diagnosis keys
+App <- DistributionAPI
 
-App -> App: check matches, none found
+App -> DistributionAPI: poll postal district risk levels
+App <- DistributionAPI
 
-group Check diagnosis keys all 2h
-App -> DistributeAPI: get diagnosis keys
-App <- DistributeAPI: keys (incremental)
-end
+App -> DistributionAPI: poll identified risk venues
+App <- DistributionAPI
+...
 
-App -> App: check matches, none found
+User -> App: use app features, e.g. venue check-in
+...
 
-group Update hotspots and postal district risks daily
-App -> DistributeAPI: get venue hotspots
-App <- DistributeAPI: hotspots (full set)
+App -> App: risk analysis check matches, none found
+...
 
-App -> DistributeAPI: get postal district risk list
-App <- DistributeAPI: postal districts (full set) 
-end
-
-App -> App: check matches, none found
-
-group Send daily analytics 
-App -> AnalyticsAPI: send daily analytics
-App <- AnalyticsAPI: ok
-end
-
-group Check for new config daily 
-App -> DistributeAPI : check config (current config)
-App <- DistributeAPI : no new config
+App -> SubmissionAPI: send daily analytics data 
+...
 end
 
 @enduml

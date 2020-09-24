@@ -36,5 +36,13 @@ module NHSx
       test_config = generate_test_config(target_environment, account_name, system_config)
       run_robot_tests(test_suites, test_config, "target_environment", system_config)
     end
+
+    def run_target_environment_smoke_tests(target_environment, account_name, system_config)
+      test_config = generate_test_config(target_environment, account_name, system_config)
+      java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
+      pom_xml_path = File.join(java_project_path, "pom.xml")
+      cmdline = "SMOKE_TEST_CONFIG=#{test_config} mvn -P smokeProfile -f=#{pom_xml_path} test"
+      run_command("Runs maven smoke tests", cmdline, $configuration)
+    end
   end
 end

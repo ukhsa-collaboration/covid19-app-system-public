@@ -1,22 +1,20 @@
 package uk.nhs.nhsx.activationsubmission.persist;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.ValueType;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 public class Environment {
 
     private static final String UNKNOWN = "unknown";
-    private final Logger logger = LoggerFactory.getLogger(Environment.class);
-
-
+    private final Logger logger = LogManager.getLogger(Environment.class);
 
     public enum EnvironmentType {NonProduction, Production;}
+
     public static class EnvironmentName extends ValueType<EnvironmentName> {
 
         protected EnvironmentName(String value) {
@@ -28,6 +26,7 @@ public class Environment {
         }
 
     }
+
     public final EnvironmentName name;
 
     public final EnvironmentType type;
@@ -41,7 +40,7 @@ public class Environment {
 
     public <T> Optional<T> whenNonProduction(String functionality, Function<Environment, T> consumer) {
         if (type == EnvironmentType.NonProduction) {
-            logger.error("ENABLING TEST FUNCTIONALITY:" + functionality); 
+            logger.error("ENABLING TEST FUNCTIONALITY:" + functionality);
             return Optional.ofNullable(consumer.apply(this));
         }
         return Optional.empty();
@@ -73,8 +72,13 @@ public class Environment {
     }
 
     public interface Access {
-        Access SYSTEM =  name -> Objects.requireNonNull(System.getenv(name), String.format("Environment variable %s is missing", name));
-        Function<Map<String, String>, Access> TEST = (m) -> (n) -> Objects.requireNonNull(m.get(n), String.format("No value for %s", n));
-        String required(String name);
+        Access SYSTEM = name -> Optional.ofNullable(System.getenv(name));
+        Function<Map<String, String>, Access> TEST = (m) -> (n) -> Optional.ofNullable(m.get(n));
+
+        Optional<String> optional(String name);
+
+        default String required(String name) {
+            return optional(name).orElseThrow(() -> new IllegalArgumentException(String.format("Environment variable %s is missing", name)));
+        }
     }
 }

@@ -8,11 +8,13 @@ import org.junit.Test;
 import uk.nhs.nhsx.ContextBuilder;
 import uk.nhs.nhsx.ProxyRequestBuilder;
 import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments;
 import uk.nhs.nhsx.activationsubmission.validate.ActivationCodeValidator;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.hamcrest.CoreMatchers.allOf;
@@ -25,8 +27,11 @@ public class ActivationSubmissionHandlerTest {
     private boolean validates = true;
 
     private final ActivationCodeValidator validator = new FixedActivationCodeValidator(ActivationCode.of("1234"), () -> validates);
-    private final Handler handler = new Handler((s) -> true, validator, (r, response) -> {
-        response.getHeaders().put("signature", "sig");});
+    private final Handler handler = new Handler(TestEnvironments.TEST.apply(Map.of("MAINTENANCE_MODE","false")),
+        (s) -> true, validator, (r, response) -> {
+        response.getHeaders().put("signature", "sig");
+    });
+
 
     @Test
     public void aCodeThatIsValid() throws Exception {
@@ -147,6 +152,7 @@ public class ActivationSubmissionHandlerTest {
             new HashMap<String, String>() {{
                 put("WORKSPACE", "something");
                 put("SSM_KEY_ID_PARAMETER_NAME", "something");
+                put("MAINTENANCE_MODE","something");
         }})), SystemClock.CLOCK);
     }
 

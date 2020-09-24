@@ -21,3 +21,12 @@ variable "logs_bucket_id" {
 variable "metadata_signature_date" {
   description = "The metadata signature date header value"
 }
+
+variable "force_destroy_s3_buckets" {
+  description = "Force destroy s3 buckets if set to true"
+}
+
+variable "s3_versioning" {
+  description = "Enable S3 bucket versioning if set to true"
+}
+

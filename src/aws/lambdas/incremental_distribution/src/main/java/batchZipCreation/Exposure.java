@@ -3583,6 +3583,25 @@ public final class Exposure {
      * <code>optional int32 rolling_period = 4 [default = 144];</code>
      */
     int getRollingPeriod();
+
+    /**
+     * <pre>
+     * Number of days elapsed between symptom onset and the TEK being used.
+     * E.g. 2 means TEK is 2 days after onset of symptoms.
+     * </pre>
+     *
+     * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+     */
+    boolean hasDaysSinceOnsetOfSymptoms();
+    /**
+     * <pre>
+     * Number of days elapsed between symptom onset and the TEK being used.
+     * E.g. 2 means TEK is 2 days after onset of symptoms.
+     * </pre>
+     *
+     * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+     */
+    int getDaysSinceOnsetOfSymptoms();
   }
   /**
    * Protobuf type {@code batchZipCreation.TemporaryExposureKey}
@@ -3601,6 +3620,7 @@ public final class Exposure {
       transmissionRiskLevel_ = 0;
       rollingStartIntervalNumber_ = 0;
       rollingPeriod_ = 144;
+      daysSinceOnsetOfSymptoms_ = 0;
     }
 
     @java.lang.Override
@@ -3645,6 +3665,11 @@ public final class Exposure {
             case 32: {
               bitField0_ |= 0x00000008;
               rollingPeriod_ = input.readInt32();
+              break;
+            }
+            case 48: {
+              bitField0_ |= 0x00000010;
+              daysSinceOnsetOfSymptoms_ = input.readSInt32();
               break;
             }
             default: {
@@ -3772,6 +3797,31 @@ public final class Exposure {
       return rollingPeriod_;
     }
 
+    public static final int DAYS_SINCE_ONSET_OF_SYMPTOMS_FIELD_NUMBER = 6;
+    private int daysSinceOnsetOfSymptoms_;
+    /**
+     * <pre>
+     * Number of days elapsed between symptom onset and the TEK being used.
+     * E.g. 2 means TEK is 2 days after onset of symptoms.
+     * </pre>
+     *
+     * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+     */
+    public boolean hasDaysSinceOnsetOfSymptoms() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <pre>
+     * Number of days elapsed between symptom onset and the TEK being used.
+     * E.g. 2 means TEK is 2 days after onset of symptoms.
+     * </pre>
+     *
+     * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+     */
+    public int getDaysSinceOnsetOfSymptoms() {
+      return daysSinceOnsetOfSymptoms_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -3798,6 +3848,9 @@ public final class Exposure {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt32(4, rollingPeriod_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeSInt32(6, daysSinceOnsetOfSymptoms_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -3822,6 +3875,10 @@ public final class Exposure {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(4, rollingPeriod_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSInt32Size(6, daysSinceOnsetOfSymptoms_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3859,6 +3916,11 @@ public final class Exposure {
         result = result && (getRollingPeriod()
             == other.getRollingPeriod());
       }
+      result = result && (hasDaysSinceOnsetOfSymptoms() == other.hasDaysSinceOnsetOfSymptoms());
+      if (hasDaysSinceOnsetOfSymptoms()) {
+        result = result && (getDaysSinceOnsetOfSymptoms()
+            == other.getDaysSinceOnsetOfSymptoms());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -3885,6 +3947,10 @@ public final class Exposure {
       if (hasRollingPeriod()) {
         hash = (37 * hash) + ROLLING_PERIOD_FIELD_NUMBER;
         hash = (53 * hash) + getRollingPeriod();
+      }
+      if (hasDaysSinceOnsetOfSymptoms()) {
+        hash = (37 * hash) + DAYS_SINCE_ONSET_OF_SYMPTOMS_FIELD_NUMBER;
+        hash = (53 * hash) + getDaysSinceOnsetOfSymptoms();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -4027,6 +4093,8 @@ public final class Exposure {
         bitField0_ = (bitField0_ & ~0x00000004);
         rollingPeriod_ = 144;
         bitField0_ = (bitField0_ & ~0x00000008);
+        daysSinceOnsetOfSymptoms_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -4071,6 +4139,10 @@ public final class Exposure {
           to_bitField0_ |= 0x00000008;
         }
         result.rollingPeriod_ = rollingPeriod_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.daysSinceOnsetOfSymptoms_ = daysSinceOnsetOfSymptoms_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4131,6 +4203,9 @@ public final class Exposure {
         }
         if (other.hasRollingPeriod()) {
           setRollingPeriod(other.getRollingPeriod());
+        }
+        if (other.hasDaysSinceOnsetOfSymptoms()) {
+          setDaysSinceOnsetOfSymptoms(other.getDaysSinceOnsetOfSymptoms());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -4353,6 +4428,58 @@ public final class Exposure {
       public Builder clearRollingPeriod() {
         bitField0_ = (bitField0_ & ~0x00000008);
         rollingPeriod_ = 144;
+        onChanged();
+        return this;
+      }
+
+      private int daysSinceOnsetOfSymptoms_ ;
+      /**
+       * <pre>
+       * Number of days elapsed between symptom onset and the TEK being used.
+       * E.g. 2 means TEK is 2 days after onset of symptoms.
+       * </pre>
+       *
+       * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+       */
+      public boolean hasDaysSinceOnsetOfSymptoms() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <pre>
+       * Number of days elapsed between symptom onset and the TEK being used.
+       * E.g. 2 means TEK is 2 days after onset of symptoms.
+       * </pre>
+       *
+       * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+       */
+      public int getDaysSinceOnsetOfSymptoms() {
+        return daysSinceOnsetOfSymptoms_;
+      }
+      /**
+       * <pre>
+       * Number of days elapsed between symptom onset and the TEK being used.
+       * E.g. 2 means TEK is 2 days after onset of symptoms.
+       * </pre>
+       *
+       * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+       */
+      public Builder setDaysSinceOnsetOfSymptoms(int value) {
+        bitField0_ |= 0x00000010;
+        daysSinceOnsetOfSymptoms_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Number of days elapsed between symptom onset and the TEK being used.
+       * E.g. 2 means TEK is 2 days after onset of symptoms.
+       * </pre>
+       *
+       * <code>optional sint32 days_since_onset_of_symptoms = 6;</code>
+       */
+      public Builder clearDaysSinceOnsetOfSymptoms() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        daysSinceOnsetOfSymptoms_ = 0;
         onChanged();
         return this;
       }
@@ -6248,16 +6375,17 @@ public final class Exposure {
       "\"\233\001\n\rSignatureInfo\022\025\n\rapp_bundle_id\030\001 \001(" +
       "\t\022\027\n\017android_package\030\002 \001(\t\022 \n\030verificati" +
       "on_key_version\030\003 \001(\t\022\033\n\023verification_key" +
-      "_id\030\004 \001(\t\022\033\n\023signature_algorithm\030\005 \001(\t\"\215" +
+      "_id\030\004 \001(\t\022\033\n\023signature_algorithm\030\005 \001(\t\"\263" +
       "\001\n\024TemporaryExposureKey\022\020\n\010key_data\030\001 \001(" +
       "\014\022\037\n\027transmission_risk_level\030\002 \001(\005\022%\n\035ro" +
       "lling_start_interval_number\030\003 \001(\005\022\033\n\016rol" +
-      "ling_period\030\004 \001(\005:\003144\"F\n\020TEKSignatureLi" +
-      "st\0222\n\nsignatures\030\001 \003(\0132\036.batchZipCreatio" +
-      "n.TEKSignature\"\201\001\n\014TEKSignature\0227\n\016signa" +
-      "ture_info\030\001 \001(\0132\037.batchZipCreation.Signa" +
-      "tureInfo\022\021\n\tbatch_num\030\002 \001(\005\022\022\n\nbatch_siz" +
-      "e\030\003 \001(\005\022\021\n\tsignature\030\004 \001(\014"
+      "ling_period\030\004 \001(\005:\003144\022$\n\034days_since_ons" +
+      "et_of_symptoms\030\006 \001(\021\"F\n\020TEKSignatureList" +
+      "\0222\n\nsignatures\030\001 \003(\0132\036.batchZipCreation." +
+      "TEKSignature\"\201\001\n\014TEKSignature\0227\n\016signatu" +
+      "re_info\030\001 \001(\0132\037.batchZipCreation.Signatu" +
+      "reInfo\022\021\n\tbatch_num\030\002 \001(\005\022\022\n\nbatch_size\030" +
+      "\003 \001(\005\022\021\n\tsignature\030\004 \001(\014"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6288,7 +6416,7 @@ public final class Exposure {
     internal_static_batchZipCreation_TemporaryExposureKey_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_batchZipCreation_TemporaryExposureKey_descriptor,
-        new java.lang.String[] { "KeyData", "TransmissionRiskLevel", "RollingStartIntervalNumber", "RollingPeriod", });
+        new java.lang.String[] { "KeyData", "TransmissionRiskLevel", "RollingStartIntervalNumber", "RollingPeriod", "DaysSinceOnsetOfSymptoms", });
     internal_static_batchZipCreation_TEKSignatureList_descriptor =
       getDescriptor().getMessageTypes().get(3);
     internal_static_batchZipCreation_TEKSignatureList_fieldAccessorTable = new

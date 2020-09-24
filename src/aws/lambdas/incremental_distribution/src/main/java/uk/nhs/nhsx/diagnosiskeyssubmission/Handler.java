@@ -66,7 +66,7 @@ public class Handler extends RoutingHandler {
                 BucketName.of(environment.access.required("SUBMISSION_STORE"))
             );
 
-        this.handler = withSignedResponses(authenticator, signer,
+        this.handler = withSignedResponses(environment, authenticator, signer,
             routes(
                 path(Routing.Method.POST, "/submission/diagnosis-keys",
                     (r) -> {
@@ -75,6 +75,9 @@ public class Handler extends RoutingHandler {
 
                         return HttpResponses.ok();
                     }
+                ),
+                path(Routing.Method.POST, "/submission/diagnosis-keys/health", (r) ->
+                    HttpResponses.ok()
                 )
             )
         );

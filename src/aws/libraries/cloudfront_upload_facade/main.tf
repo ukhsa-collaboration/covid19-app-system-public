@@ -1,5 +1,6 @@
 locals {
-  fqdn = "${var.name}-${terraform.workspace}.${var.domain}"
+  name_prefix = "${var.name}-${terraform.workspace}"
+  fqdn        = "${local.name_prefix}.${var.domain}"
 }
 
 provider "aws" {
@@ -39,6 +40,11 @@ resource "aws_cloudfront_distribution" "this" {
     domain_name = replace(var.risky-post-districts-upload-endpoint, "/^https?://([^/]*).*/", "$1")
     origin_id   = var.risky-post-districts-upload-endpoint
 
+    custom_header {
+      name  = "x-custom-oai"
+      value = var.custom_oai
+    }
+
     custom_origin_config {
       http_port              = 80
       https_port             = 443
@@ -65,10 +71,34 @@ resource "aws_cloudfront_distribution" "this" {
 
     viewer_protocol_policy = "https-only"
   }
+  ordered_cache_behavior {
+    path_pattern     = var.risky-post-districts-upload-health-path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.risky-post-districts-upload-endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
 
   origin {
     domain_name = replace(var.risky-venues-upload-endpoint, "/^https?://([^/]*).*/", "$1")
     origin_id   = var.risky-venues-upload-endpoint
+
+    custom_header {
+      name  = "x-custom-oai"
+      value = var.custom_oai
+    }
 
     custom_origin_config {
       http_port              = 80
@@ -96,10 +126,34 @@ resource "aws_cloudfront_distribution" "this" {
 
     viewer_protocol_policy = "https-only"
   }
+  ordered_cache_behavior {
+    path_pattern     = var.risky-venues-upload-health-path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.risky-venues-upload-endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
 
   origin {
     domain_name = replace(var.test-results-upload-endpoint, "/^https?://([^/]*).*/", "$1")
     origin_id   = var.test-results-upload-endpoint
+
+    custom_header {
+      name  = "x-custom-oai"
+      value = var.custom_oai
+    }
 
     custom_origin_config {
       http_port              = 80
@@ -164,4 +218,10 @@ resource "aws_route53_record" "this" {
     zone_id                = aws_cloudfront_distribution.this.hosted_zone_id
     evaluate_target_health = false
   }
+}
+
+resource "aws_shield_protection" "this" {
+  count        = var.enable_shield_protection == true ? 1 : 0
+  name         = "${local.name_prefix}-cf-shield"
+  resource_arn = aws_cloudfront_distribution.this.arn
 }

@@ -2,6 +2,8 @@ package uk.nhs.nhsx;
 
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
+import uk.nhs.nhsx.virology.TestResultPollingToken;
+import uk.nhs.nhsx.virology.persistence.TestResult;
 
 import static java.util.Arrays.asList;
 
@@ -13,25 +15,45 @@ public class TestData {
             "{\"key\":\"kzQt9Lf3xjtAlMtm7jkSqw==\",\"rollingStartNumber\":12499,\"rollingPeriod\":144,\"transmissionRisk\":7}" +
             "]}";
 
+    public static final String STORED_KEYS_PAYLOAD_DAYS_SINCE_ONSET =
+        "{\"temporaryExposureKeys\":[" +
+            "{\"key\":\"W2zb3BeMWt6Xr2u0ABG32Q==\",\"rollingStartNumber\":12345,\"rollingPeriod\":144,\"transmissionRisk\":7,\"daysSinceOnsetOfSymptoms\":1}," +
+            "{\"key\":\"kzQt9Lf3xjtAlMtm7jkSqw==\",\"rollingStartNumber\":12499,\"rollingPeriod\":144,\"transmissionRisk\":7,\"daysSinceOnsetOfSymptoms\":4}" +
+            "]}";
+
+    public static final String STORED_KEYS_PAYLOAD_WITH_RISK_LEVEL =
+        "{\"temporaryExposureKeys\":[" +
+        "{\"key\":\"W2zb3BeMWt6Xr2u0ABG32Q==\",\"rollingStartNumber\":12345,\"rollingPeriod\":144,\"transmissionRisk\":5}," +
+        "{\"key\":\"kzQt9Lf3xjtAlMtm7jkSqw==\",\"rollingStartNumber\":12499,\"rollingPeriod\":144,\"transmissionRisk\":4}" +
+        "]}";
+
     public static final StoredTemporaryExposureKeyPayload STORED_KEYS_PAYLOAD_DESERIALIZED =
         new StoredTemporaryExposureKeyPayload(
             asList(
-                new StoredTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", 12345, 144),
-                new StoredTemporaryExposureKey("kzQt9Lf3xjtAlMtm7jkSqw==", 12499, 144)
+                new StoredTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", 12345, 144, 7),
+                new StoredTemporaryExposureKey("kzQt9Lf3xjtAlMtm7jkSqw==", 12499, 144, 7)
+            )
+        );
+
+    public static final StoredTemporaryExposureKeyPayload STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET =
+        new StoredTemporaryExposureKeyPayload(
+            asList(
+                new StoredTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", 12345, 144, 7, 1),
+                new StoredTemporaryExposureKey("kzQt9Lf3xjtAlMtm7jkSqw==", 12499, 144, 7, 4)
             )
         );
 
     public static final String RISKY_VENUES_UPLOAD_PAYLOAD =
         "# venue_id, start_time, end_time\n" +
-            "\"ID1\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
-            "\"ID2\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
-            "\"ID3\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
+            "\"CD3\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
+            "\"CD4\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
 
     public static final String STORED_RISKY_VENUES_UPLOAD_PAYLOAD =
         "{\"venues\":[" +
-            "{\"id\":\"ID1\",\"riskyWindow\":{\"from\":\"2019-07-04T13:33:03Z\",\"until\":\"2019-07-04T15:56:00Z\"}}," +
-            "{\"id\":\"ID2\",\"riskyWindow\":{\"from\":\"2019-07-06T19:33:03Z\",\"until\":\"2019-07-06T21:01:07Z\"}}," +
-            "{\"id\":\"ID3\",\"riskyWindow\":{\"from\":\"2019-07-08T20:05:52Z\",\"until\":\"2019-07-08T22:35:56Z\"}}" +
+            "{\"id\":\"CD2\",\"riskyWindow\":{\"from\":\"2019-07-04T13:33:03Z\",\"until\":\"2019-07-04T15:56:00Z\"},\"messageType\":\"M1\"}," +
+            "{\"id\":\"CD3\",\"riskyWindow\":{\"from\":\"2019-07-06T19:33:03Z\",\"until\":\"2019-07-06T21:01:07Z\"},\"messageType\":\"M1\"}," +
+            "{\"id\":\"CD4\",\"riskyWindow\":{\"from\":\"2019-07-08T20:05:52Z\",\"until\":\"2019-07-08T22:35:56Z\"},\"messageType\":\"M1\"}" +
             "]}";
 
     public static final String STORED_ANALYTICS_PAYLOAD_IOS =
@@ -58,4 +80,10 @@ public class TestData {
         " \"daysSinceLastExposure\": 3,\n" +
         " \"maximumRiskScore\" : 150\n" +
         " }";
+
+    public static TestResult positiveTestResultFor(TestResultPollingToken token) { 
+        return new TestResult(token.value, "2020-04-23T18:34:03Z", "POSITIVE", "available"); 
+    }
+    public static final TestResult positiveTestResult = new TestResult("abc", "2020-04-23T18:34:03Z", "POSITIVE", "available");
+    public static final TestResult pendingTestResult = new TestResult("abc", "", "", "pending");
 }

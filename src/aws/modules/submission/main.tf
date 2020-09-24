@@ -8,10 +8,11 @@ module "submission_role" {
 }
 
 module "submission_store" {
-  source         = "../../libraries/submission_s3"
-  name           = var.name
-  service        = "submission"
-  logs_bucket_id = var.logs_bucket_id
+  source                   = "../../libraries/submission_s3"
+  name                     = var.name
+  service                  = "submission"
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
 }
 
 module "submission_lambda" {
@@ -24,6 +25,7 @@ module "submission_lambda" {
   lambda_timeout               = 20
   lambda_memory                = 1024
   lambda_environment_variables = merge({ SUBMISSION_STORE = module.submission_store.bucket_name }, var.lambda_environment_variables)
+  app_alarms_topic             = var.alarm_topic_arn
 }
 
 module "submission_gateway" {

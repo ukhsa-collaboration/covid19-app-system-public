@@ -1,11 +1,11 @@
 package smoke.clients
 
+import org.apache.logging.log4j.LogManager
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.ContentType
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
-import org.slf4j.LoggerFactory
 import smoke.env.EnvConfig
 import uk.nhs.nhsx.TestData
 import uk.nhs.nhsx.circuitbreakers.TokenResponse
@@ -15,7 +15,7 @@ class EnCircuitBreakerClient(private val client: JavaHttpClient,
 
 
     companion object {
-        private val logger = LoggerFactory.getLogger(EnCircuitBreakerClient::class.java)
+        private val logger = LogManager.getLogger(EnCircuitBreakerClient::class.java)
 
         fun baseUrlFrom(config: EnvConfig) = config.exposureNotificationCircuitBreakerEndpoint
     }

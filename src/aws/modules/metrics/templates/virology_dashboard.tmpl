@@ -1,0 +1,321 @@
+{
+    "widgets": [
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 6,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${virology_submission_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 30
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 21,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${virology_submission_function}-warnings" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "${virology_submission_function}-warning",
+                "stat": "Sum",
+                "period": 30
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 27,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | parse @message /\\[(?<Date>\\d{4}-\\d\\d-\\d\\d)\\s+(?<Time>\\d\\d:\\d\\d:\\d\\d)\\]\\s+\\[(?<Thread>\\w+)\\]\\s+\\[(?<RequestId>[\\w-]+)\\]\\s+\\[(?<Level>\\w+)\\]\\s+\\[(?<Class>\\w+)\\]\\s+(?<Message>.+)/\n| filter Level == \"WARN\"\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "${virology_submission_function} WARN",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | parse @message /\\[(?<Date>\\d{4}-\\d\\d-\\d\\d)\\s+(?<Time>\\d\\d:\\d\\d:\\d\\d)\\]\\s+\\[(?<Thread>\\w+)\\]\\s+\\[(?<RequestId>[\\w-]+)\\]\\s+\\[(?<Level>\\w+)\\]\\s+\\[(?<Class>\\w+)\\]\\s+(?<Message>.+)/\n| filter Level == \"ERROR\"\n| sort @timestamp desc",                "region": "eu-west-2",
+                "stacked": false,
+                "title": "${virology_submission_function} ERROR",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 6,
+            "y": 33,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message\n| parse @message \"[WARN] [*] *\" as @class, @logMessage\n| filter @message like /\\[WARN\\]/\n| stats count(*) by @logMessage\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Sub WARN per message",
+                "view": "table"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5xx", "Resource", "/{proxy+}", "Stage", "$default", "Method", "POST", "ApiId", "${submission_api_gateway_id}", { "stat": "Sum", "label": "ApiGateway 5xx" } ],
+                    [ ".", "4xx", ".", ".", ".", ".", ".", ".", ".", ".", { "stat": "Sum", "label": "ApiGateway 4xx" } ],
+                    [ "ErrorLogCount", "${virology_submission_function}-errors", { "label": "ErrorLogCount" } ],
+                    [ "WarningLogCount", "${virology_submission_function}-warnings", { "label": "WarningLogCount" } ],
+                    [ "AWS/Lambda", "Invocations", "FunctionName", "${virology_submission_function}", "Resource", "${virology_submission_function}", { "stat": "Sum", "label": "Lambda Invocations" } ],
+                    [ ".", "Errors", ".", ".", ".", ".", { "stat": "Sum", "label": "Lambda Errors" } ],
+                    [ ".", "ConcurrentExecutions", ".", ".", ".", ".", { "label": "Lambda ConcurrentExecutions" } ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "title": "${virology_submission_function}-metrics",
+                "stat": "Average",
+                "period": 300
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 12,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message\n| parse @message \"[ERROR] [*] *\" as @class, @logMessage\n| filter @message like /\\[ERROR\\]/\n| stats count(*) by @class\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Submission ERROR per class",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 6,
+            "y": 12,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message\n| parse @message \"[ERROR] [*] *\" as @class, @logMessage\n| filter @message like /\\[ERROR\\]/\n| stats count(*) by @logMessage\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Submission ERROR per message",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 33,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message\n| parse @message \"[WARN] [*] *\" as @class, @logMessage\n| filter @message like /\\[WARN\\]/\n| stats count(*) by @class\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Sub WARN per class",
+                "view": "table"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 36,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", "${env}-virology-ordertokens", "Operation", "PutItem", { "label": "PutItem ordertokens" } ],
+                    [ "...", "${env}-virology-testresults", ".", ".", { "label": "PutItem testresults" } ],
+                    [ "...", "GetItem", { "label": "GetItem testresults" } ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Average",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 0,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5xx", "Resource", "/{proxy+}", "Stage", "$default", "Method", "POST", "ApiId", "${upload_api_gateway_id}", { "stat": "Sum", "label": "ApiGateway 5xx" } ],
+                    [ ".", "4xx", ".", ".", ".", ".", ".", ".", ".", ".", { "stat": "Sum", "label": "ApiGateway 4xx" } ],
+                    [ "ErrorLogCount", "${virology_upload_function}-errors", { "label": "ErrorLogCount" } ],
+                    [ "WarningLogCount", "${virology_upload_function}-warnings", { "label": "Lambda WarningLogCount" } ],
+                    [ "AWS/Lambda", "Invocations", "FunctionName", "${virology_upload_function}", { "stat": "Sum", "label": "Lambda Invocations" } ],
+                    [ ".", "Errors", ".", ".", { "stat": "Sum", "label": "Lambda Errors" } ],
+                    [ ".", "ConcurrentExecutions", ".", ".", { "label": "Lambda ConcurrentExecutions" } ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "title": "${virology_upload_function}-metrics",
+                "stat": "Average",
+                "period": 300
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 6,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${virology_upload_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 30
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 12,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, @message\n| parse @message \"[ERROR] [*] *\" as @class, @logMessage\n| filter @message like /\\[ERROR\\]/\n| stats count(*) by @class\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Upload ERROR per class",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 18,
+            "y": 12,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, @message\n| parse @message \"[ERROR] [*] *\" as @class, @logMessage\n| filter @message like /\\[ERROR\\]/\n| stats count(*) by @logMessage\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Upload ERROR per message",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 15,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | parse @message /\\[(?<Date>\\d{4}-\\d\\d-\\d\\d)\\s+(?<Time>\\d\\d:\\d\\d:\\d\\d)\\]\\s+\\[(?<Thread>\\w+)\\]\\s+\\[(?<RequestId>[\\w-]+)\\]\\s+\\[(?<Level>\\w+)\\]\\s+\\[(?<Class>\\w+)\\]\\s+(?<Message>.+)/\n| filter Level == \"ERROR\"\n| sort @timestamp desc",                "region": "eu-west-2",
+                "stacked": false,
+                "title": "${virology_upload_function} ERROR",
+                "view": "table"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 21,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${virology_upload_function}-warnings" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "${virology_upload_function}-warning",
+                "stat": "Sum",
+                "period": 30
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 27,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | parse @message /\\[(?<Date>\\d{4}-\\d\\d-\\d\\d)\\s+(?<Time>\\d\\d:\\d\\d:\\d\\d)\\]\\s+\\[(?<Thread>\\w+)\\]\\s+\\[(?<RequestId>[\\w-]+)\\]\\s+\\[(?<Level>\\w+)\\]\\s+\\[(?<Class>\\w+)\\]\\s+(?<Message>.+)/\n| filter Level == \"WARN\"\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "${virology_upload_function} WARN",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 18,
+            "y": 33,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, @message\n| parse @message \"[WARN] [*] *\" as @class, @logMessage\n| filter @message like /\\[WARN\\]/\n| stats count(*) by @logMessage\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Upload WARN per message",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 33,
+            "width": 6,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, @message\n| parse @message \"[WARN] [*] *\" as @class, @logMessage\n| filter @message like /\\[WARN\\]/\n| stats count(*) by @class\n| sort @timestamp desc",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Upload WARN per class",
+                "view": "table"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 36,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", "${env}-virology-testresults", "Operation", "PutItem", { "label": "PutItem testresults" } ],
+                    [ "...", "${env}-virology-ordertokens", ".", "GetItem", { "label": "GetItem test order" } ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Average",
+                "period": 300
+            }
+        }
+    ]
+}

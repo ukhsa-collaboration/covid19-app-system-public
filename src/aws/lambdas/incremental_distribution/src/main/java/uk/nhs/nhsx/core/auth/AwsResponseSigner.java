@@ -3,8 +3,8 @@ package uk.nhs.nhsx.core.auth;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.amazonaws.util.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.signature.DatedSignature;
 import uk.nhs.nhsx.core.signature.DatedSigner;
 import uk.nhs.nhsx.core.signature.SigningHeaders;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public class AwsResponseSigner implements ResponseSigner {
 
-    private final Logger logger = LoggerFactory.getLogger(AwsResponseSigner.class);
+    private final Logger logger = LogManager.getLogger(AwsResponseSigner.class);
 
     private final DatedSigner contentSigner;
 

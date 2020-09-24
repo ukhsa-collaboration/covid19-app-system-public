@@ -30,6 +30,7 @@ module "processing_lambda" {
     DISTRIBUTION_PATTERN_2HOURLY = var.distribution_pattern_2hourly
     MOBILE_APP_BUNDLE_ID         = var.mobile_app_bundle
   }
+  app_alarms_topic = var.alarm_topic_arn
 }
 
 resource "aws_cloudwatch_event_rule" "every_two_hours" {
@@ -60,7 +61,7 @@ resource "aws_cloudwatch_metric_alarm" "duration" {
   threshold           = "720000"
   alarm_description   = "Alarm if lambda processor is running longer than expected"
   treat_missing_data  = "notBreaching"
-
+  alarm_actions       = [var.alarm_topic_arn]
   dimensions = {
     FunctionName = local.identifier_prefix
   }
@@ -77,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "invocations" {
   threshold           = "1"
   alarm_description   = "Expect at least one invocation of lambda every two hours"
   treat_missing_data  = "breaching"
-
+  alarm_actions       = [var.alarm_topic_arn]
   dimensions = {
     FunctionName = local.identifier_prefix
   }
@@ -94,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "concurrent_executions" {
   threshold           = "1"
   alarm_description   = "Expect no concurrent executions"
   treat_missing_data  = "notBreaching"
-
+  alarm_actions       = [var.alarm_topic_arn]
   dimensions = {
     FunctionName = local.identifier_prefix
   }

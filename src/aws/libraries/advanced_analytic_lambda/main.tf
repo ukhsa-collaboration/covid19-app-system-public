@@ -28,12 +28,12 @@ resource "aws_lambda_function" "this" {
   role                           = var.iam_advanced_analytics_lambda_arn
   filename                       = data.archive_file.this.output_path
   source_code_hash               = data.archive_file.this.output_base64sha256
-  reserved_concurrent_executions = 100
+  reserved_concurrent_executions = 10
   depends_on                     = [aws_cloudwatch_log_group.this]
 
   environment {
     variables = {
-      AAE_ENVIRONMENT = var.aae_environment
+      AAE_HOSTNAME = var.aae_hostname
     }
   }
 
@@ -58,7 +58,45 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.this.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_suffix       = ".json"
+    filter_suffix       = ".parquet"
   }
   depends_on = [aws_lambda_permission.to_execute]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "this" {
+  name           = "ErrorLogCount"
+  pattern        = "[logLevel = ERROR,date,message]"
+  log_group_name = aws_cloudwatch_log_group.this.name
+
+  metric_transformation {
+    name      = "${var.name}-errors"
+    namespace = "ErrorLogCount"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "warning_lambda_metric" {
+  name           = "WarningLogCount"
+  pattern        = "[logLevel = WARNING,date,message]"
+  log_group_name = aws_cloudwatch_log_group.this.name
+
+  metric_transformation {
+    name      = "${var.name}-warnings"
+    namespace = "WarningLogCount"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "this" {
+  alarm_name          = "${var.name}-Errors"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = aws_cloudwatch_log_metric_filter.this.metric_transformation[0].name
+  namespace           = aws_cloudwatch_log_metric_filter.this.metric_transformation[0].namespace
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "This metric monitors the error logs in Lambda ${var.name}"
+  alarm_actions       = [var.app_alarms_topic]
+  treat_missing_data  = "notBreaching"
 }

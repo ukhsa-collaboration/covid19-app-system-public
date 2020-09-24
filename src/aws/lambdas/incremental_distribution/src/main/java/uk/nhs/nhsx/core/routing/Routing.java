@@ -4,10 +4,12 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import uk.nhs.nhsx.core.HttpResponses;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class Routing {
 
@@ -25,6 +27,19 @@ public class Routing {
 
     public static PathRoutingHandler path(Method method, Predicate<String> pathMatcher, Handler handler) {
         return new PathRoutingHandler(pathMatcher, Optional.of(method), handler);
+    }
+
+    public static APIGatewayProxyResponseEvent throttlingResponse(Duration throttleDuration,
+                                                                  Supplier<APIGatewayProxyResponseEvent> responseSupplier) {
+        var response = responseSupplier.get();
+
+        try {
+            Thread.sleep(throttleDuration.toMillis());
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted while trying to delay response", e);
+        }
+        
+        return response;
     }
 
     public interface Handler {

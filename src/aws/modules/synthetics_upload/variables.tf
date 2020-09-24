@@ -1,3 +1,9 @@
+variable "enabled" {
+  description = "Set to false if this module is to be suppressed"
+  type        = bool
+  default     = false
+}
+
 variable "region" {
   description = "Region in which the canaries will be deployed - ideally not the same as the service being monitored"
   type        = string
@@ -44,4 +50,8 @@ variable "xray_enabled" {
   type        = bool
   description = "If true, set lambda tracing configuration to Active, else PassThrough"
   default     = true
+}
+
+variable "logs_bucket_id" {
+  description = "The name of the bucket to which S3 access logs are saved."
 }

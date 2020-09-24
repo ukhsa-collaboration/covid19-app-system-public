@@ -54,6 +54,25 @@ public class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
+    public void acceptsTemporaryExposureKeysWithRiskLevel() throws IOException {
+        ClientTemporaryExposureKey key1 = new ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", 12345, 144);
+        ClientTemporaryExposureKey key2 = new ClientTemporaryExposureKey("kzQt9Lf3xjtAlMtm7jkSqw==", 12499, 144);
+        key1.setTransmissionRiskLevel(5);
+        key2.setTransmissionRiskLevel(4);
+        when(objectKeyNameProvider.generateObjectKeyName()).thenReturn(objectKey);
+        when(awsDynamoClient.getItem(tableName, hashKey, uuid)).thenReturn(dynamoItem);
+
+        ClientTemporaryExposureKeysPayload payload = new ClientTemporaryExposureKeysPayload(
+            UUID.fromString(uuid),
+            asList(key1, key2)
+        );
+
+        service.acceptTemporaryExposureKeys(payload);
+        verifyHappyPath(TestData.STORED_KEYS_PAYLOAD_WITH_RISK_LEVEL);
+    }
+    
+
+    @Test
     public void acceptsTemporaryExposureKeysWithEmptyArray() throws IOException {
         when(objectKeyNameProvider.generateObjectKeyName()).thenReturn(objectKey);
         when(awsDynamoClient.getItem(tableName, hashKey, uuid)).thenReturn(dynamoItem);
@@ -119,6 +138,20 @@ public class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
+    public void keyMustBeLessThan32Bytes(){
+        ClientTemporaryExposureKeysPayload payload = new ClientTemporaryExposureKeysPayload(
+            UUID.fromString(uuid),
+            singletonList(
+                new ClientTemporaryExposureKey("YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHCg==", 12499, 144)
+            )
+        );
+
+        service.acceptTemporaryExposureKeys(payload);
+
+        verifyNoInteractions();
+    }
+
+    @Test
     public void rollingStartNumberMustBeNonNegative() {
         ClientTemporaryExposureKeysPayload payload = new ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
@@ -163,7 +196,7 @@ public class DiagnosisKeysSubmissionServiceTest {
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
         assertThat(s3Storage.bucket, equalTo(BUCKET_NAME));
-        assertThat(s3Storage.bytes.read(), equalTo(expectedStoredPayload.getBytes(StandardCharsets.UTF_8)));
+        assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(expectedStoredPayload));
         verify(awsDynamoClient, times(1)).deleteItem(tableName, hashKey, uuid);
 
         verifyNoMoreInteractions(objectKeyNameProvider);

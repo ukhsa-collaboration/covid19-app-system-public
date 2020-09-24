@@ -21,7 +21,9 @@ module "circuit_breaker_lambda" {
   lambda_environment_variables = {
     SSM_KEY_ID_PARAMETER_NAME     = "/app/kms/ContentSigningKeyArn"
     SSM_CIRCUIT_BREAKER_BASE_NAME = "/app/${terraform.workspace}/cb"
+    custom_oai                    = var.custom_oai
   }
+  app_alarms_topic = var.alarm_topic_arn
 }
 
 module "circuit_breaker_gateway" {

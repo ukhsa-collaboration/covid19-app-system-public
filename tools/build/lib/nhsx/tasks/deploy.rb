@@ -10,9 +10,7 @@ namespace :deploy do
         terraform_configuration = File.join($configuration.base, "src/aws/accounts", account)
         deploy_to_workspace(tgt_env, terraform_configuration, $configuration)
         if tgt_env != "branch"
-          # tag the SHA with the environment tag
-          run_command("Tag the deployed SHA", "git tag -af te-#{tgt_env} -m \"Deployed on #{tgt_env}\"", $configuration)
-          run_command("Publish the tag", "git push -f --tags", $configuration)
+          push_git_tag(tgt_env, "Deployed on #{tgt_env}", $configuration)
         end
       end
     end

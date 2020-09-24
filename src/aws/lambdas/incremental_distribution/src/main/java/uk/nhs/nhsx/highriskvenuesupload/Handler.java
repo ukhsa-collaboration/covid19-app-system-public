@@ -37,13 +37,15 @@ public class Handler extends RoutingHandler {
 
     public Handler(Environment environment, Supplier<Instant> clock) {
         this(
+            environment, 
             awsAuthentication(ApiName.HighRiskVenuesUpload),
             createUploadService(clock, environment)
         );
     }
 
-    Handler(Authenticator authenticator, HighRiskVenuesUploadService service) {
+    Handler(Environment environment, Authenticator authenticator, HighRiskVenuesUploadService service) {
         this.handler = withoutSignedResponses(
+            environment, 
             authenticator,
             routes(
                 path(Routing.Method.POST, "/upload/identified-risk-venues",
@@ -55,6 +57,9 @@ public class Handler extends RoutingHandler {
 
                         return mapResultToResponse(result);
                     }
+                ),
+                path(Routing.Method.POST, "/upload/identified-risk-venues/health", (r) ->
+                    HttpResponses.ok()
                 )
             )
         );
@@ -73,6 +78,7 @@ public class Handler extends RoutingHandler {
     }
 
     private static HighRiskVenuesUploadService createUploadService(Supplier<Instant> clock, Environment environment) {
+        boolean shouldParseAdditionalFields = Boolean.parseBoolean(environment.access.required("should_parse_additional_fields"));
         return new HighRiskVenuesUploadService(
             new HighRiskVenuesUploadConfig(
                 BucketName.of(environment.access.required("BUCKET_NAME")),
@@ -83,7 +89,7 @@ public class Handler extends RoutingHandler {
             datedSigner(clock, environment),
             new AwsS3Client(),
             new AwsCloudFrontClient(),
-            new HighRiskVenueCsvParser()
+            new HighRiskVenueCsvParser(shouldParseAdditionalFields)
         );
     }
 

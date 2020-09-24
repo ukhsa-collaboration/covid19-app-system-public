@@ -11,6 +11,16 @@ module NHSx
       "staging" => ["staging"],
       "prod" => ["prod"],
     }.freeze
+    # All the fixed (named) Analytics target environments per account: {"account"=>[target_environments]}
+    ANALYTICS_TARGET_ENVIRONMENTS = {
+        "dev" => ["load-test", "branch"],
+        "staging" => ["staging"],
+        "prod" => ["prod"],
+    }.freeze
+    # All the fixed (named) DoReTo target environments per account: {"account"=>[target_environments]}
+    DORETO_TARGET_ENVIRONMENTS = {
+      "dev" => ["test", "branch"]
+    }.freeze
     # The parameter name that contains the ARN of the signing key in the SSM paramater store
     SIGNING_KEY_PARAMETER = "/app/kms/SigningKeyArn".freeze
     # The parameter name that contains the ARN of the content signing key in the SSM paramater store
@@ -19,9 +29,16 @@ module NHSx
     TEST_API_KEY_HEADERS_SECRET = "AuthenticationHeadersForTests".freeze
     # Retrieves the target environment configuration
     def target_environment_configuration(environment_name, account_name, system_config)
-      terraform_configuration = File.join(system_config.base, "src/aws/accounts", account_name)
+      terraform_configuration = File.join(system_config.base, NHSx::Terraform::APP_SYSTEM_ACCOUNTS, account_name)
       target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
       target_config["auth_headers"] = authentication_headers_for_test(system_config)
+
+      return target_config
+    end
+    # Retrieves the target environment configuration for the Document Reporting Tool subsystem
+    def doreto_target_environment_configuration(environment_name, account_name, system_config)
+      terraform_configuration = File.join(system_config.base, NHSx::Terraform::DORETO_ACCOUNTS, account_name)
+      target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
 
       return target_config
     end

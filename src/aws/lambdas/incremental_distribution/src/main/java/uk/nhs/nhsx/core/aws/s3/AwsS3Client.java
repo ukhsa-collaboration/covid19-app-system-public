@@ -6,8 +6,8 @@ import com.amazonaws.services.s3.model.*;
 import com.google.common.base.Suppliers;
 import com.google.common.io.ByteSource;
 import org.apache.http.entity.ContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +21,7 @@ import static java.util.Arrays.stream;
 
 public class AwsS3Client implements AwsS3 {
 
-    private static final Logger logger = LoggerFactory.getLogger(AwsS3Client.class);
+    private static final Logger logger = LogManager.getLogger(AwsS3Client.class);
 
     private static final Supplier<AmazonS3> client =
         Suppliers.memoize(AmazonS3ClientBuilder::defaultClient);

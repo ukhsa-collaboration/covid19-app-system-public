@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.natpryce.snodge.JsonMutator;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
 import uk.nhs.nhsx.TestData;
@@ -47,10 +48,47 @@ public class DiagnosisKeysSubmissionHandlerTest {
         "  ]" +
         "}";
 
+    private final String payloadJsonWithDaysSinceOnset = "{" +
+        "  \"diagnosisKeySubmissionToken\": \"" + uuid + "\"," +
+        "  \"temporaryExposureKeys\": [" +
+        "    {" +
+        "      \"key\": \"W2zb3BeMWt6Xr2u0ABG32Q==\"," +
+        "      \"rollingStartNumber\": 12345," +
+        "      \"rollingPeriod\": 144," +
+        "      \"daysSinceOnsetOfSymptoms\": 1" +
+        "    }," +
+        "    {" +
+        "      \"key\": \"kzQt9Lf3xjtAlMtm7jkSqw==\"," +
+        "      \"rollingStartNumber\": 12499," +
+        "      \"rollingPeriod\": 144," +
+        "      \"daysSinceOnsetOfSymptoms\": 4" +
+        "    }" +
+        "  ]" +
+        "}";
+
+    private final String payloadJsonWithRiskLevel = "{" +
+        "  \"diagnosisKeySubmissionToken\": \"" + uuid + "\"," +
+        "  \"temporaryExposureKeys\": [" +
+        "    {" +
+        "        \"key\": \"W2zb3BeMWt6Xr2u0ABG32Q==\"," +
+        "        \"rollingStartNumber\": 12345, " +
+        "        \"rollingPeriod\": 144," +
+        "        \"transmissionRiskLevel\": 5" +
+        "    }," +
+        "    {" +
+        "        \"key\": \"kzQt9Lf3xjtAlMtm7jkSqw==\"," +
+        "        \"rollingStartNumber\": 12499, " +
+        "        \"rollingPeriod\": 144," +
+        "        \"transmissionRiskLevel\": 4" +
+        "    }" +
+        "   ]" +
+        "}";
+
     @SuppressWarnings("serial")
-	private final Map<String, String> environmentSettings = new HashMap<String, String>() {{
+	private final Map<String, String> environmentSettings = new HashMap<>() {{
         put("submission_tokens_table", "stt");
         put("SUBMISSION_STORE", "store");
+        put("MAINTENANCE_MODE", "FALSE");
     }};
 
     private final Environment environment = Environment.fromName("test", Environment.Access.TEST.apply(environmentSettings));
@@ -85,8 +123,51 @@ public class DiagnosisKeysSubmissionHandlerTest {
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
         assertThat(s3Storage.bucket.value, equalTo("store"));
-        assertThat(s3Storage.bytes.read(), equalTo(TestData.STORED_KEYS_PAYLOAD.getBytes(StandardCharsets.UTF_8)));
+        assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(TestData.STORED_KEYS_PAYLOAD));
     }
+
+    @Test
+    public void acceptsPayloadWithDaysSinceOnset() throws Exception {
+        ObjectKey objectKey = ObjectKey.of("some-object-key");
+
+        String hashKey = "diagnosisKeySubmissionToken";
+        when(objectKeyNameProvider.generateObjectKeyName()).thenReturn(objectKey);
+        when(awsDynamoClient.getItem("stt", hashKey, uuid))
+            .thenReturn(Item.fromJSON("{\"" + hashKey + "\": \"" + uuid + "\"}"));
+
+        APIGatewayProxyResponseEvent responseEvent = responseFor(payloadJsonWithDaysSinceOnset);
+
+        assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200));
+        assertThat(responseEvent, hasBody(equalTo(null)));
+        assertThat(responseEvent, hasHeader("signed", equalTo("yup")));
+
+        assertThat(s3Storage.count, equalTo(1));
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
+        assertThat(s3Storage.bucket.value, equalTo("store"));
+        assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(TestData.STORED_KEYS_PAYLOAD_DAYS_SINCE_ONSET));
+    }
+
+    @Test
+    public void AcceptsPayloadWithRiskLevelAndReturns200() throws Exception {
+        ObjectKey objectKey = ObjectKey.of("some-object-key");
+
+        String hashKey = "diagnosisKeySubmissionToken";
+        when(objectKeyNameProvider.generateObjectKeyName()).thenReturn(objectKey);
+        when(awsDynamoClient.getItem("stt", hashKey, uuid))
+            .thenReturn(Item.fromJSON("{\"" + hashKey + "\": \"" + uuid + "\"}"));
+
+        APIGatewayProxyResponseEvent responseEvent = responseFor(payloadJsonWithRiskLevel);
+
+        assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200));
+        assertThat(responseEvent, hasBody(equalTo(null)));
+        assertThat(responseEvent, hasHeader("signed", equalTo("yup")));
+
+        assertThat(s3Storage.count, equalTo(1));
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
+        assertThat(s3Storage.bucket.value, equalTo("store"));
+        assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(TestData.STORED_KEYS_PAYLOAD_WITH_RISK_LEVEL));
+    }
+
 
     @Test
     public void notFoundWhenPathIsWrong() {
@@ -150,6 +231,21 @@ public class DiagnosisKeysSubmissionHandlerTest {
     @Test
     public void handlesRandomValues() {
         String originalJson = payloadJson;
+        new JsonMutator()
+            .forStrings()
+            .mutate(originalJson, 100)
+            .forEach(json -> {
+                if (!json.equals(originalJson)) {
+                    APIGatewayProxyResponseEvent response = responseFor(json);
+                    assertThat(response, hasStatus(HttpStatusCode.OK_200));
+                    assertThat(response, hasBody(equalTo(null)));
+                }
+            });
+    }
+
+    @Test
+    public void handlesRandomValuesWithRiskLevel() {
+        String originalJson = payloadJsonWithRiskLevel;
         new JsonMutator()
             .forStrings()
             .mutate(originalJson, 100)

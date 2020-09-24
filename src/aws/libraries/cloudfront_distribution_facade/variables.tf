@@ -109,3 +109,8 @@ variable "domain" {
 variable "web_acl_arn" {
   description = "The ARN of the WAFv2 web acl to filter CloudFront requests"
 }
+
+variable "enable_shield_protection" {
+  description = "Flag to enable/disable shield protection"
+  type        = bool
+}

@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.analyticssubmission;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class PostCodeDeserializer {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConcurrentExecution.class);
+    private static final Logger logger = LogManager.getLogger(ConcurrentExecution.class);
     private final static String csvMappingFileLocation = "analyticssubmission/merged_postcode_district_list.csv";
     private final static Map<String, String> postcodeMapping = getPostcodeMapping(csvMappingFileLocation);
 
@@ -26,7 +26,7 @@ public class PostCodeDeserializer {
 
     public static String mergeSmallPostcodes(String postcode, Map<String, String> mapping) {
         return Optional.ofNullable(mapping.get(postcode)).orElseGet(() -> {
-            logger.warn("Post district not found in mapping. Persisting post district as \"UNKNOWN\".");
+            logger.info("Post district not found in mapping. Persisting post district as \"UNKNOWN\".");
             return "UNKNOWN";
         });
     }

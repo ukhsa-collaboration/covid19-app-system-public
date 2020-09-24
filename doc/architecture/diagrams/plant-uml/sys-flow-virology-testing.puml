@@ -2,35 +2,40 @@
 
 Actor User
 
+
+User -> App : user enters symptoms in the questionnaire
+App -> User : app suggests to take a test 
+User -> App : ok
 App -> VirologyTestingAPI: get test URL and token
 App <- VirologyTestingAPI: test URL and token
-VirologyTestingAPI -> AnalyticsAPI: send anonymous data
 App -> App: store token
 
 
-App -> User: show URL to user
+App -> User: show website URL to user
+Participant VirologyWebsite #LightGrey
+
 App -> VirologyWebsite: launch browser window and pass token ID as query parameter
-User <- VirologyWebsite: website interaction for ordering a test
-User -> VirologyWebsite: test ordered 
+User -> VirologyWebsite: website interaction for ordering a test
+User <- VirologyWebsite: test ordered 
 VirologyWebsite -> VirologyWebsite: do testing (hours to days)
 App -> VirologyTestingAPI: poll at x time intervals (token)
 ...
-VirologyWebsite -> TestLab: send result (result, token)
+Participant TestLab #LightGrey
+VirologyWebsite -> TestLab: send swab (token)
 TestLab -> TestLabAPI: send result (result, token)
 
 TestLabAPI->VirologyTestingAPI: send result (result, token)
 ...
 App -> VirologyTestingAPI: poll at x time intervals (token)
 App <- VirologyTestingAPI: test result 
-VirologyTestingAPI -> AnalyticsAPI: send anonymous data
 
 App->App: take test result action
-App->User: on positive result get user permission to upload exposure keys
+App->User: on positive result get user permission to upload diagnosis keys
 User->App: ok
 
-App->SubmitAPI: submit exposure key history (diagnosis keys)
+App->SubmissionAPI: submit diagnosis keys (exposure key history)
 User<-App: show isolation advice for positive test result
-SubmitAPI -> SubmitAPI: batch for distribution
+SubmissionAPI -> SubmissionAPI: batch for distribution
 ...
 
 

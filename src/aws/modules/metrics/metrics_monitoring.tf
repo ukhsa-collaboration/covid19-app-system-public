@@ -1,7 +1,31 @@
 locals {
-  app_interface_group       = concat(var.submission_lambdas, var.circuit_breaker_lambdas)
-  external_interface_group  = var.upload_lambdas
-  internal_processing_group = var.processing_lambdas
+  submission_lambdas = [
+    var.analytics_submission_function,
+    var.diagnosis_keys_submission_function,
+    var.activation_keys_submission_function,
+    var.virology_submission_function
+  ]
+
+  circuit_breaker_lambdas = [
+    var.exposure_notification_circuit_breaker_function,
+    var.risky_venues_circuit_breaker_function
+  ]
+
+  upload_lambdas = [
+    var.risky_post_districts_upload_function,
+    var.risky_venues_upload_function,
+    var.virology_upload_function
+  ]
+
+  processing_lambdas = [
+    var.analytics_processing_function,
+    var.diagnosis_keys_processing_function,
+    var.advanced_analytics_function
+  ]
+
+  app_interface_group       = concat(local.submission_lambdas, local.circuit_breaker_lambdas)
+  external_interface_group  = local.upload_lambdas
+  internal_processing_group = local.processing_lambdas
 
   app_interface_error_query       = formatlist("SOURCE '/aws/lambda/%s' |", local.app_interface_group)
   external_interface_error_query  = formatlist("SOURCE '/aws/lambda/%s' |", local.external_interface_group)
@@ -9,7 +33,7 @@ locals {
 }
 
 resource "aws_cloudwatch_dashboard" "lambdas_dashboard" {
-  dashboard_name = "Lambdas-dashboard"
+  dashboard_name = "${var.env}-Lambdas-dashboard"
   dashboard_body = jsonencode(
     {
       start : "-P1D",
@@ -23,7 +47,7 @@ resource "aws_cloudwatch_dashboard" "lambdas_dashboard" {
           height : 6,
           properties : {
             metrics : [
-              for lambda in var.submission_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
+              for lambda in local.submission_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
             ],
             view : "timeSeries",
             stacked : false,
@@ -41,7 +65,7 @@ resource "aws_cloudwatch_dashboard" "lambdas_dashboard" {
           height : 6,
           properties : {
             metrics : [
-              for lambda in var.upload_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
+              for lambda in local.upload_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
             ],
             view : "timeSeries",
             stacked : false,
@@ -59,7 +83,7 @@ resource "aws_cloudwatch_dashboard" "lambdas_dashboard" {
           height : 6,
           properties : {
             metrics : [
-              for lambda in var.processing_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
+              for lambda in local.processing_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
             ],
             view : "timeSeries",
             stacked : false,
@@ -77,7 +101,7 @@ resource "aws_cloudwatch_dashboard" "lambdas_dashboard" {
           height : 6,
           properties : {
             metrics : [
-              for lambda in var.circuit_breaker_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
+              for lambda in local.circuit_breaker_lambdas : ["AWS/Lambda", "Duration", "FunctionName", lambda, "Resource", lambda]
             ],
             view : "timeSeries",
             stacked : false,
@@ -93,7 +117,7 @@ resource "aws_cloudwatch_dashboard" "lambdas_dashboard" {
 }
 
 resource "aws_cloudwatch_dashboard" "errors_dashboard" {
-  dashboard_name = "API-errors-warnings-monitoring"
+  dashboard_name = "${var.env}-API-errors-warnings-monitoring"
   dashboard_body = <<EOF
   {
    "start": "-P1W",
@@ -329,7 +353,7 @@ EOF
 }
 
 resource "aws_cloudwatch_dashboard" "account_s3_bucket_dashboard" {
-  dashboard_name = "S3-buckets-monitoring"
+  dashboard_name = "${var.env}-S3-buckets-monitoring"
   dashboard_body = <<EOF
   {
    "start": "-P1W",
@@ -352,7 +376,7 @@ resource "aws_cloudwatch_dashboard" "account_s3_bucket_dashboard" {
           "view": "timeSeries",
           "stacked": false,
           "region": "eu-west-2",
-          "period": 1,
+          "period": 60,
           "stat": "Sum",
           "title": "Overall storage size in S3 buckets",
           "yAxis": {
@@ -380,7 +404,7 @@ resource "aws_cloudwatch_dashboard" "account_s3_bucket_dashboard" {
           "view": "timeSeries",
           "stacked": false,
           "region": "eu-west-2",
-          "period": 1,
+          "period": 60,
           "stat": "Sum",
           "title": "Number of items in S3 buckets",
           "yAxis": {
@@ -397,7 +421,7 @@ resource "aws_cloudwatch_dashboard" "account_s3_bucket_dashboard" {
 }
 
 resource "aws_cloudwatch_dashboard" "cloudfront_dashboard" {
-  dashboard_name = "CloudFront-monitoring"
+  dashboard_name = "${var.env}-CloudFront-monitoring"
   dashboard_body = <<EOF
   {
    "start": "-P1D",

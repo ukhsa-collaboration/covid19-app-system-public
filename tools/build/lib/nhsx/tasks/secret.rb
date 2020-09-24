@@ -44,3 +44,38 @@ namespace :secret do
     puts "Authorization: #{authorization_header}"
   end
 end
+
+namespace :certificate do
+  desc "Updates an existing client certificate in Secrets Manager on dev"
+  task :"update:dev" do
+    include NHSx::Secret
+    service_name = "aae"
+    consumer_name = "advanced_analytics"
+    new_certificate_config = create_aae_certificate($configuration)
+    secret_manager_arns = update_aae_certificate_config(service_name, consumer_name, new_certificate_config, $configuration)
+    print_aae_certificate_issuer(new_certificate_config)
+    print_aae_certificate_fingerprint(new_certificate_config)
+    clean_aae_certificate(new_certificate_config)
+    puts "*" * 74
+    puts "AWS Account User needs to share the public key with AAE Environment"
+    puts new_certificate_config["public_key_name"]
+    puts "*" * 74
+    puts secret_manager_arns
+  end
+  desc "Updates an existing client certificate in Secrets Manager on prod"
+  task :"update:prod" => [:"login:prod"] do
+    include NHSx::Secret
+    service_name = "aae"
+    consumer_name = "advanced_analytics"
+    new_certificate_config = create_aae_certificate($configuration)
+    secret_manager_arns = update_aae_certificate_config(service_name, consumer_name, new_certificate_config, $configuration)
+    print_aae_certificate_issuer(new_certificate_config)
+    print_aae_certificate_fingerprint(new_certificate_config)
+    clean_aae_certificate(new_certificate_config)
+    puts "*" * 74
+    puts "AWS Account User needs to share the public key with AAE Environment"
+    puts new_certificate_config["public_key_name"]
+    puts "*" * 74
+    puts secret_manager_arns
+  end
+end

@@ -1,13 +1,13 @@
 package smoke.clients
 
+import org.apache.logging.log4j.LogManager
 import org.http4k.core.Status
-import org.slf4j.LoggerFactory
 import smoke.env.EnvConfig
 
 class BatchProcessingClient(private val config: EnvConfig) {
 
     companion object {
-        private val logger = LoggerFactory.getLogger(BatchProcessingClient::class.java)
+        private val logger = LogManager.getLogger(BatchProcessingClient::class.java)
     }
 
     fun invokeBatchProcessing() {

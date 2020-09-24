@@ -1,0 +1,21 @@
+{
+  "riskyVenueAlertMessages": [
+      {
+          "messageType": "M1",
+          "messageDescription": "(placeholder / sample) Inform user about check-in at a risky venue.",
+          "additionalParameterRequired": false
+      },
+      {
+          "messageType": "M2",
+          "messageDescription": "(placeholder / sample) Inform user about check-in at a risky venue and instruct him/her to self-isolate.",
+          "additionalParameterRequired": false
+      },
+      {
+          "messageType": "M3",
+          "messageDescription": "(placeholder / sample) Inform user about check-in at a risky venue and instruct him/her to call the provided phone number",
+          "additionalParameterRequired": true,
+          "parameterType": "PHONE_NUMBER",
+          "parameterDescription": "Phone number"
+      }
+  ]
+}

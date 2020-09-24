@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.core.auth;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Base64;
 import java.util.List;
@@ -11,7 +11,7 @@ import static com.google.common.collect.Lists.newArrayList;
 
 public class ApiKeyAuthenticator implements Authenticator {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiKeyAuthenticator.class);
+    private static final Logger logger = LogManager.getLogger(ApiKeyAuthenticator.class);
     private final List<ApiKeyAuthorizer> authorizers;
 
     public ApiKeyAuthenticator(List<ApiKeyAuthorizer> authorizers) {

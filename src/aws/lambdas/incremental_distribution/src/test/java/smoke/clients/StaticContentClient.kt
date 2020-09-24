@@ -1,16 +1,16 @@
 package smoke.clients
 
+import org.apache.logging.log4j.LogManager
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
-import org.slf4j.LoggerFactory
 import smoke.env.EnvConfig
 
 class StaticContentClient(private val client: JavaHttpClient,
                           private val config: EnvConfig) {
 
-    private val logger = LoggerFactory.getLogger(StaticContentClient::class.java)
+    private val logger = LogManager.getLogger(StaticContentClient::class.java)
 
     fun availabilityAndroid() = getStaticContent(config.availabilityAndroidDistUrl)
 

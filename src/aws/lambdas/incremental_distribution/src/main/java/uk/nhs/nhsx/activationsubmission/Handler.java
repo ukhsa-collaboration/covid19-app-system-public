@@ -42,12 +42,12 @@ public class Handler extends RoutingHandler {
     }
 
     public Handler(Environment environment, Supplier<Instant> clock) {
-        this(awsAuthentication(ApiName.Mobile), suitableValidatorFor(clock, environment), signResponseWithKeyGivenInSsm(clock, environment));
+        this(environment, awsAuthentication(ApiName.Mobile), suitableValidatorFor(clock, environment), signResponseWithKeyGivenInSsm(clock, environment));
     }
 
-    public Handler(Authenticator authenticator, ActivationCodeValidator validator, ResponseSigner signer) {
+    public Handler(Environment environment, Authenticator authenticator, ActivationCodeValidator validator, ResponseSigner signer) {
         this.handler = withSignedResponses(
-            authenticator,
+            environment, authenticator,
             signer,
             routes(
                 path(Routing.Method.POST, "/activation/request",
@@ -57,6 +57,9 @@ public class Handler extends RoutingHandler {
                             .map(v -> HttpResponses.ok())
                             .orElse(HttpResponses.badRequest())
                     )
+                ),
+                path(Routing.Method.POST, "/activation/request/health", (r) ->
+                    HttpResponses.ok()
                 )));
     }
 

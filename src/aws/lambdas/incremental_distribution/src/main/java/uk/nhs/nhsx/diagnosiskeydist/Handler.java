@@ -3,8 +3,8 @@ package uk.nhs.nhsx.diagnosiskeydist;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.activationsubmission.persist.Environment;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFrontClient;
@@ -35,7 +35,7 @@ import static uk.nhs.nhsx.core.StandardSigning.signContentWithKeyFromParameter;
  */
 public class Handler implements RequestHandler<ScheduledEvent, String> {
 
-    private static final Logger logger = LoggerFactory.getLogger(Handler.class);
+    private static final Logger logger = LogManager.getLogger(Handler.class);
     private static final String MOBILE_APP_BUNDLE_ID = "MOBILE_APP_BUNDLE_ID";
 
     private final Environment environment;
@@ -63,7 +63,7 @@ public class Handler implements RequestHandler<ScheduledEvent, String> {
 
             new DistributionService(
                 new SubmissionFromS3Repository(awsS3Client),
-                new ExposureProtobuf(environment.access.required(MOBILE_APP_BUNDLE_ID), SystemClock.CLOCK),
+                new ExposureProtobuf(environment.access.required(MOBILE_APP_BUNDLE_ID)),
                 new UploadToS3KeyDistributor(awsS3Client, datedSigner(clock, parameters, batchProcessingConfig.ssmMetaDataSigningKeyParameterName)),
                 signContentWithKeyFromParameter(parameters, batchProcessingConfig.ssmAGSigningKeyParameterName),
                 new AwsCloudFrontClient(),

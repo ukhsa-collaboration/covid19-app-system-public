@@ -7,7 +7,10 @@ import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasHeader
 import org.http4k.hamkrest.hasStatus
 import org.junit.Test
-import smoke.clients.*
+import smoke.clients.DiagnosisKeysSubmissionClient
+import smoke.clients.EnCircuitBreakerClient
+import smoke.clients.VenuesCircuitBreakerClient
+import smoke.clients.VirologyClient
 import smoke.env.SmokeTests
 
 class UnauthorizedRequestsSmokeTest {
@@ -38,7 +41,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `order virology test`() {
-        val uri = "${TestKitOrderClient.baseUrlFrom(config)}/home-kit/order"
+        val uri = "${VirologyClient.baseUrlFrom(config)}/home-kit/order"
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -47,7 +50,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `retrieve virology test result`() {
-        val uri = "${TestKitOrderClient.baseUrlFrom(config)}/results"
+        val uri = "${VirologyClient.baseUrlFrom(config)}/results"
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -55,8 +58,35 @@ class UnauthorizedRequestsSmokeTest {
     }
 
     @Test
-    fun `upload test result`() {
-        val uri = TestResultUploadClient.baseUrlFrom(config)
+    fun `upload npex test result`() {
+        val uri = VirologyClient.npexUploadEndpoint(config)
+        val request = unAuthorizedPostRequest(uri)
+        val response = client(request)
+
+        assertUnAuthorized(response)
+    }
+
+    @Test
+    fun `upload fiorano test result`() {
+        val uri = VirologyClient.fioranoUploadEndpoint(config)
+        val request = unAuthorizedPostRequest(uri)
+        val response = client(request)
+
+        assertUnAuthorized(response)
+    }
+
+    @Test
+    fun `upload english token-gen test result`() {
+        val uri = VirologyClient.engTokenGenUploadEndpoint(config)
+        val request = unAuthorizedPostRequest(uri)
+        val response = client(request)
+
+        assertUnAuthorized(response)
+    }
+
+    @Test
+    fun `upload welsh token-gen test result`() {
+        val uri = VirologyClient.wlsTokenGenUploadEndpoint(config)
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 

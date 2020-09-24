@@ -33,3 +33,15 @@ variable "lambda_repository_bucket" {
 variable "lambda_object_key" {
   description = "The object key of the lambda jar in the s3 bucket"
 }
+
+variable "test_orders_index" {
+  description = "The global secondary index within the test orders table"
+}
+
+variable "custom_oai" {
+  description = "Secret shared between CloudFront Distribution and Lambda"
+}
+
+variable "alarm_topic_arn" {
+  description = "SNS topic to publish application metric alarms to"
+}

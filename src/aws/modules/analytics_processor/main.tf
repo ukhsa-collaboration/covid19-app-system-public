@@ -3,26 +3,25 @@ locals {
   identifier_prefix_underscores = "${terraform.workspace}_${var.name}_proc"
 }
 
-
 module "processor_role" {
   source = "../../libraries/iam_processing_lambda"
   name   = local.identifier_prefix
 }
 
-
 module "output_store" {
-  source         = "../../libraries/analytics_s3"
-  name           = "processing-store"
-  service        = "analytics"
-  logs_bucket_id = var.logs_bucket_id
+  source                   = "../../libraries/analytics_s3"
+  name                     = "processing-store"
+  service                  = "analytics"
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
 }
 
 module "athena" {
   source           = "../../libraries/athena"
-  database_name    = "${local.identifier_prefix_underscores}_db"
+  database_name    = var.database_name
   s3_input_bucket  = var.input_store
   s3_output_bucket = module.output_store.bucket_name
-  table_name       = "analytics_data_table"
+  table_name       = var.table_name
 }
 
 module "processing_lambda" {
@@ -35,11 +34,12 @@ module "processing_lambda" {
   lambda_memory             = 3008
   lambda_timeout            = 900
   lambda_environment_variables = {
-    DATABASE_NAME = module.athena.database_name
+    DATABASE_NAME = var.database_name
     INPUT_BUCKET  = var.input_store
     OUTPUT_BUCKET = module.output_store.bucket_name
     WORKGROUP     = module.athena.workgroup_name
   }
+  app_alarms_topic = var.alarm_topic_arn
 }
 
 resource "aws_cloudwatch_event_rule" "cron" {

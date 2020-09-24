@@ -7,8 +7,7 @@ resource "aws_s3_bucket" "this" {
   acl    = "private"
   policy = ""
 
-  #FIXME make this environment-specific (false for prod, true for non-prod - especially for short living environments for git branches)
-  force_destroy = true
+  force_destroy = var.force_destroy_s3_buckets
 
   tags = {
     Environment = terraform.workspace
@@ -16,7 +15,7 @@ resource "aws_s3_bucket" "this" {
   }
 
   versioning {
-    enabled = false # *** PRIVACY / AG Terms & Conditions (CHT) *** Make sure versioning __is disabled__ because we store diagnosis keys in these buckets !!!
+    enabled = var.s3_versioning
   }
 
   server_side_encryption_configuration {
@@ -53,7 +52,7 @@ data "aws_iam_policy_document" "this" {
   }
 
   statement {
-    actions = ["s3:GetObject"]
+    actions = ["s3:*"]
     principals {
       type        = "AWS"
       identifiers = ["*"]
@@ -71,7 +70,7 @@ data "aws_iam_policy_document" "this" {
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  bucket = aws_s3_bucket.this.id
-  policy = data.aws_iam_policy_document.this.json
+  depends_on = [aws_s3_bucket_public_access_block.this] # in terraform v0.12.29 we encounter conflict when this is executed concurrently with setting public access block
+  bucket     = aws_s3_bucket.this.id
+  policy     = data.aws_iam_policy_document.this.json
 }
-

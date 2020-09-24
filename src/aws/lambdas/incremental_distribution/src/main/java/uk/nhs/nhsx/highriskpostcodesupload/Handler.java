@@ -49,6 +49,7 @@ public class Handler extends RoutingHandler {
     private static final String DISTRIBUTION_ID = "DISTRIBUTION_ID";
     private static final String DISTRIBUTION_INVALIDATION_PATTERN = "DISTRIBUTION_INVALIDATION_PATTERN";
     private static final String DISTRIBUTION_OBJ_KEY_NAME = "distribution/risky-post-districts";
+    private static final String RAW_OBJ_KEY_NAME = "raw/risky-post-districts";
     private static final String BUCKET_NAME = "BUCKET_NAME";
 
     private final Routing.Handler handler;
@@ -78,6 +79,7 @@ public class Handler extends RoutingHandler {
         CsvUploadService service = new CsvUploadService(
             BucketName.of(environment.access.required(BUCKET_NAME)),
             ObjectKey.of(DISTRIBUTION_OBJ_KEY_NAME),
+            ObjectKey.of(RAW_OBJ_KEY_NAME),
             signer,
             s3Storage,
             awsCloudFront,
@@ -85,14 +87,19 @@ public class Handler extends RoutingHandler {
             environment.access.required(DISTRIBUTION_INVALIDATION_PATTERN),
             parser);
         handler = withoutSignedResponses(
+            environment, 
             authenticator,
-            routes(path(Method.POST, "/upload/high-risk-postal-districts", (r) -> {
-                if (!ContentTypes.isTextCsv(r))
-                    throw new ApiResponseException(HttpStatusCode.UNPROCESSABLE_ENTITY_422, "Content type is not text/csv");
+            routes(
+                path(Method.POST, "/upload/high-risk-postal-districts", (r) -> {
+                    if (!ContentTypes.isTextCsv(r))
+                        throw new ApiResponseException(HttpStatusCode.UNPROCESSABLE_ENTITY_422, "Content type is not text/csv");
 
-                service.upload(r.getBody());
-                return HttpResponses.accepted("successfully uploaded");
-            }))
+                    service.upload(r.getBody());
+                    return HttpResponses.accepted("successfully uploaded");
+                }),
+                path(Routing.Method.POST, "/upload/high-risk-postal-districts/health", (r) ->
+                    HttpResponses.ok()
+                ))
         );
 
     }

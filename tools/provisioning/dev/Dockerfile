@@ -34,11 +34,11 @@ RUN apt-get update && apt-get -qq -y install \
 
 WORKDIR /work
 
-# Gitversion isntallation
+# Gitversion installation
 RUN wget ${GITVERSION_URL}
 RUN tar -xf gitversion-ubuntu.18.04-x64-${GITVERSION_VERSION}.tar.gz && \
   cp gitversion /usr/local/bin && \
-  chmod +x /usr/local/bin/gitversion
+  chmod a+rx /usr/local/bin/gitversion
 
 
 # Python installation
@@ -89,10 +89,6 @@ RUN bundle install
 # Python packages
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-
-# Maven dependencies
-COPY pom.xml .
-RUN mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
 
 # Customise .profile - mainly to simplify use of multi-factor authentication on the CLI
 RUN sed -i.bak '/^mesg/i# You may comment out the following lines if you don´t want `ls´ to be colorized:\

@@ -13,6 +13,12 @@ module NHSx
     # relative to the root of the repository
     DEV_ACCOUNT = "src/aws/accounts/dev".freeze
     SYNTH_DEV_ACCOUNT = "src/synthetics/accounts/dev".freeze
+    ANALYTICS_DEV_ACCOUNT = "src/analytics/accounts/dev".freeze
+    DORETO_DEV_ACCOUNT = "src/documentation_reporting_tool/infrastructure/accounts/dev".freeze
+    # The location for the account used by a component of the system for targeting a temporary deployment environment
+    # relative to the root of the repository
+    APP_SYSTEM_ACCOUNTS = "src/aws/accounts".freeze
+    DORETO_ACCOUNTS = "src/documentation_reporting_tool/infrastructure/accounts".freeze
 
     # Invokes terraform in the correct context
     #
@@ -71,38 +77,45 @@ module NHSx
       run_command("Terraform initialisation", "terraform init", system_config)
     end
 
-    # Switches the terraform workspace to the given workspace_name
-    # (Workspaces map to target environments)
+    # Codifies the naming convention for terraform workspaces related to the target environment
     #
-    # This method implements the logic for differentiating between on-demand target environments
-    # (which are created using the special workspace name "branch") and named target environments
-    #
-    # If "branch" is passed as the workspace name, then the SHA1 of the current branch is calculated and used as the target envrionment identifier
-    # otherwise the workspace_name is taken as is.
-    #
-    # Multiple workspaces (i.e. multiple target environments) are only allowed
-    # in the DEV_ACCOUNT terraform configuration.
-    #
-    # Only the "default" workspace is allowed in other terraform configuration directories
-    #
-    # Pay attention to the length of workspace names as some AWS reosurces have a limit and the terraform workspace is prefixed to all
-    # resource identifiers.
-    def select_workspace(workspace_name, terraform_configuration, system_config)
+    # "branch" is a magic value that triggers the calculation of the SHA of the current branch name
+    # and uses the first 5 digits
+    def target_environment_name(workspace_name, account, system_config)
       if workspace_name == "branch"
         version_metadata = subsystem_version_metadata("backend", system_config)
         workspace_name = version_metadata["BranchName"]
         target_environment = generate_workspace_id(workspace_name)
       else
         target_environment = workspace_name
-        target_environment = "te-#{workspace_name}" if NHSx::TargetEnvironment::TARGET_ENVIRONMENTS[File.basename(terraform_configuration)].include?(workspace_name)
+        target_environment = "te-#{workspace_name}" if NHSx::TargetEnvironment::TARGET_ENVIRONMENTS[account].include?(workspace_name)
       end
-      simple_name = File.basename(terraform_configuration)
+      return target_environment
+    end
+
+    # Switches the terraform workspace to the given workspace_name
+    # (Workspaces map to target environments)
+    #
+    # This method implements the logic for differentiating between on-demand target environments
+    # (which are created using the special workspace name "branch") and named target environments
+    #
+    # If "branch" is passed as the workspace name, then the SHA1 of the current branch is calculated and used as the target environment identifier
+    # otherwise the workspace_name is taken as is.
+    #
+    # Multiple workspaces (i.e. multiple target environments) are only allowed
+    # in the DEV_ACCOUNT terraform configuration.
+    #
+    # Pay attention to the length of workspace names as some AWS resources have a limit and the terraform workspace is prefixed to all
+    # resource identifiers.
+    def select_workspace(workspace_name, terraform_configuration, system_config)
+      account_name = File.basename(terraform_configuration)
+      target_environment = target_environment_name(workspace_name, account_name, system_config)
       Dir.chdir(terraform_configuration) do
         init_terraform(system_config)
         begin
-          run_command("Create #{target_environment} workspace for #{simple_name}", "terraform workspace new #{target_environment}", system_config)
+          run_command("Create #{target_environment} workspace for #{account_name}", "terraform workspace new #{target_environment}", system_config)
         rescue GaudiError
-          run_command("Select #{target_environment} workspace for #{simple_name}", "terraform workspace select #{target_environment}", system_config)
+          run_command("Select #{target_environment} workspace for #{account_name}", "terraform workspace select #{target_environment}", system_config)
         end
       end
       return target_environment
@@ -113,7 +126,6 @@ module NHSx
       include NHSx::Generate
       simple_name = File.basename(terraform_configuration)
       workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
-      generate_test_config(workspace_name, simple_name, system_config) # used for creating synthetic canaries
       Dir.chdir(terraform_configuration) do
         run_tee("Deploy #{workspace_id} for #{simple_name}", "terraform apply -auto-approve -lock=true -no-color", system_config)
       end

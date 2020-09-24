@@ -1,0 +1,3 @@
+-r requirements.txt
+boto3==1.14.60
+

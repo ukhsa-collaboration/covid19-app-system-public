@@ -5,7 +5,10 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.junit.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
+import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -15,7 +18,7 @@ import static uk.nhs.nhsx.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
 public class HighRiskVenuesUploadHandlerTest {
 
     private final HighRiskVenuesUploadService service = mock(HighRiskVenuesUploadService.class);
-    private final Handler handler = new Handler((h) -> true, service);
+    private final Handler handler = new Handler(TestEnvironments.TEST.apply(Map.of("MAINTENANCE_MODE", "false")), (h) -> true, service);
 
     @Test
     public void mapsOkResultToHttpResponse() {

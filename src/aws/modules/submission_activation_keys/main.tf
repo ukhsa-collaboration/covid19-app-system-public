@@ -15,8 +15,10 @@ module "submission_lambda" {
   lambda_timeout            = 10
   lambda_memory             = 2048
   lambda_environment_variables = {
-    SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn",
+    SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
+    custom_oai                = var.custom_oai
   }
+  app_alarms_topic = var.alarm_topic_arn
 }
 
 module "submission_gateway" {

@@ -7,27 +7,25 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import uk.nhs.nhsx.ContextBuilder
 import uk.nhs.nhsx.ProxyRequestBuilder
+import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
 import uk.nhs.nhsx.core.aws.ssm.Parameter
-import uk.nhs.nhsx.core.aws.ssm.ParameterName
-import uk.nhs.nhsx.core.aws.ssm.Parameters
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import java.util.*
-import java.util.function.Function
 
 class RiskyVenueHandlerTest {
 
     private val contentSigner = Signer {
         Signature(
-            KeyId.of("some-id"),
-            SigningAlgorithmSpec.ECDSA_SHA_256,
-            "TEST_SIGNATURE".toByteArray()
+                KeyId.of("some-id"),
+                SigningAlgorithmSpec.ECDSA_SHA_256,
+                "TEST_SIGNATURE".toByteArray()
         )
     }
 
@@ -38,23 +36,25 @@ class RiskyVenueHandlerTest {
     private val poll = Parameter { ApprovalStatus.YES }
 
     private val breaker = CircuitBreakerService(initial, poll)
-    private val handler = RiskyVenueHandler(Authenticator { true }, signer, breaker )
+    private val handler = RiskyVenueHandler(TestEnvironments.TEST.apply(
+        mapOf("MAINTENANCE_MODE" to "false")
+    ), Authenticator { true }, signer, breaker)
 
     @Test
     fun handleCircuitBreakerRequestInitial() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath("/circuit-breaker/venue/request")
-            .withBearerToken("anything")
-            .withJson("{\"venueId\": \"MAX8CHR1\"}")
-            .build()
+                .withMethod(HttpMethod.POST)
+                .withPath("/circuit-breaker/venue/request")
+                .withBearerToken("anything")
+                .withJson("{\"venueId\": \"MAX8CHR1\"}")
+                .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
         val tokenResponse = Jackson.deserializeMaybe(response.body, TokenResponse::class.java)
-            .orElse(TokenResponse())
+                .orElse(TokenResponse())
         assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
     }
@@ -62,11 +62,11 @@ class RiskyVenueHandlerTest {
     @Test
     fun handleCircuitBreakerRequestInvalidJsonData() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath("/circuit-breaker/venue/request")
-            .withBearerToken("anything")
-            .withJson("{\"invalidField\": null}")
-            .build()
+                .withMethod(HttpMethod.POST)
+                .withPath("/circuit-breaker/venue/request")
+                .withBearerToken("anything")
+                .withJson("{\"invalidField\": null}")
+                .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -76,11 +76,11 @@ class RiskyVenueHandlerTest {
     @Test
     fun handleCircuitBreakerRequestInvalidJsonFormat() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath("/circuit-breaker/venue/request")
-            .withBearerToken("anything")
-            .withJson("{ invalid }")
-            .build()
+                .withMethod(HttpMethod.POST)
+                .withPath("/circuit-breaker/venue/request")
+                .withBearerToken("anything")
+                .withJson("{ invalid }")
+                .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -90,10 +90,10 @@ class RiskyVenueHandlerTest {
     @Test
     fun handleCircuitBreakerRequestNoBody() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath("/circuit-breaker/venue/request")
-            .withBearerToken("anything")
-            .build()
+                .withMethod(HttpMethod.POST)
+                .withPath("/circuit-breaker/venue/request")
+                .withBearerToken("anything")
+                .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -103,10 +103,10 @@ class RiskyVenueHandlerTest {
     @Test
     fun handleCircuitBreakerNoSuchPath() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath("/circuit-breaker/unknown-feature")
-            .withBearerToken("anything")
-            .build()
+                .withMethod(HttpMethod.POST)
+                .withPath("/circuit-breaker/unknown-feature")
+                .withBearerToken("anything")
+                .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(404)
@@ -115,30 +115,30 @@ class RiskyVenueHandlerTest {
     @Test
     fun handleCircuitBreakerMissingToken() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.GET)
-            .withPath("/circuit-breaker/venue/resolution")
-            .withBearerToken("anything")
-            .build()
+                .withMethod(HttpMethod.GET)
+                .withPath("/circuit-breaker/venue/resolution")
+                .withBearerToken("anything")
+                .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(404)
+        assertThat(response.statusCode).isEqualTo(422)
     }
 
     @Test
     fun handleCircuitBreakerResolutionSuccess() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.GET)
-            .withPath("/circuit-breaker/venue/resolution/abc123")
-            .withBearerToken("anything")
-            .build()
+                .withMethod(HttpMethod.GET)
+                .withPath("/circuit-breaker/venue/resolution/abc123")
+                .withBearerToken("anything")
+                .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
         val resolutionResponse = Jackson
-            .deserializeMaybe(response.body, ResolutionResponse::class.java)
-            .orElse(ResolutionResponse())
+                .deserializeMaybe(response.body, ResolutionResponse::class.java)
+                .orElse(ResolutionResponse())
         assertThat(resolutionResponse.approval).matches(ApprovalStatus.YES.getName())
     }
 

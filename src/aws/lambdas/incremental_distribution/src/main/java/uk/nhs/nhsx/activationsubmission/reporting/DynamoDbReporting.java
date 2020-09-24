@@ -2,8 +2,6 @@ package uk.nhs.nhsx.activationsubmission.reporting;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.model.AttributeAction;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.AttributeValueUpdate;
 import com.amazonaws.services.dynamodbv2.model.UpdateItemRequest;
 import uk.nhs.nhsx.activationsubmission.persist.ActivationCodeBatchName;
 import uk.nhs.nhsx.activationsubmission.persist.PersistedActivationCode;
@@ -14,6 +12,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Supplier;
+
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.*;
 
 public class DynamoDbReporting implements PersistedActivationCodeReporting {
 
@@ -49,9 +49,9 @@ public class DynamoDbReporting implements PersistedActivationCodeReporting {
     private void incrementBatchCount(ActivationCodeBatchName batch, String increment) {
         UpdateItemRequest request = new UpdateItemRequest()
             .withTableName(tableName)
-            .addKeyEntry("Date", new AttributeValue(today()))
-            .addKeyEntry("Batch", new AttributeValue(batch.value))
-            .addAttributeUpdatesEntry(increment, new AttributeValueUpdate().withValue(new AttributeValue().withN("1")).withAction(AttributeAction.ADD));
+            .addKeyEntry("Date", stringAttribute(today()))
+            .addKeyEntry("Batch", stringAttribute(batch.value))
+            .addAttributeUpdatesEntry(increment, attributeValueUpdate(numericAttribute(1), AttributeAction.ADD));
         db.updateItem(request);
     }
 

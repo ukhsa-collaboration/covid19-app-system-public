@@ -1,3 +1,5 @@
+data "aws_caller_identity" "caller" {}
+
 resource "aws_iam_role" "lambda_execution_role" {
   name = "${terraform.workspace}-${var.service}-${var.name}"
 
@@ -34,6 +36,15 @@ resource "aws_iam_role_policy" "lambda_execution_policy" {
         ],
         "Effect": "Allow",
         "Resource": "*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+          "secretsmanager:GetSecretValue"
+        ],
+        "Resource": [
+          "arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.caller.account_id}:secret:/*/synthetic_canary_auth*"
+        ]
       },
       {
         "Action": [

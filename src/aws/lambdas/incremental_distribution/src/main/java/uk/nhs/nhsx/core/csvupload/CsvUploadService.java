@@ -17,6 +17,7 @@ public class CsvUploadService {
 
     private final BucketName bucketName;
     private final ObjectKey distributionObjKeyName;
+    private final ObjectKey rawObjKeyName;
     private final DatedSigner signer;
     private final S3Storage s3Client;
     private final AwsCloudFront awsCloudFront;
@@ -26,6 +27,7 @@ public class CsvUploadService {
 
     public CsvUploadService(BucketName bucketName,
                             ObjectKey distributionObjKeyName,
+                            ObjectKey rawObjKeyName,
                             DatedSigner signer,
                             S3Storage s3Client,
                             AwsCloudFront awsCloudFront,
@@ -34,6 +36,7 @@ public class CsvUploadService {
                             CsvToJsonParser parser) {
         this.bucketName = bucketName;
         this.distributionObjKeyName = distributionObjKeyName;
+        this.rawObjKeyName = rawObjKeyName;
         this.signer = signer;
         this.s3Client = s3Client;
         this.awsCloudFront = awsCloudFront;
@@ -52,6 +55,13 @@ public class CsvUploadService {
             byteSource,
             SigningHeaders.fromDatedSignature(signatureResult)
         );
+
+        s3Client.upload(
+            S3Storage.Locator.of(bucketName, rawObjKeyName),
+            ContentType.TEXT_PLAIN,
+            byteSourceFor(csv)
+        );
+
         awsCloudFront.invalidateCache(cloudFrontDistributionId, cloudFrontInvalidationPattern);
     }
 }

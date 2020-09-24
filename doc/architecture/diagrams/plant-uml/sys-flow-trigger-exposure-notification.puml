@@ -1,43 +1,52 @@
 @startuml system-flow_matching-diagnosis-keys-trigger-exposure-notification
 
+
+Collections Apps
 Actor User
 
+group Encounter detection
 ...
-group Match diagnosis keys
-  App -> DistributionAPI : get diagnosis keys (eg. 2h increment)
-  App <- DistributionAPI : diagnosis key histories (for that increment)
+Apps <-> App : encounter detection running
+Apps -> Apps : store encounters locally
+App -> App : store encounters locally 
+...
+end
+Apps -> SubmissionAPI : uploaded diagnosis keys after pos test
+...
 
-  App -> App : check, matches found, analyse risk (matched-diag-keys)
+
+group Match diagnosis keys
+  App -> DistributionAPI : poll diagnosis keys
+  App <- DistributionAPI : 
+
+  ...
+
+App -> App: risk analysis, match with encounters found
+...
 end
 group Circuit breaker
-  App -> CircuitBreaker : confirm exposure notification (data)
-  App <- CircuitBreaker : wait(token)
+  App -> CircuitBreaker : confirm exposure notification
+  App <- CircuitBreaker : wait (token)
   ...
-  CircuitBreaker -> CircuitBreaker : collect and aggregate other requests (may take up to eg. 2h)
-  CircuitBreaker -> ControlAPI : notification threshold reached
+  CircuitBreaker -> CircuitBreaker : collect and aggregate (period e.g. 2h)
+  CircuitBreaker -> SystemData : threshold reached
 
-  ControlAPI -> ControlPanel : decision needed
-  
+  SystemData <- ControlPanel : observe thresholds
+  ...
   App -> CircuitBreaker : poll confirmation, at x time (token)
     Actor Operator
   ControlPanel -> Operator :  human decision needed
-  ControlPanel <- Operator :  decision
-
-  ControlAPI <- ControlPanel : decision
-  CircuitBreaker <- ControlAPI : decision
+  ConfigStore <- Operator :  confirm
+  CircuitBreaker <- ConfigStore : confirm
 
   App -> CircuitBreaker : poll confirmation, at x time (token)
-  App <- CircuitBreaker : decision
-
-  CircuitBreaker -> AnalyticsAPI : update analytics
+  App <- CircuitBreaker : confirm
 end
 
-group Trigger notification
-  App -> User : trigger exposure notification for user (matched-diag-keys)
-end
-
-group Isolation advice
-  App -> User : isolation advice for exposed user (14d)
+group Trigger notification and advice
+  App -> User : trigger exposure notification for user
+  App -> User : isolation advice for exposed contact
+  ...
 end 
 
 @enduml

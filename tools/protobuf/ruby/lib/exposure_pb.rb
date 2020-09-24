@@ -26,6 +26,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :transmission_risk_level, :int32, 2
       optional :rolling_start_interval_number, :int32, 3
       optional :rolling_period, :int32, 4, default: 144
+      optional :days_since_onset_of_symptoms, :sint32, 6
     end
     add_message "batchZipCreation.TEKSignatureList" do
       repeated :signatures, :message, 1, "batchZipCreation.TEKSignature"

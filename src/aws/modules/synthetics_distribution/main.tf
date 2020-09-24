@@ -1,15 +1,14 @@
 locals {
   workspace_te = regex("^(?P<prefix>te-)?(?P<target>[^-]+)$", terraform.workspace)
   workspace_id = (local.workspace_te.prefix == null) ? "branch" : local.workspace_te.target
-  test_config  = jsondecode(file("${path.root}/../../../../out/gen/config/test_config_${local.workspace_id}.json"))
 }
 
-data "aws_caller_identity" "current" {}
-
 module "lambda_storage" {
-  source  = "../../libraries/non_logging_s3"
-  name    = "probe"
-  service = var.service
+  source                   = "../../libraries/submission_s3"
+  name                     = "probe"
+  service                  = var.service
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = true
 }
 
 # maximum name length including workspace prefix is 21.
@@ -23,7 +22,7 @@ module "probe_exposure_configuration_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/exposure-configuration"
   method                = "GET"
-  auth_header           = ""
+  secret_name           = ""
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -39,7 +38,7 @@ module "probe_risky_post_district_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/risky-post-districts"
   method                = "GET"
-  auth_header           = ""
+  secret_name           = ""
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -56,7 +55,7 @@ module "probe_risky_venues_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/risky-venues"
   method                = "GET"
-  auth_header           = ""
+  secret_name           = ""
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -73,7 +72,7 @@ module "probe_self_isolation_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/self-isolation"
   method                = "GET"
-  auth_header           = ""
+  secret_name           = ""
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -90,7 +89,7 @@ module "probe_symptomatic_questionnaire_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/symptomatic-questionnaire"
   method                = "GET"
-  auth_header           = ""
+  secret_name           = ""
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -107,7 +106,7 @@ module "probe_availability_android_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/availability-android"
   method                = "GET"
-  auth_header           = ""
+  secret_name           = ""
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -124,7 +123,7 @@ module "probe_availability_ios_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/availability-ios"
   method                = "GET"
-  auth_header           = ""
+  secret_name           = ""
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -141,7 +140,7 @@ module "probe_diagnosis_keys_daily_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/daily"
   method                = "GET"
-  auth_header           = local.test_config.auth_headers.mobile
+  secret_name           = "/mobile/synthetic_canary_auth"
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false
@@ -158,7 +157,7 @@ module "probe_diagnosis_keys_2hourly_distribution" {
   hostname              = "distribution-${terraform.workspace}"
   uri_path              = "/distribution/two-hourly"
   method                = "GET"
-  auth_header           = local.test_config.auth_headers.mobile
+  secret_name           = "/mobile/synthetic_canary_auth"
   expc_status           = "200"
   service               = var.service
   api_gw_support        = false

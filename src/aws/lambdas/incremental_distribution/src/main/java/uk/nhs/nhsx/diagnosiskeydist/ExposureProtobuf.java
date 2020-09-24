@@ -3,14 +3,13 @@ package uk.nhs.nhsx.diagnosiskeydist;
 import batchZipCreation.Exposure;
 import batchZipCreation.Exposure.TemporaryExposureKey;
 import com.google.protobuf.ByteString;
+import uk.nhs.nhsx.diagnosiskeydist.apispec.ZIPSubmissionPeriod;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 
 import java.nio.ByteBuffer;
-import java.time.Instant;
-import java.time.Period;
 import java.util.Base64;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ExposureProtobuf {
@@ -20,11 +19,9 @@ public class ExposureProtobuf {
     private static final String VERIFICATION_KEY_VERSION = "v1";
 
     private final String mobileAppBundleId;
-    private final Supplier<Instant> clock;
 
-    public ExposureProtobuf(String mobileAppBundleId, Supplier<Instant> clock) {
+    public ExposureProtobuf(String mobileAppBundleId) {
         this.mobileAppBundleId = mobileAppBundleId;
-        this.clock = clock;
     }
 
     public Exposure.TEKSignatureList buildTEKSignatureList(ByteBuffer byteBufferSignatureResult) {
@@ -42,12 +39,11 @@ public class ExposureProtobuf {
             .build();
     }
 
-    public Exposure.TemporaryExposureKeyExport buildTemporaryExposureKeyExport(List<StoredTemporaryExposureKey> keys) {
-        Instant now = clock.get();
+    public Exposure.TemporaryExposureKeyExport buildTemporaryExposureKeyExport(List<StoredTemporaryExposureKey> keys, ZIPSubmissionPeriod period, int periodOffsetMinutes) {
         return Exposure.TemporaryExposureKeyExport
             .newBuilder()
-            .setStartTimestamp(now.minus(Period.ofDays(14)).getEpochSecond())
-            .setEndTimestamp(now.getEpochSecond())
+            .setStartTimestamp((period.getStartInclusive().getTime() / 1000) + periodOffsetMinutes * 60)
+            .setEndTimestamp((period.getEndExclusive().getTime() / 1000) + periodOffsetMinutes * 60)
             .setBatchNum(1)
             .setBatchSize(1)
             .addSignatureInfos(buildSignatureInfo())
@@ -57,20 +53,42 @@ public class ExposureProtobuf {
 
     private List<TemporaryExposureKey> buildTekList(List<StoredTemporaryExposureKey> keys) {
         return keys.stream()
-            .map(k -> buildTemporaryExposureKey(k.key, k.rollingStartNumber, k.rollingPeriod, k.transmissionRisk))
+            .map(buildTemporaryExposureKey())
             .collect(Collectors.toList());
     }
 
-    private TemporaryExposureKey buildTemporaryExposureKey(String key,
-                                                          Integer rollingStartNumber,
-                                                          Integer rollingPeriod,
-                                                          Integer transmissionRisk) {
+    private Function<StoredTemporaryExposureKey,TemporaryExposureKey> buildTemporaryExposureKey() {
+        return (StoredTemporaryExposureKey tek) -> {
+            if (isTemporaryExposureKeyV2(tek)) {
+                return buildTemporaryExposureKeyV2(tek);
+            } else {
+                return buildTemporaryExposureKeyV1(tek);
+            }
+        };
+    }
+
+    private boolean isTemporaryExposureKeyV2(StoredTemporaryExposureKey tek) {
+        return tek.daysSinceOnsetOfSymptoms != null;
+    }
+
+    private TemporaryExposureKey buildTemporaryExposureKeyV1(StoredTemporaryExposureKey tek) {
         return Exposure.TemporaryExposureKey
             .newBuilder()
-            .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode(key)))
-            .setRollingStartIntervalNumber(rollingStartNumber)
-            .setRollingPeriod(rollingPeriod)
-            .setTransmissionRiskLevel(transmissionRisk)
+            .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode(tek.key)))
+            .setRollingStartIntervalNumber(tek.rollingStartNumber)
+            .setRollingPeriod(tek.rollingPeriod)
+            .setTransmissionRiskLevel(tek.transmissionRisk)
+            .build();
+    }
+
+    private TemporaryExposureKey buildTemporaryExposureKeyV2(StoredTemporaryExposureKey tek) {
+        return Exposure.TemporaryExposureKey
+            .newBuilder()
+            .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode(tek.key)))
+            .setRollingStartIntervalNumber(tek.rollingStartNumber)
+            .setRollingPeriod(tek.rollingPeriod)
+            .setTransmissionRiskLevel(tek.transmissionRisk)
+            .setDaysSinceOnsetOfSymptoms(tek.daysSinceOnsetOfSymptoms)
             .build();
     }
 

@@ -2,13 +2,26 @@
   "minimumOSVersion": {
     "value": "13.5.0",
     "description": {
-      "en-GB": ""
+      "en-GB": "In order to run this app on your device, you need to update your device software. Please go to settings and update it from there.",
+      "ar": "ولتتمكن من تشغيل هذا التطبيق في جهازك ، فسيتوجب عليك تحديث برنامج جهازك.  يرجى منك الذهاب الى الاعدادات وتحديث البرنامج هناك",
+      "tr": "Bu uygulamanın cihazınızda çalıştırılması için cihaz yazılımınızı güncellemeniz gerekir. Lütfen ayarlara giderek bunları oradan güncelleyin.",
+      "zh": "为了在您的设备上运行此应用程序，您需要更新设备软件。 请转到设置并从那里进行更新。",
+      "ro": "Pentru a rula această aplicație pe dispozitivul dvs., trebuie să vă actualizați software-ul dispozitivului. Vă rugăm să accesați setările și să o actualizați de acolo."
     }
   },
   "minimumAppVersion": {
     "value": "3.0.0",
     "description": {
-      "en-GB": ""
+      "en-GB": "In order to run this app on your device, you need to update it to the latest version. Please go to the app store and update it from there.",
+      "cy-GB": "Er mwyn rhedeg yr ap hwn ar eich dyfais, mae angen i chi gael y fersiwn ddiweddaraf. Ewch i'r App Store i gael y fersiwn ddiweddaraf.",
+      "bn-BD": "আপনার ডিভাইসে এই অ্যাপ্লিকেশনটি চালানোর জন্য, আপনাকে এটি সর্বশেষতম সংস্করণে আপডেট করতে হবে। অ্যাপ স্টোর এ যান এবং সেখান থেকে এটি আপডেট করুন।",
+      "gu-IN": "આ એપ્લિકેશનને તમારા ડિવાઇસ પર ચલાવવા માટે, તમારે તેને નવીનતમ સંસ્કરણ પર અપડેટ કરવાની જરૂર છે. કૃપા કરીને એપ્લિકેશન સ્ટોર પર જાઓ અને ત્યાંથી તેને અપડેટ કરો.",
+      "pa-IN": "ਇਸ ਐਪ ਨੂੰ ਆਪਣੀ ਡਿਵਾਈਸ ਤੇ ਚਲਾਉਣ ਲਈ, ਤੁਹਾਨੂੰ ਇਸ ਨੂੰ ਨਵੇਂ ਸੰਸਕਰਣ ਵਿੱਚ ਅਪਡੇਟ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਸਟੋਰ ਤੇ ਜਾਓ ਅਤੇ ਉੱਥੋਂ ਇਸ ਨੂੰ ਅਪਡੇਟ ਕਰੋ।",
+      "ur-PK": "اس ایپ کو اپنے آلہ پر چلانے کے لئے، آپ کو اسے تازہ ترین ورژن میں اپ ڈیٹ کرنے کی ضرورت ہے۔ براہ کرم ایپ اسٹور پر جائیں اور وہاں سے اسے اپ ڈیٹ کریں۔",
+      "ar": "ولتتمكن من تشغيل التطبيق في جهازك ، فيرجى منك تحديث جهازك للحصول على آخر نسخة.  يرجى منك الذهاب الى متجر التطبيقات وتحديث التطبيق هناك",
+      "tr": "Bu uygulamanın cihazınızda çalıştırılması için bunu en son sürüme yükseltmeniz gerekmektedir. Lütfen uygulama mağazasına giderek bunları oradan güncelleyin.",
+      "zh": "为了在您的设备上运行此应用程序，您需要将其更新到最新版本。 请转到应用商店并从那里进行更新。",
+      "ro": "Pentru a rula această aplicație pe dispozitivul dvs., trebuie să o actualizați la cea mai recentă versiune. Vă rugăm să accesați App Store și să o actualizați de acolo."
     }
   }
 }

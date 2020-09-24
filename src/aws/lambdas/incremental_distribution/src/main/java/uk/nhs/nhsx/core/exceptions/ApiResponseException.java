@@ -4,6 +4,7 @@ public class ApiResponseException extends RuntimeException {
   	private static final long serialVersionUID = 1L;
 	
     public final HttpStatusCode statusCode;
+    
     public ApiResponseException(HttpStatusCode statusCode) {
         super();
         this.statusCode = statusCode;

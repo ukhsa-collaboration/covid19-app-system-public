@@ -2,8 +2,8 @@ package uk.nhs.nhsx.diagnosiskeyssubmission;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import org.apache.http.entity.ContentType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient;
 import uk.nhs.nhsx.core.aws.s3.*;
@@ -15,11 +15,12 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DiagnosisKeysSubmissionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(DiagnosisKeysSubmissionService.class);
+    private static final Logger logger = LogManager.getLogger(DiagnosisKeysSubmissionService.class);
 
     private final BucketName bucketName;
     private final S3Storage s3Storage;
@@ -62,7 +63,7 @@ public class DiagnosisKeysSubmissionService {
     }
 
     private boolean isKeyValid(String key) {
-        return key != null && isBase64Encoded(key);
+        return key != null && isBase64EncodedAndLessThan32Bytes(key);
     }
 
     private boolean isRollingStartNumberValid(int rollingStartNumber) {
@@ -73,10 +74,10 @@ public class DiagnosisKeysSubmissionService {
         return isRollingPeriod == 144;
     }
 
-    private boolean isBase64Encoded(String value) {
+    private boolean isBase64EncodedAndLessThan32Bytes(String value) {
         try {
-            Base64.getDecoder().decode(value);
-            return true;
+            byte[] key = Base64.getDecoder().decode(value);
+            return key.length < 32;
         } catch (IllegalArgumentException e) {
             return false;
         }
@@ -114,9 +115,14 @@ public class DiagnosisKeysSubmissionService {
         return new StoredTemporaryExposureKeyPayload(
             payload.temporaryExposureKeys
                 .stream()
-                .map(tek -> new StoredTemporaryExposureKey(tek.key, tek.rollingStartNumber, tek.rollingPeriod))
+                .map(buildStoredTemporaryExposureKey())
                 .collect(Collectors.toList())
         );
+    }
+
+    private Function<ClientTemporaryExposureKey, StoredTemporaryExposureKey> buildStoredTemporaryExposureKey() {
+        return (ClientTemporaryExposureKey tek) -> new StoredTemporaryExposureKey
+            (tek.key, tek.rollingStartNumber, tek.rollingPeriod, tek.transmissionRiskLevel, tek.daysSinceOnsetOfSymptoms);
     }
 
     private void deleteToken(UUID diagnosisKeySubmissionToken) {

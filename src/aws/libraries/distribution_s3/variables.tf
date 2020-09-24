@@ -20,3 +20,15 @@ variable "origin_access_identity_path" {
 variable "logs_bucket_id" {
   description = "The name of the bucket to which S3 access logs are saved."
 }
+
+variable "force_destroy_s3_buckets" {
+  description = "Force destroy s3 buckets if set to true"
+  type        = bool
+  default     = true
+}
+
+variable "s3_versioning" {
+  description = "Enable S3 bucket versioning if set to true"
+  type        = bool
+  default     = false
+}

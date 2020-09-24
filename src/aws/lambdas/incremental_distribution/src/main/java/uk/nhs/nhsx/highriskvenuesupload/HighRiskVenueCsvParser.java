@@ -18,12 +18,36 @@ import static uk.nhs.nhsx.core.DateFormatValidator.DATE_TIME_PATTERN;
 public class HighRiskVenueCsvParser {
 
     private static final String VENUE_CSV_ROW_FORMAT = "\\s*\"(?<venueId>[\\w\\-]+)\"\\s*,\\s*\"(?<startTime>[\\w.:\\-,/_]+)\"\\s*,\\s*\"(?<endTime>[\\w.:\\-,/_]+)\"\\s*";
+    private static final String VENUE_CSV_ROW_MESSAGE_TYPE_FORMAT = "\\s*\"(?<venueId>[\\w\\-]+)\"\\s*,\\s*\"(?<startTime>[\\w.:\\-,/_]+)\"\\s*,\\s*\"(?<endTime>[\\w.:\\-,/_]+)\"\\s*,\\s*\"(?<messageType>[\\w.:\\-,/_]+)\"\\s*,\\s*\"(?<optionalParameter>[\\w ]*)\"\\s*";
     private static final String VENUE_CSV_HEADER_FORMAT = "\\s*#\\s*(?<venueIdColumnHeader>\\w+)\\s*,\\s*(?<startTimeColumnHeader>\\w+)\\s*,\\s*(?<endTimeColumnHeader>\\w+)\\s*";
+    private static final String VENUE_CSV_HEADER_MESSAGE_TYPE_FORMAT = "\\s*#\\s*(?<venueIdColumnHeader>\\w+)\\s*,\\s*(?<startTimeColumnHeader>\\w+)\\s*,\\s*(?<endTimeColumnHeader>\\w+)\\s*,\\s*(?<messageTypeColumnHeader>\\w+)\\s*,\\s*(?<optionalParameterColumnHeader>\\w+)\\s*";
     private static final Pattern VENUE_CSV_ROW_PATTERN = Pattern.compile(VENUE_CSV_ROW_FORMAT);
+    private static final Pattern VENUE_CSV_ROW_MESSAGE_TYPE_PATTERN = Pattern.compile(VENUE_CSV_ROW_MESSAGE_TYPE_FORMAT);
     private static final Pattern VENUE_CSV_HEADER_PATTERN = Pattern.compile(VENUE_CSV_HEADER_FORMAT);
+    private static final Pattern VENUE_CSV_HEADER_MESSAGE_TYPE_PATTERN = Pattern.compile(VENUE_CSV_HEADER_MESSAGE_TYPE_FORMAT);
+    private static final String VENUE_ID_FORMAT = "[CDEFHJKMPRTVWXY2345689]*";
+    private static final Pattern VENUE_ID_PATTERN = Pattern.compile(VENUE_ID_FORMAT);
+    private static final int VENUE_ID_MAX_LENGTH = 12;
+    private static final String MESSAGE_TYPE_FORMAT = "M\\d";
+    private static final Pattern MESSAGE_TYPE_PATTERN = Pattern.compile(MESSAGE_TYPE_FORMAT);
     private static final String CSV_HEADER_VENUE_ID = "venue_id";
     private static final String CSV_HEADER_START_TIME = "start_time";
     private static final String CSV_HEADER_END_TIME = "end_time";
+    private static final String CSV_HEADER_MESSAGE_TYPE = "message_type";
+    private static final String CSV_HEADER_OPTIONAL_PARAMETER = "optional_parameter";
+
+    private static final String DEFAULT_MESSAGE_TYPE = "M1";
+    private static final String DEFAULT_OPTIONAL_PARAMETER = "";
+    private static final int CSV_CONTENT_MAX_SIZE = 1048576;
+    private static boolean messageTypeFeatureFlag;
+    private static List<String> MESSAGE_TYPES_WITH_OPTIONAL_PARAMETER = List.of("M3");
+
+    public HighRiskVenueCsvParser() {
+        this(false);
+    }
+    public HighRiskVenueCsvParser(boolean messageTypeFeatureFlag) {
+        HighRiskVenueCsvParser.messageTypeFeatureFlag = messageTypeFeatureFlag;
+    }
 
     public VenuesParsingResult toJson(String csv) {
         try {
@@ -33,21 +57,33 @@ public class HighRiskVenueCsvParser {
             return VenuesParsingResult.failure(e.getMessage());
         }
     }
-    
+
     private static HighRiskVenues parse(String csv) {
         if (Strings.isNullOrEmpty(csv) || csv.trim().isEmpty())
             throwParsingExceptionWith("No payload");
+        if (csv.getBytes().length > CSV_CONTENT_MAX_SIZE)
+            throwParsingExceptionWith("Csv content is more than 1MB");
 
         String[] rows = csv.split("\\r?\\n");
 
-        validateHeaderRow(rows[0]);
-
         List<HighRiskVenue> venues = new ArrayList<>();
-        for (int i = 1; i < rows.length; i++) {
-            VenueRisk venueIdRisk = parseRow(rows[i], i + 1);
-            RiskyWindow riskyWindow = new RiskyWindow(venueIdRisk.startTime, venueIdRisk.endTime);
-            HighRiskVenue highRiskVenue = new HighRiskVenue(venueIdRisk.venueId, riskyWindow);
-            venues.add(highRiskVenue);
+
+        if (messageTypeFeatureFlag) {
+            validateHeaderRowWithMessageType(rows[0]);
+            for (int i = 1; i < rows.length; i++) {
+                VenueRisk venueIdRisk = parseRow(rows[i], i + 1, VENUE_CSV_ROW_MESSAGE_TYPE_PATTERN);
+                RiskyWindow riskyWindow = new RiskyWindow(venueIdRisk.startTime, venueIdRisk.endTime);
+                HighRiskVenue highRiskVenue = new HighRiskVenue(venueIdRisk.venueId, riskyWindow, venueIdRisk.messageType, venueIdRisk.optionalParameter);
+                venues.add(highRiskVenue);
+            }
+        } else {
+            validateHeaderRow(rows[0]);
+            for (int i = 1; i < rows.length; i++) {
+                VenueRisk venueIdRisk = parseRow(rows[i], i + 1, VENUE_CSV_ROW_PATTERN);
+                RiskyWindow riskyWindow = new RiskyWindow(venueIdRisk.startTime, venueIdRisk.endTime);
+                HighRiskVenue highRiskVenue = new HighRiskVenue(venueIdRisk.venueId, riskyWindow);
+                venues.add(highRiskVenue);
+            }
         }
         // TODO: check if date ranges overlap for the same venue id
         return new HighRiskVenues(venues);
@@ -58,12 +94,36 @@ public class HighRiskVenueCsvParser {
         final String venueId;
         final String startTime;
         final String endTime;
+        final String messageType;
+        final String optionalParameter;
 
         VenueRisk(String venueId, String startTime, String endTime) {
+            this(venueId, startTime, endTime, DEFAULT_MESSAGE_TYPE, DEFAULT_OPTIONAL_PARAMETER);
+        }
+
+        VenueRisk(String venueId, String startTime, String endTime, String messageType, String optionalParameter) {
             checkRiskyWindow(startTime, endTime);
+            checkVenueId(venueId);
+            checkMessageType(messageType, optionalParameter);
+
             this.venueId = venueId;
             this.startTime = startTime;
             this.endTime = endTime;
+            this.messageType = messageType;
+            this.optionalParameter = optionalParameter;
+        }
+
+        private void checkMessageType(String messageType, String optionalParameter) {
+            Matcher matcher = MESSAGE_TYPE_PATTERN.matcher(messageType);
+            if (!matcher.matches()) {
+                throwParsingExceptionWith("Invalid characters on the messageType: " + messageType);
+            }
+            if (!MESSAGE_TYPES_WITH_OPTIONAL_PARAMETER.contains(messageType) && !Strings.isNullOrEmpty(optionalParameter)) {
+                throwParsingExceptionWith(String.format("Message type %s does not support optional parameter", messageType));
+            }
+            if (MESSAGE_TYPES_WITH_OPTIONAL_PARAMETER.contains(messageType) && Strings.isNullOrEmpty(optionalParameter)) {
+                throwParsingExceptionWith(String.format("Message type %s must include an optional parameter", messageType));
+            }
         }
 
         private void checkRiskyWindow(String startTime, String endTime) {
@@ -87,19 +147,34 @@ public class HighRiskVenueCsvParser {
                 throwParsingExceptionWith("Start date must be <= end date");
             }
         }
+
+        private void checkVenueId(String venueId) {
+            if (venueId.length() > VENUE_ID_MAX_LENGTH) {
+                throwParsingExceptionWith("Length of VenueId is greater than " + VENUE_ID_MAX_LENGTH + " characters");
+            }
+            Matcher matcher = VENUE_ID_PATTERN.matcher(venueId);
+            if (!matcher.matches()) {
+                throwParsingExceptionWith("Invalid characters on the venueId: " + venueId);
+            }
+        }
     }
 
-    private static VenueRisk parseRow(String dataRow, Integer row) {
-        Matcher matcher = VENUE_CSV_ROW_PATTERN.matcher(dataRow);
+    private static VenueRisk parseRow(String dataRow, Integer row, Pattern pattern) {
+        Matcher matcher = pattern.matcher(dataRow);
         if (!matcher.matches()) {
             throwParsingExceptionWith("Invalid data row on line number: " + row);
         }
-
         String venueId = matcher.group("venueId");
         String startTime = matcher.group("startTime");
         String endTime = matcher.group("endTime");
 
-        return new VenueRisk(venueId, startTime, endTime);
+        if (!pattern.equals(VENUE_CSV_ROW_MESSAGE_TYPE_PATTERN)) {
+            return new VenueRisk(venueId, startTime, endTime);
+        }
+        String messageType = matcher.group("messageType");
+        String optionalParameter = matcher.group("optionalParameter");
+
+        return new VenueRisk(venueId, startTime, endTime, messageType, optionalParameter);
     }
 
     private static void validateHeaderRow(String headerRow) {
@@ -109,13 +184,25 @@ public class HighRiskVenueCsvParser {
             throwParsingExceptionWith("Invalid header");
         }
 
-        String venueIdColumnHeader = matcher.group("venueIdColumnHeader");
-        String startTimeColumnHeader = matcher.group("startTimeColumnHeader");
-        String endTimeColumnHeader = matcher.group("endTimeColumnHeader");
+        if (!CSV_HEADER_VENUE_ID.equals(matcher.group("venueIdColumnHeader")) ||
+            !CSV_HEADER_START_TIME.equals(matcher.group("startTimeColumnHeader")) ||
+            !CSV_HEADER_END_TIME.equals(matcher.group("endTimeColumnHeader"))) {
+            throwParsingExceptionWith("Invalid header");
+        }
+    }
 
-        if (!CSV_HEADER_VENUE_ID.equals(venueIdColumnHeader) ||
-            !CSV_HEADER_START_TIME.equals(startTimeColumnHeader) ||
-            !CSV_HEADER_END_TIME.equals(endTimeColumnHeader)) {
+    private static void validateHeaderRowWithMessageType(String headerRow) {
+        Matcher matcher = VENUE_CSV_HEADER_MESSAGE_TYPE_PATTERN.matcher(headerRow);
+
+        if (!matcher.matches()) {
+            throwParsingExceptionWith("Invalid header");
+        }
+
+        if (!CSV_HEADER_VENUE_ID.equals(matcher.group("venueIdColumnHeader")) ||
+            !CSV_HEADER_START_TIME.equals(matcher.group("startTimeColumnHeader")) ||
+            !CSV_HEADER_END_TIME.equals(matcher.group("endTimeColumnHeader")) ||
+            !CSV_HEADER_MESSAGE_TYPE.equals(matcher.group("messageTypeColumnHeader")) ||
+            !CSV_HEADER_OPTIONAL_PARAMETER.equals(matcher.group("optionalParameterColumnHeader"))) {
             throwParsingExceptionWith("Invalid header");
         }
     }

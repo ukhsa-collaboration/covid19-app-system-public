@@ -21,3 +21,7 @@ output "lambda_function_name" {
 output "gateway_id" {
   value = module.upload_gateway.api_gateway_id
 }
+
+output "test_orders_index_name" {
+  value = "${local.identifier_prefix}-ordertokens-index"
+}

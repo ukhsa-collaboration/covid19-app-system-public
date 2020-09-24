@@ -1,5 +1,7 @@
 package uk.nhs.nhsx.analyticssubmission;
 
+import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose;
+import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder;
 import uk.nhs.nhsx.activationsubmission.persist.Environment;
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload;
 import uk.nhs.nhsx.core.HttpResponses;
@@ -29,7 +31,8 @@ import static uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses;
  */
 public class Handler extends RoutingHandler {
 
-    private final static String bucketName = System.getenv("SUBMISSION_STORE");
+    private static final AmazonKinesisFirehose kinesisFirehose = AmazonKinesisFirehoseClientBuilder.defaultClient();
+    
     private final Routing.Handler handler;
 
     public Handler() {
@@ -38,30 +41,44 @@ public class Handler extends RoutingHandler {
 
     public Handler(Environment environment, Supplier<Instant> clock) {
         this(
-            awsAuthentication(ApiName.Mobile),
+            environment, awsAuthentication(ApiName.Mobile),
             new AwsS3Client(), 
             new UniqueObjectKeyNameProvider(clock, UniqueId.ID),
-            bucketName
+            analyticsConfig(environment)
         );
     }
 
-    public Handler(Authenticator authenticator, 
+    private static AnalyticsConfig analyticsConfig(Environment environment) {
+        return new AnalyticsConfig(
+            environment.access.required("firehose_stream_name"),
+            !"false".equals(environment.access.required("s3_ingest_enabled")),
+            "true".equals(environment.access.required("firehose_ingest_enabled")),
+            environment.access.required("SUBMISSION_STORE")
+        );
+    }
+
+    public Handler(Environment environment,
+                   Authenticator authenticator,
                    S3Storage s3Storage,
                    ObjectKeyNameProvider objectKeyNameProvider,
-                   String bucketName) {
+                   AnalyticsConfig analyticsConfig) {
         
         AnalyticsSubmissionService service = new AnalyticsSubmissionService(
-            bucketName, s3Storage, objectKeyNameProvider
+            analyticsConfig, s3Storage, objectKeyNameProvider, kinesisFirehose
         );
         this.handler = withoutSignedResponses(
-            authenticator,
-            routes(path(Method.POST, "/submission/mobile-analytics", (r) ->
-                deserializeMaybe(r.getBody(), ClientAnalyticsSubmissionPayload.class)
-                    .map(it -> {
-                        service.accept(it);
-                        return HttpResponses.ok();
-                    })
-                    .orElse(HttpResponses.badRequest()))
+            environment, authenticator,
+            routes(
+                path(Method.POST, "/submission/mobile-analytics", (r) ->
+                    deserializeMaybe(r.getBody(), ClientAnalyticsSubmissionPayload.class)
+                        .map(it -> {
+                            service.accept(it);
+                            return HttpResponses.ok();
+                        })
+                        .orElse(HttpResponses.badRequest())),
+                path(Routing.Method.POST, "/submission/mobile-analytics/health", (r) ->
+                    HttpResponses.ok()
+                )
             )
         );
     }

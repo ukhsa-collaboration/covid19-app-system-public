@@ -1,27 +1,23 @@
 package uk.nhs.nhsx.highriskvenuesupload;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static uk.nhs.nhsx.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
-import static uk.nhs.nhsx.TestData.STORED_RISKY_VENUES_UPLOAD_PAYLOAD;
-import static uk.nhs.nhsx.core.signature.SigningHeadersTest.matchesMeta;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
-
 import uk.nhs.nhsx.analyticssubmission.FakeS3Storage;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
 import uk.nhs.nhsx.highriskpostcodesupload.TestDatedSigner;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
+import static uk.nhs.nhsx.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
+import static uk.nhs.nhsx.TestData.STORED_RISKY_VENUES_UPLOAD_PAYLOAD;
+import static uk.nhs.nhsx.core.signature.SigningHeadersTest.matchesMeta;
 
 public class HighRiskVenuesUploadServiceTest {
 

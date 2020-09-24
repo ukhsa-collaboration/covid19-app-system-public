@@ -29,3 +29,8 @@ variable "lambda_environment_variables" {
   description = "A map of environment variable --> value to pass as environment to the lambda"
   type        = map
 }
+
+variable "app_alarms_topic" {
+  description = "Alarm topic arn"
+  type        = string
+}

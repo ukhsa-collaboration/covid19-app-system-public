@@ -1,19 +1,34 @@
 locals {
   workspace_te = regex("^(?P<prefix>te-)?(?P<target>[^-]+)$", terraform.workspace)
   workspace_id = (local.workspace_te.prefix == null) ? "branch" : local.workspace_te.target
-  test_config  = jsondecode(file("${path.root}/../../../../out/gen/config/test_config_${local.workspace_id}.json"))
 }
 
-data "aws_caller_identity" "current" {}
-
 module "lambda_storage" {
-  source  = "../../libraries/non_logging_s3"
-  name    = "probe"
-  service = var.service
+  source                   = "../../libraries/submission_s3"
+  name                     = "probe"
+  service                  = var.service
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = true
 }
 
 # maximum name length including workspace prefix is 21.
 # maximum prefix length is currently "te-staging-" i.e. we have only 10 characters to play with.
+module "probe_activation" {
+  source                = "../../libraries/synthetics"
+  name                  = "activatnp"
+  synthetic_script_path = "${path.module}/../../lambdas/synthetics/synthetics-canary.js"
+  artifact_s3_bucket    = module.lambda_storage.bucket_name
+  base_domain           = var.base_domain
+  hostname              = "submission-${terraform.workspace}"
+  uri_path              = "/activation/request/health"
+  method                = "POST"
+  secret_name           = "/mobile/synthetic_canary_auth"
+  expc_status           = "200"
+  service               = var.service
+  api_gw_support        = true
+  lambda_exec_role_arn  = var.lambda_exec_role_arn
+}
+
 module "probe_analytics" {
   source                = "../../libraries/synthetics"
   name                  = "analyticsp"
@@ -21,10 +36,10 @@ module "probe_analytics" {
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "submission-${terraform.workspace}"
-  uri_path              = "/submission/mobile-analytics"
+  uri_path              = "/submission/mobile-analytics/health"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.mobile
-  expc_status           = "400"
+  secret_name           = "/mobile/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
@@ -37,10 +52,10 @@ module "probe_diag_keys" {
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "submission-${terraform.workspace}"
-  uri_path              = "/submission/diagnosis-keys"
+  uri_path              = "/submission/diagnosis-keys/health"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.mobile
-  expc_status           = "400"
+  secret_name           = "/mobile/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
@@ -54,10 +69,10 @@ module "probe_exp_notif_circ_brkr" {
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "submission-${terraform.workspace}"
-  uri_path              = "/circuit-breaker/exposure-notification/request"
+  uri_path              = "/circuit-breaker/exposure-notification/health"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.mobile
-  expc_status           = "422"
+  secret_name           = "/mobile/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
@@ -71,10 +86,10 @@ module "probe_rsky_vnue_circ_brkr" {
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "submission-${terraform.workspace}"
-  uri_path              = "/circuit-breaker/venue/request"
+  uri_path              = "/circuit-breaker/venue/health"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.mobile
-  expc_status           = "422"
+  secret_name           = "/mobile/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
@@ -88,10 +103,10 @@ module "probe_virology_test" {
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "submission-${terraform.workspace}"
-  uri_path              = "/virology-test/home-kit/order"
+  uri_path              = "/virology-test/health"
   method                = "POST"
-  auth_header           = "None"
-  expc_status           = "403"
+  secret_name           = "/mobile/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn

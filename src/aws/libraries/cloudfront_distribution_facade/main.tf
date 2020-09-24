@@ -1,5 +1,6 @@
 locals {
-  fqdn = "${var.name}-${terraform.workspace}.${var.domain}"
+  name_prefix = "${var.name}-${terraform.workspace}"
+  fqdn        = "${local.name_prefix}.${var.domain}"
 }
 
 provider "aws" {
@@ -22,6 +23,7 @@ resource "aws_cloudfront_distribution" "this" {
     min_ttl                = 0
     max_ttl                = 0
     default_ttl            = 0
+    compress               = true
     allowed_methods = [
       "DELETE",
       "GET",
@@ -56,10 +58,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.exposure_configuration_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -84,10 +86,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.risky_post_district_distribution_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -112,10 +114,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.risky_venues_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -140,10 +142,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.self_isolation_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -168,10 +170,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.symptomatic_questionnaire_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -196,10 +198,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.diagnosis_keys_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -215,10 +217,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.diagnosis_keys_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -243,10 +245,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.availability_android_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -271,10 +273,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.availability_ios_bucket_regional_domain_name
-
-    default_ttl = 0
-    min_ttl     = 0
-    max_ttl     = 0
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
 
     forwarded_values {
       query_string = true
@@ -322,4 +324,10 @@ resource "aws_route53_record" "this" {
     zone_id                = aws_cloudfront_distribution.this.hosted_zone_id
     evaluate_target_health = false
   }
+}
+
+resource "aws_shield_protection" "this" {
+  count        = var.enable_shield_protection == true ? 1 : 0
+  name         = "${local.name_prefix}-cf-shield"
+  resource_arn = aws_cloudfront_distribution.this.arn
 }

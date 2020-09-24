@@ -29,7 +29,7 @@ public class RiskyPostCodesCsvParserTest {
             "\"CODE3\", \"L\"";
 
         RiskyPostCodes riskyPostcodes = RiskyPostCodesCsvParser.parse(csv);
-        Map<String, String> postDistrictsMap = new HashMap<String, String>() {
+        Map<String, String> postDistrictsMap = new HashMap<>() {
             {
                 put("CODE1", "H");
                 put("CODE2", "M");
@@ -45,7 +45,7 @@ public class RiskyPostCodesCsvParserTest {
         String csv = readAsString("highriskpostcodes/postcodes.csv");
 
         RiskyPostCodes riskyPostcodes = RiskyPostCodesCsvParser.parse(csv);
-        Map<String, String> postDistrictsMap = new HashMap<String, String>() {
+        Map<String, String> postDistrictsMap = new HashMap<>() {
             {
                 put("CODE1", "H");
                 put("CODE2", "M");
@@ -61,7 +61,7 @@ public class RiskyPostCodesCsvParserTest {
         String csv = readAsString("highriskpostcodes/postcodes_extra_whitespace.csv");
 
         RiskyPostCodes riskyPostcodes = RiskyPostCodesCsvParser.parse(csv);
-        Map<String, String> postDistrictsMap = new HashMap<String, String>() {
+        Map<String, String> postDistrictsMap = new HashMap<>() {
             {
                 put("CODE1", "H");
                 put("CODE2", "M");
@@ -127,6 +127,18 @@ public class RiskyPostCodesCsvParserTest {
     @Test
     public void validateHeader() {
         RiskyPostCodesCsvParser.parse("# postal_district_code, risk_indicator");
+    }
+
+    @Test
+    public void postDistrictLargerThan20CharactersThrowsException(){
+        String csv = "" +
+            "# postal_district_code, risk_indicator\n" +
+            "\"123456789012345678901\", \"H\"\n" +
+            "\"CODE2\", \"M\"\n" +
+            "\"CODE3\", \"L\"";
+        assertThatThrownBy(() -> RiskyPostCodesCsvParser.parse(csv))
+            .isInstanceOf(ApiResponseException.class)
+            .hasMessage("validation error: Invalid post district longer than 20 characters: 123456789012345678901");
     }
 
     @Test

@@ -6,12 +6,16 @@ import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import uk.nhs.nhsx.activationsubmission.ActivationCode;
 import uk.nhs.nhsx.core.SystemClock;
+import uk.nhs.nhsx.core.aws.xray.Tracing;
+import uk.nhs.nhsx.core.exceptions.ExceptionPrinting;
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator;
 
 import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -98,12 +102,19 @@ public class InsertActivationCodesMain {
 
     public static void insert(CodeSupplier codes, ActivationCodeBatchName batchName,
                               ExecutorService executor,
-                              DynamoDBActivationCodes persistedCodes, LinkedTransferQueue<ActivationCode> inserted) {
+                              DynamoDBActivationCodes persistedCodes,
+                              LinkedTransferQueue<ActivationCode> inserted,
+                              Consumer<Exception> reporter
+    ) {
         codes.generate().forEach(
             code ->
                 executor.submit(() -> {
-                    if (persistedCodes.insert(batchName, code)) {
-                        inserted.put(code);
+                    try {
+                        if (persistedCodes.insert(batchName, code)) {
+                            inserted.put(code);
+                        }
+                    } catch (Exception e) {
+                        reporter.accept(e);
                     }
                 })
         );
@@ -117,6 +128,9 @@ public class InsertActivationCodesMain {
      */
 
     public static void main(String[] args) throws FileNotFoundException {
+
+        Tracing.disableXRayComplaintsForMainClasses();
+
         CommandLine commandLine = new CommandLine();
         JCommander commander = JCommander.newBuilder().addObject(commandLine).build();
         commander.parse(args);
@@ -151,7 +165,12 @@ public class InsertActivationCodesMain {
                 ThreadPoolExecutor executor = new ThreadPoolExecutor(75, 75, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
 
                 LinkedTransferQueue<ActivationCode> inserted = new LinkedTransferQueue<>();
-                insert(codeSupplier, batchName, executor, dbActivationCodes, inserted);
+
+                AtomicInteger errorCount = new AtomicInteger();
+
+                Consumer<Exception> reporter = e -> System.err.printf("%5d %s%n", errorCount.incrementAndGet(), ExceptionPrinting.describeCauseOf(e));
+
+                insert(codeSupplier, batchName, executor, dbActivationCodes, inserted, reporter);
 
                 System.err.println("Waiting for database ....");
 
@@ -161,18 +180,18 @@ public class InsertActivationCodesMain {
                         Duration estimate = Duration.ofMinutes(12).multipliedBy(executor.getQueue().size()).dividedBy(500_000);
                         System.err.println("Estimate remaining " + estimate);
                         executor.awaitTermination(10, TimeUnit.SECONDS);
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException ignored) {
                     }
                 }
 
                 System.err.println("");
                 System.err.println("Completed...");
 
-                int count = inserted.size();
+                int insertedCount = inserted.size();
 
                 inserted.forEach((c) -> output.println(c.value));
 
-                System.err.printf("Inserted %d (may be less than you expected, because of duplicates. If zero, then maybe you reloaded a file.\n", count);
+                System.err.printf("Inserted %d, and there were %d errors (may be less than you expected, because of duplicates. If zero, then maybe you reloaded a file.\n", insertedCount, errorCount.get());
 
             }
         } finally {

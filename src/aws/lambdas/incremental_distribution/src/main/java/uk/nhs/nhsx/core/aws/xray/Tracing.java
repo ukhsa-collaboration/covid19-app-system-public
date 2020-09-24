@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.core.aws.xray;
 
 import com.amazonaws.xray.AWSXRay;
+import com.amazonaws.xray.AWSXRayRecorderBuilder;
 import com.amazonaws.xray.entities.Subsegment;
 
 import java.lang.reflect.InvocationTargetException;
@@ -29,6 +30,12 @@ public class Tracing {
                     }
                 }
             )
+        );
+    }
+
+    public static void disableXRayComplaintsForMainClasses() {
+        AWSXRay.setGlobalRecorder(
+            AWSXRayRecorderBuilder.standard().withContextMissingStrategy((s, aClass) -> { /*ignore it*/ }).build()
         );
     }
 }

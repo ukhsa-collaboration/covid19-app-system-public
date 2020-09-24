@@ -1,5 +1,6 @@
 locals {
-  fqdn            = "${var.name}-${terraform.workspace}.${var.domain}"
+  name_prefix     = "${var.name}-${terraform.workspace}"
+  fqdn            = "${local.name_prefix}.${var.domain}"
   allowed_methods = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
   cached_methods  = ["HEAD", "GET", "OPTIONS"]
 }
@@ -112,4 +113,10 @@ resource "aws_route53_record" "this" {
     zone_id                = aws_cloudfront_distribution.this.hosted_zone_id
     evaluate_target_health = false
   }
+}
+
+resource "aws_shield_protection" "this" {
+  count        = var.enable_shield_protection == true ? 1 : 0
+  name         = "${local.name_prefix}-cf-shield"
+  resource_arn = aws_cloudfront_distribution.this.arn
 }

@@ -26,13 +26,14 @@ namespace :test do
     end
   end
 
-  desc "Runs maven smoke tests"
-  task "maven:smoke" do
-    java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
-    pom_xml_path = File.join(java_project_path, "pom.xml")
-    cmdline = "mvn -P smokeProfile -f=#{pom_xml_path} test"
-    run_command("Runs maven smoke tests", cmdline, $configuration)
+  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+    desc "Runs all maven smoke tests against the #{tgt_env} target environment"
+    task :"maven:smoke:#{tgt_env}" do
+      include NHSx::Test
+      run_target_environment_smoke_tests(tgt_env, "dev", $configuration)
+    end
   end
+
   desc "Runs the sanity_check tests against prod"
   task :"sanity_check:prod" => [:"login:prod", :"clean:config"] do
     include NHSx::Test

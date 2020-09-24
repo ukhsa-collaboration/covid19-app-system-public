@@ -1,13 +1,13 @@
 package uk.nhs.nhsx.diagnosiskeydist.apispec;
 
 import org.junit.Test;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class TwoHourlyZIPSubmissionPeriodTest {
 
@@ -30,6 +30,24 @@ public class TwoHourlyZIPSubmissionPeriodTest {
                 .isCoveringSubmissionDate(utcDate(2020, 07, 3, 23, 59, 59, 999), 0));
         assertFalse(new TwoHourlyZIPSubmissionPeriod(utcDate(2020, 07, 4, 0, 0, 0, 0))
                 .isCoveringSubmissionDate(utcDate(2020, 07, 4, 0, 0, 0, 0), 0));
+    }
+
+    @Test
+    public void testPeriodForSubmissionDate() {
+        assertEquals("distribution/two-hourly/2020070402.zip", TwoHourlyZIPSubmissionPeriod.periodForSubmissionDate(utcDate(2020, 07, 4, 0, 0, 0, 0)).zipPath());
+        assertEquals("distribution/two-hourly/2020070500.zip", TwoHourlyZIPSubmissionPeriod.periodForSubmissionDate(utcDate(2020, 07, 4, 23, 59, 59, 999)).zipPath());
+    }
+
+    @Test
+    public void testAllPeriodsToGenerate() {
+        Date endDate = utcDate(2020, 7, 20, 4, 0, 0, 0);
+        TwoHourlyZIPSubmissionPeriod twoHourlyZIPSubmissionPeriod = new TwoHourlyZIPSubmissionPeriod(endDate);
+
+        List<TwoHourlyZIPSubmissionPeriod> result = twoHourlyZIPSubmissionPeriod.allPeriodsToGenerate();
+        assertEquals(14*12, result.size());
+
+        assertEquals("distribution/two-hourly/2020072004.zip", result.get(0).zipPath());
+        assertEquals("distribution/two-hourly/2020070606.zip", result.get(14*12-1).zipPath());
     }
 
     @Test

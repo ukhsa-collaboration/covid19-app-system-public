@@ -3,7 +3,7 @@
   "x": 0,
   "y": 0,
   "width": 12,
-  "height": 12,
+  "height": 6,
   "properties": {
     "view": "timeSeries",
     "stacked": false,
@@ -18,7 +18,7 @@
       [ ".", "Requests", ".", ".", ".", ".", { "id": "m7", "stat": "Sum", "visible": false } ]
     ],
     "region": "us-east-1",
-    "period": 1,
+    "period": 60,
     "title": "${api_name} API: Error rate (as a percentage of total requests)",
     "yAxis": {
       "left": {
@@ -35,7 +35,7 @@
   "x": 12,
   "y": 0,
   "width": 12,
-  "height": 12,
+  "height": 6,
   "properties": {
     "view": "timeSeries",
     "stacked": false,
@@ -43,7 +43,7 @@
       [ "AWS/CloudFront", "Requests", "Region", "Global", "DistributionId", "${api_distribution_id}" ]
     ],
     "region": "us-east-1",
-    "period": 1,
+    "period": 60,
     "title": "${api_name} API: Number of requests",
     "yAxis": {
       "left": {
@@ -59,9 +59,9 @@
 {
   "type": "metric",
   "x": 0,
-  "y": 12,
+  "y": 6,
   "width": 12,
-  "height": 12,
+  "height": 6,
   "properties": {
     "view": "timeSeries",
     "stacked": false,
@@ -70,7 +70,7 @@
       [ ".", "BytesDownloaded", ".", ".", ".", "." ]
     ],
     "region": "us-east-1",
-    "period": 1,
+    "period": 60,
     "title": "${api_name} API: Data transfer in bytes",
     "yAxis": {
       "left": {

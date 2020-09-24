@@ -2,10 +2,12 @@ locals {
   service      = "canary"
   workspace_te = regex("^(?P<prefix>te-)?(?P<target>[^-]+)$", terraform.workspace)
   workspace_id = (local.workspace_te.prefix == null) ? "branch" : local.workspace_te.target
-  test_config  = jsondecode(file("${path.root}/../../../../out/gen/config/test_config_${local.workspace_id}.json"))
+  aws_base_dom = regex("^(?P<host>[^.]+)[.](?P<domain>.*)$", var.base_domain)
+  aws_acc_name = local.aws_base_dom.host
 }
 
 module "lambda_execution_role" {
+  region  = var.canary_deploy_region
   source  = "../aws/libraries/iam_synthetic_canary"
   service = local.service
   name    = "runner"
@@ -16,13 +18,17 @@ module "submission_probes" {
   service              = "submissions"
   base_domain          = var.base_domain
   lambda_exec_role_arn = module.lambda_execution_role.role.arn
+  logs_bucket_id       = var.logs_bucket_id
 }
 
 module "upload_probes" {
+  // Upload probes do not work in Staging or Prod because of WAF origin-IP filtering rules
+  enabled              = local.aws_acc_name == "dev"
   source               = "../aws/modules/synthetics_upload"
   service              = "uploads"
   base_domain          = var.base_domain
   lambda_exec_role_arn = module.lambda_execution_role.role.arn
+  logs_bucket_id       = var.logs_bucket_id
 }
 
 module "distribution_probes" {
@@ -30,6 +36,7 @@ module "distribution_probes" {
   service              = "distribution"
   base_domain          = var.base_domain
   lambda_exec_role_arn = module.lambda_execution_role.role.arn
+  logs_bucket_id       = var.logs_bucket_id
 }
 
 output "probe_analytics_function_name" {

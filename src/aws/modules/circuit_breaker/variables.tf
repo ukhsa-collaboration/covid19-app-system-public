@@ -25,3 +25,11 @@ variable "lambda_object_key" {
 variable "ssm_parameter" {
   description = "Base name of the SSM Parameter used to control this circuit breaker"
 }
+
+variable "custom_oai" {
+  description = "Secret shared between CloudFront Distribution and Lambda"
+}
+
+variable "alarm_topic_arn" {
+  description = "SNS topic to publish application metric alarms to"
+}

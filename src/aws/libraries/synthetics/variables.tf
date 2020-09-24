@@ -1,3 +1,9 @@
+variable "enabled" {
+  description = "Set to false if this module is to be suppressed"
+  type        = bool
+  default     = true
+}
+
 variable "region" {
   description = "Region in which the canary will be deployed - ideally not the same as the service being monitored"
   type        = string
@@ -41,8 +47,8 @@ variable "method" {
   default     = "GET"
 }
 
-variable "auth_header" {
-  description = "Authorization header for endpoint"
+variable "secret_name" {
+  description = "AWS secret manager name needed to retrieve authorization header for endpoint"
   type        = string
 }
 
@@ -103,5 +109,5 @@ variable "xray_enabled" {
 variable "dependency_ref" {
   description = "Supply reference from another resource/module if there's a need to build dependency. Replace with depends_on once migrate to Terraform v0.13 or later"
   type        = string
-  default     = ""
+  default     = "_"
 }

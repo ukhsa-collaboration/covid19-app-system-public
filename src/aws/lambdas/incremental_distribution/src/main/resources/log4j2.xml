@@ -2,7 +2,7 @@
 	<Appenders>
 		<Lambda name="Lambda">
 			<PatternLayout>
-				<pattern>%d{yyyy-MM-dd HH:mm:ss} %-18t %X{AWSRequestId} %-5p %c{1} - %m%n
+				<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%t] [%X{AWSRequestId}] [%p] [%c{1}] "%m"%n
 				</pattern>
 			</PatternLayout>
 		</Lambda>

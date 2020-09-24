@@ -19,11 +19,10 @@ module NHSx
       end
     end
 
-    def install_requirements(lambda_function, output_path,system_config)
+    def install_requirements(lambda_function, output_path, system_config)
       requirements_location = File.join(lambda_function, "requirements.txt")
       cmdline = NHSx::Python::Commandlines.requirements(requirements_location, output_path)
-      run_command("Installing requirements from #{requirements_location} for #{lambda_function}", cmdline, system_config)
+      run_command("Installing python requirements for #{lambda_function}", cmdline, system_config)
     end
-
   end
 end

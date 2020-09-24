@@ -28,3 +28,5 @@ src/aws/lambdas/incremental_distribution/.factorypath
 
 # Maven
 .m2/
+temp
+

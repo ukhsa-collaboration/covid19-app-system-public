@@ -12,18 +12,21 @@ module "test_order_lambda" {
   lambda_function_name      = local.identifier_prefix
   lambda_repository_bucket  = var.lambda_repository_bucket
   lambda_object_key         = var.lambda_object_key
-  lambda_handler_class      = "uk.nhs.nhsx.testkitorder.Handler"
+  lambda_handler_class      = "uk.nhs.nhsx.virology.VirologySubmissionHandler"
   lambda_execution_role_arn = module.virology_submission_role.arn
   lambda_timeout            = 20
   lambda_memory             = 1024
   lambda_environment_variables = {
-    test_orders_table                = var.test_orders_table_id
-    test_results_table               = var.test_results_table_id
-    virology_submission_tokens_table = var.virology_submission_tokens_table_id
-    order_website                    = var.test_order_website
-    register_website                 = var.test_register_website
-    SSM_KEY_ID_PARAMETER_NAME        = "/app/kms/ContentSigningKeyArn"
+    test_orders_table         = var.test_orders_table_id
+    test_results_table        = var.test_results_table_id
+    submission_tokens_table   = var.virology_submission_tokens_table_id
+    test_orders_index         = var.test_orders_index
+    order_website             = var.test_order_website
+    register_website          = var.test_register_website
+    SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
+    custom_oai                = var.custom_oai
   }
+  app_alarms_topic = var.alarm_topic_arn
 }
 
 module "test_order_gateway" {

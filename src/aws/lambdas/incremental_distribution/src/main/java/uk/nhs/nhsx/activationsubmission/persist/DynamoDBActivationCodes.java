@@ -9,6 +9,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
+import static com.amazonaws.services.dynamodbv2.model.AttributeAction.PUT;
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.*;
+
 public class DynamoDBActivationCodes implements PersistedActivationCodeLookup {
 
     private final AmazonDynamoDB db;
@@ -26,13 +29,15 @@ public class DynamoDBActivationCodes implements PersistedActivationCodeLookup {
 
         AtomicBoolean alreadyUsed = new AtomicBoolean(false);
 
+        long activationEpochMilli = epochMilli();
+
         try {
             UpdateItemRequest request = new UpdateItemRequest()
                 .withTableName(tableName)
-                .addKeyEntry("Code", new AttributeValue(code.value))
-                .addAttributeUpdatesEntry("Activated", new AttributeValueUpdate(new AttributeValue().withN(epochMilli()), AttributeAction.PUT))
-                .addExpectedEntry("Code", new ExpectedAttributeValue(new AttributeValue(code.value)))
-                .addExpectedEntry("Activated", new ExpectedAttributeValue(false));
+                .addKeyEntry("Code", stringAttribute(code.value))
+                .addAttributeUpdatesEntry("Activated", attributeValueUpdate(numericAttribute(activationEpochMilli), PUT))
+                .addExpectedEntry("Code", expectedAttributeExists(stringAttribute(code.value)))
+                .addExpectedEntry("Activated", expectedAttributeDoesNotExist());
 
             db.updateItem(request);
         } catch (ConditionalCheckFailedException e) {
@@ -45,9 +50,12 @@ public class DynamoDBActivationCodes implements PersistedActivationCodeLookup {
 
         GetItemRequest request = new GetItemRequest()
             .withTableName(tableName)
-            .addKeyEntry("Code", new AttributeValue(code.value));
+            .addKeyEntry("Code", stringAttribute(code.value));
 
         GetItemResult result = db.getItem(request);
+
+        // due to eventually consistent read, the Activated time *may* not have been set by this point
+        // however, we can assume that if it is null, then it was just set in the block above, so we can use the same time.
 
         return Optional.ofNullable(result.getItem())
             .map(
@@ -56,7 +64,12 @@ public class DynamoDBActivationCodes implements PersistedActivationCodeLookup {
                         attributeToInstant(attributes.get("Created").getN()),
                         ActivationCodeBatchName.of(attributes.get("Batch").getS()),
                         ActivationCode.of(attributes.get("Code").getS()),
-                        attributeToInstant(attributes.get("Activated").getN()),
+                        Instant.ofEpochMilli(
+                            Optional.ofNullable(attributes.get("Activated"))
+                            .map(AttributeValue::getN)
+                            .map(Long::parseLong)
+                            .orElse(activationEpochMilli)
+                        ),
                         alreadyUsed.get()
                     )
             );
@@ -66,8 +79,8 @@ public class DynamoDBActivationCodes implements PersistedActivationCodeLookup {
         return Instant.ofEpochMilli(Long.parseLong(activated));
     }
 
-    private String epochMilli() {
-        return String.valueOf(clock.get().toEpochMilli());
+    private long epochMilli() {
+        return clock.get().toEpochMilli();
     }
 
     public boolean insert(ActivationCodeBatchName batchName, ActivationCode code) {
@@ -75,10 +88,10 @@ public class DynamoDBActivationCodes implements PersistedActivationCodeLookup {
             UpdateItemRequest request = new UpdateItemRequest()
                 .withTableName(tableName)
                 .withReturnValues(ReturnValue.ALL_NEW)
-                .addKeyEntry("Code", new AttributeValue(code.value))
-                .addAttributeUpdatesEntry("Created", new AttributeValueUpdate(new AttributeValue().withN(epochMilli()), AttributeAction.PUT))
-                .addAttributeUpdatesEntry("Batch", new AttributeValueUpdate(new AttributeValue(batchName.value), AttributeAction.PUT))
-                .addExpectedEntry("Code", new ExpectedAttributeValue(false));
+                .addKeyEntry("Code", stringAttribute(code.value))
+                .addAttributeUpdatesEntry("Created", attributeValueUpdate(numericAttribute(epochMilli()), PUT))
+                .addAttributeUpdatesEntry("Batch", attributeValueUpdate(stringAttribute(batchName.value), PUT))
+                .addExpectedEntry("Code", expectedAttributeDoesNotExist());
 
             db.updateItem(request);
             return true;

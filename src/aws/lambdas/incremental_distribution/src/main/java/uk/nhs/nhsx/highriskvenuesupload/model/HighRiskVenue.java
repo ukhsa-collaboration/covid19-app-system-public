@@ -1,14 +1,26 @@
 package uk.nhs.nhsx.highriskvenuesupload.model;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class HighRiskVenue {
     public final String id;
     public final RiskyWindow riskyWindow;
+    public final String messageType;
+    public final String optionalParameter;
 
     public HighRiskVenue(String id, RiskyWindow riskyWindow) {
+        this(id, riskyWindow, "M1", null);
+    }
+    @JsonCreator
+    public HighRiskVenue(String id, RiskyWindow riskyWindow, String messageType,  String optionalParameter) {
         this.id = id;
         this.riskyWindow = riskyWindow;
+        this.messageType = messageType;
+        this.optionalParameter = optionalParameter;
     }
 
     @Override
@@ -16,12 +28,24 @@ public class HighRiskVenue {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HighRiskVenue that = (HighRiskVenue) o;
-        return id.equals(that.id) &&
-                riskyWindow.equals(that.riskyWindow);
+        return Objects.equals(id, that.id) &&
+            Objects.equals(riskyWindow, that.riskyWindow) &&
+            Objects.equals(messageType, that.messageType) &&
+            Objects.equals(optionalParameter, that.optionalParameter);
+    }
+
+    @Override
+    public String toString() {
+        return "HighRiskVenue{" +
+            "id='" + id + '\'' +
+            ", riskyWindow=" + riskyWindow +
+            ", messageType='" + messageType + '\'' +
+            ", optionalParameter='" + optionalParameter + '\'' +
+            '}';
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, riskyWindow);
+        return Objects.hash(id, riskyWindow, messageType, optionalParameter);
     }
 }

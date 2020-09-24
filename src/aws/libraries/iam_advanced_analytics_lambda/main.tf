@@ -28,7 +28,7 @@ resource "aws_iam_role_policy_attachment" "advanced_analytics_lambda_policy_atta
 
 resource "aws_iam_role_policy_attachment" "lambda_xray" {
   role       = aws_iam_role.this.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AWSXrayFullAccess"
 }
 
 resource "aws_iam_policy" "lambda_s3_policy" {

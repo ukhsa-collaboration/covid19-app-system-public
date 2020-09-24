@@ -1,46 +1,47 @@
 locals {
   workspace_te = regex("^(?P<prefix>te-)?(?P<target>[^-]+)$", terraform.workspace)
   workspace_id = (local.workspace_te.prefix == null) ? "branch" : local.workspace_te.target
-  test_config  = jsondecode(file("${path.root}/../../../../out/gen/config/test_config_${local.workspace_id}.json"))
 }
 
-data "aws_caller_identity" "current" {}
-
 module "lambda_storage" {
-  source  = "../../libraries/non_logging_s3"
-  name    = "probe"
-  service = var.service
+  source                   = "../../libraries/submission_s3"
+  name                     = "probe"
+  service                  = var.service
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = true
 }
 
 # maximum name length including workspace prefix is 21.
 # maximum prefix length is currently "te-staging-" i.e. we have only 10 characters to play with.
 module "probe_risky_venues_upload" {
+  enabled               = var.enabled
   source                = "../../libraries/synthetics"
   name                  = "rven-upldp"
   synthetic_script_path = "${path.module}/../../lambdas/synthetics/synthetics-canary.js"
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "upload-${terraform.workspace}"
-  uri_path              = "/upload/identified-risk-venues"
+  uri_path              = "/upload/identified-risk-venues/health"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.highRiskVenuesCodeUpload
-  expc_status           = "422"
+  secret_name           = "/highRiskVenuesCodeUpload/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
 }
 
 module "probe_risky_post_districts_upload" {
+  enabled               = var.enabled
   source                = "../../libraries/synthetics"
   name                  = "rpos-upldp"
   synthetic_script_path = "${path.module}/../../lambdas/synthetics/synthetics-canary.js"
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "upload-${terraform.workspace}"
-  uri_path              = "/upload/high-risk-postal-districts"
+  uri_path              = "/upload/high-risk-postal-districts/health"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.highRiskPostCodeUpload
-  expc_status           = "422"
+  secret_name           = "/highRiskPostCodeUpload/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
@@ -48,16 +49,17 @@ module "probe_risky_post_districts_upload" {
 }
 
 module "probe_virology_upload" {
+  enabled               = var.enabled
   source                = "../../libraries/synthetics"
   name                  = "viro-upldp"
   synthetic_script_path = "${path.module}/../../lambdas/synthetics/synthetics-canary.js"
   artifact_s3_bucket    = module.lambda_storage.bucket_name
   base_domain           = var.base_domain
   hostname              = "upload-${terraform.workspace}"
-  uri_path              = "/upload/virology-test/npex-result"
+  uri_path              = "/upload/virology-test/health"
   method                = "POST"
-  auth_header           = local.test_config.auth_headers.testResultUpload
-  expc_status           = "422"
+  secret_name           = "/testResultUpload/synthetic_canary_auth"
+  expc_status           = "200"
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn

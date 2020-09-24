@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.core.auth;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue;
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 public class SecretManagerKeyAuthorizer implements ApiKeyAuthorizer {
-    private static final Logger logger = LoggerFactory.getLogger(SecretManagerKeyAuthorizer.class);
+    private static final Logger logger = LogManager.getLogger(SecretManagerKeyAuthorizer.class);
 
     private final SecretManager secretManager;
     private final ApiName apiName;

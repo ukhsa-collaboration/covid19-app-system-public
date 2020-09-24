@@ -45,3 +45,7 @@ variable "xray_enabled" {
   description = "If true, set lambda tracing configuration to Active, else PassThrough"
   default     = true
 }
+
+variable "logs_bucket_id" {
+  description = "The name of the bucket to which S3 access logs are saved."
+}

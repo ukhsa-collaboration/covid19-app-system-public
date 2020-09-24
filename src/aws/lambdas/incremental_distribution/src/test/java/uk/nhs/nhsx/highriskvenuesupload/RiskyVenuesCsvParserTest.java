@@ -1,14 +1,20 @@
 package uk.nhs.nhsx.highriskvenuesupload;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenue;
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues;
 import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class RiskyVenuesCsvParserTest {
 
     @Test
-    public void validHeaderWithNoRows() {
+    public void validHeaderWithNoRows() throws JsonProcessingException {
         VenuesParsingResult result = new HighRiskVenueCsvParser()
             .toJson("# venue_id, start_time, end_time");
 
@@ -25,21 +31,21 @@ public class RiskyVenuesCsvParserTest {
     }
 
     @Test
-    public void validCsv() {
+    public void validCsv() throws JsonProcessingException {
         String csv = "" +
             "# venue_id, start_time, end_time\n" +
-            "\"ID1\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
-            "\"ID2\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
-            "\"ID3\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
+            "\"CD3\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
+            "\"CD4\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
 
         VenuesParsingResult result = new HighRiskVenueCsvParser()
             .toJson(csv);
 
-        HighRiskVenue venue1 = new HighRiskVenue("ID1",
+        HighRiskVenue venue1 = new HighRiskVenue("CD2",
             new RiskyWindow("2019-07-04T13:33:03Z", "2019-07-04T15:56:00Z"));
-        HighRiskVenue venue2 = new HighRiskVenue("ID2",
+        HighRiskVenue venue2 = new HighRiskVenue("CD3",
             new RiskyWindow("2019-07-06T19:33:03Z", "2019-07-06T21:01:07Z"));
-        HighRiskVenue venue3 = new HighRiskVenue("ID3",
+        HighRiskVenue venue3 = new HighRiskVenue("CD4",
             new RiskyWindow("2019-07-08T20:05:52Z", "2019-07-08T22:35:56Z"));
         List<HighRiskVenue> venues = Arrays.asList(venue1, venue2, venue3);
 
@@ -47,22 +53,45 @@ public class RiskyVenuesCsvParserTest {
     }
 
     @Test
-    public void validCsvWithAdditionalWhitespace() {
+    public void validCsvWithMessageTypeAndOptionalParameter() throws JsonProcessingException {
+        String csv = "" +
+            "# venue_id, start_time, end_time, message_type, optional_parameter\n" +
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-14T23:33:03Z\", \"M1\", \"\"\n" +
+            "\"CD3\", \"2019-07-05T13:33:03Z\", \"2019-07-15T23:33:03Z\", \"M2\", \"\"\n" +
+            "\"CD4\", \"2019-07-06T13:33:03Z\", \"2019-07-16T23:33:03Z\", \"M3\", \"07911 123456\"";
+
+
+        VenuesParsingResult result = new HighRiskVenueCsvParser(true)
+            .toJson(csv);
+
+        HighRiskVenue venue1 = new HighRiskVenue("CD2",
+            new RiskyWindow("2019-07-04T13:33:03Z", "2019-07-14T23:33:03Z"), "M1", null);
+        HighRiskVenue venue2 = new HighRiskVenue("CD3",
+            new RiskyWindow("2019-07-05T13:33:03Z", "2019-07-15T23:33:03Z"), "M2", null);
+        HighRiskVenue venue3 = new HighRiskVenue("CD4",
+            new RiskyWindow("2019-07-06T13:33:03Z", "2019-07-16T23:33:03Z"), "M3", "07911 123456");
+        List<HighRiskVenue> venues = Arrays.asList(venue1, venue2, venue3);
+
+        assertEquals(venues, venuesFrom(result));
+    }
+
+    @Test
+    public void validCsvWithAdditionalWhitespace() throws JsonProcessingException {
         String csv = "" +
             "       # venue_id ,     start_time    ,    end_time \n" +
-            " \"ID1\" , \"2019-07-04T13:33:03Z\" ,  \"2019-07-04T15:56:00Z\"\n" +
-            "\"ID2\" ,\"2019-07-06T19:33:03Z\" , \"2019-07-06T21:01:07Z\"\n" +
-            "   \"ID3\" , \"2019-07-08T20:05:52Z\" ,\"2019-07-08T22:35:56Z\"";
+            " \"CD2\" , \"2019-07-04T13:33:03Z\" ,  \"2019-07-04T15:56:00Z\"\n" +
+            "\"CD3\" ,\"2019-07-06T19:33:03Z\" , \"2019-07-06T21:01:07Z\"\n" +
+            "   \"CD4\" , \"2019-07-08T20:05:52Z\" ,\"2019-07-08T22:35:56Z\"";
 
 
         VenuesParsingResult result = new HighRiskVenueCsvParser()
             .toJson(csv);
 
-        HighRiskVenue venue1 = new HighRiskVenue("ID1",
+        HighRiskVenue venue1 = new HighRiskVenue("CD2",
             new RiskyWindow("2019-07-04T13:33:03Z", "2019-07-04T15:56:00Z"));
-        HighRiskVenue venue2 = new HighRiskVenue("ID2",
+        HighRiskVenue venue2 = new HighRiskVenue("CD3",
             new RiskyWindow("2019-07-06T19:33:03Z", "2019-07-06T21:01:07Z"));
-        HighRiskVenue venue3 = new HighRiskVenue("ID3",
+        HighRiskVenue venue3 = new HighRiskVenue("CD4",
             new RiskyWindow("2019-07-08T20:05:52Z", "2019-07-08T22:35:56Z"));
         List<HighRiskVenue> venues = Arrays.asList(venue1, venue2, venue3);
 
@@ -70,48 +99,84 @@ public class RiskyVenuesCsvParserTest {
     }
 
     @Test
-    public void validCsvWithHyphenInVenue() {
+    public void throwsIfCsvWithHyphenInVenue() {
         String csv = "# venue_id, start_time, end_time \n" +
             "\"8CHARS-Y\", \"2019-07-04T13:33:03Z\", \"2019-07-04T23:33:03Z\"";
 
         VenuesParsingResult result = new HighRiskVenueCsvParser()
             .toJson(csv);
 
-        HighRiskVenue venue1 = new HighRiskVenue("8CHARS-Y",
-            new RiskyWindow("2019-07-04T13:33:03Z", "2019-07-04T23:33:03Z"));
-        List<HighRiskVenue> venues = Collections.singletonList(venue1);
+        assertThat(result.failureMaybe())
+            .isEqualTo(Optional.of("validation error: Invalid characters on the venueId: 8CHARS-Y"));
+    }
 
-        assertEquals(venues, venuesFrom(result));
+    @Test
+    public void throwsIfCsvMessageTypeIsInvalid() {
+        String csv = "# venue_id, start_time, end_time, message_type, optional_parameter\n" +
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T23:33:03Z\", \"d1\", \"\"";
+
+        VenuesParsingResult result = new HighRiskVenueCsvParser(true)
+            .toJson(csv);
+
+        assertThat(result.failureMaybe())
+            .isEqualTo(Optional.of("validation error: Invalid characters on the messageType: d1"));
+    }
+
+    @Test
+    public void throwsIfCsvMessageTypeHasInvalidOptionalParameter() {
+        String csv = "# venue_id, start_time, end_time, message_type, optional_parameter\n" +
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T23:33:03Z\", \"M1\", \"0712 34567\"";
+
+        VenuesParsingResult result = new HighRiskVenueCsvParser(true)
+            .toJson(csv);
+
+        assertThat(result.failureMaybe())
+            .isEqualTo(Optional.of("validation error: Message type M1 does not support optional parameter"));
+    }
+
+    @Test
+    public void throwsIfCsvMessageTypeHasNoOptionalParameter() {
+        String csv = "# venue_id, start_time, end_time, message_type, optional_parameter\n" +
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T23:33:03Z\", \"M3\", \"\"";
+
+        VenuesParsingResult result = new HighRiskVenueCsvParser(true)
+            .toJson(csv);
+
+        assertThat(result.failureMaybe())
+            .isEqualTo(Optional.of("validation error: Message type M3 must include an optional parameter"));
     }
 
     @Test
     public void validCsvToJsonUnixLineEnding() throws Exception {
         String csv = "" +
             "# venue_id, start_time, end_time\n" +
-            "\"ID1\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
-            "\"ID2\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
-            "\"ID3\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
+            "\"CD3\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
+            "\"CD4\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
 
         String expectedJson = "{\n" +
             "    \"venues\" : [\n" +
             "        {\n" +
-            "            \"id\": \"ID1\",\n" +
+            "            \"id\": \"CD2\",\n" +
             "            \"riskyWindow\": {\n" +
             "              \"from\": \"2019-07-04T13:33:03Z\",\n" +
             "              \"until\": \"2019-07-04T15:56:00Z\"\n" +
-            "            }\n" +
+            "            },\n" +
+            "           \"messageType\": \"M1\"\n" +
             "        },{\n" +
-            "            \"id\": \"ID2\",\n" +
+            "            \"id\": \"CD3\",\n" +
             "            \"riskyWindow\": {\n" +
             "              \"from\": \"2019-07-06T19:33:03Z\",\n" +
             "              \"until\": \"2019-07-06T21:01:07Z\"\n" +
-            "            }\n" +
+            "            },\n" +
+            "           \"messageType\": \"M1\"\n" +
             "        },{\n" +
-            "            \"id\": \"ID3\",\n" +
+            "            \"id\": \"CD4\",\n" +
             "            \"riskyWindow\": {\n" +
             "              \"from\": \"2019-07-08T20:05:52Z\",\n" +
             "              \"until\": \"2019-07-08T22:35:56Z\"\n" +
-            "            }\n" +
+            "            },\n" +
+            "           \"messageType\": \"M1\"\n" +
             "        }\n" +
             "\n" +
             "    ]\n" +
@@ -124,30 +189,33 @@ public class RiskyVenuesCsvParserTest {
     public void validCsvToJsonWindowsLineEnding() throws Exception {
         String csv = "" +
             "# venue_id, start_time, end_time\r\n" +
-            "\"ID1\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\r\n" +
-            "\"ID2\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\r\n" +
-            "\"ID3\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\r\n" +
+            "\"CD3\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\r\n" +
+            "\"CD4\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\"";
 
         String expectedJson = "{\n" +
             "    \"venues\" : [\n" +
             "        {\n" +
-            "            \"id\": \"ID1\",\n" +
+            "            \"id\": \"CD2\",\n" +
             "            \"riskyWindow\": {\n" +
             "              \"from\": \"2019-07-04T13:33:03Z\",\n" +
             "              \"until\": \"2019-07-04T15:56:00Z\"\n" +
-            "            }\n" +
+            "            },\n" +
+            "           \"messageType\": \"M1\"\n" +
             "        },{\n" +
-            "            \"id\": \"ID2\",\n" +
+            "            \"id\": \"CD3\",\n" +
             "            \"riskyWindow\": {\n" +
             "              \"from\": \"2019-07-06T19:33:03Z\",\n" +
             "              \"until\": \"2019-07-06T21:01:07Z\"\n" +
-            "            }\n" +
+            "            },\n" +
+            "           \"messageType\": \"M1\"\n" +
             "        },{\n" +
-            "            \"id\": \"ID3\",\n" +
+            "            \"id\": \"CD4\",\n" +
             "            \"riskyWindow\": {\n" +
             "              \"from\": \"2019-07-08T20:05:52Z\",\n" +
             "              \"until\": \"2019-07-08T22:35:56Z\"\n" +
-            "            }\n" +
+            "            },\n" +
+            "           \"messageType\": \"M1\"\n" +
             "        }\n" +
             "\n" +
             "    ]\n" +
@@ -212,9 +280,9 @@ public class RiskyVenuesCsvParserTest {
     public void throwsIfDifferentInvalidRow() {
         String csv = "" +
             "# venue_id, start_time, end_time\n" +
-            "\"ID1\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
-            "\"ID2\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
-            "\"ID3\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\", H";
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
+            "\"CD3\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
+            "\"CD4\", \"2019-07-08T20:05:52Z\", \"2019-07-08T22:35:56Z\", H";
 
         VenuesParsingResult result = new HighRiskVenueCsvParser().toJson(csv);
 
@@ -226,9 +294,9 @@ public class RiskyVenuesCsvParserTest {
     public void throwsIfInvalidRow() {
         String csv = "" +
             "# venue_id, start_time, end_time\n" +
-            "\"ID1\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
-            "\"ID2\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
-            "\"ID3\", \"2019-07-08T20:05:52Z\"";
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
+            "\"CD3\", \"2019-07-06T19:33:03Z\", \"2019-07-06T21:01:07Z\"\n" +
+            "\"CD4\", \"2019-07-08T20:05:52Z\"";
 
         VenuesParsingResult result = new HighRiskVenueCsvParser().toJson(csv);
 
@@ -240,8 +308,8 @@ public class RiskyVenuesCsvParserTest {
     public void throwsIfInvalidStartDate() {
         String csv = "" +
             "# venue_id, start_time, end_time\n" +
-            "\"ID1\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
-            "\"ID3\", \"2019-07-08T20:05F:52Z\", \"2019-07-04T22:35:56Z\"";
+            "\"CD2\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"\n" +
+            "\"CD3\", \"2019-07-08T20:05F:52Z\", \"2019-07-04T22:35:56Z\"";
 
         VenuesParsingResult result = new HighRiskVenueCsvParser().toJson(csv);
 
@@ -292,9 +360,36 @@ public class RiskyVenuesCsvParserTest {
             .isEqualTo(Optional.of("validation error: Invalid data row on line number: 2"));
     }
 
-    private List<HighRiskVenue> venuesFrom(VenuesParsingResult result) {
-        return Jackson.deserializeMaybe(result.jsonOrThrow(), HighRiskVenues.class)
-            .map(it -> it.venues)
-            .orElseThrow(() -> new IllegalStateException("Could not deserialize venues"));
+    private List<HighRiskVenue> venuesFrom(VenuesParsingResult result) throws JsonProcessingException {
+            ObjectMapper riskyVenueMapper = new ObjectMapper()
+                .deactivateDefaultTyping()
+                .registerModule(new ParameterNamesModule(JsonCreator.Mode.PROPERTIES))
+                .registerModule(new Jdk8Module());
+            return riskyVenueMapper.readValue(result.jsonOrThrow(), HighRiskVenues.class).venues;
+    }
+
+    @Test
+    public void throwsIfVenueIdHasMoreCharacters() {
+        String csv =
+            "# venue_id, start_time, end_time\n" +
+                "\"CDEFH23456789\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"";
+
+        VenuesParsingResult result = new HighRiskVenueCsvParser().toJson(csv);
+
+        assertThat(result.failureMaybe())
+            .isEqualTo(Optional.of("validation error: Length of VenueId is greater than 12 characters"));
+    }
+
+
+    @Test
+    public void throwsIfVenueIdHasOtherCharacters() {
+        String csv =
+            "# venue_id, start_time, end_time\n" +
+                "\"ID123456789\", \"2019-07-04T13:33:03Z\", \"2019-07-04T15:56:00Z\"";
+
+        VenuesParsingResult result = new HighRiskVenueCsvParser().toJson(csv);
+
+        assertThat(result.failureMaybe())
+            .isEqualTo(Optional.of("validation error: Invalid characters on the venueId: ID123456789"));
     }
 }

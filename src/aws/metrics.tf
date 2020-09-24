@@ -10,26 +10,6 @@ module "cloudwatch_analytics" {
     module.diagnosis_keys_submission.store_id,
     module.analytics_processing.output_store_id
   ]
-  submission_lambdas = [
-    module.analytics_submission.function,
-    module.diagnosis_keys_submission.function,
-    module.activation_keys_submission.function,
-    module.virology_submission.lambda_function_name
-  ]
-  upload_lambdas = [
-    module.risky_post_districts_upload.lambda_function_name,
-    module.risky_venues_upload.lambda_function_name,
-    module.virology_upload.lambda_function_name
-  ]
-  processing_lambdas = [
-    module.analytics_processing.function,
-    module.diagnosis_keys_processing.function,
-    module.advanced_analytics.lambda_function_name
-  ]
-  circuit_breaker_lambdas = [
-    module.exposure_notification_circuit_breaker.function,
-    module.risky_venues_circuit_breaker.function
-  ]
   request_triggered = [
     module.risky_venues_upload.lambda_function_name,
     module.risky_post_districts_upload.lambda_function_name,
@@ -52,4 +32,20 @@ module "cloudwatch_analytics" {
     module.risky_venues_circuit_breaker.gateway_id,
     module.exposure_notification_circuit_breaker.gateway_id
   ]
+
+  activation_keys_submission_function            = module.activation_keys_submission.function
+  analytics_submission_function                  = module.analytics_submission.function
+  analytics_processing_function                  = module.analytics_processing.function
+  diagnosis_keys_submission_function             = module.diagnosis_keys_submission.function
+  federation_keys_processing_function            = module.federation_keys_processing.function
+  exposure_notification_circuit_breaker_function = module.exposure_notification_circuit_breaker.function
+  diagnosis_keys_processing_function             = module.diagnosis_keys_processing.function
+  risky_post_districts_upload_function           = module.risky_post_districts_upload.lambda_function_name
+  risky_venues_circuit_breaker_function          = module.risky_venues_circuit_breaker.function
+  risky_venues_upload_function                   = module.risky_venues_upload.lambda_function_name
+  virology_submission_function                   = module.virology_submission.lambda_function_name
+  virology_upload_function                       = module.virology_upload.lambda_function_name
+  advanced_analytics_function                    = module.advanced_analytics.lambda_function_name
+  virology_submission_api_gateway_id             = module.virology_submission.gateway_id
+  virology_upload_api_gateway_id                 = module.virology_upload.gateway_id
 }

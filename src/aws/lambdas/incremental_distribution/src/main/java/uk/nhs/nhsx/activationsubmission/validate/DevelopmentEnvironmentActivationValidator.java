@@ -1,12 +1,12 @@
 package uk.nhs.nhsx.activationsubmission.validate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.activationsubmission.ActivationCode;
 
 public class DevelopmentEnvironmentActivationValidator implements ActivationCodeValidator {
 
-    private static final Logger log = LoggerFactory.getLogger(DevelopmentEnvironmentActivationValidator.class);
+    private static final Logger log = LogManager.getLogger(DevelopmentEnvironmentActivationValidator.class);
 
     @Override
     public boolean validate(ActivationCode code) {

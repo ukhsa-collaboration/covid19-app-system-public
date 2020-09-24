@@ -1,18 +1,13 @@
 package uk.nhs.nhsx.circuitbreakers;
 
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import uk.nhs.nhsx.circuitbreakers.utils.TokenGenerator;
-import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.aws.ssm.Parameter;
-import uk.nhs.nhsx.core.exceptions.ApiResponseException;
 
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static uk.nhs.nhsx.core.exceptions.HttpStatusCode.NOT_FOUND_404;
 
 public class CircuitBreakerService {
 
@@ -26,27 +21,28 @@ public class CircuitBreakerService {
         this.poll = poll;
     }
 
-    public APIGatewayProxyResponseEvent getApprovalToken() {
+    public CircuitBreakerResult getApprovalToken() {
         String token = TokenGenerator.getToken();
 
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setApprovalToken(token);
         tokenResponse.setApproval(initial.value().getName());
 
-        return HttpResponses.ok(Jackson.toJson(tokenResponse));
+        return CircuitBreakerResult.ok(Jackson.toJson(tokenResponse));
     }
 
-    public APIGatewayProxyResponseEvent getResolution(String path) {
+    public CircuitBreakerResult getResolution(String path) {
         Optional<String> pollingToken = extractPollingToken(path);
 
-        if (!pollingToken.isPresent()) {
-            throw new ApiResponseException(NOT_FOUND_404, "Circuit Breaker request submitted without approval token");
+        if (pollingToken.isEmpty()) {
+            return CircuitBreakerResult.missingPollingTokenError();
         }
+
         ResolutionResponse resolutionResponse = new ResolutionResponse();
         ApprovalStatus status = poll.value();
         resolutionResponse.setApproval(status.getName());
 
-        return HttpResponses.ok(Jackson.toJson(resolutionResponse));
+        return CircuitBreakerResult.ok(Jackson.toJson(resolutionResponse));
     }
 
     public static Optional<String> extractPollingToken(String path) {

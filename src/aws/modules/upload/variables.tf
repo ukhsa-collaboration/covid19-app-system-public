@@ -33,3 +33,17 @@ variable "lambda_repository_bucket" {
 variable "lambda_object_key" {
   description = "The object key of the lambda jar in the s3 bucket"
 }
+
+variable "custom_oai" {
+  description = "Secret shared between CloudFront Distribution and Lambda"
+}
+
+variable "alarm_topic_arn" {
+  description = "SNS topic to publish application metric alarms to"
+}
+
+variable "should_parse_additional_fields" {
+  description = "Feature flag for risky venue upload with message type"
+  default     = false
+  type        = bool
+}

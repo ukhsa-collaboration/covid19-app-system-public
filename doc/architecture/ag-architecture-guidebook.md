@@ -1,45 +1,31 @@
-# NHS CV-19 App System | Architecture Guidebook
+# NHS CV19 App System | Architecture Guidebook
 
-**2020-08-12** 
+**2020-09-14, Target V3.5** 
 
 This is a living guidebook and unique point of architectural reference for the NHS Test and Trace Application
 
 ## Table of Contents
 
-Architecture
-
-* [Context and Driver](#context-and-driver)
-* [Domain Model](#domain-model)
-* [Architecture V3](#system-architecture) and [Flows](#system-flows)
-* [API Service Architecture](#api-service-architecture), [iOS App](#iOS), [Android App](#Android)
+* [Context](#context)
+* [Functional Architecture](#Functional-Architecture)
+* [System Architecture](#system-architecture)
+* [System Behaviour](#system-behaviour)
+* [System APIs and Interfaces](#System-APIs-and-Interfaces)
+* [Tech Stacks and Repositories](Tech-Stacks-and-Repositories)
 * [Infrastructure](#infrastructure)
-* [Quality Attribute Scenarios](#quality-attribute-scenarios)
-* [Architecture Decisions](#architecture-decision-log)
+* [Quality Scenarios and Decisions](#quality-scenarios-and-decisions)
 
+## Context
 
-Appendices
+**Vision Statement**. The Test and Trace Application is about speed, precision and reach in context of the overall Test & Trace program. It triggers isolation advice in minutes, provides measurements of time and approximated distance and notifies who you met, while protecting your privacy.
 
-* [API Contracts](#api-specifications)
-* [Conceptual System Flows](#flow-specifications)
+As of the current version there are [six main features](https://covid19.nhs.uk/): 
 
-## Context and Driver
+![Figure: App Capabilities](diagrams/img/cv19-app-system-features-2020-09-08.png "Figure: App Capabilities")
 
-### Vision
+## Functional Architecture
 
-The Test and Trace Application is about speed, precision and reach in context of the overall Test & Trace program. It triggers isolation advice in minutes, provides measurements of time and approximated distance and notifies who you met, while protecting your privacy.
-
-There are six capabilities to implement that vision
-
-  1. **Symptom checker**: records symptoms, suggests a test and triggers isolation
-  1. **Test odering**: order a test and receive test results
-  1. **Personal risk score**: encounter history, behavioural risk
-  1. **Self-isolation advice**: countdown timer, triggered by symptoms and by exposure notification
-  1. **Postcode risk notification**: matches personal postcode prefix with given CV-19 high-risk postal districts
-  1. **Venue check-in**: scanning at entry, user notification after match against given list of risk venues
-
-## Domain Model
-
-### Domains Overview
+### Overview
 
 The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journies:
 
@@ -66,16 +52,16 @@ Note that our concepts include terminology of the GAEN framework [see Android AP
 * **Encounter detection** provides temporary exposure key histories for index cases; we probably use attenuation duration only (and not the AG risk scoring)
 * **Diagnosis keys** are polled periodically from the backend and then matched on mobile client side using the AG-API (provide diagnosis keys, and get exposure information and summary)
 * **Personal risk score** as a user-centric risk visualisation of one or several results of the risk analysis
-* **Risk indicators** are: Self-diagnosis, Test results, Exposure notification, Identified risk venues and High-risk postcodes
+* Risk indicators for analysis: Self-diagnosis, Test results, Exposure notification, Identified risk venues and High-risk postcodes
 * **Symptoms** trigger isolation advice, but **not** a diagnosis key upload
 * **Isolation advice** offers **ordering a test**
 * Based on **test result**, diagnosis key upload with exposure notification and/or index case advice is (re)triggered
-* Venue **QR codes** are polled and matched with codes collected by **Check In**
+* Lists of venues identified by public health organisations as risk venues are polled and matched with information from Venue QR codes scanned by the app's **Venue Check In**.
 * **High risk postcodes** are polled and matched with postcode prefix
 * **User Notifications** can be triggered by different risk indicators, for the particular user
 * The important **difference between user and exposure notification** is that the latter always and only refers to diagnosis key matches for the contacts of an index case (cascading). User notifications in contrast are triggered only by and for user owned data like postcodes, QR codes or social distancing behaviour.
 * **System analytics** is the one and only domain getting anonymised user related data. Design and implementation needs to address in particular privacy and security concerns.
-* **Control panel**: to monitor apps and system. It is linked with all circuit breakers and enables human decision-making to confirm massive scale risk actions.
+* **Control panel**: to monitor apps and system. It is linked with the circuit breakers and enables human decision-making to confirm massive scale risk actions.
 
 ### External domains
 
@@ -91,154 +77,250 @@ The following data model provides a black box view on the system's data model. I
 
 ![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2020-08-02.png "Figure: Data Model")
 
-### AG-API details
+### EN Framework (AG-API)
 
-This is a conceptual analysis on the usage possibilities of the AG-API. It has been used for the architectural design of our usage of the AG-API. For data model details please see the latest [GAEN API documentation](https://www.google.com/covid19/exposurenotifications/)
+This is a conceptual analysis on the usage possibilities of the GAEN Framework and API. It has been used for the initial architectural design of our encounter detetction and exposure notification. For data model details please see the latest [GAEN API documentation](https://www.google.com/covid19/exposurenotifications/)
 
-![Figure: AG-API Details](diagrams/img/cv19-app-system-ag-api-concepts-2020-08-02.png "Figure: AG-API Details")
+![Figure: GAEN concepts](diagrams/img/cv19-app-system-ag-api-concepts-2020-09-09.png "Figure: GAEN concepts for Ecnounter Detection and Exposure Notification")
 
 ## System Architecture
 
-The NHS CV19 system architecture has three parts, mobile app, cloud backend and external systems. It adheres to following principles
+The NHS CV19 system architecture has four major parts, mobile app, cloud backend, external systems and operations. It adheres to following principles
 
 1. No User State or Identifier is stored on the Cloud Services
 1. All APIs are stateless where possible
-1. When stateful behaviour is required, short-lived tokens are used as identifiers. As described in the flow below this exist only as long as are needed
-1. Some interactions are in place to support future functionality
-1. Rich analytics are collected, completely anonymously. A user’s IP addresses will not be recorded. Some identifiers such as phone device type will not be aggregated at a postal district level.
+1. When stateful behaviour is required, short-lived tokens are used as identifiers. They exist only as long as are needed
+1. Mobile analytics are collected, completely anonymously. A user’s IP addresses will not be stored by the functional App System
+1. External system integration follows an API-first approach
 
-The diagrams show the component's name (responsibility), technology and their internal and external dependencies.
+Note, that on the technical layer HTTPS is used, where Internet Network Providers typically transfer IP-addresses between technical endpoints such as mobile device and the Web Application Firewalls of the AWS cloud services. However, we do not store any of these in the App System's backend.
 
-* Android and iOS native mobile apps implement the user-centric vision of the Test and Trace application. We use the AG-API to implement encounter detection based on BLE attenuation duration.
-* Backend services are implemented using an AWS cloud-native serverless architecture and provided to mobile clients as APIs. For the implementation of the services we use AWS Lambdas.
-* The integration of external systems is implemented in the backend, using required APIs (think of consumer-driven contracts) for the external systems and provided APIs for the mobile clients.
-* Web clients for smaller mostly internal user groups are implemented as SPAs (single page applications), predominantly React, to be hosted on S3.
+The system architecture diagram below specifies the complete system showing the main system components with their communication ports, and integrations within each other:
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-V3.0-2020-08-12.png "Figure: System Architecture")
+* Android and iOS native mobile apps implement the user-centric vision of the Test and Trace application. We use the EN Framework provided by Apple and Google to implement encounter detection based on BLE attenuation duration.
+* APIs and Cloud Services (Backend) are implemented using an AWS cloud-native serverless architecture and provided to mobile clients as APIs. For the implementation of the services we use AWS Lambdas.
+* The integration of external systems is implemented by the backend, again following an API-driven approach for all provided interfaces. For exporting or providing data there are connector or exporter implementations, again using AWS Lambdas.
+* As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
+* Security and operations is built on AWS cloud-native components.
 
-* Security and operations is built on AWS cloud-native components (detailed below)
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-09-14.png "Figure: System Architecture")
 
-## System Flows
+The port names in the system architecture are usually defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
 
-System flows describe the interactions between the app, the backend services, the Control Panel website and 3rd part systems like Virology testing. The related sequence diagrams can be found in the Appendix of this guidebook.
+## System Behaviour
 
-The details of the APIs that participate in these flows and the services that support them are developed as we move forward with implementation.
+System flows describe the behavioural interactions between the app, the backend services, the external systems and the monitoring and operation components. They **do not describe interactions within a single system component** like an app user interacting with only mobile app.
 
-### Installation and normal use
+### Installation, configuration and normal use
 
-This is the [flow on first app install, and in normal use](#system-flow-installation-and-normal-use) when it is collecting exposures and QR code check-ins and checking these against distributed positive diagnosis keys, HotSpot QRs (Venues) and high-risk postcodes.
+This is the flow on first app install, and in normal use when the app is collecting exposures and QR code check-ins and checking these against distributed positive diagnosis keys, identified risk venues and high-risk postcodes.
 
-The app is expected to have the following **configuration**:
+![System flow: installation and normal use](diagrams/img/system-flow_install-and-normal-2020-09-14.png "Figure: Installation and normal use")
 
-* AG EN API Config (Apple Google Exposure Notification)
-* Risk Analysis Controls
-* Feature Controls & Kill Switch
-* Symptomatic Questionnaire Contents (likely predefined answers and values)
-* Display text that is likely to change
-* URL links for backend services, and possibly for advice and Swab Testing
-* Notifications to be shown to the users of the app
+On **first install and when the app is opened** after it has been closed completely on the mobile device, it checks version availability with our backend service as well as the Apple and Google app stores. This check then may notify the user of mandatory or optional available app updates. It also allows to deactivate all but the availability check functionality, hence acting as a kind of "kill switch".
 
-Some of this configuration may be dependent on the language in use on the phone and its device type. For the first version its likely that all requests get the same config returned. Configuration will be signed to confirm authenticity. Multiple configuration will need to be fully tested, not just the expected initial configuration.
+After that it downloads and applies the following **configurations**:
 
-For first install the app will submit the following **analytics**
+* Exposure Configuration (Apple Google EN Framework) for encounter detection and exposure risk computation
+* Self-Isolation Configuration for isolation time intervals
 
-* Postal District
-* Device Type (Manufacturer and model)
+It then periodically downloads and uses data, retrieved from  **data distribution** APIs:
 
-Each day the app will submit as appropriate and completely anonymously, data as listed by Daily App Analytics in the data model above.
+* Diagnosis Keys
+* Postal District Risk Levels
+* Identified Risk Venues
+* Data and structure for the Symptoms Questionnaire
 
-Should **distribution of the Diagnosis Keys** and the HotSpot QR codes be separate calls or bundled as one? If its a single call/package that would limit the requests going to the server and save a small bit of bandwidth due to less headers. If they're separate, we could choose to download them at a different frequency.
+On a daily basis the app will submit anonymous **mobile analytics** data:
 
-The AG-API puts constraints on how frequently we can check for the user's diagnosis keys, but that doesn’t apply to the QR codes. Checking for updated QR hotspots could be done daily, or could be done whenever checking for diagnosis keys.
+* Technical static data: OS and app version, and the device model
+* Technical dynamic data such as cumulative bytes of data uploaded/downloaded and the number of completed background tasks
+* App usage related data on
+  * Onboarding
+  * Venue Check-Ins
+  * Symptoms Questionnaire
+  * Test results
+  * Isolation
 
-Scenario [SCN012](./scenarios/SCN012-num-users-distribution-service.md) discusses different assumptions on number of users and impact the distribution architecture.
-
-For the first release it is expected that the **Postal District risk** will be a lookup using the partial Post Code submitted by the User. It is expected that we will host the list within our system. In the future it might be a set of risks for a scrollable map, so that someone can assess the risk of other destinations also.
-
-The "Geiger" feature is currently also described as Personal Risk Model and it is not yet decided what a sensible input to the counter would be. As long as the existing risk analysis results are used, the following holds:
-
-* One or several of the risk analysis results are used to derive a personal risk score low, high or no risk.
-* Since all risk analysis is computed mobile client-side, no backend interaction but the daily analytics update with the computation result is needed
+The analytics data is stored in the backend without any reference to the submitting device or app installation.
 
 ### Matching diagnosis keys trigger exposure notification
 
-This is the [flow when a diagnosis key match is found](#system-flow-matching-diagnosis-keys-trigger-exposure-notification). A ‘Circuit Breaker’ is a backend service to control alert or notification decisions, so a scenario where a whole city is told to isolate can be identified and action taken before it occurs. This Circuit Breaker is not expected to be fully functional in the F&F release and might always return true. However, it is mandatory for later nation wide releases.
+This is the flow when a diagnosis key match is found. A ‘Circuit Breaker’ is a backend service to control alert or notification decisions, so a scenario where a whole city is told to isolate can be identified and action taken before it occurs. 
 
-The timing of when the match checks are made within the app is driven by the requirements of the AG-API.
+![System flow: trigger exposure notification](diagrams/img/system-flow_trigger-exposure-notification-2020-09-14.png "Figure: Matching diagnosis keys trigger exposure notification")
 
-The **risk analysis** is performed by a collection of algorithms within the app, using all available data and the risk analysis configuration retrieved from the backend. There is no personal data in the backend that are needed as part of the risk analysis.
+The **risk analysis** is performed by a collection of algorithms within the app, using all available data and the configuration retrieved from the backend. There is no personal data in the backend that are needed as part of the risk analysis.
 
-If  risk analysis results in an action trigger, this must be **confirmed with the Circuit Breaker** backend service. The API may need time to decide what action to take (as it needs to see what other app user actions are pending, and get human input) hence it never makes an immediate response. Rather it generates a short-lived token and returns this reference to the app for it to ask for updates.
+If risk analysis results in an action trigger, this must be **confirmed with the Circuit Breaker** backend service. The API may need time to decide what action to take (as it needs to see what other app user actions are pending, and get human input) hence it never makes an immediate response. Rather it generates a short-lived token and returns this reference to the app for it to ask for updates. The app will periodically poll the server for a decision, driven by the backgrounding schedule of the app.
 
-Not expected to be in the first release. This is the logic that decides whether to allow the action to proceed or not. The app will periodically poll the server for a decision, driven by the backgrounding schedule of the app. For the first release it is expected that all actions will be allowed to proceed.
+For the Isolation advice please note, that no idenitifiable user state is stored within the cloud services. When we have asked a user to take an action all record of this is held on the app.
 
-**Open questions.** When considering a set of commuters travelling from Reading to London yet they catch Covid-19 due to proximity events in London, does the circuit breaker affect London or Reading?
+### Symptoms questionnaire, booking a test and getting result using a temporary token
 
-It is likely a good idea that anyone that we ask to isolate is asked to provide their Exposure Diagnosis keys, in case we need to do secondary cascades in the future.
+This is the flow that is taken when the app recommends to a user that they take a Virology test after having entered symptoms in the questionnaire.
 
-For the Isolation State please note, that no user state is stored within the cloud services. When we have asked a user to take an action all record of this must be held on the app.
+Wenn the user interacts with the symptoms questionnaire, the App has the latest symptoms configuration and a mapping from symptoms to advice which is then shown to the user. With the advice there is an option to order a test and a start of the isolation countdown. The countdown is not synchronised with the backend, so in case the device is wiped or lost, thre is no means to recover the isolation state for that user.
 
-As long as **we do not ask for uploading diagnosis keys on symptoms**, there is no specific app-backend interaction for this flow. We assume
+The testing process involves ordering and registering tests through the UK  Virology Testing website, which is external to the App system. Note the flow step for actual Virology Testing is a horribly over-simplified view of a complex process outside of our system.
 
-* App has the latest symptoms configuration
-* Configuration includes a mapping from symptoms to advice
-* App has all advices available
+![System flow: virology testing](diagrams/img/system-flow_virology-testing-2020-09-14.png "Figure: Request virology testing and get result using a temporary token")
 
-Then the user enters symptoms, the app maps them to an advice, which is then shown to the user. With the advice there is an option to order a test and a start of the isolation countdown. The countdown is not synchronised with the backend, as long as there is no explicit requirement to eg. be able to recover from app or mobile OS failures.
+The app generates a short-lived **token to pass to the Virology Testing website** so that it can match the results that come back a few days later. This token is generated as unique by the Backend Service. The Backend service will store the token so that it can confirm the results that it is sent are valid.  
 
-### Request virology testing and get result using a temporary token
+The app will sporadically poll the Virology Testing API to see if the test result is available. If the test result is negative no further action is taken.
 
-This is the [flow that is taken when the app recommends to a user that they take a Virology test](#system-flow-request-virology-testing-and-get-result-using-a-temporary-token). This process involves ordering and registering tests through a Virology Testing website, the detail of which is covered elsewhere. Note the flow step for actual Virology Testing is a horribly over-simplified view of a complex process, search Virology Integrations on Confluence for more details.
+As per the flow for an Exposure Notification, when an app user is confirmed positive they are asked to submit their keys for inclusion in the diagnosis keys distribution set.
 
-The Circuit Breaker API is not asked to confirm any decisions in this flow. This step could be added in case it is needed in the future, however a confirmed test positive is unlikely to require additional control like alerts and notifications do.
+### Receive test result token via Mail or SMS and enter into app for diagnosis key submission
 
-A **(temporay) token id** is needed, unique for the app system, that is passed in to the Virology Testing system and comes back in the test results to identify a particular result. It only lives as long as the Virology Test is in flight. This implies that if there's a set of bad test results identified, there's no way to change the result.
+This is the flow where the App user manually enters a test result code, received via SMS or Mail from the citizen notification service: BSA for England and PHW for Wales. 
 
-The mechanism by which the app determines the need for a test is not specified here. This flow starts once the app has decided to recommend a test.
+![System flow: Enter test result code](diagrams/img/system-flow_enter-test-result-code-2020-09-14.png "Figure:  Enter test result code")
 
-The app needs a **token to pass to the Virology Testing website** so that it can match the results that come back a few days later. This token must be generated as unique by the Backend Service. It is expected that the Backend service will store the token so that it can confirm the results that it is sent are valid, and for in the future if it can maintain updates from Virology Testing for a particular test in flight.  
+The notification service uses an App System API to upload the test result **and** get a test result verification token. The token is then send via SMS/Mail to the citizen together with the result so she can verify the test result with the app and submit diagnosis keys for contact exposure notifications.
 
-Given that the app needs to go to the backend to get the code, it seems sensible to get the URLs for the Virology website at this point also, to ensure the latest correct site is used. This could also be used in the future for load balancing Virology Testing requests across different providers.
+### Venue check in, matching identifed risk venues and alert user
 
-In the **current implementation the Test Lab is NPEx** and results are sent to our backend services a few times a day in batches, in a CSV file.
+The venue check-in flow shows how idenitfied risk venues are imported from external systems, matched in the App against visited venues and then may trigger a corresponding notification for the App user.  
 
-The app will sporadically poll the backend Services to see if the test result is available.
+![System flow: check in](diagrams/img/system-flow_check-in-2020-09-14.png "Figure: Venue check in, matching at risk venues and alert user")
 
-If the test result is negative no further action is taken.
+## System APIs and Interfaces
 
-As per the flow for an Exposure Notification, when an app user is confirmed positive they are asked to **submit their keys for inclusion in the distribution** set. It’s possible that this step may need to happen at the start of the flow, when the App decides that a test is needed.
+The ports of the Cloud Services component in the system architecture are implemented by API services and Interfaces, grouped into a smaller number of fundamental concepts and architectural patterns:
 
-Changed symptoms may have an effect on isolation advice and companion:
+* Mobile **data submission** to backend
+* **Distribution of data and configuration** to mobile apps
+* **Circuit breaker** for specific app user notifications
+* **External systems data** by file upload to backend
+* **Connectors and exporters** to external systems
+* **Dashboards** for monitoring
+* Application level **security**
 
-* If the 7d isolation advice ends, the user is asked again for symptoms
-* With the 14d isolation advice, the user is asked for symptoms while having received the isolation advice already
-* Since we assume that the periodical data polling and downloads continues during isolation, the symptoms configuration and advice should be up-to-date
-* Dependening on the symptoms the advice may change, but is still without additional backend interaction
+The following solution patterns take characteristics of these groups into account. The patterns are applied in [specific API contracts](./api-contracts), provided by the cloud services backend and consumed by mobile or external systems. We use an API specification by example approach based on semi-formal .md files.
 
-### Check in and out, matching hotspot venues and alert user
+All APIs adhere to the following **structure and foundational features**
 
-The [venue check in system flow](#system-flow-check-in-and-out-matching-at-risk-venues-and-alert-user) imports data from an external system, matches and then triggers an alert for the interacting user.
+* Basic endpoint schema: ```https://<FQDN>/<api-group>```
+* `FQDN`: Hostname is different per environment. It is prefixed by the API group, e.g. for `submission-` you'll get ```https://submission-<host>/<api-group>```
+* We provide API endpoints in different environments from test to prod, to support joint integration testing
+* APIs have rate limits, see general information on [AWS API GW rate limits](https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-request-throttling.html)
 
-There are some important points in this flow:
+**Security for external system access** via Upload or Submission: Based on [ADR-022 Security for external system integration](./decisions/ADR022-security-ext-system-integration.md)
 
-* Distribution behaviour needs to be configurable
-* Poll config mechanism needed, we don't want to receive poll storms
+* Cloudfront presents SSL certificate with our host name in it, pinned on the root certificate(s) of the chain for our mobile app
+* TLS 1.2 (tls1.2_2018 policy) is used for connection encryption
+* Authorisation with API Key specially issued for each API: ```Authorization: Bearer <API KEY>```
+* Secure process for generating and distributing API Keys relies on out-of-band identity authentication:
+  1. We generate and exchange GPG public keys and establish a trust relationship (e.g. phone call) with third party (ext system responsible)
+  1. We generate the API key using the third-parties's public key, encrypt and send it via mail
+* IP range restrictions: API access is restricted to a single IP or a range of given IP addresses
+* Our process for IP range restrictions requires exchange of to be used API Adressess/ranges with our Operations & Infrastructure team
+* Authentication secrets are not stored anywhere except in the opaque auth header, which is distributed to the respective client application with end-to-end encryption.
+* Note that details of the particular security implementation may differ from dev to prod
 
-## API Service Architecture
+If not stated differently all APIs use the following **default HTTP response codes**
 
-The CV19 App System's provided API services group into a smaller number of fundamental concepts and architectural patterns:
+* `202` iff uploaded file successfully processed, response text similar to `successfully processed`
+* `403` forbidden (API key invalid), response text similar to `authentication error: <summary, no details>`
+* `422` file validation errors, response text similar to `validation error: <details>`
+* `429` API GW rate limit, response text similar to `too many requests: <summary, no details>`
+* `500` internal errors, response text similar to `internal error: <summary, no details>` 
 
-* Submission & query
-* Distribution to mobile apps
-* Web site links (Virology Testing)
-* Third party file upload
-* Circuit breaker
-* Control panel
-* Application level security
+### Submission
 
-### Tech Stack
+Submission APIs are usually used by the app to submit data to the backend.
 
-The API services are implemented using the following tech stack
+* Endpoint schema: ```https://<FQDN>/submission/<payload type>```
+* Payload content-type: application/json
+* Authorisation: ```Authorization: Bearer <API KEY>```
+* One API KEY for all mobile-facing APIs
+
+Note, the port name in the system architecture is defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
+
+| API Name | API Group | API Contract | User/Client impact |
+| - | - | - | - |
+| Diagnosis Key | Submission | [diagnosis-key-submission.md](./api-contracts/diagnosis-key-submission.md) | In event of positive diagnosis the app can upload anonymous exposure keys to the server |
+| Virology Testing | Submission | [virology-testing-api.md ](./api-contracts/virology-testing-api.md) | Allows clients to book a coronavirus test using a CTA Token that is passed into the test booking website. Clients can also periodically poll for test results using the CTA Token. New for v3.3 - clients can request a result for a test that was not booked via the app, they will input a CTA token into the app. |
+| Mobile Analytics  | Submission | analytics-submission.md | Allows clients to submit analytics data daily. Not testable from mobile application. |
+| Token API  | Submission | [token-api.md](./api-contracts/token-api.md)] | Data source for CTA token when test outside of the app has been undertaken. Mobile app allows entry of CTA token to confirm receipt of the test outcome. |
+
+### Distribution
+
+* Endpoint schema: ```https://<FQDN>/distribution/<payload specific>```
+* `FQDN`: One (CDN-) hostname for all distribute APIs
+* HTTP verb: GET
+* Payload content-type: payload specific
+* Key Distribution
+  * Signed "by design"
+  * One Signing Key #1 for Diagnosis Key distributions
+  * Public Key #1 sent to appgle/google
+* All except Diagnosis Key Distribution
+  * Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
+  * One Signing Key #2 for all other distributions
+  * Public Key #2 embedded into mobile apps (in obfuscated form)
+  * Clients (mobile apps) must verify signature
+
+| API Name | API Group | API Contract | User/Client impact |
+| - | - | - | - |
+| Diagnosis Key | Distribution | [diagnosis-key-distribution.md](./api-contracts/diagnosis-key-distribution.md) | Clients download exposure keys everyday, valid for 14 days (as per EN API). |
+| Exposure Risk Configuration | Distribution | [exposure-risk-configuration-distribution.md](./api-contracts/exposure-risk-configuration-distribution.md) | N/A not testable. |
+| Postal District Risk Levels | Distribution | [risky-post-district-distribution.md](./api-contracts/risky-post-district-distribution.md) | Used by mobiles to determine if the device is in a high or intermediate risk postcode. |
+| Identified Risk Venues | Distribution | [risky-venue-distribution.md](./api-contracts/risky-venue-distribution.md) | List of venues marked as risky which mobile clients poll for daily. If the client has been in a risky venue within the risk period (defined in risky venue upload) an isolation message is displayed. |
+| Symptoms Questionnaire | Distribution | [symptoms-questionnaire-distribution.md](./api-contracts/symptoms-questionnaire-distribution.md) | Symptomatic questionnaire used in the mobile clients. This is set by the NHS Medical Policy team. |
+| Self Isolation Configuration | Distribution | [self-isolation-distribution.md](./api-contracts/self-isolation-distribution.md) | Configuration data used by mobile clients to inform users how long to isolate for and how far back they can select symptom onset. |
+| App Availability | Distribution | [app-availability-distribution.md](./api-contracts/app-availability-distribution.md) | Distribute required OS and app versions (req version > existing => deactivates app) |
+
+### Upload
+
+External systems will upload files periodically. General pattern:
+
+* Endpoint schema: ```https://<FQDN>/upload/<payload type>```
+* Payload content type (HTTP header): application/json or text/csv
+* Payload size restriction: < 6MB
+* All-or-nothing: No partial processing (no row-by-row processing)
+* Fast-fail: stop processing after first validation exception
+* API GW Rate limit: 100 RPS, max concurrency of 10
+* Security for external system upload
+
+| API Name | API Group | API Contract | User/Client impact |
+| - | - | - | - |
+| Postal District Risk Levels | Upload | [risky-post-district-upload.md](./api-contracts/risky-post-district-upload.md) | Distribution to mobile. |
+| Identified Risk Venues | Upload | [risky-venue-upload.md](./api-contracts/risky-venue-upload.md) | Data source for Risky Venue distribution API. |
+| Test Lab Results | Upload | [test-lab-api.md](./api-contracts/test-lab-api.md) | Data source for Virology Testing API allowing mobile to poll for test result. |
+
+### Circuit Breaker
+
+Circuit breaker APIs delegate the decision for a risk-based action (e.g. advice self-isolation on exposure notification). The mobile client indicates to the corresponding service that a risk action is to be taken and receives a randomly generated token.
+
+* Endpoint schema: ```https://<FQDN>/circuit-breaker/<risk type specific>```
+* HTTP verb: POST
+* Payload content-type: application/json
+* Payload: related context information (a simple JSON dictionary, i.e. key-value pairs)
+* Authorisation: ```Authorization: Bearer <API KEY>```
+* One API KEY for all mobile phone-facing APIs
+
+After receiving the token the mobile client polls the backend until it receives a resolution result from the backend.
+
+| API Name | API Group | API Contract | User/Client impact |
+| - | - | - | - |
+| Exposure Notification Circuit Breaker | Submission | exposure-notification-circuit-breaker.md | Manual circuit breaker to stop exposure notification alerts in mobile clients on positive diagnosis after client uploads keys. |
+| Risk Venues Circuit Breaker | Submission | risky-venue-circuit-breaker.md | Manual circuit breaker to stop exposure notification alerts in mobile clients after a venue is marked as risky from the upload API. |
+
+### Connectors and Exporters
+
+| API Name | API Group | API Contract | User/Client impact |
+| - | - | - | - |
+| Federated Server Connector | Connector | [](./api-contracts) | Up/Download Federated Server keys. |
+| AAE Exporter | Exporter | [](./api-contracts) | Export analytics data. |
+
+
+
+## Tech Stacks and Repositories
+
+The [system repository](https://github.com/nhsx/covid19-app-system-public-public) includes the implementation of all services required to collect data and interact with the mobile devices and external systems
+and the code to automate build, deployment and test of the services. The **APIs and Cloud Services** are implemented using
 
 * Run: AWS and Java
 * Build and Deploy: Ruby and Terraform
@@ -246,28 +328,20 @@ The API services are implemented using the following tech stack
 
 The AWS cloud-native implementation uses API gateways acting as a facade for serverless functions with mostly S3 buckets for storage. The services are configured using Terraform source code files. Payloads are signed using KMS. Some patterns require more DB like persistence where we use DynamoDB. Finally some services and storage components require time triggers or time related functions and AWS features such as retention policies for S3 buckets.
 
-## Mobile App Architecture
+Note that our build system and deployment architecture is currently used only internally. We add documentation to the open source repository as soon as these internal components for development and delivery become relevant for public development.
 
-### iOS
+The **iOS app** only uses standard Apple tooling, all bundled within Xcode.
 
-The iOS app only uses standard Apple tooling, all bundled within Xcode.
+* [Application source code](https://github.com/nhsx/covid-19-app-ios-ag-public-public)
+* [Architecture and module definitions](https://github.com/nhsx/covid-19-app-ios-ag-public-public/blob/master/Docs/AppArchitecture.md)
+* [Internal and external dependencies](https://github.com/nhsx/covid-19-app-ios-ag-public-public#dependencies)
 
-* [Application source code](https://github.com/nhsx/covid-19-app-ios-ag-public)
-* [Architecture and module definitions](https://github.com/nhsx/covid-19-app-ios-ag-public/blob/master/Docs/AppArchitecture.md)
-* [Internal and external dependencies](https://github.com/nhsx/covid-19-app-ios-ag-public#dependencies)
+The **Android app** uses standard Android tooling, Kotlin and Android SDK. The build uses Gradle with a couple of third party Gradle plugins for publishing and protobuf (only for field test).
 
-### Android
+* [Application source code](https://github.com/nhsx/covid-19-app-android-ag-public-public)
+* [Internal and external dependencies](https://github.com/nhsx/covid-19-app-android-ag-public-public/blob/master/app/build.gradle)
 
-The Android app uses standard Android tooling, Kotlin and Android SDK. The build uses Gradle with a couple of third party Gradle plugins for publishing and protobuf (only for field test).
-
-* [Application source code](https://github.com/nhsx/covid-19-app-android-ag-public)
-* [Internal and external dependencies](https://github.com/nhsx/covid-19-app-android-ag-public/blob/master/app/build.gradle)
-
-## Web Architecture
-
-**Tech Stack** React SPA hosted on S3, delivered by CDN.
-
-The closed beta release does not provide any public available web client, so we add to this section as soon as there is a web client beyond what we use as internal tools.
+The **Web apps** use React SPA hosted on S3, delivered by CDN. However, note that the current system does not provide any public available web client, so we add to this section as soon as there is a web client beyond what we use as internal tools.
 
 ## Infrastructure
 
@@ -281,41 +355,10 @@ The CV19 App System infrastructure and operations uses AWS cloud-native componen
 
 ![Figure: Cloud Infrastructure](diagrams/img/cv19-app-system-cloud-infrastructure-2020-08-12.png "Figure: Cloud Infrastructure")
 
-## Deployment
+## Quality Scenarios and Decisions
 
-Our build system and deployment architecture is currently used only internally. We add documentation to this section as soon as these internal components for development and delivery becomes relevant for public development.
+Quality scenarios provide support for architectural decision making and advanced continuous testing of system qualities as part of our CI/CD pipelines. For the initial release, the system was tested following industry best practices like automated unit, integration and system tests as well as external load and pen testing.
 
-## Quality Attribute Scenarios
+For future releases we aim to evolve our approach and include system quality testing related not only to security and performance but to any other *ility as outlined by our [current scenarios](scenarios/).
 
-Quality scenarios provide support for architectural decisions making and advanced continuous testing of system qualities as part of our CI/CD pipelines. For the closed beta release, the system was tested following industry best practices like automated unit, integration and system tests as well as external load and pen testing.
-
-For future releases we evolve our approach to include system quality testing related not only to security and performance but to any other *ility as outlined by our [current scenarios](scenarios/).
-
-## Architecture Decision Log
-
-We use [Architectural Decision Records ADRs](decisions/) to track decisions in github as part of the architecture documentation.
-
-## Appendices
-
-### API Contracts
-
-* [API Patterns](../api-patterns.md)
-* [API Contracts](../design/api-contracts)
-
-### Flow Specifications
-
-#### System Flow: Installation and normal use
-
-![System flow: installation and normal use](diagrams/img/system-flow_install-and-normal-2020-07-15.png "Figure: Installation and normal use")
-
-#### System Flow: Matching diagnosis keys trigger exposure notification
-
-![System flow: trigger exposure notification](diagrams/img/system-flow_trigger-exposure-notification-2020-07-15.png "Figure: Matching diagnosis keys trigger exposure notification")
-
-#### System Flow: Request virology testing and get result using a temporary token
-
-![System flow: virology testing](diagrams/img/system-flow_virology-testing-2020-07-08.png "Figure: Request virology testing and get result using a temporary token")
-
-#### System Flow: Check in and out, matching at risk venues and alert user
-
-![System flow: check in](diagrams/img/system-flow_check-in-2020-07-15.png "Figure: Check in and out, matching at risk venues and alert user")
+We use lightweight [Architectural Decision Records ADRs](decisions/) to track decisions in the system's repository as part of the architecture documentation.

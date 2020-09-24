@@ -13,3 +13,12 @@ variable "logs_bucket_id" {
 variable "aws_wafv2_web_acl_arn" {
   description = "The ACL arn registered in WAF"
 }
+
+variable "force_destroy_s3_buckets" {
+  description = "Force destroy s3 buckets if set to true"
+}
+
+variable "enable_shield_protection" {
+  description = "Flag to enable/disable shield protection"
+  type        = bool
+}

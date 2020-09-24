@@ -1,6 +1,5 @@
 package uk.nhs.nhsx.core.signature;
 
-import com.amazonaws.xray.strategy.ContextMissingStrategy;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.google.common.io.Files;
@@ -10,6 +9,7 @@ import uk.nhs.nhsx.core.SystemObjectMapper;
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters;
 import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 import uk.nhs.nhsx.core.aws.ssm.Parameters;
+import uk.nhs.nhsx.core.aws.xray.Tracing;
 
 import java.io.*;
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class DistributionSignatureMain {
 
     public static void main(String[] args) throws IOException {
 
-        System.setProperty(ContextMissingStrategy.CONTEXT_MISSING_STRATEGY_SYSTEM_PROPERTY_OVERRIDE_KEY, "LOG_ERROR");
+        Tracing.disableXRayComplaintsForMainClasses();
 
         CommandLine commandLine = new DistributionSignatureMain.CommandLine();
         JCommander commander = JCommander.newBuilder().addObject(commandLine).build();

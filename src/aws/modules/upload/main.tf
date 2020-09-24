@@ -21,7 +21,10 @@ module "upload_lambda" {
     DISTRIBUTION_ID                   = var.distribution_id,
     SSM_KEY_ID_PARAMETER_NAME         = "/app/kms/ContentSigningKeyArn",
     DISTRIBUTION_INVALIDATION_PATTERN = var.distribution_invalidation_pattern
+    custom_oai                        = var.custom_oai
+    should_parse_additional_fields    = var.should_parse_additional_fields
   }
+  app_alarms_topic = var.alarm_topic_arn
 }
 
 module "upload_gateway" {

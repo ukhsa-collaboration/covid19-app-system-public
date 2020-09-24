@@ -67,6 +67,10 @@ public class RiskyPostCodesCsvParser implements CsvToJsonParser {
             throwValidationErrorWith("Invalid risk indicator on line number: " + row);
         }
 
+        if (postCode.length() > 20){
+            throwValidationErrorWith("Invalid post district longer than 20 characters: " + postCode);
+        }
+
         return new PostCodeRisk(postCode, riskIndicator);
     }
 

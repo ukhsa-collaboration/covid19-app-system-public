@@ -1,17 +1,17 @@
 package smoke.env
 
-import com.amazonaws.xray.strategy.ContextMissingStrategy
-import org.slf4j.LoggerFactory
+import org.apache.logging.log4j.LogManager
 import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.aws.xray.Tracing
 import java.io.File
 import java.io.FileNotFoundException
 
 object SmokeTests {
 
-    private val logger = LoggerFactory.getLogger(SmokeTests::class.java)
+    private val logger = LogManager.getLogger(SmokeTests::class.java)
 
     init {
-        System.setProperty(ContextMissingStrategy.CONTEXT_MISSING_STRATEGY_SYSTEM_PROPERTY_OVERRIDE_KEY, "LOG_ERROR")
+        Tracing.disableXRayComplaintsForMainClasses()
     }
 
     fun loadConfig(): EnvConfig =

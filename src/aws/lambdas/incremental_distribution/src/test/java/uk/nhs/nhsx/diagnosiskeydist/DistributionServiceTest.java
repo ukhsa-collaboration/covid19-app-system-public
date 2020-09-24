@@ -21,6 +21,7 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -47,7 +48,7 @@ public class DistributionServiceTest {
 
     private final FakeS3 awsS3 = new FakeS3();
     private final AwsCloudFront awsCloudFront = mock(AwsCloudFront.class);
-    private final ExposureProtobuf exposureProtobuf = new ExposureProtobuf(mobileAppBundleId, SystemClock.CLOCK);
+    private final ExposureProtobuf exposureProtobuf = new ExposureProtobuf(mobileAppBundleId);
     private final BatchProcessingConfig batchProcessingConfig = new BatchProcessingConfig(
         true,
         BucketName.of("dist-zip-bucket-name"),
@@ -280,11 +281,27 @@ public class DistributionServiceTest {
         verify(awsCloudFront, times(1))
             .invalidateCache("dis-id", "dist-pattern-2hourly");
     }
+    @Test
+    public void checkDailyBatchExistsAtMidnightBoundary() throws Exception {
+        Date date = utcDate(2020, 9, 16, 23, 47, 0, 0);
 
+        new DistributionService(
+            new MockSubmissionRepository(singletonList(date)),
+            exposureProtobuf,
+            new SaveToFileKeyDistributor(distributionFolder.getRoot()),
+            signer,
+            awsCloudFront,
+            awsS3,
+            batchProcessingConfig
+        ).distributeKeys(date);
+        File distributionDailyDir = new File(distributionFolder.getRoot(), "distribution/daily");
+        assertTrue(new File(distributionDailyDir.getPath().concat("/2020091700.zip")).exists());
+        assertDailyExportBatchExists();
+    }
     private void assertDailyExportBatchExists() {
         File distributionDailyDir = new File(distributionFolder.getRoot(), "distribution/daily");
         assertTrue(distributionDailyDir.exists());
-        assertEquals(14, distributionDailyDir.list().length);
+        assertEquals(15, distributionDailyDir.list().length);
     }
 
     private void assertTwoHourlyExportBatchExists() {
@@ -315,7 +332,7 @@ public class DistributionServiceTest {
         }
 
         private static StoredTemporaryExposureKey makeKey(long keyStartTime) {
-            return new StoredTemporaryExposureKey("ABC", Math.toIntExact(keyStartTime), 144);
+            return new StoredTemporaryExposureKey("ABC", Math.toIntExact(keyStartTime), 144, 7);
         }
     }
 

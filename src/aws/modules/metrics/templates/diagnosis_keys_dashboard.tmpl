@@ -1,0 +1,266 @@
+{
+    "widgets": [
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 3,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${diagnosis_keys_processing_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Error Metrics - Key Processing",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 21,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${diagnosis_keys_processing_function}-warnings" ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Warning Metrics - Key Processing",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 27,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/\n| parse @message /WARN\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "region": "eu-west-2",
+                "stacked": true,
+                "title": "Warning Log Count - Key Processing",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 33,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/",
+                "region": "eu-west-2",
+                "stacked": true,
+                "title": "Warning Log Details - Key Processing",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 15,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/",
+                "region": "eu-west-2",
+                "stacked": true,
+                "title": "Error Log Details - Key Processing",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 12,
+            "y": 9,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/\n| parse @message /ERROR\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Error Log Count - Key Processing",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 0,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "Invocations", "FunctionName", "${diagnosis_keys_processing_function}" ],
+                    [ "ErrorLogCount", "${diagnosis_keys_processing_function}-errors", { "color": "#d62728" } ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Invocations and Errors for Key Processing Lambda",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${diagnosis_keys_submission_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Error Metrics - Key Submission",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 21,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${diagnosis_keys_submission_function}-warnings" ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Warning Metrics - Key Submission",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 9,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/\n| parse @message /ERROR\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "region": "eu-west-2",
+                "stacked": true,
+                "title": "Error Log Count - Key Submission",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 33,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/",
+                "region": "eu-west-2",
+                "stacked": true,
+                "title": "Warning Log Details - Key Submission",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/",
+                "region": "eu-west-2",
+                "stacked": true,
+                "title": "Error Log Details - Key Submission",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 27,
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/\n| parse @message /WARN\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "region": "eu-west-2",
+                "stacked": true,
+                "title": "Warning Log Count - Key Submission",
+                "view": "table",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "Invocations", "FunctionName", "${diagnosis_keys_submission_function}" ],
+                    [ "ErrorLogCount", "${diagnosis_keys_submission_function}-errors", { "color": "#d62728" } ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Invocations and Errors for Key Submission Lambda",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 12,
+            "y": 21,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${diagnosis_keys_processing_function}-warnings" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Warnings for Key Processing Lambda",
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 21,
+            "width": 12,
+            "height": 3,
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${diagnosis_keys_submission_function}-warnings" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "title": "Warnings for Key Submission Lambda",
+                "setPeriodToTimeRange": true
+            }
+        }
+    ]
+}

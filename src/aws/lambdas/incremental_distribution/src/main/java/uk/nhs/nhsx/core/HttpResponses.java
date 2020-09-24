@@ -63,6 +63,10 @@ public class HttpResponses {
         return withStatusCode(HttpStatusCode.NOT_FOUND_404);
     }
 
+    public static APIGatewayProxyResponseEvent notFound(String body) {
+        return withStatusCodeAndBody(HttpStatusCode.NOT_FOUND_404, body);
+    }
+
     public static APIGatewayProxyResponseEvent methodNotAllowed() {
         return withStatusCode(HttpStatusCode.METHOD_NOT_ALLOWED_405);
     }
@@ -84,5 +88,13 @@ public class HttpResponses {
 
     public static APIGatewayProxyResponseEvent badRequest() {
         return withStatusCode(HttpStatusCode.BAD_REQUEST_400);
+    }
+
+    public static APIGatewayProxyResponseEvent conflict() {
+        return withStatusCode(HttpStatusCode.CONFLICT_409);
+    }
+
+    public static APIGatewayProxyResponseEvent serviceUnavailable() {
+        return withStatusCode(HttpStatusCode.SERVICE_UNAVAILABLE_503);
     }
 }

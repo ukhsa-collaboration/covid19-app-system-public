@@ -8,10 +8,12 @@ module "distribution_store" {
   service                     = "distribution"
   origin_access_identity_path = aws_cloudfront_origin_access_identity.this.iam_arn
   logs_bucket_id              = var.logs_bucket_id
+  force_destroy_s3_buckets    = var.force_destroy_s3_buckets
+  s3_versioning               = var.s3_versioning
 }
 
-# FIXME: avoid overwriting existing files for risky venues and (maybe) post districts
 resource "aws_s3_bucket_object" "payload" {
+  count        = var.default_payload == null ? 0 : 1
   bucket       = module.distribution_store.bucket.bucket
   key          = var.default_payload
   source       = var.payload_source

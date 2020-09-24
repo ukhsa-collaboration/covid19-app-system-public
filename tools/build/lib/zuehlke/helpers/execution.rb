@@ -19,8 +19,10 @@ module Zuehlke
       cmd.run
       logfile = File.join(system_config.out, "logs", "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{name.gsub("\s", "_")}.log")
       write_file(logfile, "#{cmdline}\n#{cmd.output}\n#{cmd.error}\n")
-      puts "#{name} completed in #{cmd.exec_time.round(2)}"
-      if !cmd.success?
+      if cmd.success?
+        puts "#{name} completed in #{cmd.exec_time.round(2)}s"
+      else
+        puts "#{name} failed after #{cmd.exec_time.round(2)}s"
         if cmd.output && cmd.output.lines.size > EXCEPTION_LINES
           message = "#{cmd.output.lines[-EXCEPTION_LINES..-1].join("\n")}"
         else
@@ -81,6 +83,30 @@ module Zuehlke
         puts "#{name} completed in #{exec_time.round(2)}"
         return exec_time
       end
+    end
+
+    # Runs the command line using Patir, creating a new process and suppressing the output of the command.
+    # It does not print the command on stdout or in logs
+    #
+    # Output, error output, command exit status and total time of execution are captured and returned on success as Patir::ShellCommand instance
+    # This does not suppress or capture the output.
+    #
+    # Returns the execution duration
+    def run_quiet(name, cmdline, system_config)
+      cmd = Patir::ShellCommand.new(:cmd => cmdline)
+      cmd.run
+      logfile = File.join(system_config.out, "logs", "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{name.gsub("\s", "_")}.log")
+      write_file(logfile, "#{cmd.output}\n#{cmd.error}\n")
+      puts "#{name} completed in #{cmd.exec_time.round(2)}"
+      if !cmd.success?
+        if cmd.output && cmd.output.lines.size > EXCEPTION_LINES
+          message = "#{cmd.output.lines[-EXCEPTION_LINES..-1].join("\n")}"
+        else
+          message = cmd.output
+        end
+        raise GaudiError, "Failed to run #{name}:\n#{message}\n#{cmd.error}"
+      end
+      return cmd
     end
   end
 end

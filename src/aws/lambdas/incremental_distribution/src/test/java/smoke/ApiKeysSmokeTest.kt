@@ -11,7 +11,7 @@ import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasHeader
 import org.http4k.hamkrest.hasStatus
 import org.junit.Test
-import smoke.clients.TestKitOrderClient
+import smoke.clients.VirologyClient
 import smoke.env.SmokeTests
 import java.util.*
 
@@ -109,7 +109,7 @@ class ApiKeysSmokeTest {
     }
 
     private fun sendRequestWith(authHeader: String): Response {
-        val uri = "${TestKitOrderClient.baseUrlFrom(config)}/home-kit/order"
+        val uri = "${VirologyClient.baseUrlFrom(config)}/home-kit/order"
         val request = Request(Method.POST, uri)
             .header("Authorization", authHeader)
 

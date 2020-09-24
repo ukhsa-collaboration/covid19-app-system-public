@@ -4,73 +4,87 @@ provider "aws" {
 }
 
 module "exposure_configuration_distribution" {
-  source                  = "./modules/distribution"
-  name                    = "exposure-configuration"
-  default_payload         = "/distribution/exposure-configuration"
-  payload_source          = abspath("../../../static/exposure-configuration.json")
-  metadata_signature      = abspath("../../../../out/signatures/exposure-configuration.json.sig")
-  metadata_signature_date = abspath("../../../../out/signatures/exposure-configuration.json.date")
-  logs_bucket_id          = var.logs_bucket_id
+  source                   = "./modules/distribution"
+  name                     = "exposure-configuration"
+  default_payload          = "/distribution/exposure-configuration"
+  payload_source           = abspath("../../../static/exposure-configuration.json")
+  metadata_signature       = abspath("../../../../out/signatures/exposure-configuration.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/exposure-configuration.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = false
 }
 
 module "post_districts_distribution" {
-  source                  = "./modules/distribution"
-  name                    = "risky-post-districts"
-  default_payload         = "/distribution/risky-post-districts"
-  payload_source          = abspath("../../../static/risky-post-districts.json")
-  metadata_signature      = abspath("../../../../out/signatures/risky-post-districts.json.sig")
-  metadata_signature_date = abspath("../../../../out/signatures/risky-post-districts.json.date")
-  logs_bucket_id          = var.logs_bucket_id
+  source                   = "./modules/distribution"
+  name                     = "risky-post-districts"
+  default_payload          = null
+  payload_source           = abspath("../../../static/risky-post-districts.json")
+  metadata_signature       = abspath("../../../../out/signatures/risky-post-districts.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/risky-post-districts.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = var.s3_versioning
 }
 
 module "risky_venues_distribution" {
-  source                  = "./modules/distribution"
-  name                    = "risky-venues"
-  default_payload         = "/distribution/risky-venues"
-  payload_source          = abspath("../../../static/risky-venues.json")
-  metadata_signature      = abspath("../../../../out/signatures/risky-venues.json.sig")
-  metadata_signature_date = abspath("../../../../out/signatures/risky-venues.json.date")
-  logs_bucket_id          = var.logs_bucket_id
+  source                   = "./modules/distribution"
+  name                     = "risky-venues"
+  default_payload          = null
+  payload_source           = abspath("../../../static/risky-venues.json")
+  metadata_signature       = abspath("../../../../out/signatures/risky-venues.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/risky-venues.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = var.s3_versioning
 }
 
 module "self_isolation_distribution" {
-  source                  = "./modules/distribution"
-  name                    = "self-isolation"
-  default_payload         = "/distribution/self-isolation"
-  payload_source          = abspath("../../../static/self-isolation.json")
-  metadata_signature      = abspath("../../../../out/signatures/self-isolation.json.sig")
-  metadata_signature_date = abspath("../../../../out/signatures/self-isolation.json.date")
-  logs_bucket_id          = var.logs_bucket_id
+  source                   = "./modules/distribution"
+  name                     = "self-isolation"
+  default_payload          = "/distribution/self-isolation"
+  payload_source           = abspath("../../../static/self-isolation.json")
+  metadata_signature       = abspath("../../../../out/signatures/self-isolation.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/self-isolation.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = false
 }
 
 module "symptomatic_questionnaire_distribution" {
-  source                  = "./modules/distribution"
-  name                    = "symptomatic-questionnaire"
-  default_payload         = "/distribution/symptomatic-questionnaire"
-  payload_source          = abspath("../../../static/symptomatic-questionnaire.json")
-  metadata_signature      = abspath("../../../../out/signatures/symptomatic-questionnaire.json.sig")
-  metadata_signature_date = abspath("../../../../out/signatures/symptomatic-questionnaire.json.date")
-  logs_bucket_id          = var.logs_bucket_id
+  source                   = "./modules/distribution"
+  name                     = "symptomatic-questionnaire"
+  default_payload          = "/distribution/symptomatic-questionnaire"
+  payload_source           = abspath("../../../static/symptomatic-questionnaire.json")
+  metadata_signature       = abspath("../../../../out/signatures/symptomatic-questionnaire.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/symptomatic-questionnaire.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = false
 }
 
 module "availability_android_distribution" {
-  source                  = "./modules/distribution"
-  name                    = "availability-android"
-  default_payload         = "/distribution/availability-android"
-  payload_source          = abspath("../../../static/availability-android.json")
-  metadata_signature      = abspath("../../../../out/signatures/availability-android.json.sig")
-  metadata_signature_date = abspath("../../../../out/signatures/availability-android.json.date")
-  logs_bucket_id          = var.logs_bucket_id
+  source                   = "./modules/distribution"
+  name                     = "availability-android"
+  default_payload          = "/distribution/availability-android"
+  payload_source           = abspath("../../../static/availability-android.json")
+  metadata_signature       = abspath("../../../../out/signatures/availability-android.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/availability-android.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = false
 }
 
 module "availability_ios_distribution" {
-  source                  = "./modules/distribution"
-  name                    = "availability-ios"
-  default_payload         = "/distribution/availability-ios"
-  payload_source          = abspath("../../../static/availability-ios.json")
-  metadata_signature      = abspath("../../../../out/signatures/availability-ios.json.sig")
-  metadata_signature_date = abspath("../../../../out/signatures/availability-ios.json.date")
-  logs_bucket_id          = var.logs_bucket_id
+  source                   = "./modules/distribution"
+  name                     = "availability-ios"
+  default_payload          = "/distribution/availability-ios"
+  payload_source           = abspath("../../../static/availability-ios.json")
+  metadata_signature       = abspath("../../../../out/signatures/availability-ios.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/availability-ios.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = false
 }
 
 resource "aws_cloudfront_origin_access_identity" "diagnosis_keys" {
@@ -83,6 +97,7 @@ module "diagnosis_keys_distribution_store" {
   service                     = "key-distribution"
   origin_access_identity_path = aws_cloudfront_origin_access_identity.diagnosis_keys.iam_arn
   logs_bucket_id              = var.logs_bucket_id
+  force_destroy_s3_buckets    = var.force_destroy_s3_buckets
 }
 
 module "distribution_apis" {
@@ -123,8 +138,9 @@ module "distribution_apis" {
   availability_ios_payload                     = module.availability_ios_distribution.name
   availability_ios_origin_access_identity_path = module.availability_ios_distribution.origin_access_identity_path
 
-  domain      = var.base_domain
-  web_acl_arn = data.aws_wafv2_web_acl.this.arn
+  domain                   = var.base_domain
+  web_acl_arn              = data.aws_wafv2_web_acl.this.arn
+  enable_shield_protection = var.enable_shield_protection
 }
 
 output "base_distribution_endpoint" {

@@ -7,15 +7,15 @@ import com.amazonaws.services.cloudfront.model.CreateInvalidationRequest;
 import com.amazonaws.services.cloudfront.model.InvalidationBatch;
 import com.amazonaws.services.cloudfront.model.Paths;
 import com.google.common.base.Suppliers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
 public class AwsCloudFrontClient implements AwsCloudFront {
 
-    private static final Logger logger = LoggerFactory.getLogger(AwsCloudFrontClient.class);
+    private static final Logger logger = LogManager.getLogger(AwsCloudFrontClient.class);
 
     private static final Supplier<AmazonCloudFront> client =
         Suppliers.memoize(AmazonCloudFrontClientBuilder::defaultClient);

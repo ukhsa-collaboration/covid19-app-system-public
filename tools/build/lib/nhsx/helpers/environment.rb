@@ -40,6 +40,17 @@ module Gaudi
       def token
         mandatory("TOKEN")
       end
+
+      # Pass a point in time value for restoring backups
+      #
+      # Returns epoch time for given value
+      #
+      # Eg: RESTORE_AT = "September 9, 2020 at 8:32:06 PM UTC+8"
+      def restore_at
+        restore_time = mandatory("RESTORE_AT")
+        parsed_time = DateTime.parse(restore_time)
+        return parsed_time.strftime("%s")
+      end
     end
   end
 end

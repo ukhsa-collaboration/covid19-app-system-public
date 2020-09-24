@@ -21,3 +21,19 @@ variable "lambda_repository_bucket" {
 variable "lambda_object_key" {
   description = "The object key of the lambda jar in the s3 bucket"
 }
+
+variable "database_name" {
+  description = "The name of the database"
+}
+
+variable "table_name" {
+  description = "The name of the table"
+}
+
+variable "force_destroy_s3_buckets" {
+  description = "Force destroy s3 buckets if set to true"
+}
+
+variable "alarm_topic_arn" {
+  description = "SNS topic to publish application metric alarms to"
+}

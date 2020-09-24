@@ -4,22 +4,21 @@ import com.amazonaws.HttpMethod
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
+import org.json.JSONObject
 import org.junit.Test
 import uk.nhs.nhsx.ContextBuilder
 import uk.nhs.nhsx.ProxyRequestBuilder
+import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
 import uk.nhs.nhsx.core.aws.ssm.Parameter
-import uk.nhs.nhsx.core.aws.ssm.ParameterName
-import uk.nhs.nhsx.core.aws.ssm.Parameters
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import java.util.*
-import java.util.function.Function
 
 class ExposureNotificationHandlerTest {
 
@@ -37,7 +36,19 @@ class ExposureNotificationHandlerTest {
     private val poll = Parameter { ApprovalStatus.YES }
 
     private val breaker = CircuitBreakerService(initial, poll)
-    private val handler = ExposureNotificationHandler(Authenticator { true }, signer, breaker )
+    private val handler = ExposureNotificationHandler(TestEnvironments.TEST.apply(
+            mapOf("MAINTENANCE_MODE" to "false")), Authenticator { true }, signer, breaker)
+
+
+    @Test
+    fun testGetApprovalTokenForValidPayloadForExposure() {
+        val result: CircuitBreakerResult = breaker.approvalToken
+        val approvalValue = JSONObject(result.responseBody).getString("approval")
+
+        assertThat(result.type).isEqualTo(CircuitBreakerResult.ResultType.Ok)
+        assertThat(approvalValue).isEqualTo(ApprovalStatus.PENDING.getName())
+        assertThat(result.responseBody).isNotEmpty()
+    }
 
     @Test
     fun handleCircuitBreakerRequestSuccess() {
@@ -124,7 +135,7 @@ class ExposureNotificationHandlerTest {
             .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(404)
+        assertThat(response.statusCode).isEqualTo(422)
     }
 
     @Test
@@ -146,5 +157,9 @@ class ExposureNotificationHandlerTest {
 
     private fun headersOrEmpty(response: APIGatewayProxyResponseEvent): Map<String, String> {
         return Optional.ofNullable(response.headers).orElse(emptyMap())
+    }
+
+    private fun checkForExposureNotificationObject(json: String): Boolean {
+        return Jackson.deserializeMaybe(json, ExposureNotificationCircuitBreakerRequest::class.java).isPresent
     }
 }

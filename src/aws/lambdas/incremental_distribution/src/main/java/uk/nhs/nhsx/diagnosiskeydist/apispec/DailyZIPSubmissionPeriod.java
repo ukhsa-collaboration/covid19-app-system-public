@@ -61,9 +61,9 @@ public class DailyZIPSubmissionPeriod extends ZIPSubmissionPeriod {
 		List<DailyZIPSubmissionPeriod> periods = new LinkedList<>();
 
 		Calendar cal = utcCalendar(periodEndDateExclusive);
-		for (int i = 0; i < TOTAL_DAILY_ZIPS; i++) {
-			cal.add(Calendar.DATE, -1);
+		for (int i = 0; i < TOTAL_DAILY_ZIPS + 1; i++) {
 			periods.add(new DailyZIPSubmissionPeriod(cal.getTime()));
+			cal.add(Calendar.DATE, -1);
 		}
 
 		return periods;

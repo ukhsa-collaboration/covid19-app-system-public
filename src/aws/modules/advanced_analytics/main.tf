@@ -20,20 +20,21 @@ data "aws_secretsmanager_secret" "subscription_key" {
 
 module "iam_advanced_analytics_lambda" {
   source                              = "../../libraries/iam_advanced_analytics_lambda"
-  name                                = local.function_name
   bucket_name                         = var.analytics_submission_store
   certificate_secret_arn              = data.aws_secretsmanager_secret.private_certificate.arn
-  key_secret_name_arn                 = data.aws_secretsmanager_secret.private_key.arn
   encryption_password_secret_name_arn = data.aws_secretsmanager_secret.certificate_encryption_password.arn
+  key_secret_name_arn                 = data.aws_secretsmanager_secret.private_key.arn
+  name                                = local.function_name
   subscription_key_name_arn           = data.aws_secretsmanager_secret.subscription_key.arn
 }
 
 module "advanced_analytics_lambda" {
   source                            = "../../libraries/advanced_analytic_lambda"
-  name                              = local.function_name
+  analytics_submission_store        = var.analytics_submission_store
+  aae_hostname                      = var.aae_hostname
+  iam_advanced_analytics_lambda_arn = module.iam_advanced_analytics_lambda.arn
   lambda_timeout                    = var.lambda_timeout
   lambda_handler                    = var.lambda_handler
-  iam_advanced_analytics_lambda_arn = module.iam_advanced_analytics_lambda.arn
-  analytics_submission_store        = var.analytics_submission_store
-  aae_environment                   = var.aae_environment
+  name                              = local.function_name
+  app_alarms_topic                  = var.alarm_topic_arn
 }

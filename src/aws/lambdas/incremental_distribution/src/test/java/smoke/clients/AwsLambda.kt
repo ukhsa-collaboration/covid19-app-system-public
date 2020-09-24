@@ -28,4 +28,23 @@ object AwsLambda {
         return awsLambdaClient.invoke(invokeRequest)
     }
 
+    fun enableMaintenanceMode(lambdaFunctionName: String) {
+        setMaintenanceMode(lambdaFunctionName, true)
+    }
+
+    fun disableMaintenanceMode(lambdaFunctionName: String) {
+        setMaintenanceMode(lambdaFunctionName, false)
+    }
+
+    private fun setMaintenanceMode(lambdaFunctionName: String, value: Boolean) {
+        val envVarName = "MAINTENANCE_MODE"
+        val result = AwsLambda.updateLambdaEnvVar(
+            lambdaFunctionName,
+            envVarName to "$value"
+        )
+        val updatedEnvVar = result.environment.variables[envVarName]
+        if (updatedEnvVar != "$value")
+            throw IllegalStateException("Expected env var: $envVarName to be updated but it was not.")
+    }
+
 }

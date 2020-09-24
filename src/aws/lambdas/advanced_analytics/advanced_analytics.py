@@ -1,81 +1,79 @@
-import http.client
 import logging
-import os
 import ssl
+import tempfile
 
-from aws_xray_sdk.core import patch
+import requests
 from aws_xray_sdk.core import xray_recorder
+from requests.adapters import HTTPAdapter
 
-logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
-# httplib is an alias for http.client
-patch((['httplib']))
+
+class SecureClientAuthAdapter(HTTPAdapter):
+
+    def __init__(self, sslcontext):
+        self._sslcontext = sslcontext
+        super().__init__()
+
+    def init_poolmanager(self, *args, **kwargs):
+        kwargs['ssl_context'] = self._sslcontext
+        return super(SecureClientAuthAdapter, self).init_poolmanager(*args, **kwargs)
 
 
 @xray_recorder.capture('Advanced Analytics')
 class AdvancedAnalytics:
 
-    def __init__(self, certificate_private, certificate_key, subscription_key, encryption_passphrase, host):
-        self.certificate_private = certificate_private
-        self.certificate_key = certificate_key
-        self.subscription_key = subscription_key
-        self.encryption_passphrase = encryption_passphrase
+    def __init__(self, host, secrets):
+        self.session = requests.Session()
+        self.session.mount(f"https://{host}", SecureClientAuthAdapter(AdvancedAnalytics.configure_ssl_context(secrets)))
+        self.session.headers.update({
+            "Content-Type": "application/octet-stream",
+            "Ocp-Apim-Trace": "true",
+            "Ocp-Apim-Subscription-Key": secrets.subscription_key
+        })
         self.host = host
 
-    def send(self, document_name, analytics):
-        certificate_id = "certificate_private"
-        certificate_key_id = "certificate_key"
-        certificate_location = self.save_to_file(certificate_id, self.certificate_private)
-        certificate_key_location = self.save_to_file(certificate_key_id, self.certificate_key)
+    @staticmethod
+    def configure_ssl_context(secrets):
+        with tempfile.TemporaryDirectory() as temp:
+            certificate_location = AdvancedAnalytics.save_to_file(temp, secrets.certificate_private)
+            certificate_key_location = AdvancedAnalytics.save_to_file(temp, secrets.certificate_key)
 
-        try:
-            ssl_context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+            ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
             ssl_context.load_cert_chain(certfile=certificate_location,
                                         keyfile=certificate_key_location,
-                                        password=self.encryption_passphrase)
-
-            self.send_to_aa(self.subscription_key, analytics, document_name, ssl_context, self.host)
-
-        except ssl.SSLError as ssl_error:
-            logging.error(ssl_error)
-            print("SSL Error")
-
-        self.delete_file(certificate_id)
-        self.delete_file(certificate_key_id)
+                                        password=secrets.encryption_passphrase)
+            return ssl_context
 
     @staticmethod
-    def save_to_file(file_name, content):
-        location = "/tmp/" + file_name
-        with open(location, "w", encoding="utf8") as f:
+    def save_to_file(directory, content):
+        file = tempfile.NamedTemporaryFile(dir=directory, mode="w", delete=False)
+        with file as f:
             f.write(content)
-        return location
+        return file.name
 
-    @staticmethod
-    def delete_file(file_name):
-        os.remove("/tmp/" + file_name)
+    def send(self, document_name, analytics):
 
-    @staticmethod
-    def send_to_aa(key, metrics, metrics_name, ssl_context, host):
-        request_headers = {
-            "Content-Type": "application/json",
-            "Ocp-Apim-Trace": "true",
-            "Ocp-Apim-Subscription-Key": key
-        }
-        connection = http.client.HTTPSConnection(host, port=443, context=ssl_context)
+        try:
+            response = self.session.put(
+                f"https://{self.host}/c19appdata/{document_name}",
+                data=analytics,
+                timeout=(15, 15)  # connect , read
+            )
+            response.raise_for_status()
+            log.info(f"Successfully delivered metric file: {document_name}")
+            log.info(f"HTTP response is: {response.status_code}, {response.reason}")
 
-        endpoint_uri = "/c19appdata/" + metrics_name
-        connection.request(method="PUT",
-                           url=endpoint_uri,
-                           headers=request_headers,
-                           body=metrics)
+        except requests.exceptions.HTTPError as unsuccessful:
+            response = unsuccessful.response
+            status = response.status_code
+            if (status < 200) or (status > 299):
+                log.error('The host did not create the record as expected.')
+            elif status >= 500:
+                log.error('The host is currently unavailable')
 
-        response = connection.getresponse()
-        if (response.status < 200) or (response.status > 299):
-            print("The host did not create the record as expected.\nHTTP response is:",
-                  response.status, response.reason)
-        elif response.status >= 500:
-            print("The host is currently unavailable.\nHTTP response is:", response.status,
-                  response.reason)
-        else:
-            print(f"Successfully delivered metric file: {metrics_name}.\nHTTP response is:", response.status,
-                  response.reason)
+            log.error(f"HTTP response is: {status}, {response.reason}")
+            raise
+        except requests.ConnectionError as connection_error:
+            log.error(f"Sending to AAE failed with Connection Error: {connection_error}")
+            raise

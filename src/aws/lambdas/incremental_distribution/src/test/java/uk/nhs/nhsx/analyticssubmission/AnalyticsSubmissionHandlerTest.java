@@ -9,15 +9,19 @@ import org.junit.Ignore;
 import org.junit.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
 import uk.nhs.nhsx.TestData;
-import uk.nhs.nhsx.core.aws.s3.*;
+import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments;
+import uk.nhs.nhsx.core.aws.s3.ObjectKey;
+import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static uk.nhs.nhsx.ContextBuilder.aContext;
 import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasBody;
 import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasStatus;
@@ -31,7 +35,7 @@ public class AnalyticsSubmissionHandlerTest {
         return iOSPayloadFrom(startDate, endDate, "AB10");
     }
 
-    private static String iOSPayloadFrom(String startDate, String endDate, String postDistrict) {
+    public static String iOSPayloadFrom(String startDate, String endDate, String postDistrict) {
         return "{" +
             "  \"metadata\" : {" +
             "    \"operatingSystemVersion\" : \"iPhone OS 13.5.1 (17F80)\"," +
@@ -110,7 +114,14 @@ public class AnalyticsSubmissionHandlerTest {
     private final FakeS3Storage s3Storage = new FakeS3Storage();
     
     private final ObjectKeyNameProvider objectKeyNameProvider = mock(ObjectKeyNameProvider.class);
-    private final Handler handler = new Handler((e) -> true, s3Storage, objectKeyNameProvider, BUCKET_NAME);
+    private final AnalyticsConfig config = new AnalyticsConfig(
+        "firehoseStreamName",
+        true,
+        false,
+        BUCKET_NAME
+    );
+    private final Handler handler = new Handler(TestEnvironments.TEST.apply(
+        Map.of("MAINTENANCE_MODE", "false")), (e) -> true, s3Storage, objectKeyNameProvider, config);
 
     @Before
     public void setup() {

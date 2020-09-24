@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.mocks;
 
-import uk.nhs.nhsx.core.signature.KeyId;
 import uk.nhs.nhsx.core.aws.ssm.KeyLookup;
+import uk.nhs.nhsx.core.signature.KeyId;
 
 public class MockKeyLookup implements KeyLookup {
 

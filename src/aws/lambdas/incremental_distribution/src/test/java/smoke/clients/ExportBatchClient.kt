@@ -1,11 +1,11 @@
 package smoke.clients
 
 import batchZipCreation.Exposure
+import org.apache.logging.log4j.LogManager
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
-import org.slf4j.LoggerFactory
 import smoke.env.EnvConfig
 import uk.nhs.nhsx.BatchExport
 import java.time.Instant
@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter
 
 class ExportBatchClient(private val client: JavaHttpClient, private val config: EnvConfig) {
 
-    private val logger = LoggerFactory.getLogger(ExportBatchClient::class.java)
+    private val logger = LogManager.getLogger(ExportBatchClient::class.java)
 
     fun getLatestTwoHourlyTekExport(): Exposure.TemporaryExposureKeyExport {
         val dateTime = LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"))

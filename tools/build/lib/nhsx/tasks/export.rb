@@ -1,5 +1,3 @@
-require "highline"
-
 namespace :export do
   desc "Creates a test key/example bundle to send to Apple & Google"
   task :"key:dev" => [:"clean:wipe"] do

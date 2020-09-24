@@ -50,14 +50,7 @@ resource "aws_iam_role" "this" {
 }
 EOF
 }
-#FIXME: replace with fine grained policy document
-# KMS signing
-# ParameterStore lookup
-# Cloudwatch logging
-# SecretsManager API key lookup
-# CloudFront cache flush
-# DynamoDB
-# S3
+
 resource "aws_iam_role_policy_attachment" "lambda_all" {
   count      = length(local.lambda_policies)
   policy_arn = local.lambda_policies[count.index]

@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Sources {
 
-    public static ByteSource byteSourceFor(String json) {
-        return CharSource.wrap(json).asByteSource(StandardCharsets.UTF_8);
+    public static ByteSource byteSourceFor(String data) {
+        return CharSource.wrap(data).asByteSource(StandardCharsets.UTF_8);
     }
 }

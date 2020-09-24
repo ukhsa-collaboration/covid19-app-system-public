@@ -28,12 +28,12 @@ public class RiskyPostCodesHandlerTest {
             "\"CODE3\", \"L\"";
 
 
-    @SuppressWarnings("serial")
-	private final Map<String, String> environmentSettings = new HashMap<String, String>() {{
-        put("BUCKET_NAME", "my-bucket");
-        put("DISTRIBUTION_ID", "my-distribution");
-        put("DISTRIBUTION_INVALIDATION_PATTERN", "invalidation-pattern");
-    }};
+	private final Map<String, String> environmentSettings = Map.of(
+        "BUCKET_NAME", "my-bucket",
+        "DISTRIBUTION_ID", "my-distribution",
+        "DISTRIBUTION_INVALIDATION_PATTERN", "invalidation-pattern",
+        "MAINTENANCE_MODE", "FALSE"
+    );
 
     private final Environment environment = Environment.fromName("test", Environment.Access.TEST.apply(environmentSettings));
 
@@ -61,7 +61,7 @@ public class RiskyPostCodesHandlerTest {
         String contentToStore = "{\"postDistricts\":{\"CODE2\":\"M\",\"CODE1\":\"H\",\"CODE3\":\"L\"}}";
         assertThat(datedSigner.count).isEqualTo(1);
         assertThat(datedSigner.content).isEqualTo(Bytes.concat("date:".getBytes(StandardCharsets.UTF_8), contentToStore.getBytes(StandardCharsets.UTF_8)));
-        assertThat(s3Storage.count).isEqualTo(1);
+        assertThat(s3Storage.count).isEqualTo(2);
         assertThat(s3Storage.bucket.value).isEqualTo("my-bucket");
 
         verify(awsCloudFront, times(1)).invalidateCache("my-distribution", "invalidation-pattern");

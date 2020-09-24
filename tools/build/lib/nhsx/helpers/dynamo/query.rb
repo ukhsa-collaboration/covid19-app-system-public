@@ -1,4 +1,4 @@
-require "aws-sdk"
+
 
 module NHSx
   # Helpers to run queries against DynamoDB
