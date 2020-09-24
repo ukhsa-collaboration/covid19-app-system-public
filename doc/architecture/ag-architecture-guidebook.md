@@ -45,7 +45,7 @@ The CV19 App System is a composition of different functional, technical and orga
 
 ### Functional and technical domains
 
-Note that our concepts include terminology of the GAEN framework [see Android API doc, Glossary](https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Android-Exposure-Notification-API-documentation-v1.3.2.pdf).
+Note that our concepts include terminology of the GAEN framework [see Android API doc, Glossary](https://developers.google.com/android/exposure-notifications/exposure-notifications-api#glossary).
 
 ![Figure: Domain Model](diagrams/img/cv19-app-system-domain-model-domain-model-2020-08-12.png "Figure: Domain Model")
 
