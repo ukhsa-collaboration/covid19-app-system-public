@@ -67,7 +67,7 @@ class AdvancedAnalytics:
         except requests.exceptions.HTTPError as unsuccessful:
             response = unsuccessful.response
             status = response.status_code
-            if (status < 200) or (status > 299):
+            if (status < 200) or (status > 299 and status < 500):
                 log.error('The host did not create the record as expected.')
             elif status >= 500:
                 log.error('The host is currently unavailable')
