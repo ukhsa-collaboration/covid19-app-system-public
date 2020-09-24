@@ -26,7 +26,7 @@
     "0007": {
         "folder name": "0007_ios-exposure-notification-keys",
         "description": "Contains exposure notification keys payload extracted from 2 different test phones and formatted to be inserted directly into the submissions bucket. For payloads that are submitted to the lambda function, it is necessary to add a key 'diagnosisKeySubmissionToken' with the token submitted to the external virology testing service, at the same level as the 'temporaryExposureKeys' and remove all 'transmissionRisk' values. 20200729110100.json is from an iPhone 8+ and 20200728153000.json is from an iPhone 11."
-    }
+    },
     "0008": {
         "folder name": "0008_app-version-kill-switch",
         "description": "Contains iOS and Android killswitch JSONs to test out adjusting the minimum OS/app versions that are allowed."
