@@ -242,9 +242,9 @@ Note, the port name in the system architecture is defined by ```API Group\API Na
 | API Name | API Group | API Contract | User/Client impact |
 | - | - | - | - |
 | Diagnosis Key | Submission | [diagnosis-key-submission.md](./api-contracts/diagnosis-key-submission.md) | In event of positive diagnosis the app can upload anonymous exposure keys to the server |
-| Virology Testing | Submission | [virology-testing-api.md ](./api-contracts/virology-testing-api.md) | Allows clients to book a coronavirus test using a CTA Token that is passed into the test booking website. Clients can also periodically poll for test results using the CTA Token. New for v3.3 - clients can request a result for a test that was not booked via the app, they will input a CTA token into the app. |
-| Mobile Analytics  | Submission | analytics-submission.md | Allows clients to submit analytics data daily. Not testable from mobile application. |
-| Token API  | Submission | [token-api.md](./api-contracts/token-api.md)] | Data source for CTA token when test outside of the app has been undertaken. Mobile app allows entry of CTA token to confirm receipt of the test outcome. |
+| Virology Testing | Submission | [virology-testing-api.md](./api-contracts/virology-testing-api.md) | Allows clients to book a coronavirus test using a CTA Token that is passed into the test booking website. Clients can also periodically poll for test results using the CTA Token. New for v3.3 - clients can request a result for a test that was not booked via the app, they will input a CTA token into the app. |
+| Mobile Analytics  | Submission | [analytics-submission.md](./api-contracts/analytics-submission.md) | Allows clients to submit analytics data daily. Not testable from mobile application. |
+| Token API  | Submission | [token-api.md](./api-contracts/token-api.md) | Data source for CTA token when test outside of the app has been undertaken. Mobile app allows entry of CTA token to confirm receipt of the test outcome. |
 
 ### Distribution
 
@@ -305,8 +305,8 @@ After receiving the token the mobile client polls the backend until it receives 
 
 | API Name | API Group | API Contract | User/Client impact |
 | - | - | - | - |
-| Exposure Notification Circuit Breaker | Submission | exposure-notification-circuit-breaker.md | Manual circuit breaker to stop exposure notification alerts in mobile clients on positive diagnosis after client uploads keys. |
-| Risk Venues Circuit Breaker | Submission | risky-venue-circuit-breaker.md | Manual circuit breaker to stop exposure notification alerts in mobile clients after a venue is marked as risky from the upload API. |
+| Exposure Notification Circuit Breaker | Submission | [exposure-notification-circuit-breaker.md](./api-contracts/exposure-notification-circuit-breaker.md) | Manual circuit breaker to stop exposure notification alerts in mobile clients on positive diagnosis after client uploads keys. |
+| Risk Venues Circuit Breaker | Submission | [risky-venue-circuit-breaker.md](./api-contracts/risky-venue-circuit-breaker.md) | Manual circuit breaker to stop exposure notification alerts in mobile clients after a venue is marked as risky from the upload API. |
 
 ### Connectors and Exporters
 
