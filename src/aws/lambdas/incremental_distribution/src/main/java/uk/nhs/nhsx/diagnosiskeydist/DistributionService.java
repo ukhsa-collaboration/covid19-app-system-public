@@ -67,7 +67,7 @@ public class DistributionService {
 	public void distributeKeys(Date now) throws Exception {
 		DistributionServiceWindow window = new DistributionServiceWindow(now);
 
-		logger.info("Batch run triggered: now={}, earliest start={} (inclusive), lastest start={} (exclusive)", now, window.earliestBatchStartDateWithinHourInclusive(), window.latestBatchStartDateWithinHourExclusive());
+		logger.info("Batch run triggered: now={}, earliest start={} (inclusive), latest start={} (exclusive)", now, window.earliestBatchStartDateWithinHourInclusive(), window.latestBatchStartDateWithinHourExclusive());
 
 		if (!window.validBatchStartDate()) {
 			logger.error("CloudWatch Event triggered Lambda at wrong time.");

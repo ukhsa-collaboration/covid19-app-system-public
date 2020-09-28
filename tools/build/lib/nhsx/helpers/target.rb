@@ -21,9 +21,9 @@ module NHSx
     DORETO_TARGET_ENVIRONMENTS = {
       "dev" => ["test", "branch"]
     }.freeze
-    # The parameter name that contains the ARN of the signing key in the SSM paramater store
+    # The parameter name that contains the ARN of the signing key in the SSM parameter store
     SIGNING_KEY_PARAMETER = "/app/kms/SigningKeyArn".freeze
-    # The parameter name that contains the ARN of the content signing key in the SSM paramater store
+    # The parameter name that contains the ARN of the content signing key in the SSM parameter store
     CONTENT_SIGNING_KEY_PARAMETER = "/app/kms/ContentSigningKeyArn".freeze
     # The name of the secret that contains the API authentication headers used by the tests
     TEST_API_KEY_HEADERS_SECRET = "AuthenticationHeadersForTests".freeze

@@ -104,7 +104,7 @@ Note that indicating the minimum OS version is necessary to avoid confusing user
 
 ### Example: Demising the app
 
-App demise is supported just like security and policy force upgrades. We set the minimum version to a non-existant version, along with the appropriate message.
+App demise is supported just like security and policy force upgrades. We set the minimum version to a non-existent version, along with the appropriate message.
 
 ```json
 {

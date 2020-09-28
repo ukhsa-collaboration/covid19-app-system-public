@@ -5,7 +5,7 @@ require "pathname"
 require "yaml"
 
 module Gaudi
-  # The path to the defualt configuration file relative to the main rakefile
+  # The path to the default configuration file relative to the main rakefile
   DEFAULT_CONFIGURATION_FILE = File.expand_path(File.join(File.dirname(__FILE__), "../../../system.cfg"))
   # Loads and returns the system configuration
   def self.configuration

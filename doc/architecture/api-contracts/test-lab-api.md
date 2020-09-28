@@ -72,7 +72,7 @@ Default -> [Upload Response Codes](../api-patterns.md#Upload)
 - Note that **distribution to mobile clients** depends on system latency *and* mobile systems background polling scheduler. So it might take between 6h to 24h until uploaded test results are finally delivered to the mobile app.
   
 - **Expected Fiorano load**
-  - Subset of all test results (those wit a cta token)
+  - Subset of all test results (those with a cta token)
   - numbers TBD
 
 - **Expected NPEx load**, Mail (2020-07-21)

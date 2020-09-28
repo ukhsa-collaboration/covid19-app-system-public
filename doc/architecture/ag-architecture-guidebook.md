@@ -27,7 +27,7 @@ As of the current version there are [six main features](https://covid19.nhs.uk/)
 
 ### Overview
 
-The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journies:
+The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journeys:
 
 1. Mobile platform
 1. User and personal risk score
@@ -160,7 +160,7 @@ For the Isolation advice please note, that no idenitifiable user state is stored
 
 This is the flow that is taken when the app recommends to a user that they take a Virology test after having entered symptoms in the questionnaire.
 
-Wenn the user interacts with the symptoms questionnaire, the App has the latest symptoms configuration and a mapping from symptoms to advice which is then shown to the user. With the advice there is an option to order a test and a start of the isolation countdown. The countdown is not synchronised with the backend, so in case the device is wiped or lost, thre is no means to recover the isolation state for that user.
+Wenn the user interacts with the symptoms questionnaire, the App has the latest symptoms configuration and a mapping from symptoms to advice which is then shown to the user. With the advice there is an option to order a test and a start of the isolation countdown. The countdown is not synchronised with the backend, so in case the device is wiped or lost, there is no means to recover the isolation state for that user.
 
 The testing process involves ordering and registering tests through the UK  Virology Testing website, which is external to the App system. Note the flow step for actual Virology Testing is a horribly over-simplified view of a complex process outside of our system.
 

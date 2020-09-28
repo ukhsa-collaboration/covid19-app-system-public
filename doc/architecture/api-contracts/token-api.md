@@ -60,7 +60,7 @@ Response body
 - `testResult` one of the following
   - eng `POSITIVE | NEGATIVE | VOID`
   - wls `POSITIVE | NEGATIVE | INDETERMINATE`
-- **One-time upload only**: we don't accept multiple uploads with the same ctaToken. Once uploaded with `202` the test result will be destributed to all mobile clients.
+- **One-time upload only**: we don't accept multiple uploads with the same ctaToken. Once uploaded with `202` the test result will be distributed to all mobile clients.
 - Please note: INDETERMINATE and VOID are both treated as VOID by the mobile application - the behaviour could change in the future
 
 ## Response Codes

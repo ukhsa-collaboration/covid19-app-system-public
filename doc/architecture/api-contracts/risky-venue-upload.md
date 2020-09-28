@@ -6,7 +6,7 @@ An identified risky venue is a venue that has been tagged by a UK public health 
  
 For the V3 launch we provide a basic https endpoint for CSV file upload which is then processed and distributed as a json file to our api clients.
 
-The responsibility of when updates are fed into the system is completely up to the upload approver, e.g. to PHE or to PHW. This also allows for system indpendent coordination with public comms if needed at the same time.
+The responsibility of when updates are fed into the system is completely up to the upload approver, e.g. to PHE or to PHW. This also allows for system independent coordination with public comms if needed at the same time.
 
 
 ## Scenario

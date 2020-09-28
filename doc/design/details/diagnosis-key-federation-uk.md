@@ -24,7 +24,7 @@
 ### Details
 
 - Integration components (Export Lambda & Import Lambda) can be instantiated more than once (different configuration per instance, e.g. gateway feature enabled/disabled, import enabled/disabled, export enabled/disabled)
-- All diagnosis key batches downloaded from federation servers will be stored as submissions in the existing submission bucket (different s3 objekt key prefix per federation server) so that the incremental distribution component only needs minimal adjustments, e.g. configuration of disabled (federation server-) submission s3 object key prefixes
+- All diagnosis key batches downloaded from federation servers will be stored as submissions in the existing submission bucket (different s3 object key prefix per federation server) so that the incremental distribution component only needs minimal adjustments, e.g. configuration of disabled (federation server-) submission s3 object key prefixes
 
 # Post V4: Diagnosis Key Federation within Europe
 

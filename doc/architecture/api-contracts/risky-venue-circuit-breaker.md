@@ -26,7 +26,7 @@ We assume the circuit breaker counts the number of identified risk venues over s
 }
 ```
 
-#### Respose Payload Example
+#### Response Payload Example
 
 ```json
 {
