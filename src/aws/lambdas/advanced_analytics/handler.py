@@ -38,10 +38,10 @@ def grab_secrets(secrets_manager):
 
 xray_patch_all()
 
-secerts = grab_secrets(boto3.client("secretsmanager"))
+secrets = grab_secrets(boto3.client("secretsmanager"))
 
 s3 = boto3.resource('s3')
-aa = AdvancedAnalytics(host, secerts)
+aa = AdvancedAnalytics(host, secrets)
 
 
 @xray_recorder.capture('Advanced Analytics')
