@@ -18,10 +18,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.net.http.HttpRequest.BodyPublishers.ofString;
 import static uk.nhs.nhsx.core.Jackson.toJson;
+import static uk.nhs.nhsx.core.UncheckedException.uncheckedGet;
 
 public class InteropClient {
 
@@ -40,33 +42,50 @@ public class InteropClient {
         this.jws = jws;
     }
 
-    public List<DiagnosisKeysDownloadResponse> downloadKeys(LocalDate date, BatchTag batchTag) throws Exception {
-        String batch = batchTag == null ? "" : "?batchTag=" + batchTag.value;
-        DiagnosisKeysDownloadResponse exposureKeysNextBatch = getExposureKeysBatch(date, batch);
+    public List<DiagnosisKeysDownloadResponse> downloadKeys(LocalDate date) {
+        return downloadKeys(date, null);
+    }
+
+    public List<DiagnosisKeysDownloadResponse> downloadKeys(final LocalDate date, final BatchTag batchTag) {
+        String batch = Optional.ofNullable(batchTag).map(b -> "?batchTag=" + b.value).orElse("");
+        Optional<DiagnosisKeysDownloadResponse> exposureKeysNextBatch = getExposureKeysBatch(date, batch);
 
         ArrayList<DiagnosisKeysDownloadResponse> responses = new ArrayList<>();
-        while (exposureKeysNextBatch != null) {
-            responses.add(exposureKeysNextBatch);
+        while (exposureKeysNextBatch.isPresent()) {
+            DiagnosisKeysDownloadResponse diagnosisKeysDownloadResponse = exposureKeysNextBatch.get();
+            responses.add(diagnosisKeysDownloadResponse);
             logger.info(String.format("Downloaded %s keys from federated server, Batch %s",
-                exposureKeysNextBatch.exposures.size(),
-                exposureKeysNextBatch.batchTag));
-            exposureKeysNextBatch = getExposureKeysBatch(date, "?batchTag=" + exposureKeysNextBatch.batchTag);
+                diagnosisKeysDownloadResponse.exposures.size(),
+                diagnosisKeysDownloadResponse.batchTag));
+            exposureKeysNextBatch = getExposureKeysBatch(date, "?batchTag=" + diagnosisKeysDownloadResponse.batchTag);
         }
+
+        logger.info("Downloaded keys from federated server finished, batchCount={}", responses.size());
+
         return responses;
     }
 
-    private DiagnosisKeysDownloadResponse getExposureKeysBatch(LocalDate date, String batchTag) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
+    private Optional<DiagnosisKeysDownloadResponse> getExposureKeysBatch(LocalDate date, String batchTag) {
+        var request = HttpRequest.newBuilder()
             .header("Authorization", "Bearer " + authToken)
             .uri(URI.create(interopBaseUrl + "/diagnosiskeys/download/" + date.format(FORMATTER) + batchTag))
             .build();
-        HttpResponse<String> httpResponse = client.send(request, HttpResponse.BodyHandlers.ofString());
-        if (httpResponse.statusCode() == 200) {
-            return Jackson.deserializeMaybe(httpResponse.body(), DiagnosisKeysDownloadResponse.class).orElseThrow(RuntimeException::new);
-        } else if (httpResponse.statusCode() != 204){
-            logger.warn("Request to federated key server with batch tag " + batchTag + " failed with status code " + httpResponse.statusCode());
+
+        var response = uncheckedGet(() -> client.send(request, HttpResponse.BodyHandlers.ofString()));
+
+        if (response.statusCode() == 200) {
+            return Optional.of(
+                Jackson.deserializeMaybe(response.body(), DiagnosisKeysDownloadResponse.class)
+                    .orElseThrow(RuntimeException::new)
+            );
         }
-        return null;
+
+        if (response.statusCode() == 204) {
+            return Optional.empty();
+        }
+
+        logger.warn("Request to federated key server with batch tag " + batchTag + " failed with status code " + response.statusCode());
+        return Optional.empty();
     }
 
     public DiagnosisKeysUploadResponse uploadKeys(String payload) {

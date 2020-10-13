@@ -1,8 +1,3 @@
-locals {
-  workspace_te = regex("^(?P<prefix>te-)?(?P<target>[^-]+)$", terraform.workspace)
-  workspace_id = (local.workspace_te.prefix == null) ? "branch" : local.workspace_te.target
-}
-
 module "lambda_storage" {
   source                   = "../../libraries/submission_s3"
   name                     = "probe"
@@ -27,6 +22,7 @@ module "probe_exposure_configuration_distribution" {
   service               = var.service
   api_gw_support        = false
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = var.dependency_ref # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_risky_post_district_distribution" {

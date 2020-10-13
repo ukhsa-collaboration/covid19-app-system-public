@@ -15,11 +15,20 @@ module Gaudi
         mandatory("API_KEY_NAME")
       end
 
+      # Path to a file containing test data. This is a parameter for most publish tasks and the format of the TEST_DATA file depends on the corresponding task.
       def test_data
         test_data_file = File.expand_path(mandatory("TEST_DATA"))
         raise GaudiError, "Test data #{test_data_file} not found" unless File.exist?(test_data_file)
 
         return test_data_file
+      end
+
+      # Path to a file to be uploaded. This is a parameter for most upload tasks and the format of the UPLOAD_DATA file depends on the corresponding upload API.
+      def upload_data
+        upload_data_file = File.expand_path(mandatory("UPLOAD_DATA"))
+        raise GaudiError, "Upload data #{upload_data_file} not found" unless File.exist?(upload_data_file)
+
+        return upload_data_file
       end
 
       # Retrieve an AWS_ROLE used to determine the actual login credentials to use for AWS
@@ -50,6 +59,10 @@ module Gaudi
         restore_time = mandatory("RESTORE_AT")
         parsed_time = DateTime.parse(restore_time)
         return parsed_time.strftime("%s")
+      end
+
+      def custom_oai
+        mandatory("CUSTOM_OAI")
       end
     end
   end

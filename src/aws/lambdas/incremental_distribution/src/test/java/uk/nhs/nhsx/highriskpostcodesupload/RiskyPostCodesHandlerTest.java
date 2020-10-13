@@ -6,13 +6,12 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.google.common.primitives.Bytes;
 import org.junit.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.analyticssubmission.FakeS3Storage;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,10 +38,9 @@ public class RiskyPostCodesHandlerTest {
 
     private final AwsCloudFront awsCloudFront = mock(AwsCloudFront.class);
     private final FakeS3Storage s3Storage = new FakeS3Storage();
-    private final RiskyPostCodesCsvParser csvParser = new RiskyPostCodesCsvParser();
     private final TestDatedSigner datedSigner = new TestDatedSigner("date");
 
-    private final Handler handler = new Handler(environment, (h) -> true, datedSigner, s3Storage, awsCloudFront, csvParser);
+    private final Handler handler = new Handler(environment, (h) -> true, datedSigner, s3Storage, awsCloudFront);
 
     @Test
     public void acceptsPayload() {
@@ -59,9 +57,9 @@ public class RiskyPostCodesHandlerTest {
         assertThat(responseEvent.getBody()).isEqualTo("successfully uploaded");
 
         String contentToStore = "{\"postDistricts\":{\"CODE2\":\"M\",\"CODE1\":\"H\",\"CODE3\":\"L\"}}";
-        assertThat(datedSigner.count).isEqualTo(1);
-        assertThat(datedSigner.content).isEqualTo(Bytes.concat("date:".getBytes(StandardCharsets.UTF_8), contentToStore.getBytes(StandardCharsets.UTF_8)));
-        assertThat(s3Storage.count).isEqualTo(2);
+        assertThat(datedSigner.count).isEqualTo(2);
+        assertThat(datedSigner.content.get(0)).isEqualTo(Bytes.concat("date:".getBytes(StandardCharsets.UTF_8), contentToStore.getBytes(StandardCharsets.UTF_8)));
+        assertThat(s3Storage.count).isEqualTo(3);
         assertThat(s3Storage.bucket.value).isEqualTo("my-bucket");
 
         verify(awsCloudFront, times(1)).invalidateCache("my-distribution", "invalidation-pattern");

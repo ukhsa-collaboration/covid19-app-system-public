@@ -16,11 +16,6 @@ class HealthSmokeTest {
     private val healthClient = HealthClient(client, config)
 
     @Test
-    fun `activation keys submission health`() {
-        verifyResponse(healthClient.activationKeysSubmission())
-    }
-
-    @Test
     fun `analytics submission health`() {
         verifyResponse(healthClient.analyticsSubmission())
     }

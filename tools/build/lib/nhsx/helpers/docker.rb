@@ -9,7 +9,7 @@ module NHSx
     module Commandlines
       # Pull an image
       def self.pull_image(image_tag)
-        "docker image pull -q #{image_tag}"
+        "docker image pull -q \"#{image_tag}\""
       end
 
       # Push a docker image
@@ -32,7 +32,11 @@ module NHSx
     def sha256(files)
       sha = Digest::SHA2.new
       files.each do |f|
-        sha << File.binread(f)
+        content = File.binread(f)
+        # work around possible git checkout issues by removing CR and LF from the file
+        content.gsub!("\n", "")
+        content.gsub!("\r", "")
+        sha << content
       end
       sha.hexdigest
     end
@@ -54,7 +58,7 @@ module NHSx
     def pull_repository_image(system_config, tag)
       registry_login(system_config)
       cmdline = Commandlines.pull_image(tag)
-      run_command("Pull #{tag}", cmdline, system_config)
+      run_command("Pull #{tag.split(":").last}", cmdline, system_config)
     end
 
     # Pulls the docker image for the development environment
@@ -63,14 +67,14 @@ module NHSx
       registry_login(system_config)
       tag = full_tag(content_version($configuration))
       cmdline = Commandlines.pull_image(tag)
-      run_command("Pull #{tag}", cmdline, system_config)
+      run_command("Pull #{tag.split(":").last}", cmdline, system_config)
       tag_content_version_as_latest(system_config, tag)
     end
 
     def tag_content_version_as_latest(system_config, existing_tag)
       tag = full_tag(DEFAULT_VERSION)
       cmdline = Commandlines.tag_existing(existing_tag, tag)
-      run_command("Tag #{existing_tag} as #{tag}", cmdline, system_config)
+      run_command("Tag #{existing_tag.split(":").last} as latest", cmdline, system_config)
     end
 
     # Publish the docker container image to the ECR registry
@@ -78,7 +82,7 @@ module NHSx
       registry_login(system_config)
       [content_version($configuration), DEFAULT_VERSION].map { |t| full_tag(t) }.each do |tag|
         cmdline = Commandlines.push_image(tag)
-        run_command("Publish #{tag}", cmdline, system_config)
+        run_command("Publish #{tag.split(":").last}", cmdline, system_config)
       end
     end
 

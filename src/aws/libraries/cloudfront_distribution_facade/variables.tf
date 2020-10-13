@@ -22,6 +22,10 @@ variable "risky_post_district_payload" {
   description = "The path (i.e. route) to the post districts payload"
 }
 
+variable "risky_post_district_v2_payload" {
+  description = "The path (i.e. route) to the post districts v2 payload"
+}
+
 variable "risky_post_district_origin_access_identity_path" {
   description = "The origin access controlling access to the store"
 }

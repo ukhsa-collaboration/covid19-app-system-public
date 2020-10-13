@@ -1,5 +1,7 @@
 # Risky Venue Messages Configuration-Download
 
+_This is an internal API, intended for use by the NHS COVID-19 app. External projects should not use or rely on this API as it is subject to change_.
+
 API group: [Download](FIXME - similar to ../api-patterns.md#Distribution, but ext-system-facing)
 
 - Endpoint schema: ```https://<FQDN>/download/risky-venue-messages-configuration```
@@ -8,6 +10,7 @@ API group: [Download](FIXME - similar to ../api-patterns.md#Distribution, but ex
 - Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
 
 ## Scenario
+
 - Rush website downloads the list of risky venue message configurations periodically (i.e. between hourly and daily) and caches the configuration locally
 - User of rush website can chose one of the offered message types (and must provide a parameter value, if supported by the selected message type)
 

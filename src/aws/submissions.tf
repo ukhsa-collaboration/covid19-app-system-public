@@ -12,11 +12,49 @@ module "analytics_submission" {
     firehose_ingest_enabled = "true"
     custom_oai              = random_uuid.submission-custom-oai.result
   }
-  burst_limit              = var.burst_limit
-  rate_limit               = var.rate_limit
-  logs_bucket_id           = var.logs_bucket_id
-  force_destroy_s3_buckets = var.force_destroy_s3_buckets
-  alarm_topic_arn          = var.alarm_topic_arn
+  burst_limit                       = var.burst_limit
+  rate_limit                        = var.rate_limit
+  logs_bucket_id                    = var.logs_bucket_id
+  force_destroy_s3_buckets          = var.force_destroy_s3_buckets
+  alarm_topic_arn                   = var.alarm_topic_arn
+  provisioned_concurrent_executions = var.analytics_submission_scale_down_provisioned_concurrent_executions
+}
+
+resource "aws_appautoscaling_target" "analytics_submission" {
+  count              = var.analytics_submission_scale_up_provisioned_concurrent_executions != 0 && var.analytics_submission_scale_down_provisioned_concurrent_executions != 0 ? 1 : 0
+  max_capacity       = var.analytics_submission_scale_down_provisioned_concurrent_executions
+  min_capacity       = var.analytics_submission_scale_down_provisioned_concurrent_executions
+  resource_id        = "function:${module.analytics_submission.function}:${module.analytics_submission.version}"
+  scalable_dimension = "lambda:function:ProvisionedConcurrency"
+  service_namespace  = "lambda"
+}
+
+resource "aws_appautoscaling_scheduled_action" "analytics_submission_scale_up" {
+  count              = var.analytics_submission_scale_up_provisioned_concurrent_executions != 0 ? 1 : 0
+  name               = "${terraform.workspace}-analytics_up"
+  service_namespace  = aws_appautoscaling_target.analytics_submission[0].service_namespace
+  resource_id        = aws_appautoscaling_target.analytics_submission[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.analytics_submission[0].scalable_dimension
+  schedule           = var.analytics_submission_scale_up_cron
+
+  scalable_target_action {
+    min_capacity = var.analytics_submission_scale_up_provisioned_concurrent_executions
+    max_capacity = var.analytics_submission_scale_up_provisioned_concurrent_executions
+  }
+}
+
+resource "aws_appautoscaling_scheduled_action" "analytics_submission_scale_down" {
+  count              = var.analytics_submission_scale_down_provisioned_concurrent_executions != 0 ? 1 : 0
+  name               = "${terraform.workspace}-analytics_down"
+  service_namespace  = aws_appautoscaling_target.analytics_submission[0].service_namespace
+  resource_id        = aws_appautoscaling_target.analytics_submission[0].resource_id
+  scalable_dimension = aws_appautoscaling_target.analytics_submission[0].scalable_dimension
+  schedule           = var.analytics_submission_scale_down_cron
+
+  scalable_target_action {
+    min_capacity = var.analytics_submission_scale_down_provisioned_concurrent_executions
+    max_capacity = var.analytics_submission_scale_down_provisioned_concurrent_executions
+  }
 }
 
 module "analytics_submission_store_parquet" {
@@ -256,17 +294,7 @@ module "diagnosis_keys_submission" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   alarm_topic_arn          = var.alarm_topic_arn
-}
-
-module "activation_keys_submission" {
-  source                   = "./modules/submission_activation_keys"
-  name                     = "activation-keys"
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  burst_limit              = var.burst_limit
-  rate_limit               = var.rate_limit
-  custom_oai               = random_uuid.submission-custom-oai.result
-  alarm_topic_arn          = var.alarm_topic_arn
+  replication_enabled      = var.submission_replication_enabled
 }
 
 module "virology_submission" {
@@ -290,7 +318,7 @@ module "submission_apis" {
 
   name        = "submission"
   domain      = var.base_domain
-  web_acl_arn = data.aws_wafv2_web_acl.this.arn
+  web_acl_arn = var.waf_arn
 
   analytics_submission_endpoint                  = module.analytics_submission.endpoint
   analytics_submission_path                      = "/submission/mobile-analytics"
@@ -304,9 +332,6 @@ module "submission_apis" {
   risky_venues_circuit_breaker_path              = "/circuit-breaker/venue/*"
   virology_kit_endpoint                          = module.virology_submission.api_endpoint
   virology_kit_path                              = "/virology-test/*"
-  activation_keys_submission_endpoint            = module.activation_keys_submission.endpoint
-  activation_keys_submission_path                = "/activation/request"
-  activation_keys_submission_health_path         = "/activation/request/health"
   custom_oai                                     = random_uuid.submission-custom-oai.result
   enable_shield_protection                       = var.enable_shield_protection
 }
@@ -326,17 +351,11 @@ output "diagnosis_keys_submission_endpoint" {
 output "virology_kit_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/virology-test"
 }
-output "activation_keys_submission_endpoint" {
-  value = "https://${module.submission_apis.submission_domain_name}/activation/request"
-}
 output "virology_submission_lambda_function_name" {
   value = module.virology_submission.lambda_function_name
 }
 
 # Health endpoints
-output "activation_keys_submission_health_endpoint" {
-  value = "https://${module.submission_apis.submission_domain_name}/activation/request/health"
-}
 output "analytics_submission_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/mobile-analytics/health"
 }

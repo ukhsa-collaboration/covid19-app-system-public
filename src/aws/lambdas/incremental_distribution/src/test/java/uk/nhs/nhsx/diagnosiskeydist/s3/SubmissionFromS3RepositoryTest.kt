@@ -18,6 +18,7 @@ import java.security.SecureRandom
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
+import java.util.function.Predicate
 
 class SubmissionFromS3RepositoryTest {
 
@@ -43,6 +44,22 @@ class SubmissionFromS3RepositoryTest {
             S3ObjectSummary().apply { key = "abcdef" }
         ))
         val submissionRepository = SubmissionFromS3Repository(fakeS3) { objectKey -> !objectKey.startsWith("my-prefix") }
+        val submissions = submissionRepository.loadAllSubmissions()
+
+        assertThat(submissions).hasSize(1)
+
+    }
+
+    @Test
+    fun `filter submissions from s3 by prefix`() {
+        val fakeS3 = FakeDiagnosisKeysS3(listOf(
+            S3ObjectSummary().apply { key = "my-prefix-abc" },
+            S3ObjectSummary().apply { key = "/bla/my-prefix-def" },
+            S3ObjectSummary().apply { key = "/mobile/abc" }
+        ))
+        val allowedPrefixes = "/nearform/IE,/nearform/NIR,/mobile".split(",".toRegex()).toTypedArray()
+        val matchesPrefix = Predicate { objectKey: String -> Arrays.stream(allowedPrefixes).anyMatch { prefix: String? -> objectKey.startsWith(prefix!!) } }
+        val submissionRepository = SubmissionFromS3Repository(fakeS3, matchesPrefix)
         val submissions = submissionRepository.loadAllSubmissions()
 
         assertThat(submissions).hasSize(1)

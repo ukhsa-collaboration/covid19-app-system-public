@@ -68,17 +68,6 @@ public class VirologyDynamoService {
             ));
     }
 
-    public void incrementDownloadCount(CtaToken ctaToken) {
-        executeTransaction(dynamoDbClient, List.of(new TransactWriteItem().withUpdate(
-            new Update()
-                .withTableName(config.testOrdersTable)
-                .withKey(attributeMap("ctaToken", ctaToken.value))
-                .withUpdateExpression("ADD downloadCount :dc ")
-                .withExpressionAttributeValues(attributeMap(":dc", 1))
-
-        )));
-    }
-
     public TestOrder persistTestOrder(Supplier<TestOrder> testOrderSupplier,
                                       long expireAt) {
         return persistTestOrderTransactItems(
@@ -152,8 +141,8 @@ public class VirologyDynamoService {
         if (testResult.isPositive()) {
             executeTransaction(dynamoDbClient,
                 asList(
-                    testOrderTimeToLiveUpdateOp(testOrder.ctaToken, testDataExpireAt),
-                    testResultTimeToLiveUpdateOp(testOrder.testResultPollingToken, testDataExpireAt),
+                    testOrderTtlUpdateOp(testOrder.ctaToken, testDataExpireAt),
+                    testResultTtlUpdateOp(testOrder.testResultPollingToken, testDataExpireAt),
                     submissionTokenTimeToLiveUpdateOp(
                         testOrder.diagnosisKeySubmissionToken,
                         virologyTimeToLive.submissionDataExpireAt
@@ -163,8 +152,47 @@ public class VirologyDynamoService {
         } else {
             executeTransaction(dynamoDbClient,
                 asList(
-                    testOrderTimeToLiveUpdateOp(testOrder.ctaToken, testDataExpireAt),
-                    testResultTimeToLiveUpdateOp(testOrder.testResultPollingToken, testDataExpireAt)
+                    testOrderTtlUpdateOp(testOrder.ctaToken, testDataExpireAt),
+                    testResultTtlUpdateOp(testOrder.testResultPollingToken, testDataExpireAt)
+                )
+            );
+        }
+    }
+
+    public void updateOnCtaExchange(TestOrder testOrder, 
+                                    TestResult testResult, 
+                                    VirologyDataTimeToLive virologyTimeToLive) {
+        try {
+            updateCtaExchangeTimeToLiveAndCounter(testOrder, testResult, virologyTimeToLive);
+        } catch (TransactionException e) {
+            logger.warn(
+                "Cta exchange ttl and counter not updated for " +
+                    "ctaToken:" + testOrder.ctaToken +
+                    ", pollingToken:" + testOrder.testResultPollingToken.value +
+                    ", submissionToken:" + testOrder.diagnosisKeySubmissionToken.value, e
+            );
+        }
+    }
+
+    private void updateCtaExchangeTimeToLiveAndCounter(TestOrder testOrder, 
+                                                       TestResult testResult, 
+                                                       VirologyDataTimeToLive virologyTimeToLive) {
+        if (testResult.isPositive()) {
+            executeTransaction(dynamoDbClient,
+                asList(
+                    testOrderTtlAndCounterUpdateOp(testOrder.ctaToken, virologyTimeToLive.testDataExpireAt),
+                    testResultTtlUpdateOp(testOrder.testResultPollingToken, virologyTimeToLive.testDataExpireAt),
+                    submissionTokenTimeToLiveUpdateOp(
+                        testOrder.diagnosisKeySubmissionToken,
+                        virologyTimeToLive.submissionDataExpireAt
+                    )
+                )
+            );
+        } else {
+            executeTransaction(dynamoDbClient,
+                asList(
+                    testOrderTtlAndCounterUpdateOp(testOrder.ctaToken, virologyTimeToLive.testDataExpireAt),
+                    testResultTtlUpdateOp(testOrder.testResultPollingToken, virologyTimeToLive.testDataExpireAt)
                 )
             );
         }
@@ -238,7 +266,7 @@ public class VirologyDynamoService {
         );
     }
 
-    private TransactWriteItem testOrderTimeToLiveUpdateOp(CtaToken ctaToken, long testDataExpireAt) {
+    private TransactWriteItem testOrderTtlUpdateOp(CtaToken ctaToken, long testDataExpireAt) {
         return new TransactWriteItem().withUpdate(
             new Update()
                 .withTableName(config.testOrdersTable)
@@ -247,8 +275,23 @@ public class VirologyDynamoService {
                 .withExpressionAttributeValues(attributeMap(":expireAt", testDataExpireAt))
         );
     }
+    
+    private TransactWriteItem testOrderTtlAndCounterUpdateOp(CtaToken ctaToken, long testDataExpireAt) {
+        return new TransactWriteItem().withUpdate(
+            new Update()
+                .withTableName(config.testOrdersTable)
+                .withKey(attributeMap("ctaToken", ctaToken.value))
+                .withUpdateExpression("set expireAt = :expireAt add downloadCount :dc")
+                .withExpressionAttributeValues(
+                    Map.of(
+                        ":expireAt", numericAttribute(testDataExpireAt),
+                        ":dc", numericAttribute(1)
+                    )
+                )
+        );
+    }
 
-    private TransactWriteItem testResultTimeToLiveUpdateOp(TestResultPollingToken testResultPollingToken, long testDataExpireAt) {
+    private TransactWriteItem testResultTtlUpdateOp(TestResultPollingToken testResultPollingToken, long testDataExpireAt) {
         return new TransactWriteItem().withUpdate(
             new Update()
                 .withTableName(config.testResultsTable)
@@ -291,6 +334,9 @@ public class VirologyDynamoService {
                 try {
                     executeTransaction(dynamoDbClient, transactWriteItems.apply(order));
                 } catch (TransactionException e) {
+                    if (e.isConditionFailure()) {
+                        logger.warn("Failed to persist test result due to duplicate ctaToken: " + order.ctaToken);
+                    }
                     return new VirologyResultPersistOperation.TransactionFailed(e.getMessage());
                 }
                 return new VirologyResultPersistOperation.Success();

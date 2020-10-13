@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.Test
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.*
@@ -33,14 +34,14 @@ class VirologyDynamoServiceMockedTest {
     private val itemResult = mockk<GetItemResult>()
 
     @Test
-    fun `order returning null returns empty`() {
+    fun `test result with no data returns empty`() {
         every { itemResult.item } returns null
         every { dynamoDbClient.getItem(any()) } returns itemResult
         assertThat(service.getTestResult(TestResultPollingToken.of("token"))).isEmpty
     }
 
     @Test
-    fun orderReturnsEmptyResultThrowsException() {
+    fun `test result with empty data throws exception`() {
         every { itemResult.item } returns emptyMap()
         every { dynamoDbClient.getItem(any()) } returns itemResult
         assertThatThrownBy { service.getTestResult(TestResultPollingToken.of("token")) }
@@ -49,7 +50,7 @@ class VirologyDynamoServiceMockedTest {
     }
 
     @Test
-    fun orderReturnsResultMissingTokenValueThrowsException() {
+    fun `test result with missing field throws exception`() {
         val pollingTokenValue = mockk<AttributeValue> {
             every { s } returns null
         }
@@ -68,7 +69,7 @@ class VirologyDynamoServiceMockedTest {
     }
 
     @Test
-    fun `order returns result missing status value throws exception`() {
+    fun `test result with missing status value throws exception`() {
         val pollingTokenValue = mockk<AttributeValue> {
             every { s } returns "token"
         }
@@ -85,6 +86,38 @@ class VirologyDynamoServiceMockedTest {
         assertThatThrownBy { service.getTestResult(TestResultPollingToken.of("token")) }
             .isInstanceOf(RuntimeException::class.java)
             .hasMessage("Required field missing")
+    }
+
+    @Test
+    fun `test order given cta token`() {
+        val ctaToken = "cc8f0b6z"
+        val testResultToken = "poll-abcd"
+        val subToken = "sub-zyxw"
+        val itemResult = GetItemResult()
+            .withItem(
+                java.util.Map.of(
+                    "testResultPollingToken", DynamoAttributes.stringAttribute(testResultToken),
+                    "diagnosisKeySubmissionToken", DynamoAttributes.stringAttribute(subToken),
+                    "ctaToken", DynamoAttributes.stringAttribute(ctaToken)
+                )
+            )
+        every { dynamoDbClient.getItem(any()) } returns itemResult
+
+        val testOrderTokens = service.getTestOrder(CtaToken.of(ctaToken))
+
+        assertThat(testOrderTokens).isNotEmpty
+        assertThat(testOrderTokens.get().ctaToken).isEqualTo(CtaToken.of(ctaToken))
+        assertThat(testOrderTokens.get().testResultPollingToken).isEqualTo(TestResultPollingToken.of(testResultToken))
+        assertThat(testOrderTokens.get().diagnosisKeySubmissionToken).isEqualTo(DiagnosisKeySubmissionToken.of(subToken))
+
+        verify(exactly = 1) {
+            dynamoDbClient.getItem(
+                GetItemRequest(
+                    "testOrdersTableName",
+                    DynamoAttributes.attributeMap("ctaToken", ctaToken)
+                )
+            )
+        }
     }
 
     @Test
@@ -156,6 +189,76 @@ class VirologyDynamoServiceMockedTest {
     }
 
     @Test
+    fun `cta exchange updates ttl and counter for positive test result`() {
+        val testOrder = TokensGenerator().generateVirologyTokens()
+        val queryResultItems = queryResult(testOrder)
+        val queryResult = mockk<QueryResult> {
+            every { items } returns queryResultItems
+        }
+        every { dynamoDbClient.query(any()) } returns queryResult
+
+        val slot = slot<TransactWriteItemsRequest>()
+        every { dynamoDbClient.transactWriteItems(capture(slot)) } returns mockk()
+
+        val testResult = TestResult("some-token", "", "POSITIVE", "available")
+
+        service.updateOnCtaExchange(testOrder, testResult, VirologyDataTimeToLive(1, 10))
+
+        verify(exactly = 1) {
+            dynamoDbClient.transactWriteItems(any())
+        }
+
+        val transactItems = slot.captured.transactItems
+        assertThat(transactItems).hasSize(3)
+
+        val testOrderUpdate = transactItems[0].update
+        assertThat(testOrderUpdate.tableName).isEqualTo("testOrdersTableName")
+        assertThat(testOrderUpdate.expressionAttributeValues)
+            .isEqualTo(expireAtWithTtl(1).apply { put(":dc", numericAttribute(1)) })
+
+        val testResultUpdate = transactItems[1].update
+        assertThat(testResultUpdate.tableName).isEqualTo("testResultsTableName")
+        assertThat(testResultUpdate.expressionAttributeValues).isEqualTo(expireAtWithTtl(1))
+
+        val submissionUpdate = transactItems[2].update
+        assertThat(submissionUpdate.tableName).isEqualTo("submissionTokensTableName")
+        assertThat(submissionUpdate.expressionAttributeValues).isEqualTo(expireAtWithTtl(10))
+    }
+
+    @Test
+    fun `cta exchange updates ttl and counter for non-positive test result`() {
+        val testOrder = TokensGenerator().generateVirologyTokens()
+        val queryResultItems = queryResult(testOrder)
+        val queryResult = mockk<QueryResult> {
+            every { items } returns queryResultItems
+        }
+        every { dynamoDbClient.query(any()) } returns queryResult
+
+        val slot = slot<TransactWriteItemsRequest>()
+        every { dynamoDbClient.transactWriteItems(capture(slot)) } returns mockk()
+
+        val testResult = TestResult("some-token", "", "NEGATIVE", "available")
+
+        service.updateOnCtaExchange(testOrder, testResult, VirologyDataTimeToLive(1, 10))
+
+        verify(exactly = 1) {
+            dynamoDbClient.transactWriteItems(any())
+        }
+
+        val transactItems = slot.captured.transactItems
+        assertThat(transactItems).hasSize(2)
+
+        val testOrderUpdate = transactItems[0].update
+        assertThat(testOrderUpdate.tableName).isEqualTo("testOrdersTableName")
+        assertThat(testOrderUpdate.expressionAttributeValues)
+            .isEqualTo(expireAtWithTtl(1).apply { put(":dc", numericAttribute(1)) })
+
+        val testResultUpdate = transactItems[1].update
+        assertThat(testResultUpdate.tableName).isEqualTo("testResultsTableName")
+        assertThat(testResultUpdate.expressionAttributeValues).isEqualTo(expireAtWithTtl(1))
+    }
+
+    @Test
     fun `persists token gen positive test result`() {
         val slot = slot<TransactWriteItemsRequest>()
         every { dynamoDbClient.transactWriteItems(capture(slot)) } returns mockk()
@@ -208,38 +311,6 @@ class VirologyDynamoServiceMockedTest {
 
         val testResultUpdate = transactItems[1].put
         assertThat(testResultUpdate.tableName).isEqualTo("testResultsTableName")
-    }
-
-    @Test
-    fun `gets test order tokens when given cta token`() {
-        val ctaToken = "cc8f0b6z"
-        val testResultToken = "poll-abcd"
-        val subToken = "sub-zyxw"
-        val itemResult = GetItemResult()
-            .withItem(
-                java.util.Map.of(
-                    "testResultPollingToken", DynamoAttributes.stringAttribute(testResultToken),
-                    "diagnosisKeySubmissionToken", DynamoAttributes.stringAttribute(subToken),
-                    "ctaToken", DynamoAttributes.stringAttribute(ctaToken)
-                )
-            )
-        every { dynamoDbClient.getItem(any()) } returns itemResult
-
-        val testOrderTokens = service.getTestOrder(CtaToken.of(ctaToken))
-
-        assertThat(testOrderTokens).isNotEmpty
-        assertThat(testOrderTokens.get().ctaToken).isEqualTo(CtaToken.of(ctaToken))
-        assertThat(testOrderTokens.get().testResultPollingToken).isEqualTo(TestResultPollingToken.of(testResultToken))
-        assertThat(testOrderTokens.get().diagnosisKeySubmissionToken).isEqualTo(DiagnosisKeySubmissionToken.of(subToken))
-
-        verify(exactly = 1) {
-            dynamoDbClient.getItem(
-                GetItemRequest(
-                    "testOrdersTableName",
-                    DynamoAttributes.attributeMap("ctaToken", ctaToken)
-                )
-            )
-        }
     }
 
     @Test
@@ -314,9 +385,8 @@ class VirologyDynamoServiceMockedTest {
         return listOf(item)
     }
 
-    private fun expireAtWithTtl(s: Number): Map<String, AttributeValue> {
-        val testExpireAt: MutableMap<String, AttributeValue> = LinkedHashMap()
-        testExpireAt[":expireAt"] = DynamoAttributes.numericAttribute(s)
-        return testExpireAt
-    }
+    private fun expireAtWithTtl(s: Number): MutableMap<String, AttributeValue> =
+        mutableMapOf(
+            ":expireAt" to numericAttribute(s)
+        )
 }

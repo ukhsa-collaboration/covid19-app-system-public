@@ -51,3 +51,19 @@ module "postcodes_geofence" {
   database_name            = aws_glue_catalog_database.this.name
   workgroup_name           = module.workgroup.name
 }
+
+module "demographics_data" {
+  source                   = "./modules/demographic_data"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+}
+
+module "local_authorities_geofence" {
+  source                   = "./modules/local_authorities_geofence"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+}

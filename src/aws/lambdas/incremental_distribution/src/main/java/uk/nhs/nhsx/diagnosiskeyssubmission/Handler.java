@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeyssubmission;
 
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.StandardSigning;
 import uk.nhs.nhsx.core.SystemClock;

@@ -4,9 +4,8 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.HttpResponses;
-import uk.nhs.nhsx.core.auth.ApiKey;
 import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.auth.ResponseSigner;
 import uk.nhs.nhsx.core.exceptions.ApiResponseException;

@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.circuitbreakers;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.auth.ApiName;

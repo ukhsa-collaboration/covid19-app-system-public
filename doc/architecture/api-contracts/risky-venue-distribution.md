@@ -1,6 +1,6 @@
 # Risky Venue Distribution
 
-API group: [Distribution](../ag-architecture-guidebook#System-APIs-and-Interfaces)
+API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
 - Endpoint schema: ```https://<FQDN>/distribution/risky-venues```
   - FQDN: One (CDN-) hostname for all distribute APIs

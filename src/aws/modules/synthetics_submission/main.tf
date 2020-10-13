@@ -1,8 +1,3 @@
-locals {
-  workspace_te = regex("^(?P<prefix>te-)?(?P<target>[^-]+)$", terraform.workspace)
-  workspace_id = (local.workspace_te.prefix == null) ? "branch" : local.workspace_te.target
-}
-
 module "lambda_storage" {
   source                   = "../../libraries/submission_s3"
   name                     = "probe"
@@ -13,21 +8,6 @@ module "lambda_storage" {
 
 # maximum name length including workspace prefix is 21.
 # maximum prefix length is currently "te-staging-" i.e. we have only 10 characters to play with.
-module "probe_activation" {
-  source                = "../../libraries/synthetics"
-  name                  = "activatnp"
-  synthetic_script_path = "${path.module}/../../lambdas/synthetics/synthetics-canary.js"
-  artifact_s3_bucket    = module.lambda_storage.bucket_name
-  base_domain           = var.base_domain
-  hostname              = "submission-${terraform.workspace}"
-  uri_path              = "/activation/request/health"
-  method                = "POST"
-  secret_name           = "/mobile/synthetic_canary_auth"
-  expc_status           = "200"
-  service               = var.service
-  api_gw_support        = true
-  lambda_exec_role_arn  = var.lambda_exec_role_arn
-}
 
 module "probe_analytics" {
   source                = "../../libraries/synthetics"
@@ -43,6 +23,7 @@ module "probe_analytics" {
   service               = var.service
   api_gw_support        = true
   lambda_exec_role_arn  = var.lambda_exec_role_arn
+  dependency_ref        = var.dependency_ref # create canaries one at a time to avoid 429 errors
 }
 
 module "probe_diag_keys" {

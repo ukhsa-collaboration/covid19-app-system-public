@@ -57,7 +57,9 @@ class SmokeTest {
         SecretName.of("/app/interop/AuthorizationToken"),
         SecretName.of("/app/interop/PrivateKey"),
         "federatedKeyPrefix",
-        "DUMMY_TABLE"
+        "DUMMY_TABLE",
+        "GB-EAW",
+        "GB-EAW"
     )
 
 
@@ -79,7 +81,7 @@ class SmokeTest {
 
         val objectSummaries = s3Client.listObjects(SUBMISSION_BUCKET_NAME).objectSummaries
         assertThat(objectSummaries).isEmpty()
-        assertThat(batchTagService.latestBatchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
+        assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
     }
 
     @Test
@@ -140,7 +142,7 @@ class SmokeTest {
         assertThat(keys).hasSize(2)
         assertThat(keys).containsAll(listOf("ogNW4Ra+Zdds1ShN56yv3w==", "EwoHez3CQgdslvdxaf+ztw=="))
 
-        assertThat(batchTagService.latestBatchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
+        assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
     }
 
     @Test
@@ -173,7 +175,7 @@ class SmokeTest {
 
         val objectSummaries = s3Client.listObjects(SUBMISSION_BUCKET_NAME).objectSummaries
         assertThat(objectSummaries).isEmpty()
-        assertThat(batchTagService.latestBatchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
+        assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
     }
 
 }

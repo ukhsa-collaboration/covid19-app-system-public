@@ -3,21 +3,23 @@ package uk.nhs.nhsx.keyfederation.upload;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.diagnosiskeydist.Submission;
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.keyfederation.BatchTagService;
 import uk.nhs.nhsx.keyfederation.Exposure;
 import uk.nhs.nhsx.keyfederation.InteropClient;
-import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.*;
 
 import static uk.nhs.nhsx.core.Jackson.toJson;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 public class DiagnosisKeysUploadService {
 
@@ -27,16 +29,15 @@ public class DiagnosisKeysUploadService {
 
     private final SubmissionRepository submissionRepository;
 
-    private static final String REGION = "GB-EAW";
+    private final String region;
 
     private final BatchTagService batchTagService;
 
-    private static final TimeZone TIME_ZONE_UTC = TimeZone.getTimeZone("UTC");
-
-    public DiagnosisKeysUploadService(InteropClient interopClient, SubmissionRepository submissionRepository, BatchTagService batchTagService) {
+    public DiagnosisKeysUploadService(InteropClient interopClient, SubmissionRepository submissionRepository, BatchTagService batchTagService,String region) {
         this.interopClient = interopClient;
         this.submissionRepository = submissionRepository;
         this.batchTagService = batchTagService;
+        this.region = region;
     }
 
 
@@ -44,24 +45,29 @@ public class DiagnosisKeysUploadService {
 
         logger.info("Begin: Upload diagnosis keys to the Nearform server");
 
-        Date lastUploadedTime = getLastUploadedTime();
-        Date currentTime = getCurrentTime();
+        Instant lastUploadedTime = getLastUploadedTime();
+        Instant currentTime = SystemClock.CLOCK.get();
         List<Submission> allSubmissions = submissionRepository.loadAllSubmissions();
-        List<Exposure> exposureKeys = getUploadRequestRawPayload(allSubmissions,lastUploadedTime,currentTime);
+        List<Exposure> exposureKeys = getUploadRequestRawPayload(allSubmissions, lastUploadedTime, currentTime);
 
-        if(!exposureKeys.isEmpty()){
+        logger.info("Loading keys from submissions finished, keyCount={}, earliestKeyTime={}, latestKeyTime={}",
+            exposureKeys.size(), lastUploadedTime, currentTime);
+
+        if (!exposureKeys.isEmpty()) {
             String payload = toJson(exposureKeys);
             DiagnosisKeysUploadResponse uploadResponse = interopClient.uploadKeys(payload);
             if (uploadResponse != null) {
                 logger.info(String.format("Uploaded %s keys with submission date greater than %s to federation server",
                     uploadResponse.insertedExposures,
-                    formatDate(lastUploadedTime)));
+                    lastUploadedTime.toString()));
             }
-            batchTagService.updateLastUploadState(formatDate(currentTime));
+            batchTagService.updateLastUploadState(currentTime.getEpochSecond());
+        } else {
+            logger.info("No keys were available for uploading to federation server");
         }
     }
 
-    public List<Exposure> getUploadRequestRawPayload(List<Submission> submissions, Date lastUploadedTime, Date currentTime) {
+    public List<Exposure> getUploadRequestRawPayload(List<Submission> submissions, Instant lastUploadedTime, Instant currentTime) {
 
         List<Exposure> exposures = new ArrayList<>();
         submissions.stream()
@@ -73,49 +79,27 @@ public class DiagnosisKeysUploadService {
                         exposure.rollingStartNumber,
                         exposure.transmissionRisk,
                         exposure.rollingPeriod,
-                        List.of(REGION)
+                        List.of(this.region)
                     ));
                 });
             });
         return exposures;
     }
 
-    private Date getLastUploadedTime() {
+    private Instant getLastUploadedTime() {
         return batchTagService.getLastUploadState().map(it -> {
-            logger.info("Last uploaded timeStamp from db "+it.lastUploadedTimeStamp);
-
-            return parse(String.valueOf(it.lastUploadedTimeStamp));
+            logger.info("Last uploaded timestamp from db {}", it.lastUploadedTimeStamp);
+            return Instant.ofEpochSecond(it.lastUploadedTimeStamp);
         }).orElse(
-            Date.from(LocalDateTime.now().minusDays(14).toInstant(ZoneOffset.UTC))
+            OffsetDateTime.now(ZoneOffset.UTC).minusDays(14).toInstant()
         );
     }
 
-    private Date getCurrentTime(){
-        return Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC));
-    }
 
-
-
-    private static Date parse(String date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        simpleDateFormat.setTimeZone(TIME_ZONE_UTC);
-
-        try {
-            return simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Date();
-    }
-
-    private String formatDate(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        return sdf.format(date);
-    }
-
-    private boolean isKeyValid(Date submissionDate, Date from, Date to) {
-        return (submissionDate.after(from) &&
-            submissionDate.before(to)) || (submissionDate.equals(to));
+    private boolean isKeyValid(Date submissionDate, Instant from, Instant to) {
+        Instant submissionDateInstant = Optional.ofNullable(submissionDate).map(Date::toInstant).orElse(Instant.MIN);
+        return (submissionDateInstant.isAfter(from) &&
+            submissionDateInstant.isBefore(to)) || (submissionDateInstant.equals(to));
     }
 
 }

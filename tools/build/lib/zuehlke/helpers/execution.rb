@@ -17,7 +17,8 @@ module Zuehlke
       puts cmdline
       cmd = Patir::ShellCommand.new(:cmd => cmdline)
       cmd.run
-      logfile = File.join(system_config.out, "logs", "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{name.gsub("\s", "_")}.log")
+      logname = name.gsub("\s", "_").gsub("\\", "_").gsub("/", "_").gsub(":", "_")
+      logfile = File.join(system_config.out, "logs", "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{logname}.log")
       write_file(logfile, "#{cmdline}\n#{cmd.output}\n#{cmd.error}\n")
       if cmd.success?
         puts "#{name} completed in #{cmd.exec_time.round(2)}s"
@@ -58,7 +59,9 @@ module Zuehlke
     #
     # Returns the execution duration
     def run_tee(name, cmdline, system_config)
-      logfile = File.join(system_config.out, "logs", "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{name.gsub("\s", "_")}.log")
+      logname = name.gsub("\s", "_").gsub("\\", "_").gsub("/", "_").gsub(":", "_")
+      logfile = File.join(system_config.out, "logs", "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{logname}.log")
+
       mkdir_p(File.dirname(logfile), :verbose => false)
 
       File.open(logfile, "wb") do |out|

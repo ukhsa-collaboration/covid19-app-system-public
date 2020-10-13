@@ -129,16 +129,6 @@ class UnauthorizedRequestsSmokeTest {
         assertUnAuthorized(response)
     }
 
-    @Test
-    fun `submit activation codes`() {
-        val uri = config.activationKeysSubmissionEndpoint
-        val request = unAuthorizedPostRequest(uri)
-        val response = client(request)
-
-        assertUnAuthorized(response)
-
-    }
-
     private fun assertUnAuthorized(response: Response) {
         assertThat(response, hasStatus(Status.FORBIDDEN))
         assertThat(response, !hasHeader("x-amz-meta-signature"))

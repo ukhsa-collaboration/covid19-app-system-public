@@ -1,8 +1,6 @@
 # App availability Distribution
 
-Version V3.0, 2020-08-08
-
-API group: [Distribution](../api-patterns.md#Distribution)
+API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
 - Endpoint schema: ```https://<FQDN>/distribution/availability-<Platform>```
   - FQDN: One (CDN-) hostname for all distribute APIs

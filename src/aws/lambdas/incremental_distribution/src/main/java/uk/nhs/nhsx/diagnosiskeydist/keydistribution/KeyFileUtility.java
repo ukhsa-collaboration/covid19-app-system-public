@@ -24,9 +24,9 @@ public class KeyFileUtility {
         }
     }
 
-    private static void addFileToZip(ZipOutputStream zipOut, String name, File file) throws IOException {
-        try (FileInputStream inputStream = new FileInputStream(file)) {
-            ZipEntry zipEntry = new ZipEntry(name);
+    public static void addFileToZip(ZipOutputStream zipOut, String zipEntryName, File zipEntryFile) throws IOException {
+        try (FileInputStream inputStream = new FileInputStream(zipEntryFile)) {
+            ZipEntry zipEntry = new ZipEntry(zipEntryName);
             zipOut.putNextEntry(zipEntry);
 
             byte[] bytes = new byte[1024];

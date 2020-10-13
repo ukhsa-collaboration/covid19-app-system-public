@@ -1,9 +1,9 @@
 package uk.nhs.nhsx.keyfederation.upload.lookup;
 
 public class UploadKeysResult {
-    public final String lastUploadedTimeStamp;
+    public final Long lastUploadedTimeStamp;
 
-    public UploadKeysResult(String lastUploadedTimeStamp) {
+    public UploadKeysResult(Long lastUploadedTimeStamp) {
         this.lastUploadedTimeStamp = lastUploadedTimeStamp;
     }
 }

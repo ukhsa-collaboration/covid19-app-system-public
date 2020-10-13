@@ -6,7 +6,7 @@ namespace :tag do
       tgt_envs.each do |tgt_env|
         desc "Push immutable tag of the current git SHA for the Analytics subsystem to #{tgt_env}"
         task :"#{tgt_env}" => [:"login:#{account}"] do
-          push_immutable_git_tag(tgt_env, "Release Analytics on #{tgt_env}", $configuration)
+          push_timestamped_tag("analytics", tgt_env, "Release Analytics on #{tgt_env}", $configuration)
         end
       end
     end
@@ -17,7 +17,7 @@ namespace :tag do
       tgt_envs.each do |tgt_env|
         desc "Push immutable tag of the current git SHA for the App System to #{tgt_env}"
         task :"#{tgt_env}" => [:"login:#{account}"] do
-          push_immutable_git_tag(tgt_env, "Release App System on #{tgt_env}", $configuration)
+          push_timestamped_tag("system", tgt_env, "Release App System on #{tgt_env}", $configuration)
         end
       end
     end
@@ -28,7 +28,7 @@ namespace :tag do
       tgt_envs.each do |tgt_env|
         desc "Push immutable tag of the current git SHA for the Control Panel to #{tgt_env}"
         task :"#{tgt_env}" => [:"login:#{account}"] do
-          push_immutable_git_tag_subsystem(tgt_env, "conpan", "Release Control Panel on #{tgt_env}", $configuration)
+          push_timestamped_tag("conpan", tgt_env, "Release Control Panel on #{tgt_env}", $configuration)
         end
       end
     end
@@ -38,7 +38,7 @@ namespace :tag do
     NHSx::TargetEnvironment::DORETO_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
       desc "Push immutable tag of the current git SHA for the Document Reporting Tool to #{tgt_env}"
       task :"#{tgt_env}" do
-        push_immutable_git_tag_subsystem(tgt_env, "doreto", "Release doreto on #{tgt_env}", $configuration)
+        push_timestamped_tag("doreto", tgt_env, "Release doreto on #{tgt_env}", $configuration)
       end
     end
   end
@@ -48,7 +48,7 @@ namespace :tag do
       tgt_envs.each do |tgt_env|
         desc "Push immutable tag of the current git SHA for the Synthetic Canaries to #{tgt_env}"
         task :"#{tgt_env}" => [:"login:#{account}"] do
-          push_immutable_git_tag(tgt_env, "Release Synthetic Canaries on #{tgt_env}", $configuration)
+          push_timestamped_tag("synth", tgt_env, "Release Synthetic Canaries on #{tgt_env}", $configuration)
         end
       end
     end

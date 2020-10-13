@@ -44,5 +44,13 @@ module NHSx
       cmdline = "SMOKE_TEST_CONFIG=#{test_config} mvn -P smokeProfile -f=#{pom_xml_path} test"
       run_command("Runs maven smoke tests", cmdline, $configuration)
     end
+
+    def run_target_unit_tests
+      java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
+      pom_xml_path = File.join(java_project_path, "pom.xml")
+      java_output_path = File.join($configuration.out, "java/batch_creation")
+      cmdline = "mvn -P buildProfile -f=#{pom_xml_path} -DbuildOutput=#{java_output_path} test"
+      run_command("Runs java smoke tests", cmdline, $configuration)
+    end
   end
 end

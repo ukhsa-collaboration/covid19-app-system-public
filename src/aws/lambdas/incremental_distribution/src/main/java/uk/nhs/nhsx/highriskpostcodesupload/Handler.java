@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.highriskpostcodesupload;
 
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.ContentTypes;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.SystemClock;
@@ -9,7 +9,6 @@ import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFrontClient;
 import uk.nhs.nhsx.core.aws.s3.*;
-import uk.nhs.nhsx.core.csvupload.CsvToJsonParser;
 import uk.nhs.nhsx.core.csvupload.CsvUploadService;
 import uk.nhs.nhsx.core.exceptions.ApiResponseException;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
@@ -49,6 +48,7 @@ public class Handler extends RoutingHandler {
     private static final String DISTRIBUTION_ID = "DISTRIBUTION_ID";
     private static final String DISTRIBUTION_INVALIDATION_PATTERN = "DISTRIBUTION_INVALIDATION_PATTERN";
     private static final String DISTRIBUTION_OBJ_KEY_NAME = "distribution/risky-post-districts";
+    private static final String DISTRIBUTION_OBJ_V2_KEY_NAME = "distribution/risky-post-districts-v2";
     private static final String RAW_OBJ_KEY_NAME = "raw/risky-post-districts";
     private static final String BUCKET_NAME = "BUCKET_NAME";
 
@@ -64,8 +64,7 @@ public class Handler extends RoutingHandler {
             awsAuthentication(ApiName.HighRiskPostCodeUpload),
             datedSigner(clock, environment),
             new AwsS3Client(),
-            new AwsCloudFrontClient(),
-            new RiskyPostCodesCsvParser()
+            new AwsCloudFrontClient()
         );
     }
 
@@ -74,18 +73,17 @@ public class Handler extends RoutingHandler {
         Authenticator authenticator,
         DatedSigner signer,
         S3Storage s3Storage,
-        AwsCloudFront awsCloudFront,
-        CsvToJsonParser parser) {
+        AwsCloudFront awsCloudFront) {
         CsvUploadService service = new CsvUploadService(
             BucketName.of(environment.access.required(BUCKET_NAME)),
             ObjectKey.of(DISTRIBUTION_OBJ_KEY_NAME),
+            ObjectKey.of(DISTRIBUTION_OBJ_V2_KEY_NAME),
             ObjectKey.of(RAW_OBJ_KEY_NAME),
             signer,
             s3Storage,
             awsCloudFront,
             environment.access.required(DISTRIBUTION_ID),
-            environment.access.required(DISTRIBUTION_INVALIDATION_PATTERN),
-            parser);
+            environment.access.required(DISTRIBUTION_INVALIDATION_PATTERN));
         handler = withoutSignedResponses(
             environment, 
             authenticator,

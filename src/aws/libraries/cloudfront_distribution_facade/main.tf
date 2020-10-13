@@ -102,6 +102,34 @@ resource "aws_cloudfront_distribution" "this" {
   }
 
   origin {
+    domain_name = var.risky_post_district_distribution_bucket_regional_domain_name
+    origin_id   = var.risky_post_district_distribution_bucket_regional_domain_name
+
+    s3_origin_config {
+      origin_access_identity = var.risky_post_district_origin_access_identity_path
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = "/${var.name}/${var.risky_post_district_v2_payload}"
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = var.risky_post_district_distribution_bucket_regional_domain_name
+    compress         = true
+    default_ttl      = 0
+    min_ttl          = 0
+    max_ttl          = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+
+  origin {
     domain_name = var.risky_venues_bucket_regional_domain_name
     origin_id   = var.risky_venues_bucket_regional_domain_name
 

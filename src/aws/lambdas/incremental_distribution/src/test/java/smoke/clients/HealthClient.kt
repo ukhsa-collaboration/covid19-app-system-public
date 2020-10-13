@@ -12,8 +12,6 @@ class HealthClient(private val client: JavaHttpClient,
 
     private val logger = LogManager.getLogger(HealthClient::class.java)
 
-    fun activationKeysSubmission() = getHealthContent(config.activationKeysSubmissionHealthEndpoint, config.authHeaders.mobile)
-
     fun analyticsSubmission() = getHealthContent(config.analyticsSubmissionHealthEndpoint, config.authHeaders.mobile)
 
     fun diagnosisKeysSubmission() = getHealthContent(config.diagnosisKeysSubmissionHealthEndpoint, config.authHeaders.mobile)

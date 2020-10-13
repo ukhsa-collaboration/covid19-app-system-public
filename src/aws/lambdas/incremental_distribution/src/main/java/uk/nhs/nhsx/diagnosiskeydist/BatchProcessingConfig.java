@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeydist;
 
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 

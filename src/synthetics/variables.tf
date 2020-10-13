@@ -1,16 +1,11 @@
-variable "base_domain" {
-  description = "The base DNS domain for the APIs"
+variable "aws_account_name" {
+  description = "The name of the account being deployed to (e.g. dev, staging, prod)"
   type        = string
 }
 
-variable "rate_limit" {
-  description = "The requests per second limit for this API gateway"
-  type        = number
-}
-
-variable "burst_limit" {
-  description = "The requests per second burst limit for this API gateway"
-  type        = number
+variable "base_domain" {
+  description = "The base DNS domain for the APIs"
+  type        = string
 }
 
 variable "logs_bucket_id" {

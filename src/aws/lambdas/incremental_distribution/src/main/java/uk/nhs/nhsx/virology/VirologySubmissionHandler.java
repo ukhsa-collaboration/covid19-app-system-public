@@ -2,7 +2,7 @@ package uk.nhs.nhsx.virology;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.SystemClock;
@@ -24,6 +24,7 @@ import java.time.Instant;
 import java.util.function.Supplier;
 
 import static uk.nhs.nhsx.core.Jackson.deserializeMaybe;
+import static uk.nhs.nhsx.core.Jackson.deserializeMaybeLogInfo;
 import static uk.nhs.nhsx.core.StandardSigning.signResponseWithKeyGivenInSsm;
 import static uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication;
 import static uk.nhs.nhsx.core.routing.Routing.*;
@@ -97,7 +98,7 @@ public class VirologySubmissionHandler extends RoutingHandler {
                 path(Method.POST, "/virology-test/cta-exchange", (r) ->
                     throttlingResponse(
                         delayDuration,
-                        () -> deserializeMaybe(r.getBody(), CtaExchangeRequest.class)
+                        () -> deserializeMaybeLogInfo(r.getBody(), CtaExchangeRequest.class)
                             .map(it -> service.exchangeCtaToken(it).toHttpResponse())
                             .orElseGet(HttpResponses::badRequest)
                     )

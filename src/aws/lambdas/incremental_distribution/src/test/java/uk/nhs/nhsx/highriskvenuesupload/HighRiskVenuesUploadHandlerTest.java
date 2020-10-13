@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.junit.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
-import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments;
+import uk.nhs.nhsx.core.TestEnvironments;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 
 import java.util.Map;

@@ -1,5 +1,6 @@
 locals {
   identifier_prefix = "${terraform.workspace}-${var.name}-${var.service}"
+  replicator        = var.replication_enabled ? [true] : []
 }
 
 resource "aws_s3_bucket" "this" {
@@ -12,11 +13,10 @@ resource "aws_s3_bucket" "this" {
     Environment = terraform.workspace
     Service     = var.service
   }
-
-  versioning {
-    enabled = false # *** PRIVACY / AG Terms & Conditions (CHT) *** Make sure versioning __is disabled__ because we store diagnosis keys in these buckets !!!
+  logging {
+    target_bucket = var.logs_bucket_id
+    target_prefix = "${local.identifier_prefix}/"
   }
-
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -25,9 +25,26 @@ resource "aws_s3_bucket" "this" {
     }
   }
 
-  logging {
-    target_bucket = var.logs_bucket_id
-    target_prefix = "${local.identifier_prefix}/"
+  # Replication relevant settings. These are activated via var.replication_enabled and are
+  # only active on staging and prod
+  versioning {
+    enabled = var.replication_enabled
+  }
+
+  dynamic "replication_configuration" {
+    for_each = local.replicator
+    content {
+      role = aws_iam_role.replication[0].arn
+      rules {
+        id     = "${local.identifier_prefix}-replication-config"
+        status = "Enabled"
+
+        destination {
+          bucket        = aws_s3_bucket.destination[0].arn
+          storage_class = "STANDARD"
+        }
+      }
+    }
   }
 }
 
@@ -60,7 +77,105 @@ data "aws_iam_policy_document" "this" {
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  depends_on = [aws_s3_bucket_public_access_block.this] # in terraform v0.12.29 we encounter conflict when this is executed concurrently with setting public access block
+  # in terraform v0.12.29 we encounter conflict when this is executed concurrently with setting public access block
+  depends_on = [aws_s3_bucket_public_access_block.this]
   bucket     = aws_s3_bucket.this.id
   policy     = data.aws_iam_policy_document.this.json
+}
+
+# Replication relevant settings. These are activated via var.replication_enabled and are
+# only active on staging and prod
+
+resource "aws_s3_bucket" "destination" {
+  count  = var.replication_enabled ? 1 : 0
+  bucket = "${local.identifier_prefix}-replica"
+
+  force_destroy = var.force_destroy_s3_buckets
+
+  versioning {
+    enabled = true
+  }
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "replica" {
+  count  = var.replication_enabled ? 1 : 0
+  bucket = aws_s3_bucket.destination[0].id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+resource "aws_iam_role" "replication" {
+  count = var.replication_enabled ? 1 : 0
+  name  = "${var.name}-replication"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+POLICY
+}
+resource "aws_iam_policy" "replication" {
+  count = var.replication_enabled ? 1 : 0
+  name  = "${var.name}-replication"
+
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetReplicationConfiguration",
+        "s3:ListBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.this.arn}"
+      ]
+    },
+    {
+      "Action": [
+        "s3:GetObjectVersion",
+        "s3:GetObjectVersionAcl"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.this.arn}/*"
+      ]
+    },
+    {
+      "Action": [
+        "s3:ReplicateObject",
+        "s3:ReplicateDelete"
+      ],
+      "Effect": "Allow",
+      "Resource": "${aws_s3_bucket.destination[0].arn}/*"
+    }
+  ]
+}
+POLICY
+}
+resource "aws_iam_role_policy_attachment" "replication" {
+  count      = var.replication_enabled ? 1 : 0
+  role       = aws_iam_role.replication[0].name
+  policy_arn = aws_iam_policy.replication[0].arn
 }

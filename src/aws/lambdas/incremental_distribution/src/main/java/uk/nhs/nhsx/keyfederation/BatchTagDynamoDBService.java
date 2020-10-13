@@ -4,98 +4,70 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.KeyAttribute;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
-import com.amazonaws.services.dynamodbv2.model.*;
+import com.amazonaws.services.dynamodbv2.model.ReturnValue;
 import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult;
 
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.Optional;
-
-import static java.util.Arrays.asList;
-import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap;
-import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrThrow;
-import static uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions.executeTransaction;
 
 public class BatchTagDynamoDBService implements BatchTagService {
 
-    private final String batchTagAttributeName = "lastReceivedBatchTag";
+    private final String uploadTimeAttributeName = "uploadTimestamp";
     private final String primaryKeyAttributeName = "id";
-    private final int primaryKeyAttributeValue = 0;
+    private final String primaryKeyAttributeValueDownload = "lastDownloadState";
+    private final String primaryKeyAttributeValueUpload = "lastUploadState";
 
-    private final AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
-    private final DynamoDB dynamoDB = new DynamoDB(client);
-    private final String stateTableName;
     private final Table table;
 
     public BatchTagDynamoDBService(String stateTableName) {
-        this.stateTableName = stateTableName;
-        this.table = dynamoDB.getTable(stateTableName);
-    }
-
-    @Override
-    public BatchTag getLatestBatchTag() {
-        return getLatestBatchTag(table);
-    }
-
-    public BatchTag getLatestBatchTag(Table table) {
-        try {
-            Item item = table.getItem(primaryKeyAttributeName, primaryKeyAttributeValue);
-            if (item != null) {
-                BatchTag batchTag = BatchTag.of(String.valueOf(item.getString(batchTagAttributeName)));
-                return batchTag;
-            }
-            return null;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void updateLatestBatchTag(BatchTag batchTag) {
-        updateLatestBatchTag(batchTag, table);
-    }
-
-    public void updateLatestBatchTag(BatchTag batchTag, Table table) {
-        UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey(primaryKeyAttributeName, primaryKeyAttributeValue)
-                .withUpdateExpression("set " + batchTagAttributeName + " = :tag")
-                .withReturnValues(ReturnValue.UPDATED_NEW)
-                .withValueMap(new ValueMap()
-                        .withString(":tag", batchTag.toString()));
-        table.updateItem(updateItemSpec);
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+        this.table = new DynamoDB(client).getTable(stateTableName);
     }
 
     public Optional<UploadKeysResult> getLastUploadState() {
-        ScanRequest scanRequest = new ScanRequest()
-            .withTableName(stateTableName)
-            .withFilterExpression("id = :id")
-            .withExpressionAttributeValues(attributeMap(":id", 0))
-            .withLimit(1);
-
-        ScanResult scanResult = client.scan(scanRequest);
-        List<Map<String, AttributeValue>> resultItems = scanResult.getItems();
-
-        return resultItems.stream().findFirst()
-            .map(it -> new UploadKeysResult(
-                itemValueOrThrow(it, "lastUploadState")
-            ));
+        return getLastUploadState(table);
     }
 
-    public void updateLastUploadState(String lastUploadState) {
-        List<TransactWriteItem> transactionItems = asList(
-            new TransactWriteItem().withUpdate(
-                new Update()
-                    .withTableName(stateTableName)
-                    .withKey(attributeMap("id",0))
-                    .withUpdateExpression("set lastUploadState = :lastUploadState")
-                    .withExpressionAttributeValues(attributeMap(":lastUploadState", lastUploadState))
-            )
+    public Optional<UploadKeysResult> getLastUploadState(Table table) {
+        Item item = table.getItem(primaryKeyAttributeName, primaryKeyAttributeValueUpload);
+        return Optional.ofNullable(item).map(i -> new UploadKeysResult(i.getLong(uploadTimeAttributeName)));
+    }
+
+    @Override
+    public void updateLastUploadState(Long uploadTimestamp) {
+        updateLastUploadState(uploadTimestamp, table);
+    }
+
+    public void updateLastUploadState(Long uploadTimestamp, Table table) {
+        UpdateItemSpec updateItemSpec = new UpdateItemSpec().withPrimaryKey(primaryKeyAttributeName, primaryKeyAttributeValueUpload)
+            .withUpdateExpression("set " + uploadTimeAttributeName + " = :uploadTimestamp")
+            .withReturnValues(ReturnValue.UPDATED_NEW)
+            .withValueMap(new ValueMap()
+                .withLong(":uploadTimestamp", uploadTimestamp));
+        table.updateItem(updateItemSpec);
+    }
+
+    @Override
+    public Optional<FederationBatch> getLatestFederationBatch() {
+        Item item = table.getItem(new KeyAttribute("id", primaryKeyAttributeValueDownload));
+        return Optional.ofNullable(item).map(it -> new FederationBatch(
+            BatchTag.of(it.getString("batchTag")),
+            LocalDate.parse(it.getString("batchDate"))
+        ));
+    }
+
+    @Override
+    public void updateLatestFederationBatch(FederationBatch batch) {
+        table.putItem(
+            new Item()
+                .withPrimaryKey("id", primaryKeyAttributeValueDownload)
+                .with("batchTag", batch.batchTag.value)
+                .with("batchDate", batch.batchDate.toString())
         );
-        executeTransaction(client, transactionItems);
     }
 
 }

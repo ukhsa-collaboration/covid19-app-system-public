@@ -1,8 +1,6 @@
 # Daily mobile analytics submission
 
-Version V3.0, 2020-08-08
-
-API group: [Submission](../api-patterns.md#Submission)
+API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
 - Endpoint schema: ```https://<FQDN>/submission/mobile-analytics```
   - FQDN: Hostname can be different per API

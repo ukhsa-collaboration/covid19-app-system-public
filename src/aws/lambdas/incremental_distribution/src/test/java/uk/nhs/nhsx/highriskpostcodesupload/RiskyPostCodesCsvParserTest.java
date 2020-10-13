@@ -38,6 +38,74 @@ public class RiskyPostCodesCsvParserTest {
         };
         assertEquals(postDistrictsMap, riskyPostcodes.postDistricts);
     }
+    @Test
+    public void parseCsvWithMixedData() {
+        String csv = "" +
+            "# postal_district_code, risk_indicator, tier_indicator\n" +
+            "\"CODE1\", \"H\", \"Tier 3\"\n" +
+            "\"CODE2\", \"M\", \"Tier 2\"\n" +
+            "\"CODE3\", \"L\", \"Tier 1\"";
+
+        RiskyPostCodes riskyPostcodes = RiskyPostCodesCsvParser.parse(csv);
+        Map<String, String> postDistrictsMap = new HashMap<>() {
+            {
+                put("CODE1", "H");
+                put("CODE2", "M");
+                put("CODE3", "L");
+            }
+        };
+        assertEquals(postDistrictsMap, riskyPostcodes.postDistricts);
+    }
+    @SuppressWarnings("serial")
+    @Test
+    public void parseCsvWithoutTierToParseV2ShouldReturnEmptyHashMap() {
+        String csv = "" +
+            "# postal_district_code, risk_indicator\n" +
+            "\"CODE1\", \"H\"\n" +
+            "\"CODE2\", \"M\"\n" +
+            "\"CODE3\", \"L\"";
+
+        Map<String, String> riskyPostcodes = RiskyPostCodesCsvParser.parseV2(csv);
+        Map<String, String> postDistrictsMap = new HashMap<>();
+        assertEquals(postDistrictsMap, riskyPostcodes);
+    }
+
+    @Test
+    public void parseCsvWithTier() {
+        String csv = "" +
+            "# postal_district_code, risk_indicator, tier_indicator\n" +
+            "\"CODE1\", \"H\", \"Tier 3\"\n" +
+            "\"CODE2\", \"M\", \"Tier 2\"\n" +
+            "\"CODE3\", \"L\", \"Tier 1\"";
+
+        Map<String, String> riskyPostcodes = RiskyPostCodesCsvParser.parseV2(csv);
+        Map<String, String> postDistrictsMap = new HashMap<>() {
+            {
+                put("CODE1", "Tier 3");
+                put("CODE2", "Tier 2");
+                put("CODE3", "Tier 1");
+            }
+        };
+        assertEquals(postDistrictsMap, riskyPostcodes);
+    }
+
+    @Test
+    public void givenCsvWithOneMissingTierShouldReturnMapWithOneLessElement() {
+        String csv = "" +
+            "# postal_district_code, risk_indicator, tier_indicator\n" +
+            "\"CODE1\", \"H\", \"Tier 3\"\n" +
+            "\"CODE2\", \"M\", \"\"\n " +
+            "\"CODE3\", \"L\", \"Tier 1\"";
+
+        Map<String, String> riskyPostcodes = RiskyPostCodesCsvParser.parseV2(csv);
+        Map<String, String> postDistrictsMap = new HashMap<>() {
+            {
+                put("CODE1", "Tier 3");
+                put("CODE3", "Tier 1");
+            }
+        };
+        assertEquals(postDistrictsMap, riskyPostcodes);
+    }
 
     @SuppressWarnings("serial")
     @Test

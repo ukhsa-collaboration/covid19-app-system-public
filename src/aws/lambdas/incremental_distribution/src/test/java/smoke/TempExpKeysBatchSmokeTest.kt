@@ -6,22 +6,29 @@ import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasElement
 import com.natpryce.hamkrest.isNullOrEmptyString
 import junit.framework.Assert.assertEquals
+import org.apache.http.entity.ContentType
 import org.apache.logging.log4j.LogManager
 import org.http4k.asString
 import org.http4k.client.JavaHttpClient
+import org.junit.Ignore
 import org.junit.Test
 import smoke.clients.*
 import smoke.env.EnvConfig
 import smoke.env.SmokeTests
+import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
+import uk.nhs.nhsx.core.aws.s3.S3Storage
+import uk.nhs.nhsx.core.aws.s3.Sources
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
+import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
+import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResponse
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.*
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
@@ -37,6 +44,7 @@ class TempExpKeysBatchSmokeTest {
 
     private val logger = LogManager.getLogger(TempExpKeysBatchSmokeTest::class.java)
     private val config = SmokeTests.loadConfig()
+    private val awsS3Client = uk.nhs.nhsx.core.aws.s3.AwsS3Client()
     private val numberOfRuns = 50
 
     @Test
@@ -115,6 +123,28 @@ class TempExpKeysBatchSmokeTest {
         scenario.checkTekExportContentsContainsOnsetDays(payload, tekExport)
     }
 
+    @Ignore
+    @Test
+    fun `zip file only contains keys that match filter`() {
+        val scenario = TempExpKeysScenario(config)
+        //Generate Keys and Upload to S3 with prefix that passes filter
+        val mobileSubmissionKeys = scenario.generateKeyData(0)
+        val mobilePayload = scenario.createKeysPayload(mobileSubmissionKeys)
+        val mobileObjectKey: ObjectKey = ObjectKey.of("mobile/smoketest.json")
+        awsS3Client.upload(S3Storage.Locator.of(BucketName.of(config.diagnosis_keys_submission_store), mobileObjectKey), ContentType.APPLICATION_JSON, Sources.byteSourceFor(Jackson.toJson(mobilePayload)))
+
+        //Generate Keys and Upload to S3 with prefix that fails filter
+        val nonFilterSubmissionKeys = scenario.generateKeyData(0)
+        val nonFilterPayload = scenario.createKeysPayload(nonFilterSubmissionKeys)
+        val nonFilterObjectKey: ObjectKey = ObjectKey.of("nonfilter/smoketest.json")
+        awsS3Client.upload(S3Storage.Locator.of(BucketName.of(config.diagnosis_keys_submission_store), nonFilterObjectKey), ContentType.APPLICATION_JSON, Sources.byteSourceFor(Jackson.toJson(nonFilterPayload)))
+
+        val tekExport = scenario.invokeBatchProcessingAndGetTekExport()
+
+        scenario.checkTekExportContentsContains(mobileSubmissionKeys,tekExport)
+        scenario.checkTekExportContentsDoesNotContain(nonFilterSubmissionKeys,tekExport)
+    }
+
     private class TempExpKeysScenario(config: EnvConfig) {
         private val logger = LogManager.getLogger(TempExpKeysScenario::class.java)
 
@@ -189,6 +219,15 @@ class TempExpKeysBatchSmokeTest {
             return false
         }
 
+        fun createKeysPayload(encodedKeyData: List<String>): StoredTemporaryExposureKeyPayload {
+            return StoredTemporaryExposureKeyPayload(
+                    encodedKeyData.map {
+
+                        StoredTemporaryExposureKey(it, rollingStartNumber(), 144, 7)
+                    }
+            )
+        }
+
         fun checkTekExportContentsContains(expectedKeys: List<String>,
                                            tekExport: Exposure.TemporaryExposureKeyExport) {
             if (isOutsideProcessingWindow()) {
@@ -249,11 +288,19 @@ class TempExpKeysBatchSmokeTest {
             return key
         }
 
-        private fun generateKeyData(numKeys: Int) =
+        fun generateKeyData(numKeys: Int) =
             (0..numKeys)
                 .map { keyGenerator.generate() }
                 .map { Base64.getEncoder().encodeToString(it.toByteArray()) }
 
+        private fun rollingStartNumber(): Int {
+            val utcDateTime = utcDateTime().toInstant(ZoneOffset.UTC)
+            val rollingStartNumber = utcDateTime.epochSecond / Duration.ofMinutes(10).toSeconds()
+            return rollingStartNumber.toInt()
+        }
+
+        private fun utcDateTime() = LocalDateTime
+                .ofInstant(Instant.now(), ZoneId.of("UTC"))
     }
 
 }

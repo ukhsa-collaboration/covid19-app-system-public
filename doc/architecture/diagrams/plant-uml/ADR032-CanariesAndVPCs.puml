@@ -1,0 +1,45 @@
+@startuml
+
+cloud "AWS Lambda VPC\n" {
+    [node.js Lambda] --> (Direct Call)
+    (Direct Call) - [Synthetic Canary]
+}
+
+cloud "te-prod-canary-vpc\n" {
+
+    package "te-prod-canary-subnet-c" {
+        [Synthetic Canary] --> [Route C] : HTTPs
+        [Route C]
+    }
+
+    package "te-prod-canary-subnet-b" {
+        [Synthetic Canary] --> [Route B] : HTTPs
+        [Route B]
+    }
+
+    package "te-prod-canary-subnet-a" {
+        [Synthetic Canary] --> [Route A] : HTTPs
+        [Route A]
+    }
+
+    package "te-prod-canary-subnet-p" {
+        [Route A] --> [NAT Gateway\nte-prod-canary-nat-gw]
+        [Route B] --> [NAT Gateway\nte-prod-canary-nat-gw]
+        [Route C] --> [NAT Gateway\nte-prod-canary-nat-gw]
+        (Elastic Network Interface\nte-prod-canary-eni) - [NAT Gateway\nte-prod-canary-nat-gw]
+        note left of (Elastic Network Interface\nte-prod-canary-eni) : Allocated Elastic IP
+    }
+
+    (Elastic Network Interface\nte-prod-canary-eni) --> [Internet Gateway\nte-prod-canary-inet-gw]
+}
+
+cloud {
+    [Internet Gateway\nte-prod-canary-inet-gw] --> [Internet]
+}
+
+package "public API endpoint" {
+    [Internet] --> (HTTPs)
+    (HTTPs) - [Covid-19 service]
+}
+
+@enduml

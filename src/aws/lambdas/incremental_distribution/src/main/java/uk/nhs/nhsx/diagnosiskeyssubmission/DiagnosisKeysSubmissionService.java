@@ -16,7 +16,7 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 public class DiagnosisKeysSubmissionService {
 
@@ -46,11 +46,24 @@ public class DiagnosisKeysSubmissionService {
     }
 
     private Optional<ClientTemporaryExposureKeysPayload> allValidMaybe(ClientTemporaryExposureKeysPayload payload) {
-        if (payload.temporaryExposureKeys.stream().allMatch(this::isValidKey))
-            return Optional.of(payload);
+        if (payload.temporaryExposureKeys.size() > 14) {
+            logger.warn("Submission contains more than 14 keys");
+            return Optional.empty();
+        }
 
-        logger.warn("At least one key is invalid");
+        var validKeys = payload.temporaryExposureKeys.stream().filter(this::isValidKey).collect(toList());
+        var invalidKeysCount = payload.temporaryExposureKeys.size() - validKeys.size();
 
+        if (validKeys.size() > 0) {
+            if (invalidKeysCount > 0)
+                logger.warn(
+                    "Downloaded from mobile valid keys={}, invalid keys={}",
+                    validKeys.size(), invalidKeysCount
+                );
+            return Optional.of(new ClientTemporaryExposureKeysPayload(payload.diagnosisKeySubmissionToken, validKeys));
+        }
+
+        logger.warn("Submission contains no key or is empty");
         return Optional.empty();
     }
 
@@ -116,7 +129,7 @@ public class DiagnosisKeysSubmissionService {
             payload.temporaryExposureKeys
                 .stream()
                 .map(buildStoredTemporaryExposureKey())
-                .collect(Collectors.toList())
+                .collect(toList())
         );
     }
 

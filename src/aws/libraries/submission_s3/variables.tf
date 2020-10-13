@@ -15,3 +15,9 @@ variable "force_destroy_s3_buckets" {
   type        = bool
   default     = true
 }
+
+variable "replication_enabled" {
+  description = "will enable bucket versioning and backup bucket contents in secondary bucket"
+  type        = bool
+  default     = false
+}

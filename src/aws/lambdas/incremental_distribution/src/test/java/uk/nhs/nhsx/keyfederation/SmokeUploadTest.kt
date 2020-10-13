@@ -1,6 +1,5 @@
 package uk.nhs.nhsx.keyfederation
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import org.junit.Ignore
 import org.junit.Test
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
@@ -14,7 +13,7 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import java.security.SecureRandom
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
 
@@ -35,7 +34,8 @@ class SmokeUploadTest {
         DiagnosisKeysUploadService(
             InteropClient(INTEROP_BASE_URL, AUTH_TOKEN, JWS(PEM)),
             SubmissionFromS3Repository(AwsS3Client()),
-            InMemoryBatchTagService()
+            InMemoryBatchTagService(),
+            "GB-EAW"
         ).uploadRequest()
     }
 
@@ -43,8 +43,9 @@ class SmokeUploadTest {
     fun `upload keys from s3 mock`() {
         DiagnosisKeysUploadService(
             InteropClient(INTEROP_BASE_URL, AUTH_TOKEN, JWS(PEM)),
-            MockSubmissionRepository(listOf(Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC)))),
-            InMemoryBatchTagService()
+            MockSubmissionRepository(listOf(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()))),
+            InMemoryBatchTagService(),
+            "GB-EAW"
         ).uploadRequest()
     }
 

@@ -13,20 +13,13 @@ module NHSx
       return repo_tags
     end
 
-    # Create an immutable tag on the current git SHA for a target environment
+    # Create and push a tag for the given subsystem in the target environment that includes a timestamp
     #
-    # Example, te-prod-20200916-1600257965
-    def push_immutable_git_tag(tgt_env, message, system_config)
-      time = "#{Time.now.strftime("%Y%m%d-%s")}"
-      tag("te-#{tgt_env}-#{time}", message, system_config)
-    end
-
-    # Create an immutable tag on the current git SHA for a target environment
-    # on a sub system of the app system
-    # Example, te-prod-20200916-1600257965
-    def push_immutable_git_tag_subsystem(tgt_env, subsystem, message, system_config)
-      time = "#{Time.now.strftime("%Y%m%d-%s")}"
-      tag("te-#{tgt_env}-#{subsystem}-#{time}", message, system_config)
+    # The tag will follow the convention te-{tgt_env}-{timestamp}-{subsystem}
+    def push_timestamped_tag(subsystem, tgt_env, message, system_config)
+      timestamp = Time.now.strftime("%Y%m%d-%s")
+      subsystem = "#{subsystem}-" unless subsystem.empty?
+      tag("te-#{tgt_env}-#{subsystem}#{timestamp}", message, system_config)
     end
 
     # Tag the current git SHA with the environment tag
@@ -43,9 +36,20 @@ module NHSx
       tag("te-#{tgt_env}-#{subsystem}", message, system_config)
     end
 
+    # Creates and pushes a git tag forcing the tag to be rewritten if it exists.
     def tag(tag, message, system_config)
-      run_command("Tag the current SHA", "git tag -af #{tag} -m \"#{message}\"", system_config)
-      run_command("Publish the tag", "git push -f origin #{tag}", system_config)
+      cmd1 = "git tag -af #{tag} -m \"#{message}\""
+      cmd2 = "git push -f origin #{tag}"
+      begin
+        run_command("Tag the current SHA", cmd1, system_config)
+        run_command("Publish the tag", cmd2, system_config)
+      rescue RuntimeError => failure
+        puts "#" * 23
+        puts("In a native (not container) shell in this directory while logged in to GitHub, please run:")
+        puts(cmd1)
+        puts(cmd2)
+        puts "#" * 23
+      end
     end
   end
 end

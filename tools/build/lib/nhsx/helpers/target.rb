@@ -1,10 +1,19 @@
 require_relative "terraform"
 
 module NHSx
+
   # Methods to query and manipulate the target environment
   module TargetEnvironment
     include NHSx::Terraform
     include NHSx::AWS
+
+    # Define the API endpoint category names and corresponding rake targets - see uk.nhs.nhsx.core.auth.ApiName
+    API_NAMES = {
+        "mobile" => "mobile",
+        "testResultUpload" => "test_result",
+        "highRiskVenuesCodeUpload" => "venues",
+        "highRiskPostCodeUpload" => "post_districts"}.freeze
+
     # All the fixed (named) target environments per account: {"account"=>[target_environments]}
     TARGET_ENVIRONMENTS = {
       "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "branch"],

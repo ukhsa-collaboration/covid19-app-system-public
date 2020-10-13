@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.highriskvenuesupload;
 
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import uk.nhs.nhsx.core.ContentTypes;
 import uk.nhs.nhsx.core.HttpResponses;

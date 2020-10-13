@@ -29,3 +29,7 @@ variable "lambda_object_key" {
 variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }
+
+variable "diagnosis_key_submission_prefixes" {
+  description = "Allowed prefixes for the diagnosis key submissions"
+}

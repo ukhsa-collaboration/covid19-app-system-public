@@ -2,7 +2,7 @@ package uk.nhs.nhsx.analyticssubmission;
 
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder;
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.SystemClock;

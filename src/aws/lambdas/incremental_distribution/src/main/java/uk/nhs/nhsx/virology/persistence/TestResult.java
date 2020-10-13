@@ -15,6 +15,10 @@ public class TestResult {
     }
 
     public boolean isPositive() {
-        return testResult.equals("POSITIVE");
+        return "POSITIVE".equals(testResult);
+    }
+
+    public boolean isAvailable() {
+        return "available".equals(status);
     }
 }

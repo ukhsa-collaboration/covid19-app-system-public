@@ -6,6 +6,12 @@ variable "lambda_function_name" {
   description = "The lambda function linked to the gateway"
 }
 
+variable "lambda_function_version" {
+  description = "The version of the lambda function linked to the gateway (or 0 if versioning is not enabled for the lambda)"
+  type        = number
+  default     = 0
+}
+
 variable "lambda_function_arn" {
   description = "The ARN through which the lambda function is invoked"
 }

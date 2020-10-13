@@ -39,20 +39,29 @@ resource "aws_glue_catalog_table" "this" {
     }
 
     columns {
-      name = "Postcode"
+      name = "postcode"
       type = "string"
     }
 
     columns {
-      name = "Latitude"
+      name = "local_authority"
+      type = "string"
+    }
+
+    columns {
+      name = "country"
+      type = "string"
+    }
+
+    columns {
+      name = "latitude"
       type = "float"
     }
 
     columns {
-      name = "Longitude"
+      name = "longitude"
       type = "float"
     }
-
   }
 }
 

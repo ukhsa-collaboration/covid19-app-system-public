@@ -1,6 +1,6 @@
 # Venue API: Upload identified risk venues
 
-API group: [Upload](../ag-architecture-guidebook#System-APIs-and-Interfaces)
+API group: [Upload](../guidebook.md#system-apis-and-interfaces)
 
 An identified risky venue is a venue that has been tagged by a UK public health authority (e.g. CTAS, manual contact tracers, PHE) as a potential CV-19 hotspot.
  

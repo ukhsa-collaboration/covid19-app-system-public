@@ -9,15 +9,15 @@ module NHSx
     # Set all virology APIs in operation mode
     def activate_virology(tgt_env, account, system_config)
       target_environment_config = target_environment_configuration(tgt_env, account, system_config)
-      enable_api("#{target_environment_config["virology_submission_lambda_function_name"]}", system_config)
-      enable_api("#{target_environment_config["virology_upload_lambda_function_name"]}", system_config)
+      enable_api(target_environment_config["virology_submission_lambda_function_name"], system_config)
+      enable_api(target_environment_config["virology_upload_lambda_function_name"], system_config)
     end
 
     # Set all virology APIs in maintenance mode
     def deactivate_virology(tgt_env, account, system_config)
       target_environment_config = target_environment_configuration(tgt_env, account, system_config)
-      disable_api("#{target_environment_config["virology_submission_lambda_function_name"]}", system_config)
-      disable_api("#{target_environment_config["virology_upload_lambda_function_name"]}", system_config)
+      disable_api(target_environment_config["virology_submission_lambda_function_name"], system_config)
+      disable_api(target_environment_config["virology_upload_lambda_function_name"], system_config)
     end
 
     # Disable an API

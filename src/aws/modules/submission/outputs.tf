@@ -14,6 +14,10 @@ output "function" {
   value = module.submission_lambda.lambda_function_name
 }
 
+output "version" {
+  value = module.submission_lambda.version
+}
+
 output "endpoint" {
   value = module.submission_gateway.api_endpoint
 }

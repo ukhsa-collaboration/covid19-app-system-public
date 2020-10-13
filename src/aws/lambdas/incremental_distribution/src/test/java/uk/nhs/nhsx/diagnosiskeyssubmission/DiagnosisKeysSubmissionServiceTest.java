@@ -13,11 +13,14 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayl
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
@@ -70,22 +73,55 @@ public class DiagnosisKeysSubmissionServiceTest {
         service.acceptTemporaryExposureKeys(payload);
         verifyHappyPath(TestData.STORED_KEYS_PAYLOAD_WITH_RISK_LEVEL);
     }
-    
 
     @Test
-    public void acceptsTemporaryExposureKeysWithEmptyArray() throws IOException {
+    public void ifMoreThanFourteenExposureKeysThenReject()  {
+
+        ClientTemporaryExposureKey key1 = new ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", 12345, 144);
+        List<ClientTemporaryExposureKey> listOfKeys = IntStream.range(0, 15).mapToObj(i -> key1).collect(Collectors.toList());
+
+        ClientTemporaryExposureKeysPayload payload = new ClientTemporaryExposureKeysPayload(
+                UUID.fromString(uuid),
+                listOfKeys
+
+        );
+        service.acceptTemporaryExposureKeys(payload);
+        verifyNoInteractions();
+
+    }
+
+    @Test
+    public void acceptIfAtleastOneValidKey() throws IOException  {
         when(objectKeyNameProvider.generateObjectKeyName()).thenReturn(objectKey);
         when(awsDynamoClient.getItem(tableName, hashKey, uuid)).thenReturn(dynamoItem);
 
+        ClientTemporaryExposureKey key1 = new ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", 12345, 144);
+        ClientTemporaryExposureKey key2 = new ClientTemporaryExposureKey(null, 12345, 148);
+
+
         ClientTemporaryExposureKeysPayload payload = new ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
-            emptyList()
+            List.of(key1,key2)
+
         );
 
         service.acceptTemporaryExposureKeys(payload);
+        verifyHappyPath(TestData.STORED_KEYS_PAYLOAD_ONE_KEY);
 
-        final String expectedStoredPayload = "{\"temporaryExposureKeys\":[]}";
-        verifyHappyPath(expectedStoredPayload);
+    }
+    @Test
+    public void rejectIfNoValidKeys() {
+        ClientTemporaryExposureKey key2 = new ClientTemporaryExposureKey(null, 12345, 148);
+
+
+        ClientTemporaryExposureKeysPayload payload = new ClientTemporaryExposureKeysPayload(
+            UUID.fromString(uuid),
+            List.of(key2)
+
+        );
+
+        service.acceptTemporaryExposureKeys(payload);
+        verifyNoInteractions();
     }
 
     @Test

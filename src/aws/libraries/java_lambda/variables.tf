@@ -34,3 +34,9 @@ variable "app_alarms_topic" {
   description = "Alarm topic arn"
   type        = string
 }
+
+variable "publish" {
+  description = "Create lambda version (required for provisioned concurrency)"
+  type        = bool
+  default     = false
+}

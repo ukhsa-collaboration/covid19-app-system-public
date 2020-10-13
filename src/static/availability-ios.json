@@ -6,7 +6,9 @@
       "ar": "ولتتمكن من تشغيل هذا التطبيق في جهازك ، فسيتوجب عليك تحديث برنامج جهازك.  يرجى منك الذهاب الى الاعدادات وتحديث البرنامج هناك",
       "tr": "Bu uygulamanın cihazınızda çalıştırılması için cihaz yazılımınızı güncellemeniz gerekir. Lütfen ayarlara giderek bunları oradan güncelleyin.",
       "zh": "为了在您的设备上运行此应用程序，您需要更新设备软件。 请转到设置并从那里进行更新。",
-      "ro": "Pentru a rula această aplicație pe dispozitivul dvs., trebuie să vă actualizați software-ul dispozitivului. Vă rugăm să accesați setările și să o actualizați de acolo."
+      "ro": "Pentru a rula această aplicație pe dispozitivul dvs., trebuie să vă actualizați software-ul dispozitivului. Vă rugăm să accesați setările și să o actualizați de acolo.",
+      "pl": "Aby uruchomić tę aplikację na Twoim urządzeniu, musisz zaktualizować oprogramowanie urządzenia. Otwórz ustawienia i zaktualizuj oprogramowanie.",
+      "so": "Si aad barnaamijkan ugu isticmaasho aaladdaada, waxaad u baahan tahay inaad cusbooneysiisaa barnaamijyada aaladdaada kuwi ugu dambeeyay. Fadlan aad qaybta isku-hagaajinta oo halkaas ka cusboonaysiiso."
     }
   },
   "minimumAppVersion": {
@@ -21,7 +23,9 @@
       "ar": "ولتتمكن من تشغيل التطبيق في جهازك ، فيرجى منك تحديث جهازك للحصول على آخر نسخة.  يرجى منك الذهاب الى متجر التطبيقات وتحديث التطبيق هناك",
       "tr": "Bu uygulamanın cihazınızda çalıştırılması için bunu en son sürüme yükseltmeniz gerekmektedir. Lütfen uygulama mağazasına giderek bunları oradan güncelleyin.",
       "zh": "为了在您的设备上运行此应用程序，您需要将其更新到最新版本。 请转到应用商店并从那里进行更新。",
-      "ro": "Pentru a rula această aplicație pe dispozitivul dvs., trebuie să o actualizați la cea mai recentă versiune. Vă rugăm să accesați App Store și să o actualizați de acolo."
+      "ro": "Pentru a rula această aplicație pe dispozitivul dvs., trebuie să o actualizați la cea mai recentă versiune. Vă rugăm să accesați App Store și să o actualizați de acolo.",
+      "pl": "Aby uruchomić tę aplikację na Twoim urządzeniu, musisz zaktualizować ją do najnowszej wersji. Uruchom sklep z aplikacjami i zaktualizuj aplikację.",
+      "so": "Si aad barnaamijkan ugu isticmaasho aaladdaada, waxaad u baahan tahay inaad ku cusbooneysiisaa werinka ugu dambeeyay. Fadlan aad qaybta app store oo halkaas ka cusboonaysiiso."
     }
   }
 }

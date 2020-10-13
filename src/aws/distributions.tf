@@ -111,6 +111,7 @@ module "distribution_apis" {
 
   risky_post_district_distribution_bucket_regional_domain_name = module.post_districts_distribution.store.bucket_regional_domain_name
   risky_post_district_payload                                  = module.post_districts_distribution.name
+  risky_post_district_v2_payload                               = "risky-post-districts-v2"
   risky_post_district_origin_access_identity_path              = module.post_districts_distribution.origin_access_identity_path
 
   risky_venues_bucket_regional_domain_name = module.risky_venues_distribution.store.bucket_regional_domain_name
@@ -139,7 +140,7 @@ module "distribution_apis" {
   availability_ios_origin_access_identity_path = module.availability_ios_distribution.origin_access_identity_path
 
   domain                   = var.base_domain
-  web_acl_arn              = data.aws_wafv2_web_acl.this.arn
+  web_acl_arn              = var.waf_arn
   enable_shield_protection = var.enable_shield_protection
 }
 

@@ -49,3 +49,9 @@ variable "xray_enabled" {
 variable "logs_bucket_id" {
   description = "The name of the bucket to which S3 access logs are saved."
 }
+
+variable "dependency_ref" {
+  description = "Supply reference from another resource/module if there's a need to build dependency. Replace with depends_on once migrate to Terraform v0.13 or later"
+  type        = string
+  default     = "_"
+}

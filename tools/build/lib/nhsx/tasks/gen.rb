@@ -80,10 +80,8 @@ namespace :gen do
 
       raise "Authentication headers are already configured. Run clean:test:secrets:#{account} to remove them" unless authentication_headers_for_test($configuration).empty?
 
-      api_names = ["mobile", "testResultUpload", "highRiskVenuesCodeUpload", "highRiskPostCodeUpload"] # see uk.nhs.nhsx.core.auth.ApiName
-
       authorization_headers = {}
-      api_names.each do |api_name|
+      NHSx::TargetEnvironment::API_NAMES.keys.each do |api_name|
         key_name = "used_for_tests_#{Digest::SHA1.hexdigest(Time.now.to_s)[0..6]}"
         authorization_header = create_and_store_api_key(api_name, key_name)
         authorization_headers[api_name] = authorization_header

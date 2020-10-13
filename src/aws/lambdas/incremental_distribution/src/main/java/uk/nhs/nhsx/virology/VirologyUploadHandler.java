@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.SystemClock;
@@ -62,7 +62,7 @@ public class VirologyUploadHandler extends RoutingHandler {
                                                                  APIGatewayProxyRequestEvent request) {
         return deserializeMaybe(request.getBody(), VirologyResultRequest.class)
             .map(it -> {
-                logger.info("{} sent virology result: {}", source.name(), it.testResult);
+                logger.info("{} sent virology ctaToken: {}, result: {}", source.name(), it.ctaToken, it.testResult);
                 return virologyService.acceptTestResult(it).toHttpResponse();
             })
             .orElseGet(HttpResponses::unprocessableEntity);

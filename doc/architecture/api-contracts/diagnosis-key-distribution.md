@@ -1,8 +1,6 @@
 # Diagnosis Key Distribution
 
-Version V3.0, 2020-08-08
-
-API group: [Distribution](../api-patterns.md#Distribution)
+API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
 - Endpoint schema for daily ZIPs: ```https://<FQDN>/distribution/daily/yyyyMMdd00.zip```
     - ```yyyyMMdd00``` (formatted UTC timestamp): 14 valid values (the last 14 days < today)

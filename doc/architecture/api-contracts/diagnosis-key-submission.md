@@ -1,6 +1,6 @@
 # Diagnosis Key Submission
 
-API group: [Submission](../api-patterns.md#Submission)
+API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
 - Endpoint schema: ```https://<FQDN>/submission/diagnosis-keys``` 
     - FQDN: Hostname can be different per API

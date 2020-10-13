@@ -1,9 +1,5 @@
 locals {
-  service      = "canary"
-  workspace_te = regex("^(?P<prefix>te-)?(?P<target>[^-]+)$", terraform.workspace)
-  workspace_id = (local.workspace_te.prefix == null) ? "branch" : local.workspace_te.target
-  aws_base_dom = regex("^(?P<host>[^.]+)[.](?P<domain>.*)$", var.base_domain)
-  aws_acc_name = local.aws_base_dom.host
+  service = "canary"
 }
 
 module "lambda_execution_role" {
@@ -23,12 +19,13 @@ module "submission_probes" {
 
 module "upload_probes" {
   // Upload probes do not work in Staging or Prod because of WAF origin-IP filtering rules
-  enabled              = local.aws_acc_name == "dev"
+  enabled              = var.aws_account_name == "dev"
   source               = "../aws/modules/synthetics_upload"
   service              = "uploads"
   base_domain          = var.base_domain
   lambda_exec_role_arn = module.lambda_execution_role.role.arn
   logs_bucket_id       = var.logs_bucket_id
+  dependency_ref       = module.submission_probes.probe_virology_test_function_name # create canaries one at a time to avoid 429 errors
 }
 
 module "distribution_probes" {
@@ -37,6 +34,7 @@ module "distribution_probes" {
   base_domain          = var.base_domain
   lambda_exec_role_arn = module.lambda_execution_role.role.arn
   logs_bucket_id       = var.logs_bucket_id
+  dependency_ref       = module.upload_probes.probe_virology_upload_function_name # create canaries one at a time to avoid 429 errors
 }
 
 output "probe_analytics_function_name" {

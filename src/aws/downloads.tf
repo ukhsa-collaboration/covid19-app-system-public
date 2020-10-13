@@ -21,7 +21,7 @@ module "download_apis" {
   risky_venues_messages_origin_access_identity_path = module.risky_venues_messages_distribution.origin_access_identity_path
 
   domain      = var.base_domain
-  web_acl_arn = data.aws_wafv2_web_acl.this.arn
+  web_acl_arn = var.waf_arn
 }
 
 output "base_download_endpoint" {

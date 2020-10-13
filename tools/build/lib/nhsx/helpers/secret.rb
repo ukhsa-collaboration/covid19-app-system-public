@@ -14,7 +14,7 @@ module NHSx
         run_command("Create aws secret", cmdline, $configuration)
       rescue GaudiError => failure
         if /ResourceExistsException/.match(failure.message)
-          puts('Failed to create the secret - trying to update it instead')
+          puts("Failed to create the secret - trying to update it instead")
           cmdline = "aws secretsmanager update-secret --secret-id #{name} --secret-string '#{secret_string}' --region #{aws_region}"
           run_command("Update aws secret", cmdline, $configuration)
         else
@@ -91,11 +91,13 @@ module NHSx
       cmd = run_command("Print the certificate's issuer", cmdline, system_config)
       return cmd.output
     end
+
     def print_aae_certificate_fingerprint(certificate_config)
       cmdline = "openssl x509 -in #{certificate_config["certificate_name"]} -fingerprint -noout"
       cmd = run_command("Print the certificate's fingerprint", cmdline, system_config)
       return cmd.output
     end
+
     def clean_aae_certificate(certificate_config)
       rm_rf(certificate_config["certificate_name"], :verbose => false)
       rm_rf(certificate_config["certificate_key_name"], :verbose => false)

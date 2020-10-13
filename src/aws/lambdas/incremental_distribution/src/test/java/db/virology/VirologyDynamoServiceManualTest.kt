@@ -19,6 +19,7 @@ import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLiveCalculator
 import uk.nhs.nhsx.virology.persistence.VirologyDynamoService
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyResultRequest
+import java.time.Duration
 import java.time.Instant
 import java.util.*
 import java.util.function.Supplier
@@ -29,7 +30,7 @@ class VirologyDynamoServiceManualTest {
         Tracing.disableXRayComplaintsForMainClasses()
     }
 
-    private val targetEnv = "450c66"
+    private val targetEnv = ""
 
     private val virologyConfig = VirologyConfig(
         "$targetEnv-virology-ordertokens",
@@ -200,11 +201,72 @@ class VirologyDynamoServiceManualTest {
         assertNoSubmissionTokenInDb(testOrder)
 
         assertThatThrownBy {
-            service.markForDeletion(testResult.get(), VirologyDataTimeToLiveCalculator.CTA_EXCHANGE_TTL.apply { Instant.now() })
+            service.markForDeletion(testResult.get(), VirologyDataTimeToLiveCalculator.DEFAULT_TTL.apply { Instant.now() })
         }.isInstanceOf(TransactionException::class.java)
 
         assertNoSubmissionTokenInDb(testOrder)
+    }
 
+    @Test
+    fun `cta exchange - update positive test result`() {
+        val testOrder = service.persistTestOrderAndResult(
+            { tokensGenerator.generateVirologyTokens() }, expireAt, "POSITIVE", testEndDate
+        )
+
+        val testResult = service.getTestResult(testOrder.testResultPollingToken)
+
+        service.updateOnCtaExchange(
+            testOrder,
+            testResult.get(),
+            VirologyDataTimeToLiveCalculator.DEFAULT_TTL.apply { Instant.ofEpochMilli(0) }
+        )
+
+        val testOrderItem = dynamoDb
+            .getTable(virologyConfig.testOrdersTable)
+            .getItem("ctaToken", testOrder.ctaToken.value)
+        assertThat(testOrderItem.getLong("expireAt")).isEqualTo(Duration.ofHours(4).toSeconds())
+        assertThat(testOrderItem.getInt("downloadCount")).isEqualTo(1)
+
+        val testResultItem = dynamoDb
+            .getTable(virologyConfig.testResultsTable)
+            .getItem("testResultPollingToken", testOrder.testResultPollingToken.value)
+        assertThat(testResultItem.getLong("expireAt")).isEqualTo(Duration.ofHours(4).toSeconds())
+
+        val submissionTokenItem = dynamoDb
+            .getTable(virologyConfig.submissionTokensTable)
+            .getItem("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value)
+        assertThat(submissionTokenItem.getLong("expireAt")).isEqualTo(Duration.ofDays(4).toSeconds())
+    }
+
+    @Test
+    fun `cta exchange - update negative test result`() {
+        val testOrder = service.persistTestOrderAndResult(
+            { tokensGenerator.generateVirologyTokens() }, expireAt, "NEGATIVE", testEndDate
+        )
+
+        val testResult = service.getTestResult(testOrder.testResultPollingToken)
+
+        service.updateOnCtaExchange(
+            testOrder,
+            testResult.get(),
+            VirologyDataTimeToLiveCalculator.DEFAULT_TTL.apply { Instant.ofEpochMilli(0) }
+        )
+
+        val testOrderItem = dynamoDb
+            .getTable(virologyConfig.testOrdersTable)
+            .getItem("ctaToken", testOrder.ctaToken.value)
+        assertThat(testOrderItem.getLong("expireAt")).isEqualTo(Duration.ofHours(4).toSeconds())
+        assertThat(testOrderItem.getInt("downloadCount")).isEqualTo(1)
+
+        val testResultItem = dynamoDb
+            .getTable(virologyConfig.testResultsTable)
+            .getItem("testResultPollingToken", testOrder.testResultPollingToken.value)
+        assertThat(testResultItem.getLong("expireAt")).isEqualTo(Duration.ofHours(4).toSeconds())
+
+        val submissionTokenItem = dynamoDb
+            .getTable(virologyConfig.submissionTokensTable)
+            .getItem("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value)
+        assertThat(submissionTokenItem).isNull()
     }
 
     private fun assertTestOrderInDb(testOrder: TestOrder) {
@@ -226,6 +288,7 @@ class VirologyDynamoServiceManualTest {
         assertThat(testOrderMaybe.get().ctaToken).isEqualTo(testOrder.ctaToken)
         assertThat(testOrderMaybe.get().testResultPollingToken).isEqualTo(testOrder.testResultPollingToken)
         assertThat(testOrderMaybe.get().diagnosisKeySubmissionToken).isEqualTo(testOrder.diagnosisKeySubmissionToken)
+        assertThat(testOrderMaybe.get().downloadCounter).isEqualTo(testOrder.downloadCounter)
     }
 
     private fun assertPendingTestResultInDb(testOrder: TestOrder) {

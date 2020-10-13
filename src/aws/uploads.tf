@@ -63,7 +63,7 @@ module "upload_apis" {
 
   name        = "upload"
   domain      = var.base_domain
-  web_acl_arn = data.aws_wafv2_web_acl.this.arn
+  web_acl_arn = var.waf_arn
 
   risky-post-districts-upload-endpoint    = module.risky_post_districts_upload.api_endpoint
   risky-post-districts-upload-path        = local.risky_post_districts_upload_pattern
@@ -117,4 +117,10 @@ output "risky_venues_upload_health_endpoint" {
 }
 output "risky_post_districts_upload_health_endpoint" {
   value = "https://${module.upload_apis.upload_domain_name}/${local.risky_post_districts_health_pattern}"
+}
+
+# gateway endpoints
+
+output "risky_post_districts_upload_gateway_endpoint" {
+  value = module.risky_post_districts_upload.api_endpoint
 }

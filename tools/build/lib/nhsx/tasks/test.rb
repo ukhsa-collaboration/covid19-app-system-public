@@ -34,6 +34,12 @@ namespace :test do
     end
   end
 
+  desc "Runs all java unit tests"
+  task :"java:unit" do
+    include NHSx::Test
+    run_target_unit_tests
+  end
+
   desc "Runs the sanity_check tests against prod"
   task :"sanity_check:prod" => [:"login:prod", :"clean:config"] do
     include NHSx::Test

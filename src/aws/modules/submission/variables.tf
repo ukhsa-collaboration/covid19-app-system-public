@@ -38,3 +38,15 @@ variable "force_destroy_s3_buckets" {
 variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }
+
+variable "replication_enabled" {
+  description = "will enable bucket versioning and backup bucket contents in secondary bucket"
+  type        = bool
+  default     = false
+}
+
+variable "provisioned_concurrent_executions" {
+  description = "provisioned concurrency or 0 (no provisioned concurrency)"
+  type        = number
+  default     = 0
+}

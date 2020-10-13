@@ -1,13 +1,11 @@
 package uk.nhs.nhsx.keyfederation;
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
-import uk.nhs.nhsx.core.ObjectKeyFilter;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.aws.s3.AwsS3;
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
@@ -21,16 +19,12 @@ import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService;
 import uk.nhs.nhsx.keyfederation.upload.JWS;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.function.Supplier;
 
 import static uk.nhs.nhsx.core.ObjectKeyFilter.excludeKeyWithPrefix;
 
 
 public class Handler implements RequestHandler<ScheduledEvent, String> {
-
-    private static final int MAX_AGE = 14;
 
     private static final Logger logger = LogManager.getLogger(Handler.class);
 
@@ -91,12 +85,11 @@ public class Handler implements RequestHandler<ScheduledEvent, String> {
         if (config.downloadEnabled) {
             try {
                 new DiagnosisKeysDownloadService(
+                    clock,
                     interopClient,
-                    new KeyUploader(awsS3Client, config.submissionBucketName, config.federatedKeyPrefix),
+                    new FederatedKeyUploader(awsS3Client, config.submissionBucketName, config.federatedKeyPrefix, clock, config.validRegions),
                     batchTagService
-                ).downloadAndSave(
-                    LocalDate.ofInstant(clock.get(), ZoneId.of("UTC")).minusDays(MAX_AGE)
-                );
+                ).downloadAndSave();
             } catch (Exception e) {
                 logger.error("Download keys failed with error", e);
             }
@@ -109,7 +102,8 @@ public class Handler implements RequestHandler<ScheduledEvent, String> {
                 new DiagnosisKeysUploadService(
                     interopClient,
                     submissionRepository,
-                    batchTagService
+                    batchTagService,
+                    config.region
                 ).uploadRequest();
             } catch (Exception e) {
                 logger.error("Upload keys failed with error", e);

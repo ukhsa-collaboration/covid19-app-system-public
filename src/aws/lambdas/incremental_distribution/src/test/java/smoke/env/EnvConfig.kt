@@ -3,8 +3,6 @@ package smoke.env
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class EnvConfig(
-    @JsonProperty("activation_keys_submission_endpoint") val activationKeysSubmissionEndpoint: String,
-    @JsonProperty("activation_keys_submission_health_endpoint") val activationKeysSubmissionHealthEndpoint: String,
     @JsonProperty("analytics_processing_function") val analytics_processing_function: String,
     @JsonProperty("analytics_processing_output_store") val analytics_processing_output_store: String,
     @JsonProperty("analytics_submission_endpoint") val analyticsSubmissionEndpoint: String,
@@ -29,9 +27,11 @@ data class EnvConfig(
     @JsonProperty("exposure_configuration_distribution_store") val exposure_configuration_distribution_store: String,
     @JsonProperty("exposure_notification_circuit_breaker_endpoint") val exposureNotificationCircuitBreakerEndpoint: String,
     @JsonProperty("exposure_notification_circuit_breaker_health_endpoint") val enCircuitBreakerHealthEndpoint: String,
+    @JsonProperty("federated_keys_processing_function") val federatedKeysProcessingFunction: String,
     @JsonProperty("post_districts_distribution_endpoint") val postDistrictsDistUrl: String,
     @JsonProperty("post_districts_distribution_store") val post_districts_distribution_store: String,
     @JsonProperty("risky_post_districts_upload_endpoint") val riskyPostDistrictsUploadEndpoint: String,
+    @JsonProperty("risky_post_districts_upload_gateway_endpoint") val riskyPostDistrictsUploadGatewayEndpoint: String,
     @JsonProperty("risky_post_districts_upload_health_endpoint") val riskyPostDistrictsUploadHealthEndpoint: String,
     @JsonProperty("risky_venues_circuit_breaker_endpoint") val riskyVenuesCircuitBreakerEndpoint: String,
     @JsonProperty("risky_venues_circuit_breaker_health_endpoint") val riskyVenuesCircuitBreakerHealthEndpoint: String,
@@ -55,6 +55,8 @@ data class EnvConfig(
     @JsonProperty("virology_table_submission_tokens") val virology_table_submission_tokens: String,
     @JsonProperty("virology_table_test_orders") val virology_table_test_orders: String,
     @JsonProperty("virology_submission_lambda_function_name") val virologySubmissionLambdaFunctionName: String,
+    @JsonProperty("virology_tokens_processing_function") val virologyTokensProcessingFunction: String,
+    @JsonProperty("virology_tokens_processing_output_store") val virology_tokens_processing_output_store: String,
     @JsonProperty("virology_upload_lambda_function_name") val virologyUploadLambdaFunctionName: String,
     @JsonProperty("auth_headers") val authHeaders: AuthHeaders
 )

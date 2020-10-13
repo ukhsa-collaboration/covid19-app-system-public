@@ -26,6 +26,11 @@ public class DynamoAttributes {
             .flatMap(attributeValue -> Optional.of(Integer.parseInt(attributeValue.getN())));
     }
 
+    public static Optional<Long> itemLongValueMaybe(Map<String, AttributeValue> item, String key) {
+        return Optional.ofNullable(item.get(key)).map(AttributeValue::getN)
+            .map(Long::valueOf);
+    }
+
     public static Map<String, AttributeValue> attributeMap(String key, String value) {
         return Collections.singletonMap(key, stringAttribute(value));
     }

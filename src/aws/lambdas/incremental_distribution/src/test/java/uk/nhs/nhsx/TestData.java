@@ -26,6 +26,13 @@ public class TestData {
         "{\"key\":\"W2zb3BeMWt6Xr2u0ABG32Q==\",\"rollingStartNumber\":12345,\"rollingPeriod\":144,\"transmissionRisk\":5}," +
         "{\"key\":\"kzQt9Lf3xjtAlMtm7jkSqw==\",\"rollingStartNumber\":12499,\"rollingPeriod\":144,\"transmissionRisk\":4}" +
         "]}";
+    public static final String STORED_KEYS_PAYLOAD_ONE_KEY =
+        "{\"temporaryExposureKeys\":[" +
+            "{\"key\":\"W2zb3BeMWt6Xr2u0ABG32Q==\",\"rollingStartNumber\":12345,\"rollingPeriod\":144,\"transmissionRisk\":7}" +
+            "]}";
+
+    public final static String STORED_FEDERATED_KEYS_PAYLOAD_NI = "{\"temporaryExposureKeys\":[{\"key\":\"W2zb3BeMWt6Xr2u0ABG32Q==\",\"rollingStartNumber\":2666736,\"rollingPeriod\":144,\"transmissionRisk\":3},{\"key\":\"B3xb3BeMWt6Xr2u0ABG45F==\",\"rollingStartNumber\":2666874,\"rollingPeriod\":144,\"transmissionRisk\":6}]}";
+    public final static String STORED_FEDERATED_KEYS_PAYLOAD_IE = "{\"temporaryExposureKeys\":[{\"key\":\"kzQt9Lf3xjtAlMtm7jkSqw==\",\"rollingStartNumber\":2666868,\"rollingPeriod\":144,\"transmissionRisk\":4}]}";
 
     public static final StoredTemporaryExposureKeyPayload STORED_KEYS_PAYLOAD_DESERIALIZED =
         new StoredTemporaryExposureKeyPayload(

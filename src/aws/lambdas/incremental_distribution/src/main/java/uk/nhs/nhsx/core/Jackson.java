@@ -1,12 +1,14 @@
 package uk.nhs.nhsx.core;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class Jackson {
 
@@ -19,12 +21,23 @@ public class Jackson {
     public static <T> T readJson(InputStream inputStream, Class<T> clazz) throws IOException {
         return SystemObjectMapper.MAPPER.readValue(inputStream, clazz);
     }
+    public static <T> T readJson(InputStream inputStream, TypeReference<T> clazz) throws IOException {
+        return SystemObjectMapper.MAPPER.readValue(inputStream, clazz);
+    }
 
     public static <T> Optional<T> deserializeMaybe(String value, Class<T> toClass) {
+        return deserializeMaybe(value, toClass, e -> logger.warn("Unable to deserialize payload", e));
+    }
+
+    public static <T> Optional<T> deserializeMaybeLogInfo(String value, Class<T> toClass) {
+       return deserializeMaybe(value, toClass, e -> logger.info("Unable to deserialize payload", e));
+    }
+    
+    public static <T> Optional<T> deserializeMaybe(String value, Class<T> toClass, Consumer<Exception> logMethod){
         try {
             return Optional.ofNullable(readJson(value, toClass));
         } catch (Exception e) {
-            logger.warn("Unable to deserialize payload", e);
+            logMethod.accept(e);
             return Optional.empty();
         }
     }

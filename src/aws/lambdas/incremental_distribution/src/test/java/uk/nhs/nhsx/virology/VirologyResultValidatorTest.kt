@@ -11,19 +11,19 @@ class VirologyResultValidatorTest {
     private val validTestDate = "2020-04-23T00:00:00Z"
 
     @Test
-    fun `valid positive test result`() {
+    fun `valid positive test result and date`() {
         assertThatCode { validateTestResult("POSITIVE", validTestDate) }
             .doesNotThrowAnyException()
     }
 
     @Test
-    fun `valid negative test result`() {
+    fun `valid negative test result and date`() {
         assertThatCode { validateTestResult("NEGATIVE", validTestDate) }
             .doesNotThrowAnyException()
     }
 
     @Test
-    fun `valid void test result`() {
+    fun `valid void test result and date`() {
         assertThatCode { validateTestResult("NEGATIVE", validTestDate) }
             .doesNotThrowAnyException()
     }
@@ -43,12 +43,6 @@ class VirologyResultValidatorTest {
     }
 
     @Test
-    fun `valid date accepted`() {
-        assertThatCode { validateTestResult("POSITIVE", validTestDate) }
-            .doesNotThrowAnyException()
-    }
-
-    @Test
     fun `date with invalid time throws exception`() {
         assertThatThrownBy { validateTestResult("POSITIVE", "2020-04-23T11:09:53Z") }
             .isInstanceOf(ApiResponseException::class.java)
@@ -58,6 +52,20 @@ class VirologyResultValidatorTest {
     @Test
     fun `invalid date throws exception`() {
         assertThatThrownBy { validateTestResult("POSITIVE", "2020-04-23T1F:09:53Z") }
+            .isInstanceOf(ApiResponseException::class.java)
+            .hasMessage("validation error: Invalid date format")
+    }
+
+    @Test
+    fun `invalid date format with suffix throws exception`() {
+        assertThatThrownBy { validateTestResult("POSITIVE", "2020-09-29T00:00:00+00:00") }
+            .isInstanceOf(ApiResponseException::class.java)
+            .hasMessage("validation error: Invalid date format")
+    }
+
+    @Test
+    fun `random date format with suffix throws exception`() {
+        assertThatThrownBy { validateTestResult("POSITIVE", "fsd34af") }
             .isInstanceOf(ApiResponseException::class.java)
             .hasMessage("validation error: Invalid date format")
     }

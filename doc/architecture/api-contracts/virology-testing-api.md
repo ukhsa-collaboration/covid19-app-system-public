@@ -1,10 +1,10 @@
 # Virology Testing API
 
-API group: [Submission](../ag-architecture-guidebook#System-APIs-and-Interfaces)
+API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
 The Virology Testing API is a mobile facing API and hence, to reduce roundtrip times, does not follow a RESTful approach to API design. Its basic principle is to provide HTTP endpoints to retrieve URLs and tokens for the interaction with the website and to enable retrieving test results later.
 
-The token in V2 is a base32 encoded 40byte [Crockford and Damm](../details/crockford-damm.md) random number
+Virology tokens follow the [Crockford and Damm](../../design/details/crockford-damm.md) algorithm.
 
 Please note: testResult INDETERMINATE reported by Fiorano will be delivered as VOID to the mobile application - the behaviour could change in the future
 
@@ -28,25 +28,18 @@ When the service is in maintenance mode, all services will return 503. Maintenan
 
 ### Response Codes
 
-- Order a home kit test
+- Order a home kit test / Register home kit test
   - `HTTP 200` ok
   - `HTTP 500` internal server error
-  - `HTTP 503` service in maintenance mode
-- Register home kit test
-  - `HTTP 200` ok
-  - `HTTP 500` internal server error
-  - `HTTP 503` service in maintenance mode
 - Poll for test results
   - `HTTP 200` ok
   - `HTTP 204` no result yet
   - `HTTP 404` polling token not found
   - `HTTP 422` invalid json request body
   - `HTTP 500` internal server error
-  - `HTTP 503` service in maintenance mode
 - Exchange cta token
   - `HTTP 200` ok
   - `HTTP 404` cta token not found  
-  - `HTTP 503` service in maintenance mode
 
 ### Response Headers
 - Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
@@ -55,9 +48,9 @@ When the service is in maintenance mode, all services will return 503. Maintenan
 
 ### Response for ordering a home kit test / registering a home kit test
 
-POST https://<FQDN>/virology-test/home-kit/order
+```POST https://<FQDN>/virology-test/home-kit/order```
 
-POST https://<FQDN>/virology-test/home-kit/register
+```POST https://<FQDN>/virology-test/home-kit/register```
 
 Request body: empty
 
@@ -65,17 +58,16 @@ Response body:
 ```json
 {
     "websiteUrlWithQuery": "https://self-referral.test-for-coronavirus.service.gov.uk/cta-start?ctaToken=tbdfjaj0",
-    "tokenParameterValue": "tbdfjaj0", /* only to be displayed in app */
-    "testResultPollingToken" : "61EEFD4B-E903-4294-B595-B1D491134E3D", /* see result polling below */
-    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF" /* see diagnosis-key-submission.md */
+    "tokenParameterValue": "tbdfjaj0",
+    "testResultPollingToken" : "61EEFD4B-E903-4294-B595-B1D491134E3D",
+    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF" 
 }
 ```
+Notes: `tokenParameterValue` is only to be displayed in the app. See bellow for more info about the `testResultPollingToken` and `diagnosisKeySubmissionToken` fields. 
 
 ### Poll for test result using the token from the ordering requests
 
-The response payload returns the values from the TestLab csv
-
-POST https://<FQDN>/virology-test/results
+```POST https://<FQDN>/virology-test/results```
 
 Request body:
 ```json
@@ -87,21 +79,21 @@ Request body:
 Response body:
 ```json
 {
-    "testEndDate": "2020-04-23T00:00:00.0000000Z",
+    "testEndDate": "2020-04-23T00:00:00Z",
     "testResult": "POSITIVE"
 }
 ```
 or
 ```json
 {
-    "testEndDate": "2020-04-23T00:00:00.0000000Z",
+    "testEndDate": "2020-04-23T00:00:00Z",
     "testResult": "NEGATIVE"
 }
 ```
 or
 ```json
 {
-    "testEndDate": "2020-04-23T00:00:00.0000000Z",
+    "testEndDate": "2020-04-23T00:00:00Z",
     "testResult": "VOID"
 }
 ```
@@ -110,7 +102,7 @@ or
 
 - Security: This endpoint will be made slow (response time) by design to avoid brute-force attacks.
 
-POST https://<FQDN>/virology-test/cta-exchange
+```POST https://<FQDN>/virology-test/cta-exchange```
 
 Request body:
 ```json
@@ -122,13 +114,14 @@ Request body:
 Response body:
 ```json
 {
-    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF" /* see diagnosis-key-submission.md */
-    "testEndDate": "2020-04-23T00:00:00.0000000Z",
+    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF",
+    "testEndDate": "2020-04-23T00:00:00Z",
     "testResult": "POSITIVE"
 }
 ```
+Notes: See [diagnosis-key-submission.md](diagnosis-key-submission.md) for more info about the `diagnosisKeySubmissionToken` field.
 
 ## Notes and Links
 
 - Confluence: Search Virology
-- [Conceptual system flow](../../architecture/ag-architecture-guidebook.md#system-flow-request-virology-testing-and-get-result-using-a-temporary-token)
+- [Conceptual system flow](../../architecture/drafts/ag-architecture-guidebook-v4.md#system-flow-request-virology-testing-and-get-result-using-a-temporary-token)

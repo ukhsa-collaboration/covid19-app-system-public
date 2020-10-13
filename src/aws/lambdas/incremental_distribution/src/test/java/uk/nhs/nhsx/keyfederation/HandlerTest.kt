@@ -22,7 +22,7 @@ import uk.nhs.nhsx.keyfederation.upload.JWS
 import java.security.KeyPairGenerator
 import java.security.spec.ECGenParameterSpec
 import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.util.*
 
@@ -73,14 +73,16 @@ class HandlerTest {
                 SecretName.of("authToken"),
                 SecretName.of("privateKey"),
                 "federatedKeyPrefix",
-                "DUMMY_TABLE"
+                "DUMMY_TABLE",
+                "GB-EAW",
+                 "GB-EAW"
             ),
             InMemoryBatchTagService(),
             { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(keyPair.private)) },
             FakeDiagnosisKeysS3(listOf(
                 S3ObjectSummary().apply {
                     key = "foo"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 }
             ))
         ).handleRequest(null, null)
@@ -116,7 +118,9 @@ class HandlerTest {
                 SecretName.of("authToken"),
                 SecretName.of("privateKey"),
                 "federatedKeyPrefix",
-                "DUMMY_TABLE"
+                "DUMMY_TABLE",
+                "GB-EAW",
+                "GB-EAW"
             ),
             InMemoryBatchTagService(),
             { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(keyPair.private)) },
@@ -158,26 +162,28 @@ class HandlerTest {
                 SecretName.of("authToken"),
                 SecretName.of("privateKey"),
                 "federatedKeyPrefix",
-                "DUMMY_TABLE"
+                "DUMMY_TABLE",
+                "GB-EAW",
+                "GB-EAW"
             ),
             InMemoryBatchTagService(),
             { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(keyPair.private)) },
             FakeDiagnosisKeysS3(listOf(
                 S3ObjectSummary().apply {
                     key = "foo"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 },
                 S3ObjectSummary().apply {
                     key = "bar"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 },
                 S3ObjectSummary().apply {
                     key = "foobar"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 },
                 S3ObjectSummary().apply {
                     key = "federatedKeyPrefix-foo"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 }
             ))
         ).handleRequest(null, null)

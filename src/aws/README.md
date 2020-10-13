@@ -21,7 +21,7 @@ An account can contain multiple target environments - but the build system will 
 In [src/aws](./aws/) each TF file is used to group the different design pattern instantiations together (e.g. distributions, submissions etc.). 
 Outputs are placed at the bottom of the file (and need to be replicated in every root module to be visible).
 
-The [patterns identified in the design](../../doc/design/api-patterns.md) are implemented as Terraform modules in [src/aws/modules](./modules/).
+The [patterns identified in the design](../../doc/architecture/guidebook.md#System-APIs-and-Interfaces) are implemented as Terraform modules in [src/aws/modules](./modules/).
 
 AWS resources are also instantiated and managed in Terraform modules. The technical building block modules are in [src/aws/libraries](./libraries/).
 This allows us to maintain them centrally following the "single source of truth" principle.

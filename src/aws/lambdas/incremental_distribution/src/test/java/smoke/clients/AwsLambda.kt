@@ -22,6 +22,16 @@ object AwsLambda {
         return awsLambdaClient.updateFunctionConfiguration(updateRequest)
     }
 
+    fun readLambdaEnvVar(functionName: String, envVar: String): String{
+        val awsLambdaClient = AWSLambdaClientBuilder.standard().build()
+
+        val configurationResponse = awsLambdaClient.getFunctionConfiguration(
+            GetFunctionConfigurationRequest().withFunctionName(functionName)
+        )
+
+        return configurationResponse.environment.variables[envVar]!!
+    }
+
     fun invokeFunction(functionName: String): InvokeResult {
         val awsLambdaClient = AWSLambdaClientBuilder.standard().build()
         val invokeRequest = InvokeRequest().withFunctionName(functionName)

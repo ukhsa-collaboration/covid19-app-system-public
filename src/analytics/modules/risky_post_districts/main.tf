@@ -22,6 +22,11 @@ resource "aws_glue_catalog_table" "this" {
     }
 
     columns {
+      name = "date"
+      type = "string"
+    }
+
+    columns {
       name = "postal_district_code"
       type = "string"
     }

@@ -63,4 +63,18 @@ class DynamoAttributesTest {
         val attributeMap = DynamoAttributes.attributeMap("key", 1)
         assertThat(attributeMap, equalTo(singletonMap("key", AttributeValue().withN("1"))))
     }
+
+    @Test
+    fun `item long maybe for existing item key`() {
+        val item = mapOf("key" to AttributeValue().withN("1600848379"))
+        val value = DynamoAttributes.itemLongValueMaybe(item, "key")
+        assertThat(value, equalTo(Optional.of(1600848379L)))
+    }
+
+    @Test
+    fun `item long maybe for non existing item key`() {
+        val item = mapOf("key" to AttributeValue())
+        val value = DynamoAttributes.itemLongValueMaybe(item, "key")
+        assertThat(value, equalTo(Optional.empty()))
+    }
 }

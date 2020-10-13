@@ -1,6 +1,5 @@
 package uk.nhs.nhsx.core;
 
-import uk.nhs.nhsx.activationsubmission.persist.Environment;
 import uk.nhs.nhsx.core.auth.AwsResponseSigner;
 import uk.nhs.nhsx.core.auth.ResponseSigner;
 import uk.nhs.nhsx.core.aws.kms.KmsKeySigner;

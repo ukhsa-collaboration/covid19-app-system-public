@@ -18,10 +18,6 @@ variable "logs_bucket_id" {
   description = "The name of the bucket to which all S3 access logs are saved"
 }
 
-variable "waf2_web_acl" {
-  description = "The name of the WAFv2 web acl to filter CloudFront requests"
-}
-
 variable "aae_hostname" {
   description = "The name of the AAE endpoint base domain in DNS (set in main.tf in the appropriate src/aws/accounts subdirectory)"
 }
@@ -53,4 +49,40 @@ variable "s3_versioning" {
 variable "enable_shield_protection" {
   description = "Flag to enable/disable shield protection"
   type        = bool
+}
+
+variable "shield_alarm_set_topic_arn" {
+  description = "ARN of SNS topic subscribed to shield alarms ALARM state"
+}
+
+variable "shield_alarm_ok_topic_arn" {
+  description = "ARN of SNS topic subscribed to shield alarms OK state"
+}
+
+variable "waf_arn" {
+  description = "ARN of WAF to be attached to CloudFront distributions"
+}
+
+variable "submission_replication_enabled" {
+  description = "will enable bucket versioning and backup bucket contents in secondary bucket"
+  type        = bool
+  default     = false
+}
+
+variable "analytics_submission_scale_up_provisioned_concurrent_executions" {
+  description = "provisioned concurrency or 0 (no scheduled provisioned concurrency)"
+  type        = number
+}
+
+variable "analytics_submission_scale_up_cron" {
+  description = "cron schedule"
+}
+
+variable "analytics_submission_scale_down_provisioned_concurrent_executions" {
+  description = "provisioned concurrency or 0 (no scheduled provisioned concurrency)"
+  type        = number
+}
+
+variable "analytics_submission_scale_down_cron" {
+  description = "cron schedule"
 }

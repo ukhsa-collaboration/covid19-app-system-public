@@ -1,0 +1,21 @@
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: uk.nhs.nhsx.analyticssubmission.Handler
+      CodeUri: .
+      Runtime: java11
+      Timeout: 300
+      MemorySize: 2048
+      Environment:
+        Variables:
+          xx_JAVA_TOOL_OPTIONS: -verbose:class
+          MAINTENANCE_MODE: false
+          SSM_KEY_ID_PARAMETER_NAME: /app/kms/ContentSigningKeyArn
+          WORKSPACE: te-xxx
+          firehose_ingest_enabled: true
+          firehose_stream_name: te-xxx-analytics
+          s3_ingest_enabled: false
+          SUBMISSION_STORE: te-xxx-submission
+    Metadata:
+        BuildMethod: makefile

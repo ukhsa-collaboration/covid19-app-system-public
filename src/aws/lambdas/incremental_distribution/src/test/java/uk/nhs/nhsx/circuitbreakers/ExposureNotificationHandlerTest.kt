@@ -8,7 +8,7 @@ import org.json.JSONObject
 import org.junit.Test
 import uk.nhs.nhsx.ContextBuilder
 import uk.nhs.nhsx.ProxyRequestBuilder
-import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments
+import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.Authenticator

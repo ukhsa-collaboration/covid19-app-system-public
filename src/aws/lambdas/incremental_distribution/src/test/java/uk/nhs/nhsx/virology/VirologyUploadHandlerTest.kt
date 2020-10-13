@@ -13,7 +13,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import uk.nhs.nhsx.ContextBuilder
 import uk.nhs.nhsx.ProxyRequestBuilder
-import uk.nhs.nhsx.activationsubmission.persist.TestEnvironments
+import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasBody

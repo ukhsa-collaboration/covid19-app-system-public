@@ -42,14 +42,6 @@ variable "virology_kit_path" {
   description = "The route for the virology test kit order and result"
 }
 
-variable "activation_keys_submission_path" {
-  description = "The endpoint for the activation keys submission API"
-}
-
-variable "activation_keys_submission_endpoint" {
-  description = "The route for the diagnosis keys submission API"
-}
-
 variable "domain" {
   description = "The domain the CloudFront distribution needs to be deployed into"
 }
@@ -65,10 +57,6 @@ variable "custom_oai" {
 variable "enable_shield_protection" {
   description = "Flag to enable/disable shield protection"
   type        = bool
-}
-
-variable "activation_keys_submission_health_path" {
-  description = "The route for the activation keys submission health endpoint"
 }
 
 variable "analytics_submission_health_path" {

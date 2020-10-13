@@ -1,0 +1,54 @@
+{
+  "body": "{\n  \"metadata\" : {\n    \"operatingSystemVersion\" : \"iPhone OS 13.5.1 (17F80)\",\n    \"latestApplicationVersion\" : \"3.0\",\n    \"deviceModel\" : \"iPhone11,2\",\n    \"postalDistrict\" : \"SE1\"\n  },\n  \"analyticsWindow\" : {\n    \"endDate\" : \"2020-07-28T22:59:00Z\",\n    \"startDate\" : \"2020-07-27T23:00:00Z\"\n  },\n  \"metrics\" : {\n    \"cumulativeDownloadBytes\" : 140000000,\n    \"cumulativeUploadBytes\" : 140000000,\n    \"cumulativeCellularDownloadBytes\" : 80000000,\n    \"cumulativeCellularUploadBytes\" : 70000000,\n    \"cumulativeWifiDownloadBytes\" : 60000000,\n    \"cumulativeWifiUploadBytes\" : 50000000,\n    \"checkedIn\" : 1,\n    \"canceledCheckIn\" : 1,\n    \"receivedVoidTestResult\" : 1,\n    \"isIsolatingBackgroundTick\" : 1,\n    \"hasHadRiskyContactBackgroundTick\" : 1,\n    \"receivedPositiveTestResult\" : 1,\n    \"receivedNegativeTestResult\" : 1,\n    \"hasSelfDiagnosedPositiveBackgroundTick\" : 1,\n    \"completedQuestionnaireAndStartedIsolation\" : 1,\n    \"encounterDetectionPausedBackgroundTick\" : 1,\n    \"completedQuestionnaireButDidNotStartIsolation\" : 1,\n    \"totalBackgroundTasks\" : 1,\n    \"runningNormallyBackgroundTick\" : 1,\n    \"completedOnboarding\" : 1\n  },\n  \"includesMultipleApplicationVersions\" : false\n}",
+  "resource": "/{proxy+}",
+  "path": "/submission/mobile-analytics",
+  "httpMethod": "POST",
+  "queryStringParameters": {
+  },
+  "pathParameters": {
+    "proxy": "/submission/mobile-analytics"
+  },
+  "stageVariables": {
+
+  },
+  "headers": {
+    "Authorization": "Bearer XXX_REPLACE_ME_XXX",
+    "Cache-Control": "max-age=0",
+    "CloudFront-Forwarded-Proto": "https",
+    "CloudFront-Is-Desktop-Viewer": "true",
+    "CloudFront-Is-Mobile-Viewer": "false",
+    "CloudFront-Is-SmartTV-Viewer": "false",
+    "CloudFront-Is-Tablet-Viewer": "false",
+    "CloudFront-Viewer-Country": "US",
+    "Host": "1234567890.execute-api.{dns_suffix}",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Custom User Agent String",
+    "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
+    "X-Amz-Cf-Id": "cDehVQoZnx43VYQb9j2-nvCh-9z396Uhbp027Y2JvkCPNLmGJHqlaA==",
+    "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
+    "X-Forwarded-Port": "443",
+    "X-Forwarded-Proto": "https"
+  },
+  "requestContext": {
+    "accountId": "123456789012",
+    "resourceId": "123456",
+    "stage": "prod",
+    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "apiKey": null,
+      "sourceIp": "127.0.0.1",
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "Custom User Agent String",
+      "user": null
+    },
+    "resourcePath": "/{proxy+}",
+    "httpMethod": "POST",
+    "apiId": "1234567890"
+  }
+}

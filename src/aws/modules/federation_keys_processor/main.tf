@@ -24,19 +24,21 @@ module "processing_lambda" {
     INTEROP_AUTH_TOKEN_SECRET_NAME  = "/app/interop/AuthorizationToken"
     INTEROP_PRIVATE_KEY_SECRET_NAME = "/app/interop/PrivateKey"
     PROCESSOR_STATE_TABLE           = aws_dynamodb_table.this.name
-    FEDERATED_KEY_PREFIX            = "federation"
+    FEDERATED_KEY_PREFIX            = "nearform"
+    VALID_REGIONS                   = "IE,GB"
+    REGION                          = "GB-EAW"
   }
   app_alarms_topic = var.alarm_topic_arn
 }
 
 resource "aws_dynamodb_table" "this" {
-  name         = "${terraform.workspace}-federation-key-proc-state"
+  name         = "${terraform.workspace}-federation-key-proc-history"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "id"
 
   attribute {
     name = "id"
-    type = "N"
+    type = "S"
   }
 }
 

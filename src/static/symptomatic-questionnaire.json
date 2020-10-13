@@ -10,8 +10,10 @@
         "ur-PK": "زیادہ درجہ حرارت (بخار)",
         "ar": "ارتفاع في درجة الحرارة (الحمى)",
         "tr": "Yüksek vücut sıcaklığı (ateş)",
-        "zh":    "体温高（发烧）",
-        "ro": "O temperatură ridicată (febră)"
+        "zh": "体温高（发烧）",
+        "ro": "O temperatură ridicată (febră)",
+        "pl": "Wysoka temperatura (gorączka)",
+        "so": "Heerkuleel oo sareeya (qandho)"
       },
       "description": {
         "en-GB": "This means that you feel hot to touch on your chest or back (you do not need to measure your temperature).",
@@ -23,7 +25,9 @@
         "ar": "مما يعني بأنك تشعر بسخونة جلدك عند لمسك لمنطقة الصدر أو الظهر - ولا تحتاج الى قياس درجة حرارتك باستخدام مقياس الحرارة.",
         "tr": "Bu, göğsünüz veya sırtınıza dokunulunca sıcaklık hissi duyulmasıdır; bir termometre ile vücut sıcaklığınızı ölçmeniz gerekmez.",
         "zh": "这意味着您的胸部或背部感到发烫，无需用温度计测量温度。",
-        "ro": "Aceasta înseamnă că vă simțiți fierbinte la atingerea zonei toracice sau  a spatelui - nu trebuie să vă măsurați temperatura cu un termometru."
+        "ro": "Aceasta înseamnă că vă simțiți fierbinte la atingerea zonei toracice sau  a spatelui - nu trebuie să vă măsurați temperatura cu un termometru.",
+        "pl": "Oznacza to, że Twoja klatka piersiowa lub plecy są gorące w dotyku – nie musisz mierzyć temperatury termometrem.",
+        "so": "Tan macnaheedu waa inaad dareento kuleyl inaad taabato feerahaaga ama dhabarkaaga - uma baahnid inaad ku cabbirto heerkulkaaga heerkulbeegga."
       },
       "riskWeight": 1
     },
@@ -37,8 +41,10 @@
         "ur-PK": "نئی مسلسل کھانسی",
         "ar": "سعال جديد ومستمر",
         "tr": "Yeni başlayan inatçı öksürük",
-        "zh":    "新出现的连续咳嗽",
-        "ro": "O nouă tuse continuă"
+        "zh": "新出现的连续咳嗽",
+        "ro": "O nouă tuse continuă",
+        "pl": "Uporczywy kaszel, który nie występował wcześniej",
+        "so": "Qufac joogto ah oo cusub"
       },
       "description": {
         "en-GB": "This means coughing a lot for more than an hour, or 3 or more coughing episodes in 24 hours (if you usually have a cough, it may be worse than usual).",
@@ -50,7 +56,9 @@
         "ar": "مما يعني سعالك بشكل كبير ولمدة تزيد عن ساعة واحدة أو تعرضك لثلاثة نوبات سعال أو أكثر خلال 24 ساعة (واذا كنت تعاني من السعال بشكل طبيعي ، فمن الممكن بأنك تشعر بأنك تسعل أكثر من المعتاد)",
         "tr": "Bu, bir saatten daha uzun süreyle öksürme ya da 24 saat içinde üç veya daha fazla öksürük nöbeti geçirme anlamına gelir (normalde sık öksürüyorsanız, öksürüğünüz olağandan daha kötü olabilir).",
         "zh": "这意味着长时间咳嗽一个多小时，或者在24小时内三次咳嗽发作（如果您通常咳嗽，则可能比平时咳得厉害）。",
-        "ro": "Aceasta înseamnă că tușiți mai mult  pentru o perioadă mai mare de o oră, sau trei sau mai multe episoade de tuse în 24 de ore (dacă de obicei tușiți, poate fi mai rău decât de obicei)"
+        "ro": "Aceasta înseamnă că tușiți mai mult  pentru o perioadă mai mare de o oră, sau trei sau mai multe episoade de tuse în 24 de ore (dacă de obicei tușiți, poate fi mai rău decât de obicei)",
+        "pl": "Oznacza to, że dużo kaszlesz przez dłużej niż jedną godzinę lub w ciągu ostatnich 24 godzin miałeś(-aś) trzy lub więcej ataków kaszlu (jeżeli zazwyczaj kaszlesz, atak kaszlu może być poważniejszy).",
+        "so": "Tan macnaheedu waa qufac badan in ka badan saacad, ama seddex ama in kabadan oo qufac 24 saac gudahood (haddii aad qufac leedahay, way ka xumaan kartaa sidii caadiga ahayd)."
       },
       "riskWeight": 1
     },
@@ -65,7 +73,9 @@
         "ar": "تغيير في حاسة الشم أو التذوق",
         "tr": "Koku veya tat alma hissinizde değişiklik",
         "zh": "您的嗅觉或味觉的改变",
-        "ro": "O schimbare a simțului mirosului sau gustului"
+        "ro": "O schimbare a simțului mirosului sau gustului",
+        "pl": "Zmiana węchu lub smaku",
+        "so": "Isbeddel ka timaada dareenkaaga urta ama dhadhanka"
       },
       "description": {
         "en-GB": "This means you have noticed you cannot smell or taste anything, or things smell or taste different to normal.",
@@ -77,7 +87,9 @@
         "ar": "مما يعني بأنك لاحظت عدم مقدرتك على شم أو تذوق أي شيء أو تغير رائحة أو مذاق الاشياء عن المعتاد.",
         "tr": "Bu, herhangi bir şeyin kokusu veya tadını alamadığınız ya da tat veya kokuların normalden farklı olduğu anlamını taşır.",
         "zh": "这意味着您已经注意到自己无法闻到或尝到任何东西，或者闻到或尝到的东西与平时不同。",
-        "ro": "Acest lucru înseamnă că ați observat că nu puteți mirosi sau gusta nimic, sau că lucrurile au un miros sau un gust diferit de normal."
+        "ro": "Acest lucru înseamnă că ați observat că nu puteți mirosi sau gusta nimic, sau că lucrurile au un miros sau un gust diferit de normal.",
+        "pl": "Oznacza to, że zauważyłeś(-aś) brak możliwości odczuwania powonienia lub smaku jakiejkolwiek rzeczy lub też rzeczy pachną lub smakują inaczej niż normalnie.",
+        "so": "Tani waxay ka dhigan tahay inaad dareentay inaadan urin karin ama wax dhadhamin karin, ama in waxyaaboho urta ama dhadhan ahaan ay yihiin wax ka duwaan sida caadiga ah."
       },
       "riskWeight": 1
     }

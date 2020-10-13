@@ -12,6 +12,7 @@ resource "aws_lambda_function" "this" {
   handler       = var.lambda_handler_class
   role          = var.lambda_execution_role_arn
   depends_on    = [aws_cloudwatch_log_group.this]
+  publish       = var.publish
 
   environment {
     variables = merge({ WORKSPACE = terraform.workspace, MAINTENANCE_MODE = false }, var.lambda_environment_variables)

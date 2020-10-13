@@ -1,9 +1,6 @@
 package uk.nhs.nhsx.keyfederation
 
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
-import com.amazonaws.services.dynamodbv2.model.ScanResult
-import com.amazonaws.services.dynamodbv2.model.TransactWriteItemsRequest
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.amazonaws.xray.strategy.ContextMissingStrategy
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -14,11 +11,9 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule
 import com.github.tomakehurst.wiremock.matching.MatchResult
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentCaptor
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemObjectMapper
@@ -27,7 +22,6 @@ import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.JWS
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -60,7 +54,8 @@ class DiagnosisKeysUploadServiceTest {
         val service = DiagnosisKeysUploadService(
             InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", jws),
             MockSubmissionRepository(listOf(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()))),
-            InMemoryBatchTagService()
+            InMemoryBatchTagService(),
+            "GB-EAW"
         )
         service.uploadRequest()
 
@@ -95,14 +90,15 @@ class DiagnosisKeysUploadServiceTest {
             SubmissionFromS3Repository(FakeDiagnosisKeysS3(listOf(
                 S3ObjectSummary().apply {
                     key = "foo"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 },
                 S3ObjectSummary().apply {
                     key = "bar"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 }
             ))),
-            InMemoryBatchTagService()
+            InMemoryBatchTagService(),
+            "GB-EAW"
         )
         service.uploadRequest()
 
@@ -144,14 +140,15 @@ class DiagnosisKeysUploadServiceTest {
             SubmissionFromS3Repository(FakeDiagnosisKeysS3(listOf(
                 S3ObjectSummary().apply {
                     key = "prefix-foo"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 },
                 S3ObjectSummary().apply {
                     key = "bar"
-                    lastModified = Date.from(LocalDateTime.now().toInstant(ZoneOffset.UTC))
+                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 }
             ))) { objectKey -> !objectKey.startsWith("prefix") },
-            InMemoryBatchTagService()
+            InMemoryBatchTagService(),
+            "GB-EAW"
         )
         service.uploadRequest()
 
@@ -190,11 +187,12 @@ class DiagnosisKeysUploadServiceTest {
         val service = DiagnosisKeysUploadService(
             InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", jws),
             MockSubmissionRepository(listOf(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()))),
-            batchTagService
+            batchTagService,
+            "GB-EAW"
         )
         service.uploadRequest()
 
-        Mockito.verify(batchTagService).updateLastUploadState(Mockito.anyString())
+        Mockito.verify(batchTagService).updateLastUploadState(Mockito.anyLong())
     }
 
     class UploadPayloadPattern(@JsonProperty matchesPayloadPattern: String = """{ batchTag: [a-f0-9\-]+, payload: "DUMMY_SIGNATURE" }""") : StringValuePattern(matchesPayloadPattern) {

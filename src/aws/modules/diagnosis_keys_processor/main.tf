@@ -24,11 +24,13 @@ module "processing_lambda" {
 
     SUBMISSION_BUCKET_NAME = var.submission_bucket_name
 
-    DISTRIBUTION_BUCKET_NAME     = var.distribution_bucket_name
-    DISTRIBUTION_ID              = var.distribution_id
-    DISTRIBUTION_PATTERN_DAILY   = var.distribution_pattern_daily
-    DISTRIBUTION_PATTERN_2HOURLY = var.distribution_pattern_2hourly
-    MOBILE_APP_BUNDLE_ID         = var.mobile_app_bundle
+    DISTRIBUTION_BUCKET_NAME          = var.distribution_bucket_name
+    DISTRIBUTION_ID                   = var.distribution_id
+    DISTRIBUTION_PATTERN_DAILY        = var.distribution_pattern_daily
+    DISTRIBUTION_PATTERN_2HOURLY      = var.distribution_pattern_2hourly
+    MOBILE_APP_BUNDLE_ID              = var.mobile_app_bundle
+    DIAGNOSIS_KEY_SUBMISSION_PREFIXES = var.diagnosis_key_submission_prefixes
+
   }
   app_alarms_topic = var.alarm_topic_arn
 }

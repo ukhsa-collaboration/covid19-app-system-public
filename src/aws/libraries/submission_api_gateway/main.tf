@@ -19,7 +19,7 @@ resource "aws_apigatewayv2_integration" "this" {
 
 resource "aws_lambda_permission" "this" {
   statement_id  = "AllowAPIGatewayInvoke"
-  function_name = var.lambda_function_name
+  function_name = "${var.lambda_function_name}${var.lambda_function_version != 0 ? format("%s%s", ":", var.lambda_function_version) : ""}"
   action        = "lambda:InvokeFunction"
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:${aws_apigatewayv2_api.this.id}/*/*/{proxy+}"

@@ -1,0 +1,46 @@
+{
+    "widgets": [
+        {
+            "type": "log",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 9,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${federation_keys_processing_function}' | fields @timestamp, @message\n| filter @message like /Uploaded \\d+ /\n| parse @message \"Uploaded * keys\" as @numberofkeys\n| stats sum(@numberofkeys) by bin(30s)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Keys uploaded to federation server",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 9,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${federation_keys_processing_function}' | fields @timestamp, @message\n| filter @message like /Downloaded \\d+ /\n| parse @message \"Downloaded * keys\" as @numberofkeys\n| stats sum(@numberofkeys) by bin(30s)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Keys downloaded from federation server",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 15,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${federation_keys_processing_function}' | fields @timestamp, @message\n| filter @message like /Downloaded from federated server/\n| parse @message \"Downloaded from federated server valid keys=*, invalid keys=*,region = *\\\"\" as @validKeys, @invalidKeys, @region\n| stats sum(@validKeys),sum(@invalidKeys) by @region",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Valid/Invalid keys downloaded from federation server",
+                "view": "bar"
+            }
+        }
+    ]
+}

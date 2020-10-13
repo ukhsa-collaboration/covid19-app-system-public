@@ -1,6 +1,6 @@
 # Risky Venue Circuit Breaker
 
-API group: [Submission]((../ag-architecture-guidebook#System-APIs-and-Interfaces)
+API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
 ## Scenario
 
