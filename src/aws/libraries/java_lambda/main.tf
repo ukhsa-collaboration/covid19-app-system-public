@@ -25,6 +25,7 @@ resource "aws_lambda_function" "this" {
 
 resource "aws_cloudwatch_log_group" "this" {
   name = "/aws/lambda/${var.lambda_function_name}"
+  retention_in_days = 90 
 }
 
 resource "aws_cloudwatch_log_metric_filter" "this" {
