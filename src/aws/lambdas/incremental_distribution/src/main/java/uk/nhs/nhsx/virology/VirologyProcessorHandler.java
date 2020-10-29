@@ -5,13 +5,14 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.SystemObjectMapper;
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.virology.order.TokensGenerator;
 import uk.nhs.nhsx.virology.persistence.VirologyDynamoService;
-import uk.nhs.nhsx.virology.tokengen.CtaProcessorEvent;
+import uk.nhs.nhsx.virology.tokengen.CtaProcessorRequest;
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorService;
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorStore;
 
@@ -21,6 +22,7 @@ public class VirologyProcessorHandler implements RequestHandler<Map<String, Stri
 
     private static final Logger logger = LogManager.getLogger(VirologyProcessorHandler.class);
     private final VirologyProcessorService virologyProcessorService;
+    private static final int MAX_RETRY_COUNT = 3;
 
     public VirologyProcessorHandler() {
         this(virologyProcessorService());
@@ -33,9 +35,10 @@ public class VirologyProcessorHandler implements RequestHandler<Map<String, Stri
     @Override
     public String handleRequest(Map<String, String> event, Context context) {
         logger.info("EVENT: {}", event);
-        var ctaProcessorEvent = SystemObjectMapper.MAPPER.convertValue(event, CtaProcessorEvent.class);
-        virologyProcessorService.generateAndStoreTokens(ctaProcessorEvent);
-        return "success";
+        var ctaProcessorEvent = SystemObjectMapper.MAPPER.convertValue(event, CtaProcessorRequest.class);
+        var result = virologyProcessorService.generateAndStoreTokens(ctaProcessorEvent);
+        logger.info("RESULT: {}", event);
+        return Jackson.toJson(result.toResponse());
     }
 
     private static VirologyProcessorService virologyProcessorService() {
@@ -52,7 +55,8 @@ public class VirologyProcessorHandler implements RequestHandler<Map<String, Stri
                 new AwsS3Client(),
                 BucketName.of(System.getenv("virology_tokens_bucket_name"))
             ),
-            SystemClock.CLOCK
+            SystemClock.CLOCK,
+            MAX_RETRY_COUNT
         );
     }
 

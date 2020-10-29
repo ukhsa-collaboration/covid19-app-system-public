@@ -149,6 +149,7 @@ public class VirologyService {
                         testResult.testResult,
                         testResult.testEndDate
                     );
+                    logger.info("Cta token exchange successful for ctaToken: {}", testOrder.ctaToken.value);
                     return new CtaExchangeResult.Available(response);
                 }
                 return new CtaExchangeResult.Pending();

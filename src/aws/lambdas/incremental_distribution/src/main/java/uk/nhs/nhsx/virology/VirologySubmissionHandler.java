@@ -2,7 +2,10 @@ package uk.nhs.nhsx.virology;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Environment;
+import uk.nhs.nhsx.core.EnvironmentKeys;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.SystemClock;
@@ -23,6 +26,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.function.Supplier;
 
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.string;
 import static uk.nhs.nhsx.core.Jackson.deserializeMaybe;
 import static uk.nhs.nhsx.core.Jackson.deserializeMaybeLogInfo;
 import static uk.nhs.nhsx.core.StandardSigning.signResponseWithKeyGivenInSsm;
@@ -59,6 +63,8 @@ import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
 public class VirologySubmissionHandler extends RoutingHandler {
 
     private final Routing.Handler handler;
+
+    private static final Logger logger = LogManager.getLogger(VirologySubmissionHandler.class);
     private static final Duration defaultDelayDuration = Duration.ofSeconds(1);
 
     public VirologySubmissionHandler() {
@@ -114,6 +120,10 @@ public class VirologySubmissionHandler extends RoutingHandler {
                                                              VirologyWebsiteConfig websiteConfig,
                                                              VirologyRequestType order) {
         var response = service.handleTestOrderRequest(websiteConfig, order);
+        logger.info(
+            "Virology order created ctaToken: {}, testResultToken: {}",
+            response.tokenParameterValue, response.testResultPollingToken
+        );
         return HttpResponses.ok(Jackson.toJson(response));
     }
 
@@ -128,20 +138,27 @@ public class VirologySubmissionHandler extends RoutingHandler {
         );
     }
 
+    private static final Environment.EnvironmentKey<String> TEST_ORDERS_TABLE = string("test_orders_table");
+    private static final Environment.EnvironmentKey<String> TEST_RESULTS_TABLE = string("test_results_table");
+    private static final Environment.EnvironmentKey<String> TEST_ORDERS_INDEX = string("test_orders_index");
+    
     private static VirologyConfig virologyConfig(Environment environment) {
         return new VirologyConfig(
-            environment.access.required("test_orders_table"),
-            environment.access.required("test_results_table"),
-            environment.access.required("submission_tokens_table"),
-            environment.access.required("test_orders_index"),
+            environment.access.required(TEST_ORDERS_TABLE),
+            environment.access.required(TEST_RESULTS_TABLE),
+            environment.access.required(EnvironmentKeys.SUBMISSIONS_TOKENS_TABLE),
+            environment.access.required(TEST_ORDERS_INDEX),
             VirologyConfig.MAX_TOKEN_PERSISTENCE_RETRY_COUNT
         );
     }
 
+    private static final Environment.EnvironmentKey<String> ORDER_WEBSITE = string("order_website");
+    private static final Environment.EnvironmentKey<String> REGISTER_WEBSITE = string("register_website");
+
     private static VirologyWebsiteConfig websiteConfig(Environment environment) {
         return new VirologyWebsiteConfig(
-            environment.access.required("order_website"),
-            environment.access.required("register_website")
+            environment.access.required(ORDER_WEBSITE),
+            environment.access.required(REGISTER_WEBSITE)
         );
     }
 

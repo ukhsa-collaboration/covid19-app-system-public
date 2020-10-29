@@ -10,6 +10,11 @@ This is a living guidebook and unique point of architectural reference for the N
 * [System Architecture](#system-architecture)
 * [System Behaviour](#system-behaviour)
 * [System APIs and Interfaces](#system-apis-and-interfaces)
+  * [Submission](#submission)
+  * [Distribution](#distribution)
+  * [Upload](#upload)
+  * [Circuit Breaker](#circuit-breaker)
+  * [Connector](#connectors-and-exporters)
 * [Tech Stacks and Repositories](#tech-stacks-and-repositories)
 * [Infrastructure](#infrastructure)
 
@@ -60,9 +65,9 @@ Our concepts include terminology of the GAEN framework. Please see the [GAEN API
 
 ### Data Model
 
-The following data model provides a black box view on the system's data model. It uses the data specifications of our Data Dictionary and Payload specifications of our API contracts.
+The following data model provides a black box view on the system's data model. It uses the data specifications of our Data Dictionary and Payload specifications of our [API contracts](#system-apis-and-interfaces).
 
-![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2020-09-22.png "Figure: Data Model")
+![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2020-10-21.png "Figure: Data Model")
 
 ### GAEN Framework
 
@@ -74,7 +79,7 @@ This is a conceptual analysis on the usage possibilities of the GAEN Framework a
 
 The NHS CV19 system architecture has four major parts, mobile app, cloud backend with API services, external systems and operations.
 
-![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2020-09-30.png "Figure: Overview")
+![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2020-10-21.png "Figure: Overview")
 
 It adheres to following principles
 
@@ -96,7 +101,7 @@ The system architecture diagram below specifies the complete system showing the 
 * As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
 * Security and operations is built on AWS cloud-native components.
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-09-22.png "Figure: System Architecture")
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-10-21.png "Figure: System Architecture")
 
 The port names in the system architecture are usually defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
 
@@ -181,7 +186,7 @@ The venue check-in flow shows how idenitfied risk venues are imported from exter
 
 ## System APIs and Interfaces
 
-The ports of the Cloud Services component in the system architecture are implemented by API services and Interfaces, grouped into a smaller number of fundamental concepts and architectural patterns:
+The Cloud Services ports in the system architecture are implemented by API services and Interfaces, grouped into a small number of fundamental concepts and architectural patterns:
 
 * Mobile **data submission** to backend
 * **Distribution of data and configuration** to mobile apps
@@ -193,6 +198,7 @@ The ports of the Cloud Services component in the system architecture are impleme
 
 The following solution patterns take characteristics of these groups into account. The patterns are applied in [specific API contracts](./api-contracts), provided by the cloud services backend and consumed by mobile or external systems. We use an API specification by example approach based on semi-formal .md files.
 
+### Foundations and Security
 All APIs adhere to the following **structure and foundational features**
 
 * Basic endpoint schema: ```https://<FQDN>/<api-group>```
@@ -261,7 +267,8 @@ Note, the port name in the system architecture is defined by ```API Group\API Na
 | - | - | - | - |
 | Diagnosis Key | Distribution | [diagnosis-key-distribution.md](./api-contracts/diagnosis-key-distribution.md) | Clients download exposure keys everyday, valid for 14 days (as per EN API). |
 | Exposure Risk Configuration | Distribution | [exposure-risk-configuration-distribution.md](./api-contracts/exposure-risk-configuration-distribution.md) | N/A not testable. |
-| Postal District Risk Levels | Distribution | [risky-post-district-distribution.md](./api-contracts/risky-post-district-distribution.md) | Used by mobiles to determine if the device is in a high or intermediate risk postcode. |
+| Postal District Risk Levels | Distribution | [risky-post-district-distribution.md](./api-contracts/risky-post-district-distribution.md) | List of post districts with risk indicators, used by mobiles to match against the user specified postal district. |
+|  |  | [risky-post-district-distribution-v2.md](./api-contracts//risky-post-district-distribution-v2.md) |  Additional app color and content information for risk level indicators. |
 | Identified Risk Venues | Distribution | [risky-venue-distribution.md](./api-contracts/risky-venue-distribution.md) | List of venues marked as risky which mobile clients poll for daily. If the client has been in a risky venue within the risk period (defined in risky venue upload) an isolation message is displayed. |
 | Symptoms Questionnaire | Distribution | [symptoms-questionnaire-distribution.md](./api-contracts/symptoms-questionnaire-distribution.md) | Symptomatic questionnaire used in the mobile clients. This is set by the NHS Medical Policy team. |
 | Self Isolation Configuration | Distribution | [self-isolation-distribution.md](./api-contracts/self-isolation-distribution.md) | Configuration data used by mobile clients to inform users how long to isolate for and how far back they can select symptom onset. |
@@ -308,7 +315,7 @@ After receiving the token the mobile client polls the backend until it receives 
 
 | API Name | API Group | API Contract | User/Client impact |
 | - | - | - | - |
-| Federated Server Connector | Connector | [](./api-contracts) | Up/Download federated diagnosis keys. |
+| Federated Server Connector | Connector | [diagnosis-key-federation.md](./api-contracts/diagnosis-key-federation.md) | Up/Download federated diagnosis keys. |
 | AAE Exporter | Exporter | [](./api-contracts) | Export analytics data. |
 
 ## Tech Stacks and Repositories

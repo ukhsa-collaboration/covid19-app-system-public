@@ -15,9 +15,8 @@ import uk.nhs.nhsx.diagnosiskeydist.keydistribution.UploadToS3KeyDistributor;
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository;
 
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.function.Predicate;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static uk.nhs.nhsx.core.StandardSigning.datedSigner;
@@ -38,7 +37,9 @@ import static uk.nhs.nhsx.core.StandardSigning.signContentWithKeyFromParameter;
 public class Handler implements RequestHandler<ScheduledEvent, String> {
 
     private static final Logger logger = LogManager.getLogger(Handler.class);
-    private static final String MOBILE_APP_BUNDLE_ID = "MOBILE_APP_BUNDLE_ID";
+    
+    private static final Environment.EnvironmentKey<List<String>> DIAGNOSIS_KEY_SUBMISSION_PREFIXES = Environment.EnvironmentKey.strings("DIAGNOSIS_KEY_SUBMISSION_PREFIXES");
+    private static final Environment.EnvironmentKey<String> MOBILE_APP_BUNDLE_ID = Environment.EnvironmentKey.string("MOBILE_APP_BUNDLE_ID");
 
     private final Environment environment;
     private final BatchProcessingConfig batchProcessingConfig;
@@ -63,12 +64,13 @@ public class Handler implements RequestHandler<ScheduledEvent, String> {
             AwsS3Client awsS3Client = new AwsS3Client();
             Parameters parameters = new AwsSsmParameters();
             SubmissionFromS3Repository submissionRepository;
-            String[] allowedPrefixes = environment.access.required("DIAGNOSIS_KEY_SUBMISSION_PREFIXES").split(",");
-            if (allowedPrefixes.length != 0) {
-
-                Predicate<String> matchesPrefix = objectKey -> (Arrays.stream(allowedPrefixes).anyMatch(objectKey::startsWith));
-                submissionRepository = new SubmissionFromS3Repository(awsS3Client, matchesPrefix);
-            } else submissionRepository = new SubmissionFromS3Repository(awsS3Client);
+            
+            List<String> allowedPrefixes = environment.access.required(DIAGNOSIS_KEY_SUBMISSION_PREFIXES);
+            if (allowedPrefixes.isEmpty()) {
+                submissionRepository = new SubmissionFromS3Repository(awsS3Client);
+            } else {
+                submissionRepository = new SubmissionFromS3Repository(awsS3Client, objectKey -> allowedPrefixes.stream().anyMatch(objectKey::startsWith));
+            }
 
             new DistributionService(
                 submissionRepository,

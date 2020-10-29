@@ -74,6 +74,30 @@ class ExposureNotificationHandlerTest {
     }
 
     @Test
+    fun handleCircuitBreakerRequestSuccessWithExtraRiskCalculationScoreField() {
+        val requestEvent = ProxyRequestBuilder.request()
+            .withMethod(HttpMethod.POST)
+            .withPath("/circuit-breaker/exposure-notification/request")
+            .withBearerToken("anything")
+            .withJson("""{
+                "matchedKeyCount": 2,
+                "daysSinceLastExposure": 3,
+                "maximumRiskScore": 150.123456,
+                "riskCalculationVersion": 8
+            }"""
+            ).build()
+
+        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
+        assertThat(response.statusCode).isEqualTo(200)
+        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+
+        val tokenResponse = Jackson.deserializeMaybe(response.body, TokenResponse::class.java)
+            .orElse(TokenResponse())
+        assertThat(tokenResponse.approval).matches("pending")
+        assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
+    }
+
+    @Test
     fun handleCircuitBreakerRequestInvalidJsonData() {
         val requestEvent = ProxyRequestBuilder.request()
             .withMethod(HttpMethod.POST)

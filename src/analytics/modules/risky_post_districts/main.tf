@@ -22,17 +22,17 @@ resource "aws_glue_catalog_table" "this" {
     }
 
     columns {
-      name = "date"
-      type = "string"
-    }
-
-    columns {
       name = "postal_district_code"
       type = "string"
     }
 
     columns {
       name = "risk_indicator"
+      type = "string"
+    }
+
+    columns {
+      name = "tier_indicator"
       type = "string"
     }
   }

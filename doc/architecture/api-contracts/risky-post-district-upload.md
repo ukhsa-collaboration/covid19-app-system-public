@@ -47,8 +47,8 @@ POST https://<FQDN>/upload/high-risk-postal-districts
 
 ```csv
 # postal_district_code, risk_indicator, tier_indicator
-"CODE1", "H","Tier 1"
-"CODE2", "M","Tier 3"
+"CODE1", "H","EN.Tier1"
+"CODE2", "M","EN.Tier3"
 "CODE3", "L",""
 ```
 
@@ -64,7 +64,16 @@ An empty value is only accepted as "". The service will return an error for malf
 
 - `postal_district_code` valid UK postal district code
 - `risk_indicator` ["L","M","H"] corresponding to Low, Medium and High.
-- `tier_indicator` ["Tier 1","Tier 2","Tier 3", ""].
+- `tier_indicator` ["EN.Tier1", "EN.Tier2", "EN.Tier3","EN.HighVHigh", "EN.MedHigh", "EN.MedVHigh", "EN.GenericNeutral", "EN.Border.Tier1", "EN.Border.Tier2", "EN.Border.Tier3", "WA.Tier1", "WA.Tier2", "WA.Tier3", "WA.Border.Tier1", "WA.Border.Tier2", "WA.Border.Tier3", ""].
+
+## The English Tier System
+
+Tiers 1 through 3 ("EN.Tier1", "EN.Tier2", "EN.Tier3") signify medium, high and very high risk .
+Tiers "EN.HighVHigh", "EN.MedHigh", "EN.MedVHigh", "EN.GenericNeutral" are used to signify discrepancy in the status provided for a post district (when a post district is in multiple local authorities and there is a difference in the risk level assigned by each local authority). They do not indicate a specific risk level.
+
+Currently for post districts on the border of England and Wales only the "EN.Border.Tier1" tier is used, supplying a generic message directing the user to nation specific advice. It does not indicate a risk level.
+
+The tiers associated with Wales ("WA.Tier1", "WA.Tier2", "WA.Tier3") signify low, medium and high risk mapping directly to the L/M/H v1 model.
 
 ## Response Codes
 

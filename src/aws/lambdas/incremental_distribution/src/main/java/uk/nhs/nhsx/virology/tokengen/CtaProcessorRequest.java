@@ -4,13 +4,13 @@ import uk.nhs.nhsx.virology.result.VirologyResultValidator;
 
 import java.util.Objects;
 
-public class CtaProcessorEvent {
+public class CtaProcessorRequest {
 
     public final String testResult;
     public final String testEndDate;
     public final Integer numberOfTokens;
 
-    public CtaProcessorEvent(String testResult, String testEndDate, Integer numberOfTokens) {
+    public CtaProcessorRequest(String testResult, String testEndDate, Integer numberOfTokens) {
         VirologyResultValidator.validateTestResult(testResult,testEndDate);
         this.testResult = testResult;
         this.testEndDate = testEndDate;
@@ -21,7 +21,7 @@ public class CtaProcessorEvent {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CtaProcessorEvent that = (CtaProcessorEvent) o;
+        CtaProcessorRequest that = (CtaProcessorRequest) o;
         return Objects.equals(testResult, that.testResult) &&
             Objects.equals(testEndDate, that.testEndDate) &&
             Objects.equals(numberOfTokens, that.numberOfTokens);
@@ -34,7 +34,7 @@ public class CtaProcessorEvent {
 
     @Override
     public String toString() {
-        return "CtaProcessorEvent{" +
+        return "CtaProcessorRequest{" +
             "testResult='" + testResult + '\'' +
             ", testEndDate='" + testEndDate + '\'' +
             ", numberOfTokens=" + numberOfTokens +

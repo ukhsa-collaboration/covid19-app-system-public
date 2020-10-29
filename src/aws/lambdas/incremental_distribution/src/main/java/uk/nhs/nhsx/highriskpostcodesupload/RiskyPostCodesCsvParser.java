@@ -4,10 +4,7 @@ import com.google.common.base.Strings;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.csvupload.CsvToJsonParser;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,20 +21,22 @@ public class RiskyPostCodesCsvParser implements CsvToJsonParser {
     private static final Pattern POST_CODE_CSV_TIER_ROW_PATTERN = Pattern.compile(POST_CODE_CSV_TIER_ROW_FORMAT);
     private static final Pattern POST_CODE_CSV_TIER_HEADER_PATTERN = Pattern.compile(POST_CODE_CSV_TIER_HEADER_FORMAT);
     private static final List<String> VALID_RISK_INDICATORS = Arrays.asList("H", "M", "L");
-    private static final List<String> VALID_TIER_INDICATORS = Arrays.asList("Tier 1", "Tier 2", "Tier 3", "");
+
     private static final String CSV_HEADER_POSTAL_DISTRICT_CODE = "postal_district_code";
     private static final String CSV_HEADER_RISK_INDICATOR = "risk_indicator";
     private static final String CSV_HEADER_TIER_INDICATOR = "tier_indicator";
 
-    public static Map<String, String> parseV2(String csv) {
+    public static Map<String, String> parseV2(String csv, Map<String, RiskLevel> riskLevels) {
         if (Strings.isNullOrEmpty(csv))
             return new HashMap<>();
+
+        var validTierIndicators = getValidTierIndicators(riskLevels);
 
         String[] rows = csv.split("\\r?\\n");
         Map<String, String> postCodeRiskIndicators = new HashMap<>();
         if (validateHeadersWithTiers(rows[0])) {
             for (int i = 1; i < rows.length; i++) {
-                PostCodeRisk postCodeRisk = parseTierRow(rows[i], i + 1);
+                PostCodeRisk postCodeRisk = parseTierRow(rows[i], i + 1, validTierIndicators);
                 if (!postCodeRisk.tierIndicator.isEmpty()) {
                     postCodeRiskIndicators.put(postCodeRisk.postCode, postCodeRisk.tierIndicator);
                 }
@@ -46,9 +45,11 @@ public class RiskyPostCodesCsvParser implements CsvToJsonParser {
         return postCodeRiskIndicators;
     }
 
-    public static RiskyPostCodes parse(String csv) {
+    public static RiskyPostCodes parse(String csv, Map<String, RiskLevel> riskLevels) {
         if (Strings.isNullOrEmpty(csv))
             throwValidationErrorWith("No payload");
+
+        var validTierIndicators = getValidTierIndicators(riskLevels);
 
         String[] rows = csv.split("\\r?\\n");
 
@@ -65,7 +66,7 @@ public class RiskyPostCodesCsvParser implements CsvToJsonParser {
             }
         } else {
             for (int i = 1; i < rows.length; i++) {
-                PostCodeRisk postCodeRisk = parseTierRow(rows[i], i + 1);
+                PostCodeRisk postCodeRisk = parseTierRow(rows[i], i + 1, validTierIndicators);
                 postCodeRiskIndicators.put(postCodeRisk.postCode, postCodeRisk.riskIndicator);
             }
         }
@@ -93,7 +94,7 @@ public class RiskyPostCodesCsvParser implements CsvToJsonParser {
         return new PostCodeRisk(postCode, riskIndicator);
     }
 
-    private static PostCodeRisk parseTierRow(String dataRow, Integer row) {
+    private static PostCodeRisk parseTierRow(String dataRow, Integer row, List<String> validTierIndicators) {
         Matcher matcher = POST_CODE_CSV_TIER_ROW_PATTERN.matcher(dataRow);
 
         if (!matcher.matches()) {
@@ -112,7 +113,7 @@ public class RiskyPostCodesCsvParser implements CsvToJsonParser {
             throwValidationErrorWith("Invalid post district longer than 20 characters: " + postCode);
         }
 
-        if (!VALID_TIER_INDICATORS.contains(tierIndicator)) {
+        if (!validTierIndicators.contains(tierIndicator)) {
             throwValidationErrorWith("Invalid tier indicator on line number: " + row);
         }
 
@@ -149,9 +150,15 @@ public class RiskyPostCodesCsvParser implements CsvToJsonParser {
             CSV_HEADER_TIER_INDICATOR.equals(tierIndicatorColumnHeader);
     }
 
-    public String toJson(String csv) {
-        RiskyPostCodes riskyPostcodes = RiskyPostCodesCsvParser.parse(csv);
+    public String toJson(String csv, Map<String, RiskLevel> riskLevels) {
+        RiskyPostCodes riskyPostcodes = RiskyPostCodesCsvParser.parse(csv, riskLevels);
         return Jackson.toJson(riskyPostcodes);
+    }
+
+    private static List<String> getValidTierIndicators(Map<String, RiskLevel> riskLevels) {
+        var tierIndicatorsList = new ArrayList<>(riskLevels.keySet());
+        tierIndicatorsList.add("");
+        return tierIndicatorsList;
     }
 
     private static class PostCodeRisk {

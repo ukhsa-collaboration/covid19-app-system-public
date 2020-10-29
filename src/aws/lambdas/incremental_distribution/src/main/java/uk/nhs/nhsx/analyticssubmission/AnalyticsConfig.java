@@ -12,10 +12,10 @@ public class AnalyticsConfig {
     public AnalyticsConfig(String firehoseStreamName,
                            boolean s3IngestEnabled,
                            boolean firehoseIngestEnabled,
-                           String bucketName) {
+                           BucketName bucketName) {
         this.firehoseStreamName = firehoseStreamName;
         this.s3IngestEnabled = s3IngestEnabled;
         this.firehoseIngestEnabled = firehoseIngestEnabled;
-        this.bucketName = BucketName.of(bucketName);
+        this.bucketName = bucketName;
     }
 }

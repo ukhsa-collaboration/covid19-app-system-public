@@ -1,25 +1,19 @@
 package uk.nhs.nhsx.circuitbreakers;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import static java.util.Objects.requireNonNull;
 
 public class ExposureNotificationCircuitBreakerRequest {
 
-    public final int matchedKeyCount;
-    public final int daysSinceLastExposure;
-    public final double maximumRiskScore;
+    public Integer matchedKeyCount;
+    public Integer daysSinceLastExposure;
+    public Double maximumRiskScore;
+    public Integer riskCalculationVersion = 1;
 
-    @JsonCreator
-    public ExposureNotificationCircuitBreakerRequest(
-        @JsonProperty int matchedKeyCount,
-        @JsonProperty int daysSinceLastExposure,
-        @JsonProperty double maximumRiskScore
-    ) {
-
-        this.matchedKeyCount = matchedKeyCount;
-        this.daysSinceLastExposure = daysSinceLastExposure;
-        this.maximumRiskScore = maximumRiskScore;
+    public static ExposureNotificationCircuitBreakerRequest validate(ExposureNotificationCircuitBreakerRequest request) {
+        requireNonNull(request.matchedKeyCount);
+        requireNonNull(request.daysSinceLastExposure);
+        requireNonNull(request.maximumRiskScore);
+        requireNonNull(request.riskCalculationVersion);
+        return request;
     }
-
-
 }

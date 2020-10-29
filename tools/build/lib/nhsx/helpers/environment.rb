@@ -23,6 +23,14 @@ module Gaudi
         return test_data_file
       end
 
+      # Path to a file containing static content. This is a parameter for most publish tasks and the format of the STATIC_CONTENT file depends on the corresponding task.
+      def static_content
+        static_content_file = File.expand_path(mandatory("STATIC_CONTENT"))
+        raise GaudiError, "Static content file #{static_content_file} not found" unless File.exist?(static_content_file)
+
+        return static_content_file
+      end
+
       # Path to a file to be uploaded. This is a parameter for most upload tasks and the format of the UPLOAD_DATA file depends on the corresponding upload API.
       def upload_data
         upload_data_file = File.expand_path(mandatory("UPLOAD_DATA"))
@@ -63,6 +71,44 @@ module Gaudi
 
       def custom_oai
         mandatory("CUSTOM_OAI")
+      end
+
+      def localise_input
+        input_dir = ENV["LOCALISE_INPUT"]
+        input_dir ||= File.expand_path("locale")
+        input_dir = File.expand_path(input_dir)
+
+        raise GaudiError, "Cannot find localisation input. '#{input_dir}' does not exist" unless File.exist?(input_dir)
+
+        return input_dir
+      end
+
+      # Pass test/virology result when invoking the virology token generation lambda (default POSITIVE)
+      def test_result
+        test_result = ENV.fetch("TEST_RESULT", "POSITIVE")
+
+        raise GaudiError, "Invalid TEST_RESULT" unless ["POSITIVE", "NEGATIVE"].include?(test_result)
+
+        return test_result
+      end
+
+      # Pass test/virology end date when invoking the virology token generation lambda
+      #
+      # Eg: TEST_END_DATE=2020-10-10T00:00:00Z
+      def test_end_date
+        require 'time'
+        test_end_date = mandatory("TEST_END_DATE")
+        raise GaudiError, "Invalid TEST_END_DATE" unless Time.iso8601(test_end_date)
+        return test_end_date
+      end
+
+      # Pass number of tokens to generate when invoking the virology token generation lambda (default 35000)
+      def number_of_tokens
+        number_of_tokens = ENV.fetch("NUMBER_OF_TOKENS", "35000")
+
+        raise GaudiError, "Invalid NUMBER_OF_TOKENS" unless number_of_tokens
+
+        return number_of_tokens
       end
     end
   end

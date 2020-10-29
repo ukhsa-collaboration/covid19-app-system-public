@@ -2,6 +2,8 @@ resource "aws_athena_workgroup" "this" {
   name          = "${terraform.workspace}_${var.name}"
   force_destroy = true
 
+  tags = var.account_tags
+
   configuration {
     enforce_workgroup_configuration = true
 

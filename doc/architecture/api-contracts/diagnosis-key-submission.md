@@ -2,7 +2,7 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/submission/diagnosis-keys``` 
+- Endpoint schema: ```https://<FQDN>/submission/diagnosis-keys```
     - FQDN: Hostname can be different per API
 - Authorisation: ```Authorization: Bearer <API KEY>```
     - One API KEY for all mobile phone-facing APIs

@@ -21,12 +21,18 @@ module NHSx
     AWS_ROLE_NAMES = ["deploy", "read"].freeze
     # AWS CLI command lines in use by automation scripts
     module Commandlines
-      # Invoke an AWS Lambda function by name and put the response under out/logs/lambdas
-      def self.invoke_lambda(lambda_function, system_config)
+
+      # Creates a new output files to be passed into the lambda invoke funtion
+      def self.new_lambda_output_file(lambda_function, system_config)
         outdir = File.join(system_config.out, "/logs/lambdas")
-        FileUtils.mkdir_p outdir
-        outfile = "#{outdir}/#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{lambda_function}.log"
-        "aws lambda invoke --region #{AWS_REGION} --function-name #{lambda_function} #{outfile}"
+        mkdir_p(outdir, :verbose => false)
+        return "#{outdir}/#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{lambda_function}.log"
+      end
+
+      # Invoke an AWS Lambda function by name and put the response under out/logs/lambdas
+      def self.invoke_lambda(lambda_function, payload, output_file)
+        payload_cmd = "--cli-binary-format raw-in-base64-out --payload #{payload}" unless payload.empty?
+        "aws --cli-read-timeout 0 --cli-connect-timeout 0 lambda invoke --region #{AWS_REGION} --function-name #{lambda_function} #{payload_cmd} #{output_file}"
       end
 
       # Retrieve a temporary ECR authentication token
@@ -106,6 +112,41 @@ module NHSx
       def self.multi_factor_authentication(profile, role, suffix)
         "aws-mfa --duration 3600 --profile #{profile} --assume-role #{role} --long-term-suffix none --short-term-suffix #{suffix}"
       end
+
+      def self.get_active_synth_lambda_layers(region, system_config)
+        cmdline = "aws lambda list-functions --region #{region}"
+        cmd = run_command("Retrieve list of active synth lambda layers", cmdline, system_config)
+        active_synth_lambda_layers = []
+        lambda_layers = JSON.parse(cmd.output)["Functions"].map{|el| el["Layers"]}
+        lambda_layers.map do |layers_list|
+          if ! layers_list
+            next
+          end
+          layers_list.map do |layer|
+            if layer["Arn"].match(/:(cwsyn-.*):[^:]*$/)
+              layer_name = layer["Arn"].match(/:(cwsyn-.*):[^:]*$/).captures[0]
+              if !active_synth_lambda_layers.include?(layer_name)
+                active_synth_lambda_layers.push(layer_name)
+              end
+            end
+          end
+        end
+        active_synth_lambda_layers
+      end
+
+      def self.get_all_synth_lambda_layers(region, system_config)
+        cmdline = "aws lambda list-layers --region #{region}"
+        cmd = run_command("Retrieve list of all synth lambda layers", cmdline, system_config)
+        JSON.parse(cmd.output)["Layers"].select{|el| el["LayerName"].start_with?("cwsyn-")}.map{|el| el["LayerName"]}
+      end
+
+      def self.get_lambda_layer_versions(layer_name, region)
+        "aws lambda list-layer-versions --layer-name #{layer_name} --region #{region}"
+      end
+
+      def self.delete_lambda_layer_version(layer_name, version_number, region)
+        "aws lambda delete-layer-version --region #{region} --version-number #{version_number} --layer-name #{layer_name}"
+      end
     end
 
     def ssm_parameter(parameter_name, system_config)
@@ -135,6 +176,23 @@ module NHSx
     def mfa_login(role_name, account)
       role_arn = aws_role_arn(role_name, account)
       cmdline = NHSx::AWS::Commandlines.multi_factor_authentication(NHSx::AWS::AWS_AUTH_PROFILE, role_arn, account)
+      sh(cmdline)
+    end
+
+    def get_orphaned_synthetics_lambda_layers(region, system_config)
+      all_synth_lambda_layers = NHSx::AWS::Commandlines.get_all_synth_lambda_layers(region, system_config)
+      active_synth_lambda_layers = NHSx::AWS::Commandlines.get_active_synth_lambda_layers(region, system_config)
+      all_synth_lambda_layers - active_synth_lambda_layers
+    end
+
+    def get_lambda_layer_versions(layer_name, region, system_config)
+      cmd = run_command("Retrieve list of lambda layer versions", 
+        NHSx::AWS::Commandlines.get_lambda_layer_versions(layer_name, region), system_config)
+      JSON.parse(cmd.output)["LayerVersions"].map { |el| el["Version"] }
+    end
+
+    def delete_lambda_layer_version(layer_name, version_number, region)
+      cmdline = NHSx::AWS::Commandlines.delete_lambda_layer_version(layer_name, version_number, region)
       sh(cmdline)
     end
 

@@ -1,10 +1,9 @@
 package uk.nhs.nhsx.highriskvenuesupload;
 
-import uk.nhs.nhsx.core.Environment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.*;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import uk.nhs.nhsx.core.ContentTypes;
-import uk.nhs.nhsx.core.HttpResponses;
-import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.auth.ApiName;
 import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFrontClient;
@@ -28,6 +27,8 @@ import static uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses;
  * doc/design/api-contracts/risky-venue-upload.md
  */
 public class Handler extends RoutingHandler {
+
+    private static final Logger logger = LogManager.getLogger(Handler.class);
 
     private final Routing.Handler handler;
 
@@ -66,9 +67,10 @@ public class Handler extends RoutingHandler {
     }
 
     private APIGatewayProxyResponseEvent mapResultToResponse(VenuesUploadResult result) {
-        if (result.type == VenuesUploadResult.ResultType.ValidationError)
+        if (result.type == VenuesUploadResult.ResultType.ValidationError) {
+            logger.error("Upload of high risk venue file failed validation: " + result.message);
             return HttpResponses.unprocessableEntity(result.message);
-        
+        }
         return HttpResponses.accepted(result.message);
     }
 
@@ -77,14 +79,16 @@ public class Handler extends RoutingHandler {
         return handler;
     }
 
+    private static final Environment.EnvironmentKey<Boolean> SHOULD_PARSE_ADDITIONAL_FIELDS = Environment.EnvironmentKey.bool("should_parse_additional_fields");
+    
     private static HighRiskVenuesUploadService createUploadService(Supplier<Instant> clock, Environment environment) {
-        boolean shouldParseAdditionalFields = Boolean.parseBoolean(environment.access.required("should_parse_additional_fields"));
+        boolean shouldParseAdditionalFields = environment.access.required(SHOULD_PARSE_ADDITIONAL_FIELDS);
         return new HighRiskVenuesUploadService(
             new HighRiskVenuesUploadConfig(
-                BucketName.of(environment.access.required("BUCKET_NAME")),
+                environment.access.required(EnvironmentKeys.BUCKET_NAME),
                 ObjectKey.of("distribution/risky-venues"),
-                environment.access.required("DISTRIBUTION_ID"),
-                environment.access.required("DISTRIBUTION_INVALIDATION_PATTERN")
+                environment.access.required(EnvironmentKeys.DISTRIBUTION_ID),
+                environment.access.required(EnvironmentKeys.DISTRIBUTION_INVALIDATION_PATTERN)
             ),
             datedSigner(clock, environment),
             new AwsS3Client(),

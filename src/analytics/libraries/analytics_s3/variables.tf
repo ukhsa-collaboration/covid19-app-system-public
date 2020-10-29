@@ -13,3 +13,8 @@ variable "logs_bucket_id" {
 variable "force_destroy_s3_buckets" {
   description = "Force destroy s3 bucket if set to true"
 }
+
+variable "account_tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

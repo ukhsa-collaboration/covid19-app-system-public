@@ -7,8 +7,8 @@ import com.google.common.primitives.Bytes;
 import org.junit.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
 import uk.nhs.nhsx.core.Environment;
-import uk.nhs.nhsx.analyticssubmission.FakeS3Storage;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
+import uk.nhs.nhsx.core.csvupload.s3.FakeCsvUploadServiceS3;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 
 import java.nio.charset.StandardCharsets;
@@ -37,7 +37,7 @@ public class RiskyPostCodesHandlerTest {
     private final Environment environment = Environment.fromName("test", Environment.Access.TEST.apply(environmentSettings));
 
     private final AwsCloudFront awsCloudFront = mock(AwsCloudFront.class);
-    private final FakeS3Storage s3Storage = new FakeS3Storage();
+    private final FakeCsvUploadServiceS3 s3Storage = new FakeCsvUploadServiceS3();
     private final TestDatedSigner datedSigner = new TestDatedSigner("date");
 
     private final Handler handler = new Handler(environment, (h) -> true, datedSigner, s3Storage, awsCloudFront);

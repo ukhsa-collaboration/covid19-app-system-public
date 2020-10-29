@@ -18,7 +18,9 @@ RUN apt-get update && apt-get -qq -y install \
   build-essential \
   curl \
   git \
-  graphviz\
+  graphviz \
+  iputils-ping \
+  jq \
   libffi-dev \
   libgdbm-dev \
   libncurses5-dev \
@@ -28,15 +30,15 @@ RUN apt-get update && apt-get -qq -y install \
   libtool \
   protobuf-compiler \
   ruby-google-protobuf \
+  sudo \
   wget \
-  zlib1g-dev \
-  iputils-ping
+  zlib1g-dev
 
 WORKDIR /work
 
 # Gitversion installation
-RUN wget ${GITVERSION_URL}
-RUN tar -xf gitversion-ubuntu.18.04-x64-${GITVERSION_VERSION}.tar.gz && \
+RUN wget ${GITVERSION_URL} && \
+  tar -xf gitversion-ubuntu.18.04-x64-${GITVERSION_VERSION}.tar.gz && \
   cp gitversion /usr/local/bin && \
   chmod a+rx /usr/local/bin/gitversion
 
@@ -99,8 +101,18 @@ alias ll="ls \$LS_OPTIONS -l"\
 alias l="ls \$LS_OPTIONS -lA"\
 ' /root/.profile
 
+# Allow image to be run from Linux as user ID rather than root
+RUN \
+mkdir -p /home/dev100x && chmod a+rwx /home/dev100x && \
+useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1000 dev1000 && \
+useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1001 dev1001 && \
+useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1002 dev1002 && \
+useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1003 dev1003 && \
+echo '%sudo  ALL=(ALL)  NOPASSWD:ALL' >> /etc/sudoers.d/passwordlesssudo && \
+chmod 440 /etc/sudoers.d/passwordlesssudo
+
 WORKDIR /workspace
 
-RUN rm -rf /work/*
+RUN rm -rf /work/* /root/.git-credentials /home/dev100x/.git-credentials
 
 ENTRYPOINT ["/bin/bash"]

@@ -13,3 +13,8 @@ variable "risky_post_codes_bucket_id" {
 variable "analytics_submission_store_parquet_bucket_id" {
   description = "The name of the bucket the stores mobile analytics"
 }
+
+variable "account_tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

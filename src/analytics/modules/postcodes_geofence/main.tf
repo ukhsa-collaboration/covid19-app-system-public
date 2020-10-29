@@ -9,6 +9,7 @@ module "postcodes_geofence" {
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
+  account_tags             = var.account_tags
 }
 
 resource "aws_s3_bucket_object" "payload" {
@@ -40,16 +41,6 @@ resource "aws_glue_catalog_table" "this" {
 
     columns {
       name = "postcode"
-      type = "string"
-    }
-
-    columns {
-      name = "local_authority"
-      type = "string"
-    }
-
-    columns {
-      name = "country"
       type = "string"
     }
 

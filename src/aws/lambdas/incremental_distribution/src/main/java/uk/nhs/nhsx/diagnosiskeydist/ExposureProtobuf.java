@@ -57,38 +57,18 @@ public class ExposureProtobuf {
             .collect(Collectors.toList());
     }
 
-    private Function<StoredTemporaryExposureKey,TemporaryExposureKey> buildTemporaryExposureKey() {
-        return (StoredTemporaryExposureKey tek) -> {
-            if (isTemporaryExposureKeyV2(tek)) {
-                return buildTemporaryExposureKeyV2(tek);
-            } else {
-                return buildTemporaryExposureKeyV1(tek);
-            }
-        };
+    private Function<StoredTemporaryExposureKey, TemporaryExposureKey> buildTemporaryExposureKey() {
+        return this::buildTemporaryExposureKey;
     }
 
-    private boolean isTemporaryExposureKeyV2(StoredTemporaryExposureKey tek) {
-        return tek.daysSinceOnsetOfSymptoms != null;
-    }
-
-    private TemporaryExposureKey buildTemporaryExposureKeyV1(StoredTemporaryExposureKey tek) {
+    private TemporaryExposureKey buildTemporaryExposureKey(StoredTemporaryExposureKey tek) {
         return Exposure.TemporaryExposureKey
             .newBuilder()
             .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode(tek.key)))
             .setRollingStartIntervalNumber(tek.rollingStartNumber)
             .setRollingPeriod(tek.rollingPeriod)
             .setTransmissionRiskLevel(tek.transmissionRisk)
-            .build();
-    }
-
-    private TemporaryExposureKey buildTemporaryExposureKeyV2(StoredTemporaryExposureKey tek) {
-        return Exposure.TemporaryExposureKey
-            .newBuilder()
-            .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode(tek.key)))
-            .setRollingStartIntervalNumber(tek.rollingStartNumber)
-            .setRollingPeriod(tek.rollingPeriod)
-            .setTransmissionRiskLevel(tek.transmissionRisk)
-            .setDaysSinceOnsetOfSymptoms(tek.daysSinceOnsetOfSymptoms)
+            .setDaysSinceOnsetOfSymptoms(tek.daysSinceOnsetOfSymptoms != null ? tek.daysSinceOnsetOfSymptoms : 0)
             .build();
     }
 

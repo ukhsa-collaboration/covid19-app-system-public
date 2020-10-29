@@ -18,7 +18,7 @@ public class SystemObjectMapper {
             .registerModule(new JavaTimeModule())
             .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, true)
             .configure(DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES, true)
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true)
             .configure(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS, false)
             .configure(DeserializationFeature.FAIL_ON_READING_DUP_TREE_KEY, true)

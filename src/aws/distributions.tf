@@ -91,6 +91,14 @@ resource "aws_cloudfront_origin_access_identity" "diagnosis_keys" {
   comment = "Origin access ID for the key distribution service in ${terraform.workspace}"
 }
 
+resource "aws_s3_bucket_object" "metadata" {
+  bucket       = module.post_districts_distribution.store.bucket
+  key          = "tier-metadata"
+  source       = abspath("../../../static/tier-metadata.json")
+  etag         = filemd5("../../../static/tier-metadata.json")
+  content_type = "application/json"
+}
+
 module "diagnosis_keys_distribution_store" {
   source                      = "./libraries/distribution_s3"
   name                        = "diagnosis"
@@ -99,6 +107,7 @@ module "diagnosis_keys_distribution_store" {
   logs_bucket_id              = var.logs_bucket_id
   force_destroy_s3_buckets    = var.force_destroy_s3_buckets
 }
+
 
 module "distribution_apis" {
   source = "./libraries/cloudfront_distribution_facade"

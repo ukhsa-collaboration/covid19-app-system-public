@@ -1,9 +1,6 @@
 package uk.nhs.nhsx.highriskpostcodesupload;
 
-import uk.nhs.nhsx.core.Environment;
-import uk.nhs.nhsx.core.ContentTypes;
-import uk.nhs.nhsx.core.HttpResponses;
-import uk.nhs.nhsx.core.SystemClock;
+import uk.nhs.nhsx.core.*;
 import uk.nhs.nhsx.core.auth.ApiName;
 import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
@@ -45,12 +42,10 @@ import static uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses;
  */
 public class Handler extends RoutingHandler {
 
-    private static final String DISTRIBUTION_ID = "DISTRIBUTION_ID";
-    private static final String DISTRIBUTION_INVALIDATION_PATTERN = "DISTRIBUTION_INVALIDATION_PATTERN";
     private static final String DISTRIBUTION_OBJ_KEY_NAME = "distribution/risky-post-districts";
     private static final String DISTRIBUTION_OBJ_V2_KEY_NAME = "distribution/risky-post-districts-v2";
     private static final String RAW_OBJ_KEY_NAME = "raw/risky-post-districts";
-    private static final String BUCKET_NAME = "BUCKET_NAME";
+    private static final String METADATA_OBJ_KEY_NAME = "tier-metadata";
 
     private final Routing.Handler handler;
 
@@ -72,18 +67,19 @@ public class Handler extends RoutingHandler {
         Environment environment,
         Authenticator authenticator,
         DatedSigner signer,
-        S3Storage s3Storage,
+        AwsS3 s3Storage,
         AwsCloudFront awsCloudFront) {
         CsvUploadService service = new CsvUploadService(
-            BucketName.of(environment.access.required(BUCKET_NAME)),
+            environment.access.required(EnvironmentKeys.BUCKET_NAME),
             ObjectKey.of(DISTRIBUTION_OBJ_KEY_NAME),
             ObjectKey.of(DISTRIBUTION_OBJ_V2_KEY_NAME),
             ObjectKey.of(RAW_OBJ_KEY_NAME),
+            ObjectKey.of(METADATA_OBJ_KEY_NAME),
             signer,
             s3Storage,
             awsCloudFront,
-            environment.access.required(DISTRIBUTION_ID),
-            environment.access.required(DISTRIBUTION_INVALIDATION_PATTERN));
+            environment.access.required(EnvironmentKeys.DISTRIBUTION_ID),
+            environment.access.required(EnvironmentKeys.DISTRIBUTION_INVALIDATION_PATTERN));
         handler = withoutSignedResponses(
             environment, 
             authenticator,

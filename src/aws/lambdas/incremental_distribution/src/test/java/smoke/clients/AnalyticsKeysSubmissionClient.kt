@@ -14,12 +14,6 @@ class AnalyticsKeysSubmissionClient(private val client: JavaHttpClient, private 
         fun baseUrlFrom(config: EnvConfig) = config.analyticsSubmissionEndpoint
     }
 
-    fun invokeMobileAnalytics() {
-        AwsLambda.invokeFunction(config.analytics_processing_function)
-            .requireStatusCode(Status.OK)
-            .requireBodyText("\"success\"")
-    }
-
     fun upload(json: String): Response {
         logger.info("uploadResult")
 

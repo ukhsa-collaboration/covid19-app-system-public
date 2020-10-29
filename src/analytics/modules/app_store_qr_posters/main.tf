@@ -9,6 +9,7 @@ module "analytics_app_store_qr_posters_s3" {
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
+  account_tags             = var.account_tags
 }
 
 resource "aws_glue_catalog_table" "mobile_analytics_table" {
@@ -41,43 +42,23 @@ resource "aws_glue_catalog_table" "mobile_analytics_table" {
     }
 
     columns {
-      name = "averagerating"
+      name = "average_rating"
       type = "float"
-    }
-
-    columns {
-      name = "numberofratingstotal"
-      type = "int"
-    }
-
-    columns {
-      name = "numberofratings1star"
-      type = "int"
-    }
-
-    columns {
-      name = "numberofratings2star"
-      type = "int"
-    }
-
-    columns {
-      name = "numberofratings3star"
-      type = "int"
-    }
-
-    columns {
-      name = "numberofratings4star"
-      type = "int"
-    }
-
-    columns {
-      name = "numberofratings5star"
-      type = "int"
     }
 
     columns {
       name = "downloads"
       type = "int"
+    }
+
+    columns {
+      name = "deletes"
+      type = "int"
+    }
+
+    columns {
+      name = "opt_in_proportion"
+      type = "float"
     }
 
   }

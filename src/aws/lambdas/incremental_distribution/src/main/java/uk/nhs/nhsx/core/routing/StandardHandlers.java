@@ -17,6 +17,10 @@ import java.util.function.Consumer;
 public class StandardHandlers {
 
     private static final Logger logger = LogManager.getLogger(StandardHandlers.class);
+    
+    private static final Environment.EnvironmentKey<String> MAINTENANCE_MODE = Environment.EnvironmentKey.string("MAINTENANCE_MODE");
+    private static final Environment.EnvironmentKey<String> CUSTOM_OAI = Environment.EnvironmentKey.string("custom_oai");
+    
 
     public static Routing.Handler withoutSignedResponses(Environment environment, Authenticator authenticator, Routing.Handler delegate) {
         return defaultStack(environment, authenticator, catchExceptions(delegate));
@@ -40,7 +44,6 @@ public class StandardHandlers {
         );
     }
 
-
     public static Routing.Handler loggingIncomingRequests(Routing.Handler delegate) {
         return r -> {
             String keyName =  apiKeyNameFrom(r.getHeaders().get("authorization")).orElse("none");
@@ -51,7 +54,7 @@ public class StandardHandlers {
     }
 
     public static Routing.Handler filteringWhileMaintenanceModeEnabled(Environment environment, Routing.Handler delegate) {
-        if (Boolean.parseBoolean(environment.access.required("MAINTENANCE_MODE"))) {
+        if (Boolean.parseBoolean(environment.access.required(MAINTENANCE_MODE))) {
             return r -> HttpResponses.serviceUnavailable();
         }
         else {
@@ -64,7 +67,7 @@ public class StandardHandlers {
     }
 
     public static Routing.Handler requiringCustomAccessIdentity(Environment environment, Routing.Handler delegate) {
-        Optional<String> maybeRequiredOai = environment.access.optional("custom_oai");
+        Optional<String> maybeRequiredOai = environment.access.optional(CUSTOM_OAI);
 
         return maybeRequiredOai.map(
             requiredOai -> (Routing.Handler) request -> {

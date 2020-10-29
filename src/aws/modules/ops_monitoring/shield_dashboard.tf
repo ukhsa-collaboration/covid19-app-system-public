@@ -7,19 +7,6 @@ resource "aws_cloudwatch_dashboard" "ddos_dashboard" {
   {
     "widgets": [
         {
-            "type": "alarm",
-            "x": 0,
-            "y": 0,
-            "width": 24,
-            "height": 3,
-            "properties": {
-                "title": "Alarms",
-                "alarms": [
-                   
-                ]
-            }
-        },
-        {
             "type": "metric",
             "width": 24,
             "height": 6,

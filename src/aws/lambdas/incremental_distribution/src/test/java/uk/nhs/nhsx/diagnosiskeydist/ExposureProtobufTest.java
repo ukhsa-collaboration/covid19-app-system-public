@@ -16,8 +16,7 @@ import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ExposureProtobufTest {
 
@@ -97,6 +96,7 @@ public class ExposureProtobufTest {
                 .setRollingPeriod(144)
                 .setRollingStartIntervalNumber(12345)
                 .setTransmissionRiskLevel(7)
+                .setDaysSinceOnsetOfSymptoms(0)
                 .build();
 
         Exposure.TemporaryExposureKey expectedKey2 =
@@ -155,18 +155,20 @@ public class ExposureProtobufTest {
     }
 
     @Test
-    public void exportDoesNotContainDaysSinceOnsetOfSymptomsForV1() {
+    public void exportContainsDaysSinceOnsetOfSymptomsWhenKeyNotPresent() {
         ZIPSubmissionPeriod period = DailyZIPSubmissionPeriod.periodForSubmissionDate(new Date());
         Exposure.TemporaryExposureKeyExport tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, 0);
         List<Exposure.TemporaryExposureKey> exposureKeys = tekExport.getKeysList();
-        assertFalse(exposureKeys.get(0).hasDaysSinceOnsetOfSymptoms());
+        assertTrue(exposureKeys.get(0).hasDaysSinceOnsetOfSymptoms());
+        assertEquals(exposureKeys.get(0).getDaysSinceOnsetOfSymptoms(), 0);
     }
 
     @Test
-    public void exportContainsDaysSinceOnsetOfSymptomsForV2() {
+    public void exportContainsDaysSinceOnsetOfSymptomsWhenKeyPresent() {
         ZIPSubmissionPeriod period = DailyZIPSubmissionPeriod.periodForSubmissionDate(new Date());
         Exposure.TemporaryExposureKeyExport tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, 0);
         List<Exposure.TemporaryExposureKey> exposureKeys = tekExport.getKeysList();
         assertTrue(exposureKeys.get(1).hasDaysSinceOnsetOfSymptoms());
+        assertEquals(exposureKeys.get(1).getDaysSinceOnsetOfSymptoms(), 4);
     }
 }

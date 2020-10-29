@@ -74,7 +74,7 @@ class HandlerTest {
                 SecretName.of("privateKey"),
                 "federatedKeyPrefix",
                 "DUMMY_TABLE",
-                "GB-EAW",
+                listOf("GB-EAW"),
                  "GB-EAW"
             ),
             InMemoryBatchTagService(),
@@ -119,7 +119,7 @@ class HandlerTest {
                 SecretName.of("privateKey"),
                 "federatedKeyPrefix",
                 "DUMMY_TABLE",
-                "GB-EAW",
+                listOf("GB-EAW"),
                 "GB-EAW"
             ),
             InMemoryBatchTagService(),
@@ -163,7 +163,7 @@ class HandlerTest {
                 SecretName.of("privateKey"),
                 "federatedKeyPrefix",
                 "DUMMY_TABLE",
-                "GB-EAW",
+                listOf("GB-EAW"),
                 "GB-EAW"
             ),
             InMemoryBatchTagService(),

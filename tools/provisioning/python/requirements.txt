@@ -29,6 +29,7 @@ pyflakes==2.2.0
 Pygments==2.6.1
 pyparsing==2.4.7
 pytest==5.4.3
+pytest-mock==3.3.1
 python-dateutil==2.8.1
 PyYAML==5.3.1
 rdk==0.7.10

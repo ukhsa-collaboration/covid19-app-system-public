@@ -47,4 +47,18 @@ namespace :clean do
   task :config do
     rm_rf(File.join($configuration.out, "gen/config"), :verbose => false)
   end
+  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.keys.each do |account|
+    desc "Delete orphaned synthetics lambda layers from #{account} account"
+    task :"synth:#{account}" => [:"login:#{account}"] do
+      include NHSx::AWS
+      region = "eu-west-1"
+      layersList = get_orphaned_synthetics_lambda_layers(region, $configuration)
+      layersList.each do |layer_name|
+        layerVersionList = get_lambda_layer_versions(layer_name, region, $configuration)
+        layerVersionList.each do |layer_version|
+          delete_lambda_layer_version(layer_name, layer_version, region)
+        end
+      end
+    end
+  end
 end

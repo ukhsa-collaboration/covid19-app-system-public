@@ -1,8 +1,7 @@
 package uk.nhs.nhsx.virology.tokengen
 
 import io.mockk.*
-import org.assertj.core.api.Assertions.assertThatCode
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.assertj.core.api.Assertions.*
 import org.junit.Test
 import uk.nhs.nhsx.virology.VirologyProcessorHandler
 
@@ -18,9 +17,12 @@ class VirologyProcessorHandlerTest {
             "testEndDate" to "2020-10-06T00:00:00Z",
             "numberOfTokens" to "1000"
         )
-        every { service.generateAndStoreTokens(any()) } returns mockk()
-        assertThatCode { handler.handleRequest(input, mockk()) }.doesNotThrowAnyException()
-        val expectedEvent = CtaProcessorEvent("POSITIVE", "2020-10-06T00:00:00Z", 1000)
+        every { service.generateAndStoreTokens(any()) } returns CtaProcessorResult.Success("some-file.zip", "some-message")
+
+        val json = handler.handleRequest(input, mockk())
+        assertThat(json).containsSubsequence("some-file.zip")
+
+        val expectedEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z", 1000)
         verify { service.generateAndStoreTokens(expectedEvent) }
     }
 

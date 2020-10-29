@@ -7,7 +7,11 @@ import org.http4k.core.Status
 import org.http4k.hamkrest.hasStatus
 import org.junit.Test
 import smoke.clients.AnalyticsKeysSubmissionClient
+import smoke.clients.AwsLambda
+import smoke.clients.requireBodyText
+import smoke.clients.requireStatusCode
 import smoke.env.SmokeTests
+import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.iOSPayloadFrom
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetadata
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
@@ -16,7 +20,8 @@ import uk.nhs.nhsx.core.DateFormatValidator
 import uk.nhs.nhsx.core.Jackson
 import java.time.OffsetDateTime
 
-class AnalyticsSubmissionSmokeTest() {
+class AnalyticsSubmissionSmokeTest {
+
     private val config = SmokeTests.loadConfig()
     private val client = JavaHttpClient()
     private val startDate = OffsetDateTime.now().minusDays(1).format(DateFormatValidator.formatter).toString()
@@ -24,18 +29,29 @@ class AnalyticsSubmissionSmokeTest() {
 
     @Test
     fun `submit ios analytics data`() {
-        val payload: ClientAnalyticsSubmissionPayload = generateIosAnalyticsPayload()
-        invokeAnalyticsAndValidate()
-        val uploadResponse = uploadAnalyticsToS3(Jackson.toJson(payload))
+        val payload = generateIosAnalyticsPayload()
+        val uploadResponse = submitAnalytics(Jackson.toJson(payload))
         assertThat(uploadResponse, hasStatus(Status.OK))
     }
 
     @Test
     fun `submit android analytics data`() {
-        val payload: ClientAnalyticsSubmissionPayload = generateAndroidAnalyticsPayload()
-        invokeAnalyticsAndValidate()
-        val response = uploadAnalyticsToS3(Jackson.toJson(payload))
+        val payload = generateAndroidAnalyticsPayload()
+        val response = submitAnalytics(Jackson.toJson(payload))
         assertThat(response, hasStatus(Status.OK))
+    }
+
+    @Test
+    fun `invalid payload is rejected`() {
+        val response = submitAnalytics(iOSPayloadFrom("1", "2", "3"))
+        assertThat(response, hasStatus(Status.BAD_REQUEST))
+    }
+
+    @Test
+    fun `invokes analytics processing`() {
+        AwsLambda.invokeFunction(config.analytics_processing_function)
+            .requireStatusCode(Status.OK)
+            .requireBodyText("\"success\"")
     }
 
     private fun generateIosAnalyticsPayload(): ClientAnalyticsSubmissionPayload {
@@ -51,11 +67,5 @@ class AnalyticsSubmissionSmokeTest() {
         return ClientAnalyticsSubmissionPayload(AnalyticsWindow(startDate, endDate), analyticsMetadata, analyticsMetrics, false)
     }
 
-    private fun invokeAnalyticsAndValidate() {
-        return AnalyticsKeysSubmissionClient(client, config).invokeMobileAnalytics()
-    }
-
-    private fun uploadAnalyticsToS3(json: String): Response {
-        return AnalyticsKeysSubmissionClient(client, config).upload(json)
-    }
+    private fun submitAnalytics(json: String): Response = AnalyticsKeysSubmissionClient(client, config).upload(json)
 }

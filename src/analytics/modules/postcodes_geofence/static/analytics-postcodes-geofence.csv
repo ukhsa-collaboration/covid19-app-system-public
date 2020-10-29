@@ -1,2582 +1,2435 @@
-﻿postcode,local_authority,country,latitude,longitude
-AB10,Aberdeen City,Scotland,57.134814,-2.117460
-AB10_AB99,Aberdeen City,Scotland,57.134735,-2.117381
-AB11,Aberdeen City,Scotland,57.137138,-2.093457
-AB12,Aberdeen City,Scotland,57.103388,-2.109898
-AB13_AB14,Aberdeen City,Scotland,57.106946,-2.261092
-AB15,Aberdeen City,Scotland,57.138578,-2.166850
-AB16,Aberdeen City,Scotland,57.159561,-2.156527
-AB21,Aberdeen City,Scotland,57.208136,-2.200757
-AB22,Aberdeen City,Scotland,57.186448,-2.119629
-AB23,Aberdeen City,Scotland,57.208331,-2.089806
-AB24,Aberdeen City,Scotland,57.163399,-2.108256
-AB25,Aberdeen City,Scotland,57.153483,-2.114231
-AB30,Aberdeenshire,Scotland,56.845894,-2.476895
-AB31,Aberdeenshire,Scotland,57.066944,-2.504985
-AB32,Aberdeenshire,Scotland,57.154550,-2.314956
-AB33_AB35_AB36,Aberdeenshire,Scotland,57.156722,-2.914247
-AB34,Aberdeenshire,Scotland,57.092737,-2.810034
-AB37_AB38_IV32,Moray,Scotland,57.511806,-3.207984
-AB39,Aberdeenshire,Scotland,56.978044,-2.217097
-AB41,Aberdeenshire,Scotland,57.371702,-2.116731
-AB42,Aberdeenshire,Scotland,57.501580,-1.888169
-AB43,Aberdeenshire,Scotland,57.657777,-2.044860
-AB44_AB45,Aberdeenshire,Scotland,57.655047,-2.553410
-AB51,Aberdeenshire,Scotland,57.287912,-2.404800
-AB52,Aberdeenshire,Scotland,57.342088,-2.602614
-AB53,Aberdeenshire,Scotland,57.534374,-2.407192
-AB54,Aberdeenshire,Scotland,57.465691,-2.755991
-AB55,Moray,Scotland,57.532427,-2.975614
-AB56,Moray,Scotland,57.673519,-2.919141
-AL1,St Albans,England,51.748662,-0.319472
-AL10,Welwyn Hatfield,England,51.760952,-0.231262
-AL2,St Albans,England,51.722320,-0.331054
-AL3,St Albans,England,51.775416,-0.366610
-AL4,St Albans,England,51.771274,-0.296002
-AL5,St Albans,England,51.814562,-0.351518
-AL6,Welwyn Hatfield,England,51.829923,-0.199450
-AL7,Welwyn Hatfield,England,51.798630,-0.189295
-AL8,Welwyn Hatfield,England,51.803431,-0.210299
-AL9,Welwyn Hatfield,England,51.746868,-0.201696
-B1,Birmingham,England,52.479571,-1.907793
-B10,Birmingham,England,52.470107,-1.853289
-B11,Birmingham,England,52.455383,-1.859837
-B12,Birmingham,England,52.460887,-1.882533
-B13,Birmingham,England,52.435102,-1.882565
-B14,Birmingham,England,52.418789,-1.890259
-B15,Birmingham,England,52.467944,-1.923494
-B16,Birmingham,England,52.475451,-1.932313
-B17,Birmingham,England,52.461489,-1.962927
-B18,Birmingham,England,52.491540,-1.922568
-B19,Birmingham,England,52.496309,-1.906164
-B20,Birmingham,England,52.513387,-1.918844
-B21,Birmingham,England,52.505126,-1.936336
-B23,Birmingham,England,52.527650,-1.851730
-B24,Birmingham,England,52.519636,-1.828912
-B25,Birmingham,England,52.461654,-1.825970
-B26,Birmingham,England,52.460734,-1.792881
-B27,Birmingham,England,52.445770,-1.823770
-B28,Birmingham,England,52.427799,-1.843175
-B29,Birmingham,England,52.437720,-1.945658
-B2_B3_B4,Birmingham,England,52.484358,-1.898427
-B2_B3_B4_B99,Birmingham,England,52.484686,-1.898309
-B30,Birmingham,England,52.421173,-1.928092
-B31,Birmingham,England,52.409139,-1.973104
-B32,Birmingham,England,52.450899,-1.994499
-B33,Birmingham,England,52.480726,-1.787952
-B34,Birmingham,England,52.495674,-1.781685
-B35,Birmingham,England,52.517256,-1.789982
-B36,Solihull,England,52.504536,-1.779989
-B37,Solihull,Other,52.478398,-1.741819
-B37_B40,Solihull,England,52.477855,-1.741355
-B38,Birmingham,England,52.401044,-1.934002
-B40_B92,Solihull,Other,52.435964,-1.772922
-B42,Birmingham,England,52.534676,-1.904758
-B43,Sandwell,England,52.547605,-1.928244
-B44,Birmingham,England,52.544992,-1.885656
-B45,Birmingham,England,52.388486,-2.008454
-B46,North Warwickshire,England,52.507108,-1.697609
-B47,Bromsgrove,England,52.388697,-1.881177
-B48,Bromsgrove,England,52.356886,-1.951645
-B49,Stratford-on-Avon,England,52.217183,-1.867680
-B5,Birmingham,England,52.472193,-1.896817
-B50,Stratford-on-Avon,England,52.169634,-1.856637
-B6,Birmingham,England,52.502504,-1.886852
-B60,Bromsgrove,England,52.323783,-2.050252
-B61,Bromsgrove,England,52.344055,-2.067473
-B62,Dudley,England,52.459910,-2.037192
-B63,Dudley,England,52.453071,-2.067369
-B64,Sandwell,England,52.472434,-2.069069
-B65,Sandwell,England,52.482825,-2.043446
-B66,Sandwell,England,52.493644,-1.965878
-B67,Sandwell,England,52.487670,-1.977314
-B68,Sandwell,England,52.480059,-2.001830
-B69,Sandwell,England,52.502812,-2.025503
-B7,Birmingham,England,52.493823,-1.874405
-B70,Sandwell,England,52.519789,-2.002674
-B71,Sandwell,England,52.534791,-1.990099
-B72,Birmingham,England,52.554483,-1.823635
-B73,Birmingham,England,52.559272,-1.837672
-B74,Birmingham,England,52.582351,-1.857296
-B75,Birmingham,England,52.577843,-1.811222
-B76,Birmingham,England,52.544725,-1.789898
-B77,Tamworth,England,52.620252,-1.671725
-B78,North Warwickshire,England,52.606584,-1.675044
-B79,Tamworth,England,52.648119,-1.682583
-B8,Birmingham,England,52.490021,-1.842774
-B80,Stratford-on-Avon,England,52.279042,-1.897274
-B9,Birmingham,England,52.478085,-1.852839
-B90,Solihull,England,52.401299,-1.826133
-B91,Solihull,England,52.413987,-1.780706
-B92,Solihull,England,52.435309,-1.774300
-B93,Solihull,England,52.383111,-1.742138
-B94,Stratford-on-Avon,England,52.352985,-1.791010
-B95,Stratford-on-Avon,England,52.287070,-1.780540
-B96,Redditch,England,52.254862,-1.959544
-B97,Redditch,England,52.303236,-1.949753
-B98,Redditch,England,52.303712,-1.916079
-BA1,Bath and North East Somerset,England,51.388807,-2.360199
-BA10_BA7,South Somerset,England,51.100095,-2.485284
-BA11,Mendip,England,51.237627,-2.326367
-BA12,Wiltshire,England,51.174274,-2.187438
-BA13,Wiltshire,England,51.263027,-2.184855
-BA14,Wiltshire,England,51.319032,-2.202835
-BA15,Wiltshire,England,51.348387,-2.262242
-BA16,Mendip,England,51.126547,-2.743236
-BA2,Bath and North East Somerset,England,51.362021,-2.376248
-BA20,South Somerset,England,50.939032,-2.642694
-BA21,South Somerset,England,50.951152,-2.633828
-BA22,South Somerset,England,50.968570,-2.637243
-BA3,Bath and North East Somerset,England,51.285590,-2.449286
-BA4,Mendip,England,51.174619,-2.533157
-BA5,Mendip,England,51.211635,-2.654805
-BA6,Mendip,England,51.143100,-2.709375
-BA8_BA9,South Somerset,England,51.038324,-2.410298
-BB1,Blackburn with Darwen,England,53.755182,-2.465756
-BB10,Burnley,England,53.799427,-2.221693
-BB11,Burnley,England,53.784778,-2.250779
-BB12,Burnley,England,53.802031,-2.288949
-BB18,Pendle,England,53.915036,-2.172528
-BB18_BB94,Pendle,England,53.915049,-2.171529
-BB2,Blackburn with Darwen,England,53.741848,-2.498016
-BB3,Blackburn with Darwen,England,53.697783,-2.466231
-BB4,Rossendale,England,53.703413,-2.291152
-BB5,Hyndburn,England,53.754548,-2.372258
-BB6,Hyndburn,England,53.803932,-2.415656
-BB7,Ribble Valley,England,53.871801,-2.389237
-BB8,Pendle,England,53.879240,-2.168067
-BB9,Pendle,England,53.837021,-2.215819
-BD1,Bradford,England,53.797288,-1.754315
-BD10,Bradford,England,53.830871,-1.726191
-BD11,Leeds,England,53.749833,-1.679243
-BD12,Bradford,England,53.747898,-1.762439
-BD13,Bradford,England,53.787585,-1.856047
-BD14,Bradford,England,53.783277,-1.817496
-BD15,Bradford,England,53.808022,-1.835131
-BD16,Bradford,Other,53.847561,-1.832255
-BD16_BD97,Bradford,England,53.847489,-1.832133
-BD17,Bradford,Other,53.844996,-1.769070
-BD17_BD98,Bradford,England,53.844795,-1.769044
-BD18,Bradford,England,53.830220,-1.776497
-BD19,Kirklees,England,53.726649,-1.714377
-BD1_BD97_BD98_BD99,Bradford,Other,53.797403,-1.754517
-BD2,Bradford,England,53.814147,-1.736274
-BD20,Bradford,England,53.895787,-1.946473
-BD21,Bradford,England,53.864602,-1.908341
-BD22,Bradford,England,53.846927,-1.952341
-BD23,Craven,England,53.988736,-2.052211
-BD24,Craven,England,54.077200,-2.281531
-BD3,Bradford,England,53.797929,-1.729956
-BD4,Bradford,England,53.776771,-1.721651
-BD5,Bradford,England,53.779322,-1.758344
-BD6,Bradford,England,53.764941,-1.784776
-BD7,Bradford,Other,53.784216,-1.780989
-BD7_BD99,Bradford,England,53.784430,-1.780532
-BD8,Bradford,England,53.801423,-1.780640
-BD9,Bradford,England,53.811503,-1.788118
-BH1,"Bournemouth, Christchurch and Poole",England,50.725281,-1.863081
-BH10,"Bournemouth, Christchurch and Poole",England,50.759081,-1.893259
-BH11,"Bournemouth, Christchurch and Poole",England,50.760866,-1.920075
-BH12,"Bournemouth, Christchurch and Poole",England,50.737958,-1.924849
-BH13,"Bournemouth, Christchurch and Poole",England,50.710432,-1.918312
-BH14,"Bournemouth, Christchurch and Poole",England,50.722247,-1.945520
-BH15,"Bournemouth, Christchurch and Poole",England,50.720846,-1.984902
-BH16,Dorset,England,50.738164,-2.044452
-BH17,"Bournemouth, Christchurch and Poole",England,50.745817,-1.973258
-BH18,"Bournemouth, Christchurch and Poole",England,50.757050,-1.991531
-BH19,Dorset,England,50.611397,-1.969992
-BH2,"Bournemouth, Christchurch and Poole",England,50.721897,-1.881276
-BH20,Dorset,England,50.687513,-2.144728
-BH21,Dorset,England,50.818261,-1.964535
-BH22,Dorset,England,50.806148,-1.889117
-BH23,"Bournemouth, Christchurch and Poole",England,50.745372,-1.758550
-BH24,New Forest,England,50.845921,-1.788235
-BH25,New Forest,England,50.752291,-1.658630
-BH3,"Bournemouth, Christchurch and Poole",England,50.735517,-1.880237
-BH31,Dorset,England,50.874838,-1.869166
-BH4,"Bournemouth, Christchurch and Poole",England,50.721711,-1.900528
-BH5,"Bournemouth, Christchurch and Poole",England,50.725760,-1.837068
-BH6,"Bournemouth, Christchurch and Poole",England,50.727675,-1.809195
-BH7,"Bournemouth, Christchurch and Poole",England,50.734535,-1.834178
-BH8,"Bournemouth, Christchurch and Poole",England,50.739773,-1.853945
-BH9,"Bournemouth, Christchurch and Poole",England,50.749827,-1.874817
-BL0,Bury,England,53.643398,-2.316206
-BL1,Bolton,England,53.588913,-2.440660
-BL11_BL2,Bolton,Other,53.587395,-2.398431
-BL11_BL3,Bolton,England,53.566258,-2.431866
-BL2,Bolton,England,53.587720,-2.397854
-BL3,Bolton,Other,53.566155,-2.431978
-BL4,Bolton,England,53.547366,-2.403504
-BL4_BL78,Bolton,England,53.547552,-2.403571
-BL5,Bolton,England,53.551649,-2.517184
-BL6,Bolton,England,53.591130,-2.540162
-BL7,Bolton,England,53.628161,-2.423013
-BL8,Bury,England,53.601854,-2.323599
-BL9,Bury,England,53.592022,-2.288861
-BN1,Brighton and Hove,England,50.837195,-0.140102
-BN10,Lewes,England,50.795594,0.001828
-BN11,Worthing,England,50.813740,-0.375476
-BN12_BN99,Worthing,England,50.816770,-0.402461
-BN13,Worthing,England,50.830342,-0.406417
-BN14,Worthing,England,50.830767,-0.379930
-BN15_BN95,Adur,England,50.830006,-0.325118
-BN16,Arun,England,50.815504,-0.498019
-BN17,Arun,England,50.815280,-0.537127
-BN18,Arun,England,50.848585,-0.578374
-BN1_BN50_BN88,Brighton and Hove,England,50.835045,-0.140231
-BN20,Eastbourne,England,50.774032,0.254855
-BN21,Eastbourne,England,50.772095,0.274635
-BN22,Eastbourne,England,50.787886,0.283457
-BN23,Eastbourne,England,50.798480,0.312718
-BN24,Wealden,England,50.815581,0.325717
-BN25,Lewes,England,50.775950,0.107285
-BN26,Wealden,England,50.821449,0.225039
-BN27,Wealden,England,50.870810,0.262830
-BN2_BN51,Brighton and Hove,England,50.823865,-0.106374
-BN2_BN88,Brighton and Hove,England,50.824531,-0.108381
-BN3,Brighton and Hove,England,50.834453,-0.175375
-BN3_BN52,Brighton and Hove,England,50.834374,-0.174393
-BN41,Brighton and Hove,England,50.839103,-0.215313
-BN42,Adur,England,50.836747,-0.232049
-BN43,Adur,England,50.835423,-0.268216
-BN44,Horsham,England,50.892747,-0.318649
-BN45_BN6,Mid Sussex,England,50.926931,-0.155039
-BN5,Horsham,England,50.924312,-0.268099
-BN7,Lewes,England,50.878323,0.002918
-BN8,Lewes,England,50.912427,0.050565
-BN9,Lewes,England,50.795289,0.026855
-BR1,Bromley,England,51.410733,0.019428
-BR2,Bromley,England,51.390379,0.021642
-BR3,Bromley,England,51.403411,-0.031736
-BR4,Bromley,England,51.375566,-0.009891
-BR5,Bromley,England,51.389195,0.102525
-BR6,Bromley,England,51.367411,0.092520
-BR7,Bromley,England,51.411787,0.059159
-BR8,Sevenoaks,England,51.397627,0.174824
-BS1,"Bristol, City of",England,51.453893,-2.592042
-BS10,"Bristol, City of",England,51.505652,-2.611734
-BS11,"Bristol, City of",England,51.498719,-2.678502
-BS13,"Bristol, City of",England,51.412082,-2.611773
-BS14,"Bristol, City of",England,51.413133,-2.563142
-BS15,South Gloucestershire,England,51.454803,-2.496170
-BS16,South Gloucestershire,England,51.485531,-2.512253
-BS2,"Bristol, City of",England,51.459012,-2.581152
-BS20,North Somerset,England,51.480608,-2.757012
-BS21,North Somerset,England,51.436168,-2.851379
-BS22,North Somerset,England,51.360634,-2.928253
-BS23,North Somerset,England,51.343508,-2.969516
-BS24,North Somerset,England,51.331282,-2.924834
-BS25_BS29,North Somerset,England,51.323414,-2.839979
-BS26_BS28,Sedgemoor,England,51.257095,-2.835067
-BS27,Sedgemoor,England,51.272417,-2.772307
-BS2_BS98_BS99,"Bristol, City of",England,51.458164,-2.577240
-BS3,"Bristol, City of",England,51.438576,-2.603428
-BS30,South Gloucestershire,England,51.446417,-2.475493
-BS31,Bath and North East Somerset,England,51.409594,-2.493464
-BS32,South Gloucestershire,England,51.541462,-2.561098
-BS34,South Gloucestershire,England,51.525270,-2.567794
-BS35,South Gloucestershire,England,51.597342,-2.548188
-BS36,South Gloucestershire,England,51.526177,-2.487908
-BS37,South Gloucestershire,England,51.540169,-2.418340
-BS39,Bath and North East Somerset,England,51.328093,-2.532842
-BS4,"Bristol, City of",England,51.436242,-2.563950
-BS40,North Somerset,England,51.346817,-2.693597
-BS41,North Somerset,England,51.423511,-2.654455
-BS48,North Somerset,England,51.426526,-2.749686
-BS49,North Somerset,England,51.382418,-2.816036
-BS5,"Bristol, City of",England,51.462166,-2.552834
-BS6,"Bristol, City of",England,51.470163,-2.598400
-BS7,"Bristol, City of",England,51.486663,-2.581603
-BS8,"Bristol, City of",England,51.457480,-2.619444
-BS9,"Bristol, City of",England,51.488327,-2.625351
-BT10,Belfast,Northern Ireland,54.559778,-5.986498
-BT11,Belfast,Northern Ireland,54.576243,-5.998135
-BT12,Belfast,Other,54.592446,-5.956303
-BT12_BT2,Belfast,Northern Ireland,54.592711,-5.949527
-BT13,Belfast,Northern Ireland,54.605777,-5.958499
-BT14,Belfast,Northern Ireland,54.621096,-5.962356
-BT15,Belfast,Northern Ireland,54.621892,-5.931663
-BT16,Lisburn and Castlereagh,Northern Ireland,54.590897,-5.798057
-BT17,Belfast,Northern Ireland,54.553175,-6.019549
-BT18,Ards and North Down,Northern Ireland,54.640353,-5.823878
-BT19,Ards and North Down,Northern Ireland,54.650749,-5.657868
-BT1_BT2_BT3_BT7,Belfast,Other,54.595372,-5.926195
-BT1_BT3_BT7,Belfast,Northern Ireland,54.595715,-5.925390
-BT20,Ards and North Down,Northern Ireland,54.659011,-5.665563
-BT21,Ards and North Down,Northern Ireland,54.640753,-5.547026
-BT22,Ards and North Down,Northern Ireland,54.503441,-5.515175
-BT23,Ards and North Down,Northern Ireland,54.571640,-5.707761
-BT24,"Newry, Mourne and Down",Northern Ireland,54.417842,-5.871645
-BT25,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.396523,-6.115798
-BT26,Lisburn and Castlereagh,Northern Ireland,54.454167,-6.063942
-BT27,Lisburn and Castlereagh,Northern Ireland,54.509035,-6.024632
-BT28,Lisburn and Castlereagh,Northern Ireland,54.521933,-6.084434
-BT29,Antrim and Newtownabbey,Northern Ireland,54.621391,-6.197521
-BT30,"Newry, Mourne and Down",Northern Ireland,54.333499,-5.703375
-BT31,"Newry, Mourne and Down",Northern Ireland,54.276529,-5.968428
-BT32,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.336242,-6.247335
-BT33,"Newry, Mourne and Down",Northern Ireland,54.223343,-5.890744
-BT34,"Newry, Mourne and Down",Northern Ireland,54.153127,-6.181605
-BT35,"Newry, Mourne and Down",Northern Ireland,54.164895,-6.439656
-BT36,Antrim and Newtownabbey,Northern Ireland,54.678247,-5.959661
-BT37,Antrim and Newtownabbey,Northern Ireland,54.676397,-5.908278
-BT38,Mid and East Antrim,Northern Ireland,54.728734,-5.801127
-BT39,Antrim and Newtownabbey,Northern Ireland,54.745197,-6.018105
-BT4,Belfast,Northern Ireland,54.602727,-5.868166
-BT40,Mid and East Antrim,Northern Ireland,54.846646,-5.822876
-BT41,Antrim and Newtownabbey,Northern Ireland,54.731317,-6.253812
-BT42,Mid and East Antrim,Northern Ireland,54.854757,-6.276737
-BT43,Mid and East Antrim,Northern Ireland,54.890684,-6.265732
-BT44,Mid and East Antrim,Northern Ireland,54.972870,-6.284191
-BT45,Mid Ulster,Northern Ireland,54.759776,-6.638933
-BT46,Mid Ulster,Northern Ireland,54.865550,-6.662934
-BT47,Derry City and Strabane,Northern Ireland,54.980595,-7.231056
-BT48,Derry City and Strabane,Northern Ireland,55.009080,-7.327276
-BT49,Causeway Coast and Glens,Northern Ireland,55.047539,-6.951742
-BT5,Belfast,Northern Ireland,54.588623,-5.873864
-BT51,Causeway Coast and Glens,Northern Ireland,55.061260,-6.683330
-BT52,Causeway Coast and Glens,Northern Ireland,55.133624,-6.655913
-BT53,Causeway Coast and Glens,Northern Ireland,55.085069,-6.477025
-BT54,Causeway Coast and Glens,Other,55.204659,-6.256240
-BT54_BT57,Causeway Coast and Glens,Northern Ireland,55.204121,-6.362160
-BT55,Causeway Coast and Glens,Northern Ireland,55.179674,-6.709666
-BT56,Causeway Coast and Glens,Northern Ireland,55.197411,-6.650624
-BT56_BT57,Causeway Coast and Glens,Other,55.199897,-6.595215
-BT6,Belfast,Northern Ireland,54.580812,-5.898378
-BT60,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.292701,-6.647718
-BT61,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.366855,-6.626184
-BT62,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.412825,-6.464686
-BT63,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.408102,-6.392424
-BT64_BT65,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.446737,-6.376852
-BT66,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.455341,-6.333379
-BT67,"Armagh City, Banbridge and Craigavon",Northern Ireland,54.486843,-6.268282
-BT68_BT69_BT76_BT77,Mid Ulster,Northern Ireland,54.411786,-7.031574
-BT70,Mid Ulster,Northern Ireland,54.514456,-6.881655
-BT71,Mid Ulster,Northern Ireland,54.512636,-6.705751
-BT74,Fermanagh and Omagh,Northern Ireland,54.344702,-7.663433
-BT75_BT94,Fermanagh and Omagh,Northern Ireland,54.376080,-7.508228
-BT78,Fermanagh and Omagh,Northern Ireland,54.572642,-7.372191
-BT79,Fermanagh and Omagh,Northern Ireland,54.622174,-7.204826
-BT8,Lisburn and Castlereagh,Northern Ireland,54.545330,-5.908319
-BT80,Mid Ulster,Northern Ireland,54.645828,-6.743682
-BT81,Derry City and Strabane,Northern Ireland,54.695950,-7.612247
-BT82,Derry City and Strabane,Northern Ireland,54.826262,-7.431335
-BT9,Belfast,Northern Ireland,54.572190,-5.950181
-BT92,Fermanagh and Omagh,Northern Ireland,54.223723,-7.464946
-BT93,Fermanagh and Omagh,Northern Ireland,54.467633,-7.826245
-CA1,Carlisle,England,54.887138,-2.918289
-CA10,Eden,Other,54.614250,-2.662316
-CA10_CA9,Eden,England,54.653834,-2.610537
-CA11,Eden,England,54.664817,-2.782180
-CA12,Allerdale,England,54.602302,-3.134343
-CA13,Allerdale,England,54.660433,-3.368023
-CA14,Allerdale,England,54.635172,-3.539530
-CA14_CA95,Allerdale,England,54.635208,-3.539632
-CA15,Allerdale,England,54.711837,-3.481985
-CA16_CA17,Eden,England,54.530685,-2.423109
-CA16_CA17_CA9,Eden,Other,54.603317,-2.421628
-CA18_CA19_CA20_CA21_LA19,Copeland,England,54.383974,-3.434606
-CA2,Carlisle,England,54.884774,-2.950652
-CA22_CA27,Copeland,England,54.482185,-3.542752
-CA23_CA24_CA26,Copeland,England,54.529427,-3.498519
-CA25,Copeland,England,54.522047,-3.519585
-CA28,Copeland,England,54.543650,-3.579613
-CA3,Carlisle,England,54.905908,-2.939978
-CA4,Carlisle,England,54.856708,-2.820737
-CA5,Carlisle,England,54.820752,-3.210939
-CA6,Carlisle,England,54.986976,-2.868530
-CA7,Allerdale,England,54.808549,-3.235230
-CA8,Carlisle,England,54.939704,-2.688139
-CB1,Cambridge,England,52.185854,0.167350
-CB10,Uttlesford,England,52.029332,0.258128
-CB11,Uttlesford,England,52.001877,0.213910
-CB2,Cambridge,England,52.171884,0.129586
-CB21,South Cambridgeshire,England,52.130497,0.279417
-CB22,South Cambridgeshire,England,52.133263,0.135967
-CB23,South Cambridgeshire,England,52.216762,-0.022836
-CB24,South Cambridgeshire,England,52.275454,0.084226
-CB25,East Cambridgeshire,England,52.256881,0.245840
-CB3,Cambridge,England,52.214071,0.033456
-CB4,Cambridge,England,52.243722,0.117619
-CB5,Cambridge,England,52.233651,0.199544
-CB6,East Cambridgeshire,England,52.403379,0.224630
-CB7,East Cambridgeshire,England,52.369896,0.311986
-CB8,West Suffolk,England,52.232978,0.420957
-CB9,West Suffolk,England,52.083008,0.439954
-CF10_CF91_CF95_CF99,Cardiff,Wales,51.473533,-3.177490
-CF10_CF99,Cardiff,Wales,51.473623,-3.177248
-CF11,Cardiff,Wales,51.470671,-3.192643
-CF14,Cardiff,Wales,51.520243,-3.202440
-CF15,Cardiff,Wales,51.533869,-3.271069
-CF23,Cardiff,Wales,51.513579,-3.145149
-CF24,Cardiff,Wales,51.484747,-3.166390
-CF3,Cardiff,Wales,51.518032,-3.118626
-CF31,Bridgend,Wales,51.507718,-3.575437
-CF32,Bridgend,Wales,51.557652,-3.582809
-CF33,Bridgend,Wales,51.524488,-3.687095
-CF34,Bridgend,Wales,51.610761,-3.652625
-CF35,Bridgend,Wales,51.521270,-3.527774
-CF36,Bridgend,Wales,51.483966,-3.699788
-CF37,Rhondda Cynon Taf,Wales,51.601487,-3.334257
-CF38,Rhondda Cynon Taf,Wales,51.560913,-3.333486
-CF39,Rhondda Cynon Taf,Wales,51.601746,-3.426585
-CF3_CF30,Cardiff,Wales,51.518106,-3.118670
-CF40,Rhondda Cynon Taf,Wales,51.620506,-3.452738
-CF41,Rhondda Cynon Taf,Wales,51.647794,-3.482728
-CF42,Rhondda Cynon Taf,Wales,51.666577,-3.521918
-CF43,Rhondda Cynon Taf,Wales,51.656997,-3.449597
-CF44,Rhondda Cynon Taf,Wales,51.717313,-3.457270
-CF45,Rhondda Cynon Taf,Wales,51.670075,-3.362832
-CF46,Merthyr Tydfil,Wales,51.663926,-3.301476
-CF47,Merthyr Tydfil,Wales,51.750663,-3.375456
-CF48,Merthyr Tydfil,Wales,51.742599,-3.370590
-CF5,Cardiff,Wales,51.482894,-3.241502
-CF61,Vale of Glamorgan,Wales,51.409446,-3.480954
-CF62,Vale of Glamorgan,Wales,51.404193,-3.309225
-CF63,Vale of Glamorgan,Wales,51.410606,-3.260303
-CF64,Vale of Glamorgan,Wales,51.434448,-3.188143
-CF71,Vale of Glamorgan,Wales,51.456926,-3.464771
-CF72,Rhondda Cynon Taf,Wales,51.529879,-3.399697
-CF81_NP24,Caerphilly,Wales,51.705658,-3.242423
-CF82,Caerphilly,Wales,51.649327,-3.237124
-CF83,Caerphilly,Wales,51.585530,-3.220549
-CH1_CH70_CH88_CH99,Cheshire West and Chester,England,53.198627,-2.900300
-CH1_CH88,Cheshire West and Chester,England,53.199050,-2.900030
-CH2,Cheshire West and Chester,England,53.215587,-2.870708
-CH25_CH41,Wirral,England,53.394855,-3.029402
-CH26_CH43,Wirral,England,53.381751,-3.060521
-CH27_CH44,Wirral,England,53.416206,-3.037840
-CH28_CH46,Wirral,England,53.403660,-3.110992
-CH29_CH47,Wirral,England,53.394790,-3.171942
-CH3,Cheshire West and Chester,England,53.167867,-2.825680
-CH30_CH49,Wirral,England,53.380879,-3.103080
-CH31_CH60,Wirral,England,53.327341,-3.096781
-CH32_CH63,Wirral,England,53.347477,-3.009957
-CH33_CH64,Cheshire West and Chester,England,53.288553,-3.050439
-CH34_CH65,Cheshire West and Chester,England,53.278721,-2.903228
-CH4,Cheshire West and Chester,Wales,53.169503,-2.938386
-CH41,Wirral,England,53.394691,-3.030756
-CH42,Wirral,England,53.375233,-3.022053
-CH43,Wirral,England,53.382866,-3.060147
-CH45,Wirral,England,53.428270,-3.050786
-CH46,Wirral,England,53.403843,-3.110937
-CH47,Wirral,England,53.395843,-3.170206
-CH48,Wirral,England,53.372565,-3.170850
-CH49,Wirral,England,53.380986,-3.103349
-CH5,Flintshire,Wales,53.204797,-3.038962
-CH6,Flintshire,Wales,53.249109,-3.144271
-CH60,Wirral,England,53.326945,-3.096434
-CH61,Wirral,England,53.347378,-3.101770
-CH62,Wirral,England,53.335866,-2.982175
-CH63,Wirral,England,53.345811,-3.011375
-CH64,Cheshire West and Chester,England,53.288361,-3.049266
-CH66,Cheshire West and Chester,England,53.278039,-2.935614
-CH7,Flintshire,Wales,53.169395,-3.134127
-CH8,Flintshire,Wales,53.282253,-3.241552
-CM0,Maldon,England,51.659550,0.832278
-CM1,Chelmsford,England,51.745369,0.465961
-CM11,Basildon,England,51.623963,0.442857
-CM12,Basildon,England,51.626823,0.414862
-CM13,Brentwood,England,51.615385,0.334555
-CM14,Brentwood,England,51.618942,0.295528
-CM15,Brentwood,England,51.641305,0.304200
-CM16,Epping Forest,England,51.700239,0.118707
-CM17,Harlow,England,51.772774,0.140924
-CM18,Harlow,England,51.756660,0.104677
-CM19,Harlow,England,51.761388,0.074314
-CM19_CM92,Harlow,England,51.761627,0.073922
-CM2,Chelmsford,England,51.723700,0.484970
-CM20,Harlow,England,51.774538,0.100464
-CM21,East Hertfordshire,England,51.811963,0.147811
-CM22,Uttlesford,England,51.865242,0.217069
-CM23,East Hertfordshire,England,51.871028,0.158942
-CM24,Uttlesford,England,51.897736,0.206535
-CM3,Chelmsford,England,51.715837,0.586497
-CM3_CM98_CM99,Chelmsford,England,51.717961,0.578779
-CM4,Brentwood,England,51.674975,0.388476
-CM5_RM4,Epping Forest,England,51.695665,0.224838
-CM6,Uttlesford,England,51.878480,0.373542
-CM7,Braintree,England,51.886054,0.547815
-CM77,Braintree,England,51.867547,0.552812
-CM8,Braintree,England,51.804984,0.638617
-CM9,Maldon,England,51.739370,0.695778
-CO1,Colchester,England,51.880691,0.889686
-CO10,Babergh,England,52.053994,0.726713
-CO11,Tendring,England,51.942411,1.075202
-CO12,Tendring,England,51.932296,1.255743
-CO13,Tendring,England,51.838206,1.237896
-CO14,Tendring,England,51.850255,1.267540
-CO15,Tendring,England,51.796687,1.155197
-CO16,Tendring,England,51.819568,1.125686
-CO2,Colchester,England,51.871040,0.895382
-CO3,Colchester,England,51.885293,0.858197
-CO4,Colchester,England,51.906818,0.920665
-CO5,Colchester,England,51.814082,0.822414
-CO6,Colchester,England,51.932743,0.793417
-CO7,Tendring,England,51.880661,1.002909
-CO8_CO9,Braintree,England,51.968497,0.627705
-CR0,Croydon,Other,51.373245,-0.078267
-CR0_CR9,Croydon,England,51.373879,-0.085014
-CR2,Croydon,England,51.345305,-0.095467
-CR3,Tandridge,England,51.297758,-0.096731
-CR4,Merton,England,51.402532,-0.144876
-CR44_CR9_SM6,Sutton,England,51.369550,-0.115051
-CR5,Croydon,England,51.313378,-0.141389
-CR6,Tandridge,England,51.303011,-0.057425
-CR7,Croydon,England,51.392683,-0.103532
-CR7_CR90,Croydon,England,51.389648,-0.104169
-CR8,Croydon,England,51.336428,-0.110985
-CT1,Canterbury,England,51.278753,1.086630
-CT10,Thanet,England,51.362885,1.429156
-CT11,Thanet,England,51.336506,1.412414
-CT12,Thanet,England,51.343145,1.370587
-CT13,Dover,England,51.268564,1.330371
-CT14,Dover,England,51.217413,1.386976
-CT15,Dover,England,51.171267,1.283472
-CT16,Dover,England,51.139347,1.301422
-CT17,Dover,England,51.128744,1.295289
-CT18,Folkestone and Hythe,England,51.112621,1.150455
-CT19,Folkestone and Hythe,England,51.088378,1.168474
-CT2,Canterbury,England,51.292169,1.081655
-CT20,Folkestone and Hythe,England,51.079655,1.165282
-CT20_CT50,Folkestone and Hythe,England,51.079651,1.165081
-CT21,Folkestone and Hythe,England,51.073061,1.077990
-CT3,Dover,England,51.277024,1.207326
-CT4,Canterbury,England,51.228060,1.067780
-CT5,Canterbury,England,51.354267,1.034532
-CT6,Canterbury,England,51.364244,1.128515
-CT7,Thanet,England,51.371675,1.302401
-CT8,Thanet,England,51.380557,1.340581
-CT9,Thanet,England,51.384010,1.388103
-CV1,Coventry,England,52.408989,-1.507458
-CV10,Nuneaton and Bedworth,England,52.525639,-1.499039
-CV11,Nuneaton and Bedworth,England,52.520243,-1.456876
-CV12,Nuneaton and Bedworth,England,52.477023,-1.473726
-CV13,Hinckley and Bosworth,England,52.608080,-1.417749
-CV2,Coventry,England,52.423362,-1.467676
-CV21,Rugby,England,52.370790,-1.271444
-CV22,Rugby,England,52.357984,-1.283112
-CV23,Rugby,England,52.350145,-1.301897
-CV3,Coventry,England,52.393861,-1.482776
-CV31,Warwick,England,52.280028,-1.527107
-CV32,Warwick,England,52.295681,-1.531882
-CV33,Warwick,England,52.238416,-1.443786
-CV34,Warwick,England,52.284424,-1.584796
-CV35,Stratford-on-Avon,England,52.231984,-1.595348
-CV36,Stratford-on-Avon,England,52.071011,-1.629833
-CV37,Stratford-on-Avon,England,52.187156,-1.714973
-CV4,Coventry,England,52.399613,-1.555632
-CV47,Stratford-on-Avon,England,52.236592,-1.386804
-CV5,Coventry,England,52.411911,-1.548326
-CV6,Coventry,England,52.430950,-1.507128
-CV7,Solihull,England,52.442393,-1.559107
-CV8,Warwick,England,52.351253,-1.547994
-CV9,North Warwickshire,England,52.584373,-1.559076
-CW1,Cheshire East,England,53.099757,-2.430602
-CW10,Cheshire East,England,53.189051,-2.448986
-CW11,Cheshire East,England,53.143226,-2.365098
-CW12,Cheshire East,England,53.166307,-2.215998
-CW2,Cheshire East,England,53.081316,-2.445803
-CW2_CW98,Cheshire East,England,53.081328,-2.445779
-CW3,Newcastle-under-Lyme,England,53.003550,-2.410909
-CW4,Cheshire East,England,53.204106,-2.340433
-CW5,Cheshire East,England,53.063393,-2.521976
-CW6,Cheshire West and Chester,England,53.161607,-2.667326
-CW7,Cheshire West and Chester,England,53.190678,-2.527535
-CW8,Cheshire West and Chester,England,53.254197,-2.559423
-CW9,Cheshire West and Chester,England,53.259587,-2.503980
-DA1,Dartford,England,51.447276,0.209409
-DA10,Dartford,England,51.442890,0.300883
-DA11,Gravesham,England,51.435374,0.351725
-DA12,Gravesham,England,51.430633,0.384072
-DA13,Gravesham,England,51.386061,0.354273
-DA14,Bexley,England,51.425884,0.110447
-DA15,Bexley,England,51.439838,0.098953
-DA16,Bexley,England,51.464492,0.109008
-DA17,Bexley,England,51.486568,0.150623
-DA18,Bexley,England,51.491479,0.145750
-DA2,Dartford,England,51.433239,0.231902
-DA3,Sevenoaks,England,51.385928,0.306407
-DA4,Sevenoaks,England,51.392794,0.230812
-DA5,Bexley,England,51.441022,0.147447
-DA6,Bexley,England,51.456117,0.138918
-DA7,Bexley,England,51.465023,0.143352
-DA8,Bexley,England,51.476108,0.179861
-DA9,Dartford,England,51.448200,0.280642
-DD1,Dundee City,Scotland,56.461825,-2.977306
-DD10,Angus,Scotland,56.745297,-2.430887
-DD11,Angus,Scotland,56.572423,-2.597785
-DD2,Dundee City,Scotland,56.471068,-3.027964
-DD3,Dundee City,Scotland,56.481982,-2.989328
-DD4,Dundee City,Scotland,56.481910,-2.935707
-DD5,Dundee City,Scotland,56.479512,-2.863297
-DD6,Fife,Scotland,56.436950,-2.927073
-DD7,Angus,Scotland,56.502767,-2.719498
-DD8,Angus,Scotland,56.655667,-2.921961
-DD9,Angus,Scotland,56.747575,-2.666821
-DE1,Derby,England,52.918929,-1.472694
-DE11,South Derbyshire,England,52.773031,-1.556841
-DE12,North West Leicestershire,England,52.727402,-1.553924
-DE13,East Staffordshire,England,52.807734,-1.687980
-DE14,East Staffordshire,England,52.807167,-1.638879
-DE15,East Staffordshire,England,52.799529,-1.610459
-DE1_DE99,Derby,England,52.918916,-1.472665
-DE21,Derby,England,52.932519,-1.435232
-DE22,Derby,England,52.933019,-1.497593
-DE23,Derby,England,52.899385,-1.499817
-DE24,Derby,England,52.890478,-1.453502
-DE3,Derby,England,52.915416,-1.508648
-DE4,Derbyshire Dales,England,53.143739,-1.585388
-DE45,Derbyshire Dales,England,53.214332,-1.677329
-DE5,Amber Valley,England,53.056737,-1.425792
-DE55,Amber Valley,England,53.099639,-1.371976
-DE56,Amber Valley,England,53.021172,-1.476994
-DE6,Derbyshire Dales,England,52.963148,-1.667958
-DE65,South Derbyshire,England,52.866481,-1.620513
-DE7,Erewash,England,52.940037,-1.343021
-DE72,Erewash,England,52.894008,-1.366935
-DE73,Derby,England,52.849449,-1.438519
-DE74,North West Leicestershire,England,52.848021,-1.340728
-DE75,Amber Valley,England,53.012089,-1.353309
-DG1,Dumfries and Galloway,Scotland,55.073249,-3.585563
-DG10_DG13_DG14_DG16,Dumfries and Galloway,England,55.174157,-3.189003
-DG11,Dumfries and Galloway,Scotland,55.114639,-3.340860
-DG12,Dumfries and Galloway,Scotland,54.989815,-3.251614
-DG2,Dumfries and Galloway,Scotland,55.065273,-3.656622
-DG3_DG4,Dumfries and Galloway,Scotland,55.292905,-3.862246
-DG5,Dumfries and Galloway,Scotland,54.921515,-3.812974
-DG6,Dumfries and Galloway,Scotland,54.837201,-4.055507
-DG7,Dumfries and Galloway,Scotland,54.966202,-4.008728
-DG8,Dumfries and Galloway,Scotland,54.874509,-4.514141
-DG9,Dumfries and Galloway,Scotland,54.878601,-5.022831
-DH1_DH97,County Durham,England,54.782583,-1.562578
-DH1_DH99,County Durham,England,54.782659,-1.562403
-DH2,County Durham,England,54.859902,-1.598294
-DH3,Gateshead,England,54.870107,-1.569307
-DH4,Sunderland,England,54.852864,-1.490268
-DH5,Sunderland,England,54.824564,-1.455873
-DH6,County Durham,England,54.753530,-1.464951
-DH7,County Durham,England,54.789487,-1.661525
-DH7_DH99,County Durham,Other,54.789454,-1.659186
-DH8,County Durham,England,54.853308,-1.832983
-DH9,County Durham,England,54.867829,-1.710951
-DH98_NE11_NE82_NE83_NE88_NE92,Gateshead,England,54.939970,-1.629874
-DL1,Darlington,England,54.528031,-1.541316
-DL10,Richmondshire,England,54.413150,-1.699753
-DL11,Richmondshire,England,54.439041,-1.871266
-DL12,County Durham,England,54.570381,-1.981571
-DL13,County Durham,England,54.716695,-1.951795
-DL14,County Durham,England,54.653324,-1.690177
-DL15,County Durham,England,54.709651,-1.729232
-DL16,County Durham,England,54.699089,-1.603821
-DL17,County Durham,England,54.681054,-1.543129
-DL2,Darlington,England,54.527336,-1.591376
-DL3,Darlington,England,54.531169,-1.569063
-DL3_DL98,Darlington,England,54.531141,-1.568991
-DL4,County Durham,England,54.630847,-1.645668
-DL5,County Durham,England,54.616215,-1.576973
-DL6,Hambleton,England,54.367977,-1.394060
-DL7,Hambleton,England,54.337004,-1.479160
-DL8,Richmondshire,England,54.294673,-1.785009
-DL9,Richmondshire,England,54.376040,-1.710856
-DN1,Doncaster,England,53.520963,-1.118413
-DN10,Bassetlaw,England,53.426552,-0.941377
-DN11,Doncaster,England,53.449702,-1.083727
-DN12,Doncaster,England,53.483238,-1.223659
-DN14,East Riding of Yorkshire,England,53.707744,-0.935109
-DN15,North Lincolnshire,England,53.609633,-0.652603
-DN16,North Lincolnshire,England,53.568391,-0.640029
-DN17,North Lincolnshire,England,53.573326,-0.703273
-DN18,North Lincolnshire,England,53.681862,-0.446226
-DN19_DN39,North Lincolnshire,England,53.662189,-0.353806
-DN1_DN55,Doncaster,England,53.520552,-1.118786
-DN2,Doncaster,England,53.532691,-1.104196
-DN20,North Lincolnshire,England,53.557854,-0.503585
-DN21,West Lindsey,England,53.417317,-0.710010
-DN22,Bassetlaw,England,53.324660,-0.929781
-DN3,Doncaster,England,53.543733,-1.064764
-DN31,North East Lincolnshire,England,53.570917,-0.084518
-DN32,North East Lincolnshire,England,53.563245,-0.071106
-DN33,North East Lincolnshire,England,53.540598,-0.098498
-DN34,North East Lincolnshire,England,53.558035,-0.111978
-DN35,North East Lincolnshire,England,53.555541,-0.037951
-DN36,North East Lincolnshire,England,53.513654,-0.040277
-DN37,North East Lincolnshire,England,53.550855,-0.149337
-DN38_LN7,West Lindsey,England,53.509859,-0.356965
-DN4,Doncaster,England,53.505962,-1.122096
-DN40,North East Lincolnshire,England,53.621627,-0.223995
-DN41,North East Lincolnshire,England,53.584723,-0.195573
-DN5,Doncaster,England,53.536724,-1.171192
-DN6,Doncaster,England,53.594759,-1.177097
-DN7,Doncaster,England,53.580335,-1.017580
-DN8,Doncaster,England,53.614484,-0.956500
-DN9,North Lincolnshire,England,53.505550,-0.904996
-DT1,Dorset,England,50.712464,-2.444125
-DT10,Dorset,England,50.937108,-2.331373
-DT11,Dorset,England,50.861423,-2.179894
-DT2,Dorset,England,50.748519,-2.449451
-DT3,Dorset,England,50.640499,-2.466878
-DT4,Dorset,England,50.609862,-2.463201
-DT5,Dorset,England,50.549366,-2.442806
-DT6,Dorset,England,50.738679,-2.774750
-DT7,Dorset,England,50.729257,-2.945794
-DT8,Dorset,England,50.815017,-2.758050
-DT9,Dorset,England,50.942597,-2.516680
-DY1,Dudley,England,52.515139,-2.094345
-DY10,Wyre Forest,England,52.386243,-2.229209
-DY11,Wyre Forest,England,52.385372,-2.260366
-DY11_WV98,Wyre Forest,England,52.391089,-2.249199
-DY12,Wyre Forest,England,52.386443,-2.323678
-DY13,Wyre Forest,England,52.337186,-2.280862
-DY14,Shropshire,England,52.380995,-2.456097
-DY2,Dudley,England,52.497580,-2.082601
-DY3,Dudley,England,52.529762,-2.128583
-DY4,Sandwell,England,52.531874,-2.054451
-DY5,Dudley,England,52.480979,-2.122798
-DY6,Dudley,England,52.498891,-2.164363
-DY7,South Staffordshire,England,52.464573,-2.217790
-DY8,Dudley,England,52.459952,-2.153917
-DY9,Dudley,England,52.437529,-2.124177
-E1,Tower Hamlets,England,51.516256,-0.060427
-E10,Waltham Forest,England,51.568696,-0.012931
-E11,Waltham Forest,England,51.567370,0.011668
-E12,Newham,England,51.551035,0.050794
-E13,Newham,England,51.528216,0.025811
-E14,Tower Hamlets,England,51.507579,-0.020743
-E15,Newham,England,51.538655,0.000570
-E16,Newham,England,51.511456,0.020766
-E17,Waltham Forest,England,51.586401,-0.020221
-E18,Redbridge,England,51.592575,0.025546
-E1W_E98,Tower Hamlets,Other,51.511540,-0.059729
-E1W_E98_EC3N,Tower Hamlets,England,51.511882,-0.065887
-E2,Tower Hamlets,England,51.530138,-0.062264
-E20,Newham,England,51.546459,-0.010502
-E3,Tower Hamlets,England,51.528158,-0.025792
-E4,Waltham Forest,England,51.623841,-0.003239
-E5,Hackney,England,51.559156,-0.054668
-E6,Newham,England,51.525185,0.055168
-E7,Newham,England,51.547556,0.026155
-E8,Hackney,England,51.541262,-0.064986
-E9,Hackney,England,51.541841,-0.046603
-EC1A_EC2A_EC2M_EC2N_EC2P_EC2R_EC2V_EC2Y_EC3A_EC3M_EC3R_EC3V_EC4A_EC4M_EC4N_EC4R_EC4V_EC4Y,City of London,England,51.516606,-0.094013
-EC1A_EC2M_EC2N_EC2P_EC2R_EC2V_EC2Y_EC3A_EC3M_EC3N_EC3P_EC3R_EC3V_EC4A_EC4M_EC4N_EC4R_EC4V_EC4Y,City of London,England,51.515727,-0.094203
-EC1M_EC1P_EC1Y_EC4P,Islington,England,51.522887,-0.103766
-EC1M_EC1Y,Islington,England,51.522161,-0.098935
-EC1N_WC1A_WC1B_WC1E_WC1R_WC1V_WC2A,Camden,England,51.518782,-0.119683
-EC1R,Islington,England,51.524494,-0.108972
-EC1V,Islington,England,51.526505,-0.099307
-EC2A_WC2H,Hackney,Other,51.518462,-0.107721
-EH10,City of Edinburgh,Scotland,55.921547,-3.210799
-EH11,City of Edinburgh,Scotland,55.933355,-3.251433
-EH12,City of Edinburgh,Scotland,55.941364,-3.274021
-EH13,City of Edinburgh,Scotland,55.908615,-3.242566
-EH14,City of Edinburgh,Scotland,55.911469,-3.281085
-EH15,City of Edinburgh,Scotland,55.947153,-3.113073
-EH16,City of Edinburgh,Scotland,55.923746,-3.151314
-EH17,City of Edinburgh,Scotland,55.906987,-3.144347
-EH18_EH24_EH25,Midlothian,Scotland,55.863310,-3.147753
-EH19,Midlothian,Scotland,55.872466,-3.105048
-EH1_EH2,City of Edinburgh,Scotland,55.952714,-3.196277
-EH1_EH2_EH91_EH99,City of Edinburgh,Scotland,55.952307,-3.197770
-EH20,Midlothian,Scotland,55.878682,-3.154258
-EH21,East Lothian,Scotland,55.939011,-3.046886
-EH22,Midlothian,Scotland,55.885574,-3.061650
-EH23_EH37,Midlothian,Scotland,55.846210,-3.031616
-EH26,Midlothian,Scotland,55.833080,-3.223961
-EH27_EH55,West Lothian,Scotland,55.857324,-3.542274
-EH28_EH29,City of Edinburgh,Scotland,55.940583,-3.400418
-EH3,City of Edinburgh,Scotland,55.952462,-3.204393
-EH30,City of Edinburgh,Scotland,55.982685,-3.378280
-EH31_EH39_EH40,East Lothian,Scotland,56.040105,-2.737744
-EH32,East Lothian,Scotland,55.966469,-2.953011
-EH33,East Lothian,Scotland,55.941840,-2.945070
-EH34_EH35_EH36,East Lothian,Scotland,55.907548,-2.907787
-EH38_EH43_EH44_TD10_TD2_TD3_TD4,Scottish Borders,Scotland,55.674225,-2.782179
-EH38_EH43_EH44_TD2,Scottish Borders,Other,55.675599,-2.927417
-EH4,City of Edinburgh,Scotland,55.962388,-3.255392
-EH41,East Lothian,Scotland,55.949494,-2.777491
-EH42,East Lothian,Scotland,55.993861,-2.524543
-EH45_EH46,Scottish Borders,Scotland,55.672120,-3.224663
-EH47,West Lothian,Scotland,55.860684,-3.664731
-EH48,West Lothian,Scotland,55.898396,-3.661015
-EH49,West Lothian,Scotland,55.976801,-3.602775
-EH5,City of Edinburgh,Scotland,55.974571,-3.219332
-EH51,Falkirk,Scotland,56.011592,-3.605385
-EH52,West Lothian,Scotland,55.936062,-3.489213
-EH53,West Lothian,Scotland,55.894155,-3.476057
-EH54,West Lothian,Scotland,55.891972,-3.524883
-EH5_EH95,City of Edinburgh,Scotland,55.974603,-3.219597
-EH6,City of Edinburgh,Scotland,55.971161,-3.173889
-EH7,City of Edinburgh,Scotland,55.959919,-3.164799
-EH8,City of Edinburgh,Other,55.949933,-3.166279
-EH8_EH99,City of Edinburgh,Scotland,55.949941,-3.166390
-EH9,City of Edinburgh,Scotland,55.933167,-3.186949
-EN1,Enfield,England,51.653210,-0.070681
-EN10,Broxbourne,England,51.740912,-0.021119
-EN11,Broxbourne,England,51.763843,-0.009340
-EN2,Enfield,England,51.658512,-0.091715
-EN3,Enfield,England,51.658118,-0.041638
-EN4,Barnet,England,51.648184,-0.162356
-EN5,Barnet,England,51.648302,-0.190537
-EN6,Hertsmere,England,51.699028,-0.179810
-EN7,Broxbourne,England,51.708248,-0.064534
-EN8,Broxbourne,England,51.696200,-0.033199
-EN9,Epping Forest,England,51.694606,0.010440
-EX1,Exeter,England,50.726739,-3.510181
-EX10,East Devon,England,50.691933,-3.245768
-EX11,East Devon,England,50.747157,-3.288636
-EX12_EX24,East Devon,England,50.715613,-3.082923
-EX13,East Devon,England,50.773838,-3.025365
-EX14,East Devon,England,50.810938,-3.200143
-EX15,Mid Devon,England,50.875613,-3.346027
-EX16,Mid Devon,England,50.920512,-3.490913
-EX17_EX18,Mid Devon,England,50.824956,-3.731742
-EX19_EX38,Torridge,England,50.917196,-4.089703
-EX2,Exeter,England,50.711462,-3.515339
-EX20,West Devon,England,50.750730,-4.015450
-EX21_EX22,Torridge,England,50.819300,-4.317102
-EX23,Cornwall,England,50.824841,-4.534205
-EX3,Exeter,England,50.693988,-3.459870
-EX31_EX35,North Devon,England,51.101293,-4.040409
-EX32,North Devon,England,51.073205,-4.027071
-EX33,North Devon,England,51.112584,-4.166215
-EX34,North Devon,England,51.199189,-4.107816
-EX36_EX37,North Devon,England,51.004846,-3.849628
-EX39,Torridge,England,51.016004,-4.242613
-EX4,Exeter,England,50.730239,-3.526510
-EX5,East Devon,England,50.754871,-3.436984
-EX6,Teignbridge,England,50.675713,-3.592699
-EX7,Teignbridge,England,50.585950,-3.470911
-EX8,East Devon,England,50.628434,-3.403050
-EX9,East Devon,England,50.638934,-3.323659
-FK1,Falkirk,Scotland,55.988703,-3.793073
-FK10,Clackmannanshire,Scotland,56.115008,-3.783332
-FK11_FK12,Clackmannanshire,Scotland,56.151389,-3.817868
-FK13,Clackmannanshire,Scotland,56.150235,-3.742484
-FK14_PH4,Clackmannanshire,Other,56.181909,-3.688007
-FK14_PH4_PH5_PH6,Clackmannanshire,Scotland,56.257664,-3.797685
-FK15,Stirling,Scotland,56.200002,-3.952305
-FK16_FK17_FK18_FK19_FK20_FK21,Stirling,Scotland,56.285972,-4.231805
-FK2,Falkirk,Scotland,56.005030,-3.757966
-FK3,Falkirk,Scotland,56.011927,-3.720417
-FK4,Falkirk,Scotland,55.997596,-3.907327
-FK5,Falkirk,Scotland,56.025482,-3.820211
-FK6,Falkirk,Scotland,56.021569,-3.914544
-FK7,Stirling,Scotland,56.099375,-3.918100
-FK8,Stirling,Scotland,56.129028,-4.034276
-FK9,Stirling,Scotland,56.141596,-3.941378
-FY1,Blackpool,England,53.816100,-3.048272
-FY2,Blackpool,England,53.844375,-3.040234
-FY3,Blackpool,England,53.821073,-3.022660
-FY4,Blackpool,England,53.792010,-3.030531
-FY5,Wyre,England,53.873583,-3.024336
-FY6,Wyre,England,53.864933,-2.980451
-FY7,Wyre,England,53.916546,-3.025499
-FY8,Fylde,England,53.750427,-3.006573
-G11,Glasgow City,Scotland,55.873528,-4.313240
-G12,Glasgow City,Scotland,55.879664,-4.302028
-G13,Glasgow City,Scotland,55.892843,-4.347155
-G14,Glasgow City,Scotland,55.880142,-4.350558
-G15,Glasgow City,Scotland,55.910345,-4.366947
-G1_G2,Glasgow City,Scotland,55.862392,-4.253473
-G1_G2_G58_G9_G90,Glasgow City,Scotland,55.862471,-4.253314
-G20,Glasgow City,Scotland,55.885492,-4.282038
-G21,Glasgow City,Scotland,55.880495,-4.222839
-G22,Glasgow City,Scotland,55.889565,-4.252609
-G23,Glasgow City,Scotland,55.902174,-4.285240
-G3,Glasgow City,Scotland,55.866310,-4.270273
-G31,Glasgow City,Scotland,55.856188,-4.209291
-G32,Glasgow City,Scotland,55.848783,-4.166307
-G33,Glasgow City,Scotland,55.872943,-4.165010
-G34,Glasgow City,Scotland,55.867905,-4.112598
-G4,Glasgow City,Scotland,55.868140,-4.251595
-G40,Glasgow City,Scotland,55.847482,-4.221107
-G41,Glasgow City,Scotland,55.838653,-4.281634
-G42,Glasgow City,Scotland,55.834079,-4.258679
-G43,Glasgow City,Scotland,55.818485,-4.292392
-G44,Glasgow City,Scotland,55.814162,-4.257691
-G45,Glasgow City,Scotland,55.804572,-4.233091
-G46,East Renfrewshire,Scotland,55.804345,-4.306983
-G5,Glasgow City,Scotland,55.847702,-4.253939
-G51,Glasgow City,Scotland,55.857418,-4.313143
-G52,Glasgow City,Scotland,55.849576,-4.353187
-G53,Glasgow City,Scotland,55.820876,-4.352413
-G60,West Dunbartonshire,Scotland,55.918228,-4.443481
-G61,East Dunbartonshire,Scotland,55.919196,-4.330236
-G62,East Dunbartonshire,Scotland,55.942556,-4.320319
-G63,Stirling,Scotland,56.042764,-4.369760
-G64,East Dunbartonshire,Scotland,55.910915,-4.217951
-G65,North Lanarkshire,Scotland,55.972124,-4.099915
-G66,East Dunbartonshire,Scotland,55.940276,-4.154423
-G67,North Lanarkshire,Scotland,55.947830,-3.985711
-G68,North Lanarkshire,Scotland,55.953224,-4.010933
-G68_G70,North Lanarkshire,Scotland,55.953146,-4.010359
-G69,North Lanarkshire,Scotland,55.874029,-4.102489
-G71,North Lanarkshire,Scotland,55.821800,-4.075715
-G72,South Lanarkshire,Scotland,55.804576,-4.130539
-G73,South Lanarkshire,Scotland,55.821778,-4.206813
-G74_G79,South Lanarkshire,Scotland,55.767823,-4.177961
-G75,South Lanarkshire,Scotland,55.751204,-4.195319
-G76,East Renfrewshire,Scotland,55.778273,-4.273357
-G77,East Renfrewshire,Scotland,55.773943,-4.331406
-G78,East Renfrewshire,Scotland,55.793502,-4.409022
-G81,West Dunbartonshire,Scotland,55.912068,-4.407160
-G82,West Dunbartonshire,Scotland,55.950950,-4.573528
-G83,West Dunbartonshire,Scotland,56.011734,-4.587355
-G84,Argyll and Bute,Scotland,56.014045,-4.754729
-GL1,Gloucester,England,51.857491,-2.245015
-GL10,Stroud,England,51.744244,-2.283036
-GL11,Stroud,England,51.692157,-2.357361
-GL12_GL9,Stroud,England,51.615553,-2.367957
-GL13,Stroud,England,51.693010,-2.453799
-GL14,Forest of Dean,England,51.818808,-2.484361
-GL15,Forest of Dean,England,51.735019,-2.549838
-GL16,Forest of Dean,England,51.795075,-2.613224
-GL17,Forest of Dean,England,51.854915,-2.508079
-GL18,Forest of Dean,England,51.940697,-2.413913
-GL19,Forest of Dean,England,51.937974,-2.284358
-GL2,Gloucester,England,51.841311,-2.269871
-GL20,Tewkesbury,England,52.002731,-2.131127
-GL3,Tewkesbury,England,51.859753,-2.180835
-GL4,Gloucester,England,51.842913,-2.218922
-GL5,Stroud,England,51.739264,-2.221193
-GL50,Cheltenham,England,51.901477,-2.081491
-GL51,Cheltenham,England,51.896674,-2.108268
-GL52,Cheltenham,England,51.922182,-2.060716
-GL53,Cheltenham,England,51.882025,-2.069069
-GL54,Cotswold,England,51.898051,-1.867570
-GL55,Cotswold,England,52.062330,-1.771197
-GL56,Cotswold,England,51.990219,-1.704024
-GL6,Stroud,England,51.738323,-2.198894
-GL7,Cotswold,England,51.711409,-1.906021
-GL8,Cotswold,England,51.641518,-2.169092
-GU1,Guildford,England,51.243115,-0.570127
-GU10,Waverley,England,51.198388,-0.797403
-GU11,Rushmoor,England,51.249708,-0.762474
-GU12,Guildford,England,51.251910,-0.733434
-GU14,Rushmoor,England,51.291033,-0.761396
-GU15,Surrey Heath,England,51.335539,-0.750558
-GU16,Surrey Heath,England,51.313754,-0.731175
-GU17,Hart,England,51.336595,-0.806573
-GU18,Surrey Heath,England,51.347495,-0.663155
-GU19_GU20,Surrey Heath,England,51.363243,-0.673969
-GU2,Guildford,England,51.244780,-0.593029
-GU21,Woking,England,51.319862,-0.577381
-GU22,Woking,England,51.313392,-0.553198
-GU23,Guildford,England,51.297661,-0.510969
-GU24,Surrey Heath,England,51.330147,-0.625355
-GU25,Runnymede,England,51.401383,-0.569681
-GU26,Waverley,England,51.110292,-0.746140
-GU27,Waverley,England,51.083576,-0.722288
-GU28,Chichester,England,50.991119,-0.628407
-GU29,Chichester,England,50.984473,-0.746560
-GU3,Guildford,England,51.246862,-0.621492
-GU30,East Hampshire,England,51.075596,-0.803681
-GU31,East Hampshire,England,50.997753,-0.908555
-GU32,East Hampshire,England,51.007842,-0.961121
-GU33,East Hampshire,England,51.047937,-0.893585
-GU34,East Hampshire,England,51.140555,-0.984787
-GU35,East Hampshire,England,51.116740,-0.851291
-GU4,Guildford,England,51.243003,-0.546694
-GU46,Hart,England,51.338464,-0.824069
-GU47,Bracknell Forest,England,51.347552,-0.793202
-GU5,Waverley,England,51.206334,-0.522063
-GU51,Hart,England,51.285220,-0.839848
-GU52,Hart,England,51.265954,-0.838273
-GU6,Waverley,England,51.140826,-0.485217
-GU7,Waverley,England,51.188914,-0.610689
-GU8,Waverley,England,51.152187,-0.640031
-GU9,Waverley,England,51.217893,-0.795908
-HA0,Brent,England,51.550123,-0.304737
-HA1,Harrow,England,51.581359,-0.336166
-HA2,Harrow,England,51.575758,-0.354855
-HA3,Harrow,England,51.591518,-0.322938
-HA4,Hillingdon,England,51.570789,-0.410440
-HA5,Harrow,England,51.594651,-0.385880
-HA6,Hillingdon,England,51.610024,-0.420609
-HA7,Harrow,England,51.609670,-0.306999
-HA8,Barnet,England,51.611587,-0.275254
-HA9,Brent,England,51.558649,-0.289947
-HD1,Kirklees,England,53.646878,-1.786324
-HD2,Kirklees,England,53.666895,-1.776682
-HD3,Kirklees,England,53.652865,-1.830387
-HD4,Kirklees,England,53.627225,-1.797341
-HD5,Kirklees,England,53.647568,-1.748806
-HD6,Calderdale,England,53.701703,-1.782813
-HD7,Kirklees,England,53.599019,-1.829372
-HD8,Kirklees,England,53.600651,-1.675390
-HD9,Kirklees,England,53.579204,-1.795822
-HG1,Harrogate,England,53.999782,-1.532607
-HG2,Harrogate,England,53.987703,-1.528053
-HG3,Harrogate,England,54.030294,-1.614294
-HG4,Harrogate,England,54.153993,-1.559425
-HG5,Harrogate,England,54.013193,-1.459634
-HP1,Dacorum,England,51.754856,-0.479936
-HP10,Buckinghamshire,England,51.610742,-0.710191
-HP11,Buckinghamshire,England,51.625261,-0.746470
-HP12,Buckinghamshire,England,51.624710,-0.778060
-HP13,Buckinghamshire,England,51.633023,-0.741451
-HP14,Buckinghamshire,England,51.648700,-0.825819
-HP15,Buckinghamshire,England,51.653323,-0.717456
-HP16,Buckinghamshire,England,51.702396,-0.717867
-HP17,Buckinghamshire,England,51.750026,-0.852005
-HP18,Buckinghamshire,England,51.816803,-0.960615
-HP19,Buckinghamshire,England,51.823835,-0.826374
-HP2,Dacorum,England,51.762040,-0.454445
-HP20,Buckinghamshire,England,51.819655,-0.807425
-HP21,Buckinghamshire,England,51.806840,-0.806178
-HP22,Buckinghamshire,England,51.800600,-0.768708
-HP23,Dacorum,England,51.794945,-0.662219
-HP27,Buckinghamshire,England,51.721770,-0.831058
-HP3,Dacorum,England,51.737266,-0.471665
-HP4,Dacorum,England,51.766744,-0.567767
-HP5,Buckinghamshire,England,51.713073,-0.608530
-HP6,Buckinghamshire,England,51.677422,-0.601583
-HP7,Buckinghamshire,England,51.666340,-0.610427
-HP8,Buckinghamshire,England,51.644759,-0.576042
-HP9,Buckinghamshire,England,51.610355,-0.642019
-HR1,"Herefordshire, County of",England,52.057048,-2.689372
-HR2,"Herefordshire, County of",England,52.013503,-2.778163
-HR3_HR5,"Herefordshire, County of",England,52.129919,-3.054212
-HR4,"Herefordshire, County of",England,52.084749,-2.761064
-HR6,"Herefordshire, County of",England,52.231793,-2.768695
-HR7,"Herefordshire, County of",England,52.184506,-2.525042
-HR8,"Herefordshire, County of",England,52.044103,-2.442149
-HR9,"Herefordshire, County of",England,51.908395,-2.581534
-HS1,Na h-Eileanan Siar,Scotland,58.212056,-6.381416
-HS1_HS2,Na h-Eileanan Siar,Other,58.232240,-6.423527
-HS2_HS3_HS4_HS5,Na h-Eileanan Siar,Scotland,58.167934,-6.541383
-HS3_HS4_HS5_HS6_HS7_HS8_HS9,Na h-Eileanan Siar,Other,57.494115,-7.210827
-HS6_HS7_HS8_HS9,Na h-Eileanan Siar,Scotland,57.344030,-7.355750
-HU10,East Riding of Yorkshire,England,53.747822,-0.440350
-HU11,East Riding of Yorkshire,England,53.830447,-0.237110
-HU12,East Riding of Yorkshire,England,53.723969,-0.135380
-HU13,East Riding of Yorkshire,England,53.724658,-0.437286
-HU14,East Riding of Yorkshire,England,53.727377,-0.488399
-HU15,East Riding of Yorkshire,England,53.747216,-0.618652
-HU16,East Riding of Yorkshire,England,53.781335,-0.421640
-HU17,East Riding of Yorkshire,England,53.846022,-0.426272
-HU18,East Riding of Yorkshire,England,53.908685,-0.170232
-HU19,East Riding of Yorkshire,England,53.723298,0.034086
-HU1_HU2,"Kingston upon Hull, City of",England,53.745232,-0.337031
-HU20_YO43,East Riding of Yorkshire,England,53.846246,-0.670933
-HU3,"Kingston upon Hull, City of",England,53.741332,-0.365440
-HU4,"Kingston upon Hull, City of",England,53.736455,-0.399392
-HU5,"Kingston upon Hull, City of",England,53.759481,-0.374533
-HU6,"Kingston upon Hull, City of",England,53.780865,-0.368836
-HU7,"Kingston upon Hull, City of",England,53.788797,-0.330271
-HU8,"Kingston upon Hull, City of",England,53.767787,-0.305009
-HU9,"Kingston upon Hull, City of",England,53.753593,-0.296227
-HX1,Calderdale,England,53.721726,-1.867902
-HX2,Calderdale,England,53.738414,-1.904229
-HX3,Calderdale,England,53.726386,-1.845874
-HX4,Calderdale,England,53.680629,-1.879903
-HX5,Calderdale,England,53.686455,-1.836137
-HX6,Calderdale,England,53.698527,-1.923340
-HX7,Calderdale,England,53.739362,-2.008977
-IG1,Redbridge,England,51.559171,0.072759
-IG10,Epping Forest,England,51.648322,0.065379
-IG11,Barking and Dagenham,England,51.534906,0.091842
-IG2,Redbridge,England,51.573296,0.079463
-IG3,Redbridge,England,51.562490,0.097782
-IG4,Redbridge,England,51.577202,0.054948
-IG5,Redbridge,England,51.585937,0.064710
-IG6,Redbridge,England,51.591804,0.086990
-IG7,Epping Forest,England,51.613701,0.087466
-IG8,Redbridge,England,51.610886,0.035851
-IG9,Epping Forest,England,51.624061,0.038900
-IP1,Ipswich,England,52.062645,1.142324
-IP10_IP5,East Suffolk,England,52.046411,1.251167
-IP11,East Suffolk,England,51.966935,1.334095
-IP12,East Suffolk,England,52.093932,1.364300
-IP13,East Suffolk,England,52.184782,1.320777
-IP14,Mid Suffolk,England,52.204320,1.028904
-IP15_IP16,East Suffolk,England,52.187614,1.587829
-IP17,East Suffolk,England,52.229795,1.501294
-IP18_IP19,East Suffolk,England,52.337315,1.552334
-IP2,Ipswich,England,52.046280,1.134469
-IP20,South Norfolk,England,52.405988,1.318376
-IP21,Mid Suffolk,England,52.365653,1.229441
-IP22,South Norfolk,Other,52.377970,1.072225
-IP22_IP98,South Norfolk,England,52.377951,1.072749
-IP23,Mid Suffolk,England,52.313600,1.120625
-IP23_IP98,Mid Suffolk,Other,52.316600,1.120151
-IP24,Breckland,England,52.419094,0.756119
-IP25,Breckland,England,52.578149,0.834714
-IP26,King's Lynn and West Norfolk,England,52.505734,0.576721
-IP27,West Suffolk,England,52.429761,0.583657
-IP28,West Suffolk,England,52.327899,0.536726
-IP29,West Suffolk,England,52.195497,0.662817
-IP3,Ipswich,England,52.042084,1.185049
-IP30,Mid Suffolk,England,52.212078,0.835842
-IP31,West Suffolk,England,52.289694,0.825345
-IP32,West Suffolk,England,52.253508,0.719184
-IP33,West Suffolk,England,52.243242,0.712811
-IP4,Ipswich,England,52.059605,1.175764
-IP6,Mid Suffolk,England,52.128363,1.112238
-IP7,Babergh,England,52.066148,0.949720
-IP8,Babergh,England,52.063199,1.083016
-IP9,Babergh,England,51.993244,1.147673
-IV12,Highland,Scotland,57.574804,-3.865418
-IV13_PH19_PH20_PH23_PH24_PH25_PH26_PH30_PH31_PH34_PH49_PH50,Highland,Other,57.118347,-4.122816
-IV13_PH20_PH22_PH23_PH24_PH25_PH26,Highland,Scotland,57.245157,-3.782164
-IV14_IV15_IV16,Highland,Other,57.604821,-4.442197
-IV14_IV16_IV23_IV24,Highland,Scotland,57.704086,-4.568101
-IV15,Highland,Scotland,57.598496,-4.431099
-IV17,Highland,Scotland,57.698589,-4.255964
-IV18,Highland,Scotland,57.700810,-4.156284
-IV19_IV20,Highland,Scotland,57.799260,-4.007489
-IV19_IV20_IV25,Highland,Other,57.827214,-4.017893
-IV1_IV10_IV11_IV8_IV9,Highland,Scotland,57.501302,-4.188133
-IV1_IV10_IV11_IV8_IV9_IV99,Highland,Scotland,57.501220,-4.188282
-IV2,Highland,Scotland,57.468326,-4.190332
-IV21_IV22_IV23_IV24_IV26_IV27,Highland,Other,57.983011,-5.055324
-IV21_IV22_IV4_IV52_IV53_IV54,Highland,Scotland,57.539025,-5.163898
-IV25_IV28_KW10_KW11_KW12_KW13_KW2_KW3_KW5_KW6_KW7_KW8_KW9,Highland,Scotland,58.074475,-3.818038
-IV26_IV27,Highland,Scotland,58.158968,-4.919690
-IV28_KW10_KW11_KW12_KW13_KW2_KW3_KW5_KW6_KW7_KW8_KW9,Highland,Other,58.159282,-3.716492
-IV3,Highland,Scotland,57.463257,-4.271775
-IV30,Moray,Scotland,57.653841,-3.327932
-IV31,Moray,Scotland,57.717017,-3.290641
-IV36,Moray,Scotland,57.610199,-3.607173
-IV40_IV63_PH31_PH32_PH35,Highland,Scotland,57.238426,-5.111923
-IV41_IV42_IV43_IV44_IV45_IV46_IV47_IV48_IV49_IV55_IV56_PH41_PH42_PH43_PH44,Highland,Other,57.239561,-6.123192
-IV41_IV42_IV43_IV44_IV45_IV46_IV47_IV48_IV49_IV55_IV56_PH42_PH43_PH44,Highland,Scotland,57.283896,-6.177867
-IV4_IV40_IV52_IV53_IV54,Highland,Other,57.377921,-5.194346
-IV51,Highland,Scotland,57.484963,-6.250024
-IV5_IV6,Highland,Scotland,57.509423,-4.449340
-IV63_PA80_PH32_PH35_PH36_PH37_PH38_PH39_PH40,Highland,Other,57.042618,-5.319763
-IV7,Highland,Scotland,57.584013,-4.392206
-KA1,East Ayrshire,Scotland,55.597110,-4.496982
-KA10,South Ayrshire,Scotland,55.549496,-4.649997
-KA11,North Ayrshire,Scotland,55.617661,-4.629535
-KA12,North Ayrshire,Scotland,55.617931,-4.665874
-KA13,North Ayrshire,Scotland,55.655312,-4.700114
-KA14_KA24,North Ayrshire,Scotland,55.713804,-4.710106
-KA15,North Ayrshire,Scotland,55.748401,-4.626967
-KA16_KA17,East Ayrshire,Scotland,55.608847,-4.312453
-KA18,East Ayrshire,Scotland,55.450808,-4.241990
-KA19,South Ayrshire,Scotland,55.346392,-4.669956
-KA2,East Ayrshire,Scotland,55.596744,-4.561293
-KA20,North Ayrshire,Scotland,55.640746,-4.753191
-KA21,North Ayrshire,Scotland,55.641175,-4.784798
-KA22,North Ayrshire,Scotland,55.648736,-4.807621
-KA23_KA28_KA29,North Ayrshire,Scotland,55.715992,-4.868743
-KA25,North Ayrshire,Scotland,55.752139,-4.689171
-KA26,South Ayrshire,Scotland,55.220168,-4.836061
-KA27_PA28,Argyll and Bute,Scotland,55.482634,-5.406804
-KA27_PA28_PA29_PA30_PA41,Argyll and Bute,Other,55.564754,-5.421392
-KA3,East Ayrshire,Scotland,55.642831,-4.496825
-KA30_PA17,North Ayrshire,Scotland,55.807904,-4.865491
-KA4,East Ayrshire,Scotland,55.599358,-4.384714
-KA5,East Ayrshire,Scotland,55.509172,-4.384618
-KA6,East Ayrshire,Scotland,55.417682,-4.509157
-KA7,South Ayrshire,Scotland,55.450546,-4.630546
-KA8,South Ayrshire,Scotland,55.471460,-4.613764
-KA9,South Ayrshire,Scotland,55.498252,-4.606051
-KT1,Kingston upon Thames,England,51.407093,-0.297593
-KT10,Elmbridge,England,51.371058,-0.357205
-KT11,Elmbridge,England,51.328175,-0.404717
-KT12,Elmbridge,England,51.377350,-0.408755
-KT13,Elmbridge,England,51.369216,-0.451462
-KT14,Woking,England,51.340173,-0.486375
-KT15,Runnymede,England,51.365039,-0.494549
-KT16,Runnymede,England,51.384176,-0.513869
-KT17,Epsom and Ewell,England,51.339768,-0.253097
-KT18,Epsom and Ewell,England,51.318958,-0.263665
-KT19,Epsom and Ewell,England,51.350060,-0.269358
-KT2,Kingston upon Thames,England,51.416128,-0.291047
-KT20,Reigate and Banstead,England,51.287097,-0.231881
-KT21,Mole Valley,England,51.310938,-0.302936
-KT22,Mole Valley,England,51.300606,-0.337653
-KT23,Mole Valley,England,51.281947,-0.370976
-KT24,Guildford,England,51.269204,-0.430012
-KT3,Kingston upon Thames,England,51.399665,-0.256793
-KT4,Sutton,England,51.378681,-0.243108
-KT5,Kingston upon Thames,England,51.392779,-0.287890
-KT6,Kingston upon Thames,England,51.389689,-0.300620
-KT7,Elmbridge,England,51.390233,-0.328698
-KT8,Elmbridge,England,51.401594,-0.366922
-KT9,Kingston upon Thames,England,51.364754,-0.303176
-KW1,Highland,Scotland,58.455879,-3.118722
-KW14,Highland,Scotland,58.588661,-3.555377
-KW15_KW16,Orkney Islands,Scotland,58.974866,-3.043812
-KW17,Orkney Islands,Scotland,59.030158,-3.007528
-KY1,Fife,Scotland,56.126652,-3.141192
-KY10_KY9,Fife,Scotland,56.224831,-2.734460
-KY11,Fife,Scotland,56.049525,-3.412257
-KY12,Fife,Scotland,56.075896,-3.488327
-KY12_KY99,Fife,Scotland,56.075538,-3.487467
-KY13,Perth and Kinross,Scotland,56.208014,-3.431496
-KY14,Fife,Scotland,56.310958,-3.232500
-KY15,Fife,Scotland,56.300902,-3.051018
-KY16,Fife,Scotland,56.341466,-2.819339
-KY2,Fife,Scotland,56.122487,-3.183010
-KY3,Fife,Scotland,56.063042,-3.232002
-KY4,Fife,Scotland,56.113943,-3.361768
-KY5,Fife,Scotland,56.144528,-3.295583
-KY6,Fife,Scotland,56.196592,-3.196607
-KY7,Fife,Scotland,56.210657,-3.155066
-KY8,Fife,Scotland,56.197089,-3.012473
-L10,Sefton,England,53.473734,-2.928116
-L11,Liverpool,England,53.447335,-2.914660
-L12,Liverpool,England,53.434549,-2.896768
-L13,Liverpool,England,53.415147,-2.921612
-L14,Liverpool,England,53.419129,-2.881815
-L15,Liverpool,England,53.397291,-2.922655
-L16,Liverpool,England,53.398176,-2.892047
-L17,Liverpool,England,53.378616,-2.942211
-L18,Liverpool,England,53.380527,-2.909421
-L19,Liverpool,England,53.358159,-2.903095
-L1_L2_L69_L70,Liverpool,Other,53.403634,-2.979612
-L1_L2_L75,Liverpool,England,53.405587,-2.985229
-L20,Sefton,England,53.452239,-2.990083
-L21,Sefton,England,53.470705,-3.000400
-L22,Sefton,England,53.476735,-3.027464
-L23,Sefton,England,53.489222,-3.024375
-L24,Liverpool,Other,53.344392,-2.842979
-L24_L70,Liverpool,England,53.362679,-2.879583
-L25,Liverpool,England,53.379005,-2.863901
-L26,Knowsley,England,53.365559,-2.836301
-L27,Liverpool,England,53.387993,-2.840154
-L28,Knowsley,England,53.435203,-2.866515
-L29_L30_L38,Sefton,England,53.490856,-2.986320
-L29_L30_L38_L68_L71_L72_L75_L80,Sefton,England,53.485933,-2.985514
-L31,Sefton,England,53.513390,-2.938622
-L32,Knowsley,England,53.478567,-2.889366
-L33,Knowsley,England,53.488746,-2.876085
-L34,Knowsley,England,53.435298,-2.815154
-L35,Knowsley,England,53.416456,-2.785078
-L36,Knowsley,England,53.414245,-2.841556
-L37,Sefton,England,53.556982,-3.063797
-L39,West Lancashire,England,53.562990,-2.893354
-L3_L74,Liverpool,England,53.408510,-2.985612
-L4,Liverpool,England,53.437794,-2.962035
-L40,West Lancashire,England,53.598982,-2.846417
-L5,Liverpool,England,53.424829,-2.977630
-L6,Liverpool,England,53.418603,-2.953325
-L67_L9,Liverpool,England,53.460522,-2.952511
-L69_L7,Liverpool,England,53.402894,-2.968424
-L7,Liverpool,Other,53.405452,-2.950402
-L8,Liverpool,England,53.390162,-2.963991
-LA1,Lancaster,England,54.046954,-2.800211
-LA10_LA8,South Lakeland,England,54.320980,-2.680832
-LA11,South Lakeland,England,54.199544,-2.924082
-LA12,South Lakeland,England,54.202510,-3.084137
-LA13,Barrow-in-Furness,England,54.118289,-3.199211
-LA14,Barrow-in-Furness,England,54.117829,-3.230618
-LA15_LA16,Barrow-in-Furness,England,54.164546,-3.186622
-LA17_LA20_LA21_LA22,South Lakeland,England,54.381912,-3.040845
-LA18,Copeland,England,54.215156,-3.275481
-LA2,Lancaster,England,54.066107,-2.675039
-LA23,South Lakeland,England,54.372556,-2.912663
-LA3,Lancaster,England,54.051954,-2.878034
-LA4,Lancaster,England,54.070402,-2.854614
-LA5,Lancaster,England,54.143086,-2.789962
-LA6,South Lakeland,England,54.174596,-2.616083
-LA7,South Lakeland,England,54.225951,-2.773145
-LA9,South Lakeland,England,54.326224,-2.743955
-LD1,Powys,Wales,52.258004,-3.367727
-LD2,Powys,Wales,52.143362,-3.394979
-LD3,Powys,Wales,51.958172,-3.374218
-LD4_LD5_LD6_SY18,Powys,Wales,52.320127,-3.550163
-LD7_LD8,Powys,Wales,52.311261,-3.070574
-LE10,Hinckley and Bosworth,England,52.537424,-1.370398
-LE11,Charnwood,England,52.770410,-1.220464
-LE12,Charnwood,England,52.768465,-1.192347
-LE13,Melton,England,52.766559,-0.883844
-LE14,Melton,England,52.782572,-0.895506
-LE15,Rutland,England,52.659329,-0.706479
-LE16,Harborough,England,52.485252,-0.898758
-LE16_LE94,Harborough,England,52.485227,-0.898865
-LE17,Harborough,England,52.467560,-1.181871
-LE18,Oadby and Wigston,England,52.583430,-1.111610
-LE19,Blaby,England,52.585649,-1.213222
-LE19_LE21_LE41_LE95,Blaby,England,52.605151,-1.182720
-LE1_LE55_LE87,Leicester,England,52.634997,-1.136444
-LE1_LE87,Leicester,England,52.633449,-1.132095
-LE2,Leicester,England,52.611189,-1.117999
-LE3,Leicester,England,52.626892,-1.181584
-LE4,Leicester,England,52.662670,-1.122528
-LE5,Leicester,England,52.636874,-1.093275
-LE6,Hinckley and Bosworth,England,52.713656,-1.363779
-LE65,North West Leicestershire,England,52.748516,-1.469827
-LE67,North West Leicestershire,England,52.716051,-1.362780
-LE7,Charnwood,England,52.685369,-1.070828
-LE8,Blaby,England,52.564290,-1.107445
-LE9,Hinckley and Bosworth,England,52.571993,-1.270904
-LL11,Wrexham,Wales,53.059135,-3.027235
-LL12,Wrexham,Wales,53.085915,-2.990303
-LL13,Wrexham,Wales,53.036325,-2.963570
-LL14,Wrexham,Wales,52.992364,-3.052553
-LL15,Denbighshire,Wales,53.105170,-3.315422
-LL16,Denbighshire,Wales,53.185248,-3.430958
-LL17,Denbighshire,Wales,53.255380,-3.438736
-LL18,Denbighshire,Wales,53.311797,-3.477767
-LL19,Denbighshire,Wales,53.331397,-3.410806
-LL20,Denbighshire,Wales,52.961007,-3.162231
-LL21,Denbighshire,Wales,52.988774,-3.408285
-LL22,Conwy,Wales,53.271669,-3.591293
-LL23_LL37_LL38_LL39_LL40_LL42,Gwynedd,Wales,52.777382,-3.866961
-LL24_LL25_LL26_LL27,Conwy,Wales,53.102421,-3.798909
-LL28,Conwy,Wales,53.289071,-3.758971
-LL29,Conwy,Wales,53.290751,-3.712560
-LL30,Conwy,Wales,53.317313,-3.817932
-LL31,Conwy,Wales,53.291224,-3.810848
-LL32_LL34,Conwy,Wales,53.265375,-3.868482
-LL33_LL57,Gwynedd,Wales,53.215523,-4.097449
-LL35_LL36,Gwynedd,Wales,52.588016,-4.059101
-LL41_LL43_LL44_LL45_LL46_LL47,Gwynedd,Wales,52.913377,-4.003949
-LL48_LL49_LL51_LL52,Gwynedd,Wales,52.932560,-4.154117
-LL53,Gwynedd,Other,52.884461,-4.487958
-LL53_LL56,Gwynedd,Wales,52.911972,-4.461838
-LL54,Gwynedd,Wales,53.060500,-4.285932
-LL55,Gwynedd,Wales,53.133815,-4.211101
-LL55_LL56,Gwynedd,Other,53.138644,-4.210110
-LL58_LL59,Isle of Anglesey,Wales,53.256083,-4.132123
-LL60_LL62_LL63_LL64,Isle of Anglesey,Wales,53.217335,-4.391984
-LL61,Isle of Anglesey,Wales,53.197056,-4.258997
-LL65,Isle of Anglesey,Wales,53.301028,-4.575129
-LL66_LL67_LL68_LL71,Isle of Anglesey,Wales,53.384758,-4.387632
-LL69_LL70_LL72_LL73_LL74_LL75_LL76_LL78,Isle of Anglesey,Wales,53.324373,-4.249059
-LL77,Isle of Anglesey,Wales,53.259422,-4.312536
-LN1,Lincoln,England,53.256116,-0.584655
-LN10,East Lindsey,England,53.157675,-0.216001
-LN11,East Lindsey,England,53.372371,0.022440
-LN12,East Lindsey,England,53.329643,0.262853
-LN13,East Lindsey,England,53.264768,0.182820
-LN2,Lincoln,England,53.259083,-0.511118
-LN3,West Lindsey,England,53.280808,-0.338871
-LN4,North Kesteven,England,53.153198,-0.390431
-LN5,Lincoln,England,53.187204,-0.553201
-LN6,Lincoln,England,53.202848,-0.596620
-LN8,West Lindsey,England,53.375547,-0.329236
-LN9,East Lindsey,England,53.216019,-0.111795
-LS1,Leeds,England,53.797362,-1.552962
-LS10,Leeds,England,53.765201,-1.531875
-LS10_LS88_LS98_LS99,Leeds,England,53.764713,-1.530849
-LS11,Leeds,Other,53.778088,-1.556745
-LS11_LS98,Leeds,England,53.778059,-1.556586
-LS12,Leeds,England,53.791413,-1.595293
-LS13,Leeds,England,53.811090,-1.634909
-LS14,Leeds,England,53.827054,-1.458252
-LS15,Leeds,England,53.806714,-1.446373
-LS16,Leeds,England,53.850492,-1.604219
-LS17,Leeds,England,53.858294,-1.529056
-LS18,Leeds,England,53.840917,-1.644593
-LS19,Leeds,England,53.860749,-1.685843
-LS2,Leeds,England,53.801443,-1.547476
-LS20,Leeds,England,53.873332,-1.713710
-LS21,Leeds,England,53.910227,-1.682813
-LS22,Leeds,England,53.931650,-1.392723
-LS23,Leeds,England,53.906584,-1.353000
-LS24,Selby,England,53.871379,-1.254993
-LS25,Leeds,England,53.786167,-1.325772
-LS26,Leeds,England,53.756377,-1.443696
-LS27,Leeds,England,53.749082,-1.604884
-LS28,Leeds,England,53.801599,-1.669158
-LS29,Bradford,England,53.919705,-1.804571
-LS3,Leeds,England,53.801567,-1.563215
-LS4,Leeds,England,53.808487,-1.582783
-LS5,Leeds,England,53.818144,-1.602407
-LS6,Leeds,England,53.818525,-1.566383
-LS7,Leeds,England,53.817693,-1.540492
-LS8,Leeds,England,53.821690,-1.512331
-LS9,Leeds,England,53.798820,-1.511819
-LU1,Luton,England,51.876349,-0.424701
-LU2,Luton,England,51.890794,-0.397873
-LU3,Luton,England,51.906741,-0.443357
-LU4,Luton,England,51.898512,-0.465273
-LU5,Central Bedfordshire,England,51.907376,-0.514837
-LU6,Central Bedfordshire,England,51.880880,-0.532814
-LU7,Central Bedfordshire,England,51.910898,-0.661910
-M1,Manchester,England,53.477713,-2.236815
-M11,Manchester,England,53.478399,-2.183276
-M12,Manchester,England,53.465623,-2.205534
-M13,Manchester,England,53.462171,-2.217153
-M14,Manchester,England,53.446931,-2.225065
-M15,Manchester,England,53.466057,-2.252409
-M16,Manchester,England,53.455938,-2.265088
-M17_M32,Trafford,England,53.455238,-2.310465
-M18,Manchester,England,53.461604,-2.172800
-M19,Manchester,England,53.437713,-2.195521
-M20,Manchester,England,53.425097,-2.231677
-M21,Manchester,England,53.438838,-2.273402
-M22,Manchester,Other,53.384886,-2.261257
-M22_M90,Manchester,England,53.382760,-2.262696
-M23,Manchester,England,53.397122,-2.286579
-M23_M90,Manchester,Other,53.391839,-2.284819
-M24,Rochdale,England,53.552153,-2.198795
-M25,Bury,England,53.533261,-2.279952
-M26,Bury,England,53.562151,-2.333977
-M27,Salford,England,53.512211,-2.338135
-M28,Salford,England,53.516528,-2.398271
-M29,Wigan,England,53.515058,-2.470398
-M2_M4_M60_M61_M99,Manchester,England,53.483942,-2.234638
-M2_M4_M60_M99,Manchester,England,53.483727,-2.235107
-M3,Salford,England,53.483474,-2.252185
-M30,Salford,England,53.475765,-2.367817
-M31,Trafford,England,53.443248,-2.380396
-M33,Trafford,England,53.422585,-2.324912
-M34,Tameside,England,53.454806,-2.116039
-M35,Oldham,England,53.497719,-2.152589
-M38,Salford,England,53.529840,-2.420254
-M40,Manchester,England,53.502761,-2.193764
-M41,Trafford,England,53.451174,-2.362840
-M43,Tameside,England,53.483183,-2.149300
-M44,Salford,England,53.440712,-2.427123
-M45,Bury,England,53.544863,-2.289827
-M46,Wigan,England,53.525533,-2.492206
-M5,Salford,England,53.479739,-2.285786
-M50,Salford,England,53.476677,-2.289950
-M6,Salford,England,53.491502,-2.295948
-M7,Salford,England,53.504252,-2.261610
-M8,Manchester,England,53.508967,-2.240871
-M9,Manchester,England,53.521649,-2.214391
-ME1,Medway,England,51.375598,0.499860
-ME10,Swale,England,51.342706,0.735453
-ME11_ME9,Swale,England,51.345451,0.726577
-ME12,Swale,England,51.424631,0.798819
-ME13,Swale,England,51.305115,0.894600
-ME14,Maidstone,England,51.276367,0.538071
-ME14_ME99,Maidstone,England,51.276447,0.537903
-ME15,Maidstone,England,51.254977,0.532758
-ME16,Maidstone,England,51.273361,0.499073
-ME17,Maidstone,England,51.236638,0.603695
-ME18,Maidstone,England,51.244407,0.422968
-ME19,Tonbridge and Malling,England,51.293768,0.411243
-ME2,Medway,England,51.391317,0.484714
-ME20,Tonbridge and Malling,England,51.305949,0.458951
-ME3,Medway,England,51.431375,0.546429
-ME4,Medway,England,51.381133,0.527822
-ME5,Medway,England,51.352127,0.531578
-ME6,Tonbridge and Malling,England,51.324346,0.438847
-ME7,Medway,England,51.380367,0.554814
-ME8,Medway,England,51.362008,0.594892
-MK10,Milton Keynes,England,52.037492,-0.695741
-MK11,Milton Keynes,England,52.050008,-0.835711
-MK12,Milton Keynes,England,52.057038,-0.817944
-MK13,Milton Keynes,England,52.052235,-0.789564
-MK14,Milton Keynes,England,52.059549,-0.768787
-MK15_MK9,Milton Keynes,England,52.045330,-0.741909
-MK16,Milton Keynes,England,52.088276,-0.721216
-MK17,Buckinghamshire,England,51.998332,-0.699563
-MK18,Buckinghamshire,England,51.980524,-0.970798
-MK19,South Northamptonshire,England,52.071087,-0.851698
-MK1_MK11_MK77,Milton Keynes,England,52.032803,-0.792475
-MK1_MK7,Milton Keynes,England,52.015365,-0.706171
-MK2,Milton Keynes,England,51.991884,-0.725565
-MK3,Milton Keynes,England,51.995493,-0.750168
-MK4,Milton Keynes,England,52.004918,-0.776781
-MK40,Bedford,England,52.137343,-0.474412
-MK41,Bedford,England,52.150422,-0.450561
-MK42,Bedford,England,52.119641,-0.474023
-MK43,Bedford,England,52.116712,-0.550577
-MK44,Bedford,England,52.188235,-0.430320
-MK45,Central Bedfordshire,England,52.029652,-0.472690
-MK46,Milton Keynes,England,52.152749,-0.695983
-MK5,Milton Keynes,England,52.019519,-0.776976
-MK6,Milton Keynes,England,52.029209,-0.739299
-MK7,Milton Keynes,Other,52.020583,-0.692582
-MK8,Milton Keynes,England,52.036053,-0.808151
-ML1,North Lanarkshire,Scotland,55.797549,-3.977268
-ML10,South Lanarkshire,Scotland,55.684574,-4.062033
-ML11,South Lanarkshire,Scotland,55.666239,-3.788755
-ML12,South Lanarkshire,Scotland,55.573006,-3.588944
-ML2,North Lanarkshire,Scotland,55.776722,-3.915379
-ML3,South Lanarkshire,Scotland,55.771147,-4.052914
-ML4,North Lanarkshire,Scotland,55.818719,-4.021396
-ML5,North Lanarkshire,Scotland,55.859617,-4.030732
-ML6,North Lanarkshire,Scotland,55.867720,-3.963131
-ML7,North Lanarkshire,Scotland,55.829792,-3.795902
-ML8,South Lanarkshire,Scotland,55.727826,-3.837916
-ML9,South Lanarkshire,Scotland,55.725575,-3.968317
-N1,Islington,England,51.537577,-0.098235
-N10,Haringey,England,51.593890,-0.144264
-N11,Barnet,England,51.614058,-0.138120
-N12,Barnet,England,51.615335,-0.178448
-N13,Enfield,England,51.621038,-0.103681
-N14,Enfield,England,51.633307,-0.129990
-N15,Haringey,England,51.580875,-0.085608
-N16,Hackney,England,51.564305,-0.076805
-N17,Haringey,England,51.597454,-0.071145
-N18,Enfield,England,51.613672,-0.064799
-N19,Islington,England,51.565434,-0.128293
-N1C_NW1,Camden,England,51.532361,-0.142433
-N1C_NW1_NW1W,Camden,England,51.531963,-0.140666
-N1_N1P,Islington,England,51.537839,-0.099199
-N2,Barnet,England,51.590289,-0.168646
-N20,Barnet,England,51.629561,-0.174769
-N21,Enfield,England,51.635533,-0.099598
-N22,Haringey,England,51.599985,-0.114064
-N3,Barnet,England,51.600412,-0.194105
-N4,Haringey,England,51.570957,-0.104134
-N5,Islington,England,51.553777,-0.098591
-N6,Haringey,England,51.571497,-0.140834
-N7,Islington,England,51.553809,-0.118025
-N8,Haringey,England,51.582359,-0.120122
-N8_N81,Haringey,England,51.582333,-0.119880
-N9,Enfield,England,51.627844,-0.058796
-NE1,Newcastle upon Tyne,England,54.972504,-1.613034
-NE10,Gateshead,England,54.948408,-1.556974
-NE11,Gateshead,England,54.940091,-1.631763
-NE12,North Tyneside,England,55.025552,-1.569955
-NE13,Newcastle upon Tyne,England,55.042108,-1.647263
-NE15,Newcastle upon Tyne,England,54.983205,-1.719096
-NE16,Gateshead,England,54.935031,-1.693349
-NE17_NE39,Gateshead,England,54.922261,-1.779327
-NE18_NE43_NE44_NE45,Northumberland,England,54.968183,-1.947795
-NE19_NE48_NE49,Northumberland,England,55.090318,-2.290169
-NE1_NE99,Newcastle upon Tyne,England,54.970752,-1.613723
-NE2,Newcastle upon Tyne,England,54.986231,-1.606438
-NE20,Northumberland,England,55.051872,-1.778706
-NE21,Gateshead,England,54.958793,-1.719725
-NE22,Northumberland,England,55.137315,-1.583631
-NE23,Northumberland,England,55.083732,-1.584574
-NE24,Northumberland,England,55.122835,-1.521375
-NE25,North Tyneside,England,55.049087,-1.488479
-NE26,North Tyneside,England,55.047646,-1.460868
-NE27,North Tyneside,England,55.030973,-1.511806
-NE28,North Tyneside,England,55.000668,-1.518864
-NE29,North Tyneside,England,55.011752,-1.469348
-NE3,Newcastle upon Tyne,England,55.009859,-1.633590
-NE30,North Tyneside,England,55.019803,-1.442879
-NE31,South Tyneside,England,54.971691,-1.512548
-NE32,South Tyneside,England,54.969654,-1.484404
-NE33,South Tyneside,England,54.992053,-1.431248
-NE34,South Tyneside,England,54.972778,-1.423204
-NE35,South Tyneside,England,54.952910,-1.462824
-NE36,South Tyneside,England,54.947119,-1.442829
-NE37,Sunderland,England,54.911424,-1.528380
-NE37_NE85,Sunderland,Other,54.911839,-1.530094
-NE38,Sunderland,Other,54.895051,-1.525809
-NE38_NE85,Sunderland,England,54.895730,-1.527300
-NE4,Newcastle upon Tyne,England,54.972768,-1.643796
-NE40,Gateshead,England,54.966059,-1.770398
-NE41_NE42,Northumberland,England,54.965127,-1.847349
-NE46,Northumberland,England,54.977980,-2.104475
-NE47,Northumberland,England,54.930088,-2.247462
-NE5,Newcastle upon Tyne,England,54.995415,-1.688481
-NE6,Newcastle upon Tyne,England,54.977214,-1.567389
-NE61,Northumberland,England,55.177654,-1.686891
-NE62,Northumberland,England,55.161329,-1.592834
-NE63,Northumberland,England,55.177425,-1.562024
-NE64,Northumberland,England,55.184038,-1.516648
-NE65,Northumberland,England,55.310745,-1.742146
-NE66,Northumberland,England,55.426724,-1.727049
-NE67_NE68_NE69_NE70,Northumberland,England,55.570323,-1.726350
-NE71_TD12,Northumberland,England,55.609580,-2.154760
-NE7_NE88,Newcastle upon Tyne,England,54.995864,-1.580600
-NE7_NE98,Newcastle upon Tyne,England,54.996551,-1.580307
-NE8,Gateshead,England,54.956301,-1.605025
-NE9,Gateshead,England,54.931650,-1.587691
-NG1,Nottingham,England,52.954603,-1.147690
-NG10,Erewash,England,52.899858,-1.282203
-NG11_NG80,Nottingham,England,52.901739,-1.175114
-NG12,Rushcliffe,England,52.910399,-1.059638
-NG13,Rushcliffe,England,52.947830,-0.929388
-NG14,Gedling,England,53.013423,-1.041532
-NG15,Ashfield,England,53.045265,-1.202727
-NG16,Broxtowe,England,53.026566,-1.298237
-NG17,Ashfield,England,53.115933,-1.261178
-NG18,Mansfield,England,53.140769,-1.185911
-NG19,Mansfield,England,53.160043,-1.197944
-NG2,Rushcliffe,England,52.936986,-1.136757
-NG20,Bolsover,England,53.208292,-1.185237
-NG21,Newark and Sherwood,England,53.141602,-1.108074
-NG22,Newark and Sherwood,England,53.177328,-0.969999
-NG23,Newark and Sherwood,England,53.113619,-0.801204
-NG24,Newark and Sherwood,England,53.070974,-0.802007
-NG25,Newark and Sherwood,England,53.074063,-0.950891
-NG3,Nottingham,England,52.967811,-1.130293
-NG31,South Kesteven,England,52.913361,-0.641497
-NG32,South Kesteven,England,52.946937,-0.651309
-NG33,South Kesteven,England,52.820910,-0.584196
-NG34,North Kesteven,England,52.987717,-0.395318
-NG4,Gedling,England,52.970928,-1.086941
-NG5,Nottingham,England,52.996908,-1.143502
-NG6,Nottingham,England,52.997247,-1.191614
-NG7_NG90,Nottingham,England,52.957898,-1.178619
-NG8,Nottingham,England,52.963666,-1.214651
-NG9,Broxtowe,England,52.926295,-1.233166
-NN1,Northampton,England,52.241474,-0.891060
-NN10,East Northamptonshire,England,52.292947,-0.599135
-NN11,Daventry,England,52.243768,-1.174377
-NN12,South Northamptonshire,England,52.127821,-0.996122
-NN13,South Northamptonshire,England,52.032620,-1.147423
-NN14,Kettering,England,52.411177,-0.706425
-NN15,Kettering,England,52.383970,-0.705974
-NN16,Kettering,England,52.403398,-0.704677
-NN17,Corby,England,52.499887,-0.684008
-NN18,Corby,England,52.479190,-0.710470
-NN2,Northampton,England,52.259513,-0.885299
-NN29,Wellingborough,England,52.262721,-0.665386
-NN3,Northampton,England,52.262517,-0.843973
-NN4,Northampton,England,52.221291,-0.897749
-NN5,Northampton,England,52.245705,-0.931235
-NN6,Daventry,England,52.320522,-0.946524
-NN7,South Northamptonshire,England,52.214866,-0.919715
-NN8,Wellingborough,England,52.297679,-0.692608
-NN9,East Northamptonshire,England,52.312214,-0.616125
-NP10,Newport,Wales,51.580081,-3.043081
-NP11,Caerphilly,Wales,51.644224,-3.131684
-NP12,Caerphilly,Wales,51.668752,-3.197772
-NP13,Blaenau Gwent,Wales,51.735255,-3.141091
-NP15,Monmouthshire,Wales,51.723257,-2.889186
-NP16,Monmouthshire,Wales,51.648965,-2.687116
-NP18,Newport,Wales,51.604968,-2.943050
-NP19,Newport,Wales,51.586980,-2.962577
-NP20,Newport,Wales,51.590181,-3.004590
-NP22,Blaenau Gwent,Wales,51.771221,-3.257678
-NP23,Blaenau Gwent,Wales,51.784600,-3.197876
-NP25,Monmouthshire,Wales,51.804200,-2.722888
-NP26,Monmouthshire,Wales,51.590490,-2.775815
-NP4,Torfaen,Wales,51.693107,-3.039590
-NP44,Torfaen,Wales,51.651311,-3.027603
-NP7,Monmouthshire,Wales,51.828359,-3.012226
-NP8,Powys,Wales,51.857623,-3.141208
-NR1,Norwich,England,52.628931,1.308688
-NR10,Broadland,England,52.735912,1.244500
-NR11,North Norfolk,England,52.840264,1.275083
-NR12,North Norfolk,England,52.757960,1.466539
-NR13,Broadland,England,52.633878,1.469206
-NR14,South Norfolk,England,52.565407,1.375434
-NR15,South Norfolk,England,52.505903,1.267096
-NR16,Breckland,England,52.478782,1.056020
-NR17,Breckland,England,52.515392,0.996240
-NR18,South Norfolk,England,52.571065,1.108770
-NR19,Breckland,England,52.676017,0.931415
-NR1_NR99,Norwich,England,52.628912,1.308692
-NR2,Norwich,England,52.630791,1.285209
-NR20,Breckland,England,52.721919,0.978558
-NR21,North Norfolk,England,52.840156,0.850746
-NR22_NR23_NR24_NR25,North Norfolk,England,52.911726,1.011872
-NR26,North Norfolk,England,52.937514,1.211442
-NR27,North Norfolk,England,52.925022,1.299844
-NR28,North Norfolk,England,52.822142,1.396705
-NR29,Great Yarmouth,England,52.689180,1.642054
-NR3,Norwich,England,52.643366,1.294989
-NR30,Great Yarmouth,England,52.617759,1.727094
-NR31,Great Yarmouth,England,52.577170,1.709654
-NR32,East Suffolk,England,52.487834,1.733299
-NR33,East Suffolk,England,52.455729,1.718359
-NR34,East Suffolk,England,52.439552,1.582672
-NR35,East Suffolk,England,52.461570,1.432950
-NR4,Norwich,England,52.614293,1.261606
-NR5,Norwich,England,52.641296,1.237108
-NR6,Broadland,England,52.660903,1.283267
-NR7,Broadland,England,52.645159,1.333155
-NR8,Broadland,England,52.676489,1.207730
-NR9,South Norfolk,England,52.631471,1.109943
-NW10,Brent,England,51.539238,-0.248868
-NW10_NW26,Brent,England,51.538862,-0.246182
-NW11,Barnet,England,51.578712,-0.198404
-NW2,Brent,England,51.559326,-0.218454
-NW3,Camden,England,51.552573,-0.173182
-NW4,Barnet,England,51.587403,-0.223788
-NW5,Camden,England,51.551605,-0.144599
-NW6,Camden,England,51.540288,-0.195622
-NW7,Barnet,England,51.615064,-0.236688
-NW8,Westminster,England,51.531722,-0.174471
-NW9,Barnet,England,51.586557,-0.253931
-OL1,Oldham,England,53.546974,-2.106250
-OL10,Rochdale,England,53.590443,-2.222745
-OL11,Rochdale,England,53.606328,-2.174043
-OL12,Rochdale,England,53.634434,-2.165367
-OL13,Rossendale,England,53.700811,-2.204231
-OL14,Calderdale,England,53.714252,-2.100821
-OL15,Rochdale,England,53.643572,-2.102647
-OL16,Rochdale,England,53.613338,-2.138388
-OL1_OL95,Oldham,England,53.547111,-2.106238
-OL2,Oldham,England,53.571296,-2.109450
-OL3,Oldham,England,53.552623,-2.011426
-OL4,Oldham,England,53.542362,-2.075817
-OL5,Tameside,England,53.516701,-2.040800
-OL6,Tameside,England,53.492573,-2.088461
-OL7,Tameside,England,53.489380,-2.106202
-OL8,Oldham,England,53.527065,-2.117246
-OL9,Oldham,England,53.538930,-2.141686
-OX1,Oxford,England,51.746865,-1.262217
-OX10,South Oxfordshire,England,51.605810,-1.129501
-OX11,South Oxfordshire,England,51.599949,-1.250335
-OX12,Vale of White Horse,England,51.595272,-1.425500
-OX13,Vale of White Horse,England,51.676922,-1.349018
-OX14,Vale of White Horse,England,51.667677,-1.278502
-OX15,Cherwell,England,52.033034,-1.402926
-OX16,Cherwell,England,52.063582,-1.338900
-OX17,South Northamptonshire,England,52.072417,-1.292310
-OX18,West Oxfordshire,England,51.762275,-1.592552
-OX2,Oxford,England,51.763078,-1.277517
-OX20,West Oxfordshire,England,51.854666,-1.357197
-OX25,Cherwell,England,51.900282,-1.207317
-OX26,Cherwell,England,51.901316,-1.151040
-OX27,Cherwell,England,51.934140,-1.150099
-OX28,West Oxfordshire,England,51.784516,-1.485741
-OX29,West Oxfordshire,England,51.793216,-1.438557
-OX3,Oxford,England,51.760232,-1.215560
-OX33,South Oxfordshire,England,51.756752,-1.143703
-OX39_OX49,South Oxfordshire,England,51.677442,-0.958020
-OX4,Oxford,England,51.728758,-1.214281
-OX44,South Oxfordshire,England,51.701140,-1.135522
-OX5,Cherwell,England,51.860715,-1.293569
-OX7,West Oxfordshire,England,51.898435,-1.494723
-OX9,South Oxfordshire,England,51.702804,-1.040820
-PA1,Renfrewshire,Scotland,55.844895,-4.419899
-PA10_PA12_PA9,Renfrewshire,Scotland,55.814890,-4.575374
-PA11,Renfrewshire,Scotland,55.857188,-4.584059
-PA13_PA14,Inverclyde,Scotland,55.915692,-4.653471
-PA13_PA15_PA18,Inverclyde,Other,55.929208,-4.730064
-PA14,Inverclyde,Other,55.928342,-4.666930
-PA15,Inverclyde,Scotland,55.942880,-4.747122
-PA16,Inverclyde,Other,55.942725,-4.798009
-PA16_PA18,Inverclyde,Scotland,55.938960,-4.804035
-PA19,Inverclyde,Scotland,55.952428,-4.821304
-PA2,Renfrewshire,Scotland,55.829615,-4.434925
-PA20,Argyll and Bute,Scotland,55.834352,-5.056981
-PA21_PA22_PA24_PA25_PA26_PA27_PA32_PA33_PA35_PA36_PA37_PA38,Argyll and Bute,Scotland,56.295402,-5.204262
-PA23,Argyll and Bute,Scotland,55.954004,-4.933200
-PA29_PA30_PA31_PA41_PA42_PA43_PA44_PA45_PA46_PA47_PA48_PA49_PA60,Argyll and Bute,Scotland,55.898389,-5.741251
-PA3,Renfrewshire,Scotland,55.851392,-4.444059
-PA31_PA42_PA43_PA44_PA45_PA46_PA47_PA48_PA49_PA60_PA61,Argyll and Bute,Other,55.908792,-5.822507
-PA34_PA61_PA62_PA63_PA64_PA65_PA66_PA67_PA68_PA69_PA70_PA71_PA72_PA73_PA74_PA75_PA76_PA77_PA78,Argyll and Bute,Scotland,56.426924,-5.723595
-PA34_PA62_PA63_PA64_PA65_PA66_PA67_PA68_PA69_PA70_PA71_PA72_PA73_PA74_PA75_PA76_PA77_PA78,Argyll and Bute,Other,56.430938,-5.718152
-PA4,Renfrewshire,Scotland,55.875274,-4.395837
-PA5,Renfrewshire,Scotland,55.831426,-4.509908
-PA6,Renfrewshire,Scotland,55.862979,-4.534388
-PA7,Renfrewshire,Scotland,55.907423,-4.501147
-PA8,Renfrewshire,Scotland,55.901439,-4.453735
-PA80_PH33,Highland,Scotland,56.814717,-5.222064
-PE1,Peterborough,England,52.590884,-0.248088
-PE10,South Kesteven,England,52.773834,-0.377744
-PE11,South Holland,England,52.805907,-0.163948
-PE12,South Holland,England,52.786011,0.018543
-PE13,Fenland,England,52.668969,0.139732
-PE14,King's Lynn and West Norfolk,England,52.639079,0.201768
-PE15,Fenland,England,52.538835,0.085824
-PE16,Fenland,England,52.454731,0.049273
-PE19,Huntingdonshire,England,52.236752,-0.263536
-PE2,Peterborough,England,52.567317,-0.273764
-PE20,Boston,England,52.932971,-0.101799
-PE21,Boston,England,52.974819,-0.023581
-PE22,East Lindsey,England,53.047338,0.041993
-PE23,East Lindsey,England,53.172656,0.090613
-PE24,East Lindsey,England,53.164473,0.268128
-PE25,East Lindsey,England,53.152162,0.334607
-PE26,Huntingdonshire,England,52.453009,-0.115030
-PE27,Huntingdonshire,England,52.330814,-0.075600
-PE28,Huntingdonshire,England,52.357805,-0.189741
-PE29,Huntingdonshire,England,52.334491,-0.180994
-PE3,Peterborough,Other,52.586263,-0.277345
-PE30,King's Lynn and West Norfolk,England,52.758741,0.413446
-PE31_PE35,King's Lynn and West Norfolk,England,52.874664,0.563411
-PE32,King's Lynn and West Norfolk,England,52.729182,0.622398
-PE33,King's Lynn and West Norfolk,England,52.651760,0.461898
-PE34,King's Lynn and West Norfolk,England,52.726925,0.342689
-PE36,King's Lynn and West Norfolk,England,52.938115,0.505811
-PE37,Breckland,England,52.643736,0.692922
-PE38,King's Lynn and West Norfolk,England,52.591738,0.376152
-PE3_PE5,Peterborough,England,52.585779,-0.281333
-PE4,Peterborough,England,52.612098,-0.265373
-PE5_PE6,South Kesteven,Other,52.650512,-0.262541
-PE6,South Kesteven,England,52.654442,-0.258031
-PE7,Fenland,England,52.539648,-0.204556
-PE8,East Northamptonshire,England,52.526613,-0.441957
-PE9,South Kesteven,England,52.653759,-0.478575
-PH1,Perth and Kinross,Scotland,56.418160,-3.472510
-PH10,Perth and Kinross,Scotland,56.605747,-3.357189
-PH11_PH12,Perth and Kinross,Scotland,56.619213,-3.210730
-PH13_PH14,Perth and Kinross,Scotland,56.514345,-3.252319
-PH15_PH16_PH17_PH18,Perth and Kinross,Other,56.673457,-3.876707
-PH15_PH16_PH17_PH18_PH8_PH9,Perth and Kinross,Scotland,56.651291,-3.811346
-PH19_PH21_PH30_PH34_PH36_PH37_PH38_PH39_PH40_PH41_PH49_PH50,Highland,Scotland,56.904704,-4.933353
-PH2,Perth and Kinross,Scotland,56.385949,-3.408673
-PH21_PH22,Highland,Other,57.149141,-3.907408
-PH3,Perth and Kinross,Scotland,56.301328,-3.705364
-PH33,Highland,Other,56.815630,-5.086429
-PH5_PH6_PH8_PH9,Perth and Kinross,Other,56.479684,-3.778542
-PH7,Perth and Kinross,Scotland,56.373379,-3.829536
-PL1,Plymouth,England,50.370188,-4.148534
-PL10_PL11,Cornwall,England,50.364446,-4.239078
-PL12,Cornwall,England,50.418295,-4.246863
-PL13,Cornwall,England,50.358819,-4.472856
-PL14,Cornwall,England,50.462613,-4.466089
-PL15,Cornwall,England,50.632278,-4.394039
-PL16_PL19,West Devon,England,50.566366,-4.168779
-PL17,Cornwall,England,50.514812,-4.306185
-PL18,Cornwall,England,50.515562,-4.223803
-PL1_PL95,Plymouth,Other,50.370113,-4.147622
-PL2,Plymouth,England,50.386886,-4.156946
-PL20,West Devon,England,50.503764,-4.100486
-PL21,South Hams,England,50.385410,-3.919444
-PL22_PL23,Cornwall,England,50.373626,-4.645563
-PL24,Cornwall,England,50.354562,-4.713004
-PL25,Cornwall,England,50.341036,-4.776958
-PL26,Cornwall,England,50.345520,-4.824383
-PL27_PL28,Cornwall,England,50.525519,-4.896432
-PL29_PL30,Cornwall,England,50.507442,-4.736933
-PL3,Plymouth,England,50.385971,-4.125695
-PL31,Cornwall,England,50.469072,-4.722159
-PL32_PL33_PL34_PL35,Cornwall,England,50.646151,-4.697056
-PL4,Plymouth,England,50.374675,-4.127480
-PL5,Plymouth,England,50.410919,-4.167024
-PL6,Plymouth,England,50.418362,-4.119050
-PL7,Plymouth,England,50.390880,-4.045925
-PL8,South Hams,England,50.337746,-4.018466
-PL9,Plymouth,Other,50.355665,-4.089370
-PL9_PL95,Plymouth,England,50.355987,-4.089814
-PO1,Portsmouth,England,50.799342,-1.089930
-PO10,Havant,England,50.851533,-0.930638
-PO11,Havant,England,50.791474,-0.977291
-PO12,Gosport,England,50.798705,-1.142768
-PO13,Gosport,England,50.811599,-1.179073
-PO14,Fareham,England,50.839683,-1.212392
-PO15,Fareham,England,50.863332,-1.221309
-PO16,Fareham,England,50.850466,-1.162134
-PO17,Winchester,England,50.887753,-1.174008
-PO18,Chichester,England,50.862127,-0.813064
-PO19,Chichester,England,50.836851,-0.777462
-PO2,Portsmouth,England,50.815992,-1.078809
-PO20,Chichester,England,50.795049,-0.771824
-PO21,Arun,England,50.784831,-0.693627
-PO22,Arun,England,50.798856,-0.649645
-PO3,Portsmouth,England,50.815150,-1.061549
-PO30,Isle of Wight,England,50.693395,-1.310116
-PO31,Isle of Wight,England,50.752403,-1.306149
-PO32,Isle of Wight,England,50.749737,-1.281579
-PO33_PO34,Isle of Wight,England,50.720776,-1.163499
-PO35_PO36,Isle of Wight,England,50.664602,-1.146249
-PO37,Isle of Wight,England,50.632745,-1.178094
-PO38,Isle of Wight,England,50.603519,-1.238359
-PO39_PO40_PO41,Isle of Wight,England,50.686862,-1.513843
-PO4,Portsmouth,England,50.790931,-1.064353
-PO5,Portsmouth,England,50.789734,-1.086595
-PO6,Portsmouth,England,50.846152,-1.069692
-PO7,Havant,England,50.884421,-1.042049
-PO8,East Hampshire,England,50.910878,-1.014609
-PO9,Havant,England,50.862114,-0.982934
-PR0_PR1,Preston,England,53.757874,-2.701732
-PR0_PR1_PR11,Preston,Other,53.758608,-2.701142
-PR11_PR2,Preston,England,53.775602,-2.704810
-PR2,Preston,Other,53.775491,-2.705507
-PR25,South Ribble,England,53.695431,-2.695390
-PR26,South Ribble,England,53.688920,-2.737596
-PR3,Wyre,England,53.867727,-2.717539
-PR4,Fylde,England,53.752854,-2.831662
-PR5,South Ribble,England,53.713213,-2.681303
-PR6,Chorley,England,53.664614,-2.614495
-PR7,Chorley,England,53.648722,-2.652787
-PR8,Sefton,England,53.627655,-3.005517
-PR9,Sefton,England,53.657019,-2.971895
-RG1,Reading,England,51.451624,-0.970852
-RG10,Wokingham,England,51.479973,-0.867397
-RG12,Bracknell Forest,England,51.411903,-0.752732
-RG14,West Berkshire,England,51.398273,-1.321341
-RG17,West Berkshire,England,51.437841,-1.498304
-RG18,West Berkshire,England,51.430992,-1.247543
-RG19,West Berkshire,England,51.396448,-1.226002
-RG2,Reading,England,51.424782,-0.956048
-RG20,Basingstoke and Deane,England,51.403059,-1.334863
-RG21,Basingstoke and Deane,England,51.266805,-1.090512
-RG22,Basingstoke and Deane,England,51.252210,-1.122859
-RG23,Basingstoke and Deane,England,51.260091,-1.146819
-RG24,Basingstoke and Deane,England,51.279825,-1.078525
-RG25,Basingstoke and Deane,England,51.235791,-1.085275
-RG26,Basingstoke and Deane,England,51.348111,-1.128174
-RG27,Hart,England,51.305432,-0.948656
-RG28,Basingstoke and Deane,England,51.234840,-1.329179
-RG29,Hart,England,51.248981,-0.947115
-RG30,Reading,England,51.453182,-1.009466
-RG31,West Berkshire,England,51.456578,-1.039936
-RG4,Reading,England,51.477990,-0.965344
-RG40,Wokingham,England,51.402649,-0.835753
-RG41,Wokingham,England,51.415800,-0.857432
-RG42,Bracknell Forest,England,51.424862,-0.760043
-RG45,Bracknell Forest,England,51.378514,-0.802816
-RG5,Wokingham,England,51.452874,-0.907417
-RG6,Wokingham,England,51.442332,-0.933440
-RG7,West Berkshire,England,51.397360,-1.081590
-RG8,West Berkshire,England,51.505272,-1.106883
-RG9,South Oxfordshire,England,51.542628,-0.920401
-RH1,Reigate and Banstead,England,51.237896,-0.159113
-RH10,Crawley,England,51.119354,-0.164563
-RH10_RH77,Crawley,England,51.119462,-0.164592
-RH11,Crawley,England,51.112324,-0.204864
-RH12,Horsham,England,51.074712,-0.329539
-RH13,Horsham,England,51.038447,-0.333037
-RH14,Horsham,England,51.031461,-0.479818
-RH15,Mid Sussex,England,50.956771,-0.135791
-RH16,Mid Sussex,England,51.002889,-0.099847
-RH17,Mid Sussex,England,51.020163,-0.118681
-RH18_TN7,Wealden,England,51.097339,0.056619
-RH19,Mid Sussex,England,51.125832,-0.013493
-RH2,Reigate and Banstead,England,51.236667,-0.203265
-RH20,Horsham,England,50.937371,-0.471710
-RH3_RH5,Mole Valley,England,51.202479,-0.332106
-RH4,Mole Valley,England,51.230682,-0.333909
-RH6,Reigate and Banstead,England,51.171361,-0.165267
-RH7,Tandridge,England,51.174451,-0.018332
-RH8,Tandridge,England,51.252690,-0.000181
-RH9,Tandridge,England,51.236922,-0.076663
-RM1,Havering,England,51.580225,0.182045
-RM10,Barking and Dagenham,England,51.545584,0.156567
-RM11,Havering,England,51.569625,0.218006
-RM12,Havering,England,51.554690,0.208776
-RM13,Havering,England,51.523573,0.191915
-RM14,Havering,England,51.556213,0.260765
-RM15,Thurrock,England,51.508972,0.276991
-RM16,Thurrock,England,51.488837,0.320292
-RM17,Thurrock,England,51.479621,0.326056
-RM18,Thurrock,England,51.467623,0.370370
-RM19,Thurrock,England,51.482462,0.252314
-RM2,Havering,England,51.582520,0.199326
-RM20,Thurrock,England,51.478725,0.286842
-RM3,Havering,England,51.602104,0.224255
-RM5,Havering,England,51.598140,0.165322
-RM6,Redbridge,England,51.574993,0.133658
-RM7,Havering,England,51.573338,0.169615
-RM8,Barking and Dagenham,England,51.557163,0.130818
-RM9,Barking and Dagenham,England,51.543872,0.136522
-S1,Sheffield,England,53.380614,-1.469473
-S10,Sheffield,England,53.377074,-1.516893
-S11,Sheffield,England,53.360655,-1.508074
-S12,Sheffield,England,53.349760,-1.409040
-S13,Sheffield,England,53.364780,-1.384483
-S14,Sheffield,England,53.347121,-1.444896
-S17,Sheffield,England,53.322542,-1.526086
-S18,North East Derbyshire,England,53.299535,-1.473156
-S2,Sheffield,England,53.371460,-1.450807
-S20,Sheffield,England,53.334246,-1.349689
-S21,North East Derbyshire,England,53.313116,-1.339826
-S25,Rotherham,England,53.367618,-1.219901
-S26,Rotherham,England,53.355364,-1.287522
-S3,Sheffield,England,53.386799,-1.473034
-S32,Derbyshire Dales,England,53.294837,-1.644772
-S33_SK22,High Peak,England,53.364549,-1.915262
-S35,Sheffield,England,53.458094,-1.495170
-S36,Barnsley,England,53.505211,-1.616127
-S4,Sheffield,England,53.397709,-1.451493
-S40_S49,Chesterfield,England,53.234605,-1.443354
-S41,Chesterfield,England,53.246633,-1.428939
-S42,North East Derbyshire,England,53.201784,-1.423045
-S43,Chesterfield,England,53.268363,-1.340037
-S44,Bolsover,England,53.225721,-1.312752
-S45,North East Derbyshire,England,53.167443,-1.421506
-S4_S96_S97_S98_S99,Sheffield,England,53.405859,-1.436623
-S5,Sheffield,England,53.422318,-1.462205
-S6,Sheffield,England,53.402363,-1.509364
-S60,Rotherham,England,53.416813,-1.352500
-S61,Rotherham,England,53.443018,-1.392906
-S61_S95,Rotherham,England,53.441795,-1.393664
-S62,Rotherham,England,53.466218,-1.345220
-S63,Barnsley,England,53.517095,-1.329967
-S64,Doncaster,England,53.491353,-1.299830
-S65,Rotherham,England,53.436112,-1.321821
-S66,Rotherham,England,53.421315,-1.251520
-S7,Sheffield,England,53.354697,-1.489902
-S70,Barnsley,England,53.543698,-1.476616
-S71,Barnsley,England,53.573259,-1.457358
-S72,Barnsley,England,53.577588,-1.394379
-S73,Barnsley,England,53.524245,-1.395576
-S74,Barnsley,England,53.501763,-1.440551
-S75,Barnsley,England,53.561758,-1.519012
-S8,Sheffield,England,53.342762,-1.479358
-S80,Bassetlaw,England,53.294948,-1.146634
-S81,Bassetlaw,England,53.336774,-1.123830
-S9,Sheffield,England,53.396786,-1.420998
-SA1,Swansea,Wales,51.629108,-3.938692
-SA10,Neath Port Talbot,Wales,51.686123,-3.801251
-SA11,Neath Port Talbot,Wales,51.673867,-3.766267
-SA12,Neath Port Talbot,Wales,51.607382,-3.794911
-SA13,Neath Port Talbot,Wales,51.604337,-3.737107
-SA14,Carmarthenshire,Wales,51.731693,-4.109270
-SA15,Carmarthenshire,Wales,51.696907,-4.167339
-SA16,Carmarthenshire,Wales,51.689056,-4.254260
-SA17,Carmarthenshire,Wales,51.755132,-4.285909
-SA18,Carmarthenshire,Wales,51.797469,-3.962907
-SA19_SA20,Carmarthenshire,Wales,51.962069,-3.915760
-SA2,Swansea,Wales,51.621554,-3.991029
-SA3,Swansea,Wales,51.581836,-4.042372
-SA31,Carmarthenshire,Wales,51.856139,-4.309092
-SA32_SA39,Carmarthenshire,Wales,51.917261,-4.189230
-SA33_SA38,Carmarthenshire,Wales,51.895312,-4.442241
-SA34,Carmarthenshire,Wales,51.850887,-4.618382
-SA35_SA36_SA37_SA41_SA42,Pembrokeshire,Wales,52.004363,-4.727647
-SA4,Swansea,Wales,51.676153,-4.042786
-SA40_SA48_SY25,Ceredigion,Wales,52.161689,-4.068338
-SA43,Ceredigion,Wales,52.086674,-4.632117
-SA44,Ceredigion,Wales,52.083455,-4.369605
-SA45_SA46_SA47,Ceredigion,Wales,52.213182,-4.292440
-SA5,Swansea,Wales,51.648662,-3.969054
-SA6,Swansea,Wales,51.674831,-3.921443
-SA61,Pembrokeshire,Wales,51.799245,-4.974336
-SA62,Pembrokeshire,Wales,51.839043,-5.059882
-SA63_SA64_SA65_SA66,Pembrokeshire,Wales,51.941629,-4.897382
-SA67,Pembrokeshire,Wales,51.785084,-4.734139
-SA68_SA69,Pembrokeshire,Wales,51.720043,-4.735017
-SA6_SA99,Swansea,Wales,51.674493,-3.923121
-SA7,Swansea,Wales,51.663144,-3.894062
-SA70,Pembrokeshire,Wales,51.672108,-4.734480
-SA71,Pembrokeshire,Wales,51.669480,-4.933267
-SA72,Pembrokeshire,Wales,51.692047,-4.937140
-SA73,Pembrokeshire,Wales,51.717662,-5.015641
-SA7_SA80,Swansea,Wales,51.662862,-3.894621
-SA8,Neath Port Talbot,Wales,51.721595,-3.847161
-SA9,Powys,Wales,51.780759,-3.770691
-SE1,Southwark,England,51.498192,-0.090317
-SE10,Greenwich,England,51.484153,0.000872
-SE11,Lambeth,England,51.489517,-0.109055
-SE12,Lewisham,England,51.446071,0.026118
-SE13,Lewisham,England,51.459297,-0.010489
-SE14,Lewisham,England,51.475473,-0.043115
-SE15,Southwark,England,51.472738,-0.067060
-SE16,Southwark,England,51.496531,-0.054923
-SE16_SE1P,Southwark,England,51.495463,-0.062095
-SE17,Southwark,England,51.488513,-0.094704
-SE18,Greenwich,England,51.485424,0.071180
-SE19,Croydon,England,51.418238,-0.085204
-SE2,Greenwich,England,51.491146,0.114389
-SE20,Bromley,England,51.413043,-0.058122
-SE21,Lambeth,England,51.438318,-0.088484
-SE22,Southwark,England,51.454601,-0.072575
-SE23,Lewisham,England,51.440149,-0.050085
-SE24,Lambeth,England,51.456918,-0.100266
-SE25,Croydon,England,51.398108,-0.077492
-SE26,Lewisham,England,51.427804,-0.054313
-SE27,Lambeth,England,51.430372,-0.101624
-SE28,Greenwich,England,51.501201,0.104340
-SE3,Greenwich,England,51.468603,0.017590
-SE4,Lewisham,England,51.461723,-0.035422
-SE5,Southwark,England,51.474101,-0.092897
-SE6,Lewisham,England,51.438563,-0.017567
-SE7,Greenwich,England,51.485234,0.031835
-SE8,Lewisham,England,51.481662,-0.028890
-SE9,Greenwich,England,51.446097,0.054592
-SG1,Stevenage,England,51.909058,-0.197540
-SG10_SG11,East Hertfordshire,England,51.869234,0.034541
-SG12,East Hertfordshire,England,51.812889,-0.018066
-SG13,East Hertfordshire,England,51.789906,-0.072105
-SG14,East Hertfordshire,England,51.805743,-0.090836
-SG15,Central Bedfordshire,England,52.011499,-0.262290
-SG16,Central Bedfordshire,England,52.013524,-0.299219
-SG17,Central Bedfordshire,England,52.035013,-0.335205
-SG18,Central Bedfordshire,England,52.082577,-0.264079
-SG19,Central Bedfordshire,England,52.138441,-0.246773
-SG2,Stevenage,England,51.896537,-0.169435
-SG3,North Hertfordshire,England,51.861397,-0.182478
-SG4,North Hertfordshire,England,51.925284,-0.261295
-SG5,North Hertfordshire,England,51.965087,-0.278582
-SG6,North Hertfordshire,England,51.979442,-0.220913
-SG7,North Hertfordshire,England,52.001595,-0.178731
-SG8,North Hertfordshire,England,52.064643,-0.014861
-SG9,East Hertfordshire,England,51.940001,-0.010482
-SK1,Stockport,England,53.408165,-2.153782
-SK10,Cheshire East,England,53.273615,-2.129870
-SK11,Cheshire East,England,53.247659,-2.142484
-SK12,Cheshire East,England,53.350130,-2.018030
-SK13,High Peak,England,53.447598,-1.963542
-SK14,Tameside,England,53.452979,-2.046800
-SK15,Tameside,England,53.486465,-2.050298
-SK16,Tameside,England,53.472845,-2.082436
-SK17,High Peak,England,53.246997,-1.884116
-SK2,Stockport,England,53.396263,-2.137723
-SK23,High Peak,England,53.328074,-1.946120
-SK3,Stockport,England,53.399890,-2.170803
-SK4,Stockport,England,53.417392,-2.178813
-SK5,Stockport,England,53.432473,-2.153756
-SK6,Stockport,England,53.405765,-2.081804
-SK7,Stockport,England,53.369270,-2.144380
-SK8,Stockport,England,53.381320,-2.208846
-SK9,Cheshire East,England,53.326669,-2.231077
-SL0,Buckinghamshire,England,51.522727,-0.516490
-SL1,Slough,England,51.515975,-0.614379
-SL2,Slough,England,51.532677,-0.602793
-SL3,Slough,England,51.500543,-0.557756
-SL3_SL95,Slough,England,51.500522,-0.557478
-SL4,Windsor and Maidenhead,England,51.476719,-0.623891
-SL5,Windsor and Maidenhead,England,51.404832,-0.662129
-SL6,Windsor and Maidenhead,England,51.522908,-0.726487
-SL6_SL60,Windsor and Maidenhead,England,51.522710,-0.725956
-SL7,Buckinghamshire,England,51.574355,-0.777775
-SL8,Buckinghamshire,England,51.577845,-0.708869
-SL9,Buckinghamshire,England,51.595498,-0.555624
-SM1,Sutton,England,51.364845,-0.193061
-SM2,Sutton,England,51.353221,-0.197811
-SM3,Sutton,England,51.369955,-0.214267
-SM4,Merton,England,51.392987,-0.200188
-SM5,Sutton,England,51.366744,-0.165718
-SM6,Sutton,England,51.360973,-0.146392
-SM7,Reigate and Banstead,England,51.322814,-0.202034
-SN1,Swindon,England,51.556650,-1.775471
-SN10,Wiltshire,England,51.339281,-1.988117
-SN11,Wiltshire,England,51.439488,-1.999761
-SN12,Wiltshire,England,51.372745,-2.137582
-SN13,Wiltshire,England,51.426441,-2.207566
-SN14,Wiltshire,England,51.465959,-2.198636
-SN15,Wiltshire,England,51.470848,-2.090883
-SN16,Wiltshire,England,51.589329,-2.081103
-SN2,Swindon,England,51.579736,-1.778456
-SN25,Swindon,England,51.594695,-1.803424
-SN26_SN38_SN6,Swindon,Other,51.600976,-1.758410
-SN26_SN6,Swindon,England,51.614622,-1.748128
-SN2_SN99,Swindon,England,51.579414,-1.778005
-SN3,Swindon,England,51.560130,-1.743271
-SN38_SN5,Swindon,England,51.566520,-1.831761
-SN4,Wiltshire,England,51.531828,-1.845069
-SN5,Swindon,Other,51.567644,-1.839011
-SN7,Vale of White Horse,England,51.650292,-1.567222
-SN8,Wiltshire,England,51.409563,-1.693886
-SN9,Wiltshire,England,51.329076,-1.782911
-SO14,Southampton,England,50.907786,-1.396534
-SO15,Southampton,England,50.916660,-1.425867
-SO16,Southampton,England,50.934413,-1.432832
-SO17,Southampton,England,50.925997,-1.397432
-SO18,Southampton,England,50.923849,-1.366306
-SO19,Southampton,England,50.902789,-1.357308
-SO20,Test Valley,England,51.115023,-1.502529
-SO21,Winchester,England,51.073433,-1.314405
-SO22,Winchester,England,51.066128,-1.331810
-SO23,Winchester,England,51.067162,-1.305806
-SO23_SO25,Winchester,England,51.067165,-1.305751
-SO24,Winchester,England,51.085240,-1.150473
-SO30,Eastleigh,England,50.921106,-1.307185
-SO30_SO97,Eastleigh,England,50.921594,-1.308160
-SO31,Fareham,England,50.870093,-1.294390
-SO32,Winchester,England,50.946682,-1.213882
-SO40,New Forest,England,50.916782,-1.504294
-SO41,New Forest,England,50.756021,-1.561301
-SO42_SO43,New Forest,England,50.843510,-1.558223
-SO45,New Forest,England,50.849572,-1.395082
-SO50,Eastleigh,England,50.970751,-1.345522
-SO51,Test Valley,England,50.994034,-1.500830
-SO52,Test Valley,England,50.977619,-1.436237
-SO53,Eastleigh,England,50.984241,-1.381163
-SP1,Wiltshire,England,51.073716,-1.791138
-SP10,Test Valley,England,51.210690,-1.483291
-SP11,Test Valley,England,51.225932,-1.514104
-SP2,Wiltshire,England,51.072425,-1.819174
-SP3,Wiltshire,England,51.099651,-2.004997
-SP4,Wiltshire,England,51.162386,-1.767030
-SP5,Wiltshire,England,51.024315,-1.773391
-SP6,New Forest,England,50.935448,-1.801251
-SP7,Dorset,England,51.005331,-2.185939
-SP8,Dorset,England,51.036803,-2.288567
-SP9,Wiltshire,England,51.232928,-1.663616
-SR1,Sunderland,England,54.906847,-1.381616
-SR2,Sunderland,England,54.888595,-1.378655
-SR3,Sunderland,England,54.877885,-1.416464
-SR4,Sunderland,England,54.901544,-1.424740
-SR5,Sunderland,England,54.921696,-1.422078
-SR6,Sunderland,England,54.933919,-1.380784
-SR7,County Durham,England,54.830852,-1.360556
-SR8,County Durham,England,54.766584,-1.336567
-SS0,Southend-on-Sea,England,51.545810,0.691401
-SS1,Southend-on-Sea,England,51.539422,0.724299
-SS11,Basildon,England,51.616300,0.535386
-SS12,Basildon,England,51.605835,0.520830
-SS13,Basildon,England,51.574903,0.507548
-SS14,Basildon,England,51.574929,0.470382
-SS15,Basildon,England,51.576865,0.429179
-SS16,Basildon,England,51.563070,0.451808
-SS17,Thurrock,England,51.521748,0.439497
-SS1_SS22_SS99,Southend-on-Sea,England,51.542037,0.720809
-SS2,Southend-on-Sea,Other,51.549986,0.715679
-SS2_SS99,Southend-on-Sea,England,51.549504,0.714446
-SS3,Southend-on-Sea,England,51.542156,0.789581
-SS4,Rochford,England,51.591833,0.712633
-SS5,Rochford,England,51.606798,0.649683
-SS6,Rochford,England,51.587585,0.606486
-SS7,Castle Point,England,51.563078,0.577719
-SS8,Castle Point,England,51.522103,0.589454
-SS9,Southend-on-Sea,England,51.553576,0.652161
-ST1,Stoke-on-Trent,England,53.025191,-2.174643
-ST10,Staffordshire Moorlands,England,52.988535,-1.966134
-ST11,Staffordshire Moorlands,England,52.966960,-2.067940
-ST12_ST15,Stafford,Other,52.906463,-2.154389
-ST12_ST20,Stafford,England,52.851973,-2.226516
-ST13,Staffordshire Moorlands,England,53.101451,-2.019848
-ST14,East Staffordshire,England,52.903639,-1.869100
-ST15,Stafford,England,52.898516,-2.151380
-ST16,Stafford,England,52.810690,-2.120812
-ST17,Stafford,England,52.789465,-2.101012
-ST18,Stafford,England,52.814537,-2.083307
-ST19,South Staffordshire,England,52.716001,-2.145023
-ST2,Stoke-on-Trent,England,53.027112,-2.137187
-ST20,Stafford,Other,52.798542,-2.254874
-ST21,Stafford,England,52.868511,-2.262047
-ST3,Stoke-on-Trent,England,52.981094,-2.122929
-ST4,Stoke-on-Trent,England,52.997757,-2.183576
-ST5_ST55,Newcastle-under-Lyme,England,53.015195,-2.239937
-ST6,Stoke-on-Trent,England,53.056451,-2.191920
-ST7,Newcastle-under-Lyme,England,53.088022,-2.267241
-ST8,Staffordshire Moorlands,England,53.115413,-2.168651
-ST9,Staffordshire Moorlands,England,53.049726,-2.103908
-SW10,Kensington and Chelsea,England,51.483842,-0.183040
-SW11,Wandsworth,England,51.466980,-0.164364
-SW11_SW95,Wandsworth,England,51.467321,-0.163656
-SW12,Wandsworth,England,51.446195,-0.149915
-SW13,Richmond upon Thames,England,51.474454,-0.248924
-SW14,Richmond upon Thames,England,51.466499,-0.266668
-SW15,Wandsworth,England,51.457977,-0.225819
-SW16,Lambeth,England,51.423560,-0.129567
-SW17,Wandsworth,England,51.430217,-0.165157
-SW18,Wandsworth,England,51.450485,-0.191557
-SW19,Merton,England,51.422195,-0.205348
-SW1A_SW1E_SW1H_SW1Y_W1D_W1F_W1J_WC2E_WC2N,Westminster,Other,51.508404,-0.134852
-SW1A_SW1E_SW1H_W1A_W1B_W1C_W1K_W1S_W1W,Westminster,England,51.513209,-0.138805
-SW1P,Westminster,England,51.488854,-0.133629
-SW1V,Westminster,England,51.490692,-0.139436
-SW1W,Westminster,England,51.493228,-0.147671
-SW1X,Kensington and Chelsea,England,51.497460,-0.153414
-SW1Y_WC2B_WC2E_WC2H_WC2N_WC2R,Camden,England,51.511505,-0.125979
-SW2,Lambeth,England,51.450800,-0.120673
-SW20,Merton,England,51.412447,-0.224068
-SW3,Kensington and Chelsea,England,51.488334,-0.165044
-SW4,Lambeth,England,51.461625,-0.137216
-SW5,Kensington and Chelsea,England,51.489749,-0.189684
-SW6,Hammersmith and Fulham,England,51.477397,-0.200514
-SW7,Kensington and Chelsea,England,51.496486,-0.176536
-SW8,Lambeth,England,51.476536,-0.132809
-SW9,Lambeth,England,51.469086,-0.113675
-SY1,Shropshire,England,52.719873,-2.743243
-SY10,Shropshire,Wales,52.838961,-3.108775
-SY11,Shropshire,England,52.867227,-3.031488
-SY12,Shropshire,England,52.902323,-2.897082
-SY13,Shropshire,England,52.953165,-2.689285
-SY14,Cheshire West and Chester,England,53.027984,-2.762970
-SY15,Powys,Wales,52.560480,-3.134116
-SY16,Powys,Wales,52.520012,-3.312744
-SY17_SY19_SY20,Powys,Wales,52.583690,-3.704291
-SY2,Shropshire,England,52.706260,-2.731062
-SY21,Powys,Wales,52.658314,-3.200990
-SY22,Powys,Wales,52.758347,-3.181531
-SY23_SY24,Ceredigion,Wales,52.395121,-4.051525
-SY3,Shropshire,England,52.700288,-2.771129
-SY4,Shropshire,England,52.794007,-2.752757
-SY5,Shropshire,England,52.655349,-2.826895
-SY5_SY99,Shropshire,England,52.655772,-2.826325
-SY6_SY9,Shropshire,England,52.524187,-2.847398
-SY7,Shropshire,England,52.426444,-2.882562
-SY8,Shropshire,England,52.365421,-2.696920
-TA1,Somerset West and Taunton,England,51.016322,-3.105654
-TA10,South Somerset,England,51.033773,-2.826802
-TA11,South Somerset,England,51.060129,-2.709230
-TA12_TA13,South Somerset,England,50.961547,-2.789822
-TA14_TA15_TA16_TA17,South Somerset,England,50.932163,-2.770685
-TA18,South Somerset,England,50.882849,-2.788098
-TA19,South Somerset,England,50.933987,-2.915428
-TA2,Somerset West and Taunton,England,51.032842,-3.101897
-TA20,South Somerset,England,50.873156,-2.961398
-TA21,Somerset West and Taunton,England,50.977925,-3.242308
-TA22_TA23,Somerset West and Taunton,England,51.116153,-3.429596
-TA24,Somerset West and Taunton,England,51.184210,-3.507473
-TA3,Somerset West and Taunton,England,50.994503,-3.041815
-TA4,Somerset West and Taunton,England,51.071925,-3.265526
-TA5,Sedgemoor,England,51.142668,-3.090781
-TA6,Sedgemoor,England,51.125921,-3.001014
-TA7,Sedgemoor,England,51.131033,-2.915188
-TA8,Sedgemoor,England,51.243901,-2.994820
-TA9,Sedgemoor,England,51.225949,-2.959214
-TD1,Scottish Borders,Scotland,55.622691,-2.811058
-TD10_TD11_TD3_TD4,Scottish Borders,Other,55.740187,-2.430136
-TD11,Scottish Borders,Scotland,55.787301,-2.315139
-TD13_TD14,Scottish Borders,Scotland,55.876883,-2.158276
-TD15,Northumberland,England,55.750895,-2.013079
-TD5,Scottish Borders,England,55.589111,-2.418743
-TD6,Scottish Borders,Scotland,55.582895,-2.695367
-TD7,Scottish Borders,Scotland,55.537914,-2.869666
-TD8,Scottish Borders,Scotland,55.475968,-2.543352
-TD9,Scottish Borders,England,55.399640,-2.777481
-TF1,Telford and Wrekin,England,52.703194,-2.500652
-TF10,Telford and Wrekin,England,52.768554,-2.386099
-TF11,Shropshire,England,52.663885,-2.364207
-TF12,Shropshire,England,52.612864,-2.480804
-TF13_TF8,Shropshire,England,52.605720,-2.528777
-TF2,Telford and Wrekin,England,52.696540,-2.440962
-TF3,Telford and Wrekin,England,52.666020,-2.447221
-TF3_WV99,Telford and Wrekin,England,52.668010,-2.437158
-TF4,Telford and Wrekin,England,52.660942,-2.469308
-TF5_TF6,Telford and Wrekin,England,52.728241,-2.549035
-TF7,Telford and Wrekin,England,52.639391,-2.447264
-TF9,Shropshire,England,52.898099,-2.472343
-TN1,Tunbridge Wells,England,51.136939,0.268067
-TN10,Tonbridge and Malling,England,51.210158,0.284264
-TN11,Tonbridge and Malling,England,51.205792,0.267111
-TN12,Tunbridge Wells,England,51.172983,0.437724
-TN13,Sevenoaks,England,51.275001,0.186105
-TN14,Sevenoaks,England,51.295018,0.163153
-TN15,Sevenoaks,England,51.299016,0.267826
-TN16,Bromley,England,51.297100,0.048456
-TN17,Tunbridge Wells,England,51.095390,0.537413
-TN18,Tunbridge Wells,England,51.045367,0.524473
-TN19,Rother,England,51.004273,0.412796
-TN2,Tunbridge Wells,England,51.126650,0.267674
-TN20_TN5,Wealden,England,51.056656,0.326373
-TN21,Wealden,England,50.960579,0.261054
-TN22,Wealden,England,50.980149,0.097485
-TN23,Ashford,England,51.140884,0.860957
-TN24,Ashford,England,51.149733,0.885081
-TN25,Ashford,England,51.143004,0.933063
-TN26,Ashford,England,51.101537,0.804942
-TN27,Ashford,England,51.165906,0.710217
-TN28,Folkestone and Hythe,England,50.983555,0.949455
-TN29,Folkestone and Hythe,England,50.992731,0.932837
-TN3,Tunbridge Wells,England,51.124527,0.250277
-TN30,Ashford,England,51.064118,0.695095
-TN31_TN36,Rother,England,50.955352,0.696591
-TN32,Rother,England,50.978813,0.487919
-TN33,Rother,England,50.911855,0.477048
-TN34,Hastings,England,50.862993,0.579848
-TN35,Hastings,England,50.880023,0.609665
-TN37,Hastings,England,50.870542,0.556274
-TN38,Hastings,England,50.865125,0.544782
-TN39,Rother,England,50.846031,0.453797
-TN4,Tunbridge Wells,England,51.146970,0.258315
-TN40,Rother,England,50.843871,0.480330
-TN6,Wealden,England,51.053951,0.171720
-TN8,Sevenoaks,England,51.195299,0.076123
-TN9,Tonbridge and Malling,England,51.191281,0.278258
-TQ1,Torbay,England,50.473512,-3.527497
-TQ10_TQ11,South Hams,England,50.451298,-3.799662
-TQ12,Teignbridge,England,50.529942,-3.610923
-TQ13,Teignbridge,England,50.590843,-3.711601
-TQ14,Teignbridge,England,50.549943,-3.506547
-TQ2,Torbay,England,50.475793,-3.544766
-TQ3,Torbay,England,50.443359,-3.574674
-TQ4,Torbay,England,50.425272,-3.571816
-TQ5,Torbay,England,50.392210,-3.522289
-TQ6,South Hams,England,50.347824,-3.590498
-TQ7_TQ8,South Hams,England,50.275694,-3.782474
-TQ9,South Hams,England,50.420117,-3.690494
-TR1,Cornwall,England,50.262015,-5.053658
-TR10,Cornwall,England,50.166290,-5.118123
-TR11,Cornwall,England,50.150517,-5.087831
-TR12,Cornwall,England,50.044159,-5.184695
-TR13,Cornwall,England,50.109412,-5.285793
-TR14,Cornwall,England,50.211349,-5.296172
-TR15,Cornwall,England,50.233057,-5.237043
-TR16,Cornwall,England,50.233066,-5.222062
-TR17_TR20,Cornwall,England,50.130272,-5.488710
-TR18,Cornwall,England,50.117893,-5.541684
-TR18_TR21_TR22_TR23_TR24_TR25,Cornwall,Other,50.101621,-5.606585
-TR19,Cornwall,Other,50.101897,-5.626515
-TR19_TR21_TR22_TR23_TR24_TR25,Cornwall,England,50.074386,-5.732459
-TR2,Cornwall,England,50.254576,-4.956257
-TR26,Cornwall,England,50.202934,-5.480055
-TR27,Cornwall,England,50.182353,-5.407271
-TR3,Cornwall,England,50.220351,-5.108074
-TR4,Cornwall,England,50.283541,-5.131962
-TR5_TR6,Cornwall,England,50.324075,-5.171104
-TR7,Cornwall,England,50.413806,-5.076302
-TR8,Cornwall,England,50.400599,-5.040550
-TR9,Cornwall,England,50.414115,-4.941565
-TS1,Middlesbrough,England,54.573087,-1.239576
-TS10,Redcar and Cleveland,England,54.605785,-1.072011
-TS11,Redcar and Cleveland,England,54.587990,-1.033888
-TS12,Redcar and Cleveland,England,54.563421,-0.967179
-TS13,Redcar and Cleveland,England,54.550505,-0.858561
-TS14,Redcar and Cleveland,England,54.532283,-1.061912
-TS15,Stockton-on-Tees,England,54.493657,-1.333659
-TS16,Stockton-on-Tees,England,54.526146,-1.353715
-TS17,Stockton-on-Tees,England,54.538899,-1.304992
-TS18_TS2,Stockton-on-Tees,England,54.566214,-1.306262
-TS19,Stockton-on-Tees,England,54.576077,-1.338577
-TS20,Stockton-on-Tees,England,54.585449,-1.314423
-TS21,County Durham,England,54.624006,-1.422362
-TS22,Stockton-on-Tees,England,54.620339,-1.320184
-TS23,Stockton-on-Tees,England,54.606498,-1.287014
-TS24,Hartlepool,England,54.693754,-1.210712
-TS25,Hartlepool,England,54.663475,-1.224072
-TS26,Hartlepool,England,54.688372,-1.230632
-TS27,County Durham,England,54.722478,-1.287903
-TS28,County Durham,England,54.725470,-1.375028
-TS29,County Durham,England,54.711227,-1.419955
-TS3,Middlesbrough,England,54.561889,-1.198512
-TS4,Middlesbrough,England,54.557190,-1.223736
-TS5,Middlesbrough,England,54.552007,-1.252106
-TS6,Redcar and Cleveland,England,54.567467,-1.156036
-TS7,Middlesbrough,England,54.533140,-1.186574
-TS8,Middlesbrough,England,54.521650,-1.231261
-TS9,Hambleton,England,54.469030,-1.168460
-TW1,Richmond upon Thames,England,51.450926,-0.327781
-TW10,Richmond upon Thames,England,51.451473,-0.302837
-TW11,Richmond upon Thames,England,51.426745,-0.332602
-TW12,Richmond upon Thames,England,51.421041,-0.369480
-TW13,Hounslow,England,51.439150,-0.403423
-TW14,Hounslow,England,51.452175,-0.420065
-TW15,Spelthorne,England,51.430354,-0.455828
-TW16,Spelthorne,England,51.416420,-0.417509
-TW17,Spelthorne,England,51.397550,-0.447933
-TW18,Spelthorne,England,51.429225,-0.510594
-TW19,Spelthorne,England,51.452120,-0.505321
-TW2,Richmond upon Thames,England,51.447131,-0.350064
-TW20,Runnymede,England,51.428021,-0.548780
-TW3,Hounslow,England,51.468614,-0.363337
-TW4,Hounslow,England,51.466940,-0.384390
-TW5,Hounslow,England,51.480246,-0.381528
-TW6_UB11_UB7,Hillingdon,England,51.491246,-0.461379
-TW7,Hounslow,England,51.474838,-0.331845
-TW8,Hounslow,England,51.486079,-0.308366
-TW9,Richmond upon Thames,England,51.467185,-0.296940
-UB1,Ealing,England,51.512337,-0.376460
-UB10,Hillingdon,England,51.547275,-0.455632
-UB18_UB2,Ealing,England,51.500578,-0.382041
-UB3,Hillingdon,England,51.505018,-0.421727
-UB4,Hillingdon,England,51.523142,-0.408568
-UB5,Ealing,England,51.544267,-0.374754
-UB6,Ealing,England,51.540246,-0.344355
-UB8,Hillingdon,England,51.537013,-0.478866
-UB9,Buckinghamshire,England,51.579949,-0.491795
-W10,Kensington and Chelsea,England,51.520206,-0.221379
-W11,Kensington and Chelsea,England,51.512786,-0.216719
-W12,Hammersmith and Fulham,England,51.509369,-0.238215
-W13,Ealing,England,51.513088,-0.321426
-W14,Hammersmith and Fulham,England,51.495428,-0.211162
-W1A_W1B_W1C_W1K_W1S_WC2B_WC2R,Westminster,Other,51.514957,-0.135936
-W1D_W1F_W1G_W1J,Westminster,England,51.513469,-0.140448
-W1G_W1W,Westminster,Other,51.519102,-0.144594
-W1H,Westminster,England,51.517383,-0.159511
-W1T,Camden,England,51.520112,-0.136461
-W1U,Westminster,England,51.518587,-0.153397
-W2,Westminster,England,51.514528,-0.187998
-W3,Ealing,England,51.508325,-0.270144
-W4,Hounslow,England,51.491408,-0.263614
-W5,Ealing,England,51.512220,-0.303987
-W6,Hammersmith and Fulham,England,51.492481,-0.231004
-W7,Ealing,England,51.509760,-0.335117
-W8,Kensington and Chelsea,England,51.500427,-0.195394
-W9,Westminster,England,51.523790,-0.194025
-WA1,Warrington,England,53.392724,-2.580115
-WA10,St. Helens,England,53.453778,-2.752954
-WA11,St. Helens,England,53.477140,-2.719488
-WA12,St. Helens,England,53.453431,-2.634149
-WA13,Warrington,England,53.382481,-2.465809
-WA14,Trafford,England,53.387422,-2.356789
-WA15,Trafford,England,53.384417,-2.328754
-WA16,Cheshire East,England,53.304448,-2.371238
-WA1_WA55,Warrington,England,53.392682,-2.581165
-WA2,Warrington,England,53.408557,-2.583694
-WA3,Wigan,England,53.452071,-2.548262
-WA4,Warrington,England,53.370151,-2.581329
-WA5,Warrington,England,53.399641,-2.632393
-WA6,Cheshire West and Chester,England,53.275586,-2.724151
-WA7,Halton,England,53.330318,-2.703466
-WA8_WA88,Halton,England,53.372497,-2.740000
-WA9,St. Helens,England,53.437048,-2.719905
-WC1H,Camden,England,51.524846,-0.126312
-WC1N,Camden,England,51.521955,-0.120626
-WC1X,Camden,England,51.524361,-0.117284
-WD17,Watford,England,51.660809,-0.407003
-WD18,Watford,England,51.648049,-0.419138
-WD18_WD99,Watford,England,51.648061,-0.419184
-WD19,Three Rivers,England,51.632661,-0.393710
-WD23,Hertsmere,England,51.645326,-0.366718
-WD24,Watford,England,51.669683,-0.401253
-WD25,Watford,England,51.681979,-0.392077
-WD3,Three Rivers,England,51.643476,-0.482982
-WD4,Dacorum,England,51.706467,-0.453891
-WD5,Three Rivers,England,51.704445,-0.422618
-WD6,Hertsmere,England,51.656707,-0.276446
-WD7,Hertsmere,England,51.685836,-0.312674
-WF1,Wakefield,England,53.684018,-1.498718
-WF10,Wakefield,England,53.723544,-1.350156
-WF11,Wakefield,England,53.710677,-1.259182
-WF12,Kirklees,England,53.684097,-1.622311
-WF13,Kirklees,England,53.691847,-1.644386
-WF14,Kirklees,England,53.680490,-1.691034
-WF15,Kirklees,England,53.708292,-1.699060
-WF16,Kirklees,England,53.709639,-1.668510
-WF17,Kirklees,England,53.717726,-1.640480
-WF1_WF90,Wakefield,England,53.683982,-1.498731
-WF2,Wakefield,England,53.673292,-1.511941
-WF3,Leeds,England,53.721571,-1.523852
-WF4,Wakefield,England,53.649067,-1.517798
-WF5,Wakefield,England,53.680638,-1.576909
-WF6,Wakefield,England,53.701466,-1.413740
-WF7,Wakefield,England,53.667058,-1.351177
-WF8,Wakefield,England,53.687137,-1.301571
-WF9,Wakefield,England,53.606318,-1.320899
-WN1,Wigan,England,53.551212,-2.629926
-WN2,Wigan,England,53.536335,-2.584570
-WN3,Wigan,England,53.530714,-2.644786
-WN4,Wigan,England,53.497324,-2.643414
-WN5,Wigan,England,53.532592,-2.684839
-WN6,Wigan,England,53.573253,-2.669370
-WN7,Wigan,England,53.497280,-2.518212
-WN8,West Lancashire,England,53.552158,-2.771710
-WR1,Worcester,England,52.197311,-2.217500
-WR10,Wychavon,England,52.117068,-2.067073
-WR11,Wychavon,England,52.094898,-1.929937
-WR12,Wychavon,England,52.046999,-1.879460
-WR13,"Herefordshire, County of",England,52.094701,-2.341710
-WR14,Malvern Hills,England,52.113554,-2.322316
-WR15,Malvern Hills,England,52.306126,-2.572689
-WR1_WR99,Worcester,Other,52.197314,-2.217580
-WR2,Worcester,England,52.191538,-2.240213
-WR3,Worcester,England,52.216028,-2.210525
-WR4,Worcester,England,52.204473,-2.190955
-WR5,Worcester,Other,52.179761,-2.200141
-WR5_WR99,Worcester,England,52.180241,-2.200678
-WR6,Malvern Hills,England,52.229185,-2.361095
-WR7,Wychavon,England,52.197367,-2.063763
-WR8,Malvern Hills,England,52.090220,-2.202121
-WR9,Wychavon,England,52.268310,-2.157285
-WS1,Walsall,England,52.581657,-1.979775
-WS10,Sandwell,England,52.560292,-2.023366
-WS11,Cannock Chase,England,52.688854,-2.016427
-WS12,Cannock Chase,England,52.703110,-2.002292
-WS13,Lichfield,England,52.691460,-1.817813
-WS14,Lichfield,England,52.669820,-1.813295
-WS15,Cannock Chase,England,52.758814,-1.920115
-WS2,Walsall,England,52.588732,-2.001972
-WS3,Walsall,England,52.617032,-1.991550
-WS4,Walsall,England,52.604327,-1.961167
-WS5,Walsall,England,52.568292,-1.961476
-WS6,South Staffordshire,England,52.657326,-2.022638
-WS7,Lichfield,England,52.680455,-1.915654
-WS8,Walsall,England,52.642910,-1.936761
-WS9,Walsall,England,52.609224,-1.919312
-WV1,Wolverhampton,England,52.586777,-2.118254
-WV10,Wolverhampton,England,52.615950,-2.113867
-WV11,Wolverhampton,England,52.609802,-2.071738
-WV12,Walsall,England,52.605859,-2.042091
-WV13,Walsall,England,52.585646,-2.062692
-WV14,Wolverhampton,England,52.558278,-2.077926
-WV15,Shropshire,England,52.517694,-2.379869
-WV16,Shropshire,England,52.515953,-2.436879
-WV2,Wolverhampton,England,52.575800,-2.120088
-WV3,Wolverhampton,England,52.580774,-2.148304
-WV4,Wolverhampton,England,52.564350,-2.140733
-WV5,South Staffordshire,England,52.533189,-2.210651
-WV6,Wolverhampton,England,52.597116,-2.175401
-WV7,Shropshire,England,52.634284,-2.276837
-WV8,South Staffordshire,England,52.622509,-2.182492
-WV9,Wolverhampton,England,52.631701,-2.140666
-YO10,York,England,53.951331,-1.060756
-YO11,Scarborough,England,54.268914,-0.398493
-YO12,Scarborough,England,54.274313,-0.422201
-YO13,Scarborough,England,54.286954,-0.493550
-YO14,Scarborough,England,54.199943,-0.298400
-YO15,East Riding of Yorkshire,England,54.091617,-0.182314
-YO16,East Riding of Yorkshire,England,54.096105,-0.199177
-YO17,Ryedale,England,54.139605,-0.771461
-YO18,Ryedale,England,54.255969,-0.767611
-YO19,York,England,53.911127,-1.026337
-YO1_YO90,York,England,53.958082,-1.071365
-YO21,Scarborough,England,54.477900,-0.701875
-YO22,Scarborough,England,54.452413,-0.621547
-YO23,York,England,53.927809,-1.119351
-YO24,York,England,53.947312,-1.114250
-YO25,East Riding of Yorkshire,England,54.014292,-0.419594
-YO26,York,England,53.974467,-1.167294
-YO30,York,England,53.984065,-1.110958
-YO31,York,England,53.970321,-1.065894
-YO32,York,England,54.009032,-1.060376
-YO41,East Riding of Yorkshire,England,53.969439,-0.910516
-YO42,East Riding of Yorkshire,England,53.924828,-0.788658
-YO51,Harrogate,England,54.087911,-1.388398
-YO60_YO62,Ryedale,England,54.194515,-0.980297
-YO61,Hambleton,England,54.119695,-1.199180
-YO7,Hambleton,England,54.224451,-1.350339
-YO8,Selby,England,53.785485,-1.056993
-ZE1,Shetland Islands,Scotland,60.151649,-1.168180
-ZE2_ZE3,Shetland Islands,Scotland,60.295980,-1.231889
+﻿postcode,latitude,longitude
+AB10,57.134805,-2.117455
+AB11,57.137133,-2.093443
+AB12,57.103365,-2.109934
+AB13_AB14,57.106942,-2.261168
+AB15,57.138575,-2.166715
+AB16,57.159568,-2.156525
+AB21,57.208443,-2.200934
+AB22,57.186437,-2.119507
+AB23,57.208406,-2.089781
+AB24,57.163397,-2.108254
+AB25,57.153472,-2.114219
+AB30,56.845958,-2.476986
+AB31,57.066964,-2.504895
+AB32,57.154467,-2.315049
+AB33_AB35_AB36,57.156714,-2.914243
+AB34,57.092675,-2.810042
+AB37_AB38_IV32,57.511473,-3.208139
+AB39,56.978047,-2.216928
+AB41,57.371715,-2.117104
+AB42,57.501574,-1.888256
+AB43,57.657784,-2.044831
+AB44_AB45,57.655027,-2.553747
+AB51,57.287904,-2.404888
+AB52,57.342076,-2.602524
+AB53,57.53439,-2.407171
+AB54,57.465517,-2.756242
+AB55,57.532353,-2.975847
+AB56,57.67353,-2.919004
+AL1,51.748665,-0.319465
+AL2,51.722496,-0.330885
+AL3,51.775388,-0.366536
+AL4,51.771276,-0.296003
+AL5,51.814548,-0.351507
+AL6,51.829915,-0.199434
+AL7,51.798617,-0.189271
+AL8,51.803409,-0.210292
+AL9,51.746863,-0.201709
+AL10,51.760939,-0.23129
+B1,52.479552,-1.907755
+B2_B3_B4,52.484359,-1.898427
+B5,52.472206,-1.896822
+B6,52.502505,-1.886855
+B7,52.49383,-1.874377
+B8,52.490022,-1.842774
+B9,52.478089,-1.852806
+B10,52.470106,-1.853285
+B11,52.455388,-1.859863
+B12,52.460887,-1.882531
+B13,52.435126,-1.882543
+B14,52.418788,-1.890263
+B15,52.467926,-1.923536
+B16,52.475463,-1.93238
+B17,52.461491,-1.962914
+B18,52.491538,-1.922587
+B19,52.496305,-1.906163
+B20,52.513363,-1.918878
+B21,52.505138,-1.936382
+B23,52.527661,-1.851784
+B24,52.519646,-1.828905
+B25,52.461679,-1.825958
+B26,52.460715,-1.792876
+B27,52.445771,-1.823766
+B28,52.427785,-1.843178
+B29,52.437705,-1.94579
+B30,52.421196,-1.928083
+B31,52.409132,-1.973099
+B32,52.450842,-1.994493
+B33,52.480728,-1.787949
+B34,52.495667,-1.781678
+B35,52.51731,-1.789954
+B36,52.504538,-1.779926
+B37_B40,52.477887,-1.741383
+B38,52.401057,-1.934014
+B42,52.534622,-1.904992
+B43,52.547603,-1.928246
+B44,52.544991,-1.885653
+B45,52.388508,-2.008505
+B46,52.507103,-1.697592
+B47,52.388699,-1.881181
+B48,52.356855,-1.951602
+B49,52.217145,-1.867673
+B50,52.169645,-1.856585
+B60,52.323989,-2.050277
+B61,52.344056,-2.06747
+B62,52.459781,-2.03713
+B63,52.453069,-2.067379
+B64,52.472434,-2.069085
+B65,52.482828,-2.043424
+B66,52.493645,-1.965873
+B67,52.487641,-1.977336
+B68,52.480058,-2.001833
+B69,52.50281,-2.025516
+B70,52.519793,-2.002695
+B71,52.534792,-1.9901
+B72,52.554471,-1.823641
+B73,52.559273,-1.83768
+B74,52.582364,-1.857331
+B75,52.577845,-1.81122
+B76,52.544713,-1.789954
+B77,52.620221,-1.671779
+B78,52.606451,-1.674865
+B79,52.648069,-1.682568
+B80,52.279071,-1.897271
+B90,52.401432,-1.826126
+B91,52.413974,-1.780697
+B92,52.435312,-1.7743
+B93,52.383043,-1.742192
+B94,52.352915,-1.791004
+B95,52.287158,-1.780538
+B96,52.254933,-1.959323
+B97,52.303209,-1.949766
+B98,52.303708,-1.91611
+BA1,51.388818,-2.360251
+BA2,51.362076,-2.376347
+BA3,51.285546,-2.449335
+BA4,51.174504,-2.533243
+BA5,51.211672,-2.654742
+BA6,51.143007,-2.709214
+BA10_BA7,51.100077,-2.485212
+BA8_BA9,51.038269,-2.41028
+BA11,51.237564,-2.326459
+BA12,51.174307,-2.187358
+BA13,51.263027,-2.184562
+BA14,51.319063,-2.202804
+BA15,51.348444,-2.262333
+BA16,51.12657,-2.743242
+BA20,50.939035,-2.642668
+BA21,50.951146,-2.63378
+BA22,50.9682,-2.637563
+BB1,53.755144,-2.46573
+BB2,53.741845,-2.498035
+BB3,53.697803,-2.466259
+BB4,53.703411,-2.291149
+BB5,53.75455,-2.372222
+BB6,53.803932,-2.415657
+BB7,53.871933,-2.389059
+BB8,53.879282,-2.168059
+BB9,53.837032,-2.215807
+BB10,53.799422,-2.221699
+BB11,53.784755,-2.25082
+BB12,53.802047,-2.288901
+BB18,53.914986,-2.172604
+BD1,53.797306,-1.754302
+BD2,53.81415,-1.736299
+BD3,53.797929,-1.729957
+BD4,53.776762,-1.721678
+BD5,53.779317,-1.758347
+BD6,53.76494,-1.784775
+BD7_BD99,53.784425,-1.78053
+BD8,53.801421,-1.780645
+BD9,53.811505,-1.788119
+BD10,53.830862,-1.726198
+BD11,53.749811,-1.679421
+BD12,53.74791,-1.762428
+BD13,53.787625,-1.856044
+BD14,53.783289,-1.817448
+BD15,53.80804,-1.835099
+BD16_BD97,53.847479,-1.831955
+BD17_BD98,53.844792,-1.769055
+BD18,53.830362,-1.776595
+BD19,53.726652,-1.714379
+BD20,53.895713,-1.946132
+BD21,53.864592,-1.908335
+BD22,53.846893,-1.952304
+BD23,53.988871,-2.052194
+BD24,54.077295,-2.281469
+BH1,50.72527,-1.86313
+BH2,50.721907,-1.881278
+BH3,50.735517,-1.880236
+BH4,50.721707,-1.900512
+BH5,50.725769,-1.837097
+BH6,50.727673,-1.809196
+BH7,50.734543,-1.834192
+BH8,50.739789,-1.85393
+BH9,50.749827,-1.874819
+BH10,50.759081,-1.893279
+BH11,50.760792,-1.920011
+BH12,50.737917,-1.92504
+BH13,50.710433,-1.918308
+BH14,50.722249,-1.945531
+BH15,50.720859,-1.98486
+BH16,50.738089,-2.044312
+BH17,50.745832,-1.973212
+BH18,50.75705,-1.991528
+BH19,50.611452,-1.96989
+BH20,50.6875,-2.144737
+BH21,50.818303,-1.96463
+BH22,50.806143,-1.889111
+BH23,50.745347,-1.758597
+BH24,50.846002,-1.787798
+BH25,50.752295,-1.658614
+BH31,50.874823,-1.86917
+BL0,53.643335,-2.316237
+BL1,53.58892,-2.440717
+BL2,53.587723,-2.397856
+BL11_BL3,53.56626,-2.431921
+BL4,53.547327,-2.403378
+BL5,53.551749,-2.517262
+BL6,53.591136,-2.540102
+BL7,53.628206,-2.423066
+BL8,53.60191,-2.32368
+BL9,53.592037,-2.288868
+BN1,50.837195,-0.140097
+BN2_BN88,50.824518,-0.108369
+BN3,50.83443,-0.17535
+BN5,50.924357,-0.268126
+BN45_BN6,50.926872,-0.154988
+BN7,50.878318,0.002861
+BN8,50.912457,0.05077
+BN9,50.795301,0.026748
+BN10,50.795579,0.001785
+BN11,50.813734,-0.375472
+BN12_BN99,50.816687,-0.4032
+BN13,50.830334,-0.406356
+BN14,50.83077,-0.379932
+BN15_BN95,50.830007,-0.325119
+BN16,50.81548,-0.498
+BN17,50.815284,-0.537167
+BN18,50.848843,-0.578218
+BN20,50.774037,0.254866
+BN21,50.772107,0.274605
+BN22,50.787896,0.283443
+BN23,50.798473,0.312672
+BN24,50.815592,0.325726
+BN25,50.775954,0.107289
+BN26,50.821421,0.224828
+BN27,50.870791,0.26284
+BN41,50.839103,-0.215311
+BN42,50.836747,-0.232047
+BN43,50.835436,-0.268076
+BN44,50.892757,-0.318618
+BR1,51.410732,0.019415
+BR2,51.390367,0.021651
+BR3,51.403432,-0.031687
+BR4,51.375663,-0.009914
+BR5,51.389215,0.102548
+BR6,51.367389,0.092505
+BR7,51.411811,0.059514
+BR8,51.397625,0.174793
+BS1,51.453877,-2.59211
+BS2,51.45901,-2.581145
+BS3,51.438569,-2.603415
+BS4,51.436222,-2.563961
+BS5,51.462153,-2.552834
+BS6,51.470167,-2.598439
+BS7,51.486643,-2.581605
+BS8,51.457495,-2.619483
+BS9,51.488307,-2.625372
+BS10,51.505576,-2.611603
+BS11,51.498727,-2.678466
+BS13,51.41206,-2.611766
+BS14,51.413183,-2.562762
+BS15,51.454792,-2.496157
+BS16,51.485523,-2.512241
+BS20,51.480605,-2.756983
+BS21,51.436132,-2.851408
+BS22,51.360633,-2.928254
+BS23,51.343497,-2.969554
+BS24,51.331261,-2.924847
+BS25_BS29,51.32332,-2.839879
+BS26_BS28,51.257027,-2.835087
+BS27,51.272389,-2.772277
+BS30,51.446422,-2.475462
+BS31,51.409571,-2.493446
+BS32,51.541465,-2.561103
+BS34,51.525276,-2.567779
+BS35,51.597332,-2.548251
+BS36,51.52619,-2.487852
+BS37,51.540079,-2.418375
+BS39,51.328139,-2.53286
+BS40,51.346885,-2.693532
+BS41,51.4235,-2.654423
+BS48,51.426547,-2.749781
+BS49,51.382424,-2.816022
+BT1_BT3_BT7,54.595722,-5.925393
+BT12_BT2,54.592707,-5.949533
+BT4,54.602745,-5.868192
+BT5,54.588616,-5.873893
+BT6,54.580812,-5.898377
+BT8,54.545363,-5.908342
+BT9,54.572192,-5.950173
+BT10,54.559791,-5.986452
+BT11,54.576235,-5.998131
+BT13,54.605762,-5.958469
+BT14,54.621115,-5.962265
+BT15,54.621876,-5.931642
+BT16,54.590891,-5.798095
+BT17,54.553195,-6.019519
+BT18,54.640348,-5.823868
+BT19,54.650798,-5.657916
+BT20,54.659059,-5.665437
+BT21,54.64071,-5.546944
+BT22,54.503464,-5.514791
+BT23,54.571716,-5.707671
+BT24,54.4177,-5.871723
+BT25,54.396521,-6.115809
+BT26,54.454129,-6.063881
+BT27,54.509172,-6.024242
+BT28,54.521952,-6.084576
+BT29,54.621319,-6.197429
+BT30,54.333228,-5.702965
+BT31,54.276875,-5.969012
+BT32,54.336228,-6.247343
+BT33,54.223237,-5.890808
+BT34,54.153053,-6.181632
+BT35,54.164918,-6.439638
+BT36,54.678225,-5.959613
+BT37,54.676417,-5.908255
+BT38,54.72871,-5.801016
+BT39,54.745133,-6.018104
+BT40,54.846652,-5.822865
+BT41,54.731422,-6.253682
+BT42,54.854595,-6.276875
+BT43,54.890549,-6.266001
+BT44,54.973089,-6.283916
+BT45,54.75977,-6.638906
+BT46,54.865511,-6.662609
+BT47,54.980462,-7.231091
+BT48,55.008966,-7.327423
+BT49,55.047543,-6.951814
+BT51,55.06128,-6.683172
+BT52,55.133639,-6.655938
+BT53,55.085103,-6.477066
+BT54_BT57,55.203493,-6.362701
+BT55,55.179598,-6.709805
+BT56,55.197503,-6.650721
+BT60,54.292642,-6.647681
+BT61,54.367013,-6.626014
+BT62,54.412703,-6.464458
+BT63,54.408268,-6.39281
+BT64_BT65,54.446735,-6.376797
+BT66,54.455264,-6.333375
+BT67,54.486906,-6.268565
+BT68_BT69_BT76_BT77,54.41169,-7.030972
+BT70,54.51446,-6.881505
+BT71,54.512605,-6.705766
+BT74,54.344621,-7.663341
+BT75_BT94,54.376121,-7.508037
+BT78,54.572715,-7.372266
+BT79,54.622233,-7.204606
+BT80,54.645878,-6.744168
+BT81,54.696047,-7.611976
+BT82,54.826288,-7.431113
+BT92,54.22377,-7.464883
+BT93,54.467644,-7.826232
+CA1,54.88713,-2.918298
+CA2,54.884773,-2.950667
+CA3,54.905895,-2.939956
+CA4,54.856609,-2.820702
+CA5,54.820644,-3.211323
+CA6,54.987054,-2.868389
+CA7,54.808457,-3.235139
+CA8,54.939658,-2.688334
+CA10_CA9,54.653541,-2.610554
+CA11,54.66482,-2.782275
+CA12,54.602284,-3.134375
+CA13,54.660424,-3.367997
+CA14,54.635129,-3.539579
+CA15,54.711804,-3.482009
+CA16_CA17,54.530673,-2.422925
+CA18_CA19_CA20_CA21_LA19,54.38393,-3.434659
+CA22_CA27,54.48219,-3.542809
+CA23_CA24_CA26,54.529408,-3.498695
+CA25,54.521581,-3.519471
+CA28,54.543616,-3.579573
+CB1,52.185979,0.16745
+CB2,52.171884,0.129617
+CB3,52.214065,0.033401
+CB4,52.243725,0.117615
+CB5,52.23364,0.199446
+CB6,52.403225,0.224746
+CB7,52.370161,0.311797
+CB8,52.232964,0.420805
+CB9,52.083042,0.439986
+CB10,52.029373,0.258188
+CB11,52.001861,0.213957
+CB21,52.130398,0.279445
+CB22,52.13321,0.135889
+CB23,52.216772,-0.02278
+CB24,52.275325,0.084463
+CB25,52.256793,0.245504
+CF3,51.518024,-3.118623
+CF5,51.482957,-3.241476
+CF10_CF99,51.473629,-3.177266
+CF11,51.470648,-3.192533
+CF14,51.520217,-3.202498
+CF15,51.533825,-3.27108
+CF23,51.513627,-3.145265
+CF24,51.484734,-3.166383
+CF31,51.507721,-3.57543
+CF32,51.557688,-3.582803
+CF33,51.524521,-3.68719
+CF34,51.610774,-3.652668
+CF35,51.521266,-3.527515
+CF36,51.483967,-3.69979
+CF37,51.601488,-3.334259
+CF38,51.560912,-3.333486
+CF39,51.601891,-3.426501
+CF40,51.620505,-3.452746
+CF41,51.647795,-3.48273
+CF42,51.666613,-3.521937
+CF43,51.656995,-3.449598
+CF44,51.717257,-3.457158
+CF45,51.670031,-3.362784
+CF46,51.663897,-3.301481
+CF47,51.750665,-3.375454
+CF48,51.74261,-3.370598
+CF61,51.409457,-3.481038
+CF62,51.404227,-3.309178
+CF63,51.410615,-3.260284
+CF64,51.434484,-3.188131
+CF71,51.456864,-3.464664
+CF72,51.529849,-3.399715
+CF81_NP24,51.705727,-3.242517
+CF82,51.649447,-3.237146
+CF83,51.585471,-3.220514
+CH1_CH88,53.199017,-2.900009
+CH2,53.215606,-2.870673
+CH3,53.167839,-2.825795
+CH4,53.169571,-2.938167
+CH5,53.204761,-3.039123
+CH6,53.249127,-3.144433
+CH7,53.169419,-3.134236
+CH8,53.28231,-3.241648
+CH27_CH44,53.416196,-3.037826
+CH34_CH65,53.278718,-2.903267
+CH41,53.394683,-3.030747
+CH42,53.375246,-3.022138
+CH43,53.382878,-3.060151
+CH45,53.42827,-3.050785
+CH46,53.403843,-3.110937
+CH47,53.395841,-3.170206
+CH48,53.37259,-3.170838
+CH49,53.380973,-3.103342
+CH60,53.326943,-3.09643
+CH61,53.347449,-3.101784
+CH62,53.335859,-2.98215
+CH63,53.345819,-3.011382
+CH64,53.288367,-3.049267
+CH66,53.277977,-2.935476
+CM0,51.659633,0.832412
+CM1,51.745331,0.465918
+CM2,51.723687,0.48495
+CM3,51.715679,0.586547
+CM4,51.675019,0.388493
+CM5_RM4,51.69571,0.224834
+CM6,51.878429,0.372814
+CM7,51.886067,0.547819
+CM8,51.804951,0.638663
+CM9,51.739423,0.695867
+CM11,51.623963,0.442857
+CM12,51.626857,0.414861
+CM13,51.615435,0.334535
+CM14,51.618927,0.295407
+CM15,51.641277,0.304238
+CM16,51.700206,0.118683
+CM17,51.772549,0.140862
+CM18,51.756672,0.104681
+CM19,51.761388,0.074311
+CM20,51.774561,0.10049
+CM21,51.811963,0.147768
+CM22,51.865237,0.217069
+CM23,51.870938,0.159025
+CM24,51.897702,0.206549
+CM77,51.86763,0.552607
+CO1,51.881504,0.891566
+CO2,51.871045,0.895386
+CO3,51.885331,0.858306
+CO4,51.906794,0.920738
+CO5,51.814078,0.822622
+CO6,51.932757,0.793571
+CO7,51.880864,1.002854
+CO8_CO9,51.968541,0.627627
+CO10,52.053905,0.72678
+CO11,51.942419,1.075308
+CO12,51.932293,1.255722
+CO13,51.838153,1.237981
+CO14,51.850261,1.267611
+CO15,51.796667,1.155195
+CO16,51.819516,1.125657
+CR0_CR9,51.373866,-0.084982
+CR2,51.345206,-0.095438
+CR3,51.297806,-0.096786
+CR4,51.402542,-0.144771
+CR5,51.313332,-0.141434
+CR6,51.303215,-0.057283
+CR7,51.392709,-0.103508
+CR8,51.336418,-0.110948
+CT1,51.27874,1.0866
+CT2,51.292157,1.081584
+CT3,51.27708,1.207401
+CT4,51.228109,1.067775
+CT5,51.354266,1.034556
+CT6,51.364251,1.12853
+CT7,51.371663,1.302447
+CT8,51.380557,1.340578
+CT9,51.384015,1.388114
+CT10,51.362901,1.429154
+CT11,51.336487,1.412433
+CT12,51.343162,1.370593
+CT13,51.268806,1.33082
+CT14,51.217404,1.386928
+CT15,51.171316,1.283559
+CT16,51.139281,1.301494
+CT17,51.128738,1.295283
+CT18,51.112591,1.15052
+CT19,51.088379,1.168496
+CT20,51.079655,1.165349
+CT21,51.073084,1.077955
+CV1,52.408984,-1.507482
+CV2,52.423317,-1.467702
+CV3,52.393893,-1.482856
+CV4,52.399637,-1.555588
+CV5,52.411895,-1.548324
+CV6,52.430918,-1.50722
+CV7,52.44231,-1.559032
+CV8,52.351161,-1.547647
+CV9,52.584295,-1.559046
+CV10,52.525604,-1.498876
+CV11,52.520159,-1.456946
+CV12,52.477025,-1.473736
+CV13,52.608024,-1.417859
+CV21,52.370699,-1.271622
+CV22,52.357858,-1.283553
+CV23,52.349845,-1.302937
+CV31,52.280008,-1.527051
+CV32,52.295683,-1.531905
+CV33,52.238045,-1.442886
+CV34,52.2845,-1.585043
+CV35,52.232195,-1.595466
+CV36,52.071118,-1.629898
+CV37,52.18725,-1.714894
+CV47,52.236639,-1.386463
+CW1,53.09977,-2.430614
+CW2,53.081397,-2.445758
+CW3,53.003591,-2.410966
+CW4,53.204141,-2.34036
+CW5,53.063235,-2.521923
+CW6,53.161607,-2.667383
+CW7,53.190668,-2.527559
+CW8,53.254157,-2.559471
+CW9,53.259579,-2.50401
+CW10,53.189055,-2.448976
+CW11,53.143215,-2.365116
+CW12,53.166248,-2.215872
+DA1,51.447304,0.209393
+DA2,51.433242,0.231904
+DA3,51.385949,0.306394
+DA4,51.392799,0.23081
+DA5,51.441022,0.147447
+DA6,51.456117,0.138918
+DA7,51.46503,0.143386
+DA8,51.476092,0.179771
+DA9,51.448207,0.280603
+DA10,51.443157,0.30078
+DA11,51.435438,0.351706
+DA12,51.430564,0.384145
+DA13,51.386057,0.354271
+DA14,51.425887,0.110452
+DA15,51.439846,0.098935
+DA16,51.464477,0.109011
+DA17,51.486661,0.150523
+DA18,51.491464,0.145955
+DD1,56.461823,-2.977348
+DD2,56.471042,-3.027682
+DD3,56.48198,-2.98935
+DD4,56.481885,-2.935728
+DD5,56.479483,-2.863317
+DD6,56.437041,-2.926787
+DD7,56.50277,-2.719487
+DD8,56.656108,-2.921706
+DD9,56.747556,-2.666796
+DD10,56.745411,-2.430768
+DD11,56.572386,-2.597884
+DE1,52.918925,-1.47268
+DE3,52.915423,-1.508545
+DE4,53.143799,-1.585436
+DE5,53.056841,-1.425851
+DE6,52.962945,-1.667838
+DE7,52.939933,-1.343008
+DE11,52.773035,-1.557017
+DE12,52.72762,-1.554234
+DE13,52.807879,-1.687798
+DE14,52.80713,-1.638821
+DE15,52.799649,-1.610348
+DE21,52.932519,-1.435272
+DE22,52.933035,-1.497582
+DE23,52.899417,-1.49977
+DE24,52.890498,-1.453472
+DE45,53.214337,-1.677397
+DE55,53.099571,-1.371946
+DE56,53.02115,-1.476962
+DE65,52.866438,-1.620019
+DE72,52.894071,-1.366911
+DE73,52.849419,-1.438533
+DE74,52.848126,-1.340841
+DE75,53.012063,-1.353271
+DG1,55.073268,-3.585539
+DG2,55.065285,-3.656894
+DG3_DG4,55.292851,-3.862258
+DG5,54.921523,-3.813007
+DG6,54.837174,-4.05555
+DG7,54.966205,-4.008693
+DG8,54.874452,-4.514149
+DG9,54.87854,-5.022871
+DG10_DG13_DG14_DG16,55.17438,-3.189093
+DG11,55.114662,-3.340795
+DG12,54.989815,-3.2516
+DH1_DH99,54.782638,-1.562432
+DH2,54.859905,-1.598294
+DH3,54.87015,-1.569449
+DH4,54.852927,-1.490316
+DH5,54.824562,-1.455855
+DH6,54.753609,-1.464768
+DH7,54.789435,-1.661577
+DH8,54.853291,-1.833011
+DH9,54.867836,-1.710958
+DL1,54.528021,-1.541354
+DL2,54.527526,-1.592291
+DL3,54.531181,-1.569042
+DL4,54.630827,-1.645646
+DL5,54.616226,-1.576956
+DL6,54.368052,-1.393993
+DL7,54.336994,-1.479252
+DL8,54.294652,-1.785224
+DL9,54.376037,-1.710853
+DL10,54.413142,-1.699688
+DL11,54.439051,-1.871277
+DL12,54.570528,-1.982099
+DL13,54.716627,-1.951985
+DL14,54.653333,-1.690208
+DL15,54.7096,-1.729104
+DL16,54.699088,-1.60382
+DL17,54.681165,-1.543049
+DN1,53.521046,-1.118338
+DN2,53.532662,-1.104174
+DN3,53.543736,-1.064764
+DN4,53.505957,-1.122086
+DN5,53.536723,-1.171191
+DN6,53.594718,-1.177048
+DN7,53.580347,-1.017574
+DN8,53.614499,-0.956391
+DN9,53.505584,-0.904714
+DN10,53.426528,-0.941428
+DN11,53.4495,-1.083597
+DN12,53.483243,-1.223653
+DN14,53.707724,-0.93464
+DN15,53.609631,-0.652549
+DN16,53.568388,-0.640012
+DN17,53.573298,-0.703157
+DN18,53.681819,-0.446338
+DN19_DN39,53.662064,-0.353436
+DN20,53.557933,-0.50358
+DN21,53.417335,-0.710043
+DN22,53.32464,-0.929853
+DN31,53.57092,-0.084552
+DN32,53.56322,-0.071098
+DN33,53.540605,-0.098526
+DN34,53.558084,-0.112043
+DN35,53.555542,-0.037955
+DN36,53.513692,-0.040156
+DN37,53.55095,-0.149477
+DN38_LN7,53.509997,-0.357215
+DN40,53.621647,-0.22404
+DN41,53.584753,-0.195613
+DT1,50.712409,-2.443916
+DT2,50.748501,-2.449627
+DT3,50.640448,-2.466911
+DT4,50.609868,-2.463211
+DT5,50.549344,-2.442855
+DT6,50.738688,-2.774797
+DT7,50.729261,-2.945795
+DT8,50.814914,-2.757975
+DT9,50.942577,-2.516775
+DT10,50.936998,-2.331495
+DT11,50.861426,-2.179911
+DY1,52.515145,-2.094362
+DY2,52.49758,-2.0826
+DY3,52.529766,-2.128584
+DY4,52.531863,-2.054453
+DY5,52.480934,-2.122827
+DY6,52.498872,-2.164393
+DY7,52.464658,-2.217992
+DY8,52.459967,-2.153961
+DY9,52.437528,-2.124184
+DY10,52.386202,-2.229219
+DY11,52.385376,-2.260418
+DY12,52.38645,-2.323785
+DY13,52.337188,-2.28087
+DY14,52.380898,-2.456034
+E1,51.516256,-0.060418
+E1W_E98_EC3N,51.511807,-0.065972
+E2,51.530129,-0.06224
+E3,51.528156,-0.025808
+E4,51.62381,-0.003246
+E5,51.559318,-0.054547
+E6,51.525187,0.055155
+E7,51.54755,0.026164
+E8,51.54128,-0.065033
+E9,51.541866,-0.046555
+E10,51.568709,-0.012765
+E11,51.567376,0.011669
+E12,51.55103,0.050821
+E13,51.528187,0.02579
+E14,51.507636,-0.020875
+E15,51.538692,0.00061
+E16,51.511528,0.020556
+E17,51.5864,-0.020201
+E18,51.592575,0.025529
+E20,51.546505,-0.0101
+EC1A_EC2A_EC2M_EC2N_EC2P_EC2R_EC2V_EC2Y_EC3A_EC3M_EC3R_EC3V_EC4A_EC4M_EC4N_EC4R_EC4V_EC4Y,51.516599,-0.094013
+EC1M_EC1Y,51.522163,-0.098931
+EC1N_WC1A_WC1B_WC1E_WC1R_WC1V_WC2A,51.518762,-0.119712
+EC1R,51.524494,-0.108974
+EC1V,51.5265,-0.099312
+EH1_EH2,55.952723,-3.196234
+EH3,55.952506,-3.20427
+EH4,55.962389,-3.255506
+EH5,55.974488,-3.219199
+EH6,55.97113,-3.173939
+EH7,55.959927,-3.164936
+EH8_EH99,55.949941,-3.166392
+EH9,55.933169,-3.186954
+EH10,55.921525,-3.210806
+EH11,55.933353,-3.251416
+EH12,55.941421,-3.273915
+EH13,55.90861,-3.242566
+EH14,55.91152,-3.280981
+EH15,55.947133,-3.113041
+EH16,55.923711,-3.151473
+EH17,55.90707,-3.144346
+EH18_EH24_EH25,55.863315,-3.147519
+EH19,55.872471,-3.105062
+EH20,55.87867,-3.154238
+EH21,55.939029,-3.046899
+EH22,55.885525,-3.06164
+EH23_EH37,55.846115,-3.031573
+EH26,55.832994,-3.223976
+EH27_EH55,55.857516,-3.541699
+EH28_EH29,55.940777,-3.399706
+EH30,55.982679,-3.378272
+EH31_EH39_EH40,56.040037,-2.737809
+EH32,55.966407,-2.953169
+EH33,55.94184,-2.945062
+EH34_EH35_EH36,55.907481,-2.906994
+EH38_EH43_EH44_TD10_TD2_TD3_TD4,55.67387,-2.781615
+EH41,55.94956,-2.777275
+EH42,55.993897,-2.524658
+EH45_EH46,55.672285,-3.225053
+EH47,55.860686,-3.664503
+EH48,55.898439,-3.660955
+EH49,55.976806,-3.602778
+EH51,56.011582,-3.605423
+EH52,55.935986,-3.489365
+EH53,55.893955,-3.476947
+EH54,55.892008,-3.524845
+EN1,51.653212,-0.070679
+EN2,51.65851,-0.091703
+EN3,51.658176,-0.041649
+EN4,51.648058,-0.162712
+EN5,51.648337,-0.19066
+EN6,51.69903,-0.179766
+EN7,51.70825,-0.064532
+EN8,51.696262,-0.033224
+EN9,51.694629,0.010477
+EN10,51.74091,-0.021126
+EN11,51.763872,-0.009329
+EX1,50.726614,-3.510651
+EX2,50.711472,-3.515389
+EX3,50.693885,-3.459797
+EX4,50.730246,-3.526525
+EX5,50.754854,-3.437317
+EX6,50.675742,-3.592695
+EX7,50.585935,-3.470941
+EX8,50.628468,-3.403052
+EX9,50.638943,-3.323663
+EX10,50.691953,-3.245726
+EX11,50.747149,-3.288681
+EX12_EX24,50.715614,-3.08298
+EX13,50.773813,-3.025421
+EX14,50.810973,-3.20014
+EX15,50.875642,-3.345855
+EX16,50.920543,-3.490926
+EX17_EX18,50.824931,-3.731612
+EX19_EX38,50.917197,-4.089672
+EX20,50.750814,-4.015391
+EX21_EX22,50.819317,-4.317075
+EX23,50.824955,-4.534232
+EX31_EX35,51.101417,-4.040207
+EX32,51.073205,-4.027001
+EX33,51.112587,-4.166254
+EX34,51.199199,-4.107667
+EX36_EX37,51.004749,-3.849762
+EX39,51.016009,-4.242757
+FK1,55.988697,-3.793031
+FK2,56.004984,-3.757878
+FK3,56.011935,-3.720371
+FK4,55.997595,-3.907351
+FK5,56.025483,-3.820215
+FK6,56.021586,-3.914622
+FK7,56.099375,-3.918026
+FK8,56.129081,-4.034649
+FK9,56.14158,-3.941405
+FK10,56.115006,-3.78334
+FK11_FK12,56.15138,-3.818089
+FK13,56.150204,-3.742535
+FK14_PH4_PH5_PH6,56.257637,-3.797724
+FK15,56.200076,-3.952227
+FK16_FK17_FK18_FK19_FK20_FK21,56.285977,-4.231851
+FY1,53.816083,-3.048252
+FY2,53.844375,-3.040233
+FY3,53.821051,-3.02266
+FY4,53.792005,-3.030564
+FY5,53.8736,-3.02429
+FY6,53.865075,-2.980531
+FY7,53.916552,-3.025489
+FY8,53.750399,-3.006471
+G1_G2,55.862388,-4.253474
+G3,55.866308,-4.270268
+G4,55.868136,-4.251631
+G5,55.847728,-4.254019
+G11,55.873522,-4.313257
+G12,55.879659,-4.30203
+G13,55.892863,-4.347161
+G14,55.880143,-4.35056
+G15,55.910339,-4.366945
+G20,55.885489,-4.282041
+G21,55.880489,-4.222829
+G22,55.889565,-4.252607
+G23,55.902171,-4.285257
+G31,55.856207,-4.20935
+G32,55.848802,-4.166305
+G33,55.872934,-4.165073
+G34,55.867886,-4.112491
+G40,55.847518,-4.221155
+G41,55.838652,-4.281638
+G42,55.834026,-4.258658
+G43,55.818462,-4.292293
+G44,55.814156,-4.257686
+G45,55.804589,-4.233099
+G46,55.80437,-4.306959
+G51,55.857417,-4.313149
+G52,55.849577,-4.353189
+G53,55.820905,-4.352454
+G60,55.918376,-4.443904
+G61,55.919184,-4.330262
+G62,55.942562,-4.320344
+G63,56.042575,-4.369396
+G64,55.910913,-4.217931
+G65,55.972122,-4.09997
+G66,55.940275,-4.154398
+G67,55.947817,-3.985715
+G68,55.953253,-4.010659
+G69,55.874013,-4.102529
+G71,55.821721,-4.075563
+G72,55.804535,-4.13048
+G73,55.82176,-4.206868
+G74_G79,55.767828,-4.177807
+G75,55.751285,-4.195218
+G76,55.778267,-4.273381
+G77,55.774024,-4.331264
+G78,55.793515,-4.409043
+G81,55.912076,-4.407177
+G82,55.950961,-4.573537
+G83,56.011826,-4.587424
+G84,56.013983,-4.754656
+GL1,51.857625,-2.244882
+GL2,51.841247,-2.269963
+GL3,51.859815,-2.180899
+GL4,51.842947,-2.21886
+GL5,51.739265,-2.22118
+GL6,51.73829,-2.198795
+GL7,51.711445,-1.905819
+GL8,51.641527,-2.169169
+GL12_GL9,51.615637,-2.367648
+GL10,51.744086,-2.28284
+GL11,51.692068,-2.35729
+GL13,51.693115,-2.453654
+GL14,51.818306,-2.482676
+GL15,51.735083,-2.550038
+GL16,51.79509,-2.613204
+GL17,51.854914,-2.508145
+GL18,51.940701,-2.413916
+GL19,51.938164,-2.283939
+GL20,52.002777,-2.131194
+GL50,51.901482,-2.081489
+GL51,51.896669,-2.108286
+GL52,51.922104,-2.060696
+GL53,51.882029,-2.069055
+GL54,51.897966,-1.868028
+GL55,52.062442,-1.771147
+GL56,51.990131,-1.704037
+GU1,51.243112,-0.570124
+GU2,51.244781,-0.593011
+GU3,51.246893,-0.621879
+GU4,51.243,-0.546699
+GU5,51.206334,-0.522057
+GU6,51.141059,-0.484798
+GU7,51.188926,-0.610693
+GU8,51.15207,-0.639876
+GU9,51.217895,-0.795936
+GU10,51.198421,-0.797418
+GU11,51.249634,-0.762398
+GU12,51.251994,-0.733557
+GU14,51.291055,-0.76142
+GU15,51.335572,-0.750448
+GU16,51.313771,-0.731219
+GU17,51.336713,-0.806601
+GU18,51.347501,-0.663169
+GU19_GU20,51.363234,-0.673979
+GU21,51.319856,-0.577384
+GU22,51.313345,-0.553182
+GU23,51.29771,-0.511004
+GU24,51.330033,-0.625431
+GU25,51.401385,-0.569713
+GU26,51.110254,-0.746049
+GU27,51.083558,-0.722231
+GU28,50.991127,-0.628456
+GU29,50.984406,-0.746591
+GU30,51.0755,-0.803643
+GU31,50.997771,-0.908397
+GU32,51.007839,-0.961045
+GU33,51.047923,-0.893578
+GU34,51.140532,-0.984808
+GU35,51.116739,-0.851133
+GU46,51.338368,-0.823909
+GU47,51.347585,-0.793109
+GU51,51.285247,-0.839941
+GU52,51.26597,-0.838274
+HA0,51.550131,-0.304748
+HA1,51.581301,-0.33618
+HA2,51.575688,-0.35496
+HA3,51.59155,-0.322913
+HA4,51.570787,-0.41044
+HA5,51.594651,-0.385867
+HA6,51.610029,-0.420616
+HA7,51.609681,-0.307029
+HA8,51.61159,-0.275248
+HA9,51.558672,-0.290002
+HD1,53.646878,-1.786325
+HD2,53.666893,-1.776697
+HD3,53.652827,-1.830285
+HD4,53.627227,-1.797342
+HD5,53.647575,-1.748803
+HD6,53.701715,-1.782782
+HD7,53.598966,-1.829286
+HD8,53.600678,-1.675497
+HD9,53.579137,-1.795717
+HG1,53.999764,-1.532696
+HG2,53.987709,-1.52804
+HG3,54.030388,-1.614467
+HG4,54.153972,-1.559525
+HG5,54.013176,-1.459592
+HP1,51.754752,-0.48036
+HP2,51.762063,-0.454408
+HP3,51.737281,-0.471639
+HP4,51.766749,-0.567762
+HP5,51.713056,-0.60858
+HP6,51.677437,-0.60157
+HP7,51.666339,-0.61042
+HP8,51.644754,-0.576048
+HP9,51.61038,-0.642013
+HP10,51.610769,-0.710218
+HP11,51.625258,-0.746451
+HP12,51.624746,-0.778142
+HP13,51.633027,-0.741447
+HP14,51.648497,-0.825772
+HP15,51.653323,-0.717458
+HP16,51.702386,-0.717919
+HP17,51.749794,-0.851796
+HP18,51.81676,-0.960984
+HP19,51.823836,-0.826363
+HP20,51.819668,-0.807424
+HP21,51.806902,-0.806193
+HP22,51.800316,-0.76859
+HP23,51.794949,-0.662244
+HP27,51.721731,-0.830768
+HR1,52.057447,-2.688862
+HR2,52.013514,-2.778099
+HR3_HR5,52.129692,-3.054374
+HR4,52.084676,-2.761041
+HR6,52.231719,-2.768594
+HR7,52.184388,-2.525042
+HR8,52.044193,-2.442221
+HR9,51.908439,-2.581521
+HS1,58.21208,-6.381426
+HS2_HS3_HS4_HS5,58.167782,-6.541538
+HS6_HS7_HS8_HS9,57.344012,-7.355754
+HU1_HU2,53.745238,-0.337035
+HU3,53.741329,-0.365435
+HU4,53.736453,-0.399395
+HU5,53.759477,-0.374516
+HU6,53.780879,-0.368851
+HU7,53.788741,-0.330166
+HU8,53.767775,-0.305022
+HU9,53.753619,-0.296124
+HU10,53.747846,-0.44033
+HU11,53.830429,-0.237119
+HU12,53.723951,-0.135368
+HU13,53.724609,-0.43702
+HU14,53.727391,-0.488572
+HU15,53.74721,-0.618548
+HU16,53.781336,-0.421515
+HU17,53.846081,-0.426254
+HU18,53.908688,-0.170244
+HU19,53.72328,0.034133
+HU20_YO43,53.846107,-0.670454
+HX1,53.721719,-1.867921
+HX2,53.738344,-1.904235
+HX3,53.726382,-1.845894
+HX4,53.680683,-1.879918
+HX5,53.686459,-1.836139
+HX6,53.698577,-1.923217
+HX7,53.739352,-2.008958
+IG1,51.559178,0.072741
+IG2,51.573298,0.079463
+IG3,51.562486,0.097763
+IG4,51.577204,0.054947
+IG5,51.585901,0.064721
+IG6,51.591779,0.086952
+IG7,51.613705,0.087404
+IG8,51.610584,0.035416
+IG9,51.624061,0.038898
+IG10,51.648335,0.065322
+IG11,51.534936,0.091839
+IP1,52.062642,1.142371
+IP2,52.046278,1.134469
+IP3,52.042129,1.184919
+IP4,52.059606,1.175799
+IP10_IP5,52.0464,1.251166
+IP6,52.128248,1.112145
+IP7,52.06624,0.949631
+IP8,52.063322,1.082802
+IP9,51.99319,1.147918
+IP11,51.966904,1.333974
+IP12,52.093974,1.364391
+IP13,52.184444,1.320656
+IP14,52.204367,1.028949
+IP15_IP16,52.187571,1.587848
+IP17,52.229958,1.501417
+IP18_IP19,52.337285,1.552491
+IP20,52.405862,1.318428
+IP21,52.365672,1.229361
+IP22_IP98,52.377963,1.072583
+IP23,52.313498,1.120752
+IP24,52.418872,0.755784
+IP25,52.577853,0.834406
+IP26,52.505721,0.576695
+IP27,52.429774,0.583605
+IP28,52.327601,0.537299
+IP29,52.195413,0.66297
+IP30,52.211754,0.835444
+IP31,52.289688,0.825355
+IP32,52.253423,0.719096
+IP33,52.243255,0.712472
+IV1_IV10_IV11_IV8_IV9,57.501327,-4.187995
+IV2,57.468158,-4.190687
+IV3,57.463261,-4.271779
+IV21_IV22_IV4_IV52_IV53_IV54,57.539006,-5.163893
+IV5_IV6,57.509545,-4.449306
+IV7,57.583776,-4.392732
+IV12,57.574321,-3.865071
+IV13_PH20_PH22_PH23_PH24_PH25_PH26,57.245337,-3.782126
+IV14_IV16_IV23_IV24,57.704109,-4.568109
+IV15,57.598524,-4.431161
+IV17,57.698629,-4.255992
+IV18,57.700813,-4.15629
+IV19_IV20,57.799194,-4.007261
+IV25_IV28_KW10_KW11_KW12_KW13_KW2_KW3_KW5_KW6_KW7_KW8_KW9,58.074241,-3.817866
+IV26_IV27,58.159253,-4.919634
+IV30,57.65385,-3.32803
+IV31,57.717029,-3.290655
+IV36,57.610152,-3.607176
+IV40_IV63_PH31_PH32_PH35,57.23811,-5.113909
+IV41_IV42_IV43_IV44_IV45_IV46_IV47_IV48_IV49_IV55_IV56_PH42_PH43_PH44,57.283894,-6.177692
+IV51,57.485238,-6.250027
+KA1,55.59709,-4.496924
+KA2,55.596747,-4.561295
+KA3,55.642835,-4.496835
+KA4,55.599365,-4.384742
+KA5,55.509201,-4.384581
+KA6,55.417722,-4.50908
+KA7,55.45052,-4.630571
+KA8,55.47146,-4.613765
+KA9,55.498257,-4.606036
+KA10,55.549473,-4.650081
+KA11,55.617604,-4.629601
+KA12,55.617937,-4.665868
+KA13,55.655321,-4.700128
+KA14_KA24,55.713791,-4.710081
+KA15,55.748412,-4.62695
+KA16_KA17,55.60883,-4.312481
+KA18,55.45082,-4.241983
+KA19,55.34639,-4.669924
+KA20,55.640753,-4.753188
+KA21,55.641134,-4.784813
+KA22,55.648756,-4.807582
+KA23_KA28_KA29,55.715956,-4.868743
+KA25,55.752306,-4.689058
+KA26,55.220071,-4.836095
+KA27_PA28,55.482619,-5.406818
+KA30_PA17,55.807841,-4.865446
+KT1,51.407092,-0.297606
+KT2,51.416129,-0.291051
+KT3,51.399671,-0.256805
+KT4,51.378676,-0.243077
+KT5,51.39278,-0.287888
+KT6,51.38969,-0.300621
+KT7,51.390229,-0.3287
+KT8,51.401594,-0.366927
+KT9,51.36474,-0.303178
+KT10,51.371046,-0.357179
+KT11,51.328164,-0.404699
+KT12,51.37735,-0.408754
+KT13,51.369203,-0.451436
+KT14,51.340166,-0.486372
+KT15,51.364999,-0.494581
+KT16,51.38416,-0.513911
+KT17,51.339777,-0.253033
+KT18,51.318956,-0.263665
+KT19,51.350027,-0.269346
+KT20,51.287039,-0.231877
+KT21,51.310942,-0.302933
+KT22,51.300627,-0.337637
+KT23,51.281954,-0.370936
+KT24,51.2692,-0.430066
+KW1,58.455899,-3.118707
+KW14,58.588571,-3.556022
+KW15_KW16,58.974935,-3.044187
+KW17,59.030163,-3.007531
+KY1,56.126504,-3.141265
+KY2,56.122521,-3.18304
+KY3,56.063028,-3.231981
+KY4,56.113958,-3.361756
+KY5,56.14436,-3.295395
+KY6,56.196615,-3.196604
+KY7,56.210702,-3.155084
+KY8,56.197087,-3.012459
+KY10_KY9,56.22484,-2.734445
+KY11,56.049545,-3.412353
+KY12,56.075925,-3.488554
+KY13,56.207986,-3.431522
+KY14,56.310892,-3.23237
+KY15,56.300948,-3.050989
+KY16,56.341302,-2.818952
+L1_L2_L75,53.405625,-2.985227
+L3_L74,53.408573,-2.985626
+L4,53.437808,-2.962042
+L5,53.424835,-2.977637
+L6,53.418598,-2.953337
+L69_L7,53.402925,-2.968431
+L8,53.390177,-2.963993
+L67_L9,53.460517,-2.952519
+L10,53.473727,-2.928133
+L11,53.447362,-2.914671
+L12,53.434574,-2.896748
+L13,53.415123,-2.921589
+L14,53.419094,-2.881738
+L15,53.397287,-2.922655
+L16,53.398141,-2.892256
+L17,53.378615,-2.942175
+L18,53.380541,-2.909396
+L19,53.358157,-2.903092
+L20,53.452224,-2.990118
+L21,53.470697,-3.000451
+L22,53.476733,-3.027475
+L23,53.489297,-3.024408
+L24_L70,53.362821,-2.879767
+L25,53.379009,-2.863895
+L26,53.365561,-2.836296
+L27,53.388171,-2.84001
+L28,53.435199,-2.866527
+L29_L30_L38,53.490738,-2.986166
+L31,53.513443,-2.938699
+L32,53.478528,-2.889401
+L33,53.488777,-2.876069
+L34,53.435387,-2.815133
+L35,53.416435,-2.785058
+L36,53.41425,-2.841488
+L37,53.556989,-3.063827
+L39,53.562946,-2.893433
+L40,53.598924,-2.846441
+LA1,54.04696,-2.800226
+LA2,54.066098,-2.675014
+LA3,54.051958,-2.878019
+LA4,54.07036,-2.854638
+LA5,54.143174,-2.790005
+LA6,54.174581,-2.61649
+LA7,54.225942,-2.773135
+LA10_LA8,54.32092,-2.680761
+LA9,54.32623,-2.743937
+LA11,54.199575,-2.924129
+LA12,54.202542,-3.084103
+LA13,54.118277,-3.199207
+LA14,54.11783,-3.230595
+LA15_LA16,54.164612,-3.186628
+LA17_LA20_LA21_LA22,54.381834,-3.040693
+LA18,54.215177,-3.27545
+LA23,54.372584,-2.912642
+LD1,52.258027,-3.367744
+LD2,52.143082,-3.394945
+LD3,51.958129,-3.374358
+LD4_LD5_LD6_SY18,52.320499,-3.550072
+LD7_LD8,52.311368,-3.070881
+LE1_LE87,52.63346,-1.132054
+LE2,52.611197,-1.117971
+LE3,52.626959,-1.181562
+LE4,52.662668,-1.122525
+LE5,52.63695,-1.09294
+LE6,52.713679,-1.363795
+LE7,52.685506,-1.070588
+LE8,52.564387,-1.107928
+LE9,52.57198,-1.270891
+LE10,52.537453,-1.370377
+LE11,52.770429,-1.220357
+LE12,52.768402,-1.192197
+LE13,52.766553,-0.883882
+LE14,52.782799,-0.895651
+LE15,52.65919,-0.706446
+LE16,52.485148,-0.898833
+LE17,52.467557,-1.181678
+LE18,52.583346,-1.111657
+LE19,52.585634,-1.21324
+LE65,52.748484,-1.469768
+LE67,52.716016,-1.362656
+LL11,53.059195,-3.02739
+LL12,53.085873,-2.990318
+LL13,53.036338,-2.963579
+LL14,52.992425,-3.052569
+LL15,53.105119,-3.315438
+LL16,53.18524,-3.430985
+LL17,53.255412,-3.438767
+LL18,53.311848,-3.477824
+LL19,53.331431,-3.410605
+LL20,52.960957,-3.162153
+LL21,52.988782,-3.408344
+LL22,53.271634,-3.59128
+LL23_LL37_LL38_LL39_LL40_LL42,52.777388,-3.86696
+LL24_LL25_LL26_LL27,53.102402,-3.798907
+LL28,53.289034,-3.759005
+LL29,53.290759,-3.71256
+LL30,53.317121,-3.817887
+LL31,53.291222,-3.810849
+LL32_LL34,53.265374,-3.868469
+LL33_LL57,53.215542,-4.097361
+LL35_LL36,52.588039,-4.058934
+LL41_LL43_LL44_LL45_LL46_LL47,52.913199,-4.004197
+LL48_LL49_LL51_LL52,52.93258,-4.154019
+LL53_LL56,52.911958,-4.461865
+LL54,53.060412,-4.285963
+LL55,53.133811,-4.211054
+LL58_LL59,53.25609,-4.13211
+LL60_LL62_LL63_LL64,53.21738,-4.392272
+LL61,53.197046,-4.258997
+LL65,53.301035,-4.575051
+LL66_LL67_LL68_LL71,53.38476,-4.38773
+LL69_LL70_LL72_LL73_LL74_LL75_LL76_LL78,53.32435,-4.2491
+LL77,53.259468,-4.31261
+LN1,53.255928,-0.584265
+LN2,53.258986,-0.511382
+LN3,53.2808,-0.338827
+LN4,53.15316,-0.390577
+LN5,53.187061,-0.553232
+LN6,53.202784,-0.596372
+LN8,53.375517,-0.329115
+LN9,53.216033,-0.111809
+LN10,53.157678,-0.216143
+LN11,53.372484,0.022528
+LN12,53.329642,0.26285
+LN13,53.264829,0.182909
+LS1,53.797368,-1.552907
+LS2,53.801456,-1.547479
+LS3,53.801567,-1.563217
+LS4,53.808466,-1.582746
+LS5,53.818144,-1.602408
+LS6,53.818523,-1.566406
+LS7,53.817713,-1.540489
+LS8,53.821712,-1.512313
+LS9,53.798836,-1.511858
+LS10,53.765303,-1.531745
+LS11_LS98,53.778017,-1.556651
+LS12,53.791417,-1.595304
+LS13,53.811093,-1.634879
+LS14,53.827069,-1.458219
+LS15,53.806715,-1.446375
+LS16,53.850532,-1.604192
+LS17,53.858282,-1.529043
+LS18,53.840964,-1.644621
+LS19,53.860743,-1.685784
+LS20,53.873334,-1.713715
+LS21,53.910251,-1.682805
+LS22,53.93165,-1.392768
+LS23,53.906583,-1.352996
+LS24,53.871416,-1.255008
+LS25,53.786108,-1.326169
+LS26,53.756228,-1.443976
+LS27,53.749102,-1.604898
+LS28,53.801608,-1.669167
+LS29,53.919717,-1.804599
+LU1,51.876312,-0.424665
+LU2,51.890812,-0.397934
+LU3,51.906903,-0.443489
+LU4,51.898518,-0.465318
+LU5,51.907322,-0.514686
+LU6,51.88085,-0.532822
+LU7,51.910929,-0.662004
+M1,53.477725,-2.236822
+M2_M4_M60_M99,53.483719,-2.235127
+M3,53.483469,-2.252177
+M5,53.479718,-2.285809
+M6,53.491499,-2.295939
+M7,53.504259,-2.261608
+M8,53.508978,-2.240881
+M9,53.521655,-2.214392
+M11,53.478404,-2.183293
+M12,53.465625,-2.205514
+M13,53.462147,-2.217123
+M14,53.446948,-2.225054
+M15,53.465995,-2.252458
+M16,53.455926,-2.265074
+M17_M32,53.45524,-2.310477
+M18,53.461614,-2.172842
+M19,53.437709,-2.195514
+M20,53.425103,-2.231674
+M21,53.438831,-2.273398
+M22_M90,53.382746,-2.262698
+M23,53.397104,-2.286584
+M24,53.552122,-2.198768
+M25,53.533262,-2.279953
+M26,53.562141,-2.334005
+M27,53.512227,-2.338129
+M28,53.516536,-2.39846
+M29,53.515078,-2.470449
+M30,53.475755,-2.367859
+M31,53.443279,-2.380349
+M33,53.422577,-2.324934
+M34,53.454802,-2.116068
+M35,53.497708,-2.152567
+M38,53.529813,-2.420239
+M40,53.502799,-2.193711
+M41,53.451182,-2.362854
+M43,53.483227,-2.149303
+M44,53.440713,-2.427135
+M45,53.544949,-2.289849
+M46,53.525543,-2.492209
+M50,53.476676,-2.289948
+ME1,51.375598,0.499894
+ME2,51.391329,0.484697
+ME3,51.431241,0.546391
+ME4,51.381035,0.52784
+ME5,51.352121,0.531571
+ME6,51.324262,0.438812
+ME7,51.380353,0.554851
+ME8,51.361966,0.59488
+ME11_ME9,51.345327,0.726574
+ME10,51.342706,0.735432
+ME12,51.424628,0.798871
+ME13,51.305046,0.894612
+ME14,51.27658,0.537877
+ME15,51.255024,0.532601
+ME16,51.273342,0.499102
+ME17,51.236705,0.60354
+ME18,51.244584,0.422907
+ME19,51.293833,0.411239
+ME20,51.305958,0.458906
+MK1_MK7,52.015434,-0.706082
+MK2,51.991879,-0.72555
+MK3,51.995657,-0.75025
+MK4,52.004967,-0.776628
+MK5,52.019523,-0.776945
+MK6,52.029213,-0.739289
+MK8,52.036092,-0.80809
+MK15_MK9,52.045335,-0.741923
+MK10,52.037392,-0.695871
+MK11,52.050034,-0.835746
+MK12,52.057026,-0.817934
+MK13,52.052214,-0.789566
+MK14,52.059565,-0.768802
+MK16,52.088275,-0.721281
+MK17,51.997844,-0.699272
+MK18,51.980573,-0.97081
+MK19,52.070485,-0.851898
+MK40,52.137321,-0.474331
+MK41,52.15047,-0.450518
+MK42,52.119681,-0.474139
+MK43,52.11694,-0.550764
+MK44,52.188552,-0.430069
+MK45,52.029475,-0.472696
+MK46,52.152662,-0.696102
+ML1,55.797541,-3.977215
+ML2,55.776677,-3.915167
+ML3,55.771164,-4.052907
+ML4,55.818718,-4.021408
+ML5,55.859601,-4.030709
+ML6,55.867725,-3.963123
+ML7,55.829797,-3.795872
+ML8,55.727798,-3.837877
+ML9,55.72559,-3.968385
+ML10,55.684431,-4.062264
+ML11,55.666199,-3.788966
+ML12,55.572553,-3.589837
+N1,51.537581,-0.098254
+N1C_NW1,51.532342,-0.142443
+N2,51.590289,-0.168653
+N3,51.600409,-0.194107
+N4,51.571008,-0.104095
+N5,51.553776,-0.098588
+N6,51.571508,-0.140822
+N7,51.553735,-0.118002
+N8,51.582341,-0.120125
+N9,51.627854,-0.058778
+N10,51.593907,-0.144284
+N11,51.614166,-0.138276
+N12,51.615332,-0.178435
+N13,51.621031,-0.103686
+N14,51.63328,-0.129957
+N15,51.580976,-0.085379
+N16,51.56429,-0.076803
+N17,51.59748,-0.071108
+N18,51.613672,-0.064802
+N19,51.565434,-0.128313
+N20,51.629561,-0.174782
+N21,51.635555,-0.099618
+N22,51.599988,-0.11405
+NE1,54.972504,-1.613052
+NE2,54.986231,-1.606452
+NE3,55.009864,-1.633591
+NE4,54.97277,-1.643821
+NE5,54.995343,-1.688441
+NE6,54.977208,-1.567341
+NE7_NE88,54.995865,-1.580599
+NE8,54.956295,-1.605046
+NE9,54.931644,-1.587648
+NE10,54.948404,-1.556983
+NE11,54.940093,-1.631763
+NE12,55.025547,-1.569947
+NE13,55.042364,-1.646926
+NE15,54.983178,-1.719058
+NE16,54.934953,-1.693337
+NE17_NE39,54.92222,-1.779455
+NE18_NE43_NE44_NE45,54.968191,-1.947956
+NE19_NE48_NE49,55.090276,-2.290412
+NE20,55.051874,-1.778906
+NE21,54.958778,-1.719774
+NE22,55.1373,-1.583701
+NE23,55.083742,-1.584481
+NE24,55.122804,-1.52144
+NE25,55.049059,-1.488409
+NE26,55.047787,-1.460862
+NE27,55.03105,-1.511786
+NE28,55.000601,-1.518888
+NE29,55.011742,-1.469316
+NE30,55.019801,-1.442883
+NE31,54.971675,-1.512588
+NE32,54.969622,-1.484391
+NE33,54.992024,-1.431235
+NE34,54.972777,-1.423205
+NE35,54.952915,-1.462812
+NE36,54.947046,-1.443013
+NE37,54.911444,-1.528353
+NE38_NE85,54.895734,-1.527289
+NE40,54.966042,-1.770463
+NE41_NE42,54.96519,-1.847443
+NE46,54.97794,-2.104526
+NE47,54.930225,-2.247419
+NE61,55.177816,-1.687009
+NE62,55.161333,-1.592847
+NE63,55.177413,-1.562071
+NE64,55.184041,-1.516648
+NE65,55.310769,-1.742657
+NE66,55.426545,-1.727339
+NE67_NE68_NE69_NE70,55.570392,-1.726271
+NE71_TD12,55.609531,-2.154754
+NG1,52.954595,-1.147698
+NG2,52.936956,-1.136708
+NG3,52.967832,-1.130273
+NG4,52.970899,-1.086935
+NG5,52.996902,-1.143537
+NG6,52.997238,-1.191604
+NG7_NG90,52.957905,-1.17861
+NG8,52.963687,-1.214607
+NG9,52.926283,-1.233197
+NG10,52.899865,-1.282223
+NG11_NG80,52.901736,-1.1751
+NG12,52.910434,-1.059196
+NG13,52.947853,-0.930583
+NG14,53.013495,-1.041431
+NG15,53.045355,-1.202694
+NG16,53.026618,-1.298227
+NG17,53.115908,-1.2612
+NG18,53.140767,-1.185923
+NG19,53.160045,-1.197847
+NG20,53.208315,-1.185133
+NG21,53.141545,-1.108151
+NG22,53.176966,-0.969971
+NG23,53.113762,-0.801154
+NG24,53.070996,-0.80195
+NG25,53.074055,-0.950916
+NG31,52.913375,-0.641499
+NG32,52.946929,-0.651365
+NG33,52.82084,-0.584065
+NG34,52.987756,-0.395468
+NN1,52.241445,-0.891028
+NN2,52.259645,-0.886648
+NN3,52.262492,-0.843958
+NN4,52.221293,-0.897744
+NN5,52.245724,-0.931179
+NN6,52.320475,-0.946765
+NN7,52.214727,-0.920181
+NN8,52.297616,-0.692628
+NN9,52.312034,-0.616698
+NN10,52.29295,-0.599128
+NN11,52.243804,-1.174371
+NN12,52.12783,-0.996123
+NN13,52.032617,-1.147431
+NN14,52.411161,-0.706513
+NN15,52.384,-0.706164
+NN16,52.403416,-0.705347
+NN17,52.499903,-0.684097
+NN18,52.479199,-0.710493
+NN29,52.262717,-0.66538
+NP4,51.693109,-3.039586
+NP7,51.828371,-3.012179
+NP8,51.857646,-3.141119
+NP10,51.580071,-3.043069
+NP11,51.644251,-3.131718
+NP12,51.668737,-3.197868
+NP13,51.735227,-3.141089
+NP15,51.723293,-2.889157
+NP16,51.648963,-2.687168
+NP18,51.604877,-2.943141
+NP19,51.587015,-2.962627
+NP20,51.590186,-3.004635
+NP22,51.771199,-3.257652
+NP23,51.784594,-3.197818
+NP25,51.804189,-2.722918
+NP26,51.590537,-2.775895
+NP44,51.651297,-3.027634
+NR1,52.628951,1.308695
+NR2,52.630792,1.285194
+NR3,52.643357,1.29499
+NR4,52.614286,1.26178
+NR5,52.641264,1.236623
+NR6,52.660901,1.283263
+NR7,52.645126,1.333102
+NR8,52.676489,1.207701
+NR9,52.631634,1.110018
+NR10,52.736137,1.244336
+NR11,52.840291,1.27502
+NR12,52.758036,1.46669
+NR13,52.633932,1.469391
+NR14,52.565647,1.375278
+NR15,52.505884,1.267088
+NR16,52.478418,1.055306
+NR17,52.515358,0.996091
+NR18,52.571017,1.108605
+NR19,52.675992,0.931393
+NR20,52.721774,0.978428
+NR21,52.840189,0.850777
+NR22_NR23_NR24_NR25,52.911822,1.011354
+NR26,52.93749,1.211431
+NR27,52.92502,1.299808
+NR28,52.822163,1.396804
+NR29,52.689187,1.64187
+NR30,52.61778,1.727096
+NR31,52.577054,1.709635
+NR32,52.487868,1.733311
+NR33,52.455728,1.718359
+NR34,52.439536,1.582715
+NR35,52.461557,1.433032
+NW2,51.559315,-0.21847
+NW3,51.552568,-0.17318
+NW4,51.587402,-0.223791
+NW5,51.551621,-0.144558
+NW6,51.540316,-0.195636
+NW7,51.615083,-0.236854
+NW8,51.531714,-0.174434
+NW9,51.586522,-0.254006
+NW10,51.539242,-0.248869
+NW11,51.578703,-0.198403
+OL1,53.547021,-2.106317
+OL2,53.571305,-2.10944
+OL3,53.552617,-2.011433
+OL4,53.542338,-2.075854
+OL5,53.516694,-2.040804
+OL6,53.492573,-2.088459
+OL7,53.489382,-2.106199
+OL8,53.527067,-2.117242
+OL9,53.538943,-2.141667
+OL10,53.590431,-2.222755
+OL11,53.606323,-2.174057
+OL12,53.634415,-2.165363
+OL13,53.700797,-2.204237
+OL14,53.71427,-2.100787
+OL15,53.643556,-2.102672
+OL16,53.613329,-2.138343
+OX1,51.746731,-1.262025
+OX2,51.7631,-1.277409
+OX3,51.760208,-1.215634
+OX4,51.728781,-1.214264
+OX5,51.860757,-1.293587
+OX7,51.898323,-1.494402
+OX9,51.702794,-1.040854
+OX10,51.605829,-1.129545
+OX11,51.599915,-1.250269
+OX12,51.595179,-1.425599
+OX13,51.677171,-1.34851
+OX14,51.667628,-1.278511
+OX15,52.033006,-1.402921
+OX16,52.063573,-1.338881
+OX17,52.072318,-1.292281
+OX18,51.762374,-1.592847
+OX20,51.854943,-1.357395
+OX25,51.900394,-1.207936
+OX26,51.901351,-1.150869
+OX27,51.934135,-1.149798
+OX28,51.784499,-1.48568
+OX29,51.793216,-1.438441
+OX33,51.756799,-1.143742
+OX39_OX49,51.677374,-0.958184
+OX44,51.701426,-1.136053
+PA1,55.844896,-4.419888
+PA2,55.829589,-4.434978
+PA3,55.851403,-4.444083
+PA4,55.875269,-4.395872
+PA5,55.831394,-4.509885
+PA6,55.862949,-4.534384
+PA7,55.90763,-4.50101
+PA8,55.9014,-4.453659
+PA10_PA12_PA9,55.814996,-4.575272
+PA11,55.857193,-4.584076
+PA13_PA14,55.915752,-4.653539
+PA15,55.942888,-4.74711
+PA16_PA18,55.938992,-4.803942
+PA19,55.952403,-4.821386
+PA20,55.834319,-5.056994
+PA21_PA22_PA24_PA25_PA26_PA27_PA32_PA33_PA35_PA36_PA37_PA38,56.294848,-5.203972
+PA23,55.954005,-4.933198
+PA29_PA30_PA31_PA41_PA42_PA43_PA44_PA45_PA46_PA47_PA48_PA49_PA60,55.898992,-5.740262
+PA34_PA61_PA62_PA63_PA64_PA65_PA66_PA67_PA68_PA69_PA70_PA71_PA72_PA73_PA74_PA75_PA76_PA77_PA78,56.426671,-5.723055
+PA80_PH33,56.814704,-5.222671
+PE1,52.590832,-0.24797
+PE2,52.567066,-0.273849
+PE3_PE5,52.585779,-0.281339
+PE4,52.61211,-0.265576
+PE6,52.654214,-0.257973
+PE7,52.540012,-0.204841
+PE8,52.526475,-0.441883
+PE9,52.65376,-0.478622
+PE10,52.773868,-0.377716
+PE11,52.80583,-0.163949
+PE12,52.785955,0.018508
+PE13,52.668949,0.139797
+PE14,52.63901,0.202004
+PE15,52.538998,0.085872
+PE16,52.454737,0.049291
+PE19,52.236754,-0.263539
+PE20,52.932947,-0.101924
+PE21,52.974814,-0.023574
+PE22,53.047349,0.041921
+PE23,53.172699,0.090796
+PE24,53.164475,0.268158
+PE25,53.15222,0.334648
+PE26,52.453056,-0.115022
+PE27,52.330848,-0.075628
+PE28,52.357723,-0.189755
+PE29,52.3345,-0.180985
+PE30,52.758743,0.413457
+PE31_PE35,52.874619,0.56377
+PE32,52.729199,0.621828
+PE33,52.651682,0.461937
+PE34,52.726877,0.342621
+PE36,52.938114,0.505815
+PE37,52.643718,0.692536
+PE38,52.591703,0.376094
+PH1,56.418185,-3.472572
+PH2,56.386084,-3.408659
+PH3,56.301256,-3.705502
+PH7,56.373406,-3.829504
+PH15_PH16_PH17_PH18_PH8_PH9,56.6513,-3.811401
+PH10,56.605762,-3.357297
+PH11_PH12,56.619327,-3.210871
+PH13_PH14,56.514174,-3.252682
+PH19_PH21_PH30_PH34_PH36_PH37_PH38_PH39_PH40_PH41_PH49_PH50,56.905293,-4.932641
+PL1,50.370204,-4.148648
+PL2,50.386933,-4.157043
+PL3,50.385966,-4.125687
+PL4,50.37468,-4.12749
+PL5,50.410861,-4.167082
+PL6,50.418329,-4.119034
+PL7,50.390898,-4.045952
+PL8,50.337714,-4.018475
+PL9_PL95,50.355948,-4.089958
+PL10_PL11,50.364449,-4.239078
+PL12,50.418295,-4.246854
+PL13,50.358746,-4.473096
+PL14,50.462629,-4.466136
+PL15,50.632276,-4.394109
+PL16_PL19,50.566414,-4.168837
+PL17,50.514905,-4.306132
+PL18,50.515564,-4.223697
+PL20,50.503742,-4.100461
+PL21,50.385418,-3.91942
+PL22_PL23,50.373636,-4.645671
+PL24,50.354565,-4.712994
+PL25,50.34103,-4.777031
+PL26,50.345504,-4.824537
+PL27_PL28,50.525523,-4.896192
+PL29_PL30,50.507422,-4.736925
+PL31,50.469063,-4.722057
+PL32_PL33_PL34_PL35,50.646257,-4.696916
+PO1,50.799342,-1.089947
+PO2,50.815991,-1.07881
+PO3,50.815132,-1.061557
+PO4,50.790927,-1.064342
+PO5,50.789731,-1.086601
+PO6,50.846153,-1.069688
+PO7,50.884386,-1.041978
+PO8,50.910819,-1.014692
+PO9,50.862113,-0.982967
+PO10,50.851523,-0.930593
+PO11,50.791473,-0.977292
+PO12,50.798699,-1.142769
+PO13,50.811646,-1.178952
+PO14,50.839659,-1.212585
+PO15,50.862871,-1.220785
+PO16,50.850468,-1.16213
+PO17,50.887878,-1.173891
+PO18,50.862286,-0.813209
+PO19,50.836844,-0.777452
+PO20,50.794983,-0.772003
+PO21,50.784832,-0.69366
+PO22,50.798854,-0.649642
+PO30,50.693387,-1.310164
+PO31,50.752397,-1.306167
+PO32,50.749736,-1.281577
+PO33_PO34,50.720776,-1.163425
+PO35_PO36,50.664617,-1.146228
+PO37,50.632746,-1.178097
+PO38,50.603524,-1.238366
+PO39_PO40_PO41,50.686885,-1.513763
+PR0_PR1,53.757886,-2.701747
+PR11_PR2,53.775636,-2.704825
+PR3,53.867684,-2.717448
+PR4,53.752606,-2.831625
+PR5,53.713156,-2.68137
+PR6,53.664641,-2.614458
+PR7,53.648704,-2.652733
+PR8,53.62766,-3.005583
+PR9,53.656985,-2.971997
+PR25,53.695436,-2.695316
+PR26,53.688822,-2.737838
+RG1,51.451785,-0.970888
+RG2,51.425226,-0.956598
+RG4,51.477944,-0.965318
+RG5,51.452864,-0.907481
+RG6,51.442292,-0.933392
+RG7,51.397333,-1.081592
+RG8,51.505279,-1.106873
+RG9,51.542664,-0.920453
+RG10,51.479973,-0.867398
+RG12,51.411902,-0.752737
+RG14,51.398262,-1.321392
+RG17,51.437822,-1.498208
+RG18,51.43102,-1.247494
+RG19,51.396275,-1.227539
+RG20,51.40289,-1.334923
+RG21,51.266811,-1.090511
+RG22,51.25222,-1.122849
+RG23,51.26028,-1.146719
+RG24,51.2798,-1.078517
+RG25,51.235825,-1.085188
+RG26,51.348192,-1.128598
+RG27,51.305006,-0.948553
+RG28,51.234851,-1.329245
+RG29,51.248918,-0.947104
+RG30,51.453139,-1.009558
+RG31,51.456578,-1.039936
+RG40,51.402639,-0.835636
+RG41,51.415754,-0.857506
+RG42,51.4249,-0.759915
+RG45,51.378534,-0.802931
+RH1,51.237884,-0.159104
+RH2,51.236638,-0.203267
+RH3_RH5,51.202479,-0.332138
+RH4,51.230663,-0.333937
+RH6,51.171313,-0.165146
+RH7,51.174426,-0.01834
+RH8,51.252664,-0.000166
+RH9,51.236858,-0.076711
+RH10,51.11933,-0.164495
+RH11,51.112504,-0.20489
+RH12,51.074641,-0.329797
+RH13,51.038497,-0.33302
+RH14,51.031472,-0.479931
+RH15,50.956791,-0.135807
+RH16,51.00291,-0.099884
+RH17,51.020246,-0.118959
+RH18_TN7,51.097407,0.056475
+RH19,51.125829,-0.01352
+RH20,50.937362,-0.471696
+RM1,51.580228,0.182057
+RM2,51.582519,0.199307
+RM3,51.602102,0.22426
+RM5,51.598139,0.165325
+RM6,51.574992,0.133659
+RM7,51.573384,0.169626
+RM8,51.557163,0.130817
+RM9,51.543793,0.136476
+RM10,51.545581,0.156556
+RM11,51.569623,0.218006
+RM12,51.554653,0.208709
+RM13,51.523588,0.192131
+RM14,51.556249,0.260682
+RM15,51.508949,0.276941
+RM16,51.488839,0.320198
+RM17,51.479626,0.326094
+RM18,51.467634,0.370381
+RM19,51.482462,0.25231
+RM20,51.478622,0.286747
+S1,53.380612,-1.469471
+S2,53.371421,-1.450752
+S3,53.386783,-1.473011
+S4,53.397704,-1.451505
+S5,53.422314,-1.462233
+S6,53.402374,-1.509428
+S7,53.354706,-1.489896
+S8,53.342754,-1.479355
+S9,53.396762,-1.421026
+S10,53.377064,-1.516913
+S11,53.360638,-1.508087
+S12,53.349754,-1.40904
+S13,53.364777,-1.384477
+S14,53.347119,-1.444895
+S17,53.322537,-1.526092
+S18,53.299532,-1.4732
+S20,53.334273,-1.349749
+S21,53.313114,-1.339825
+S25,53.367575,-1.219866
+S26,53.355364,-1.287446
+S32,53.294867,-1.644644
+S33_SK22,53.364659,-1.91519
+S35,53.458036,-1.495211
+S36,53.505217,-1.616132
+S40_S49,53.234613,-1.443413
+S41,53.24667,-1.42902
+S42,53.201824,-1.423111
+S43,53.268325,-1.340263
+S44,53.225674,-1.312761
+S45,53.167473,-1.421461
+S60,53.416829,-1.352438
+S61,53.442999,-1.39287
+S62,53.466218,-1.345216
+S63,53.5171,-1.329982
+S64,53.491352,-1.299852
+S65,53.43608,-1.321883
+S66,53.421318,-1.251542
+S70,53.543684,-1.476591
+S71,53.573256,-1.45733
+S72,53.577584,-1.394317
+S73,53.524281,-1.395549
+S74,53.501757,-1.440548
+S75,53.561744,-1.519026
+S80,53.294982,-1.146623
+S81,53.336714,-1.123777
+SA1,51.629066,-3.938728
+SA2,51.621559,-3.991026
+SA3,51.581704,-4.042646
+SA4,51.676191,-4.042841
+SA5,51.648667,-3.969
+SA6,51.674832,-3.92144
+SA7,51.663135,-3.894109
+SA8,51.721601,-3.84725
+SA9,51.780765,-3.770674
+SA10,51.686125,-3.801246
+SA11,51.673932,-3.76604
+SA12,51.607379,-3.794905
+SA13,51.604359,-3.737014
+SA14,51.731653,-4.109354
+SA15,51.696967,-4.167354
+SA16,51.689036,-4.254263
+SA17,51.755286,-4.286267
+SA18,51.797471,-3.962889
+SA19_SA20,51.961992,-3.915835
+SA31,51.856173,-4.309033
+SA32_SA39,51.91724,-4.18924
+SA33_SA38,51.895504,-4.442191
+SA34,51.850903,-4.618422
+SA35_SA36_SA37_SA41_SA42,52.004432,-4.727206
+SA40_SA48_SY25,52.161736,-4.068318
+SA43,52.086694,-4.632057
+SA44,52.083551,-4.369509
+SA45_SA46_SA47,52.213176,-4.292397
+SA61,51.799265,-4.974319
+SA62,51.838997,-5.059571
+SA63_SA64_SA65_SA66,51.941654,-4.897405
+SA67,51.78498,-4.734194
+SA68_SA69,51.720074,-4.735151
+SA70,51.672113,-4.734481
+SA71,51.669482,-4.933257
+SA72,51.692045,-4.937138
+SA73,51.717644,-5.015773
+SE1,51.498191,-0.090293
+SE2,51.491083,0.114453
+SE3,51.468619,0.017609
+SE4,51.461716,-0.035415
+SE5,51.4741,-0.092879
+SE6,51.438559,-0.017558
+SE7,51.485192,0.031829
+SE8,51.48161,-0.02886
+SE9,51.446095,0.054609
+SE10,51.484002,0.000746
+SE11,51.48951,-0.109062
+SE12,51.446044,0.025921
+SE13,51.459298,-0.010488
+SE14,51.47547,-0.043112
+SE15,51.472734,-0.067061
+SE16,51.49656,-0.054826
+SE17,51.488515,-0.094691
+SE18,51.48541,0.071126
+SE19,51.418238,-0.085226
+SE20,51.413035,-0.058111
+SE21,51.438333,-0.088475
+SE22,51.454601,-0.072563
+SE23,51.440155,-0.050079
+SE24,51.456882,-0.100273
+SE25,51.398086,-0.077475
+SE26,51.427724,-0.054319
+SE27,51.430377,-0.101637
+SE28,51.501203,0.104357
+SG1,51.909057,-0.197581
+SG2,51.896537,-0.169447
+SG3,51.861395,-0.182459
+SG4,51.925334,-0.261287
+SG5,51.965046,-0.278981
+SG6,51.979443,-0.220965
+SG7,52.001596,-0.178734
+SG8,52.06463,-0.014785
+SG9,51.939996,-0.010503
+SG10_SG11,51.86919,0.03449
+SG12,51.812911,-0.018168
+SG13,51.789889,-0.072106
+SG14,51.805835,-0.090865
+SG15,52.011441,-0.262195
+SG16,52.013615,-0.299156
+SG17,52.035131,-0.335266
+SG18,52.082476,-0.264073
+SG19,52.138491,-0.246813
+SK1,53.408168,-2.153743
+SK2,53.396254,-2.137688
+SK3,53.399874,-2.170819
+SK4,53.417433,-2.178856
+SK5,53.432504,-2.153751
+SK6,53.405759,-2.081793
+SK7,53.369378,-2.144322
+SK8,53.381293,-2.208823
+SK9,53.326624,-2.231117
+SK10,53.273661,-2.129707
+SK11,53.247642,-2.142381
+SK12,53.35012,-2.01802
+SK13,53.447581,-1.963551
+SK14,53.452977,-2.046669
+SK15,53.48647,-2.050271
+SK16,53.472844,-2.082437
+SK17,53.247019,-1.884016
+SK23,53.328071,-1.946128
+SL0,51.522729,-0.516472
+SL1,51.515985,-0.61439
+SL2,51.53266,-0.602773
+SL3,51.500525,-0.557627
+SL4,51.476694,-0.623911
+SL5,51.40485,-0.66218
+SL6,51.522899,-0.726488
+SL7,51.574387,-0.77777
+SL8,51.577836,-0.708869
+SL9,51.595534,-0.555618
+SM1,51.364853,-0.193055
+SM2,51.353221,-0.197812
+SM3,51.369932,-0.214258
+SM4,51.392974,-0.200191
+SM5,51.366796,-0.165795
+SM6,51.360961,-0.146371
+SM7,51.32282,-0.202032
+SN1,51.556659,-1.775433
+SN2,51.579995,-1.778897
+SN3,51.560193,-1.743295
+SN4,51.531821,-1.844885
+SN38_SN5,51.566525,-1.8318
+SN26_SN6,51.6146,-1.748037
+SN7,51.650312,-1.567205
+SN8,51.40955,-1.69375
+SN9,51.329119,-1.78253
+SN10,51.339266,-1.988109
+SN11,51.4398,-1.99998
+SN12,51.372797,-2.137676
+SN13,51.426442,-2.207494
+SN14,51.466014,-2.19897
+SN15,51.470848,-2.090578
+SN16,51.589615,-2.081877
+SN25,51.594525,-1.803249
+SO14,50.90783,-1.396547
+SO15,50.916652,-1.425829
+SO16,50.934416,-1.432805
+SO17,50.925995,-1.39743
+SO18,50.923882,-1.366197
+SO19,50.902801,-1.35727
+SO20,51.115022,-1.502523
+SO21,51.07369,-1.314571
+SO22,51.06606,-1.331931
+SO23,51.06716,-1.305861
+SO24,51.085236,-1.150469
+SO30,50.921234,-1.307686
+SO31,50.870022,-1.294354
+SO32,50.946721,-1.213558
+SO40,50.91669,-1.504274
+SO41,50.756038,-1.56135
+SO42_SO43,50.843563,-1.558201
+SO45,50.849533,-1.395083
+SO50,50.97078,-1.345471
+SO51,50.993993,-1.500817
+SO52,50.977619,-1.436235
+SO53,50.984244,-1.381163
+SP1,51.073725,-1.791138
+SP2,51.07234,-1.819179
+SP3,51.099665,-2.004807
+SP4,51.162299,-1.766763
+SP5,51.024384,-1.773194
+SP6,50.935432,-1.801249
+SP7,51.005345,-2.185929
+SP8,51.036793,-2.288574
+SP9,51.232967,-1.663617
+SP10,51.210704,-1.483295
+SP11,51.225884,-1.514216
+SR1,54.90685,-1.381627
+SR2,54.88863,-1.378659
+SR3,54.877924,-1.416451
+SR4,54.901552,-1.424739
+SR5,54.921709,-1.422073
+SR6,54.933922,-1.380792
+SR7,54.830871,-1.36057
+SR8,54.766585,-1.336554
+SS0,51.545813,0.691394
+SS1,51.539379,0.724443
+SS2_SS99,51.549522,0.714427
+SS3,51.542157,0.7896
+SS4,51.591878,0.712914
+SS5,51.606822,0.649645
+SS6,51.587597,0.606508
+SS7,51.563062,0.577728
+SS8,51.522115,0.589464
+SS9,51.553583,0.652153
+SS11,51.616287,0.535425
+SS12,51.60583,0.520808
+SS13,51.574905,0.507549
+SS14,51.574932,0.470381
+SS15,51.576853,0.429182
+SS16,51.563089,0.451789
+SS17,51.521748,0.439435
+ST1,53.025182,-2.174604
+ST2,53.027105,-2.137187
+ST3,52.98109,-2.122938
+ST4,52.997737,-2.183617
+ST5_ST55,53.01513,-2.239977
+ST6,53.056457,-2.191905
+ST7,53.088023,-2.267189
+ST8,53.115403,-2.168667
+ST9,53.049712,-2.103922
+ST10,52.988583,-1.966137
+ST11,52.96722,-2.068357
+ST12_ST20,52.852098,-2.22675
+ST13,53.101466,-2.01985
+ST14,52.903785,-1.869012
+ST15,52.898521,-2.151282
+ST16,52.810632,-2.12079
+ST17,52.789467,-2.101009
+ST18,52.814512,-2.083335
+ST19,52.716153,-2.145154
+ST21,52.868506,-2.262081
+SW1A_SW1E_SW1H_W1A_W1B_W1C_W1K_W1S_W1W,51.513196,-0.138857
+SW1P,51.488854,-0.133657
+SW1V,51.490692,-0.139435
+SW1W,51.493228,-0.147671
+SW1X,51.497455,-0.153412
+SW1Y_WC2B_WC2E_WC2H_WC2N_WC2R,51.5115,-0.125985
+SW2,51.45078,-0.120663
+SW3,51.488333,-0.16505
+SW4,51.461625,-0.13722
+SW5,51.489756,-0.189692
+SW6,51.477388,-0.200523
+SW7,51.496482,-0.176544
+SW8,51.476533,-0.132823
+SW9,51.469087,-0.113664
+SW10,51.48384,-0.183038
+SW11,51.466948,-0.164449
+SW12,51.446195,-0.14991
+SW13,51.474462,-0.248896
+SW14,51.466474,-0.266678
+SW15,51.457971,-0.22583
+SW16,51.423511,-0.129557
+SW17,51.430216,-0.165143
+SW18,51.450464,-0.191547
+SW19,51.422213,-0.205334
+SW20,51.412439,-0.224067
+SY1,52.719907,-2.743214
+SY2,52.706465,-2.7312
+SY3,52.700246,-2.771121
+SY4,52.79403,-2.752641
+SY5,52.655314,-2.826697
+SY6_SY9,52.52417,-2.847415
+SY7,52.426362,-2.882737
+SY8,52.365417,-2.696916
+SY10,52.838942,-3.109037
+SY11,52.867155,-3.031622
+SY12,52.90225,-2.897174
+SY13,52.95317,-2.689448
+SY14,53.028021,-2.762937
+SY15,52.560474,-3.134178
+SY16,52.520054,-3.31285
+SY17_SY19_SY20,52.583654,-3.704265
+SY21,52.658272,-3.201156
+SY22,52.758356,-3.181467
+SY23_SY24,52.395184,-4.051452
+TA1,51.016307,-3.105671
+TA2,51.032824,-3.102091
+TA3,50.994504,-3.041678
+TA4,51.071967,-3.265642
+TA5,51.143023,-3.091576
+TA6,51.125964,-3.001016
+TA7,51.131083,-2.915222
+TA8,51.24395,-2.994826
+TA9,51.225959,-2.959148
+TA10,51.033726,-2.826786
+TA11,51.060204,-2.708897
+TA12_TA13,50.961563,-2.789872
+TA14_TA15_TA16_TA17,50.932093,-2.770771
+TA18,50.88285,-2.788088
+TA19,50.93398,-2.915427
+TA20,50.873164,-2.961489
+TA21,50.97789,-3.242435
+TA22_TA23,51.116155,-3.429593
+TA24,51.184139,-3.507625
+TD1,55.622701,-2.811137
+TD5,55.589113,-2.41873
+TD6,55.582915,-2.695379
+TD7,55.537918,-2.869569
+TD8,55.476026,-2.543365
+TD9,55.399624,-2.777472
+TD11,55.787367,-2.314895
+TD13_TD14,55.876878,-2.158315
+TD15,55.750941,-2.013106
+TF1,52.703188,-2.500605
+TF2,52.696893,-2.441005
+TF3,52.665984,-2.447166
+TF4,52.660946,-2.469284
+TF5_TF6,52.728208,-2.548907
+TF7,52.639388,-2.447264
+TF13_TF8,52.605765,-2.528696
+TF9,52.898122,-2.472461
+TF10,52.768547,-2.38598
+TF11,52.663901,-2.364242
+TF12,52.612931,-2.480869
+TN1,51.136943,0.268071
+TN2,51.126643,0.267579
+TN3,51.124514,0.25026
+TN4,51.146964,0.258315
+TN20_TN5,51.05666,0.326264
+TN6,51.053995,0.171798
+TN8,51.195283,0.076234
+TN9,51.191299,0.278124
+TN10,51.210157,0.28428
+TN11,51.205801,0.267106
+TN12,51.173037,0.437163
+TN13,51.275029,0.186074
+TN14,51.295025,0.163145
+TN15,51.299019,0.267826
+TN16,51.297091,0.04847
+TN17,51.095419,0.53739
+TN18,51.045421,0.524379
+TN19,51.004263,0.412726
+TN21,50.960754,0.261103
+TN22,50.980245,0.097521
+TN23,51.140843,0.860947
+TN24,51.14971,0.885047
+TN25,51.143145,0.933035
+TN26,51.101443,0.805055
+TN27,51.165937,0.711144
+TN28,50.983516,0.949527
+TN29,50.992691,0.932766
+TN30,51.064117,0.695134
+TN31_TN36,50.9554,0.696615
+TN32,50.978925,0.488927
+TN33,50.911759,0.477351
+TN34,50.863012,0.579882
+TN35,50.880025,0.609655
+TN37,50.870512,0.556274
+TN38,50.865111,0.544768
+TN39,50.845984,0.453803
+TN40,50.843867,0.480337
+TQ1,50.473448,-3.527393
+TQ2,50.475792,-3.544763
+TQ3,50.44336,-3.574661
+TQ4,50.425307,-3.571838
+TQ5,50.392204,-3.522302
+TQ6,50.347822,-3.590503
+TQ7_TQ8,50.275692,-3.782265
+TQ9,50.420147,-3.690591
+TQ10_TQ11,50.451313,-3.799649
+TQ12,50.529887,-3.610924
+TQ13,50.590749,-3.71173
+TQ14,50.549936,-3.506551
+TR1,50.262045,-5.053645
+TR2,50.254554,-4.956176
+TR3,50.220281,-5.10807
+TR4,50.283519,-5.131825
+TR5_TR6,50.324118,-5.171032
+TR7,50.413801,-5.076309
+TR8,50.400631,-5.040462
+TR9,50.413872,-4.941563
+TR10,50.166254,-5.118171
+TR11,50.150518,-5.087802
+TR12,50.044177,-5.184704
+TR13,50.109451,-5.285751
+TR14,50.211405,-5.296147
+TR15,50.233041,-5.237026
+TR16,50.23301,-5.222079
+TR17_TR20,50.130276,-5.488816
+TR18,50.117861,-5.541727
+TR19_TR21_TR22_TR23_TR24_TR25,50.074396,-5.732481
+TR26,50.203014,-5.480161
+TR27,50.182401,-5.407219
+TS1,54.573079,-1.239562
+TS18_TS2,54.566214,-1.306264
+TS3,54.56189,-1.198519
+TS4,54.557154,-1.223716
+TS5,54.552018,-1.252092
+TS6,54.567473,-1.156076
+TS7,54.53314,-1.186607
+TS8,54.521664,-1.231226
+TS9,54.46902,-1.168402
+TS10,54.605803,-1.072004
+TS11,54.587978,-1.033924
+TS12,54.563394,-0.967164
+TS13,54.550506,-0.858521
+TS14,54.532299,-1.061949
+TS15,54.493691,-1.333493
+TS16,54.52615,-1.353685
+TS17,54.538933,-1.304954
+TS19,54.576075,-1.338651
+TS20,54.585438,-1.314398
+TS21,54.624022,-1.422352
+TS22,54.620042,-1.319658
+TS23,54.606511,-1.287006
+TS24,54.693769,-1.210692
+TS25,54.663445,-1.224066
+TS26,54.688384,-1.230614
+TS27,54.722472,-1.287918
+TS28,54.725472,-1.374961
+TS29,54.711225,-1.419962
+TW1,51.450914,-0.327741
+TW2,51.447134,-0.350075
+TW3,51.468602,-0.363366
+TW4,51.466934,-0.384365
+TW5,51.48023,-0.381487
+TW6_UB11_UB7,51.49121,-0.461354
+TW7,51.474831,-0.331868
+TW8,51.486071,-0.308384
+TW9,51.467202,-0.296902
+TW10,51.451476,-0.302838
+TW11,51.42676,-0.332602
+TW12,51.421061,-0.3695
+TW13,51.439148,-0.403401
+TW14,51.452173,-0.42004
+TW15,51.430353,-0.455841
+TW16,51.416416,-0.417526
+TW17,51.397558,-0.447943
+TW18,51.429209,-0.510542
+TW19,51.452115,-0.505317
+TW20,51.427999,-0.548839
+UB1,51.512346,-0.376442
+UB18_UB2,51.500562,-0.382095
+UB3,51.505043,-0.421778
+UB4,51.523134,-0.40857
+UB5,51.544247,-0.374782
+UB6,51.540205,-0.344363
+UB8,51.537007,-0.47886
+UB9,51.579899,-0.491793
+UB10,51.54724,-0.455534
+W1D_W1F_W1G_W1J,51.51347,-0.14045
+W1H,51.517376,-0.159545
+W1T,51.520112,-0.136462
+W1U,51.518581,-0.153416
+W2,51.514565,-0.187726
+W3,51.508325,-0.270131
+W4,51.491407,-0.263614
+W5,51.512197,-0.304013
+W6,51.492486,-0.230963
+W7,51.509775,-0.335124
+W8,51.500434,-0.195384
+W9,51.523835,-0.194012
+W10,51.52022,-0.221108
+W11,51.51278,-0.216117
+W12,51.509362,-0.238142
+W13,51.513088,-0.321411
+W14,51.495421,-0.211155
+WA1,53.392732,-2.580065
+WA2,53.408568,-2.583714
+WA3,53.452001,-2.548195
+WA4,53.370106,-2.581229
+WA5,53.39963,-2.63229
+WA6,53.275516,-2.72408
+WA7,53.330293,-2.703488
+WA8_WA88,53.372522,-2.740116
+WA9,53.437044,-2.719886
+WA10,53.453777,-2.752968
+WA11,53.477145,-2.719601
+WA12,53.45344,-2.634128
+WA13,53.382497,-2.465829
+WA14,53.387425,-2.356789
+WA15,53.384406,-2.328672
+WA16,53.30447,-2.371179
+WC1H,51.524846,-0.126315
+WC1N,51.521957,-0.120632
+WC1X,51.524367,-0.117296
+WD3,51.643486,-0.482997
+WD4,51.706692,-0.453979
+WD5,51.704604,-0.422636
+WD6,51.656705,-0.27647
+WD7,51.685777,-0.312627
+WD17,51.660814,-0.407036
+WD18,51.648128,-0.41913
+WD19,51.632703,-0.393756
+WD23,51.645339,-0.366774
+WD24,51.669655,-0.401242
+WD25,51.681896,-0.392216
+WF1,53.684087,-1.498749
+WF2,53.673314,-1.511943
+WF3,53.721576,-1.523869
+WF4,53.649071,-1.517683
+WF5,53.680635,-1.576903
+WF6,53.701432,-1.413784
+WF7,53.666999,-1.351161
+WF8,53.687101,-1.301561
+WF9,53.606328,-1.320852
+WF10,53.723586,-1.349971
+WF11,53.710591,-1.259083
+WF12,53.684087,-1.622314
+WF13,53.691862,-1.644426
+WF14,53.680482,-1.691108
+WF15,53.708285,-1.699004
+WF16,53.709645,-1.668478
+WF17,53.717743,-1.6405
+WN1,53.551251,-2.629885
+WN2,53.536284,-2.584548
+WN3,53.530717,-2.644789
+WN4,53.497315,-2.643403
+WN5,53.532586,-2.684827
+WN6,53.573219,-2.669462
+WN7,53.497287,-2.518139
+WN8,53.552215,-2.771708
+WR1,52.197308,-2.2175
+WR2,52.191626,-2.239827
+WR3,52.216021,-2.210436
+WR4,52.204572,-2.190617
+WR5_WR99,52.180185,-2.200802
+WR6,52.229103,-2.361088
+WR7,52.197378,-2.063756
+WR8,52.090252,-2.202213
+WR9,52.26835,-2.157262
+WR10,52.116967,-2.066972
+WR11,52.094851,-1.929995
+WR12,52.046963,-1.879702
+WR13,52.094833,-2.341811
+WR14,52.113545,-2.322319
+WR15,52.306122,-2.572705
+WS1,52.581632,-1.979767
+WS2,52.588728,-2.001951
+WS3,52.617033,-1.991556
+WS4,52.604323,-1.96117
+WS5,52.568293,-1.961472
+WS6,52.657304,-2.022678
+WS7,52.680442,-1.915589
+WS8,52.642913,-1.936766
+WS9,52.609243,-1.919288
+WS10,52.56029,-2.023343
+WS11,52.688898,-2.016504
+WS12,52.703083,-2.002183
+WS13,52.691507,-1.817859
+WS14,52.669686,-1.81338
+WS15,52.758838,-1.920055
+WV1,52.586774,-2.118255
+WV2,52.575793,-2.120069
+WV3,52.580785,-2.148295
+WV4,52.56435,-2.140732
+WV5,52.533187,-2.210657
+WV6,52.597111,-2.175627
+WV7,52.634234,-2.276789
+WV8,52.622506,-2.182483
+WV9,52.631258,-2.140685
+WV10,52.615902,-2.113863
+WV11,52.609774,-2.071822
+WV12,52.605846,-2.042106
+WV13,52.585644,-2.062691
+WV14,52.558239,-2.077941
+WV15,52.517353,-2.380078
+WV16,52.515892,-2.436936
+YO1_YO90,53.958073,-1.071274
+YO7,54.224484,-1.350478
+YO8,53.785494,-1.056887
+YO10,53.951344,-1.060733
+YO11,54.268931,-0.398499
+YO12,54.274323,-0.422191
+YO13,54.287082,-0.493388
+YO14,54.199901,-0.298328
+YO15,54.091622,-0.182351
+YO16,54.096101,-0.199149
+YO17,54.139624,-0.771416
+YO18,54.256016,-0.767533
+YO19,53.911037,-1.026199
+YO21,54.477928,-0.701554
+YO22,54.45242,-0.62154
+YO23,53.927752,-1.119438
+YO24,53.94731,-1.114274
+YO25,54.014429,-0.419524
+YO26,53.974341,-1.166941
+YO30,53.984051,-1.110933
+YO31,53.970264,-1.065897
+YO32,54.009035,-1.060382
+YO41,53.969305,-0.910543
+YO42,53.92481,-0.788574
+YO51,54.087696,-1.388351
+YO60_YO62,54.194508,-0.980369
+YO61,54.119775,-1.199023
+ZE1,60.151656,-1.16818
+ZE2_ZE3,60.29631,-1.231976

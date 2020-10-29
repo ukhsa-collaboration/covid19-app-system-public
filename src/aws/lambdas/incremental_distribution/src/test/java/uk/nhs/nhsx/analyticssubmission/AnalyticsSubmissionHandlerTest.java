@@ -10,6 +10,7 @@ import org.junit.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
 import uk.nhs.nhsx.TestData;
 import uk.nhs.nhsx.core.TestEnvironments;
+import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
@@ -28,7 +29,7 @@ import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasStatus;
 
 public class AnalyticsSubmissionHandlerTest {
 
-    private static final String BUCKET_NAME = "some-bucket-name";
+    private static final BucketName BUCKET_NAME = BucketName.of("some-bucket-name");
     private final ObjectKey objectKey = ObjectKey.of("some-object-key");
 
     private static String iOSPayloadFrom(String startDate, String endDate) {
@@ -144,7 +145,7 @@ public class AnalyticsSubmissionHandlerTest {
 
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
-        assertThat(s3Storage.bucket.value, equalTo(BUCKET_NAME));
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME));
         assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(TestData.STORED_ANALYTICS_PAYLOAD_IOS));
     }
 
@@ -164,7 +165,7 @@ public class AnalyticsSubmissionHandlerTest {
 
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
-        assertThat(s3Storage.bucket.value, equalTo(BUCKET_NAME));
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME));
         assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(TestData.STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_IOS));
     }
 
@@ -184,7 +185,7 @@ public class AnalyticsSubmissionHandlerTest {
 
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
-        assertThat(s3Storage.bucket.value, equalTo(BUCKET_NAME));
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME));
         assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(TestData.STORED_ANALYTICS_UNKOWN_POSTCODE_PAYLOAD_IOS));
     }
 
@@ -204,7 +205,7 @@ public class AnalyticsSubmissionHandlerTest {
 
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
-        assertThat(s3Storage.bucket.value, equalTo(BUCKET_NAME));
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME));
         assertThat(new String(s3Storage.bytes.read(),StandardCharsets.UTF_8), equalTo(TestData.STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_ANDROID));
     }
 
@@ -224,7 +225,7 @@ public class AnalyticsSubmissionHandlerTest {
 
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
-        assertThat(s3Storage.bucket.value, equalTo(BUCKET_NAME));
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME));
         assertThat(new String(s3Storage.bytes.read(),StandardCharsets.UTF_8), equalTo(TestData.STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID));
     }
 
@@ -244,7 +245,7 @@ public class AnalyticsSubmissionHandlerTest {
 
         assertThat(s3Storage.count, equalTo(1));
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")));
-        assertThat(s3Storage.bucket.value, equalTo(BUCKET_NAME));
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME));
         assertThat(new String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(TestData.STORED_ANALYTICS_PAYLOAD_ANDROID));
     }
 

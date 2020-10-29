@@ -92,10 +92,17 @@ resource "aws_s3_bucket" "destination" {
 
   force_destroy = var.force_destroy_s3_buckets
 
+  tags = {
+    Environment = terraform.workspace
+    Service     = var.service
+  }
+  logging {
+    target_bucket = var.logs_bucket_id
+    target_prefix = "${local.identifier_prefix}/"
+  }
   versioning {
     enabled = true
   }
-
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -114,6 +121,35 @@ resource "aws_s3_bucket_public_access_block" "replica" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
+
+data "aws_iam_policy_document" "replica" {
+  count = var.replication_enabled ? 1 : 0
+  statement {
+    actions = ["s3:*"]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    resources = ["${aws_s3_bucket.destination[0].arn}/*"]
+
+    effect = "Deny"
+
+    condition {
+      test     = "Bool"
+      values   = ["false"]
+      variable = "aws:SecureTransport"
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "replica" {
+  # in terraform v0.12.29 we encounter conflict when this is executed concurrently with setting public access block
+  depends_on = [aws_s3_bucket_public_access_block.replica]
+  count      = var.replication_enabled ? 1 : 0
+  bucket     = aws_s3_bucket.destination[0].id
+  policy     = data.aws_iam_policy_document.replica[0].json
+}
+
 resource "aws_iam_role" "replication" {
   count = var.replication_enabled ? 1 : 0
   name  = "${var.name}-replication"
@@ -134,6 +170,7 @@ resource "aws_iam_role" "replication" {
 }
 POLICY
 }
+
 resource "aws_iam_policy" "replication" {
   count = var.replication_enabled ? 1 : 0
   name  = "${var.name}-replication"
@@ -174,6 +211,7 @@ resource "aws_iam_policy" "replication" {
 }
 POLICY
 }
+
 resource "aws_iam_role_policy_attachment" "replication" {
   count      = var.replication_enabled ? 1 : 0
   role       = aws_iam_role.replication[0].name

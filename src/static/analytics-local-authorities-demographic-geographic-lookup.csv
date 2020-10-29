@@ -1,0 +1,380 @@
+﻿local_authority,region,country,local_authority_population,latitude,longitude
+Aberdeen City,Scotland,Scotland,253983,57.149503,-2.132953
+Aberdeenshire,Scotland,Scotland,229970,57.353881,-2.322427
+Adur,South East,England,63023,50.833172,-0.284433
+Allerdale,North West,England,99204,54.713221,-3.361387
+Amber Valley,East Midlands,England,136938,53.037697,-1.424348
+Angus,Scotland,Scotland,105404,56.619516,-2.749437
+Antrim and Newtownabbey,Northern Ireland,Northern Ireland,156825,54.698179,-6.051547
+Ards and North Down,Northern Ireland,Northern Ireland,164708,54.607229,-5.667056
+Argyll and Bute,Scotland,Scotland,82531,56.032443,-5.213379
+"Armagh City, Banbridge and Craigavon",Northern Ireland,Northern Ireland,221184,54.384949,-6.421472
+Arun,South East,England,149250,50.808664,-0.597058
+Ashfield,East Midlands,England,122411,53.087437,-1.249034
+Ashford,South East,England,132962,51.135353,0.837455
+Babergh,East of England,England,90532,52.038908,0.880422
+Barking and Dagenham,London,England,192968,51.546464,0.124986
+Barnet,London,England,450032,51.605517,-0.207725
+Barnsley,Yorkshire and The Humber,England,281418,53.546282,-1.467796
+Barrow-in-Furness,North West,England,66489,54.126301,-3.215764
+Basildon,East of England,England,195104,51.590104,0.465472
+Basingstoke and Deane,South East,England,176016,51.287020,-1.146253
+Bassetlaw,East Midlands,England,120010,53.331836,-1.021748
+Bath and North East Somerset,South West,England,201756,51.364117,-2.437424
+Bedford,East of England,England,185421,52.144622,-0.472840
+Belfast,Northern Ireland,Northern Ireland,340776,54.593435,-5.933223
+Bexley,London,England,221750,51.459196,0.136357
+Birmingham,West Midlands,England,1161829,52.480872,-1.884973
+Blaby,East Midlands,England,55659,52.588371,-1.200999
+Blackburn with Darwen,North West,England,162432,53.729185,-2.476915
+Blackpool,North West,England,132604,53.817589,-3.038354
+Blaenau Gwent,Wales,Wales,75628,51.767639,-3.191795
+Bolsover,East Midlands,England,50660,53.207211,-1.275340
+Bolton,North West,England,289330,53.577391,-2.447951
+Boston,East Midlands,England,62358,52.970221,-0.028390
+"Bournemouth, Christchurch and Poole",South West,England,391928,50.735805,-1.884895
+Bracknell Forest,South East,England,120039,51.401300,-0.760984
+Bradford,Yorkshire and The Humber,England,561213,53.821387,-1.802416
+Braintree,East of England,England,130134,51.888604,0.590821
+Breckland,East of England,England,132429,52.580919,0.868088
+Brent,London,England,276635,51.551786,-0.257489
+Brentwood,East of England,England,81219,51.630895,0.317317
+Bridgend,Wales,Wales,150398,51.531636,-3.605324
+Brighton and Hove,South East,England,295498,50.832213,-0.148065
+"Bristol, City of",South West,England,432149,51.460557,-2.587423
+Broadland,East of England,England,133841,52.673993,1.320243
+Bromley,London,England,341648,51.391798,0.026326
+Bromsgrove,West Midlands,England,71835,52.355690,-2.029717
+Broxbourne,East of England,England,100337,51.724050,-0.029566
+Broxtowe,East Midlands,England,143111,52.954805,-1.249890
+Buckinghamshire,South East,England,510962,51.707453,-0.742167
+Burnley,North West,England,96298,53.791830,-2.250749
+Bury,North West,England,196213,53.570165,-2.303337
+Caerphilly,Wales,Wales,170218,51.645876,-3.204343
+Calderdale,Yorkshire and The Humber,England,210655,53.717442,-1.901474
+Cambridge,East of England,England,140075,52.202454,0.137454
+Camden,London,England,296642,51.534391,-0.143298
+Cannock Chase,West Midlands,England,120312,52.707529,-1.993948
+Canterbury,South East,England,163375,51.313172,1.088044
+Cardiff,Wales,Wales,379304,51.498406,-3.185223
+Carlisle,North West,England,114499,54.906688,-2.896379
+Carmarthenshire,Wales,Wales,184033,51.823205,-4.168664
+Castle Point,East of England,England,89752,51.545712,0.583051
+Causeway Coast and Glens,Northern Ireland,Northern Ireland,122820,55.097345,-6.627315
+Central Bedfordshire,East of England,England,266583,51.979497,-0.475314
+Ceredigion,Wales,Wales,80605,52.237840,-4.215042
+Charnwood,East Midlands,England,186398,52.738125,-1.167086
+Chelmsford,East of England,England,183734,51.725510,0.493327
+Cheltenham,South West,England,142241,51.898450,-2.083943
+Cherwell,South East,England,146714,51.965325,-1.263725
+Cheshire East,North West,England,357896,53.197242,-2.311773
+Cheshire West and Chester,North West,England,361959,53.234237,-2.791446
+Chesterfield,East Midlands,England,114233,53.245120,-1.422001
+Chichester,South East,England,98743,50.874137,-0.767331
+Chorley,North West,England,100811,53.659605,-2.645855
+City of Edinburgh,Scotland,Scotland,523720,55.944426,-3.215410
+City of London,London,England,8103,51.514288,-0.091440
+Clackmannanshire,Scotland,Scotland,55336,56.133663,-3.776984
+Colchester,East of England,England,203562,51.879477,0.882904
+Conwy,Wales,Wales,108391,53.261061,-3.749900
+Copeland,North West,England,65202,54.471797,-3.502190
+Corby,East Midlands,England,70443,52.490931,-0.696898
+Cornwall,South West,England,568712,50.328128,-4.952539
+Cotswold,South West,England,95146,51.809634,-1.877751
+County Durham,North East,England,512905,54.752413,-1.627391
+Coventry,West Midlands,England,377935,52.412845,-1.506422
+Craven,Yorkshire and The Humber,England,35799,54.002789,-2.130407
+Crawley,South East,England,127822,51.118015,-0.183818
+Croydon,London,England,394208,51.368217,-0.096520
+Dacorum,East of England,England,157850,51.760877,-0.511510
+Darlington,North East,England,109463,54.529789,-1.550159
+Dartford,South East,England,111974,51.438553,0.241352
+Daventry,East Midlands,England,76337,52.285530,-1.085709
+Denbighshire,Wales,Wales,108377,53.214184,-3.399177
+Derby,East Midlands,England,282540,52.912778,-1.471804
+Derbyshire Dales,East Midlands,England,75592,53.154421,-1.658117
+Derry City and Strabane,Northern Ireland,Northern Ireland,157674,54.928642,-7.347150
+Doncaster,Yorkshire and The Humber,England,323139,53.528722,-1.118380
+Dorset,South West,England,381647,50.780916,-2.286763
+Dover,South East,England,123121,51.192270,1.317767
+Dudley,West Midlands,England,321635,52.484877,-2.109996
+Dumfries and Galloway,Scotland,England,148662,55.023387,-3.868381
+Dundee City,Scotland,Scotland,170640,56.473390,-2.966894
+Ealing,London,England,335925,51.518028,-0.324937
+East Ayrshire,Scotland,Scotland,137686,55.566499,-4.424600
+East Cambridgeshire,East of England,England,88868,52.343557,0.289817
+East Devon,South West,England,145012,50.727794,-3.248499
+East Dunbartonshire,Scotland,Scotland,108873,55.931448,-4.232272
+East Hampshire,South East,England,133787,51.070087,-0.929333
+East Hertfordshire,East of England,England,147461,51.840088,0.017861
+East Lindsey,East Midlands,England,127803,53.249798,0.080690
+East Lothian,Scotland,Scotland,107873,55.968578,-2.855726
+East Northamptonshire,East Midlands,England,89299,52.370986,-0.557272
+East Renfrewshire,Scotland,Scotland,101345,55.787593,-4.330166
+East Riding of Yorkshire,Yorkshire and The Humber,England,345416,53.869853,-0.491888
+East Staffordshire,West Midlands,England,120647,52.835312,-1.711048
+East Suffolk,East of England,England,250600,52.231346,1.475588
+Eastbourne,South East,England,111529,50.779844,0.283526
+Eastleigh,South East,England,117715,50.949193,-1.341395
+Eden,North West,England,49976,54.645134,-2.669892
+Elmbridge,South East,England,129850,51.371520,-0.396925
+Enfield,London,England,320593,51.639892,-0.082785
+Epping Forest,East of England,England,132303,51.681693,0.098026
+Epsom and Ewell,South East,England,81175,51.343034,-0.261751
+Erewash,East Midlands,England,121081,52.932571,-1.315572
+Exeter,South West,England,137907,50.721909,-3.515745
+Falkirk,Scotland,Scotland,159572,56.005294,-3.776474
+Fareham,South East,England,138000,50.853543,-1.222334
+Fenland,East of England,England,129240,52.587063,0.079719
+Fermanagh and Omagh,Northern Ireland,Northern Ireland,119569,54.414549,-7.507396
+Fife,Scotland,Scotland,371078,56.166357,-3.194822
+Flintshire,Wales,Wales,132167,53.203710,-3.111305
+Folkestone and Hythe,South East,England,109723,51.067607,1.091733
+Forest of Dean,South West,England,82482,51.805495,-2.523744
+Fylde,North West,England,107608,53.764090,-2.962905
+Gateshead,North East,England,223911,54.943680,-1.644701
+Gedling,East Midlands,England,61345,52.996953,-1.109035
+Glasgow City,Scotland,Scotland,613549,55.859287,-4.262521
+Gloucester,South West,England,144752,51.849006,-2.237028
+Gosport,South East,England,84973,50.803745,-1.156860
+Gravesham,South East,England,105483,51.424290,0.374540
+Great Yarmouth,East of England,England,102886,52.613423,1.707528
+Greenwich,London,England,309187,51.476692,0.051777
+Guildford,South East,England,148694,51.248352,-0.575963
+Gwynedd,Wales,Wales,122445,52.969281,-4.140554
+Hackney,London,England,219436,51.549638,-0.069809
+Halton,North West,England,128301,53.351494,-2.722066
+Hambleton,Yorkshire and The Humber,England,79927,54.267530,-1.332862
+Hammersmith and Fulham,London,England,188663,51.492076,-0.216475
+Harborough,East Midlands,England,60490,52.512119,-1.041732
+Haringey,London,England,305690,51.589766,-0.105836
+Harlow,East of England,England,92240,51.767786,0.103951
+Harrogate,Yorkshire and The Humber,England,145692,54.033046,-1.516743
+Harrow,London,England,257841,51.591821,-0.338056
+Hart,South East,England,99772,51.287965,-0.864969
+Hartlepool,North East,England,87366,54.680966,-1.224834
+Hastings,South East,England,99498,50.865585,0.566187
+Havant,South East,England,132304,50.857434,-0.997152
+Havering,London,England,264882,51.570873,0.203487
+"Herefordshire, County of",West Midlands,England,185944,52.073943,-2.696115
+Hertsmere,East of England,England,109990,51.665432,-0.292789
+High Peak,East Midlands,England,100988,53.365781,-1.941099
+Highland,Scotland,Scotland,235464,57.576046,-4.364526
+Hillingdon,London,England,292241,51.537813,-0.438364
+Hinckley and Bosworth,East Midlands,England,135084,52.583619,-1.352694
+Horsham,South East,England,150811,51.009576,-0.357410
+Hounslow,London,England,280715,51.471443,-0.346981
+Huntingdonshire,East of England,England,161302,52.336344,-0.186842
+Hyndburn,North West,England,76741,53.759392,-2.381014
+Inverclyde,Scotland,Scotland,78081,55.935654,-4.751826
+Ipswich,East of England,England,144627,52.055079,1.155700
+Isle of Anglesey,Wales,Wales,70044,53.286091,-4.383206
+Isle of Wight,South East,England,141771,50.688131,-1.257188
+Isles of Scilly,South West,England,2224,49.924112,-6.314312
+Islington,London,England,261639,51.538986,-0.108755
+Kensington and Chelsea,London,England,169635,51.498515,-0.187413
+Kettering,East Midlands,England,116287,52.403783,-0.739170
+King's Lynn and West Norfolk,East of England,England,165071,52.738995,0.438787
+"Kingston upon Hull, City of",Yorkshire and The Humber,England,265346,53.758161,-0.341158
+Kingston upon Thames,London,England,181964,51.397942,-0.287277
+Kirklees,Yorkshire and The Humber,England,429817,53.655498,-1.734020
+Knowsley,North West,England,145687,53.434049,-2.847568
+Lambeth,London,England,351955,51.457646,-0.120335
+Lancaster,North West,England,149155,54.065901,-2.808065
+Leeds,Yorkshire and The Humber,England,817076,53.812767,-1.549529
+Leicester,East Midlands,England,446013,52.635957,-1.125008
+Lewes,South East,England,98236,50.832112,0.031123
+Lewisham,London,England,294622,51.452605,-0.024837
+Lichfield,West Midlands,England,75396,52.683097,-1.842109
+Lincoln,East Midlands,England,169552,53.225647,-0.548711
+Lisburn and Castlereagh,Northern Ireland,Northern Ireland,123333,54.529737,-5.988564
+Liverpool,North West,England,508268,53.406450,-2.938610
+Luton,East of England,England,223471,51.891683,-0.430277
+Maidstone,South East,England,153312,51.251198,0.542366
+Maldon,East of England,England,51721,51.712987,0.731077
+Malvern Hills,West Midlands,England,63966,52.151544,-2.328666
+Manchester,North West,England,566347,53.461180,-2.230659
+Mansfield,East Midlands,England,97997,53.154677,-1.185135
+Medway,South East,England,294651,51.381106,0.538384
+Melton,East Midlands,England,45213,52.786992,-0.875844
+Mendip,South West,England,100022,51.202971,-2.532479
+Merthyr Tydfil,Wales,Wales,64974,51.734999,-3.363197
+Merton,London,England,207157,51.411114,-0.196318
+Mid and East Antrim,Northern Ireland,Northern Ireland,150177,54.833106,-6.046091
+Mid Devon,South West,England,77179,50.870182,-3.519322
+Mid Suffolk,East of England,England,94185,52.221734,1.056006
+Mid Sussex,South East,England,147290,51.024642,-0.097107
+Mid Ulster,Northern Ireland,Northern Ireland,149796,54.625077,-6.749955
+Middlesbrough,North East,England,149029,54.555816,-1.227746
+Midlothian,Scotland,Scotland,92474,55.866627,-3.108895
+Milton Keynes,South East,England,260209,52.038991,-0.751427
+Mole Valley,South East,England,86991,51.257276,-0.328345
+Monmouthshire,Wales,Wales,99794,51.716625,-2.818411
+Moray,Scotland,Scotland,95127,57.613313,-3.191284
+Na h-Eileanan Siar,Scotland,Scotland,26720,57.978283,-6.700662
+Neath Port Talbot,Wales,Wales,134436,51.660087,-3.786347
+New Forest,South East,England,185163,50.837265,-1.558699
+Newark and Sherwood,East Midlands,England,127491,53.104661,-0.900951
+Newcastle upon Tyne,North East,England,313688,54.986919,-1.632260
+Newcastle-under-Lyme,West Midlands,England,151682,53.025002,-2.257109
+Newham,London,England,364794,51.531246,0.030788
+Newport,Wales,Wales,151888,51.588179,-2.991056
+"Newry, Mourne and Down",Northern Ireland,Northern Ireland,185783,54.232988,-6.075801
+North Ayrshire,Scotland,Scotland,134367,55.670987,-4.753151
+North Devon,South West,England,96869,51.092486,-4.023664
+North East Derbyshire,East Midlands,England,89286,53.248878,-1.417885
+North East Lincolnshire,Yorkshire and The Humber,England,172731,53.561430,-0.097084
+North Hertfordshire,East of England,England,161261,51.969160,-0.202566
+North Kesteven,East Midlands,England,84401,53.100939,-0.476745
+North Lanarkshire,Scotland,Scotland,369623,55.855846,-3.990702
+North Lincolnshire,Yorkshire and The Humber,England,174574,53.585994,-0.607439
+North Norfolk,East of England,England,113230,52.853346,1.210669
+North Somerset,South West,England,219206,51.392839,-2.832058
+North Tyneside,North East,England,206026,55.021919,-1.506462
+North Warwickshire,West Midlands,England,61059,52.553054,-1.624914
+North West Leicestershire,East Midlands,England,115645,52.745601,-1.400454
+Northampton,East Midlands,England,237095,52.246092,-0.882305
+Northumberland,North East,England,311343,55.175190,-1.799702
+Norwich,East of England,England,145357,52.632306,1.284388
+Nottingham,East Midlands,England,372884,52.961225,-1.168850
+Nuneaton and Bedworth,West Midlands,England,125041,52.506718,-1.475030
+Oadby and Wigston,East Midlands,England,32886,52.587440,-1.103151
+Oldham,North West,England,236471,53.543175,-2.104856
+Orkney Islands,Scotland,Scotland,22270,58.991746,-3.032735
+Oxford,South East,England,173402,51.747106,-1.236240
+Pembrokeshire,Wales,Wales,122227,51.797817,-4.902447
+Pendle,North West,England,87322,53.864280,-2.194016
+Perth and Kinross,Scotland,Scotland,145503,56.422004,-3.507583
+Peterborough,East of England,England,165960,52.587427,-0.268005
+Plymouth,South West,England,271344,50.385925,-4.122887
+Portsmouth,South East,England,214665,50.809887,-1.077076
+Powys,Wales,Wales,142033,52.338985,-3.346896
+Preston,North West,England,152323,53.772433,-2.703868
+Reading,South East,England,173394,51.454178,-0.983709
+Redbridge,London,England,295261,51.579191,0.066578
+Redcar and Cleveland,North East,England,131395,54.572675,-1.064682
+Redditch,West Midlands,England,88577,52.300574,-1.935360
+Reigate and Banstead,South East,England,151926,51.249927,-0.188917
+Renfrewshire,Scotland,Scotland,178814,55.850551,-4.457296
+Rhondda Cynon Taf,Wales,Wales,238501,51.616823,-3.405205
+Ribble Valley,North West,England,34848,53.849110,-2.438708
+Richmond upon Thames,London,England,186703,51.449033,-0.316953
+Richmondshire,Yorkshire and The Humber,England,60578,54.382751,-1.778828
+Rochdale,North West,England,230075,53.600231,-2.171953
+Rochford,East of England,England,78361,51.591324,0.664007
+Rossendale,North West,England,59458,53.697077,-2.258888
+Rother,South East,England,86958,50.912528,0.519507
+Rotherham,Yorkshire and The Humber,England,226959,53.423241,-1.310750
+Rugby,West Midlands,England,102067,52.375304,-1.283107
+Runnymede,South East,England,84732,51.399068,-0.524794
+Rushcliffe,East Midlands,England,121170,52.910268,-1.075368
+Rushmoor,South East,England,79901,51.272288,-0.760201
+Rutland,East Midlands,England,34797,52.658946,-0.679987
+Ryedale,Yorkshire and The Humber,England,52293,54.180631,-0.869603
+Salford,North West,England,268105,53.497009,-2.335797
+Sandwell,West Midlands,England,351204,52.511979,-2.009460
+Scarborough,Yorkshire and The Humber,England,108147,54.328112,-0.485639
+Scottish Borders,Scotland,England,115046,55.602755,-2.697044
+Sedgemoor,South West,England,124549,51.179368,-2.957262
+Sefton,North West,England,292772,53.539232,-2.998850
+Selby,Yorkshire and The Humber,England,60065,53.792997,-1.124246
+Sevenoaks,South East,England,132684,51.291850,0.174652
+Sheffield,Yorkshire and The Humber,England,575740,53.384815,-1.466990
+Shetland Islands,Scotland,Scotland,22919,60.220250,-1.198461
+Shropshire,West Midlands,England,335038,52.690393,-2.718863
+Slough,South East,England,178987,51.511177,-0.592146
+Solihull,West Midlands,England,244323,52.424177,-1.771146
+Somerset West and Taunton,South West,England,154781,51.058267,-3.227553
+South Ayrshire,Scotland,Scotland,97278,55.446445,-4.640135
+South Cambridgeshire,East of England,England,111375,52.193782,0.083917
+South Derbyshire,East Midlands,England,73355,52.821905,-1.543760
+South Gloucestershire,South West,England,310968,51.517693,-2.499740
+South Hams,South West,England,74577,50.361656,-3.797622
+South Holland,East Midlands,England,89136,52.789997,-0.077541
+South Kesteven,East Midlands,England,165839,52.821459,-0.528405
+South Lakeland,North West,England,110413,54.289053,-2.867657
+South Lanarkshire,Scotland,Scotland,307669,55.754625,-4.047313
+South Norfolk,East of England,England,114043,52.510799,1.227736
+South Northamptonshire,East Midlands,England,105937,52.108674,-1.043295
+South Oxfordshire,South East,England,134036,51.625517,-1.068111
+South Ribble,North West,England,89041,53.714501,-2.702178
+South Somerset,South West,England,165328,50.966957,-2.708959
+South Staffordshire,West Midlands,England,73362,52.610807,-2.154574
+South Tyneside,North East,England,141097,54.973766,-1.449122
+Southampton,South East,England,263691,50.917535,-1.398557
+Southend-on-Sea,East of England,England,192150,51.546170,0.702900
+Southwark,London,England,322562,51.483565,-0.078573
+Spelthorne,South East,England,108922,51.422815,-0.457672
+St Albans,East of England,England,153397,51.765799,-0.330224
+St. Helens,North West,England,155884,53.452848,-2.718312
+Stafford,West Midlands,England,130785,52.834341,-2.135424
+Staffordshire Moorlands,West Midlands,England,97043,53.066822,-2.040073
+Stevenage,East of England,England,98071,51.903562,-0.191555
+Stirling,Scotland,Scotland,95267,56.133542,-4.044919
+Stockport,North West,England,292715,53.397858,-2.153490
+Stockton-on-Tees,North East,England,197020,54.566801,-1.321249
+Stoke-on-Trent,West Midlands,England,260139,53.015705,-2.166564
+Stratford-on-Avon,West Midlands,England,136298,52.199609,-1.647647
+Stroud,South West,England,112929,51.730073,-2.268793
+Sunderland,North East,England,291307,54.892792,-1.439060
+Surrey Heath,South East,England,96375,51.333595,-0.713840
+Sutton,London,England,205765,51.364227,-0.181852
+Swale,South East,England,150392,51.354123,0.788516
+Swansea,Wales,Wales,250093,51.641928,-3.978807
+Swindon,South West,England,230644,51.568360,-1.781070
+Tameside,North West,England,226231,53.473863,-2.091370
+Tamworth,West Midlands,England,79519,52.626058,-1.680489
+Tandridge,South East,England,71870,51.255804,-0.052191
+Teignbridge,South West,England,135661,50.567770,-3.593707
+Telford and Wrekin,West Midlands,England,181337,52.690438,-2.460994
+Tendring,East of England,England,164452,51.848271,1.147785
+Test Valley,South East,England,116577,51.097436,-1.490353
+Tewkesbury,South West,England,65306,51.933034,-2.121988
+Thanet,South East,England,141925,51.363140,1.388996
+Three Rivers,East of England,England,83189,51.647073,-0.445840
+Thurrock,East of England,England,173289,51.494792,0.339626
+Tonbridge and Malling,South East,England,110682,51.260572,0.360976
+Torbay,South West,England,139048,50.448030,-3.545806
+Torfaen,Wales,Wales,95280,51.675873,-3.036017
+Torridge,South West,England,68398,50.937102,-4.225311
+Tower Hamlets,London,England,335328,51.517771,-0.043647
+Trafford,North West,England,218300,53.423937,-2.333786
+Tunbridge Wells,South East,England,139097,51.130683,0.343202
+Uttlesford,East of England,England,88719,51.936255,0.267288
+Vale of Glamorgan,Wales,Wales,124554,51.424380,-3.293685
+Vale of White Horse,South East,England,104840,51.649975,-1.373494
+Wakefield,Yorkshire and The Humber,England,347450,53.675709,-1.426195
+Walsall,West Midlands,England,255984,52.595507,-1.981196
+Waltham Forest,London,England,281386,51.587952,-0.009489
+Wandsworth,London,England,312598,51.455803,-0.176777
+Warrington,North West,England,188738,53.397561,-2.578169
+Warwick,West Midlands,England,139713,52.298216,-1.562090
+Watford,East of England,England,97597,51.662553,-0.404988
+Waverley,South East,England,149186,51.169914,-0.680116
+Wealden,South East,England,146430,50.947915,0.206607
+Wellingborough,East Midlands,England,64480,52.292010,-0.692763
+Welwyn Hatfield,East of England,England,116494,51.781303,-0.202212
+West Berkshire,South East,England,174105,51.427399,-1.260171
+West Devon,South West,England,52820,50.636998,-4.066828
+West Dunbartonshire,Scotland,Scotland,92609,55.942236,-4.494668
+West Lancashire,North West,England,95854,53.582254,-2.837564
+West Lindsey,East Midlands,England,74818,53.382032,-0.539194
+West Lothian,Scotland,Scotland,184105,55.899687,-3.579614
+West Oxfordshire,South East,England,109425,51.812144,-1.491051
+West Suffolk,East of England,England,189619,52.250348,0.595564
+Westminster,London,England,234182,51.513194,-0.148684
+Wigan,North West,England,365459,53.524972,-2.585466
+Wiltshire,South West,England,493760,51.312097,-1.990636
+Winchester,South East,England,114797,51.018169,-1.249695
+Windsor and Maidenhead,South East,England,152657,51.487590,-0.680426
+Wirral,North West,England,323801,53.379347,-3.061179
+Woking,South East,England,98262,51.319038,-0.560246
+Wokingham,South East,England,147242,51.422548,-0.875158
+Wolverhampton,West Midlands,England,302981,52.587920,-2.119239
+Worcester,West Midlands,England,121704,52.198712,-2.209241
+Worthing,South East,England,117881,50.820079,-0.388942
+Wrexham,Wales,Wales,136605,53.035410,-3.005905
+Wychavon,West Midlands,England,111727,52.151441,-2.032784
+Wyre,North West,England,140962,53.886882,-2.959060
+Wyre Forest,West Midlands,England,103847,52.375232,-2.264964
+York,Yorkshire and The Humber,England,226585,53.965551,-1.082973

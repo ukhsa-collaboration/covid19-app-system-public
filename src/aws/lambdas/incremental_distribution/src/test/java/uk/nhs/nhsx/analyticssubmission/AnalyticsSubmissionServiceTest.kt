@@ -6,6 +6,7 @@ import org.junit.Test
 import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.iOSPayloadFrom
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.core.Jackson.deserializeMaybe
+import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
 import uk.nhs.nhsx.core.aws.s3.S3Storage
 
@@ -21,7 +22,7 @@ class AnalyticsSubmissionServiceTest {
             "firehoseStreamName",
             true,
             false,
-            "some-bucket-name"
+            BucketName.of("some-bucket-name")
         )
 
         every { objectKeyNameProvider.generateObjectKeyName() } returns mockk(relaxed = true)
@@ -40,7 +41,7 @@ class AnalyticsSubmissionServiceTest {
             "firehoseStreamName",
             false,
             true,
-            "some-bucket-name"
+            BucketName.of("some-bucket-name")
         )
 
         every { kinesisFirehose.putRecord(any()) } returns mockk()

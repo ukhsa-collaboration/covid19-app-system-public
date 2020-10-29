@@ -58,7 +58,7 @@ class SmokeTest {
         SecretName.of("/app/interop/PrivateKey"),
         "federatedKeyPrefix",
         "DUMMY_TABLE",
-        "GB-EAW",
+        listOf("GB-EAW"),
         "GB-EAW"
     )
 

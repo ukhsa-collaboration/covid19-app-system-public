@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.diagnosiskeyssubmission;
 
 import uk.nhs.nhsx.core.Environment;
+import uk.nhs.nhsx.core.EnvironmentKeys;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.StandardSigning;
 import uk.nhs.nhsx.core.SystemClock;
@@ -62,8 +63,8 @@ public class Handler extends RoutingHandler {
                 s3Storage,
                 awsDynamoClient,
                 objectKeyNameProvider,
-                environment.access.required("submission_tokens_table"),
-                BucketName.of(environment.access.required("SUBMISSION_STORE"))
+                environment.access.required(EnvironmentKeys.SUBMISSIONS_TOKENS_TABLE),
+                environment.access.required(EnvironmentKeys.SUBMISSION_STORE)
             );
 
         this.handler = withSignedResponses(environment, authenticator, signer,

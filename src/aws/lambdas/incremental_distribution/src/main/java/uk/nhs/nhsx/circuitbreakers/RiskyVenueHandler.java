@@ -2,6 +2,7 @@ package uk.nhs.nhsx.circuitbreakers;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import uk.nhs.nhsx.core.Environment;
+import uk.nhs.nhsx.core.EnvironmentKeys;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.auth.ApiName;
@@ -61,8 +62,8 @@ public class RiskyVenueHandler extends RoutingHandler {
             authenticator,
             signer,
             new CircuitBreakerService(
-                parameters.ofEnum(initial.withPrefix(environment.access.required("SSM_CIRCUIT_BREAKER_BASE_NAME")), ApprovalStatus.class, ApprovalStatus.PENDING),
-                parameters.ofEnum(poll.withPrefix(environment.access.required("SSM_CIRCUIT_BREAKER_BASE_NAME")), ApprovalStatus.class, ApprovalStatus.PENDING)
+                parameters.ofEnum(initial.withPrefix(environment.access.required(EnvironmentKeys.SSM_CIRCUIT_BREAKER_BASE_NAME)), ApprovalStatus.class, ApprovalStatus.PENDING),
+                parameters.ofEnum(poll.withPrefix(environment.access.required(EnvironmentKeys.SSM_CIRCUIT_BREAKER_BASE_NAME)), ApprovalStatus.class, ApprovalStatus.PENDING)
             ));
     }
 

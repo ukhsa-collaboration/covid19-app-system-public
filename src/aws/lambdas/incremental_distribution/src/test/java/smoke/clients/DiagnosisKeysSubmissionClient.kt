@@ -1,6 +1,5 @@
 package smoke.clients
 
-import org.apache.logging.log4j.LogManager
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.ContentType
 import org.http4k.core.Method
@@ -18,13 +17,10 @@ class DiagnosisKeysSubmissionClient(private val client: JavaHttpClient,
 
 
     companion object {
-        private val logger = LogManager.getLogger(DiagnosisKeysSubmissionClient::class.java)
-
         fun baseUrlFrom(config: EnvConfig) = config.diagnosisKeysSubmissionEndpoint
     }
 
     fun sendTempExposureKeys(payload: ClientTemporaryExposureKeysPayload) {
-
         val request = Request(Method.POST, baseUrlFrom(config))
             .header("Authorization", config.authHeaders.mobile)
             .header("Content-Type", ContentType.APPLICATION_JSON.value)
@@ -37,17 +33,17 @@ class DiagnosisKeysSubmissionClient(private val client: JavaHttpClient,
     }
 
     fun createKeysPayload(diagnosisKeySubmissionToken: String,
-                                  encodedKeyData: List<String>): ClientTemporaryExposureKeysPayload {
-        return ClientTemporaryExposureKeysPayload(
+                          encodedKeyData: List<String>,
+                          rollingPeriod: Int = 144): ClientTemporaryExposureKeysPayload =
+        ClientTemporaryExposureKeysPayload(
             UUID.fromString(diagnosisKeySubmissionToken),
             encodedKeyData.map {
-                ClientTemporaryExposureKey(it, rollingStartNumber(), 144)
+                ClientTemporaryExposureKey(it, rollingStartNumber(), rollingPeriod)
             }
         )
-    }
 
     fun createKeysPayloadWithOnsetDays(diagnosisKeySubmissionToken: String,
-                          encodedKeyData: List<String>): ClientTemporaryExposureKeysPayload {
+                                       encodedKeyData: List<String>): ClientTemporaryExposureKeysPayload {
 
         fun exposureKeys(): List<ClientTemporaryExposureKey> {
             val tek1 = ClientTemporaryExposureKey(encodedKeyData[0], rollingStartNumber(), 144)
@@ -55,7 +51,7 @@ class DiagnosisKeysSubmissionClient(private val client: JavaHttpClient,
             val tek2 = ClientTemporaryExposureKey(encodedKeyData[1], rollingStartNumber(), 144)
             tek2.daysSinceOnsetOfSymptoms = 3
             val tek3 = ClientTemporaryExposureKey(encodedKeyData[2], rollingStartNumber(), 144)
-            return listOf(tek1,tek2,tek3)
+            return listOf(tek1, tek2, tek3)
         }
 
         return ClientTemporaryExposureKeysPayload(
