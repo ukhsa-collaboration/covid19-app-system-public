@@ -10,7 +10,6 @@ import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFrontClient;
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters;
-import uk.nhs.nhsx.core.aws.ssm.Parameters;
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.UploadToS3KeyDistributor;
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository;
 
@@ -19,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static uk.nhs.nhsx.core.ObjectKeyFilter.includeMobileAndAllowedPrefixes;
 import static uk.nhs.nhsx.core.StandardSigning.datedSigner;
 import static uk.nhs.nhsx.core.StandardSigning.signContentWithKeyFromParameter;
 
@@ -37,7 +37,7 @@ import static uk.nhs.nhsx.core.StandardSigning.signContentWithKeyFromParameter;
 public class Handler implements RequestHandler<ScheduledEvent, String> {
 
     private static final Logger logger = LogManager.getLogger(Handler.class);
-    
+
     private static final Environment.EnvironmentKey<List<String>> DIAGNOSIS_KEY_SUBMISSION_PREFIXES = Environment.EnvironmentKey.strings("DIAGNOSIS_KEY_SUBMISSION_PREFIXES");
     private static final Environment.EnvironmentKey<String> MOBILE_APP_BUNDLE_ID = Environment.EnvironmentKey.string("MOBILE_APP_BUNDLE_ID");
 
@@ -61,16 +61,12 @@ public class Handler implements RequestHandler<ScheduledEvent, String> {
         try {
             logger.info("Begin: Key distribution batch");
 
-            AwsS3Client awsS3Client = new AwsS3Client();
-            Parameters parameters = new AwsSsmParameters();
-            SubmissionFromS3Repository submissionRepository;
-            
-            List<String> allowedPrefixes = environment.access.required(DIAGNOSIS_KEY_SUBMISSION_PREFIXES);
-            if (allowedPrefixes.isEmpty()) {
-                submissionRepository = new SubmissionFromS3Repository(awsS3Client);
-            } else {
-                submissionRepository = new SubmissionFromS3Repository(awsS3Client, objectKey -> allowedPrefixes.stream().anyMatch(objectKey::startsWith));
-            }
+            var awsS3Client = new AwsS3Client();
+            var parameters = new AwsSsmParameters();
+            var allowedPrefixes = environment.access.required(DIAGNOSIS_KEY_SUBMISSION_PREFIXES);
+            var objectKeyFilter = includeMobileAndAllowedPrefixes(allowedPrefixes);
+
+            var submissionRepository = new SubmissionFromS3Repository(awsS3Client, objectKeyFilter);
 
             new DistributionService(
                 submissionRepository,

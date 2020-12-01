@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.keyfederation;
 
+import com.amazonaws.services.lambda.runtime.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jose4j.lang.JoseException;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse;
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest;
@@ -42,22 +42,26 @@ public class InteropClient {
         this.jws = jws;
     }
 
-    public List<DiagnosisKeysDownloadResponse> downloadKeys(LocalDate date) {
-        return downloadKeys(date, null);
-    }
-
-    public List<DiagnosisKeysDownloadResponse> downloadKeys(final LocalDate date, final BatchTag batchTag) {
-        String batch = Optional.ofNullable(batchTag).map(b -> "?batchTag=" + b.value).orElse("");
-        Optional<DiagnosisKeysDownloadResponse> exposureKeysNextBatch = getExposureKeysBatch(date, batch);
+    public List<DiagnosisKeysDownloadResponse> downloadKeys(final LocalDate date, final BatchTag batchTag, int maxBatchDownloadCount, Context context) {
+        var batch = Optional.ofNullable(batchTag).map(b -> "?batchTag=" + b.value).orElse("");
+        var exposureKeysNextBatch = getExposureKeysBatch(date, batch);
 
         ArrayList<DiagnosisKeysDownloadResponse> responses = new ArrayList<>();
-        while (exposureKeysNextBatch.isPresent()) {
-            DiagnosisKeysDownloadResponse diagnosisKeysDownloadResponse = exposureKeysNextBatch.get();
+        long iterationDuration = 0L;
+        for (int i = 0; i < maxBatchDownloadCount && exposureKeysNextBatch.isPresent(); i++) {
+            var startTime = System.currentTimeMillis();
+            var diagnosisKeysDownloadResponse = exposureKeysNextBatch.get();
             responses.add(diagnosisKeysDownloadResponse);
-            logger.info(String.format("Downloaded %s keys from federated server, Batch %s",
-                diagnosisKeysDownloadResponse.exposures.size(),
-                diagnosisKeysDownloadResponse.batchTag));
+            logger.info("Downloaded {} keys from federated server, BatchTag {} (batch {})",
+                    diagnosisKeysDownloadResponse.exposures.size(),
+                    diagnosisKeysDownloadResponse.batchTag,
+                    i);
             exposureKeysNextBatch = getExposureKeysBatch(date, "?batchTag=" + diagnosisKeysDownloadResponse.batchTag);
+            iterationDuration = Math.max(iterationDuration,System.currentTimeMillis() - startTime);
+            if(iterationDuration >= context.getRemainingTimeInMillis()){
+                logger.warn("There is not enough time to complete another iteration");
+                break;
+            }
         }
 
         logger.info("Downloaded keys from federated server finished, batchCount={}", responses.size());
@@ -73,6 +77,8 @@ public class InteropClient {
 
         var response = uncheckedGet(() -> client.send(request, HttpResponse.BodyHandlers.ofString()));
 
+        logger.debug("GET {} -> {}", request.uri(), response.statusCode());
+
         if (response.statusCode() == 200) {
             return Optional.of(
                 Jackson.deserializeMaybe(response.body(), DiagnosisKeysDownloadResponse.class)
@@ -84,30 +90,32 @@ public class InteropClient {
             return Optional.empty();
         }
 
-        logger.warn("Request to federated key server with batch tag " + batchTag + " failed with status code " + response.statusCode());
-        return Optional.empty();
+        logger.error("Request to download keys from federated key server with batch tag " + batchTag + " failed with status code " + response.statusCode());
+        throw new RuntimeException("Unexpected HTTP status code " + response.statusCode());
     }
 
     public DiagnosisKeysUploadResponse uploadKeys(String payload) {
         try {
-            String signedPayload = jws.compactSignedPayload(payload); //signing
-
-            DiagnosisKeysUploadRequest requestBody = new DiagnosisKeysUploadRequest(UUID.randomUUID().toString(), signedPayload);
+            DiagnosisKeysUploadRequest requestBody = new DiagnosisKeysUploadRequest(UUID.randomUUID().toString(), jws.sign(payload));
 
             HttpRequest uploadRequest = HttpRequest.newBuilder()
                 .header("Authorization", "Bearer " + authToken)
+                .header("Content-Type", "application/json")
                 .uri(URI.create(interopBaseUrl + "/diagnosiskeys/upload"))
                 .POST(ofString(toJson(requestBody)))
                 .build();
             HttpResponse<String> httpResponse = client.send(uploadRequest, HttpResponse.BodyHandlers.ofString());
+
+            logger.debug("POST {} -> {}", uploadRequest.uri(), httpResponse.statusCode());
+
             if (httpResponse.statusCode() == 200) {
                 return Jackson.deserializeMaybe(httpResponse.body(), DiagnosisKeysUploadResponse.class).orElseThrow(RuntimeException::new);
             } else {
-                logger.warn("Request to upload keys to federated key server failed with status code " + httpResponse.statusCode());
+                logger.error("Request to upload keys to federated key server failed with status code " + httpResponse.statusCode());
+                throw new RuntimeException("Unexpected HTTP status code " + httpResponse.statusCode());
             }
-            return null;
-        } catch (InterruptedException | IOException | JoseException e) {
-            logger.error("Upload request failed", e);
+        } catch (InterruptedException | IOException  e) {
+            logger.error("Request to upload keys to federated key server failed", e);
             throw new RuntimeException(e);
         }
     }

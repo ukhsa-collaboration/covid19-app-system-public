@@ -1,7 +1,8 @@
 package uk.nhs.nhsx.core
 
-import org.assertj.core.api.Assertions.*
-import org.junit.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.UncheckedException.uncheckedGet
 import java.net.MalformedURLException
 import java.net.URL

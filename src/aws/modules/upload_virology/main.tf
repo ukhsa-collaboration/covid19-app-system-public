@@ -27,6 +27,7 @@ module "upload_lambda" {
     custom_oai              = var.custom_oai
   }
   app_alarms_topic = var.alarm_topic_arn
+  tags             = var.tags
 }
 
 module "upload_gateway" {
@@ -36,10 +37,13 @@ module "upload_gateway" {
   lambda_function_name = module.upload_lambda.lambda_function_name
   burst_limit          = var.burst_limit
   rate_limit           = var.rate_limit
+  tags                 = var.tags
 }
 
 resource "aws_iam_role" "upload_lambda_execution_role" {
   name = "${local.identifier_prefix}-upload-lambda"
+
+  tags = var.tags
 
   assume_role_policy = <<EOF
 {

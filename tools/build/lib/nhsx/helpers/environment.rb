@@ -69,10 +69,6 @@ module Gaudi
         return parsed_time.strftime("%s")
       end
 
-      def custom_oai
-        mandatory("CUSTOM_OAI")
-      end
-
       def localise_input
         input_dir = ENV["LOCALISE_INPUT"]
         input_dir ||= File.expand_path("locale")
@@ -96,7 +92,7 @@ module Gaudi
       #
       # Eg: TEST_END_DATE=2020-10-10T00:00:00Z
       def test_end_date
-        require 'time'
+        require "time"
         test_end_date = mandatory("TEST_END_DATE")
         raise GaudiError, "Invalid TEST_END_DATE" unless Time.iso8601(test_end_date)
         return test_end_date
@@ -104,11 +100,17 @@ module Gaudi
 
       # Pass number of tokens to generate when invoking the virology token generation lambda (default 35000)
       def number_of_tokens
-        number_of_tokens = ENV.fetch("NUMBER_OF_TOKENS", "35000")
+        number_of_tokens = mandatory("NUMBER_OF_TOKENS")
 
         raise GaudiError, "Invalid NUMBER_OF_TOKENS" unless number_of_tokens
 
         return number_of_tokens
+      end
+
+      def account
+        account_name = ENV["ACCOUNT"]
+        account_name = "dev" if account_name.nil?
+        return account_name
       end
     end
   end

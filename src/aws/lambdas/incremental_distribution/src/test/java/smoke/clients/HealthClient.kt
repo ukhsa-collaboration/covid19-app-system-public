@@ -18,6 +18,8 @@ class HealthClient(private val client: JavaHttpClient,
 
     fun enCircuitBreakerHealthEndpoint() = getHealthContent(config.enCircuitBreakerHealthEndpoint, config.authHeaders.mobile)
 
+    fun isolationPaymentHealthEndpoint() = getHealthContent(config.isolationPaymentHealthEndpoint, config.authHeaders.mobile)
+
     fun riskyPostDistrictsUploadHealthEndpoint() = getHealthContent(config.riskyPostDistrictsUploadHealthEndpoint, config.authHeaders.highRiskPostCodeUpload)
 
     fun riskyVenuesCircuitBreakerHealthEndpoint() = getHealthContent(config.riskyVenuesCircuitBreakerHealthEndpoint, config.authHeaders.mobile)
@@ -27,6 +29,8 @@ class HealthClient(private val client: JavaHttpClient,
     fun testResultsHealthEndpoint() = getHealthContent(config.testResultsHealthEndpoint, config.authHeaders.testResultUpload)
 
     fun virologyKitHealthEndpoint() = getHealthContent(config.virologyKitHealthEndpoint, config.authHeaders.mobile)
+
+    fun emptySubmissionEndpoint() = getHealthContent(config.emptySubmissionEndpoint, config.authHeaders.mobile)
 
     private fun getHealthContent(uri: String, authHeader: String): Response {
         logger.info("getHealthContent: $uri")

@@ -3,7 +3,7 @@ package uk.nhs.nhsx.highriskvenuesupload;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
 import uk.nhs.nhsx.core.TestEnvironments;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
@@ -11,7 +11,12 @@ import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import static uk.nhs.nhsx.ContextBuilder.aContext;
 import static uk.nhs.nhsx.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
 

@@ -8,7 +8,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.xray.Tracing
 import uk.nhs.nhsx.core.exceptions.TransactionException
 import uk.nhs.nhsx.virology.TestResultPollingToken
@@ -21,7 +21,7 @@ import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyResultRequest
 import java.time.Duration
 import java.time.Instant
-import java.util.*
+import java.util.UUID
 import java.util.function.Supplier
 
 class VirologyDynamoServiceManualTest {
@@ -30,7 +30,7 @@ class VirologyDynamoServiceManualTest {
         Tracing.disableXRayComplaintsForMainClasses()
     }
 
-    private val targetEnv = ""
+    private val targetEnv = "te-ci"
 
     private val virologyConfig = VirologyConfig(
         "$targetEnv-virology-ordertokens",

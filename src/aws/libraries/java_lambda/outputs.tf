@@ -9,3 +9,7 @@ output "lambda_function_arn" {
 output "version" {
   value = aws_lambda_function.this.version
 }
+
+output "lambda_function_id" {
+  value = aws_lambda_function.this.id
+}

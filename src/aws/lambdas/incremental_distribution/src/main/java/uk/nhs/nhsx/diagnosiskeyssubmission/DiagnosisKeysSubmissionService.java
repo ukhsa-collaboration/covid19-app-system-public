@@ -12,10 +12,16 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayl
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
 
 public class DiagnosisKeysSubmissionService {
@@ -28,16 +34,19 @@ public class DiagnosisKeysSubmissionService {
     private final ObjectKeyNameProvider objectKeyNameProvider;
     private final String tableName;
     private final String submissionTokensHashKey = "diagnosisKeySubmissionToken";
+    private final Supplier<Instant> clock;
 
     public DiagnosisKeysSubmissionService(S3Storage s3Storage,
                                           AwsDynamoClient awsDynamoClient,
                                           ObjectKeyNameProvider objectKeyNameProvider,
-                                          String tableName, BucketName name) {
+                                          String tableName, BucketName name,
+                                          Supplier<Instant> clock) {
         this.bucketName = name;
         this.s3Storage = s3Storage;
         this.awsDynamoClient = awsDynamoClient;
         this.objectKeyNameProvider = objectKeyNameProvider;
         this.tableName = tableName;
+        this.clock = clock;
     }
 
     public void acceptTemporaryExposureKeys(ClientTemporaryExposureKeysPayload payload) {
@@ -70,21 +79,42 @@ public class DiagnosisKeysSubmissionService {
     private Boolean isValidKey(ClientTemporaryExposureKey temporaryExposureKey) {
         return Optional.ofNullable(temporaryExposureKey)
             .filter(tek -> isKeyValid(tek.key))
-            .filter(tek -> isRollingStartNumberValid(tek.rollingStartNumber))
+            .filter(tek -> isRollingStartNumberValid(tek.rollingStartNumber, tek.rollingPeriod))
             .filter(tek -> isRollingPeriodValid(tek.rollingPeriod))
+            .filter(tek -> isTransmissionRiskLevelValid(tek.transmissionRiskLevel))
             .isPresent();
     }
 
     private boolean isKeyValid(String key) {
-        return key != null && isBase64EncodedAndLessThan32Bytes(key);
+        var isValid =  key != null && isBase64EncodedAndLessThan32Bytes(key);
+
+        if(!isValid){
+            logger.info("Key is invalid. Key={}", key);
+        }
+        return isValid;
     }
 
-    private boolean isRollingStartNumberValid(int rollingStartNumber) {
-        return rollingStartNumber >= 0;
+    private boolean isRollingStartNumberValid(long rollingStartNumber, int rollingPeriod) {
+        var now = clock.get();
+        long TEN_MINUTES_INTERVAL_SECONDS = 600L;
+        var currentInstant = now.getEpochSecond() / TEN_MINUTES_INTERVAL_SECONDS;
+        var expiryPeriod = clock.get().minus(14, ChronoUnit.DAYS).getEpochSecond() / TEN_MINUTES_INTERVAL_SECONDS;
+        var isValid = (rollingStartNumber + rollingPeriod) >= expiryPeriod &&
+            rollingStartNumber <= currentInstant;
+        if (!isValid) {
+            logger.debug("Key is invalid. Now={}, rollingStartNumber={}, rollingPeriod={}",
+                now, rollingStartNumber, rollingPeriod);
+        }
+        return isValid;
     }
 
-    private boolean isRollingPeriodValid(int isRollingPeriod) {
-        return isRollingPeriod == 144;
+    private boolean isRollingPeriodValid(int rollingPeriod) {
+        var isValid = rollingPeriod > 0 && rollingPeriod <= 144;
+
+        if (!isValid) {
+            logger.debug("Key is invalid. rollingPeriod={}", rollingPeriod);
+        }
+        return isValid;
     }
 
     private boolean isBase64EncodedAndLessThan32Bytes(String value) {
@@ -94,6 +124,15 @@ public class DiagnosisKeysSubmissionService {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    private boolean isTransmissionRiskLevelValid(int transmissionRiskLevel) {
+        var isValid = transmissionRiskLevel >= 0 && transmissionRiskLevel <= 7;
+
+        if (!isValid) {
+            logger.debug("Key is invalid. transmissionRiskLevel={}", transmissionRiskLevel);
+        }
+        return isValid;
     }
 
     private void acceptPayload(ClientTemporaryExposureKeysPayload payload) {

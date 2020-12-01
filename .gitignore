@@ -30,3 +30,6 @@ src/aws/lambdas/incremental_distribution/.factorypath
 .m2/
 temp
 
+# Ignore Gradle project-specific cache directory
+.gradle
+src/aws/lambdas/incremental_distribution/build/

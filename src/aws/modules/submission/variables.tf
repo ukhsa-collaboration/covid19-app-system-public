@@ -50,3 +50,14 @@ variable "provisioned_concurrent_executions" {
   type        = number
   default     = 0
 }
+
+variable "lifecycle_rule_enabled" {
+  description = "enables lifecycle rule which expires objects after specific time"
+  type        = bool
+  default     = false
+}
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

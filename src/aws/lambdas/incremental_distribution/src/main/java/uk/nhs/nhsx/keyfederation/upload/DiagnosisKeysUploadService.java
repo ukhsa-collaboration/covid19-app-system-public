@@ -1,105 +1,176 @@
 package uk.nhs.nhsx.keyfederation.upload;
 
 
+import com.amazonaws.services.lambda.runtime.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.diagnosiskeydist.Submission;
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository;
-import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.keyfederation.BatchTagService;
-import uk.nhs.nhsx.keyfederation.Exposure;
 import uk.nhs.nhsx.keyfederation.InteropClient;
-
-import static uk.nhs.nhsx.core.Jackson.toJson;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static uk.nhs.nhsx.core.Jackson.toJson;
 
 public class DiagnosisKeysUploadService {
+    private final static int NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE = 0;
 
     private static final Logger logger = LogManager.getLogger(DiagnosisKeysUploadService.class);
 
     private final InteropClient interopClient;
-
     private final SubmissionRepository submissionRepository;
-
     private final String region;
-
     private final BatchTagService batchTagService;
+    private final boolean uploadRiskLevelDefaultEnabled;
+    private final int uploadRiskLevelDefault;
+    private final int initialUploadHistoryDays;
+    private final int maxUploadBatchSize;
+    private final int maxUploadBatchLimit;
+    private final int maxSubsequentBatchUploadCount;
+    private final Context context;
 
-    public DiagnosisKeysUploadService(InteropClient interopClient, SubmissionRepository submissionRepository, BatchTagService batchTagService,String region) {
+    public DiagnosisKeysUploadService(InteropClient interopClient,
+                                      SubmissionRepository submissionRepository,
+                                      BatchTagService batchTagService,
+                                      String region,
+                                      boolean uploadRiskLevelDefaultEnabled,
+                                      int uploadRiskLevelDefault,
+                                      int initialUploadHistoryDays,
+                                      int maxUploadBatchSize,
+                                      int maxSubsequentBatchUploadCount,
+                                      Context context)
+    {
         this.interopClient = interopClient;
         this.submissionRepository = submissionRepository;
         this.batchTagService = batchTagService;
         this.region = region;
+        this.uploadRiskLevelDefaultEnabled = uploadRiskLevelDefaultEnabled;
+        this.uploadRiskLevelDefault = uploadRiskLevelDefault;
+        this.initialUploadHistoryDays = initialUploadHistoryDays;
+        this.maxUploadBatchSize = maxUploadBatchSize;
+        this.maxUploadBatchLimit = maxUploadBatchSize - 4; //4 mobile submissions/sec
+        this.maxSubsequentBatchUploadCount = maxSubsequentBatchUploadCount;
+        this.context = context;
     }
 
+    public int loadKeysAndUploadToFederatedServer() throws Exception {
+        int submissionCount = 0;
+        long iterationDuration = 0L;
+        Instant lastUploadedSubmissionTime = getLastUploadedTime();
+        for (int i = 1; i <= maxSubsequentBatchUploadCount; i++) {
+            var startTime = System.currentTimeMillis();
+            var result = loadKeysAndUploadOneBatchToFederatedServer(lastUploadedSubmissionTime, i);
 
-    public void uploadRequest() throws Exception {
+            submissionCount += result.submissionCount;
 
-        logger.info("Begin: Upload diagnosis keys to the Nearform server");
-
-        Instant lastUploadedTime = getLastUploadedTime();
-        Instant currentTime = SystemClock.CLOCK.get();
-        List<Submission> allSubmissions = submissionRepository.loadAllSubmissions();
-        List<Exposure> exposureKeys = getUploadRequestRawPayload(allSubmissions, lastUploadedTime, currentTime);
-
-        logger.info("Loading keys from submissions finished, keyCount={}, earliestKeyTime={}, latestKeyTime={}",
-            exposureKeys.size(), lastUploadedTime, currentTime);
-
-        if (!exposureKeys.isEmpty()) {
-            String payload = toJson(exposureKeys);
-            DiagnosisKeysUploadResponse uploadResponse = interopClient.uploadKeys(payload);
-            if (uploadResponse != null) {
-                logger.info(String.format("Uploaded %s keys with submission date greater than %s to federation server",
-                    uploadResponse.insertedExposures,
-                    lastUploadedTime.toString()));
+            if (maxUploadBatchSize == NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE
+                || lastUploadedSubmissionTime.equals(result.lastUploadedSubmissionTime)
+                || result.submissionCount < maxUploadBatchLimit)
+            {
+                break;
             }
-            batchTagService.updateLastUploadState(currentTime.getEpochSecond());
-        } else {
-            logger.info("No keys were available for uploading to federation server");
+
+            lastUploadedSubmissionTime = result.lastUploadedSubmissionTime;
+            iterationDuration = Math.max(iterationDuration,System.currentTimeMillis() - startTime);
+            if(iterationDuration >= context.getRemainingTimeInMillis()){
+                logger.warn("There is not enough time to complete another iteration");
+                break;
+            }
+
+        }
+
+        return submissionCount;
+    }
+
+    static class BatchUploadResult {
+        public final Instant lastUploadedSubmissionTime;
+        public final int submissionCount;
+
+        public BatchUploadResult(Instant lastUploadedSubmissionTime, int submissionCount) {
+            this.lastUploadedSubmissionTime = lastUploadedSubmissionTime;
+            this.submissionCount = submissionCount;
         }
     }
 
-    public List<Exposure> getUploadRequestRawPayload(List<Submission> submissions, Instant lastUploadedTime, Instant currentTime) {
+    public BatchUploadResult loadKeysAndUploadOneBatchToFederatedServer(Instant lastUploadedSubmissionTime, int batchNumber) throws Exception {
+        logger.info("Begin: Upload diagnosis keys to the Nearform server (batch {})", batchNumber);
 
-        List<Exposure> exposures = new ArrayList<>();
+        List<Submission> newSubmissions = submissionRepository.loadAllSubmissions(
+            lastUploadedSubmissionTime.toEpochMilli(),
+            maxUploadBatchSize == NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE ? Integer.MAX_VALUE : maxUploadBatchLimit,
+            maxUploadBatchSize == NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE ? Integer.MAX_VALUE : maxUploadBatchSize);
+
+        List<ExposureUpload> exposureKeys = getUploadRequestRawPayload(newSubmissions);
+
+        var transformedExposureKeys = exposureKeys.stream().map(this::preUploadTransformations).collect(Collectors.toList());
+
+        logger.info("Loading and transforming keys from submissions finished (from {} to {}), keyCount={} (batch {})",
+            newSubmissions.isEmpty() ? null : (newSubmissions.get(0).submissionDate),
+            newSubmissions.isEmpty() ? null : (newSubmissions.get(newSubmissions.size() - 1).submissionDate),
+            transformedExposureKeys.size(), batchNumber);
+
+        if (!transformedExposureKeys.isEmpty()) {
+            String payload = toJson(transformedExposureKeys);
+            DiagnosisKeysUploadResponse uploadResponse = interopClient.uploadKeys(payload);
+            if (uploadResponse != null) {
+                logger.info("Uploaded {} keys with submission date greater than {} to federation server (batch {})",
+                    uploadResponse.insertedExposures,
+                    lastUploadedSubmissionTime.toString(),
+                    batchNumber);
+
+                Instant updatedLastUploadedSubmissionTime = Instant.ofEpochMilli(newSubmissions.stream().map(submission -> submission.submissionDate.getTime()).max(Long::compare).orElseThrow());
+                batchTagService.updateLastUploadState(updatedLastUploadedSubmissionTime.toEpochMilli() / 1000);
+
+                return new BatchUploadResult(updatedLastUploadedSubmissionTime, newSubmissions.size());
+            }
+        } else {
+            logger.info("No keys were available for uploading to federation server with submission date greater than {} (batch {})",
+                lastUploadedSubmissionTime.toString(),
+                batchNumber);
+        }
+
+        return new BatchUploadResult(lastUploadedSubmissionTime, newSubmissions.size());
+    }
+
+    public ExposureUpload preUploadTransformations(ExposureUpload upload) {
+        return new ExposureUpload(upload.keyData,
+            upload.rollingStartNumber,
+            uploadRiskLevelDefaultEnabled ? uploadRiskLevelDefault : upload.transmissionRiskLevel,
+            upload.rollingPeriod,
+            upload.regions);
+    }
+
+    public List<ExposureUpload> getUploadRequestRawPayload(List<Submission> submissions) // FIXME filter expired keys (rollingStartNumber & rollingPeriod)
+    {
+        List<ExposureUpload> exposures = new ArrayList<>();
         submissions.stream()
-            .filter(submission -> isKeyValid(submission.submissionDate, lastUploadedTime, currentTime))
-            .forEach(submission -> {
-                List<StoredTemporaryExposureKey> temporaryExposureKeys = submission.payload.temporaryExposureKeys;
-                temporaryExposureKeys.stream().forEach(exposure -> {
-                    exposures.add(new Exposure(exposure.key,
-                        exposure.rollingStartNumber,
-                        exposure.transmissionRisk,
-                        exposure.rollingPeriod,
-                        List.of(this.region)
-                    ));
-                });
-            });
+            .forEach(submission ->
+                submission.payload.temporaryExposureKeys.forEach(exposure ->
+                    exposures.add(
+                        new ExposureUpload(
+                            exposure.key,
+                            exposure.rollingStartNumber,
+                            exposure.transmissionRisk,
+                            exposure.rollingPeriod,
+                            List.of(this.region)
+                        )
+                    )));
         return exposures;
     }
 
     private Instant getLastUploadedTime() {
-        return batchTagService.getLastUploadState().map(it -> {
-            logger.info("Last uploaded timestamp from db {}", it.lastUploadedTimeStamp);
-            return Instant.ofEpochSecond(it.lastUploadedTimeStamp);
-        }).orElse(
-            OffsetDateTime.now(ZoneOffset.UTC).minusDays(14).toInstant()
-        );
+        return batchTagService.getLastUploadState()
+            .map(it -> {
+                logger.info("Last uploaded timestamp from db {}", it.lastUploadedTimeStamp);
+                return Instant.ofEpochSecond(it.lastUploadedTimeStamp);
+            })
+            .orElse(
+                OffsetDateTime.now(ZoneOffset.UTC).minusDays(initialUploadHistoryDays).toInstant()
+            );
     }
-
-
-    private boolean isKeyValid(Date submissionDate, Instant from, Instant to) {
-        Instant submissionDateInstant = Optional.ofNullable(submissionDate).map(Date::toInstant).orElse(Instant.MIN);
-        return (submissionDateInstant.isAfter(from) &&
-            submissionDateInstant.isBefore(to)) || (submissionDateInstant.equals(to));
-    }
-
 }

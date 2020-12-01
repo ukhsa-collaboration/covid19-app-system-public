@@ -9,7 +9,7 @@ module "analytics_app_store_qr_posters_s3" {
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
-  account_tags             = var.account_tags
+  tags                     = var.tags
 }
 
 resource "aws_glue_catalog_table" "mobile_analytics_table" {

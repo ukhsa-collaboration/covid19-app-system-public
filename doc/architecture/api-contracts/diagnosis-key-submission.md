@@ -7,6 +7,10 @@ API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 - Authorisation: ```Authorization: Bearer <API KEY>```
     - One API KEY for all mobile phone-facing APIs
 
+## Scenario
+
+Mobile clients send diagnostic keys after the user receives a positive test result and agrees to the upload.
+
 ## Payload Example
 
 ```json
@@ -42,7 +46,7 @@ API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 - `temporaryExposureKeys` is required array
 - `key` required, non-empty base64 encoded string
 - `rollingStartNumber` required uint32
-- `rollingPeriod` required uint32 (only value 144 is a valid)
+- `rollingPeriod` required uint32
 - `diagnosisKeySubmissionToken` valid one-time token (associated with a positive Covid19 test result, never used yet)
 
 ### Optional properties

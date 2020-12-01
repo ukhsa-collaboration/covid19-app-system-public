@@ -8,6 +8,7 @@ module "risky_venues_messages_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  tags                     = var.tags
 }
 
 
@@ -22,6 +23,7 @@ module "download_apis" {
 
   domain      = var.base_domain
   web_acl_arn = var.waf_arn
+  tags        = var.tags
 }
 
 output "base_download_endpoint" {

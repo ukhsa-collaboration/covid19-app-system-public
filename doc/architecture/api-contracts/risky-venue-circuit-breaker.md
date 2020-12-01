@@ -12,19 +12,11 @@ We assume the circuit breaker counts the number of identified risk venues over s
     - FQDN: Hostname can be different per API
 - Authorization: ```Authorization: Bearer <API KEY>```
     - One API KEY for all mobile phone-facing APIs
-- Request payload content-type: application/json
+- Request body: empty
 - Response payload content-type: application/json
 
 ### Response Headers
 - Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
-
-#### Payload Example
-
-```json
-{
-  "venueId": "MAX8CHR1"
-}
-```
 
 #### Respose Payload Example
 

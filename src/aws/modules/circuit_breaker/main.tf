@@ -6,6 +6,8 @@ locals {
 module "circuit_breaker_role" {
   source = "../../libraries/iam_circuit_breaker_lambda"
   name   = local.identifier_prefix
+
+  tags = var.tags
 }
 
 # lambda source path will change to libraries after restructure
@@ -24,6 +26,7 @@ module "circuit_breaker_lambda" {
     custom_oai                    = var.custom_oai
   }
   app_alarms_topic = var.alarm_topic_arn
+  tags             = var.tags
 }
 
 module "circuit_breaker_gateway" {
@@ -33,6 +36,7 @@ module "circuit_breaker_gateway" {
   lambda_function_name = module.circuit_breaker_lambda.lambda_function_name
   burst_limit          = var.burst_limit
   rate_limit           = var.rate_limit
+  tags                 = var.tags
 }
 
 resource "aws_ssm_parameter" "initial" {

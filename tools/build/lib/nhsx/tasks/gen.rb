@@ -52,8 +52,6 @@ namespace :gen do
       include NHSx::AWS
 
       java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
-      pom_xml_path = File.join(java_project_path, "pom.xml")
-      java_output_path = File.join($configuration.out, "java/batch_creation")
       mkdir_p(File.join($configuration.out, "signatures"), :verbose => false)
 
       Rake::FileList["#{$configuration.base}/src/static/*.json"].each do |static_file|
@@ -63,7 +61,9 @@ namespace :gen do
         file sig_file => [static_file] do
           signature_data_json = File.join($configuration.out, "signatures", "#{File.basename(static_file)}.generated")
           sign_app_params = "--input #{static_file} --ssm-key-id #{NHSx::TargetEnvironment::CONTENT_SIGNING_KEY_PARAMETER} --output #{signature_data_json}"
-          cmdline = "mvn -f=#{pom_xml_path} -DbuildOutput=#{java_output_path} exec:java -Dexec.mainClass=\"uk.nhs.nhsx.core.signature.DistributionSignatureMain\"  -Dexec.args=\"#{sign_app_params}\" "
+
+          gradlew = File.join(java_project_path, "gradlew")
+          cmdline = "#{gradlew} -p #{java_project_path} generateSignature -Dsign.args=\"#{sign_app_params}\""
           run_command("Generate signatures for #{File.basename(static_file)}", cmdline, $configuration)
           signatures = JSON.parse(File.read(signature_data_json))
 

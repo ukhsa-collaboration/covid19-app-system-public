@@ -32,5 +32,36 @@
       "ur": "اس ایپ کو اپنے آلہ پر چلانے کے لئے، آپ کو اسے تازہ ترین ورژن میں اپ ڈیٹ کرنے کی ضرورت ہے۔ براہ کرم ایپ اسٹور پر جائیں اور وہاں سے اسے اپ ڈیٹ کریں۔",
       "zh": "为了在您的设备上运行此应用程序，您需要将其更新到最新版本。 请转到应用商店并从那里进行更新。"
     }
+  },
+  "recommendedAppVersion": {
+    "value": 35,
+    "title": {
+      "ar": "يرجى تحديث تطبيق مكافحة فيروس كورونا (كوفيد-19) المُقدَّم من هيئة الخدمات الصحية الوطنية (NHS) للحصول على أحدث نسخة من التطبيق",
+      "bn": "দয়া করে আপনার এনএইচএস কোভিড-১৯ অ্যাপটি হালনাগাদ করুন",
+      "cy": "Diweddarwch eich ap COVID-19 y GIG i'r fersiwn newydd",
+      "en": "Please update your NHS COVID-19 app to the latest version",
+      "gu": "કૃપા કરી તમારા NHS COVID-19 એપને લેટેસ્ટ વર્શન માટે અપડેટ કરો",
+      "pa": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ NHS ਕੋਵਿਡ-19 ਐਪ ਨੂੰ ਸਭ ਤੋਂ ਤਾਜ਼ਾ ਸੰਸਕਰਨ ਮੁਤਾਬਕ ਅਪਡੇਟ ਕਰੋ",
+      "pl": "Proszę zaktualizować swoją aplikację NHS COVID-19 do najnowszej wersji",
+      "ro": "Vă rugăm să vă actualizați aplicația NHS COVID-19 cu ultima versiune",
+      "so": "Fadlan ku cusbooneysii app-kaaga NHS COVID-19 nooca ugu dambeeyay",
+      "tr": "Lütfen NHS COVID-19 uygulamanızı en son sürüme güncelleyin",
+      "ur": "برائے کرم اپنی این ایچ ایس کی کوویڈ 19 ایپ کی تازہ ترین ورژن کے ساتھ تجدید کریں",
+      "zh": "请将您的NHS COVID-19应用程序更新为最新版本"
+    },
+    "description": {
+      "ar": "تتوفر الآن نسخة جديدة من هذا التطبيق. يرجى تحديث التطبيق الآن باستخدام الزرِّ أدناه لضمان الوصول إلى أحدث الخصائص والتوجيهات.",
+      "bn": "এই অ্যাপের নতুন সংস্করণ পাওয়া যাচ্ছে। সর্বশেষ ফিচার ও নির্দেশনা ব্যবহার করতে পারা নিশ্চিত করতে, নিচের বোতাম ব্যবহার করে এটি এখনই হালনাগাদ করুন।",
+      "cy": "Mae fersiwn newydd o'r ap hwn ar gael. Er mwyn sicrhau eich bod yn cael y nodweddion a'r canllawiau diweddaraf, defnyddiwch y botwm isod i gael y fersiwn newydd.",
+      "en": "There is a new version of this app available. To make sure you have access to the latest features and guidance, update it now using the button below.",
+      "gu": "આ એપનું કોઈ એક નવુ વરશન મળી રહે છે. તમારી પાસે સુગમતા- પ્રવેશ મેળવવા છેલ્લામાં છેલ્લી વિશિષ્ટતાઓ અને માર્ગદર્શનો હોય તેની ખાતરી કરવા, નીચેના બટનનો ઉપયોગ કરી હમણાંજ તેને અપડેટ કરો.",
+      "pa": "ਇਸ ਐਪ ਦਾ ਇਕ ਨਵਾਂ ਸੰਸਕਰਣ ਉਪਲਬੱਧ ਹੈ। ਇਹ ਯਕੀਨੀ ਬਣਾਉਣ ਲਈ ਕਿ ਤੁਹਾਡੀ ਨਵੀਨਤਮ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਅਤੇ ਮਾਰਗਦਰਸ਼ਨ ਤੱਕ ਪਹੁੰਚ ਹੈ, ਹੇਠਾਂ ਦਿੱਤੇ ਬਟਨ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਇਸਨੂੰ ਹੁਣ ਅਪਡੇਟ ਕਰੋ।",
+      "pl": "Dostępna jest nowa wersja tej aplikacji. Aby upewnić się, że masz dostęp do najnowszych funkcji i wskazówek, zaktualizuj ją teraz za pomocą przycisku poniżej.",
+      "ro": "Există disponibilă o nouă versiune a acestei aplicații. Pentru a vă asigura că aveți acces la cele mai recente funcții și instrucțiuni, actualizați-o acum folosind butonul de mai jos.",
+      "so": "App-kan wuxuu leeyahay werrin cusub. Si aad u hubiso in aad ogolaansho u leedahay muuqaalada iyo hagayaasha nooca ugu dambeeyay, soo cusbooneysii hadda adigoo isticmaalaya badhanka hoose.",
+      "tr": "Bu uygulamanın yeni bir sürümü mevcuttur. En son özelliklere ve yönergelere eriştiğinizden emin olmak için uygulamayı aşağıdaki düğmeyi kullanarak şimdi güncelleyin.",
+      "ur": "اس ایپ کا ایک نیا ورژن دستیاب ہے۔ اس بات کو یقینی بنانے کے لئے کہ آپ کو جدید ترین خصوصیات اور رہنمائی تک رسائی حاصل ہے، نیچے دیئے گئے بٹن کا استعمال کرکے اسے ابھی اپ ڈیٹ کریں۔",
+      "zh": "此应用程序有新版本可用。为了确保您可以访问最新功能和指南，请立即使用下面的按钮对其进行更新。"
+    }
   }
 }

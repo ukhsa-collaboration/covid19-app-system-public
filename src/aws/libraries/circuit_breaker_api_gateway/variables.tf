@@ -17,3 +17,8 @@ variable "rate_limit" {
 variable "burst_limit" {
   description = "The requests per second burst limit for this API gateway"
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

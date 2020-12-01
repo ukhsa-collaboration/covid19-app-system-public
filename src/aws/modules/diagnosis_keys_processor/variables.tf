@@ -33,3 +33,8 @@ variable "alarm_topic_arn" {
 variable "diagnosis_key_submission_prefixes" {
   description = "Allowed prefixes for the diagnosis key submissions"
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

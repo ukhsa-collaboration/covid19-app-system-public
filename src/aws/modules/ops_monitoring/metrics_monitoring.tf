@@ -17,7 +17,6 @@ locals {
   ]
 
   processing_lambdas = [
-    var.analytics_processing_function,
     var.diagnosis_keys_processing_function,
     var.advanced_analytics_function
   ]

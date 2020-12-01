@@ -1,8 +1,13 @@
 package uk.nhs.nhsx.virology.tokengen
 
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.virology.VirologyService
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse

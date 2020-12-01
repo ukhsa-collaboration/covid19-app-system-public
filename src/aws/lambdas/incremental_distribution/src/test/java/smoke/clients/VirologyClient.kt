@@ -4,11 +4,12 @@ import org.apache.logging.log4j.LogManager
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.*
 import smoke.env.EnvConfig
+import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
+import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.*
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponse
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
-import java.lang.RuntimeException
 
 class VirologyClient(private val client: JavaHttpClient,
                      private val config: EnvConfig) {
@@ -21,9 +22,9 @@ class VirologyClient(private val client: JavaHttpClient,
 
         fun npexUploadEndpoint(config: EnvConfig) = config.test_results_npex_upload_endpoint
         fun fioranoUploadEndpoint(config: EnvConfig) = config.test_results_fiorano_upload_endpoint
-        fun engTokenGenUploadEndpoint(config: EnvConfig) = config.test_results_eng_tokengen_upload_endpoint
-        fun wlsTokenGenUploadEndpoint(config: EnvConfig) = config.test_results_wls_tokengen_upload_endpoint
-
+        fun engTokenGenUploadEndpoint(config: EnvConfig) = config.engTokenGenUploadEndpoint
+        fun wlsTokenGenUploadEndpoint(config: EnvConfig) = config.wlsTokenGenUploadEndpoint
+        fun lfdTokenGenUploadEndpoint(config: EnvConfig) = config.lfdTokenGenUploadEndpoint
     }
 
     fun orderTest(): VirologyOrderResponse {
@@ -135,14 +136,20 @@ class VirologyClient(private val client: JavaHttpClient,
         return client(request)
     }
 
-    fun ctaTokenGen(testResult: String): VirologyTokenGenResponse {
+    fun ctaTokenGen(testResult: String,
+                    testEndDate: String = "2020-04-23T00:00:00Z",
+                    source: VirologyTokenExchangeSource = Eng): VirologyTokenGenResponse {
         logger.info("ctaTokenGen")
 
-        val uri = engTokenGenUploadEndpoint(config)
+        val uri = when (source) {
+            Eng -> engTokenGenUploadEndpoint(config)
+            Wls -> wlsTokenGenUploadEndpoint(config)
+            Lfd -> lfdTokenGenUploadEndpoint(config)
+        }
 
         val payload = """
             {
-              "testEndDate": "2020-04-23T00:00:00Z",
+              "testEndDate": "$testEndDate",
               "testResult": "$testResult"
             }
         """

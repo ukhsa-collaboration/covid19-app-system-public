@@ -9,7 +9,7 @@ module "local_authorities_demographic_geographic_lookup" {
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
-  account_tags             = var.account_tags
+  tags                     = var.tags
 }
 
 resource "aws_s3_bucket_object" "payload" {

@@ -1,4 +1,3 @@
-
 namespace :login do
   task :prod do
     require "highline"
@@ -9,6 +8,7 @@ namespace :login do
 
     mfa_login($configuration.aws_role, "prod")
     ENV["AWS_PROFILE"] = "nhs-auth-prod"
+    ENV["ACCOUNT"] = "prod"
   end
 
   task :staging do
@@ -16,7 +16,10 @@ namespace :login do
 
     mfa_login($configuration.aws_role, "staging")
     ENV["AWS_PROFILE"] = "nhs-auth-staging"
+    ENV["ACCOUNT"] = "staging"
   end
 
-  task :dev
+  task :dev do
+    ENV["ACCOUNT"] = "dev"
+  end
 end

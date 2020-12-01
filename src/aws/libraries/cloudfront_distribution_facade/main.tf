@@ -14,7 +14,7 @@ resource "aws_cloudfront_distribution" "this" {
   aliases         = [local.fqdn]
   price_class     = "PriceClass_100"
   web_acl_id      = var.web_acl_arn
-  tags            = {}
+  tags            = var.tags
   comment         = "Distribution APIs for ${terraform.workspace}"
 
   default_cache_behavior {
@@ -335,6 +335,7 @@ data "aws_acm_certificate" "selected" {
   provider    = aws.useast
   types       = ["AMAZON_ISSUED"]
   most_recent = true
+  tags        = var.tags
 }
 
 data "aws_route53_zone" "selected" {

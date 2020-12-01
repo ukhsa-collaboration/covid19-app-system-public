@@ -16,6 +16,37 @@
       "zh": "为了在您的设备上运行此应用程序，您需要更新设备软件。 请转到设置并从那里进行更新。"
     }
   },
+  "recommendedOSVersion": {
+    "value": "13.5",
+    "title": {
+      "ar": "يرجى تحديث نظام التشغيل لديك إلى أحدث إصدار.",
+      "bn": "অনুগ্রহ করে আপনার অপারেটিং সিস্টেম হালনাগাদ করুন",
+      "cy": "Diweddarwch eich system weithredu i'r fersiwn newydd",
+      "en": "Please update your operating system to the latest version",
+      "gu": "તમારી ઓપરેટિંગ સિસ્ટમ મહેરબાની કરીને લેટેસ્ટ અપડેટ કરો",
+      "pa": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਆਪਰੇਟਿੰਗ ਸਿਸਟਮ ਨੂੰ ਹਾਲੀਆ ਵਰਜ਼ਨ 'ਤੇ ਅਪਡੇਟ ਕਰੋ",
+      "pl": "Proszę zaktualizować system operacyjny do najnowszej wersji",
+      "ro": "Vă rugăm să vă actualizați sistemul de operare la cea mai recentă versiune",
+      "so": "Fadlan aaladadu nidaamka u ku shaqeeyo ku cusboneeysii nooca ugu dambeeyay",
+      "tr": "Lütfen işletim sisteminizi en son sürümüne güncelleyin",
+      "ur": "براہ کرم اپنے آپریٹنگ سسٹم کو تازہ ترین ورژن کے ساتھ اپ ڈیٹ کریں",
+      "zh": "请把您的操作系统升级到最新版本"
+    },
+    "description": {
+      "ar": "يوجد إصدار جديد من نظام التشغيل الذي لديك. يرجى الانتقال إلى الإعدادات وتحديث نظام التشغيل لضمان وصولك إلى أحدث الخصائص والتوجيهات.",
+      "bn": "আপনার অপারেটিং সিস্টেমের একটি নতুন সংস্করণ এখন পাওয়া যাচ্ছে। সর্বশেষ ফিচার ও নির্দেশিকায় আপনার প্রবেশাধিকার থাকা নিশ্চিত করতে, অনুগ্রহ করে সেটিংসে যান এবং সেখান থেকে এটি হালনাগাদ করুন।",
+      "cy": "Mae fersiwn newydd o'ch system weithredu ar gael. Er mwyn sicrhau eich bod yn cael y nodweddion a'r canllawiau diweddaraf, ewch i'ch gosodiadau i'w diweddaru.",
+      "en": "There is a new version of your operating system available. To make sure you have access to the latest features and guidance, please go to settings and update it from there.",
+      "gu": "તમારી ઓપરેટિંગ સિસ્ટમનું નવું વર્ઝન મળી રહે છે. તમારી પાસે સૌથી અપડેટ કરેલા લેટેસ્ટ માહિતી હોય તેની ખાતરી કરવા, કૃપા કરી સેટિંગમાં જાઓ અને ત્યાંથી તેને અપડેટ કરો.",
+      "pa": "ਤੁਹਾਡੇ ਆਪਰੇਟਿੰਗ ਸਿਸਟਮ ਦਾ ਨਵਾਂ ਸੰਸਕਰਨ ਉਪਲਬਧ ਹੈ। ਇਹ ਯਕੀਨੀ ਬਣਾਉਣ ਲਈ ਕਿ ਤੁਹਾਡੀ ਨਵੀਨਤਕ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਅਤੇ ਸੇਧ ਤੱਕ ਪਹੁੰਚ ਹੋਵੇ, ਕਿਰਪਾ ਕਰਕੇ ਸੈਟਿੰਗਜ਼ ਵਿੱਚ ਜਾਓ ਅਤੇ ਉੱਥੋਂ ਇਸ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ।",
+      "pl": "Dostępna jest nowa wersja Twojego systemu operacyjnego. Aby upewnić się, że masz dostęp do najnowszych funkcji i wskazówek, przejdź do ustawień i stamtąd zaktualizuj wersję.",
+      "ro": "O nouă versiune a sistemului dvs. de operare este disponibilă. Pentru a vă asigura că aveți acces la ultimele funcții și orientări, mergeți la Setări și actualizați-o de acolo.",
+      "so": "Nooca cusub ee nidaamka uu aaladadu ku shaqeeyo ayaa la heli karaa. Si loo hubiyo inaad marin u leedahay astaamaha ugu dambeeyay iyo hagista, fadlan tag qaybta-isku hagaajinta oo ka cusbooneysii halkaa.",
+      "tr": "İşletim sisteminizin yeni bir sürümü mevcuttur. Yeni özelliklere ve yönergeye erişiminizin olmasını temin etmek için, lütfen ayarlara gidin ve oradan güncelleyin.",
+      "ur": "آپ کے آپریٹنگ سسٹم کا ایک نیا ورژن دستیاب ہے۔ اس بات کو یقینی بنانے کے لئے کہ آپ کو جدید خصوصیات اور رہنمائی تک رسائی حاصل ہو، برائے کرم سیٹنگز میں جائیں اور وہاں سے اسے اپ ڈیٹ کریں۔",
+      "zh": "有一个新版本的操作系统供您使用。 为了确保您可以使用最新功能和指南，请转到设置并在那里进行更新。"
+    }
+  },
   "minimumAppVersion": {
     "value": "3.0.0",
     "description": {
@@ -31,6 +62,37 @@
       "tr": "Bu uygulamanın cihazınızda çalıştırılması için bunu en son sürüme yükseltmeniz gerekmektedir. Lütfen uygulama mağazasına giderek bunları oradan güncelleyin.",
       "ur": "اس ایپ کو اپنے آلہ پر چلانے کے لئے، آپ کو اسے تازہ ترین ورژن میں اپ ڈیٹ کرنے کی ضرورت ہے۔ براہ کرم ایپ اسٹور پر جائیں اور وہاں سے اسے اپ ڈیٹ کریں۔",
       "zh": "为了在您的设备上运行此应用程序，您需要将其更新到最新版本。 请转到应用商店并从那里进行更新。"
+    }
+  },
+  "recommendedAppVersion": {
+    "value": "3.0",
+    "title": {
+      "ar": "يرجى تحديث تطبيق مكافحة فيروس كورونا (كوفيد-19) المُقدَّم من هيئة الخدمات الصحية الوطنية (NHS) للحصول على أحدث نسخة من التطبيق",
+      "bn": "দয়া করে আপনার এনএইচএস কোভিড-১৯ অ্যাপটি হালনাগাদ করুন",
+      "cy": "Diweddarwch eich ap COVID-19 y GIG i'r fersiwn newydd",
+      "en": "Please update your NHS COVID-19 app to the latest version",
+      "gu": "કૃપા કરી તમારા NHS COVID-19 એપને લેટેસ્ટ વર્શન માટે અપડેટ કરો",
+      "pa": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ NHS ਕੋਵਿਡ-19 ਐਪ ਨੂੰ ਸਭ ਤੋਂ ਤਾਜ਼ਾ ਸੰਸਕਰਨ ਮੁਤਾਬਕ ਅਪਡੇਟ ਕਰੋ",
+      "pl": "Proszę zaktualizować swoją aplikację NHS COVID-19 do najnowszej wersji",
+      "ro": "Vă rugăm să vă actualizați aplicația NHS COVID-19 cu ultima versiune",
+      "so": "Fadlan ku cusbooneysii app-kaaga NHS COVID-19 nooca ugu dambeeyay",
+      "tr": "Lütfen NHS COVID-19 uygulamanızı en son sürüme güncelleyin",
+      "ur": "برائے کرم اپنی این ایچ ایس کی کوویڈ 19 ایپ کی تازہ ترین ورژن کے ساتھ تجدید کریں",
+      "zh": "请将您的NHS COVID-19应用程序更新为最新版本"
+    },
+    "description": {
+      "ar": "تتوفر الآن نسخة جديدة من هذا التطبيق. يرجى تحديث التطبيق الآن باستخدام الزرِّ أدناه لضمان الوصول إلى أحدث الخصائص والتوجيهات.",
+      "bn": "এই অ্যাপের নতুন সংস্করণ পাওয়া যাচ্ছে। সর্বশেষ ফিচার ও নির্দেশনা ব্যবহার করতে পারা নিশ্চিত করতে, নিচের বোতাম ব্যবহার করে এটি এখনই হালনাগাদ করুন।",
+      "cy": "Mae fersiwn newydd o'r ap hwn ar gael. Er mwyn sicrhau eich bod yn cael y nodweddion a'r canllawiau diweddaraf, defnyddiwch y botwm isod i gael y fersiwn newydd.",
+      "en": "There is a new version of this app available. To make sure you have access to the latest features and guidance, update it now using the button below.",
+      "gu": "આ એપનું કોઈ એક નવુ વરશન મળી રહે છે. તમારી પાસે સુગમતા- પ્રવેશ મેળવવા છેલ્લામાં છેલ્લી વિશિષ્ટતાઓ અને માર્ગદર્શનો હોય તેની ખાતરી કરવા, નીચેના બટનનો ઉપયોગ કરી હમણાંજ તેને અપડેટ કરો.",
+      "pa": "ਇਸ ਐਪ ਦਾ ਇਕ ਨਵਾਂ ਸੰਸਕਰਣ ਉਪਲਬੱਧ ਹੈ। ਇਹ ਯਕੀਨੀ ਬਣਾਉਣ ਲਈ ਕਿ ਤੁਹਾਡੀ ਨਵੀਨਤਮ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਅਤੇ ਮਾਰਗਦਰਸ਼ਨ ਤੱਕ ਪਹੁੰਚ ਹੈ, ਹੇਠਾਂ ਦਿੱਤੇ ਬਟਨ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਇਸਨੂੰ ਹੁਣ ਅਪਡੇਟ ਕਰੋ।",
+      "pl": "Dostępna jest nowa wersja tej aplikacji. Aby upewnić się, że masz dostęp do najnowszych funkcji i wskazówek, zaktualizuj ją teraz za pomocą przycisku poniżej. ",
+      "ro": "Există disponibilă o nouă versiune a acestei aplicații. Pentru a vă asigura că aveți acces la cele mai recente funcții și instrucțiuni, actualizați-o acum folosind butonul de mai jos.",
+      "so": "App-kan wuxuu leeyahay werrin cusub. Si aad u hubiso in aad ogolaansho u leedahay muuqaalada iyo hagayaasha nooca ugu dambeeyay, soo cusbooneysii hadda adigoo isticmaalaya badhanka hoose.",
+      "tr": "Bu uygulamanın yeni bir sürümü mevcuttur. En son özelliklere ve yönergelere eriştiğinizden emin olmak için uygulamayı aşağıdaki düğmeyi kullanarak şimdi güncelleyin.",
+      "ur": "اس ایپ کا ایک نیا ورژن دستیاب ہے۔ اس بات کو یقینی بنانے کے لئے کہ آپ کو جدید ترین خصوصیات اور رہنمائی تک رسائی حاصل ہے، نیچے دیئے گئے بٹن کا استعمال کرکے اسے ابھی اپ ڈیٹ کریں۔",
+      "zh": "此应用程序有新版本可用。为了确保您可以访问最新功能和指南，请立即使用下面的按钮对其进行更新。"
     }
   }
 }

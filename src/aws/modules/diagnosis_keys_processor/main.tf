@@ -5,6 +5,7 @@ locals {
 module "processor_role" {
   source = "../../libraries/iam_processing_lambda"
   name   = local.identifier_prefix
+  tags   = var.tags
 }
 
 module "processing_lambda" {
@@ -33,10 +34,12 @@ module "processing_lambda" {
 
   }
   app_alarms_topic = var.alarm_topic_arn
+  tags             = var.tags
 }
 
 resource "aws_cloudwatch_event_rule" "every_two_hours" {
-  name                = "${local.identifier_prefix}-every-two-hours"
+  name = "${local.identifier_prefix}-every-two-hours"
+
   schedule_expression = "cron(47 1,3,5,7,9,11,13,15,17,19,21,23 * * ? *)"
 }
 
@@ -50,6 +53,11 @@ resource "aws_lambda_permission" "cloudwatch_invoke_lambda_permission" {
   function_name = module.processing_lambda.lambda_function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.every_two_hours.arn
+}
+
+resource "aws_lambda_function_event_invoke_config" "lambda_function_config" {
+  function_name          = module.processing_lambda.lambda_function_name
+  maximum_retry_attempts = 0
 }
 
 resource "aws_cloudwatch_metric_alarm" "duration" {

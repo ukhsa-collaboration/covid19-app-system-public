@@ -3,8 +3,9 @@ package smoke.env
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class EnvConfig(
-    @JsonProperty("analytics_processing_function") val analytics_processing_function: String,
-    @JsonProperty("analytics_processing_output_store") val analytics_processing_output_store: String,
+    @JsonProperty("analytics_events_submission_endpoint") val analyticsEventsSubmissionEndpoint: String,
+    @JsonProperty("analytics_events_submission_function_name") val analyticsEventsSubmissionFunctionName: String,
+    @JsonProperty("analytics_events_submission_store") val analyticsEventsSubmissionStore: String,
     @JsonProperty("analytics_submission_endpoint") val analyticsSubmissionEndpoint: String,
     @JsonProperty("analytics_submission_health_endpoint") val analyticsSubmissionHealthEndpoint: String,
     @JsonProperty("analytics_submission_store") val analytics_submission_store: String,
@@ -14,10 +15,8 @@ data class EnvConfig(
     @JsonProperty("availability_ios_distribution_store") val availability_ios_distribution_store: String,
     @JsonProperty("base_distribution_endpoint") val base_distribution_endpoint: String,
     @JsonProperty("base_download_endpoint") val baseDownloadEndpoint: String,
-    @JsonProperty("conpan_endpoint") val conpan_endpoint: String,
-    @JsonProperty("conpan_store") val conpan_store: String,
     @JsonProperty("diagnosis_keys_distribution_2hourly_endpoint") val diagnosisKeysDist2hourlyEndpoint: String,
-    @JsonProperty("diagnosis_keys_distribution_daily_endpoint") val diagnosis_keys_distribution_daily_endpoint: String,
+    @JsonProperty("diagnosis_keys_distribution_daily_endpoint") val diagnosisKeysDistributionDailyEndpoint: String,
     @JsonProperty("diagnosis_keys_distribution_store") val diagnosis_keys_distribution_store: String,
     @JsonProperty("diagnosis_keys_processing_function") val diagnosisKeysProcessingFunction: String,
     @JsonProperty("diagnosis_keys_submission_endpoint") val diagnosisKeysSubmissionEndpoint: String,
@@ -27,7 +26,16 @@ data class EnvConfig(
     @JsonProperty("exposure_configuration_distribution_store") val exposure_configuration_distribution_store: String,
     @JsonProperty("exposure_notification_circuit_breaker_endpoint") val exposureNotificationCircuitBreakerEndpoint: String,
     @JsonProperty("exposure_notification_circuit_breaker_health_endpoint") val enCircuitBreakerHealthEndpoint: String,
-    @JsonProperty("federated_keys_processing_function") val federatedKeysProcessingFunction: String,
+    @JsonProperty("federation_keys_processing_upload_function") val federationKeysProcessingUploadFunction: String,
+    @JsonProperty("federation_keys_processing_download_function") val federationKeysProcessingDownloadFunction: String,
+    @JsonProperty("isolation_payment_consume_lambda_function_name") val isolationPaymentConsumeLambdaFunctionName: String,
+    @JsonProperty("isolation_payment_create_endpoint") val isolationPaymentCreateEndpoint: String,
+    @JsonProperty("isolation_payment_gateway_role") val isolationPaymentGatewayRole: String,
+    @JsonProperty("isolation_payment_health_endpoint") val isolationPaymentHealthEndpoint: String,
+    @JsonProperty("isolation_payment_order_lambda_function_name") val isolationPaymentOrderLambdaFunctionName: String,
+    @JsonProperty("isolation_payment_tokens_table") val isolationPaymentTokensTable: String,
+    @JsonProperty("isolation_payment_update_endpoint") val isolationPaymentUpdateEndpoint: String,
+    @JsonProperty("isolation_payment_verify_lambda_function_name") val isolationPaymentVerifyLambdaFunctionName: String,
     @JsonProperty("post_districts_distribution_endpoint") val postDistrictsDistUrl: String,
     @JsonProperty("post_districts_distribution_store") val post_districts_distribution_store: String,
     @JsonProperty("risky_post_districts_upload_endpoint") val riskyPostDistrictsUploadEndpoint: String,
@@ -45,8 +53,9 @@ data class EnvConfig(
     @JsonProperty("symptomatic_questionnaire_distribution_endpoint") val symptomaticQuestionnaireDistUrl: String,
     @JsonProperty("symptomatic_questionnaire_distribution_store") val symptomatic_questionnaire_distribution_store: String,
     @JsonProperty("test_results_health_endpoint") val testResultsHealthEndpoint: String,
-    @JsonProperty("test_results_eng_tokengen_upload_endpoint") val test_results_eng_tokengen_upload_endpoint: String,
-    @JsonProperty("test_results_wls_tokengen_upload_endpoint") val test_results_wls_tokengen_upload_endpoint: String,
+    @JsonProperty("test_results_eng_tokengen_upload_endpoint") val engTokenGenUploadEndpoint: String,
+    @JsonProperty("test_results_wls_tokengen_upload_endpoint") val wlsTokenGenUploadEndpoint: String,
+    @JsonProperty("test_results_lfd_tokengen_upload_endpoint") val lfdTokenGenUploadEndpoint: String,
     @JsonProperty("test_results_npex_upload_endpoint") val test_results_npex_upload_endpoint: String,
     @JsonProperty("test_results_fiorano_upload_endpoint") val test_results_fiorano_upload_endpoint: String,
     @JsonProperty("virology_kit_endpoint") val virologyKitEndpoint: String,
@@ -58,7 +67,8 @@ data class EnvConfig(
     @JsonProperty("virology_tokens_processing_function") val virologyTokensProcessingFunction: String,
     @JsonProperty("virology_tokens_processing_output_store") val virology_tokens_processing_output_store: String,
     @JsonProperty("virology_upload_lambda_function_name") val virologyUploadLambdaFunctionName: String,
-    @JsonProperty("auth_headers") val authHeaders: AuthHeaders
+    @JsonProperty("auth_headers") val authHeaders: AuthHeaders,
+    @JsonProperty("empty_submission_endpoint") val emptySubmissionEndpoint: String
 )
 
 data class AuthHeaders(

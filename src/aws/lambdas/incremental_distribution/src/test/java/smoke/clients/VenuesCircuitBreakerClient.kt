@@ -7,9 +7,8 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Status
 import smoke.env.EnvConfig
-import uk.nhs.nhsx.circuitbreakers.RiskyVenueCircuitBreakerRequest
+import uk.nhs.nhsx.circuitbreakers.ResolutionResponse
 import uk.nhs.nhsx.circuitbreakers.TokenResponse
-import uk.nhs.nhsx.core.Jackson
 
 class VenuesCircuitBreakerClient(private val client: JavaHttpClient,
                                  private val config: EnvConfig) {
@@ -20,7 +19,7 @@ class VenuesCircuitBreakerClient(private val client: JavaHttpClient,
         fun baseUrlFrom(config: EnvConfig) = config.riskyVenuesCircuitBreakerEndpoint
     }
 
-    fun requestCircuitBreaker(circuitBreakerRequest: RiskyVenueCircuitBreakerRequest): TokenResponse {
+    fun requestCircuitBreaker(): TokenResponse {
         logger.info("requestCircuitBreaker")
 
         val uri = "${config.riskyVenuesCircuitBreakerEndpoint}/request"
@@ -28,7 +27,21 @@ class VenuesCircuitBreakerClient(private val client: JavaHttpClient,
         val request = Request(Method.POST, uri)
             .header("Authorization", config.authHeaders.mobile)
             .header("Content-Type", ContentType.APPLICATION_JSON.value)
-            .body(Jackson.toJson(circuitBreakerRequest))
+
+        return client(request)
+            .requireStatusCode(Status.OK)
+            .requireSignatureHeaders()
+            .deserializeOrThrow()
+    }
+
+    fun resolutionCircuitBreaker(tokenResponse: TokenResponse): ResolutionResponse {
+        logger.info("resolutionCircuitBreaker")
+
+        val uri = "${config.riskyVenuesCircuitBreakerEndpoint}/resolution/${tokenResponse.approvalToken}"
+
+        val request = Request(Method.GET, uri)
+            .header("Authorization", config.authHeaders.mobile)
+            .header("Content-Type", ContentType.APPLICATION_JSON.value)
 
         return client(request)
             .requireStatusCode(Status.OK)

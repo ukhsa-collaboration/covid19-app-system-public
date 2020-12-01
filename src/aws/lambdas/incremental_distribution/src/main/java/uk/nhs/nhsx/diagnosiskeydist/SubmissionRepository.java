@@ -9,9 +9,17 @@ import java.util.List;
 
 public interface SubmissionRepository {
 
-    List<Submission> loadAllSubmissions() throws Exception;
+    default List<Submission> loadAllSubmissions() throws Exception {
+        return loadAllSubmissions(0);
+    }
 
-    default StoredTemporaryExposureKeyPayload getTemporaryExposureKeys(InputStream jsonInputStream) throws IOException {
+    default List<Submission> loadAllSubmissions(long minimalSubmissionTimeEpocMillisExclusive) throws Exception {
+        return loadAllSubmissions(minimalSubmissionTimeEpocMillisExclusive, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    }
+
+    List<Submission> loadAllSubmissions(long minimalSubmissionTimeEpocMillisExclusive, int limit, int maxResults) throws Exception;
+
+    static StoredTemporaryExposureKeyPayload getTemporaryExposureKeys(InputStream jsonInputStream) throws IOException {
         return Jackson.readJson(jsonInputStream, StoredTemporaryExposureKeyPayload.class);
     }
 }

@@ -6,14 +6,12 @@ API group: [Submission](../guidebook.md#system-apis-and-interfaces)
   - FQDN: Hostname can be different per API
 - Authorization: ```Authorization: Bearer <API KEY>```
   - One API KEY for all mobile phone-facing APIs
-- Extensibility: new Key-Value Pairs can be added to the request without breaking the API contract
+- Extensibility: new Key-Value Pairs can be added to the request without breaking request processing
 
 ## Scenario
+
 Mobile clients collect and send app analytics periodically (roughly once per 24h) to the backend.
  
-The request payload is received by the analytics submission aws lambda, which in turn is responsible for validating it 
-and publishing it into an s3 bucket with a unique enough name (`<unixtimestamp>_<uuid>`). 
-
 ## Mobile Payload Example
 
 ### iOS Payload Example
@@ -23,7 +21,8 @@ and publishing it into an s3 bucket with a unique enough name (`<unixtimestamp>_
     "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
     "latestApplicationVersion" : "3.0",
     "deviceModel" : "iPhone11,2",
-    "postalDistrict" : "A1"
+    "postalDistrict" : "A1",
+    "localAuthority" : "E09000012"
   },
   "analyticsWindow" : {
     "endDate" : "2020-07-28T22:59:00Z",
@@ -49,7 +48,18 @@ and publishing it into an s3 bucket with a unique enough name (`<unixtimestamp>_
     "completedQuestionnaireButDidNotStartIsolation" : 1,
     "totalBackgroundTasks" : 1,
     "runningNormallyBackgroundTick" : 1,
-    "completedOnboarding" : 1
+    "completedOnboarding" : 1,
+    "receivedVoidTestResultEnteredManually" : 1,
+    "receivedPositiveTestResultEnteredManually" : 1,
+    "receivedNegativeTestResultEnteredManually" : 1,
+    "receivedVoidTestResultViaPolling" : 1,
+    "receivedPositiveTestResultViaPolling" : 1,
+    "receivedNegativeTestResultViaPolling" : 1,
+    "hasSelfDiagnosedBackgroundTick": 1,
+    "hasTestedPositiveBackgroundTick": 1,
+    "isIsolatingForSelfDiagnosedBackgroundTick": 1,
+    "isIsolatingForTestedPositiveBackgroundTick": 1,
+    "isIsolatingForHadRiskyContactBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -62,7 +72,8 @@ and publishing it into an s3 bucket with a unique enough name (`<unixtimestamp>_
     "operatingSystemVersion" : "29",
     "latestApplicationVersion" : "3.0",
     "deviceModel" : "HUAWEI LDN-L21",
-    "postalDistrict" : "A1"
+    "postalDistrict" : "A1",
+    "localAuthority" : "E09000012"
   },
   "analyticsWindow" : {
     "endDate" : "2020-07-28T22:59:00Z",
@@ -84,16 +95,43 @@ and publishing it into an s3 bucket with a unique enough name (`<unixtimestamp>_
     "completedQuestionnaireButDidNotStartIsolation" : 1,
     "totalBackgroundTasks" : 1,
     "runningNormallyBackgroundTick" : 1,
-    "completedOnboarding" : 1
+    "completedOnboarding" : 1,
+    "receivedVoidTestResultEnteredManually" : 1,
+    "receivedPositiveTestResultEnteredManually" : 1,
+    "receivedNegativeTestResultEnteredManually" : 1,
+    "receivedVoidTestResultViaPolling" : 1,
+    "receivedPositiveTestResultViaPolling" : 1,
+    "receivedNegativeTestResultViaPolling" : 1,
+    "hasSelfDiagnosedBackgroundTick": 1,
+    "hasTestedPositiveBackgroundTick": 1,
+    "isIsolatingForSelfDiagnosedBackgroundTick": 1,
+    "isIsolatingForTestedPositiveBackgroundTick": 1,
+    "isIsolatingForHadRiskyContactBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
 ```
+
 #### Validation
 * date & time in ISO-8601 YYYY-MM-DD'T'hh:mm:ssZ format
-* Numeric values must not be null, except for the cumulativeDownloadBytes and cumulativeUploadBytes fields from android devices
-* Boolean values must not be null
-* Nullable values: `cumulativeDownloadBytes`, `cumulativeUploadBytes`
+* Apart from the exception list below, all fields are mandatory and must not be null
+* Optional metadata:
+  * `localAuthority`
+* Nullable values:
+  * `cumulativeDownloadBytes`
+  * `cumulativeUploadBytes`
+* Optional values:
+  * `receivedVoidTestResultEnteredManually`
+  * `receivedPositiveTestResultEnteredManually`
+  * `receivedNegativeTestResultEnteredManually`
+  * `receivedVoidTestResultViaPolling`
+  * `receivedPositiveTestResultViaPolling`
+  * `receivedNegativeTestResultViaPolling`
+  * `hasSelfDiagnosedBackgroundTick`
+  * `hasTestedPositiveBackgroundTick`
+  * `isIsolatingForSelfDiagnosedBackgroundTick`
+  * `isIsolatingForTestedPositiveBackgroundTick`
+  * `isIsolatingForHadRiskyContactBackgroundTick`
 
 ### Responses
 | Status Code | Description |

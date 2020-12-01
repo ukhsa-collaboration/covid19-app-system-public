@@ -43,13 +43,11 @@ public class AwsS3Client implements AwsS3 {
 
     @Override
     public List<S3ObjectSummary> getObjectSummaries(String bucketName) {
-        List<S3ObjectSummary> objectSummaries = new ArrayList<>();
-
         ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request();
         listObjectsV2Request.setBucketName(bucketName);
 
         ListObjectsV2Result result = client.get().listObjectsV2(listObjectsV2Request);
-        objectSummaries.addAll(result.getObjectSummaries());
+        List<S3ObjectSummary> objectSummaries = new ArrayList<>(result.getObjectSummaries());
 
         while (result.isTruncated()) {
             String token = result.getNextContinuationToken();

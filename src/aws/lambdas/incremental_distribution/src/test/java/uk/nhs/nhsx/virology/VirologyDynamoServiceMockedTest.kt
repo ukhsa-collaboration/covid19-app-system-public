@@ -1,21 +1,31 @@
 package uk.nhs.nhsx.virology
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
-import com.amazonaws.services.dynamodbv2.model.*
+import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.amazonaws.services.dynamodbv2.model.CancellationReason
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest
+import com.amazonaws.services.dynamodbv2.model.GetItemResult
+import com.amazonaws.services.dynamodbv2.model.QueryResult
+import com.amazonaws.services.dynamodbv2.model.TransactWriteItemsRequest
+import com.amazonaws.services.dynamodbv2.model.TransactionCanceledException
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions
 import uk.nhs.nhsx.virology.order.TokensGenerator
-import uk.nhs.nhsx.virology.persistence.*
+import uk.nhs.nhsx.virology.persistence.TestOrder
+import uk.nhs.nhsx.virology.persistence.TestResult
+import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
+import uk.nhs.nhsx.virology.persistence.VirologyDynamoService
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyResultRequest
-import java.util.*
+import java.util.LinkedHashMap
 
 class VirologyDynamoServiceMockedTest {
 
@@ -191,11 +201,11 @@ class VirologyDynamoServiceMockedTest {
     @Test
     fun `cta exchange updates ttl and counter for positive test result`() {
         val testOrder = TokensGenerator().generateVirologyTokens()
-        val queryResultItems = queryResult(testOrder)
-        val queryResult = mockk<QueryResult> {
-            every { items } returns queryResultItems
+        val queryResultItem = HashMap<String, AttributeValue>()
+        val queryResult = mockk<GetItemResult> {
+            every { item } returns queryResultItem
         }
-        every { dynamoDbClient.query(any()) } returns queryResult
+        every { dynamoDbClient.getItem(any(), any())} returns queryResult
 
         val slot = slot<TransactWriteItemsRequest>()
         every { dynamoDbClient.transactWriteItems(capture(slot)) } returns mockk()
@@ -223,6 +233,38 @@ class VirologyDynamoServiceMockedTest {
         val submissionUpdate = transactItems[2].update
         assertThat(submissionUpdate.tableName).isEqualTo("submissionTokensTableName")
         assertThat(submissionUpdate.expressionAttributeValues).isEqualTo(expireAtWithTtl(10))
+    }
+
+    @Test
+    fun `cta exchange updates ttl and counter for positive test result with missing submission token`() {
+        val testOrder = TokensGenerator().generateVirologyTokens()
+        val queryResult = mockk<GetItemResult> {
+            every { item } returns null
+        }
+        every { dynamoDbClient.getItem(any(), any())} returns queryResult
+
+        val slot = slot<TransactWriteItemsRequest>()
+        every { dynamoDbClient.transactWriteItems(capture(slot)) } returns mockk()
+
+        val testResult = TestResult("some-token", "", "POSITIVE", "available")
+
+        service.updateOnCtaExchange(testOrder, testResult, VirologyDataTimeToLive(1, 10))
+
+        verify(exactly = 1) {
+            dynamoDbClient.transactWriteItems(any())
+        }
+
+        val transactItems = slot.captured.transactItems
+        assertThat(transactItems).hasSize(2)
+
+        val testOrderUpdate = transactItems[0].update
+        assertThat(testOrderUpdate.tableName).isEqualTo("testOrdersTableName")
+        assertThat(testOrderUpdate.expressionAttributeValues)
+            .isEqualTo(expireAtWithTtl(1).apply { put(":dc", numericAttribute(1)) })
+
+        val testResultUpdate = transactItems[1].update
+        assertThat(testResultUpdate.tableName).isEqualTo("testResultsTableName")
+        assertThat(testResultUpdate.expressionAttributeValues).isEqualTo(expireAtWithTtl(1))
     }
 
     @Test

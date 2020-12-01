@@ -15,3 +15,8 @@ variable "force_destroy_s3_buckets" {
   type        = bool
   default     = true
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

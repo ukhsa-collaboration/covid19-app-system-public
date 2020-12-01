@@ -24,10 +24,6 @@ variable "analytics_submission_function" {
   description = "name of lambda function"
 }
 
-variable "analytics_processing_function" {
-  description = "name of lambda function"
-}
-
 variable "diagnosis_keys_submission_function" {
   description = "name of lambda function"
 }
@@ -40,7 +36,11 @@ variable "diagnosis_keys_processing_function" {
   description = "name of lambda function"
 }
 
-variable "federation_keys_processing_function" {
+variable "federation_keys_processing_upload_function" {
+  description = "name of lambda function"
+}
+
+variable "federation_keys_processing_download_function" {
   description = "name of lambda function"
 }
 
@@ -89,4 +89,9 @@ variable "shield_alarm_set_topic_arn" {
 variable "shield_alarm_ok_topic_arn" {
   description = "ARN of SNS topic subscribed to shield alarms OK state"
   type        = string
+}
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
 }

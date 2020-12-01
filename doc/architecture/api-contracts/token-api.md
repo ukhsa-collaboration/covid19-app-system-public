@@ -13,6 +13,7 @@ The key difference is that the Test Lab API expects a ctaToken as input (generat
 
 - System (England) posts a json test result: ```POST https://<FQDN>/upload/virology-test/eng-result-tokengen```
 - System (Wales) posts a json test result: ```POST https://<FQDN>/upload/virology-test/wls-result-tokengen```
+- System (Self Administered Lateral Flow Device) posts a json test result: ```POST https://<FQDN>/upload/virology-test/lfd-result-tokengen```
 
 ### Response Codes
   - `HTTP 200` ok
@@ -43,6 +44,23 @@ Response body
 ### System (Wales): test result upload AND ctaToken generation
 
 ```POST https://<FQDN>/upload/virology-test/wls-result-tokengen```
+```json
+{
+    "testEndDate": "2020-05-23T00:00:00Z",
+    "testResult": "POSITIVE"
+}
+```
+
+Response body
+``` json
+{
+  "ctaToken": "1234abcd"
+}
+```
+
+### System (Self Administered Lateral Flow Device): test result upload AND ctaToken generation
+
+```POST https://<FQDN>/upload/virology-test/lfd-result-tokengen```
 ```json
 {
     "testEndDate": "2020-05-23T00:00:00Z",

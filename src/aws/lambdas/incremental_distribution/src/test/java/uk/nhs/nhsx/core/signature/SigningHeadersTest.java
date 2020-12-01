@@ -5,7 +5,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.hamcrest.collection.IsArrayWithSize;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.core.aws.s3.MetaHeader;
 
 import java.time.Instant;
@@ -18,16 +18,16 @@ public class SigningHeadersTest {
     public void toHeaders() throws Exception {
 
         MetaHeader[] headers = SigningHeaders.fromDatedSignature(
-            new DatedSignature(
-                new DatedSignature.SignatureDate(
-                    "somedate", Instant.EPOCH
-                ),
-                new Signature(
-                    KeyId.of("some-key"),
-                    SigningAlgorithmSpec.ECDSA_SHA_256,
-                    new byte[]{48, 49, 50}
+                new DatedSignature(
+                        new DatedSignature.SignatureDate(
+                                "somedate", Instant.EPOCH
+                        ),
+                        new Signature(
+                                KeyId.of("some-key"),
+                                SigningAlgorithmSpec.ECDSA_SHA_256,
+                                new byte[]{48, 49, 50}
+                        )
                 )
-            )
         );
 
         assertThat(headers, matchesMeta(KeyId.of("some-key"), "MDEy", "somedate"));

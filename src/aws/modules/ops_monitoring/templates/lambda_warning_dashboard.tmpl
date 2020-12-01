@@ -10,7 +10,7 @@
             "metrics": [
               [ "WarningLogCount", "${advanced_analytics_function}-warnings" ],
               [ ".", "${analytics_submission_function}-warnings" ],
-              [ ".", "${analytics_processing_function}-warnings" ],
+
               [ ".", "${diagnosis_keys_submission_function}-warnings" ],
               [ ".", "${exposure_notification_circuit_breaker_function}-warnings" ],
               [ ".", "${diagnosis_keys_processing_function}-warnings" ],
@@ -41,7 +41,7 @@
                 "metrics": [
                   [ "WarningLogCount", "${advanced_analytics_function}-warnings" ],
                   [ ".", "${analytics_submission_function}-warnings" ],
-                  [ ".", "${analytics_processing_function}-warnings" ],
+
                   [ ".", "${diagnosis_keys_submission_function}-warnings" ],
                   [ ".", "${exposure_notification_circuit_breaker_function}-warnings" ],
                   [ ".", "${diagnosis_keys_processing_function}-warnings" ],
@@ -189,24 +189,7 @@
                 "stat": "Sum"
               }
             },
-            {
-              "type": "metric",
-              "x": 12,
-              "y": 27,
-              "width": 12,
-              "height": 6,
-              "properties": {
-                "metrics": [
-                  [ "WarningLogCount", "${analytics_processing_function}-warnings" ]
-                ],
-                "view": "timeSeries",
-                "stacked": false,
-                "region": "eu-west-2",
-                "period": 60,
-                "title": "Analytics Processor",
-                "stat": "Sum"
-              }
-            },
+
             {
               "type": "metric",
               "x": 0,

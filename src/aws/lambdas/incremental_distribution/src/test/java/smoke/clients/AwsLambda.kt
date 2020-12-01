@@ -22,7 +22,7 @@ object AwsLambda {
         return awsLambdaClient.updateFunctionConfiguration(updateRequest)
     }
 
-    fun readLambdaEnvVar(functionName: String, envVar: String): String{
+    fun readLambdaEnvVar(functionName: String, envVar: String): String {
         val awsLambdaClient = AWSLambdaClientBuilder.standard().build()
 
         val configurationResponse = awsLambdaClient.getFunctionConfiguration(
@@ -32,10 +32,14 @@ object AwsLambda {
         return configurationResponse.environment.variables[envVar]!!
     }
 
-    fun invokeFunction(functionName: String): InvokeResult {
+    fun invokeFunction(functionName: String, payload: String? = null): InvokeResult {
         val awsLambdaClient = AWSLambdaClientBuilder.standard().build()
         val invokeRequest = InvokeRequest().withFunctionName(functionName)
-        return awsLambdaClient.invoke(invokeRequest)
+        return if (payload == null) {
+            awsLambdaClient.invoke(invokeRequest)
+        } else {
+            awsLambdaClient.invoke(invokeRequest.withPayload(payload))
+        }
     }
 
     fun enableMaintenanceMode(lambdaFunctionName: String) {
@@ -48,13 +52,49 @@ object AwsLambda {
 
     private fun setMaintenanceMode(lambdaFunctionName: String, value: Boolean) {
         val envVarName = "MAINTENANCE_MODE"
-        val result = AwsLambda.updateLambdaEnvVar(
+        val result = updateLambdaEnvVar(
             lambdaFunctionName,
             envVarName to "$value"
         )
         val updatedEnvVar = result.environment.variables[envVarName]
         if (updatedEnvVar != "$value")
             throw IllegalStateException("Expected env var: $envVarName to be updated but it was not.")
+    }
+
+    private fun setTokenCreationEnabled(lambdaFunctionName: String, value: Boolean) {
+        val envVarName = "TOKEN_CREATION_ENABLED"
+        val result = updateLambdaEnvVar(
+            lambdaFunctionName,
+            envVarName to "$value"
+        )
+        val updatedEnvVar = result.environment.variables[envVarName]
+        if (updatedEnvVar != "$value")
+            throw IllegalStateException("Expected env var: $envVarName to be updated but it was not.")
+    }
+
+    fun getTokenCreationEnabled(lambdaFunctionName: String): Boolean {
+        val envVarName = "TOKEN_CREATION_ENABLED"
+        return readLambdaEnvVar(
+            lambdaFunctionName,
+            envVarName
+        ).toBoolean()
+    }
+
+    fun flipTokenCreationEnabled(lambdaFunctionName: String) {
+        if (getTokenCreationEnabled(lambdaFunctionName)) {
+            disableTokenCreationEnabled(lambdaFunctionName)
+        } else {
+            enableTokenCreationEnabled(lambdaFunctionName)
+
+        }
+    }
+
+    fun enableTokenCreationEnabled(lambdaFunctionName: String) {
+        setTokenCreationEnabled(lambdaFunctionName, true)
+    }
+
+    fun disableTokenCreationEnabled(lambdaFunctionName: String) {
+        setTokenCreationEnabled(lambdaFunctionName, false)
     }
 
 }

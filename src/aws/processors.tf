@@ -1,17 +1,3 @@
-module "analytics_processing" {
-  source                   = "./modules/analytics_processor"
-  name                     = "analytics_processor"
-  input_store              = module.analytics_submission_store_parquet.bucket_name
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_handler_class     = "uk.nhs.nhsx.controlpanel.Handler"
-  logs_bucket_id           = var.logs_bucket_id
-  database_name            = aws_glue_catalog_database.mobile_analytics.name
-  table_name               = aws_glue_catalog_table.mobile_analytics.name
-  force_destroy_s3_buckets = var.force_destroy_s3_buckets
-  alarm_topic_arn          = var.alarm_topic_arn
-}
-
 module "diagnosis_keys_processing" {
   source                            = "./modules/diagnosis_keys_processor"
   submission_bucket_name            = module.diagnosis_keys_submission.store
@@ -23,26 +9,52 @@ module "diagnosis_keys_processing" {
   lambda_repository_bucket          = module.artifact_repository.bucket_name
   lambda_object_key                 = module.artifact_repository.lambda_object_key
   alarm_topic_arn                   = var.alarm_topic_arn
-  diagnosis_key_submission_prefixes = ""
+  diagnosis_key_submission_prefixes = "nearform/JE,nearform/GB-SCT,nearform/GB-NIR,nearform/GI"
+  tags                              = var.tags
 }
 
 module "federation_keys_processing" {
-  source                   = "./modules/federation_keys_processor"
-  submission_bucket_name   = module.diagnosis_keys_submission.store
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  interop_base_url         = var.interop_base_url
-  alarm_topic_arn          = var.alarm_topic_arn
+  source                              = "./modules/federation_keys_processor"
+  submission_bucket_name              = module.diagnosis_keys_submission.store
+  lambda_repository_bucket            = module.artifact_repository.bucket_name
+  lambda_object_key                   = module.artifact_repository.lambda_object_key
+  interop_base_url                    = var.interop_base_url
+  interop_download_enabled_workspaces = var.interop_download_enabled_workspaces
+  interop_upload_enabled_workspaces   = var.interop_upload_enabled_workspaces
+  alarm_topic_arn                     = var.alarm_topic_arn
+  tags                                = var.tags
 }
 
-module "advanced_analytics" {
-  source                     = "./modules/advanced_analytics"
-  name                       = "advanced-analytics"
-  lambda_handler             = "handler.handler"
-  lambda_timeout             = 500
-  analytics_submission_store = module.analytics_submission_store_parquet.bucket_name
-  aae_hostname               = var.aae_hostname
-  alarm_topic_arn            = var.alarm_topic_arn
+module "advanced_analytics_export" {
+  name                          = "aae-mobile-analytics-parquet-export"
+  source                        = "./modules/advanced_analytics_export"
+  lambda_repository_bucket      = module.artifact_repository.bucket_name
+  lambda_object_key             = module.artifact_repository.lambda_object_key
+  alarm_topic_arn               = var.alarm_topic_arn
+  tags                          = var.tags
+  analytics_submission_store    = module.analytics_submission_store_parquet.bucket_name
+  enabled_workspaces            = var.aae_mobile_analytics_enabled_workspaces
+  aae_url_prefix                = var.aae_mobile_analytics_url_prefix
+  aae_url_suffix                = var.aae_mobile_analytics_url_suffix
+  p12_cert_secret_name          = var.aae_mobile_analytics_p12_cert_secret_name
+  p12_cert_password_secret_name = var.aae_mobile_analytics_p12_cert_password_secret_name
+  aae_subscription_secret_name  = var.aae_mobile_analytics_subscription_secret_name
+}
+
+module "advanced_analytics_events_export" {
+  name                          = "aae-mobile-analytics-events-json-export"
+  source                        = "./modules/advanced_analytics_export"
+  lambda_repository_bucket      = module.artifact_repository.bucket_name
+  lambda_object_key             = module.artifact_repository.lambda_object_key
+  alarm_topic_arn               = var.alarm_topic_arn
+  tags                          = var.tags
+  analytics_submission_store    = module.analytics_events_submission.store
+  enabled_workspaces            = var.aae_mobile_analytics_events_enabled_workspaces
+  aae_url_prefix                = var.aae_mobile_analytics_events_url_prefix
+  aae_url_suffix                = var.aae_mobile_analytics_events_url_suffix
+  p12_cert_secret_name          = var.aae_mobile_analytics_events_p12_cert_secret_name
+  p12_cert_password_secret_name = var.aae_mobile_analytics_events_p12_cert_password_secret_name
+  aae_subscription_secret_name  = var.aae_mobile_analytics_events_subscription_secret_name
 }
 
 module "virology_tokens_processing" {
@@ -55,22 +67,43 @@ module "virology_tokens_processing" {
   test_orders_index                   = module.virology_upload.test_orders_index_name
   logs_bucket_id                      = var.logs_bucket_id
   alarm_topic_arn                     = var.alarm_topic_arn
+  tags                                = var.tags
 }
 
-output "analytics_processing_function" {
-  value = module.analytics_processing.function
+output "aae_events_export_function_name" {
+  value = module.advanced_analytics_events_export.lambda_function_name
 }
 
-output "analytics_processing_output_store" {
-  value = module.analytics_processing.output_store
+output "aae_events_export_function_arn" {
+  value = module.advanced_analytics_events_export.lambda_function_arn
+}
+
+output "aae_events_export_event_source_arn" {
+  value = module.advanced_analytics_events_export.event_source_arn
+}
+
+output "aae_export_function_name" {
+  value = module.advanced_analytics_export.lambda_function_name
+}
+
+output "aae_export_function_arn" {
+  value = module.advanced_analytics_export.lambda_function_arn
+}
+
+output "aae_export_event_source_arn" {
+  value = module.advanced_analytics_export.event_source_arn
 }
 
 output "diagnosis_keys_processing_function" {
   value = module.diagnosis_keys_processing.function
 }
 
-output "federated_keys_processing_function" {
-  value = module.federation_keys_processing.function
+output "federation_keys_processing_upload_function" {
+  value = module.federation_keys_processing.upload_lambda_function
+}
+
+output "federation_keys_processing_download_function" {
+  value = module.federation_keys_processing.download_lambda_function
 }
 
 output "virology_tokens_processing_function" {

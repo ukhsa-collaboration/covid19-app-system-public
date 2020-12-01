@@ -18,6 +18,26 @@ module "analytics_submission" {
   force_destroy_s3_buckets          = var.force_destroy_s3_buckets
   alarm_topic_arn                   = var.alarm_topic_arn
   provisioned_concurrent_executions = var.analytics_submission_scale_down_provisioned_concurrent_executions
+  tags                              = var.tags
+}
+
+module "analytics_events_submission" {
+  source                   = "./modules/submission"
+  name                     = "analytics-events"
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  lambda_handler_class     = "uk.nhs.nhsx.analyticsevents.Handler"
+  lambda_environment_variables = {
+    SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
+    ACCEPT_REQUESTS_ENABLED   = true
+    custom_oai                = random_uuid.submission-custom-oai.result
+  }
+  burst_limit              = var.burst_limit
+  rate_limit               = var.rate_limit
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  alarm_topic_arn          = var.alarm_topic_arn
+  tags                     = var.tags
 }
 
 resource "aws_appautoscaling_target" "analytics_submission" {
@@ -63,6 +83,7 @@ module "analytics_submission_store_parquet" {
   service                  = "submission-parquet"
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  tags                     = var.tags
 }
 
 ############################
@@ -211,11 +232,57 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "includesMultipleApplicationVersions"
       type = "boolean"
     }
+    columns {
+      name = "receivedVoidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "hasSelfDiagnosedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForSelfDiagnosedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForHadRiskyContactBackgroundTick"
+      type = "int"
+    }
   }
 }
 
 resource "aws_iam_role" "firehose_role" {
   name = "${terraform.workspace}-firehose-analytics"
+
+  tags = var.tags
 
   assume_role_policy = <<EOF
 {
@@ -248,10 +315,12 @@ resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
   name        = "${terraform.workspace}-analytics"
   destination = "extended_s3"
 
+  tags = var.tags
+
   extended_s3_configuration {
     role_arn        = aws_iam_role.firehose_role.arn
     bucket_arn      = module.analytics_submission_store_parquet.bucket_arn
-    buffer_interval = 60
+    buffer_interval = 600
     buffer_size     = 64
 
     data_format_conversion_configuration {
@@ -295,6 +364,28 @@ module "diagnosis_keys_submission" {
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   alarm_topic_arn          = var.alarm_topic_arn
   replication_enabled      = var.submission_replication_enabled
+  lifecycle_rule_enabled   = true
+  tags                     = var.tags
+}
+
+module "empty_submission" {
+  source                   = "./modules/submission"
+  name                     = "empty-submission"
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  lambda_handler_class     = "uk.nhs.nhsx.emptysubmission.Handler"
+  lambda_environment_variables = {
+    SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
+    custom_oai                = random_uuid.submission-custom-oai.result
+  }
+  burst_limit              = var.burst_limit
+  rate_limit               = var.rate_limit
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  alarm_topic_arn          = var.alarm_topic_arn
+  replication_enabled      = var.submission_replication_enabled
+  lifecycle_rule_enabled   = true
+  tags                     = var.tags
 }
 
 module "virology_submission" {
@@ -311,6 +402,23 @@ module "virology_submission" {
   test_orders_index                   = module.virology_upload.test_orders_index_name
   custom_oai                          = random_uuid.submission-custom-oai.result
   alarm_topic_arn                     = var.alarm_topic_arn
+  tags                                = var.tags
+}
+
+module "isolation_payment_submission" {
+  source                                   = "./modules/submission_isolation_payment"
+  lambda_repository_bucket                 = module.artifact_repository.bucket_name
+  lambda_object_key                        = module.artifact_repository.lambda_object_key
+  burst_limit                              = var.burst_limit
+  rate_limit                               = var.rate_limit
+  isolation_payment_website                = var.isolation_payment_website
+  isolation_token_expiry_in_weeks          = var.isolation_token_expiry_in_weeks
+  isolation_payment_countries_whitelisted  = var.isolation_payment_countries_whitelisted
+  isolation_payment_trust_mappings         = var.isolation_payment_trust_mappings
+  custom_oai                               = random_uuid.submission-custom-oai.result
+  alarm_topic_arn                          = var.alarm_topic_arn
+  tags                                     = var.tags
+  isolation_payment_token_creation_enabled = var.isolation_payment_token_creation_enabled
 }
 
 module "submission_apis" {
@@ -323,21 +431,35 @@ module "submission_apis" {
   analytics_submission_endpoint                  = module.analytics_submission.endpoint
   analytics_submission_path                      = "/submission/mobile-analytics"
   analytics_submission_health_path               = "/submission/mobile-analytics/health"
+  analytics_events_submission_endpoint           = module.analytics_events_submission.endpoint
+  analytics_events_submission_path               = "/submission/mobile-analytics-events"
   diagnosis_keys_submission_endpoint             = module.diagnosis_keys_submission.endpoint
   diagnosis_keys_submission_path                 = "/submission/diagnosis-keys"
   diagnosis_keys_submission_health_path          = "/submission/diagnosis-keys/health"
+  empty_submission_endpoint                      = module.empty_submission.endpoint
+  empty_submission_path                          = "/submission/empty-submission"
   exposure_notification_circuit_breaker_endpoint = module.exposure_notification_circuit_breaker.endpoint
   exposure_notification_circuit_breaker_path     = "/circuit-breaker/exposure-notification/*"
+  isolation_payment_endpoint                     = module.isolation_payment_submission.endpoint
+  isolation_payment_path                         = "/isolation-payment/ipc-token/*"
+  isolation_payment_health_path                  = "/isolation-payment/health"
   risky_venues_circuit_breaker_endpoint          = module.risky_venues_circuit_breaker.endpoint
   risky_venues_circuit_breaker_path              = "/circuit-breaker/venue/*"
   virology_kit_endpoint                          = module.virology_submission.api_endpoint
   virology_kit_path                              = "/virology-test/*"
   custom_oai                                     = random_uuid.submission-custom-oai.result
   enable_shield_protection                       = var.enable_shield_protection
+  tags                                           = var.tags
 }
 
 output "analytics_submission_store" {
   value = module.analytics_submission.store
+}
+output "analytics_events_submission_store" {
+  value = module.analytics_events_submission.store
+}
+output "analytics_events_submission_function" {
+  value = module.analytics_events_submission.function
 }
 output "diagnosis_keys_submission_store" {
   value = module.diagnosis_keys_submission.store
@@ -345,14 +467,42 @@ output "diagnosis_keys_submission_store" {
 output "analytics_submission_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/mobile-analytics"
 }
+output "analytics_events_submission_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/submission/mobile-analytics-events"
+}
 output "diagnosis_keys_submission_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/diagnosis-keys"
+}
+output "empty_submission_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/submission/empty-submission"
 }
 output "virology_kit_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/virology-test"
 }
+output "isolation_payment_create_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/isolation-payment/ipc-token/create"
+}
+output "isolation_payment_update_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/isolation-payment/ipc-token/update"
+}
 output "virology_submission_lambda_function_name" {
   value = module.virology_submission.lambda_function_name
+}
+output "isolation_payment_order_lambda_function_name" {
+  value = module.isolation_payment_submission.order_lambda_function_name
+}
+output "isolation_payment_verify_lambda_function_name" {
+  value = module.isolation_payment_submission.verify_lambda_function_name
+}
+output "isolation_payment_consume_lambda_function_name" {
+  value = module.isolation_payment_submission.consume_lambda_function_name
+}
+output "isolation_payment_tokens_table" {
+  value = module.isolation_payment_submission.ipc_tokens_table
+}
+
+output "isolation_payment_gateway_role" {
+  value = module.isolation_payment_submission.gateway_role
 }
 
 # Health endpoints
@@ -361,6 +511,9 @@ output "analytics_submission_health_endpoint" {
 }
 output "diagnosis_keys_submission_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/diagnosis-keys/health"
+}
+output "isolation_payment_health_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/isolation-payment/health"
 }
 output "virology_kit_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/virology-test/health"

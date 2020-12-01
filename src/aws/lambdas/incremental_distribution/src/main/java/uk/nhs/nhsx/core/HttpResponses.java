@@ -35,6 +35,13 @@ public class HttpResponses {
         return response;
     }
 
+    public static APIGatewayProxyResponseEvent created(String jsonBody) {
+        APIGatewayProxyResponseEvent response = withStatusCode(HttpStatusCode.CREATED_201);
+        response.setBody(jsonBody);
+        response.getHeaders().put("content-type", ContentType.APPLICATION_JSON.getMimeType());
+        return response;
+    }
+
     public static APIGatewayProxyResponseEvent accepted() {
         return withStatusCode(HttpStatusCode.ACCEPTED_202);
     }

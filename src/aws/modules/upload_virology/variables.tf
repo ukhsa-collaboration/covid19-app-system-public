@@ -21,3 +21,8 @@ variable "custom_oai" {
 variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

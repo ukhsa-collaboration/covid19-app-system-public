@@ -1,18 +1,20 @@
 namespace :deploy do
   NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
-      prerequisites = [:"login:#{account}", :"build:dependencies", :"unit:all", :"gen:signatures:#{account}"]
-      prerequisites << :"backup:s3:#{tgt_env}" if ["prod", "staging"].include?(tgt_env)
+      prerequisites = [:"login:#{account}", :"build:dependencies", :"gen:signatures:#{account}"]
       desc "Deploy to the #{tgt_env} target environment"
       desc "Deploys a temporary target environment for the current branch in the dev account" if tgt_env == "branch"
       task :"#{tgt_env}" => prerequisites do
-        include NHSx::Terraform
-        terraform_configuration = File.join($configuration.base, "src/aws/accounts", account)
-        deploy_to_workspace(tgt_env, terraform_configuration, $configuration)
-        if tgt_env != "branch"
-          push_git_tag(tgt_env, "Deployed on #{tgt_env}", $configuration)
-        end
+        include NHSx::Deploy
+        deploy_app_system(tgt_env, account, $configuration)
       end
+    end
+
+    desc "Deploys the AWS resources required for operation of the pipelines in #{account}"
+    task :"ci-infra:#{account}" do
+      include NHSx::Terraform
+      terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", account)
+      deploy_to_workspace("default", terraform_configuration, $configuration)
     end
   end
 end
@@ -22,11 +24,17 @@ namespace :plan do
     tgt_envs.each do |tgt_env|
       desc "Run a plan for the #{tgt_env} target environment"
       desc "Creates the terraform plan of a temporary target environment for the current branch in the dev account" if tgt_env == "branch"
-      task :"#{tgt_env}" => [:"login:#{account}", :"build:dependencies", :"unit:all", :"gen:signatures:#{account}"] do
+      task :"#{tgt_env}" => [:"login:#{account}", :"build:dependencies", :"gen:signatures:#{account}"] do
         include NHSx::Terraform
         terraform_configuration = File.join($configuration.base, "src/aws/accounts", account)
         plan_for_workspace(tgt_env, terraform_configuration, $configuration)
       end
+    end
+    desc "Plans the AWS resource deployment required for operation of the pipelines in #{account}"
+    task :"ci-infra:#{account}" do
+      include NHSx::Terraform
+      terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", account)
+      plan_for_workspace("ci", terraform_configuration, $configuration)
     end
   end
 end

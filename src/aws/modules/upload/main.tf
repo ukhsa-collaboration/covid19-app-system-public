@@ -5,6 +5,7 @@ locals {
 module "upload_role" {
   source = "../../libraries/iam_upload_lambda"
   name   = local.identifier_prefix
+  tags   = var.tags
 }
 
 module "upload_lambda" {
@@ -25,6 +26,7 @@ module "upload_lambda" {
     should_parse_additional_fields    = var.should_parse_additional_fields
   }
   app_alarms_topic = var.alarm_topic_arn
+  tags             = var.tags
 }
 
 module "upload_gateway" {
@@ -34,4 +36,5 @@ module "upload_gateway" {
   lambda_function_name = module.upload_lambda.lambda_function_name
   burst_limit          = var.burst_limit
   rate_limit           = var.rate_limit
+  tags                 = var.tags
 }

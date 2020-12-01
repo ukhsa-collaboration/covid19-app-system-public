@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.core.aws.s3;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

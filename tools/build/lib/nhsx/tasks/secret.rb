@@ -39,6 +39,7 @@ namespace :certificate do
     puts "*" * 74
     puts secret_manager_arns
   end
+
   desc "Updates an existing client certificate in Secrets Manager on prod"
   task :"update:prod" => [:"login:prod"] do
     include NHSx::Secret

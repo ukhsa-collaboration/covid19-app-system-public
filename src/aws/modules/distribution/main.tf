@@ -10,6 +10,7 @@ module "distribution_store" {
   logs_bucket_id              = var.logs_bucket_id
   force_destroy_s3_buckets    = var.force_destroy_s3_buckets
   s3_versioning               = var.s3_versioning
+  tags                        = var.tags
 }
 
 resource "aws_s3_bucket_object" "payload" {

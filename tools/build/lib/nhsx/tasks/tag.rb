@@ -23,17 +23,6 @@ namespace :tag do
     end
   end
 
-  namespace :conpan do
-    NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
-      tgt_envs.each do |tgt_env|
-        desc "Push immutable tag of the current git SHA for the Control Panel to #{tgt_env}"
-        task :"#{tgt_env}" => [:"login:#{account}"] do
-          push_timestamped_tag("conpan", tgt_env, "Release Control Panel on #{tgt_env}", $configuration)
-        end
-      end
-    end
-  end
-
   namespace :doreto do
     NHSx::TargetEnvironment::DORETO_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
       desc "Push immutable tag of the current git SHA for the Document Reporting Tool to #{tgt_env}"

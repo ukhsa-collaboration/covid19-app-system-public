@@ -8,6 +8,7 @@ import org.http4k.core.Request
 import org.http4k.core.Status
 import smoke.env.EnvConfig
 import uk.nhs.nhsx.TestData
+import uk.nhs.nhsx.circuitbreakers.ResolutionResponse
 import uk.nhs.nhsx.circuitbreakers.TokenResponse
 
 class EnCircuitBreakerClient(private val client: JavaHttpClient,
@@ -20,7 +21,7 @@ class EnCircuitBreakerClient(private val client: JavaHttpClient,
         fun baseUrlFrom(config: EnvConfig) = config.exposureNotificationCircuitBreakerEndpoint
     }
 
-    fun requestCircuitBreaker(): TokenResponse {
+    fun request(): TokenResponse {
         logger.info("requestCircuitBreaker")
 
         val uri = "${config.exposureNotificationCircuitBreakerEndpoint}/request"
@@ -31,6 +32,21 @@ class EnCircuitBreakerClient(private val client: JavaHttpClient,
             .header("Authorization", config.authHeaders.mobile)
             .header("Content-Type", ContentType.APPLICATION_JSON.value)
             .body(payload)
+
+        return client(request)
+            .requireStatusCode(Status.OK)
+            .requireSignatureHeaders()
+            .deserializeOrThrow()
+    }
+
+    fun resolution(tokenResponse: TokenResponse): ResolutionResponse {
+        logger.info("resolutionCircuitBreaker")
+
+        val uri = "${config.exposureNotificationCircuitBreakerEndpoint}/resolution/${tokenResponse.approvalToken}"
+
+        val request = Request(Method.GET, uri)
+            .header("Authorization", config.authHeaders.mobile)
+            .header("Content-Type", ContentType.APPLICATION_JSON.value)
 
         return client(request)
             .requireStatusCode(Status.OK)

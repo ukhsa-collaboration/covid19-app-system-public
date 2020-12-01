@@ -154,6 +154,50 @@ resource "aws_glue_catalog_table" "this" {
       name = "includesMultipleApplicationVersions"
       type = "boolean"
     }
+    columns {
+      name = "receivedVoidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "hasSelfDiagnosedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForSelfDiagnosedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForHadRiskyContactBackgroundTick"
+      type = "int"
+    }
   }
 }
 

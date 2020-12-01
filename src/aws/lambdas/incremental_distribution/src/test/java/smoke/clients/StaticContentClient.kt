@@ -20,7 +20,11 @@ class StaticContentClient(private val client: JavaHttpClient,
 
     fun riskyPostDistricts() = getStaticContent(config.postDistrictsDistUrl)
 
+    fun riskyPostDistrictsV2() = getStaticContent(config.postDistrictsDistUrl + "-v2")
+
     fun riskyVenues() = getStaticContent(config.riskyVenuesDistUrl)
+
+    fun riskyVenuesMessages() = getStaticContent(config.riskyVenuesMessagesDownloadEndpoint)
 
     fun selfIsolation() = getStaticContent(config.selfIsolationDistUrl)
 

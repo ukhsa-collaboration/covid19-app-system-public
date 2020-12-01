@@ -2,14 +2,14 @@ package uk.nhs.nhsx.diagnosiskeydist;
 
 import batchZipCreation.Exposure;
 import uk.nhs.nhsx.core.aws.xray.Tracing;
+import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber;
 
 import java.io.FileInputStream;
 import java.util.Base64;
 import java.util.Date;
-import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber;
 
 /**
- * Run with: mvn -f=src/aws/lambdas/incremental_distribution/pom.xml  exec:java -Dexec.mainClass="uk.nhs.nhsx.diagnosiskeydist.ExportFileExplorer"
+ * current?
  */
 public class ExportFileExplorer {
     public static void main(String[] args) throws Exception {

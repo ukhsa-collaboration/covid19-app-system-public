@@ -24,8 +24,12 @@ object SmokeTests {
 
     private fun loadConfigFileName(): String {
         val envName = "SMOKE_TEST_CONFIG"
-        return System.getenv(envName)
-            ?: throw IllegalStateException("Env var not set: $envName=<config file>")
+        if (System.getenv(envName) == null) {
+            return "../../../../out/gen/config/test_config_branch.json"
+        }
+        else {
+            return System.getenv(envName);
+        }
     }
 
     private fun loadConfigFileFor(envConfigFileName: String): String {

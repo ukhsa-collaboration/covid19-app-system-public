@@ -8,10 +8,12 @@ variable "default_payload" {
 
 variable "payload_source" {
   description = "The content to distribute"
+  default     = ""
 }
 
 variable "metadata_signature" {
   description = "The metadata signature header value"
+  default     = ""
 }
 
 variable "logs_bucket_id" {
@@ -20,6 +22,7 @@ variable "logs_bucket_id" {
 
 variable "metadata_signature_date" {
   description = "The metadata signature date header value"
+  default     = ""
 }
 
 variable "force_destroy_s3_buckets" {
@@ -30,3 +33,7 @@ variable "s3_versioning" {
   description = "Enable S3 bucket versioning if set to true"
 }
 
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

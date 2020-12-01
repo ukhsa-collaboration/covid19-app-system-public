@@ -5,6 +5,7 @@ locals {
 module "submission_role" {
   source = "../../libraries/iam_submission_lambda"
   name   = local.identifier_prefix
+  tags   = var.tags
 }
 
 module "submission_store" {
@@ -14,6 +15,8 @@ module "submission_store" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   replication_enabled      = var.replication_enabled
+  lifecycle_rule_enabled   = var.lifecycle_rule_enabled
+  tags                     = var.tags
 }
 
 module "submission_lambda" {
@@ -28,6 +31,7 @@ module "submission_lambda" {
   lambda_environment_variables = merge({ SUBMISSION_STORE = module.submission_store.bucket_name }, var.lambda_environment_variables)
   app_alarms_topic             = var.alarm_topic_arn
   publish                      = var.provisioned_concurrent_executions != 0 ? true : false
+  tags                         = var.tags
 }
 
 resource "aws_lambda_provisioned_concurrency_config" "submission_lambda_provisioned_concurrency" {
@@ -45,4 +49,5 @@ module "submission_gateway" {
   burst_limit             = var.burst_limit
   rate_limit              = var.rate_limit
   lambda_function_version = var.provisioned_concurrent_executions != 0 ? (can(tonumber(module.submission_lambda.version)) ? module.submission_lambda.version : 0) : 0
+  tags                    = var.tags
 }

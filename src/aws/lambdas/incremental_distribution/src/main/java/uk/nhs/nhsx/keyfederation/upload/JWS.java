@@ -1,50 +1,36 @@
 package uk.nhs.nhsx.keyfederation.upload;
 
-import org.jose4j.base64url.SimplePEMEncoder;
-import org.jose4j.jws.AlgorithmIdentifiers;
-import org.jose4j.jws.JsonWebSignature;
-import org.jose4j.lang.JoseException;
+import uk.nhs.nhsx.core.signature.Signature;
+import uk.nhs.nhsx.core.signature.Signer;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 public class JWS {
 
-    private static final String BEGIN_PRIVATE_KEY = "-----BEGIN PRIVATE KEY-----";
-    private static final String END_PRIVATE_KEY = "-----END PRIVATE KEY-----";
+    private static final Base64.Encoder URL_ENCODER = Base64.getUrlEncoder();
+    
+    private final Signer signer;
 
-    private final PrivateKey privateKey;
-
-    public JWS(PrivateKey privateKey) {
-        this.privateKey = privateKey;
+    public JWS(Signer signer) {
+        this.signer = signer;
     }
 
-    public JWS(String privateKeyAsPem) {
-        try {
-            this.privateKey = fromPemEncodedPrivateKey(privateKeyAsPem);
-        } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException(e);
-        }
+    public String sign(String payload) {
+
+        String encodedHeader = encode("{\"alg\":\"ES256\"}");
+        String encodedPayload = encode(payload);
+
+        String signedComponent = encodedHeader + "." + encodedPayload;
+
+        Signature signature = signer.sign(signedComponent.getBytes(StandardCharsets.UTF_8));
+
+        String encodedSignature = URL_ENCODER.encodeToString(signature.asJWSCompatible());
+
+        return signedComponent + "." + encodedSignature;
     }
 
-    public String compactSignedPayload(String payload) throws JoseException {
-        JsonWebSignature jws = new JsonWebSignature();
-        jws.setPayload(payload);
-        jws.setAlgorithmHeaderValue(AlgorithmIdentifiers.ECDSA_USING_P256_CURVE_AND_SHA256);
-        jws.setKey(privateKey);
-        return jws.getCompactSerialization();
-    }
-
-    private PrivateKey fromPemEncodedPrivateKey(String pem) throws InvalidKeySpecException, NoSuchAlgorithmException {
-        int beginIndex = pem.indexOf(BEGIN_PRIVATE_KEY) + BEGIN_PRIVATE_KEY.length();
-        int endIndex = pem.indexOf(END_PRIVATE_KEY);
-        String base64 = pem.substring(beginIndex, endIndex).trim();
-        byte[] decode = SimplePEMEncoder.decode(base64);
-        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(decode);
-        KeyFactory  kf = KeyFactory.getInstance("EC");
-        return kf.generatePrivate(spec);
+    private String encode(String string) {
+        return URL_ENCODER.encodeToString(string.getBytes(StandardCharsets.UTF_8));
     }
 }

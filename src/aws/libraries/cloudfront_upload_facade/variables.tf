@@ -50,3 +50,8 @@ variable "risky-post-districts-upload-health-path" {
 variable "risky-venues-upload-health-path" {
   description = "The route to the risky venues health endpoint"
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

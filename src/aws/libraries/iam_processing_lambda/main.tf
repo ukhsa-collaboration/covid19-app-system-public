@@ -7,7 +7,8 @@ locals {
     "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
     "arn:aws:iam::aws:policy/CloudFrontFullAccess",
-    "arn:aws:iam::aws:policy/AmazonAthenaFullAccess"
+    "arn:aws:iam::aws:policy/AmazonAthenaFullAccess",
+    "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
   ]
 }
 
@@ -33,6 +34,8 @@ resource "aws_iam_role_policy_attachment" "this" {
 
 resource "aws_iam_role" "this" {
   name = "${var.name}-lambda"
+
+  tags = var.tags
 
   assume_role_policy = <<EOF
 {

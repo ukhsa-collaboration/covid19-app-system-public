@@ -44,7 +44,9 @@ module NHSx
     def docker_image_sourcefiles(system_config)
       Rake::FileList["#{system_config.base}/tools/build/Gemfile",
                      "#{system_config.base}/tools/provisioning/python/requirements.txt",
-                     "#{system_config.base}/tools/provisioning/dev/Dockerfile"]
+                     "#{system_config.base}/tools/provisioning/dev/Dockerfile",
+                     "#{system_config.base}/tools/provisioning/dev/useradd-init",
+                     "#{system_config.base}/tools/provisioning/dev/profile.d/**"]
     end
 
     def content_version(system_config)

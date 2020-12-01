@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.core.auth;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue;
@@ -8,7 +8,10 @@ import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SecretManagerKeyAuthorizerTest {
 

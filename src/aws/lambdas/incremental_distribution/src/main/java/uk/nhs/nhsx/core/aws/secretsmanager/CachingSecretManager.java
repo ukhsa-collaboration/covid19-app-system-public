@@ -10,18 +10,18 @@ import java.util.concurrent.ExecutionException;
 
 public class CachingSecretManager implements SecretManager {
 
-    private LoadingCache<SecretName, Optional<SecretValue>> cache;
+    private final LoadingCache<SecretName, Optional<SecretValue>> cache;
 
     public CachingSecretManager(SecretManager delegate) {
         cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(Duration.ofMinutes(5))
                 .build(
-                        new CacheLoader<SecretName, Optional<SecretValue>>() {
-                            @Override
-                            public Optional<SecretValue> load(SecretName secretName) throws Exception {
-                                return delegate.getSecret(secretName);
-                            }
+                    new CacheLoader<>() {
+                        @Override
+                        public Optional<SecretValue> load(SecretName secretName) {
+                            return delegate.getSecret(secretName);
                         }
+                    }
                 );
     }
 

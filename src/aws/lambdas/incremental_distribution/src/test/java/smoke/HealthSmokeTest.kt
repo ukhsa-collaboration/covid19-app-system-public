@@ -3,7 +3,7 @@ package smoke
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Response
 import org.http4k.core.Status
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import smoke.clients.HealthClient
 import smoke.clients.requireStatusCode
 import smoke.env.SmokeTests
@@ -31,6 +31,11 @@ class HealthSmokeTest {
     }
 
     @Test
+    fun `isolation payment health`() {
+        verifyResponse(healthClient.isolationPaymentHealthEndpoint())
+    }
+
+    @Test
     fun `risky post districts upload health`() {
         verifyResponse(healthClient.riskyPostDistrictsUploadHealthEndpoint())
     }
@@ -55,8 +60,12 @@ class HealthSmokeTest {
         verifyResponse(healthClient.virologyKitHealthEndpoint())
     }
 
+    @Test
+    fun `empty endpoint health`(){
+        verifyResponse(healthClient.emptySubmissionEndpoint())
+    }
+
     private fun verifyResponse(response: Response) {
         response.requireStatusCode(Status.OK)
-            .bodyString()
     }
 }

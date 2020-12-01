@@ -129,7 +129,7 @@ public class VirologyDynamoService {
         queryTestOrderFor(testResult)
             .ifPresentOrElse(
                 testOrder -> markTestResultForDeletion(testResult, virologyTimeToLive, testOrder),
-                () -> logger.error("Could not mark for deletion testResultPollingToken:" + testResult.testResultPollingToken) // FIXME
+                () -> logger.warn("Could not mark for deletion testResultPollingToken:" + testResult.testResultPollingToken) // FIXME
             );
     }
 
@@ -177,7 +177,7 @@ public class VirologyDynamoService {
     private void updateCtaExchangeTimeToLiveAndCounter(TestOrder testOrder, 
                                                        TestResult testResult, 
                                                        VirologyDataTimeToLive virologyTimeToLive) {
-        if (testResult.isPositive()) {
+        if (testResult.isPositive() && submissionTokenPresent(testOrder)) {
             executeTransaction(dynamoDbClient,
                 asList(
                     testOrderTtlAndCounterUpdateOp(testOrder.ctaToken, virologyTimeToLive.testDataExpireAt),
@@ -196,6 +196,11 @@ public class VirologyDynamoService {
                 )
             );
         }
+    }
+
+    private boolean submissionTokenPresent(TestOrder testOrder){
+        var itemResult = dynamoDbClient.getItem(config.submissionTokensTable, attributeMap("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value));
+         return itemResult.getItem() != null;
     }
 
     private Optional<TestOrder> queryTestOrderFor(TestResult testResult) {

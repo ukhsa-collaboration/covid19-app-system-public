@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeydist;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;

@@ -1,0 +1,11 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - rake deploy:$TARGET_ENVIRONMENT
+      - rake test:sanity_check:$TARGET_ENVIRONMENT
+artifacts:
+  files:
+    - "**/*"
+  discard-paths: no
+  base-directory: out/

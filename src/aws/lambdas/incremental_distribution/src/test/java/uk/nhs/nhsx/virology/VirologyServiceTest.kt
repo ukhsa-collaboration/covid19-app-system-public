@@ -1,9 +1,14 @@
 package uk.nhs.nhsx.virology
 
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.TestData
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
@@ -25,7 +30,7 @@ import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.time.Duration
 import java.time.Instant
-import java.util.*
+import java.util.Optional
 import java.util.function.Supplier
 
 class VirologyServiceTest {

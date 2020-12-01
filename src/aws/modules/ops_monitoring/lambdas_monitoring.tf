@@ -3,7 +3,6 @@ resource "aws_cloudwatch_dashboard" "lambda_error_dashboard" {
   dashboard_body = templatefile("${path.module}/templates/lambda_error_dashboard.tmpl", {
     advanced_analytics_function                    = var.advanced_analytics_function,
     analytics_submission_function                  = var.analytics_submission_function,
-    analytics_processing_function                  = var.analytics_processing_function,
     diagnosis_keys_submission_function             = var.diagnosis_keys_submission_function,
     exposure_notification_circuit_breaker_function = var.exposure_notification_circuit_breaker_function,
     diagnosis_keys_processing_function             = var.diagnosis_keys_processing_function,
@@ -20,7 +19,6 @@ resource "aws_cloudwatch_dashboard" "lambda_warning_dashboard" {
   dashboard_body = templatefile("${path.module}/templates/lambda_warning_dashboard.tmpl", {
     advanced_analytics_function                    = var.advanced_analytics_function,
     analytics_submission_function                  = var.analytics_submission_function,
-    analytics_processing_function                  = var.analytics_processing_function,
     diagnosis_keys_submission_function             = var.diagnosis_keys_submission_function,
     exposure_notification_circuit_breaker_function = var.exposure_notification_circuit_breaker_function,
     diagnosis_keys_processing_function             = var.diagnosis_keys_processing_function,
@@ -54,7 +52,8 @@ resource "aws_cloudwatch_dashboard" "virology_dashboard" {
 resource "aws_cloudwatch_dashboard" "federation_keys_dashboard" {
   dashboard_name = "${var.env}-federation-keys-dashboard"
   dashboard_body = templatefile("${path.module}/templates/federation_keys_dashboard.tmpl", {
-    federation_keys_processing_function = var.federation_keys_processing_function
+    federation_keys_processing_upload_function   = var.federation_keys_processing_upload_function
+    federation_keys_processing_download_function = var.federation_keys_processing_download_function
   })
 }
 

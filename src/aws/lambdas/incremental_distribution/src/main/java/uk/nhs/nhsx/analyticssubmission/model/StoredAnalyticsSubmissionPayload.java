@@ -35,8 +35,19 @@ public class StoredAnalyticsSubmissionPayload {
     public final int totalBackgroundTasks;
     public final int runningNormallyBackgroundTick;
     public final int completedOnboarding;
-
     public final boolean includesMultipleApplicationVersions;
+    public final Integer receivedVoidTestResultEnteredManually;
+    public final Integer receivedPositiveTestResultEnteredManually;
+    public final Integer receivedNegativeTestResultEnteredManually;
+    public final Integer receivedVoidTestResultViaPolling;
+    public final Integer receivedPositiveTestResultViaPolling;
+    public final Integer receivedNegativeTestResultViaPolling;
+    public final Integer hasSelfDiagnosedBackgroundTick;
+    public final Integer hasTestedPositiveBackgroundTick;
+    public final Integer isIsolatingForSelfDiagnosedBackgroundTick;
+    public final Integer isIsolatingForTestedPositiveBackgroundTick;
+    public final Integer isIsolatingForHadRiskyContactBackgroundTick;
+
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
@@ -64,7 +75,18 @@ public class StoredAnalyticsSubmissionPayload {
                                              int completedOnboarding,
                                              String startDate,
                                              String endDate,
-                                             boolean includesMultipleApplicationVersions) {
+                                             boolean includesMultipleApplicationVersions,
+                                             Integer receivedVoidTestResultEnteredManually,
+                                             Integer receivedPositiveTestResultEnteredManually,
+                                             Integer receivedNegativeTestResultEnteredManually,
+                                             Integer receivedVoidTestResultViaPolling,
+                                             Integer receivedPositiveTestResultViaPolling,
+                                             Integer receivedNegativeTestResultViaPolling,
+                                             Integer hasSelfDiagnosedBackgroundTick,
+                                             Integer hasTestedPositiveBackgroundTick,
+                                             Integer isIsolatingForSelfDiagnosedBackgroundTick,
+                                             Integer isIsolatingForTestedPositiveBackgroundTick,
+                                             Integer isIsolatingForHadRiskyContactBackgroundTick) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -91,7 +113,18 @@ public class StoredAnalyticsSubmissionPayload {
         this.completedOnboarding = completedOnboarding;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.receivedVoidTestResultEnteredManually = receivedVoidTestResultEnteredManually;
+        this.receivedPositiveTestResultEnteredManually = receivedPositiveTestResultEnteredManually;
+        this.receivedNegativeTestResultEnteredManually = receivedNegativeTestResultEnteredManually;
+        this.receivedVoidTestResultViaPolling = receivedVoidTestResultViaPolling;
+        this.receivedPositiveTestResultViaPolling = receivedPositiveTestResultViaPolling;
+        this.receivedNegativeTestResultViaPolling = receivedNegativeTestResultViaPolling;
         this.includesMultipleApplicationVersions = includesMultipleApplicationVersions;
+        this.hasSelfDiagnosedBackgroundTick = hasSelfDiagnosedBackgroundTick;
+        this.hasTestedPositiveBackgroundTick = hasTestedPositiveBackgroundTick;
+        this.isIsolatingForSelfDiagnosedBackgroundTick = isIsolatingForSelfDiagnosedBackgroundTick;
+        this.isIsolatingForTestedPositiveBackgroundTick = isIsolatingForTestedPositiveBackgroundTick;
+        this.isIsolatingForHadRiskyContactBackgroundTick = isIsolatingForHadRiskyContactBackgroundTick;
     }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload) {
@@ -122,7 +155,17 @@ public class StoredAnalyticsSubmissionPayload {
                 clientPayload.metrics.completedOnboarding,
                 clientPayload.analyticsWindow.startDate,
                 clientPayload.analyticsWindow.endDate,
-                clientPayload.includesMultipleApplicationVersions
-        );
+                clientPayload.includesMultipleApplicationVersions,
+                clientPayload.metrics.receivedVoidTestResultEnteredManually,
+                clientPayload.metrics.receivedPositiveTestResultEnteredManually,
+                clientPayload.metrics.receivedNegativeTestResultEnteredManually,
+                clientPayload.metrics.receivedVoidTestResultViaPolling,
+                clientPayload.metrics.receivedPositiveTestResultViaPolling,
+                clientPayload.metrics.receivedNegativeTestResultViaPolling,
+                clientPayload.metrics.hasSelfDiagnosedBackgroundTick,
+                clientPayload.metrics.hasTestedPositiveBackgroundTick,
+                clientPayload.metrics.isIsolatingForSelfDiagnosedBackgroundTick,
+                clientPayload.metrics.isIsolatingForTestedPositiveBackgroundTick,
+                clientPayload.metrics.isIsolatingForHadRiskyContactBackgroundTick);
     }
 }

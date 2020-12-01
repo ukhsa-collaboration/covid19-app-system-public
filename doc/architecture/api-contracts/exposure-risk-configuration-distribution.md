@@ -16,7 +16,7 @@ API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
 [Read more about Exposure Notification Configuration](https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Android-Exposure-Notification-API-documentation-v1.3.2.pdf)
 
-## Payload Example
+## Payload Example (structure)
 
 ```json
     {

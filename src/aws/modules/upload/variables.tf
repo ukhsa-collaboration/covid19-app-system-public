@@ -47,3 +47,8 @@ variable "should_parse_additional_fields" {
   default     = false
   type        = bool
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

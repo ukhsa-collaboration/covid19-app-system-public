@@ -8,7 +8,6 @@ module "cloudwatch_analytics" {
     module.diagnosis_keys_distribution_store.bucket_id,
     module.analytics_submission.store_id,
     module.diagnosis_keys_submission.store_id,
-    module.analytics_processing.output_store_id
   ]
   request_triggered = [
     module.risky_venues_upload.lambda_function_name,
@@ -32,9 +31,9 @@ module "cloudwatch_analytics" {
   ]
 
   analytics_submission_function                  = module.analytics_submission.function
-  analytics_processing_function                  = module.analytics_processing.function
   diagnosis_keys_submission_function             = module.diagnosis_keys_submission.function
-  federation_keys_processing_function            = module.federation_keys_processing.function
+  federation_keys_processing_upload_function     = module.federation_keys_processing.upload_lambda_function
+  federation_keys_processing_download_function   = module.federation_keys_processing.download_lambda_function
   exposure_notification_circuit_breaker_function = module.exposure_notification_circuit_breaker.function
   diagnosis_keys_processing_function             = module.diagnosis_keys_processing.function
   risky_post_districts_upload_function           = module.risky_post_districts_upload.lambda_function_name
@@ -42,7 +41,7 @@ module "cloudwatch_analytics" {
   risky_venues_upload_function                   = module.risky_venues_upload.lambda_function_name
   virology_submission_function                   = module.virology_submission.lambda_function_name
   virology_upload_function                       = module.virology_upload.lambda_function_name
-  advanced_analytics_function                    = module.advanced_analytics.lambda_function_name
+  advanced_analytics_function                    = module.advanced_analytics_export.lambda_function_name
   virology_submission_api_gateway_id             = module.virology_submission.gateway_id
   virology_upload_api_gateway_id                 = module.virology_upload.gateway_id
 
@@ -51,7 +50,7 @@ module "cloudwatch_analytics" {
   shield_protected_arns = [
     module.distribution_apis.distribution_arn,
     module.submission_apis.distribution_arn,
-    module.upload_apis.distribution_arn,
-    module.conpan_website.distribution_arn
+    module.upload_apis.distribution_arn
   ]
+  tags = var.tags
 }

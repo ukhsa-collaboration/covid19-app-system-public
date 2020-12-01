@@ -6,7 +6,7 @@
 package uk.nhs.nhsx.core.random.crockford;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.util.HashSet;

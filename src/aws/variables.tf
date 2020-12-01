@@ -18,8 +18,54 @@ variable "logs_bucket_id" {
   description = "The name of the bucket to which all S3 access logs are saved"
 }
 
-variable "aae_hostname" {
-  description = "The name of the AAE endpoint base domain in DNS (set in main.tf in the appropriate src/aws/accounts subdirectory)"
+variable aae_mobile_analytics_enabled_workspaces {
+  description = "Target environments with enabled SQS processing (allowed values: te-<env>, *, branch)"
+  type        = list(string)
+}
+
+variable aae_mobile_analytics_url_prefix {
+  description = "HTTPS PUT target"
+}
+
+variable aae_mobile_analytics_url_suffix {
+  description = "HTTPS PUT target (e.g. empty string)"
+}
+
+variable aae_mobile_analytics_p12_cert_secret_name {
+  description = "Name of the SecretsManager secret containing the TLS client cert in (binary secret: .p12 format)"
+}
+
+variable aae_mobile_analytics_p12_cert_password_secret_name {
+  description = "Name of the SecretsManager secret containing the password of the TLS client cert (string secret)"
+}
+
+variable aae_mobile_analytics_subscription_secret_name {
+  description = "Name of the SecretsManager secret containing the Ocp-Apim-Subscription-Key HTTP header value (string secret)"
+}
+
+variable aae_mobile_analytics_events_enabled_workspaces {
+  description = "Target environments with enabled SQS processing (allowed values: te-<env>, *, branch)"
+  type        = list(string)
+}
+
+variable aae_mobile_analytics_events_url_prefix {
+  description = "HTTPS PUT target"
+}
+
+variable aae_mobile_analytics_events_url_suffix {
+  description = "HTTPS PUT target (e.g. ?feedName=Epidemiological)"
+}
+
+variable aae_mobile_analytics_events_p12_cert_secret_name {
+  description = "Name of the SecretsManager secret containing the TLS client cert in (binary secret: .p12 format)"
+}
+
+variable aae_mobile_analytics_events_p12_cert_password_secret_name {
+  description = "Name of the SecretsManager secret containing the password of the TLS client cert (string secret)"
+}
+
+variable aae_mobile_analytics_events_subscription_secret_name {
+  description = "Name of the SecretsManager secret containing the Ocp-Apim-Subscription-Key HTTP header value (string secret)"
 }
 
 variable "virology_test_order_website" {
@@ -32,6 +78,16 @@ variable "virology_test_register_website" {
 
 variable "interop_base_url" {
   description = "The url of the interop server for exchange of keys"
+}
+
+variable "interop_download_enabled_workspaces" {
+  description = "Target environments with enabled download of exposure keys from interop server (allowed values: te-<env>, *, branch)"
+  type        = list(string)
+}
+
+variable "interop_upload_enabled_workspaces" {
+  description = "Target environments with enabled upload of exposure keys to interop server (allowed values: te-<env>, *, branch)"
+  type        = list(string)
 }
 
 variable "alarm_topic_arn" {
@@ -85,4 +141,34 @@ variable "analytics_submission_scale_down_provisioned_concurrent_executions" {
 
 variable "analytics_submission_scale_down_cron" {
   description = "cron schedule"
+}
+
+variable "isolation_payment_website" {
+  description = "The website for claiming isolation payments"
+}
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}
+
+variable "isolation_token_expiry_in_weeks" {
+  description = "The time to live for the isolation token in weeks"
+  type        = number
+  default     = 2
+}
+
+variable "isolation_payment_trust_mappings" {
+  description = "value: principals which have access to Isolation Payment verify- and consume Lambdas. key: target environment"
+  type        = map(list(string))
+}
+
+variable "isolation_payment_countries_whitelisted" {
+  description = "The countries whitelisted for isolation payment"
+  default     = "England,Wales"
+}
+
+variable "isolation_payment_token_creation_enabled" {
+  description = "Feature flag to enable/disable token creation/update endpoints"
+  default     = true
 }

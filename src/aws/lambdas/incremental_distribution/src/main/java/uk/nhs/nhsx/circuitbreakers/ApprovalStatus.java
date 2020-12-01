@@ -6,7 +6,7 @@ public enum ApprovalStatus {
     NO("no"),
     PENDING("pending");
 
-    private String name;
+    private final String name;
 
     ApprovalStatus(String name) {
         this.name = name;

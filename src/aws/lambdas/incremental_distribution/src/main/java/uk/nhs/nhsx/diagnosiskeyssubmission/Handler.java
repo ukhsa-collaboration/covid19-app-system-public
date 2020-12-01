@@ -25,14 +25,11 @@ import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
 
-/**
- * Diagnosis keys submission lambda
- * <p>
- * doc/design/api-contracts/diagnosis-key-submission.md
- */
 public class Handler extends RoutingHandler {
 
     private final Routing.Handler handler;
+
+    private final Supplier<Instant> clock;
 
     public Handler() {
         this(Environment.fromSystem(), SystemClock.CLOCK);
@@ -45,7 +42,8 @@ public class Handler extends RoutingHandler {
             StandardSigning.signResponseWithKeyGivenInSsm(clock, environment),
             new AwsS3Client(),
             new DynamoDBUtils(),
-            new UniqueObjectKeyNameProvider(clock, UniqueId.ID)
+            new UniqueObjectKeyNameProvider(clock, UniqueId.ID),
+            clock
         );
     }
 
@@ -55,16 +53,19 @@ public class Handler extends RoutingHandler {
             ResponseSigner signer,
             S3Storage s3Storage,
             AwsDynamoClient awsDynamoClient,
-            ObjectKeyNameProvider objectKeyNameProvider
+            ObjectKeyNameProvider objectKeyNameProvider,
+            Supplier<Instant> clock
     ) {
 
+        this.clock = clock;
         DiagnosisKeysSubmissionService service =
             new DiagnosisKeysSubmissionService(
                 s3Storage,
                 awsDynamoClient,
                 objectKeyNameProvider,
                 environment.access.required(EnvironmentKeys.SUBMISSIONS_TOKENS_TABLE),
-                environment.access.required(EnvironmentKeys.SUBMISSION_STORE)
+                environment.access.required(EnvironmentKeys.SUBMISSION_STORE),
+                clock
             );
 
         this.handler = withSignedResponses(environment, authenticator, signer,

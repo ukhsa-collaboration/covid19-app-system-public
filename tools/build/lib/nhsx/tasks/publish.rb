@@ -6,27 +6,14 @@ namespace :publish do
     publish_devenv_image($configuration)
   end
 
-  namespace :conpan do
-    NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
-      tgt_envs.each do |tgt_env|
-        desc "Publish the Control Panel to #{tgt_env}"
-        task :"#{tgt_env}" => [:"login:#{account}"] do
-          include NHSx::Publish
-          publish_conpan_website(account, "src/control_panel/build", "conpan_store", tgt_env, $configuration)
-        end
-      end
-    end
-  end
-
   namespace :doreto do
     NHSx::TargetEnvironment::DORETO_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
       desc "Publish the Document Reporting Tool to #{tgt_env}"
       task :"#{tgt_env}" do
         include NHSx::Publish
         publish_doreto_website("dev", "src/documentation_reporting_tool/dist", "doreto_website_s3", tgt_env, $configuration)
-        if tgt_env != "branch"
-          push_git_tag("#{tgt_env}-doreto", "Published doreto on #{tgt_env}", $configuration)
-        end
+
+        push_git_tag("#{tgt_env}-doreto", "Published doreto on #{tgt_env}", $configuration) if tgt_env != "branch"
       end
     end
   end
@@ -77,17 +64,17 @@ namespace :publish do
         static_content_file = $configuration.static_content
         publish_static_content(static_content_file, "tier-metadata", "post_districts_distribution_store", target_config, $configuration)
 
-       
         post_districts_out_dir = File.join($configuration.out, "gen/post_districts")
-        key_name = "raw/risky-post-districts"
+        key_name = "backup/api-payload"
         distribution_store = "post_districts_distribution_store"
         object_name = "#{target_config[distribution_store]}/#{key_name}"
         local_target = File.join(post_districts_out_dir, key_name)
-        run_command("Download tier meta data of #{tgt_env} deployment", NHSx::AWS::Commandlines.download_from_s3(object_name, local_target), $configuration)
+        run_command("Download current risk data of #{tgt_env} deployment", NHSx::AWS::Commandlines.download_from_s3(object_name, local_target), $configuration)
 
         ENV["UPLOAD_DATA"] = local_target
         Rake::Task["upload:post_districts:#{tgt_env}"].invoke
-       end
+        tag("te-#{tgt_env}-i18n", "Translations deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
+      end
     end
   end
 end

@@ -50,6 +50,9 @@ public class VirologyUploadHandler extends RoutingHandler {
                 path(Method.POST, "/upload/virology-test/wls-result-tokengen", (r) ->
                     handleTokenGen(VirologyTokenExchangeSource.Wls, virologyService, r)
                 ),
+                path(Method.POST, "/upload/virology-test/lfd-result-tokengen", (r) ->
+                    handleTokenGen(VirologyTokenExchangeSource.Lfd, virologyService, r)
+                ),
                 path(Method.POST, "/upload/virology-test/health", (r) ->
                     HttpResponses.ok()
                 )
@@ -110,7 +113,7 @@ public class VirologyUploadHandler extends RoutingHandler {
         Npex, Fiorano
     }
 
-    private enum VirologyTokenExchangeSource {
-        Eng, Wls
+    public enum VirologyTokenExchangeSource {
+        Eng, Wls, Lfd
     }
 }

@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.core.routing;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.ContextBuilder;
 import uk.nhs.nhsx.core.HttpResponses;
 
@@ -9,12 +9,15 @@ import java.util.HashMap;
 import java.util.Optional;
 
 import static com.google.common.collect.Maps.newHashMap;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class RoutingHandlerTest {
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void noHeaders() throws Exception {
-        new MyRoutingHandler("content-type").handleRequest(new APIGatewayProxyRequestEvent(), new ContextBuilder.TestContext());
+        assertThrows(RuntimeException.class, () ->
+                new MyRoutingHandler("content-type").handleRequest(new APIGatewayProxyRequestEvent(), new ContextBuilder.TestContext())
+        );
     }
 
     @Test
@@ -46,8 +49,8 @@ public class RoutingHandlerTest {
         @Override
         public Routing.Handler handler() {
             return request -> Optional.ofNullable(request.getHeaders().get(header))
-                .map(h -> HttpResponses.ok())
-                .orElseThrow(() -> new RuntimeException("not there"));
+                    .map(h -> HttpResponses.ok())
+                    .orElseThrow(() -> new RuntimeException("not there"));
         }
     }
 }

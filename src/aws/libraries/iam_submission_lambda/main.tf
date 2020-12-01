@@ -34,6 +34,8 @@ resource "aws_iam_role_policy_attachment" "this" {
 resource "aws_iam_role" "this" {
   name = "${var.name}-lambda"
 
+  tags = var.tags
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",

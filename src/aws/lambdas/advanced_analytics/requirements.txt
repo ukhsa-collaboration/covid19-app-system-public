@@ -1,2 +1,0 @@
-aws-xray-sdk==2.6.0
-requests==2.24.0

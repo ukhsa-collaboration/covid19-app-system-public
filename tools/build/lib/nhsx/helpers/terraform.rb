@@ -65,6 +65,14 @@ module NHSx
       return transformed_output
     end
 
+    def aae_event_source_identifiers(target_env, terraform_config, system_config, json)
+      terraform_output = parse_terraform_output(terraform_output(target_env, terraform_config, system_config))
+      lambda_arn = json ? terraform_output["aae_events_export_function_arn"] : terraform_output["aae_export_function_arn"]
+      event_source_arn = json ? terraform_output["aae_events_export_event_source_arn"] : terraform_output["aae_export_event_source_arn"]
+      function_name = json ? terraform_output["aae_events_export_function_name"] : terraform_output["aae_export_function_name"]
+      {"lambda_arn" => lambda_arn, "event_source_arn" => event_source_arn, "function_name" => function_name}
+    end
+
     # Extracts json from the given string
     def filter_json_from_output(output)
       output.split("\n").select do |line|
@@ -158,6 +166,14 @@ module NHSx
       end
     end
 
+
+    def refresh_workspace(terraform_configuration, system_config)
+      simple_name = File.basename(terraform_configuration)
+      # workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
+      Dir.chdir(terraform_configuration) do
+        run_tee("Refresh for #{simple_name}", "terraform refresh", system_config)
+      end
+    end
     # Calculates the SHA1 of the workspace name and returns the first 6 characters
     #
     # We do this to control the length of the workspace name as it is used in resource IDs that have name length restrictions

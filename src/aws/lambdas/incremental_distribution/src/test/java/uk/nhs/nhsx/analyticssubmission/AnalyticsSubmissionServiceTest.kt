@@ -1,8 +1,12 @@
 package uk.nhs.nhsx.analyticssubmission
 
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose
-import io.mockk.*
-import org.junit.Test
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.iOSPayloadFrom
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.core.Jackson.deserializeMaybe

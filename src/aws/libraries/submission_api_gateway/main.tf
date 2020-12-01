@@ -8,6 +8,8 @@ data "aws_caller_identity" "current" {}
 resource "aws_apigatewayv2_api" "this" {
   name          = "${local.identifier_prefix}-http-api"
   protocol_type = "HTTP"
+
+  tags = var.tags
 }
 
 resource "aws_apigatewayv2_integration" "this" {
@@ -36,6 +38,8 @@ resource "aws_apigatewayv2_stage" "this" {
   api_id      = aws_apigatewayv2_api.this.id
   name        = "$default"
   auto_deploy = true
+
+  tags = var.tags
 
   default_route_settings {
     detailed_metrics_enabled = true

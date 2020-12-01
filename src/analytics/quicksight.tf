@@ -1,6 +1,6 @@
 locals {
   service = "quicksight"
-  account_tags = merge(var.account_tags, {
+  tags = merge(var.tags, {
     Component = "Analytics"
   })
 }
@@ -11,14 +11,14 @@ module "output_store" {
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
-  account_tags             = local.account_tags
+  tags                     = local.tags
 }
 
 module "workgroup" {
   source              = "./libraries/athena_workgroup"
   name                = "analytics_quicksight"
   athena_output_store = module.output_store.bucket_name
-  account_tags        = local.account_tags
+  tags                = local.tags
 }
 
 resource "aws_glue_catalog_database" "this" {
@@ -39,7 +39,7 @@ module "app_store_qr_posters" {
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
   workgroup_name           = module.workgroup.name
-  account_tags = merge(local.account_tags, {
+  tags = merge(local.tags, {
     Feature = "App store and QR posters"
   })
 }
@@ -58,8 +58,8 @@ module "postcodes_geofence" {
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
   workgroup_name           = module.workgroup.name
-  account_tags = merge(local.account_tags, {
-    Feature = "Postcodes Geofence"
+  tags = merge(local.tags, {
+    Feature = "Postcode Areas"
   })
 }
 
@@ -69,7 +69,7 @@ module "demographics_data" {
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
-  account_tags = merge(local.account_tags, {
+  tags = merge(local.tags, {
     Feature = "Local Authorities Demographic Geofence Lookup"
   })
 }
@@ -80,7 +80,7 @@ module "postcode_demographic_geographic_lookup" {
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
-  account_tags = merge(local.account_tags, {
+  tags = merge(local.tags, {
     Feature = "Postcode Demographic Geographic Lookup"
   })
 }

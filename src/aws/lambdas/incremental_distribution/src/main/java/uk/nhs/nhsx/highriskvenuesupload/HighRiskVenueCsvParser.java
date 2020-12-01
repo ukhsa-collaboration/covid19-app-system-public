@@ -40,7 +40,7 @@ public class HighRiskVenueCsvParser {
     private static final String DEFAULT_OPTIONAL_PARAMETER = "";
     private static final int CSV_CONTENT_MAX_SIZE = 1048576;
     private static boolean messageTypeFeatureFlag;
-    private static List<String> MESSAGE_TYPES_WITH_OPTIONAL_PARAMETER = List.of("M3");
+    private static final List<String> MESSAGE_TYPES_WITH_OPTIONAL_PARAMETER = List.of("M3");
 
     public HighRiskVenueCsvParser() {
         this(false);
@@ -85,7 +85,6 @@ public class HighRiskVenueCsvParser {
                 venues.add(highRiskVenue);
             }
         }
-        // TODO: check if date ranges overlap for the same venue id
         return new HighRiskVenues(venues);
     }
 

@@ -1,6 +1,6 @@
 locals {
   identifier_prefix = "${terraform.workspace}-${var.name}"
-  account_tags = merge(var.account_tags, {
+  tags = merge(var.tags, {
     Resource = "s3"
   })
 }
@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "this" {
 
   force_destroy = var.force_destroy_s3_buckets
 
-  tags = local.account_tags
+  tags = local.tags
 
   versioning {
     enabled = false

@@ -21,11 +21,6 @@ import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses;
 
-/**
- * High risk venue upload lambda
- * <p>
- * doc/design/api-contracts/risky-venue-upload.md
- */
 public class Handler extends RoutingHandler {
 
     private static final Logger logger = LogManager.getLogger(Handler.class);

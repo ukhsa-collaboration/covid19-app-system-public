@@ -7,33 +7,41 @@ import smoke.env.EnvConfig
 
 class FederatedKeysSubmissionClient(private val config: EnvConfig) {
 
-    val functionName = config.federatedKeysProcessingFunction
+    val uploadFunctionName = config.federationKeysProcessingUploadFunction
+    val downloadFunctionName = config.federationKeysProcessingDownloadFunction
 
-    fun invokeFederatedKeysProcessing(){
-        invokeFunction(functionName)
+    fun invokeFederatedKeysProcessingForUpload(){
+        invokeFunction(uploadFunctionName)
                 .requireStatusCode(Status.OK)
                 .requireBodyText("\"success\"")
     }
 
+    fun invokeFederatedKeysProcessingForDownload(){
+        invokeFunction(downloadFunctionName)
+            .requireStatusCode(Status.OK)
+            .requireBodyText("\"success\"")
+    }
+
     fun invokeFederatedKeysDownload(){
-        val downloadEnabledInitialValue = readLambdaEnvVar(functionName, "DOWNLOAD_ENABLED")
-        val uploadEnabledInitialValue = readLambdaEnvVar(functionName, "UPLOAD_ENABLED")
+        val downloadEnabledInitialValue = readLambdaEnvVar(downloadFunctionName, "DOWNLOAD_ENABLED")
+        val uploadEnabledInitialValue = readLambdaEnvVar(uploadFunctionName, "UPLOAD_ENABLED")
         if (!downloadEnabledInitialValue.toBoolean()) {
-            updateEnvVar("DOWNLOAD_ENABLED", true)
+            updateEnvVar("DOWNLOAD_ENABLED", downloadFunctionName,true)
         }
         if (uploadEnabledInitialValue.toBoolean()) {
-            updateEnvVar("UPLOAD_ENABLED", false)
+            updateEnvVar("UPLOAD_ENABLED",uploadFunctionName, false)
         }
-        invokeFederatedKeysProcessing()
+        invokeFederatedKeysProcessingForUpload()
+        invokeFederatedKeysProcessingForDownload()
         if (!downloadEnabledInitialValue.toBoolean()) {
-            updateEnvVar("DOWNLOAD_ENABLED", false)
+            updateEnvVar("DOWNLOAD_ENABLED", downloadFunctionName,false)
         }
         if (uploadEnabledInitialValue.toBoolean()) {
-            updateEnvVar("UPLOAD_ENABLED", true)
+            updateEnvVar("UPLOAD_ENABLED", uploadFunctionName, true)
         }
     }
 
-    private fun updateEnvVar(envVar: String, value: Boolean){
+    private fun updateEnvVar(envVar: String, functionName: String, value: Boolean){
         val result = AwsLambda.updateLambdaEnvVar(
                 functionName,
                 envVar to "$value"

@@ -2,7 +2,7 @@ package uk.nhs.nhsx.circuitbreakers
 
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.extractPollingToken
 import uk.nhs.nhsx.core.Jackson
 

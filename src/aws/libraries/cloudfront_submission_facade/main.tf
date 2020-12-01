@@ -14,7 +14,7 @@ resource "aws_cloudfront_distribution" "this" {
   aliases         = [local.fqdn]
   price_class     = "PriceClass_100"
   web_acl_id      = var.web_acl_arn
-  tags            = {}
+  tags            = var.tags
   comment         = "Submission APIs for ${terraform.workspace}"
 
   origin {
@@ -48,6 +48,8 @@ resource "aws_cloudfront_distribution" "this" {
       cookies {
         forward = "all"
       }
+
+      headers = ["User-Agent"]
     }
 
     viewer_protocol_policy = "https-only"
@@ -67,6 +69,8 @@ resource "aws_cloudfront_distribution" "this" {
       cookies {
         forward = "all"
       }
+
+      headers = ["User-Agent"]
     }
 
     viewer_protocol_policy = "https-only"
@@ -103,6 +107,8 @@ resource "aws_cloudfront_distribution" "this" {
       cookies {
         forward = "all"
       }
+
+      headers = ["User-Agent"]
     }
 
     viewer_protocol_policy = "https-only"
@@ -122,6 +128,46 @@ resource "aws_cloudfront_distribution" "this" {
       cookies {
         forward = "all"
       }
+
+      headers = ["User-Agent"]
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+
+  origin {
+    domain_name = replace(var.analytics_events_submission_endpoint, "/^https?://([^/]*).*/", "$1")
+    origin_id   = var.analytics_events_submission_endpoint
+
+    custom_header {
+      name  = "x-custom-oai"
+      value = var.custom_oai
+    }
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = var.analytics_events_submission_path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.analytics_events_submission_endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+
+      headers = ["User-Agent"]
     }
 
     viewer_protocol_policy = "https-only"
@@ -178,7 +224,8 @@ resource "aws_cloudfront_distribution" "this" {
       cookies {
         forward = "all"
       }
-      headers = ["Authorization"] # forward this header for GET requests as well
+
+      headers = ["Authorization", "User-Agent"] # forward this header for GET requests as well
     }
 
     viewer_protocol_policy = "https-only"
@@ -215,7 +262,8 @@ resource "aws_cloudfront_distribution" "this" {
       cookies {
         forward = "all"
       }
-      headers = ["Authorization"] # forward this header for GET requests as well
+
+      headers = ["Authorization", "User-Agent"] # forward this header for GET requests as well
     }
 
     viewer_protocol_policy = "https-only"
@@ -252,10 +300,110 @@ resource "aws_cloudfront_distribution" "this" {
       cookies {
         forward = "all"
       }
+
+      headers = ["User-Agent"]
     }
 
     viewer_protocol_policy = "https-only"
   }
+
+  origin {
+    domain_name = replace(var.isolation_payment_endpoint, "/^https?://([^/]*).*/", "$1")
+    origin_id   = var.isolation_payment_endpoint
+
+    custom_header {
+      name  = "x-custom-oai"
+      value = var.custom_oai
+    }
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = var.isolation_payment_path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.isolation_payment_endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+
+      headers = ["User-Agent"]
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+  ordered_cache_behavior {
+    path_pattern     = var.isolation_payment_health_path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.isolation_payment_endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+
+      headers = ["User-Agent"]
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+
+  origin {
+    domain_name = replace(var.empty_submission_endpoint, "/^https?://([^/]*).*/", "$1")
+    origin_id   = var.empty_submission_endpoint
+
+    custom_header {
+      name  = "x-custom-oai"
+      value = var.custom_oai
+    }
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = var.empty_submission_path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.empty_submission_endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+
+      headers = ["User-Agent"]
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+
   #retain_on_delete = # not a good idead: "true" causes "Error: CloudFrontOriginAccessIdentityInUse: The CloudFront origin access identity is still being used" in other places
 
   restrictions {
@@ -277,6 +425,7 @@ data "aws_acm_certificate" "selected" {
   provider    = aws.useast
   types       = ["AMAZON_ISSUED"]
   most_recent = true
+  tags        = var.tags
 }
 
 data "aws_route53_zone" "selected" {

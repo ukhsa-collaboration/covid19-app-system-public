@@ -25,4 +25,18 @@ public class AwsSecretManager implements SecretManager {
             return Optional.empty();
         }
     }
+
+    public byte[] getSecretBinary(SecretName secretName) {
+        try {
+            GetSecretValueResult getSecretValueResult =
+                client.getSecretValue(new GetSecretValueRequest().withSecretId(secretName.value));
+
+            byte[] buffer = new byte[getSecretValueResult.getSecretBinary().remaining()];
+            getSecretValueResult.getSecretBinary().get(buffer);
+            return buffer;
+
+        } catch (AWSSecretsManagerException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

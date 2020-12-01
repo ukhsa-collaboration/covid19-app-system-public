@@ -5,7 +5,7 @@ import org.http4k.client.JavaHttpClient
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.hamkrest.hasStatus
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import smoke.clients.AnalyticsKeysSubmissionClient
 import smoke.clients.AwsLambda
 import smoke.clients.requireBodyText
@@ -45,13 +45,6 @@ class AnalyticsSubmissionSmokeTest {
     fun `invalid payload is rejected`() {
         val response = submitAnalytics(iOSPayloadFrom("1", "2", "3"))
         assertThat(response, hasStatus(Status.BAD_REQUEST))
-    }
-
-    @Test
-    fun `invokes analytics processing`() {
-        AwsLambda.invokeFunction(config.analytics_processing_function)
-            .requireStatusCode(Status.OK)
-            .requireBodyText("\"success\"")
     }
 
     private fun generateIosAnalyticsPayload(): ClientAnalyticsSubmissionPayload {

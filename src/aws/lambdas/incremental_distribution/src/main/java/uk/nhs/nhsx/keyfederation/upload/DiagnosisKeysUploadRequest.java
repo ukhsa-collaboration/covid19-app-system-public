@@ -9,9 +9,8 @@ public class DiagnosisKeysUploadRequest {
     public final String payload;
 
     @JsonCreator
-    public DiagnosisKeysUploadRequest(
-        @JsonProperty String batchTag,
-        @JsonProperty String payload) {
+    public DiagnosisKeysUploadRequest(@JsonProperty String batchTag,
+                                      @JsonProperty String payload) {
         this.batchTag = batchTag;
         this.payload = payload;
     }

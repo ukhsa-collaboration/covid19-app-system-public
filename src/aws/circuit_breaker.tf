@@ -9,6 +9,7 @@ module "exposure_notification_circuit_breaker" {
   ssm_parameter            = "exposure-notification"
   custom_oai               = random_uuid.submission-custom-oai.result
   alarm_topic_arn          = var.alarm_topic_arn
+  tags                     = var.tags
 }
 
 module "risky_venues_circuit_breaker" {
@@ -22,6 +23,7 @@ module "risky_venues_circuit_breaker" {
   ssm_parameter            = "venue-notification"
   custom_oai               = random_uuid.submission-custom-oai.result
   alarm_topic_arn          = var.alarm_topic_arn
+  tags                     = var.tags
 }
 
 output "exposure_notification_circuit_breaker_endpoint" {

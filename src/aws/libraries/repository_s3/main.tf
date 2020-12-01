@@ -1,9 +1,9 @@
 locals {
   identifier_prefix = "${terraform.workspace}-artifact-repository"
   service           = "repository"
-  lambda_source     = "${path.module}/../../../../out/java/batch_creation/javalambda-0.0.1-SNAPSHOT.jar"
+  lambda_source     = "${path.module}/../../../../src/aws/lambdas/incremental_distribution/build/distributions/javalambda-0.0.1-SNAPSHOT.zip"
   lambda_hash       = filemd5(local.lambda_source)
-  lambda_key        = "lambda/lambda-${local.lambda_hash}.jar"
+  lambda_key        = "lambda/lambda-${local.lambda_hash}.zip"
 }
 
 resource "aws_s3_bucket" "this" {
@@ -12,10 +12,7 @@ resource "aws_s3_bucket" "this" {
 
   force_destroy = var.force_destroy_s3_buckets
 
-  tags = {
-    Environment = terraform.workspace
-    Service     = local.service
-  }
+  tags = var.tags
 
   versioning {
     enabled = false # *** PRIVACY / AG Terms & Conditions (CHT) *** Make sure versioning __is disabled__ because we store diagnosis keys in these buckets !!!

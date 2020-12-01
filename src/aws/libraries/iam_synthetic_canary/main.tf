@@ -3,6 +3,8 @@ data "aws_caller_identity" "caller" {}
 resource "aws_iam_role" "lambda_execution_role" {
   name = "${terraform.workspace}-${var.service}-${var.name}"
 
+  tags = var.tags
+
   assume_role_policy = <<-EOF
     {
       "Version": "2012-10-17",

@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeydist.apispec;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -10,7 +10,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DailyZIPSubmissionPeriodTest {
 
@@ -33,9 +35,9 @@ public class DailyZIPSubmissionPeriodTest {
                 .isCoveringSubmissionDate(utcDate(2020, 07, 4, 0, 0, 0, 0), 0));
 
         assertTrue(new DailyZIPSubmissionPeriod(utcDate(2020, 07, 4, 0, 0, 0, 0))
-            .isCoveringSubmissionDate(utcDate(2020, 07, 2, 23, 59, 59, 999), -15));
+                .isCoveringSubmissionDate(utcDate(2020, 07, 2, 23, 59, 59, 999), -15));
         assertFalse(new DailyZIPSubmissionPeriod(utcDate(2020, 07, 4, 0, 0, 0, 0))
-            .isCoveringSubmissionDate(utcDate(2020, 07, 3, 23, 59, 59, 999), -15));
+                .isCoveringSubmissionDate(utcDate(2020, 07, 3, 23, 59, 59, 999), -15));
     }
 
     @Test

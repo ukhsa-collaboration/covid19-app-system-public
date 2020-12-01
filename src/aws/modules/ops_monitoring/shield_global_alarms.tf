@@ -23,6 +23,8 @@ resource "aws_cloudwatch_metric_alarm" "global" {
   count    = length(local.metric_alarms)
   provider = aws.useast
 
+  tags = var.tags
+
   alarm_name          = local.metric_alarms[count.index].name
   alarm_description   = local.metric_alarms[count.index].description
   comparison_operator = "GreaterThanOrEqualToThreshold"

@@ -8,7 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
 public class SystemObjectMapper {
-    public static ObjectMapper MAPPER = objectMapper();
+    
+    public static final ObjectMapper MAPPER = objectMapper();
 
     private static ObjectMapper objectMapper() {
         return new ObjectMapper()

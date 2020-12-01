@@ -48,7 +48,9 @@ public class StandardHandlers {
         return r -> {
             String keyName =  apiKeyNameFrom(r.getHeaders().get("authorization")).orElse("none");
             String requestId = Optional.ofNullable(r.getHeaders().get("Request-Id")).orElse("none");
-            logger.info("Received http request: method={}, path={},requestId={},apiKeyName={}", r.getHttpMethod(), r.getPath(),requestId,keyName);
+            String userAgent = Optional.ofNullable(r.getHeaders().get("User-Agent")).orElse("none");
+            logger.info("Received http request: method={}, path={},requestId={},apiKeyName={},userAgent={}",
+                r.getHttpMethod(), r.getPath(),requestId,keyName, userAgent);
             return delegate.handle(r);
         };
     }

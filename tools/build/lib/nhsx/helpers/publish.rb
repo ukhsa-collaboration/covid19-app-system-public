@@ -25,15 +25,6 @@ module NHSx
       end
     end
 
-    # Publish the control panel source code to the hosting S3
-    def publish_conpan_website(account, build_path, store_name, target_environment, system_config)
-      target_config = target_environment_configuration(target_environment, account, system_config)
-      content_base_path = File.join(system_config.base, build_path)
-      cmdline = NHSx::AWS::Commandlines.upload_to_s3_recursively(content_base_path, target_config[store_name])
-      puts "Uploading #{content_base_path}\nTarget bucket #{target_config[store_name]}"
-      run_command("Publish object to hosting bucket", cmdline, system_config)
-    end
-
     # Publish the document reporting tool source code to the hosting S3
     def publish_doreto_website(account, build_path, store_name, target_environment, system_config)
       target_config = doreto_target_environment_configuration(target_environment, account, system_config)

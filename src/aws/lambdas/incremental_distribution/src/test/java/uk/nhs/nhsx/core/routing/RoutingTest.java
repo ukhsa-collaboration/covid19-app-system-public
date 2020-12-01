@@ -3,7 +3,7 @@ package uk.nhs.nhsx.core.routing;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;

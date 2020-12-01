@@ -13,30 +13,27 @@ module "exposure_configuration_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  tags                     = var.tags
 }
 
 module "post_districts_distribution" {
   source                   = "./modules/distribution"
   name                     = "risky-post-districts"
   default_payload          = null
-  payload_source           = abspath("../../../static/risky-post-districts.json")
-  metadata_signature       = abspath("../../../../out/signatures/risky-post-districts.json.sig")
-  metadata_signature_date  = abspath("../../../../out/signatures/risky-post-districts.json.date")
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = var.s3_versioning
+  tags                     = var.tags
 }
 
 module "risky_venues_distribution" {
   source                   = "./modules/distribution"
   name                     = "risky-venues"
   default_payload          = null
-  payload_source           = abspath("../../../static/risky-venues.json")
-  metadata_signature       = abspath("../../../../out/signatures/risky-venues.json.sig")
-  metadata_signature_date  = abspath("../../../../out/signatures/risky-venues.json.date")
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = var.s3_versioning
+  tags                     = var.tags
 }
 
 module "self_isolation_distribution" {
@@ -49,6 +46,7 @@ module "self_isolation_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  tags                     = var.tags
 }
 
 module "symptomatic_questionnaire_distribution" {
@@ -61,6 +59,7 @@ module "symptomatic_questionnaire_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  tags                     = var.tags
 }
 
 module "availability_android_distribution" {
@@ -73,6 +72,7 @@ module "availability_android_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  tags                     = var.tags
 }
 
 module "availability_ios_distribution" {
@@ -85,6 +85,7 @@ module "availability_ios_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  tags                     = var.tags
 }
 
 resource "aws_cloudfront_origin_access_identity" "diagnosis_keys" {
@@ -106,6 +107,7 @@ module "diagnosis_keys_distribution_store" {
   origin_access_identity_path = aws_cloudfront_origin_access_identity.diagnosis_keys.iam_arn
   logs_bucket_id              = var.logs_bucket_id
   force_destroy_s3_buckets    = var.force_destroy_s3_buckets
+  tags                        = var.tags
 }
 
 
@@ -151,6 +153,8 @@ module "distribution_apis" {
   domain                   = var.base_domain
   web_acl_arn              = var.waf_arn
   enable_shield_protection = var.enable_shield_protection
+
+  tags = var.tags
 }
 
 output "base_distribution_endpoint" {

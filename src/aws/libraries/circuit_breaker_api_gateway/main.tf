@@ -4,6 +4,7 @@ data "aws_caller_identity" "current" {}
 resource "aws_apigatewayv2_api" "this" {
   name          = "${terraform.workspace}-${var.name}-http-api"
   protocol_type = "HTTP"
+  tags          = var.tags
 }
 
 resource "aws_apigatewayv2_integration" "post" {
@@ -44,6 +45,7 @@ resource "aws_apigatewayv2_stage" "this" {
   api_id      = aws_apigatewayv2_api.this.id
   name        = "$default"
   auto_deploy = true
+  tags        = var.tags
 
   default_route_settings {
     detailed_metrics_enabled = true
@@ -51,5 +53,4 @@ resource "aws_apigatewayv2_stage" "this" {
     throttling_burst_limit   = var.burst_limit
     throttling_rate_limit    = var.rate_limit
   }
-
 }

@@ -6,7 +6,7 @@ variable "name" {
   description = "The name you want to use to identify this workgroup in Athena."
 }
 
-variable "account_tags" {
+variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
 }

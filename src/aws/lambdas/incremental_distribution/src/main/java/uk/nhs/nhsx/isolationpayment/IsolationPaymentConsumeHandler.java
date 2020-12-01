@@ -1,0 +1,49 @@
+package uk.nhs.nhsx.isolationpayment;
+
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import uk.nhs.nhsx.core.Environment;
+import uk.nhs.nhsx.core.SystemClock;
+import uk.nhs.nhsx.isolationpayment.model.IsolationRequest;
+import uk.nhs.nhsx.isolationpayment.model.IsolationResponse;
+
+import java.time.Instant;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.string;
+
+public class IsolationPaymentConsumeHandler implements RequestHandler<IsolationRequest, IsolationResponse>  {
+    private static final Environment.EnvironmentKey<String> ISOLATION_TOKEN_TABLE = string("ISOLATION_PAYMENT_TOKENS_TABLE");
+    private static final Environment.EnvironmentKey<String> AUDIT_LOG_PREFIX = string("AUDIT_LOG_PREFIX");
+    private final IsolationPaymentGatewayService service;
+
+    public IsolationPaymentConsumeHandler() {
+        this(Environment.fromSystem(), SystemClock.CLOCK);
+    }
+
+    public IsolationPaymentConsumeHandler(IsolationPaymentGatewayService service) {
+        this.service = service;
+    }
+
+    public IsolationPaymentConsumeHandler(Environment environment, Supplier<Instant> clock) {
+        this(isolationPaymentService(clock, environment));
+    }
+
+    private static IsolationPaymentGatewayService isolationPaymentService(Supplier<Instant> clock, Environment environment) {
+        var isolationDynamoService = new IsolationDynamoService(
+            AmazonDynamoDBClientBuilder.defaultClient(),
+            environment.access.required(ISOLATION_TOKEN_TABLE)
+        );
+        return new IsolationPaymentGatewayService(clock, isolationDynamoService, environment.access.required(AUDIT_LOG_PREFIX));
+    }
+
+    @Override
+    public IsolationResponse handleRequest(IsolationRequest input, Context context) {
+        return Optional.ofNullable(input)
+            .map(v -> v.ipcToken)
+            .map(service::consumeIsolationToken)
+            .orElseThrow(RuntimeException::new);
+    }
+}

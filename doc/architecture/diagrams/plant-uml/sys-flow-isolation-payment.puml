@@ -1,0 +1,35 @@
+@startuml isolation-payment
+Actor User
+
+group trigger exposure notification
+  App -> DistributionAPI : poll diagnosis keys
+  App <- DistributionAPI : 
+
+  ...
+
+App -> App: risk analysis, match with encounters found
+...
+  App -> CircuitBreaker : confirm exposure notification
+  ...
+  App <- CircuitBreaker : confirm
+  App -> User : trigger exposure notification for user
+  App -> User : isolation advice as an exposed contact
+  ...
+end 
+
+group claim isolation payment
+User -> App : create Isolation Payment Claim token (triggered when entering self isolation)
+App -> "Submission \n IsolationPaymentClaim": create IPC token
+return 
+...
+User -> App : claim Isolation Payment (triggered by user)
+App -> "Submission \n IsolationPaymentClaim": update token data and get claim URL
+return 
+
+App -> "IPC Website": redirect user to browser, pass IPC token
+User -> "IPC Website": interact with website, finalise claim
+return
+"IPC Website" -> "Confirmation \n IsolationPaymentClaim": IPC token used
+end
+
+@enduml

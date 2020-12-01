@@ -16,7 +16,7 @@ module NHSx
 
     # All the fixed (named) target environments per account: {"account"=>[target_environments]}
     TARGET_ENVIRONMENTS = {
-      "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "branch"],
+      "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev","sit","branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
     }.freeze

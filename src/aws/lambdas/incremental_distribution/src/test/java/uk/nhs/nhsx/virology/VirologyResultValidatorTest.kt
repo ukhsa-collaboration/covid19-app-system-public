@@ -2,7 +2,7 @@ package uk.nhs.nhsx.virology
 
 import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
 import uk.nhs.nhsx.virology.result.VirologyResultValidator.validateTestResult
 

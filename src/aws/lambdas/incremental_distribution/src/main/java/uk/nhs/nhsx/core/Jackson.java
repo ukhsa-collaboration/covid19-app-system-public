@@ -23,6 +23,10 @@ public class Jackson {
         return SystemObjectMapper.MAPPER.readValue(inputStream, clazz);
     }
 
+    public static <T> T readJson(String value, TypeReference<T> clazz) throws IOException {
+        return SystemObjectMapper.MAPPER.readValue(value, clazz);
+    }
+
     public static <T> T readJson(InputStream inputStream, TypeReference<T> clazz) throws IOException {
         return SystemObjectMapper.MAPPER.readValue(inputStream, clazz);
     }

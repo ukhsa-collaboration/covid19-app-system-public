@@ -9,10 +9,8 @@ resource "aws_s3_bucket" "this" {
 
   force_destroy = var.force_destroy_s3_buckets
 
-  tags = {
-    Environment = terraform.workspace
-    Service     = var.service
-  }
+  tags = var.tags
+
   logging {
     target_bucket = var.logs_bucket_id
     target_prefix = "${local.identifier_prefix}/"
@@ -22,6 +20,16 @@ resource "aws_s3_bucket" "this" {
       apply_server_side_encryption_by_default {
         sse_algorithm = "AES256"
       }
+    }
+  }
+  lifecycle_rule {
+    id      = "${local.identifier_prefix}-days_to_retain"
+    enabled = var.lifecycle_rule_enabled
+    expiration {
+      days = var.days_to_live
+    }
+    noncurrent_version_expiration {
+      days = var.days_to_live
     }
   }
 
@@ -100,6 +108,16 @@ resource "aws_s3_bucket" "destination" {
     target_bucket = var.logs_bucket_id
     target_prefix = "${local.identifier_prefix}/"
   }
+  lifecycle_rule {
+    id      = "${local.identifier_prefix}-replica-days_to_retain"
+    enabled = var.lifecycle_rule_enabled
+    expiration {
+      days = var.days_to_live
+    }
+    noncurrent_version_expiration {
+      days = var.days_to_live
+    }
+  }
   versioning {
     enabled = true
   }
@@ -152,7 +170,9 @@ resource "aws_s3_bucket_policy" "replica" {
 
 resource "aws_iam_role" "replication" {
   count = var.replication_enabled ? 1 : 0
-  name  = "${var.name}-replication"
+  name  = "${terraform.workspace}-${var.name}-replication"
+
+  tags = var.tags
 
   assume_role_policy = <<POLICY
 {
@@ -173,7 +193,7 @@ POLICY
 
 resource "aws_iam_policy" "replication" {
   count = var.replication_enabled ? 1 : 0
-  name  = "${var.name}-replication"
+  name  = "${terraform.workspace}-${var.name}-replication"
 
   policy = <<POLICY
 {

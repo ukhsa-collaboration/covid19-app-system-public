@@ -10,14 +10,14 @@ import com.natpryce.hamkrest.isIn
 import com.natpryce.hamkrest.isNullOrEmptyString
 import org.assertj.core.api.Assertions.fail
 import org.http4k.client.JavaHttpClient
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 import smoke.clients.StaticContentClient
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.core.DateFormatValidator
 import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.highriskpostcodesupload.RiskyPostCodes
+import uk.nhs.nhsx.highriskpostcodesupload.RiskyPostCodesV1
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 
 class StaticContentSmokeTest {
@@ -64,7 +64,7 @@ class StaticContentSmokeTest {
     fun `gets risky postal districts`() {
         val json = staticContentClient.riskyPostDistricts()
         // cannot compare against static file because it might change
-        val postalDistricts = Jackson.deserializeMaybe(json, RiskyPostCodes::class.java)
+        val postalDistricts = Jackson.deserializeMaybe(json, RiskyPostCodesV1::class.java)
             .orElseGet { fail("Unable to deserialize postal districts: $json") }
 
         postalDistricts.postDistricts.entries.forEach {
@@ -105,6 +105,17 @@ class StaticContentSmokeTest {
 
         JSONAssert.assertEquals(
             SmokeTests.loadStaticContent("symptomatic-questionnaire.json"),
+            json,
+            JSONCompareMode.STRICT
+        )
+    }
+
+    @Test
+    fun `gets risky venues messages`() {
+        val json = staticContentClient.riskyVenuesMessages()
+
+        JSONAssert.assertEquals(
+            SmokeTests.loadStaticContent("risky-venues-messages.json"),
             json,
             JSONCompareMode.STRICT
         )

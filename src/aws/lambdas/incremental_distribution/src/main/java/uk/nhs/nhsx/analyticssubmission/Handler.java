@@ -28,14 +28,8 @@ import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses;
 
-/**
- * Daily mobile-analytics submission API
- * <p>
- * doc/design/api-contracts/analytics-submission.md
- */
 public class Handler extends RoutingHandler {
 
-    private static final AmazonKinesisFirehose kinesisFirehose = AmazonKinesisFirehoseClientBuilder.defaultClient();
     private static final EnvironmentKey<Boolean> S3_INGEST_ENABLED = EnvironmentKey.bool("s3_ingest_enabled");
     private static final EnvironmentKey<Boolean> FIREHOSE_INGEST_ENABLED = EnvironmentKey.bool("firehose_ingest_enabled");
     private static final EnvironmentKey<String> FIREHOSE_STREAM = EnvironmentKey.string("firehose_stream_name");
@@ -48,8 +42,10 @@ public class Handler extends RoutingHandler {
 
     public Handler(Environment environment, Supplier<Instant> clock) {
         this(
-            environment, awsAuthentication(ApiName.Mobile),
+            environment, 
+            awsAuthentication(ApiName.Mobile),
             new AwsS3Client(),
+            AmazonKinesisFirehoseClientBuilder.defaultClient(),
             new UniqueObjectKeyNameProvider(clock, UniqueId.ID),
             analyticsConfig(environment)
         );
@@ -58,12 +54,14 @@ public class Handler extends RoutingHandler {
     public Handler(Environment environment,
                    Authenticator authenticator,
                    S3Storage s3Storage,
+                   AmazonKinesisFirehose kinesisFirehose,
                    ObjectKeyNameProvider objectKeyNameProvider,
                    AnalyticsConfig analyticsConfig) {
 
-        AnalyticsSubmissionService service = new AnalyticsSubmissionService(
+        var service = new AnalyticsSubmissionService(
             analyticsConfig, s3Storage, objectKeyNameProvider, kinesisFirehose
         );
+        
         this.handler = withoutSignedResponses(
             environment, authenticator,
             routes(

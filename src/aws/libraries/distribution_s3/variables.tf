@@ -32,3 +32,8 @@ variable "s3_versioning" {
   type        = bool
   default     = false
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

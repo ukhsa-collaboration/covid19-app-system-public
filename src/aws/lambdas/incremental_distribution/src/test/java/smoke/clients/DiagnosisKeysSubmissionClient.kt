@@ -61,7 +61,7 @@ class DiagnosisKeysSubmissionClient(private val client: JavaHttpClient,
     }
 
     private fun rollingStartNumber(): Int {
-        val utcDateTime = utcDateTime().toInstant(ZoneOffset.UTC)
+        val utcDateTime = utcDateTime().minusHours(1).toInstant(ZoneOffset.UTC)
         val rollingStartNumber = utcDateTime.epochSecond / Duration.ofMinutes(10).toSeconds()
         return rollingStartNumber.toInt()
     }

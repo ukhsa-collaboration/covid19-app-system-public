@@ -118,3 +118,8 @@ variable "enable_shield_protection" {
   description = "Flag to enable/disable shield protection"
   type        = bool
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

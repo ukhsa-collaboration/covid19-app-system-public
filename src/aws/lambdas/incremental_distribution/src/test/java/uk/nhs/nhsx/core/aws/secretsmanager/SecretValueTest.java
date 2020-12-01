@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.core.aws.secretsmanager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;

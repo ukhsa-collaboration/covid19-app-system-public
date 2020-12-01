@@ -5,12 +5,12 @@ import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.ContextBuilder
 import uk.nhs.nhsx.ProxyRequestBuilder
-import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemClock
+import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
 import uk.nhs.nhsx.core.aws.ssm.Parameter
@@ -18,7 +18,7 @@ import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
-import java.util.*
+import java.util.Optional
 
 class ExposureNotificationHandlerTest {
 

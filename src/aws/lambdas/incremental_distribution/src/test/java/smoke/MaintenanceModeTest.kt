@@ -2,11 +2,15 @@ package smoke
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.http4k.client.JavaHttpClient
-import org.http4k.core.*
+import org.http4k.core.ContentType
+import org.http4k.core.Method
+import org.http4k.core.Request
+import org.http4k.core.Response
+import org.http4k.core.Status
 import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasStatus
-import org.junit.After
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
 import smoke.clients.AwsLambda
 import smoke.clients.VirologyClient
 import smoke.env.SmokeTests
@@ -20,7 +24,7 @@ class MaintenanceModeTest {
     private fun postRequest(uri: String) =
         Request(Method.POST, uri).headers(headers)
 
-    @After
+    @AfterEach
     fun tearDown() {
         AwsLambda.disableMaintenanceMode(config.virologySubmissionLambdaFunctionName)
         AwsLambda.disableMaintenanceMode(config.virologyUploadLambdaFunctionName)

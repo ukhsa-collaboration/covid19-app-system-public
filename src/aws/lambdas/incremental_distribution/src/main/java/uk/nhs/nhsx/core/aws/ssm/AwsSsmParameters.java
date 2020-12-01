@@ -29,14 +29,14 @@ public class AwsSsmParameters implements Parameters {
     public <T> Parameter<T> parameter(ParameterName name, Function<String, T> convert) {
         LoadingCache<ParameterName, T> loader = CacheBuilder.newBuilder()
             .refreshAfterWrite(2, TimeUnit.MINUTES)
-            .build(new CacheLoader<ParameterName, T>() {
+            .build(new CacheLoader<>() {
                 @Override
-                public T load(ParameterName parameterName) throws Exception {
+                public T load(ParameterName parameterName) {
                     return AwsSsmParameters.this.load(parameterName, convert);
                 }
 
                 @Override
-                public ListenableFuture<T> reload(ParameterName key, T oldValue) throws Exception {
+                public ListenableFuture<T> reload(ParameterName key, T oldValue) {
                     ListenableFutureTask<T> task = ListenableFutureTask.create(() -> load(key));
                     executor.execute(task);
                     return task;

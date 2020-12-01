@@ -21,3 +21,8 @@ variable "risky_venues_messages_payload" {
 variable "risky_venues_messages_origin_access_identity_path" {
   description = "The origin access controlling access to the store"
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

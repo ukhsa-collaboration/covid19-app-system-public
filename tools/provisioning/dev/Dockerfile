@@ -17,6 +17,7 @@ RUN apt-get update && apt-get -qq -y install \
   automake \
   build-essential \
   curl \
+  dos2unix \
   git \
   graphviz \
   iputils-ping \
@@ -86,33 +87,23 @@ RUN wget -q ${TERRAFORM_URL} && \
 
 # Ruby gems installation
 COPY Gemfile .
+RUN dos2unix Gemfile
 RUN bundle install
 
 # Python packages
 COPY requirements.txt .
+RUN dos2unix requirements.txt
 RUN pip install -r requirements.txt
 
-# Customise .profile - mainly to simplify use of multi-factor authentication on the CLI
-RUN sed -i.bak '/^mesg/i# You may comment out the following lines if you don´t want `ls´ to be colorized:\
-export LS_OPTIONS="--color=auto"\
-eval "`dircolors -b`"\
-alias ls="ls \$LS_OPTIONS"\
-alias ll="ls \$LS_OPTIONS -l"\
-alias l="ls \$LS_OPTIONS -lA"\
-' /root/.profile
+COPY profile-*.sh /etc/profile.d/
+COPY useradd-init /usr/local/bin
 
-# Allow image to be run from Linux as user ID rather than root
-RUN \
-mkdir -p /home/dev100x && chmod a+rwx /home/dev100x && \
-useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1000 dev1000 && \
-useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1001 dev1001 && \
-useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1002 dev1002 && \
-useradd -s /bin/bash -d /home/dev100x -G sudo -M -u 1003 dev1003 && \
-echo '%sudo  ALL=(ALL)  NOPASSWD:ALL' >> /etc/sudoers.d/passwordlesssudo && \
-chmod 440 /etc/sudoers.d/passwordlesssudo
+RUN dos2unix \
+    /etc/profile.d/profile-*.sh \
+    /usr/local/bin/useradd-init
 
 WORKDIR /workspace
 
-RUN rm -rf /work/* /root/.git-credentials /home/dev100x/.git-credentials
+RUN rm -rf /work/*
 
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/bash", "/usr/local/bin/useradd-init"]

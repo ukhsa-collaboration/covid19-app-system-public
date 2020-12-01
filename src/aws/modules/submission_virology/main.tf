@@ -5,6 +5,7 @@ locals {
 module "virology_submission_role" {
   source = "../../libraries/iam_upload_lambda"
   name   = local.identifier_prefix
+  tags   = var.tags
 }
 
 module "test_order_lambda" {
@@ -27,6 +28,7 @@ module "test_order_lambda" {
     custom_oai                = var.custom_oai
   }
   app_alarms_topic = var.alarm_topic_arn
+  tags             = var.tags
 }
 
 module "test_order_gateway" {
@@ -36,4 +38,5 @@ module "test_order_gateway" {
   lambda_function_name = module.test_order_lambda.lambda_function_name
   burst_limit          = var.burst_limit
   rate_limit           = var.rate_limit
+  tags                 = var.tags
 }

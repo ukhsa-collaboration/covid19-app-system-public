@@ -6,6 +6,7 @@ locals {
   test_results_fiorano_upload_pattern      = "upload/virology-test/fiorano-result"
   test_results_eng_tokengen_upload_pattern = "upload/virology-test/eng-result-tokengen"
   test_results_wls_tokengen_upload_pattern = "upload/virology-test/wls-result-tokengen"
+  test_results_lfd_tokengen_upload_pattern = "upload/virology-test/lfd-result-tokengen"
   test_results_health_pattern              = "upload/virology-test/health"
   risky_venues_health_pattern              = "upload/identified-risk-venues/health"
   risky_post_districts_health_pattern      = "upload/high-risk-postal-districts/health"
@@ -13,6 +14,10 @@ locals {
   # String patterns passed to lambdas for invalidating cloudfront specific cache objects only
   risky_venues_cache_invalidation_pattern         = "/distribution/risky-venues"
   risky_post_districts_cache_invalidation_pattern = "/distribution/risky-post-districts"
+
+  tags = merge(var.tags, {
+    Component = "upload"
+  })
 }
 
 resource "random_uuid" "uploads-custom-oai" {}
@@ -31,6 +36,7 @@ module "risky_venues_upload" {
   custom_oai                        = random_uuid.uploads-custom-oai.result
   alarm_topic_arn                   = var.alarm_topic_arn
   should_parse_additional_fields    = false
+  tags                              = local.tags
 }
 
 module "risky_post_districts_upload" {
@@ -46,6 +52,7 @@ module "risky_post_districts_upload" {
   rate_limit                        = var.rate_limit
   custom_oai                        = random_uuid.uploads-custom-oai.result
   alarm_topic_arn                   = var.alarm_topic_arn
+  tags                              = local.tags
 }
 
 module "virology_upload" {
@@ -56,6 +63,7 @@ module "virology_upload" {
   rate_limit               = var.rate_limit
   custom_oai               = random_uuid.uploads-custom-oai.result
   alarm_topic_arn          = var.alarm_topic_arn
+  tags                     = var.tags
 }
 
 module "upload_apis" {
@@ -75,6 +83,7 @@ module "upload_apis" {
   test-results-upload-path                = local.test_results_upload_pattern
   custom_oai                              = random_uuid.uploads-custom-oai.result
   enable_shield_protection                = var.enable_shield_protection
+  tags                                    = var.tags
 }
 
 output "virology_table_submission_tokens" {
@@ -105,8 +114,14 @@ output "test_results_eng_tokengen_upload_endpoint" {
 output "test_results_wls_tokengen_upload_endpoint" {
   value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_wls_tokengen_upload_pattern}"
 }
+output "test_results_lfd_tokengen_upload_endpoint" {
+  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_lfd_tokengen_upload_pattern}"
+}
 output "virology_upload_lambda_function_name" {
   value = module.virology_upload.lambda_function_name
+}
+output "risky_post_districts_upload_lambda_function_name" {
+  value = module.risky_post_districts_upload.lambda_function_name
 }
 # Health endpoints
 output "test_results_health_endpoint" {

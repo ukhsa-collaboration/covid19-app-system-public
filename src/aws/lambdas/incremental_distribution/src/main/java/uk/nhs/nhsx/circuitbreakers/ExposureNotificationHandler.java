@@ -25,12 +25,6 @@ import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
 
-/**
- * Lambda Facade for Exposure Notification Circuit Breakers
- * <p>
- * doc/design/api-contracts/exposure-notification-circuit-breaker.md
- * <p>
- */
 public class ExposureNotificationHandler extends RoutingHandler {
 
     private static final ParameterName initial = ParameterName.of("exposure-notification-initial");

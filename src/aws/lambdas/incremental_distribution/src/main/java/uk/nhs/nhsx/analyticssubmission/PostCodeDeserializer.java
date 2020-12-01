@@ -11,7 +11,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 public class PostCodeDeserializer {
@@ -44,9 +43,7 @@ public class PostCodeDeserializer {
 
     private static String readFileAsString(String resourceName) throws IOException, URISyntaxException {
         URL resource = PostCodeDeserializer.class.getClassLoader().getResource(resourceName);
-        try {
-            Objects.requireNonNull(resource);
-        } catch(NullPointerException e){
+        if (resource == null) {
             throw new RuntimeException("Could not find post code mapping csv file at " + resourceName);
         }
         return new String(Files.readAllBytes(Paths.get(resource.toURI())));

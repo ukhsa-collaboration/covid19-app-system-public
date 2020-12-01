@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.core.auth;
 
 import com.amazonaws.util.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 

@@ -5,7 +5,7 @@ import com.amazonaws.services.kms.model.SigningAlgorithmSpec;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.hamcrest.MatcherAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.ProxyRequestBuilder;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.signature.KeyId;
@@ -15,7 +15,11 @@ import uk.nhs.nhsx.core.signature.Signer;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Base64;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,9 +43,9 @@ public class AwsResponseSignerTest {
     };
 
     ZonedDateTime now = ZonedDateTime.of(
-        LocalDate.of(2020, Month.AUGUST, 2),
-        LocalTime.of(10, 18, 44),
-        ZoneId.of("UTC")
+            LocalDate.of(2020, Month.AUGUST, 2),
+            LocalTime.of(10, 18, 44),
+            ZoneId.of("UTC")
     );
 
     private final AwsResponseSigner signer = new AwsResponseSigner(new RFC2616DatedSigner(() -> now.toInstant(), contentSigner));
@@ -52,8 +56,8 @@ public class AwsResponseSignerTest {
     public void signsAResponseAndSetsTheSignatureDate() {
 
         requestBuilder.withMethod(HttpMethod.POST)
-            .withPath("/some/path")
-            .withHeader("Request-Id", "client-request-id");
+                .withPath("/some/path")
+                .withHeader("Request-Id", "client-request-id");
 
         APIGatewayProxyRequestEvent request = requestBuilder.build();
 
@@ -71,8 +75,8 @@ public class AwsResponseSignerTest {
     public void signsAResponseWhenHeaderSetLowerCaseAndSetsTheSignatureDate() {
 
         requestBuilder.withMethod(HttpMethod.POST)
-            .withPath("/some/path")
-            .withHeader("request-id", "client-request-id");
+                .withPath("/some/path")
+                .withHeader("request-id", "client-request-id");
 
         APIGatewayProxyRequestEvent request = requestBuilder.build();
 
@@ -90,8 +94,8 @@ public class AwsResponseSignerTest {
     public void signingSomeBinaryContent() throws Exception {
 
         requestBuilder.withMethod(HttpMethod.POST)
-            .withPath("/some/path")
-            .withHeader("Request-Id", "client-request-id");
+                .withPath("/some/path")
+                .withHeader("Request-Id", "client-request-id");
 
         APIGatewayProxyRequestEvent request = requestBuilder.build();
 
@@ -114,8 +118,8 @@ public class AwsResponseSignerTest {
     public void signingAResponseWithNoContent() {
 
         requestBuilder.withMethod(HttpMethod.POST)
-            .withPath("/some/path")
-            .withHeader("Request-Id", "client-request-id");
+                .withPath("/some/path")
+                .withHeader("Request-Id", "client-request-id");
 
         APIGatewayProxyResponseEvent response = HttpResponses.ok();
 

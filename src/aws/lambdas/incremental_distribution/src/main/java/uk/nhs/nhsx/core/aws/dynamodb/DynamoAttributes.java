@@ -47,6 +47,12 @@ public class DynamoAttributes {
         return new AttributeValue().withN(String.valueOf(value));
     }
 
+    public static AttributeValue numericNullableAttribute(Number value) {
+        return value == null
+            ? new AttributeValue().withNULL(Boolean.TRUE)
+            : new AttributeValue().withN(String.valueOf(value));
+    }
+
     public static AttributeValueUpdate attributeValueUpdate(AttributeValue value, AttributeAction action) {
         return new AttributeValueUpdate().withValue(value).withAction(action);
     }

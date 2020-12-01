@@ -55,3 +55,8 @@ variable "dependency_ref" {
   type        = string
   default     = "_"
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

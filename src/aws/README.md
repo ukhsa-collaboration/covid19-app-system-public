@@ -2,7 +2,7 @@
 
 We refer to the AGAPI system in the context of deployment as a target environment.
 
-A target environment contains all API implementation necessary to support the mobile applications, the services that integrate with third party systems (e.g. QR code data etc.) and any supporting services for operation (e.g. analytics stores, control panel etc.).
+A target environment contains all API implementation necessary to support the mobile applications, the services that integrate with third party systems (e.g. QR code data etc.) and any supporting services for operation (e.g. analytics stores etc.).
 
 A target environment requires a correctly configured AWS account. Issues with access, security etc. are handled at the AWS account level.
 

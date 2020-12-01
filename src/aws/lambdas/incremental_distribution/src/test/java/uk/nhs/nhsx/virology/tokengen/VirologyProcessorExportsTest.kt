@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.virology.tokengen
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.diagnosiskeydist.ZipFileUtility
 import uk.nhs.nhsx.virology.CtaToken
 import java.io.File

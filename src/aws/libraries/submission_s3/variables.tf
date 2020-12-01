@@ -21,3 +21,19 @@ variable "replication_enabled" {
   type        = bool
   default     = false
 }
+
+variable "lifecycle_rule_enabled" {
+  description = "enables lifecycle rule which expires objects after specific time"
+  type        = bool
+  default     = false
+}
+
+variable "days_to_live" {
+  description = "The time in days applicable to the lifecycle rule, i.e. object are deleted after this ammount of days"
+  type        = number
+  default     = 15
+}
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

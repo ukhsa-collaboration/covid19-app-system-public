@@ -1,7 +1,6 @@
 package smoke
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
@@ -9,16 +8,13 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isNullOrEmptyString
 import org.http4k.client.JavaHttpClient
-import org.junit.Test
-import smoke.clients.AwsLambda
+import org.junit.jupiter.api.Test
 import smoke.clients.RiskyVenuesUploadClient
 import smoke.clients.StaticContentClient
 import smoke.clients.VenuesCircuitBreakerClient
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.circuitbreakers.RiskyVenueCircuitBreakerRequest
 import uk.nhs.nhsx.core.DateFormatValidator
 import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.highriskvenuesupload.VenuesParsingResult
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenue
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow
@@ -36,7 +32,7 @@ class HighRiskVenuesSmokeTest {
 
     @Test
     fun `upload, download, circuit breaker`() {
-        val expectedRiskyVenues: HighRiskVenues = generateRiskyVenues()
+        val expectedRiskyVenues = generateRiskyVenues()
 
         // upload
         val csv = generateCsvFrom(expectedRiskyVenues)
@@ -47,12 +43,14 @@ class HighRiskVenuesSmokeTest {
         val highRiskVenues = deserialize(staticContentRiskyVenues)
         assertThat(highRiskVenues?.venues, equalTo(expectedRiskyVenues.venues))
 
-
-        // circuit breaker
-        val circuitBreakerRequest = RiskyVenueCircuitBreakerRequest(expectedRiskyVenues.venues.first().id)
-        val tokenResponse = venuesCircuitBreakerClient.requestCircuitBreaker(circuitBreakerRequest)
+        // circuit breaker request
+        val tokenResponse = venuesCircuitBreakerClient.requestCircuitBreaker()
         assertThat(tokenResponse.approval, equalTo("yes"))
         assertThat(tokenResponse.approvalToken, !isNullOrEmptyString)
+
+        // circuit breaker approval
+        val resolutionResponse = venuesCircuitBreakerClient.resolutionCircuitBreaker(tokenResponse)
+        assertThat(resolutionResponse.approval, equalTo("yes"))
     }
 
    /* @Test Commented out until feature implemented

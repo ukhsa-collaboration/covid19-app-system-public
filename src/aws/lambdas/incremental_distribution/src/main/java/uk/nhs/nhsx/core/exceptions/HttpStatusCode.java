@@ -2,6 +2,7 @@ package uk.nhs.nhsx.core.exceptions;
 
 public enum HttpStatusCode {
     OK_200(200),
+    CREATED_201(201),
     ACCEPTED_202(202),
     NO_CONTENT_204(204),
     FORBIDDEN_403(403),

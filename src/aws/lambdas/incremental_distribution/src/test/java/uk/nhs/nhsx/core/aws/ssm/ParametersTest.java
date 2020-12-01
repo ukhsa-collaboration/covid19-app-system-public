@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.core.aws.ssm;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.circuitbreakers.ApprovalStatus;
 
 import java.util.function.Function;

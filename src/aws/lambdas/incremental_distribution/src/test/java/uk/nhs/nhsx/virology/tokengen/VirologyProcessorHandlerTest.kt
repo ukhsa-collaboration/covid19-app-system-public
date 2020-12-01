@@ -1,8 +1,11 @@
 package uk.nhs.nhsx.virology.tokengen
 
-import io.mockk.*
-import org.assertj.core.api.Assertions.*
-import org.junit.Test
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.virology.VirologyProcessorHandler
 
 class VirologyProcessorHandlerTest {

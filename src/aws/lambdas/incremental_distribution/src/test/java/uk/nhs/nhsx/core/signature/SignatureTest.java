@@ -2,7 +2,7 @@ package uk.nhs.nhsx.core.signature;
 
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 public class VirologyDataTimeToLiveCalculator implements Function<Supplier<Instant>, VirologyDataTimeToLive> {
 
-    public static VirologyDataTimeToLiveCalculator DEFAULT_TTL = new VirologyDataTimeToLiveCalculator(Duration.ofHours(4), Duration.ofDays(4));
+    public static final VirologyDataTimeToLiveCalculator DEFAULT_TTL = new VirologyDataTimeToLiveCalculator(Duration.ofHours(4), Duration.ofDays(4));
 //    public static VirologyDataTimeToLiveCalculator CTA_EXCHANGE_TTL = new VirologyDataTimeToLiveCalculator(Duration.ofMinutes(10), Duration.ofMinutes(30));
 
     private final Duration testDataExpiryDuration;

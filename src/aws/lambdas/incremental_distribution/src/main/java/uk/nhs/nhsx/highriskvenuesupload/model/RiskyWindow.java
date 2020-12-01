@@ -3,8 +3,9 @@ package uk.nhs.nhsx.highriskvenuesupload.model;
 import java.util.Objects;
 
 public class RiskyWindow {
+    
     public final String from;
-    public String until;
+    public final String until;
 
     public RiskyWindow(String from, String until) {
         this.from = from;

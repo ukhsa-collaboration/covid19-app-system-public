@@ -3,18 +3,22 @@ package uk.nhs.nhsx.virology
 import com.amazonaws.HttpMethod
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 import org.skyscreamer.jsonassert.JSONParser
 import uk.nhs.nhsx.ContextBuilder
 import uk.nhs.nhsx.ProxyRequestBuilder
 import uk.nhs.nhsx.TestData
-import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.SystemClock
+import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
 import uk.nhs.nhsx.core.signature.KeyId
@@ -29,7 +33,7 @@ import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import uk.nhs.nhsx.virology.persistence.VirologyDynamoService
 import java.time.Duration
-import java.util.*
+import java.util.Optional
 
 class VirologySubmissionHandlerTest {
 

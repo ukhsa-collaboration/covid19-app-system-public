@@ -3,9 +3,6 @@ package uk.nhs.nhsx.diagnosiskeydist.apispec;
 import java.util.Date;
 import java.util.List;
 
-/**
- * See doc/design/api-contracts/diagnosis-key-distribution.md
- */
 public abstract class ZIPSubmissionPeriod {
 	protected final Date periodEndDateExclusive;
 

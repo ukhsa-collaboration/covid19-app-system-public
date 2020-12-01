@@ -10,10 +10,10 @@ import org.http4k.core.Status
 import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasHeader
 import org.http4k.hamkrest.hasStatus
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import smoke.clients.VirologyClient
 import smoke.env.SmokeTests
-import java.util.*
+import java.util.Base64
 
 class ApiKeysSmokeTest {
 

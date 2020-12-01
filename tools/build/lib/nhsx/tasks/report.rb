@@ -91,4 +91,6 @@ namespace :report do
     puts " * WARNING: deployed version does not match the repo tag (#{repo_tags.fetch("te-#{env}", "N/A")})" if env_config.fetch("deployed_version", "N/A") != repo_tags.fetch("te-#{env}", "N/A")
     puts "* Full configuration in #{env_config["config_file"]}"
   end
+  task :releases do
+  end
 end

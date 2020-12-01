@@ -2,21 +2,20 @@ package uk.nhs.nhsx.diagnosiskeydist;
 
 import batchZipCreation.Exposure;
 import com.google.protobuf.ByteString;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.diagnosiskeydist.apispec.DailyZIPSubmissionPeriod;
 import uk.nhs.nhsx.diagnosiskeydist.apispec.ZIPSubmissionPeriod;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 
 import java.nio.ByteBuffer;
-import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ExposureProtobufTest {
 

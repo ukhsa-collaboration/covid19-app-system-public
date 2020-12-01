@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.core;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;

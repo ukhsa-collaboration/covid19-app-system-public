@@ -1,13 +1,17 @@
 package uk.nhs.nhsx.virology.tokengen
 
 import com.google.common.io.ByteSource
-import com.google.common.io.Files
 import com.google.common.io.Files.asByteSource
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.apache.http.Consts
 import org.apache.http.entity.ContentType
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.S3Storage

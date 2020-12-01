@@ -18,7 +18,7 @@ class RiskyVenuesUploadClient(private val client: JavaHttpClient,
     }
 
     fun upload(csv: String) {
-        logger.info("uploadTestResult")
+        logger.info("upload")
 
         val uri = baseUrlFrom(config)
 

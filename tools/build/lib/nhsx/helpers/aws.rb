@@ -117,9 +117,9 @@ module NHSx
         cmdline = "aws lambda list-functions --region #{region}"
         cmd = run_command("Retrieve list of active synth lambda layers", cmdline, system_config)
         active_synth_lambda_layers = []
-        lambda_layers = JSON.parse(cmd.output)["Functions"].map{|el| el["Layers"]}
+        lambda_layers = JSON.parse(cmd.output)["Functions"].map { |el| el["Layers"] }
         lambda_layers.map do |layers_list|
-          if ! layers_list
+          if !layers_list
             next
           end
           layers_list.map do |layer|
@@ -137,7 +137,7 @@ module NHSx
       def self.get_all_synth_lambda_layers(region, system_config)
         cmdline = "aws lambda list-layers --region #{region}"
         cmd = run_command("Retrieve list of all synth lambda layers", cmdline, system_config)
-        JSON.parse(cmd.output)["Layers"].select{|el| el["LayerName"].start_with?("cwsyn-")}.map{|el| el["LayerName"]}
+        JSON.parse(cmd.output)["Layers"].select { |el| el["LayerName"].start_with?("cwsyn-") }.map { |el| el["LayerName"] }
       end
 
       def self.get_lambda_layer_versions(layer_name, region)
@@ -146,6 +146,30 @@ module NHSx
 
       def self.delete_lambda_layer_version(layer_name, version_number, region)
         "aws lambda delete-layer-version --region #{region} --version-number #{version_number} --layer-name #{layer_name}"
+      end
+
+      def self.update_ssm_parameter(parameter_name, value)
+        "aws ssm put-parameter --name #{parameter_name} --value #{value} --overwrite"
+      end
+
+      def self.update_lambda_env_vars(function_name, environment)
+        "aws lambda update-function-configuration --function-name #{function_name} --environment '#{environment}'"
+      end
+
+      def self.get_function_configuration(function_name, region)
+        "aws lambda get-function-configuration --function-name #{function_name} --region #{region}"
+      end
+
+      def self.list_event_source_mappings(function_name)
+        "aws lambda list-event-source-mappings --function-name #{function_name}"
+      end
+
+      def self.enable_event_source_mapping(uuid)
+        "aws lambda update-event-source-mapping --uuid #{uuid} --enabled"
+      end
+
+      def self.disable_event_source_mapping(uuid)
+        "aws lambda update-event-source-mapping --uuid #{uuid} --no-enabled"
       end
     end
 
@@ -186,14 +210,60 @@ module NHSx
     end
 
     def get_lambda_layer_versions(layer_name, region, system_config)
-      cmd = run_command("Retrieve list of lambda layer versions", 
-        NHSx::AWS::Commandlines.get_lambda_layer_versions(layer_name, region), system_config)
+      cmd = run_command("Retrieve list of lambda layer versions",
+                        NHSx::AWS::Commandlines.get_lambda_layer_versions(layer_name, region), system_config)
       JSON.parse(cmd.output)["LayerVersions"].map { |el| el["Version"] }
     end
 
     def delete_lambda_layer_version(layer_name, version_number, region)
       cmdline = NHSx::AWS::Commandlines.delete_lambda_layer_version(layer_name, version_number, region)
       sh(cmdline)
+    end
+
+    def update_ssm_parameter(name, value, system_config)
+      cmd = NHSx::AWS::Commandlines.update_ssm_parameter(name, value)
+      run_command("Update #{name} ssm parameter with value #{value}", cmd, system_config)
+    end
+
+    def update_lambda_env_vars(function_name, variables, system_config)
+      full_var_dict = get_lambda_env_vars(function_name, system_config).merge(variables)
+      environment = JSON.generate({ "Variables" => full_var_dict })
+      cmdline = NHSx::AWS::Commandlines.update_lambda_env_vars(function_name, environment)
+      run_command("Update #{function_name} lambda function environment variables with values: #{variables}", cmdline, system_config)
+    end
+
+    def get_lambda_env_vars(function_name, system_config)
+      cmdline = NHSx::AWS::Commandlines.get_function_configuration(function_name, AWS_REGION)
+      cmd = run_command("Get function configuration for #{function_name} lambda function", cmdline, system_config)
+      JSON.parse(cmd.output)["Environment"]["Variables"]
+    end
+
+    def list_event_source_mappings(function_name, system_config)
+      cmdline = NHSx::AWS::Commandlines.list_event_source_mappings(function_name)
+      cmd = run_command("List even source mappings", cmdline, system_config)
+      JSON.parse(cmd.output)["EventSourceMappings"]
+    end
+
+    def get_even_source_mapping_uuid(function_name, event_source_arn, function_arn, system_config)
+      mappings = list_event_source_mappings(function_name, system_config)
+      mappings.find { |mapping| mapping["EventSourceArn"] == event_source_arn and mapping["FunctionArn"] == function_arn }["UUID"]
+    end
+
+    def enable_event_source_mapping(uuid, system_config)
+      cmdline = NHSx::AWS::Commandlines.enable_event_source_mapping(uuid)
+      run_command("Enabling event source mapping: #{uuid}", cmdline, system_config)
+    end
+
+    def disable_event_source_mapping(uuid, system_config)
+      cmdline = NHSx::AWS::Commandlines.disable_event_source_mapping(uuid)
+      run_command("Disabling event source mapping: #{uuid}", cmdline, system_config)
+    end
+
+    def get_lambda_custom_oai(lambda_function, system_config)
+      env_vars = get_lambda_env_vars(lambda_function, system_config)
+      custom_oai = env_vars["custom_oai"]
+      raise GaudiError, "Custom oai not found for #{lambda_function}" unless custom_oai
+      custom_oai
     end
 
     # Map a user friendly role name we can add as a parameter to the tasks to the full ARN

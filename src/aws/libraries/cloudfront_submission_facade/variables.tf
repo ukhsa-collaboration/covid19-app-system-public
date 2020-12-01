@@ -10,6 +10,14 @@ variable "analytics_submission_path" {
   description = "The route for the analytics submission API"
 }
 
+variable "analytics_events_submission_endpoint" {
+  description = "The endpoint for the analytics events submission API"
+}
+
+variable "analytics_events_submission_path" {
+  description = "The route for the analytics events submission API"
+}
+
 variable "diagnosis_keys_submission_endpoint" {
   description = "The endpoint for the diagnosis keys submission API"
 }
@@ -24,6 +32,14 @@ variable "exposure_notification_circuit_breaker_endpoint" {
 
 variable "exposure_notification_circuit_breaker_path" {
   description = "The route for the exposure notification circuit breaker"
+}
+
+variable "isolation_payment_endpoint" {
+  description = "The endpoint for the isolation payment submission API"
+}
+
+variable "isolation_payment_path" {
+  description = "The route for the isolation payment submission"
 }
 
 variable "risky_venues_circuit_breaker_endpoint" {
@@ -65,4 +81,21 @@ variable "analytics_submission_health_path" {
 
 variable "diagnosis_keys_submission_health_path" {
   description = "The route for the diagnosis keys submission health endpoint"
+}
+
+variable "empty_submission_endpoint" {
+  description = "The endpoint for the empty submission api"
+}
+
+variable "empty_submission_path" {
+  description = "The route for the empty submission"
+}
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}
+
+variable "isolation_payment_health_path" {
+  description = "The route for the isolation payment health endpoint"
 }

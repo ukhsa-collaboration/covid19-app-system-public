@@ -4,6 +4,7 @@ module "lambda_storage" {
   service                  = var.service
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = true
+  tags                     = var.tags
 }
 
 # maximum name length including workspace prefix is 21.

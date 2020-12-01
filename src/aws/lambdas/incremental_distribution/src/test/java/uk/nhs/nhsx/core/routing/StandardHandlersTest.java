@@ -1,9 +1,9 @@
 package uk.nhs.nhsx.core.routing;
 
 import org.apache.http.entity.ContentType;
-import org.junit.Test;
-import uk.nhs.nhsx.core.TestEnvironments;
+import org.junit.jupiter.api.Test;
 import uk.nhs.nhsx.core.HttpResponses;
+import uk.nhs.nhsx.core.TestEnvironments;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 
 import java.util.HashMap;

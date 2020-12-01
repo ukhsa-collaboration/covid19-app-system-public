@@ -64,7 +64,7 @@ public class Environment {
         return Optional.empty();
     }
 
-    public enum EnvironmentType {NonProduction, Production;}
+    public enum EnvironmentType {NonProduction, Production}
 
     public interface Access {
         Access SYSTEM = new Access() {

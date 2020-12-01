@@ -40,3 +40,12 @@ variable "publish" {
   type        = bool
   default     = false
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}
+
+variable "reserved_concurrent_executions" {
+  default = -1
+}

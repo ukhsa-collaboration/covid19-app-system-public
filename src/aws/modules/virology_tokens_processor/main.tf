@@ -5,6 +5,7 @@ locals {
 module "processor_role" {
   source = "../../libraries/iam_processing_lambda"
   name   = local.identifier_prefix
+  tags   = var.tags
 }
 
 module "virology_tokens_processing_lambda" {
@@ -24,6 +25,7 @@ module "virology_tokens_processing_lambda" {
     test_orders_index           = var.test_orders_index
   }
   app_alarms_topic = var.alarm_topic_arn
+  tags             = var.tags
 }
 
 module "virology_tokens_bucket" {
@@ -31,4 +33,5 @@ module "virology_tokens_bucket" {
   name           = "virology-tokens"
   logs_bucket_id = var.logs_bucket_id
   service        = "processing"
+  tags           = var.tags
 }

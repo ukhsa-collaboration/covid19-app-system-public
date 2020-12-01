@@ -4,9 +4,9 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.Test
-import java.util.*
+import org.junit.jupiter.api.Test
 import java.util.Collections.singletonMap
+import java.util.Optional
 
 class DynamoAttributesTest {
 

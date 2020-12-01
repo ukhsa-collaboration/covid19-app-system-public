@@ -9,10 +9,7 @@ resource "aws_s3_bucket" "this" {
 
   force_destroy = var.force_destroy_s3_buckets
 
-  tags = {
-    Environment = terraform.workspace
-    Service     = var.service
-  }
+  tags = var.tags
 
   versioning {
     enabled = var.s3_versioning

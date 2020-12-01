@@ -1,0 +1,203 @@
+plugins {
+    id "java"
+    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+    id 'com.adarshr.test-logger' version '2.1.1'
+}
+
+group = 'com.demo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+configurations.testImplementation.canBeResolved = true
+
+repositories {
+    mavenCentral()
+    maven{
+        name "DynamoDB Local Release Repo"
+        url "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"
+    }
+}
+
+ext {
+    aws_sdk_version = "1.11.826"
+    aws_xray_version = "2.4.0"
+    guava_version = "29.0-jre"
+    http4k_version = "3.277.0"
+    jackson_version = "2.11.1"
+    log4j_version = "2.13.3"
+    junit_version = "5.7.0"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        suppressWarnings = false
+        jvmTarget = "11"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-parameters"]
+}
+
+tasks.withType(Test) {
+    outputs.upToDateWhen { false }
+}
+
+testlogger {
+    showExceptions false
+    // log tests that take longer than ...
+    slowThreshold 2000
+}
+
+task copyNativeDependencies(type: Copy) {
+    from(configurations.testImplementation) {
+        include '*.dll'
+        include '*.dylib'
+        include '*.so'
+    }
+    into 'build/libs'
+}
+
+test {
+    useJUnitPlatform()
+
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+    scanForTestClasses = false
+
+    filter {
+        includeTestsMatching "*Test"
+        excludeTestsMatching "smoke.*"
+        excludeTestsMatching "db.*"
+    }
+
+    testlogger {
+        showStandardStreams false
+        showPassed false
+    }
+    dependsOn copyNativeDependencies
+    test.doFirst {
+        systemProperty "java.library.path", 'build/libs'
+    }
+}
+
+task testUnit {
+    dependsOn(check)
+}
+
+task testSmoke(type: Test) {
+    description = 'Runs smoke tests.'
+    group = 'verification'
+
+    useJUnitPlatform()
+
+    filter {
+        includeTestsMatching "smoke.*Test"
+    }
+}
+
+task testDb(type: Test) {
+    description = 'Runs db tests.'
+    group = 'verification'
+
+    filter {
+        includeTestsMatching "db.*Test"
+    }
+}
+
+
+task generateSignature(type: JavaExec) {
+    group = "Execution"
+    description = "Generate signature for some file"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "uk.nhs.nhsx.core.signature.DistributionSignatureMain"
+    args System.getProperty("sign.args", "").split()
+}
+
+task exploreExportFile(type: JavaExec) {
+    group = "Execution"
+    description = "Explore export.bin in working directory"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "uk.nhs.nhsx.diagnosiskeydist.ExportFileExplorer"
+    args System.getProperty("explore.args", "").split()
+}
+
+task zipLambdaDistribution(type: Zip) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+
+    from compileJava
+    from compileKotlin
+    from processResources
+    into("lib") {
+        from configurations.runtimeClasspath
+    }
+}
+
+task lambdaZip {
+    dependsOn(check, zipLambdaDistribution)
+}
+
+
+dependencies {
+    implementation group: "com.amazonaws", name: "aws-lambda-java-core", version: "1.2.1"
+    implementation group: "com.amazonaws", name: "aws-lambda-java-log4j2", version: "1.2.0"
+    implementation group: "com.amazonaws", name: "aws-lambda-java-events", version: "2.2.9"
+
+    implementation group: "com.amazonaws", name: "aws-java-sdk-kms", version: aws_sdk_version
+    implementation group: "com.amazonaws", name: "aws-java-sdk-cloudfront", version: aws_sdk_version
+    implementation group: "com.amazonaws", name: "aws-java-sdk-secretsmanager", version: aws_sdk_version
+    implementation group: "com.amazonaws", name: "aws-java-sdk-s3", version: aws_sdk_version
+    implementation group: "com.amazonaws", name: "aws-java-sdk-ssm", version: aws_sdk_version
+    implementation group: "com.amazonaws", name: "aws-java-sdk-dynamodb", version: aws_sdk_version
+    implementation group: "com.amazonaws", name: "aws-java-sdk-athena", version: aws_sdk_version
+    implementation group: "com.amazonaws", name: "aws-java-sdk-kinesis", version: aws_sdk_version
+
+    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-core", version: aws_xray_version
+    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-aws-sdk-core", version: aws_xray_version
+    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-aws-sdk", version: aws_xray_version
+    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-aws-sdk-instrumentor", version: aws_xray_version
+
+    implementation group: "org.apache.logging.log4j", name: "log4j-api", version: log4j_version
+    implementation group: "org.apache.logging.log4j", name: "log4j-core", version: log4j_version
+
+    implementation group: "com.google.guava", name: "guava", version: guava_version
+    implementation group: "com.google.protobuf", name: "protobuf-java", version: "3.12.2"
+    implementation group: "at.favre.lib", name: "bcrypt", version: "0.9.0"
+
+    implementation group: "com.fasterxml.jackson.core", name: "jackson-databind", version: jackson_version
+    implementation group: "com.fasterxml.jackson.module", name: "jackson-module-parameter-names", version: jackson_version
+    implementation group: "com.fasterxml.jackson.datatype", name: "jackson-datatype-jdk8", version: jackson_version
+    implementation group: "com.fasterxml.jackson.datatype", name: "jackson-datatype-jsr310", version: jackson_version
+
+    implementation group: "com.beust", name: "jcommander", version: "1.78"
+    implementation group: "javax.xml.bind", name: "jaxb-api", version: "2.1"
+
+    testImplementation group: "com.amazonaws", name: "aws-java-sdk-lambda", version: "1.11.901"
+
+    testImplementation platform("org.junit:junit-bom:$junit_version")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation group: 'ru.lanwen.wiremock', name: 'wiremock-junit5', version: '1.0.1'
+
+    testImplementation group: "org.hamcrest", name: "hamcrest", version: "2.2"
+    testImplementation group: "com.github.npathai", name: "hamcrest-optional", version: "2.0.0"
+    testImplementation group: "org.assertj", name: "assertj-core", version: "3.18.1"
+    testImplementation group: "org.skyscreamer", name: "jsonassert", version: "1.5.0"
+    testImplementation group: "org.mockito", name: "mockito-core", version: "3.6.0"
+    testImplementation group: "com.natpryce", name: "snodge", version: "3.7.0.0"
+    testRuntimeOnly 'org.glassfish:javax.json:1.1'
+
+    testImplementation platform("org.http4k:http4k-bom:$http4k_version")
+    testImplementation 'org.http4k:http4k-core'
+    testImplementation 'org.http4k:http4k-testing-hamkrest'
+
+    testImplementation group: "org.apache.commons", name: "commons-lang3", version: "3.11"
+    testImplementation group: "io.mockk", name: "mockk", version: "1.10.2"
+    testImplementation group: "com.github.tomakehurst", name: "wiremock-jre8", version: "2.27.0"
+    testImplementation group: "org.bitbucket.b_c", name: "jose4j", version: "0.7.2"
+    testImplementation group: 'com.amazonaws', name: 'DynamoDBLocal', version: '1.13.5'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
