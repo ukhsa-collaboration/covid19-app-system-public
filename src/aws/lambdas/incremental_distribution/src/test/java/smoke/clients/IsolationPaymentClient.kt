@@ -47,19 +47,28 @@ class IsolationPaymentClient(private val client: HttpHandler,
     }
 
     fun submitIsolationTokenUpdate(updateRequest: TokenUpdateRequest): TokenUpdateResponse {
+        return client(submitIsolationTokenUpdateRequest(updateRequest))
+            .requireStatusCode(Status.OK)
+            .requireSignatureHeaders()
+            .deserializeOrThrow()
+    }
+
+    fun submitInvalidIsolationTokenUpdate(updateRequest: TokenUpdateRequest): String {
+        return client(submitIsolationTokenUpdateRequest(updateRequest))
+            .requireStatusCode(Status.BAD_REQUEST)
+            .requireSignatureHeaders()
+            .toString()
+    }
+
+    fun submitIsolationTokenUpdateRequest(updateRequest: TokenUpdateRequest): Request {
         logger.info("submitIsolationTokenUpdate")
 
         val uri = config.isolationPaymentUpdateEndpoint
 
-        val request = Request(Method.POST, uri)
+        return Request(Method.POST, uri)
             .header("Authorization", config.authHeaders.mobile)
             .header("Content-Type", "application/json")
             .body(Jackson.toJson(updateRequest))
-
-        return client(request)
-            .requireStatusCode(Status.OK)
-            .requireSignatureHeaders()
-            .deserializeOrThrow()
     }
 
     fun submitIsolationTokenUpdateTokenCreationDisabled(updateRequest: TokenUpdateRequest): Response {

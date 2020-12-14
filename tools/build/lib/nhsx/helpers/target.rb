@@ -1,7 +1,6 @@
 require_relative "terraform"
 
 module NHSx
-
   # Methods to query and manipulate the target environment
   module TargetEnvironment
     include NHSx::Terraform
@@ -9,26 +8,27 @@ module NHSx
 
     # Define the API endpoint category names and corresponding rake targets - see uk.nhs.nhsx.core.auth.ApiName
     API_NAMES = {
-        "mobile" => "mobile",
-        "testResultUpload" => "test_result",
-        "highRiskVenuesCodeUpload" => "venues",
-        "highRiskPostCodeUpload" => "post_districts"}.freeze
+      "mobile" => "mobile",
+      "testResultUpload" => "test_result",
+      "highRiskVenuesCodeUpload" => "venues",
+      "highRiskPostCodeUpload" => "post_districts",
+    }.freeze
 
     # All the fixed (named) target environments per account: {"account"=>[target_environments]}
     TARGET_ENVIRONMENTS = {
-      "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev","sit","branch"],
+      "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
     }.freeze
     # All the fixed (named) Analytics target environments per account: {"account"=>[target_environments]}
     ANALYTICS_TARGET_ENVIRONMENTS = {
-        "dev" => ["load-test", "branch"],
-        "staging" => ["staging"],
-        "prod" => ["prod"],
+      "dev" => ["load-test", "branch"],
+      "staging" => ["staging"],
+      "prod" => ["prod"],
     }.freeze
     # All the fixed (named) DoReTo target environments per account: {"account"=>[target_environments]}
     DORETO_TARGET_ENVIRONMENTS = {
-      "dev" => ["test", "branch"]
+      "dev" => ["test", "branch"],
     }.freeze
     # The parameter name that contains the ARN of the signing key in the SSM paramater store
     SIGNING_KEY_PARAMETER = "/app/kms/SigningKeyArn".freeze
@@ -44,6 +44,7 @@ module NHSx
 
       return target_config
     end
+
     # Retrieves the target environment configuration for the Document Reporting Tool subsystem
     def doreto_target_environment_configuration(environment_name, account_name, system_config)
       terraform_configuration = File.join(system_config.base, NHSx::Terraform::DORETO_ACCOUNTS, account_name)

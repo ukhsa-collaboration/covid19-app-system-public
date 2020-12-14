@@ -51,8 +51,25 @@ class IsolationPaymentSmokeTest {
     }
 
     @Test
-    fun `update isolation token returns website URL even when an invalid token is passed`() {
-        updateToken("invalid-token")
+    fun `update isolation token returns website URL even when an non-existing token is passed`() {
+        updateToken("1111111111111111111111111111111111111111111111111111111111111111")
+    }
+
+    @Test
+    fun `update isolation token returns 400 if syntactically invalid token or date is passed`() {
+        isolationPaymentClient.submitInvalidIsolationTokenUpdate(
+            TokenUpdateRequest("<script>", riskyEncounterDateString, isolationPeriodEndDateString)
+        )
+
+        isolationPaymentClient.submitInvalidIsolationTokenUpdate(
+            TokenUpdateRequest("1111111111111111111111111111111111111111111111111111111111111111",
+                "<script>", isolationPeriodEndDateString)
+        )
+
+        isolationPaymentClient.submitInvalidIsolationTokenUpdate(
+            TokenUpdateRequest("1111111111111111111111111111111111111111111111111111111111111111",
+                riskyEncounterDateString, "<script>")
+        )
     }
 
     @Test

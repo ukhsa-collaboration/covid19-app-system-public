@@ -172,6 +172,27 @@ resource "aws_cloudfront_distribution" "this" {
 
     viewer_protocol_policy = "https-only"
   }
+  ordered_cache_behavior {
+    path_pattern     = var.analytics_events_submission_health_path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.analytics_events_submission_endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+
+      headers = ["User-Agent"]
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
 
   default_cache_behavior {
     target_origin_id       = var.diagnosis_keys_submission_endpoint

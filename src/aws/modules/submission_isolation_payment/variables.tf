@@ -1,18 +1,10 @@
-variable "isolation_payment_website" {
-  description = "The website for claiming isolation payments"
-}
-
 variable "isolation_token_expiry_in_weeks" {
   description = "The time to live for the isolation token in weeks"
 }
 
-variable "isolation_payment_trust_mappings" {
-  description = "value: principals which have access to Isolation Payment verify- and consume Lambdas. key: target environment"
-  type        = map(list(string))
-}
-
-variable "isolation_payment_countries_whitelisted" {
-  description = "The countries whitelisted for isolation payment"
+variable "configuration" {
+  description = "Isolation payment configuraton. Keys: 'enabled', 'gateway_website_prefix', 'countries_whitelisted'"
+  type        = map(string)
 }
 
 variable "rate_limit" {
@@ -42,8 +34,4 @@ variable "alarm_topic_arn" {
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
-}
-
-variable "isolation_payment_token_creation_enabled" {
-  description = "Feature flag to enable/disable token creation/update endpoints"
 }

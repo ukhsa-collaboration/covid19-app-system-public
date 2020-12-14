@@ -2,12 +2,16 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/submission/empty-submission```
-    - FQDN: Hostname can be different per API
-- Authorisation: ```Authorization: Bearer <API KEY>```
-    - One API KEY for all mobile phone-facing APIs
+## HTTP request and response
 
-## Payload Example
+- Empty Submission: ```POST https://<FQDN>/submission/empty-submission```
+
+### Parameters
+
+- FQDN: Target-environment specific CNAME of the Mobile Submission CloudFront distribution 
+- Authorization required and signatures provided - see [API security](./security.md)
+
+## Example: Empty Submission
 
 Payload is ignored, so any payload will be accepted.
 

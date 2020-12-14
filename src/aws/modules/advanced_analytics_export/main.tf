@@ -49,6 +49,22 @@ resource "aws_sqs_queue" "dlq" {
   tags                       = var.tags
 }
 
+resource "aws_cloudwatch_metric_alarm" "dlq" {
+  alarm_name          = "${local.identifier_prefix}-dlq"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "ApproximateNumberOfMessagesVisible"
+  namespace           = "AWS/SQS"
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "This metric monitors whether any events are sent to the ${local.identifier_prefix} dead letter queue"
+  alarm_actions       = [var.alarm_topic_arn]
+  treat_missing_data  = "notBreaching"
+  tags                = var.tags
+  dimensions          = { QueueName = aws_sqs_queue.dlq.name }
+}
+
 resource "aws_lambda_event_source_mapping" "event_source_mapping" {
   batch_size       = 1
   event_source_arn = aws_sqs_queue.this.arn

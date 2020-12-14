@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class EnvConfig(
     @JsonProperty("analytics_events_submission_endpoint") val analyticsEventsSubmissionEndpoint: String,
     @JsonProperty("analytics_events_submission_function_name") val analyticsEventsSubmissionFunctionName: String,
+    @JsonProperty("analytics_events_submission_health_endpoint") val analyticsEventsSubmissionHealthEndpoint: String,
     @JsonProperty("analytics_events_submission_store") val analyticsEventsSubmissionStore: String,
     @JsonProperty("analytics_submission_endpoint") val analyticsSubmissionEndpoint: String,
     @JsonProperty("analytics_submission_health_endpoint") val analyticsSubmissionHealthEndpoint: String,
@@ -30,7 +31,6 @@ data class EnvConfig(
     @JsonProperty("federation_keys_processing_download_function") val federationKeysProcessingDownloadFunction: String,
     @JsonProperty("isolation_payment_consume_lambda_function_name") val isolationPaymentConsumeLambdaFunctionName: String,
     @JsonProperty("isolation_payment_create_endpoint") val isolationPaymentCreateEndpoint: String,
-    @JsonProperty("isolation_payment_gateway_role") val isolationPaymentGatewayRole: String,
     @JsonProperty("isolation_payment_health_endpoint") val isolationPaymentHealthEndpoint: String,
     @JsonProperty("isolation_payment_order_lambda_function_name") val isolationPaymentOrderLambdaFunctionName: String,
     @JsonProperty("isolation_payment_tokens_table") val isolationPaymentTokensTable: String,

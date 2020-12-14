@@ -29,8 +29,8 @@ variable "container" {
   type        = string
 }
 
-variable "artifacts_bucket_arn" {
-  description = "The ID of the S3 bucket to store the build artifacts in"
+variable "artifacts_bucket_name" {
+  description = "The name of the S3 bucket to store the build artifacts in"
   type        = string
 }
 

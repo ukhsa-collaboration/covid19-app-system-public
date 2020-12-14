@@ -2,10 +2,17 @@
 
 API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/distribution/exposure-configuration```
-  - FQDN: One (CDN-) hostname for all distribute APIs
+## HTTP request and response
+
+- Exposure Configuration: ```GET https://<FQDN>/distribution/exposure-configuration```
+
+### Parameters
+
+- FQDN: One (CDN-) hostname for all distribute APIs
+- Authorization NOT required and signatures provided - see [API security](./security.md)
 - Payload content-type: application/json
-- Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
+
+## Scenario
 - Mobile app downloads following configuration json and:
     - The `exposureNotification` is used to do the initial setup of the exposure api (based on the German configuration values)
     - The `riskCalculation` is used to then calculate the risk (based on government policy on acceptable true positive and false positive rates for alerting users)
@@ -16,8 +23,10 @@ API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
 [Read more about Exposure Notification Configuration](https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Android-Exposure-Notification-API-documentation-v1.3.2.pdf)
 
-## Payload Example (structure)
+## Example: Exposure Configuration
+```GET https://<FQDN>/distribution/exposure-configuration```
 
+### Response Example (structure)
 ```json
     {
       "exposureNotification": {

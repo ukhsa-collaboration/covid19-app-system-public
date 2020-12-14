@@ -4,8 +4,13 @@ phases:
     commands:
       - rake deploy:$TARGET_ENVIRONMENT
       - rake test:sanity_check:$TARGET_ENVIRONMENT
+reports:
+  sanity:
+    files:
+      - "out/reports/*.xml"
+    file-format: "JUNITXML"
 artifacts:
+  name: $(date +%Y%m%d%H%M%S)-deploy-$($TARGET_ENVIRONMENT)
   files:
-    - "**/*"
+    - "out/**/*"
   discard-paths: no
-  base-directory: out/

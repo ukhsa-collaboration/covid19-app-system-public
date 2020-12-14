@@ -38,18 +38,23 @@ public class Handler extends RoutingHandler {
             environment,
             authenticator,
             signer,
-            Routing.routes(path(POST, "/submission/mobile-analytics-events", request -> {
-                if (!acceptRequestsEnabled) {
-                    return HttpResponses.serviceUnavailable();
-                }
+            Routing.routes(
+                path(POST, "/submission/mobile-analytics-events", request -> {
+                    if (!acceptRequestsEnabled) {
+                        return HttpResponses.serviceUnavailable();
+                    }
 
-                var payload = new PayloadValidator().maybeValidPayload(request.getBody());
-                if (payload.isEmpty()) {
-                    return HttpResponses.badRequest();
-                }
-                new AnalyticsEventsSubmissionService(s3Storage, objectKeyNameProvider, bucketName).accept(payload.get());
-                return HttpResponses.ok();
-            }))
+                    var payload = new PayloadValidator().maybeValidPayload(request.getBody());
+                    if (payload.isEmpty()) {
+                        return HttpResponses.badRequest();
+                    }
+                    new AnalyticsEventsSubmissionService(s3Storage, objectKeyNameProvider, bucketName).accept(payload.get());
+                    return HttpResponses.ok();
+                }),
+                path(Routing.Method.POST, "/submission/mobile-analytics-events/health", (r) ->
+                    HttpResponses.ok()
+                )
+            )
         );
     }
 

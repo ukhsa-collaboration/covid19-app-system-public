@@ -22,7 +22,9 @@ resource "aws_codebuild_project" "this" {
   tags = var.tags
 
   artifacts {
-    type = "NO_ARTIFACTS"
+    type      = "S3"
+    location  = var.artifacts_bucket_name
+    packaging = "ZIP"
   }
 
   environment {

@@ -99,3 +99,7 @@ variable "tags" {
 variable "isolation_payment_health_path" {
   description = "The route for the isolation payment health endpoint"
 }
+
+variable "analytics_events_submission_health_path" {
+  description = "The route for the analytics events submission health endpoint"
+}

@@ -65,6 +65,11 @@ class HealthSmokeTest {
         verifyResponse(healthClient.emptySubmissionEndpoint())
     }
 
+    @Test
+    fun `analytics event submission health`(){
+        verifyResponse(healthClient.analyticsEventSubmission())
+    }
+
     private fun verifyResponse(response: Response) {
         response.requireStatusCode(Status.OK)
     }

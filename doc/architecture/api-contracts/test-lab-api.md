@@ -2,64 +2,47 @@
 
 API group: [Upload](../guidebook.md#system-apis-and-interfaces)
 
+## HTTP request and response
+
+- NPEx posts a json test result: ```POST https://<FQDN>/upload/virology-test/npex-result```
+- Fiorano posts a json test result: ```POST https://<FQDN>/upload/virology-test/fiorano-result```
+
+### Parameters
+- Authorization required and signatures NOT provided - see [API security](./security.md)
+
+## Scenario
+
 This API provides upload endpoints for UK wide integration of virology test result delivery to the NHS CV19 App System. Uploaded tests are distributed to mobile clients with a latency of min 2h, best we expect 4h, worst case 6 to 24 hours.
 
 The endpoint URL has path elements specific to the external system using it, for instance `npex` for test results sent from the english test results database or `fiorano` for results sent by the welsh integration component, operated and maintained by the NWIS Integration service.
 
 Note: The Token API and the Test Lab API are conceptually the same endpoint but should not be called as part of the same flow. 
 The key difference is that the Test Lab API expects a ctaToken as input (generated previously by our system) and the Token API creates and returns a ctaToken.
-
-## Endpoints
-
-- NPEx posts a json test result: ```POST https://<FQDN>/upload/virology-test/npex-result```
-- Fiorano posts a json test result: ```POST https://<FQDN>/upload/virology-test/fiorano-result```
-
-### Response Codes
-  - `HTTP 202` accepted test result
-  - `HTTP 400` given cta token is not registered in the system
-  - `HTTP 409` test result already exists for the given ctaToken
-  - `HTTP 422` invalid json request body
-  - `HTTP 500` internal server error
   
 ## Payloads
 
-### NPEx test result upload
+### Example: NPEx test result upload
 
 ```POST https://<FQDN>/upload/virology-test/npex-result```
+
+Request body:
 ```json
 {
     "ctaToken": "t1qjee7p",
     "testEndDate": "2020-04-23T00:00:00Z",
-    "testResult": "NEGATIVE"
+    "testResult": "NEGATIVE"|"POSITIVE"|"VOID"
 }
 ```
 
-```POST https://<FQDN>/upload/virology-test/npex-result```
-```json
-{
-    "ctaToken": "64hr743d",
-    "testEndDate": "2020-07-23T00:00:00Z",
-    "testResult": "VOID"
-}
-```
-
-### Fiorano test result upload
-
+### Example: Fiorano test result upload
 ```POST https://<FQDN>/upload/virology-test/fiorano-result```
+
+Request body:
 ```json
 {
     "ctaToken": "9bknrr20",
     "testEndDate": "2020-05-23T00:00:00Z",
-    "testResult": "POSITIVE"
-}
-```
-
-```POST https://<FQDN>/upload/virology-test/fiorano-result```
-```json
-{
-    "ctaToken": "hj3dz378",
-    "testEndDate": "2020-05-23T00:00:00Z",
-    "testResult": "INDETERMINATE"
+    "testResult": "NEGATIVE"|"POSITIVE"|"INDETERMINATE"
 }
 ```
 
@@ -72,6 +55,13 @@ The key difference is that the Test Lab API expects a ctaToken as input (generat
   - Fiorano `POSITIVE | NEGATIVE | INDETERMINATE`
 - **One-time upload only**: we don't accept multiple uploads with the same ctaToken.
 - Please note: INDETERMINATE and VOID are both treated as VOID by the mobile application - the behaviour could change in the future
+
+### Response Codes
+  - `HTTP 202` accepted test result
+  - `HTTP 400` given cta token is not registered in the system
+  - `HTTP 409` test result already exists for the given ctaToken
+  - `HTTP 422` invalid json request body
+  - `HTTP 500` internal server error
 
 ## Notes
 

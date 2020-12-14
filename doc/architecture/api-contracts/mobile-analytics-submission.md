@@ -2,31 +2,30 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint: HTTPS POST ```https://<FQDN>/submission/mobile-analytics-events```
-  - FQDN: Hostname can be different per API
-- Authorization: ```Authorization: Bearer <API KEY>```
-  - One API KEY for all mobile phone-facing APIs
+## HTTP request and response
+
+- Submit Mobile Analytics Event: ```POST https://<FQDN>/submission/mobile-analytics-events```
+
+### Parameters
+
+- FQDN: Hostname can be different per API
+- Authorization required and signatures provided - see [API security](./security.md)
 - Request Headers:
   - Content-Type: application/json
-
-
 
 ## Scenario
 
 Mobile clients send anonymous epidemiological data to the backend (which sends the data to AAE).
-
-
 
 ## Mobile Payload Example (for event type ```exposureWindow``` version 1)
 
 - Exposure windows sent to mobile immediately after encounter detection.
 - Important (privacy): only one ```exposureWindowPositiveTest``` or ```exposureWindow``` event per submission.
 
-### Payload Example
+### Request Payload Example
 
 ```json
 {
-
   "metadata" : {
     "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
     "latestApplicationVersion" : "3.0",
@@ -60,11 +59,10 @@ Mobile clients send anonymous epidemiological data to the backend (which sends t
 - Important (privacy): only one ```exposureWindowPositiveTest``` or ```exposureWindow``` event per submission.
 - FYI: ```testType``` is for future use.
 
-### Payload Example
+### Request Payload Example
 
 ```json
 {
-
   "metadata" : {
     "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
     "latestApplicationVersion" : "3.0",

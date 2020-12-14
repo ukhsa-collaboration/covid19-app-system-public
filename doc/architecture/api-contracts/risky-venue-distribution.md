@@ -2,18 +2,23 @@
 
 API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/distribution/risky-venues```
-  - FQDN: One (CDN-) hostname for all distribute APIs
+## HTTP request and response
+
+- Risky Venues: ```GET https://<FQDN>/distribution/risky-venues```
+
+### Parameters
+
+- FQDN: One (CDN-) hostname for all distribute APIs
+- Authorization NOT required and signatures provided - see [API security](./security.md)
 - Payload content-type: application/json
-- Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
 
 ## Scenario
 - Client downloads the list of risky venues periodically
 - Later client scans some venue qr code, extracts the venue id from the base64 encoded string (in the qr code payload) and compares it (plus the risky window) with the risky venues it has stored locally and reacts based on the result of this comparison 
 
-## Payload Example
+## Example: Risky Venues
 
-Message Type "M1" (without optional parameter):
+### Response Example: Message Type "M1" (without optional parameter):
 ```json
 {
     "venues" : [
@@ -29,7 +34,7 @@ Message Type "M1" (without optional parameter):
 }
 ```
 
-Message Type "M2" (without optional parameter):
+### Response Example: Message Type "M2" (without optional parameter):
 ```json
 {
     "venues" : [
@@ -45,7 +50,7 @@ Message Type "M2" (without optional parameter):
 }
 ```
 
-Message Type "M3" (with optional parameter):
+### Response Example: Message Type "M3" (with optional parameter):
 ```json
 {
     "venues" : [

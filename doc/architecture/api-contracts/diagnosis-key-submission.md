@@ -2,20 +2,25 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/submission/diagnosis-keys```
-    - FQDN: Hostname can be different per API
-- Authorisation: ```Authorization: Bearer <API KEY>```
-    - One API KEY for all mobile phone-facing APIs
+## HTTP request and response
+
+- Submit Diagnosis Keys - ```POST https://<FQDN>/submission/diagnosis-keys```
+
+### Parameters
+- FQDN: Hostname can be different per API
+- Authorization required and signatures provided - see [API security](./security.md)
 
 ## Scenario
 
 Mobile clients send diagnostic keys after the user receives a positive test result and agrees to the upload.
 
-## Payload Example
+## Example: Submit Diagnosis Keys
+
+### Request Payload Example
 
 ```json
 {
-    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF" /* see virology-testing-api.md */,
+    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF",
     "temporaryExposureKeys": [
         {
             "key": "base64 KEY1",
@@ -42,12 +47,14 @@ Mobile clients send diagnostic keys after the user receives a positive test resu
 }
 ```
 
-### Validation 
+## Validation
+
+### Required properties 
+- `diagnosisKeySubmissionToken` valid one-time token (associated with a positive Covid19 test result that has never been used yet). Token must be obtained via the [virology testing api](./virology-testing-api.md).
 - `temporaryExposureKeys` is required array
 - `key` required, non-empty base64 encoded string
 - `rollingStartNumber` required uint32
 - `rollingPeriod` required uint32
-- `diagnosisKeySubmissionToken` valid one-time token (associated with a positive Covid19 test result, never used yet)
 
 ### Optional properties
 

@@ -1,7 +1,8 @@
 plugins {
     id "java"
     id "org.jetbrains.kotlin.jvm" version "1.4.10"
-    id 'com.adarshr.test-logger' version '2.1.1'
+    id "com.adarshr.test-logger" version "2.1.1"
+    id "jacoco"
 }
 
 group = 'com.demo'
@@ -48,6 +49,10 @@ testlogger {
     slowThreshold 2000
 }
 
+jacocoTestReport {
+    dependsOn test
+}
+
 task copyNativeDependencies(type: Copy) {
     from(configurations.testImplementation) {
         include '*.dll'
@@ -74,10 +79,14 @@ test {
         showStandardStreams false
         showPassed false
     }
+
     dependsOn copyNativeDependencies
+
     test.doFirst {
         systemProperty "java.library.path", 'build/libs'
     }
+
+    finalizedBy jacocoTestReport
 }
 
 task testUnit {
@@ -87,6 +96,8 @@ task testUnit {
 task testSmoke(type: Test) {
     description = 'Runs smoke tests.'
     group = 'verification'
+
+    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
 
     useJUnitPlatform()
 

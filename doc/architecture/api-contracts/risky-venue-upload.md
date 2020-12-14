@@ -2,29 +2,28 @@
 
 API group: [Upload](../guidebook.md#system-apis-and-interfaces)
 
+## HTTP request and response
+
+- Upload Risky Venues: ```POST https://<FQDN>/upload/identified-risk-venues```
+
+### Parameters
+- Authorization required and signatures NOT provided - see [API security](./security.md)
+- Payload content-type: ```text/csv```
+
+## Scenario
+
 An identified risky venue is a venue that has been tagged by a UK public health authority (e.g. CTAS, manual contact tracers, PHE) as a potential CV-19 hotspot.
  
 For the V3 launch we provide a basic https endpoint for CSV file upload which is then processed and distributed as a json file to our api clients.
 
-The responsibility of when updates are fed into the system is completely up to the upload approver, e.g. to PHE or to PHW. This also allows for system indpendent coordination with public comms if needed at the same time.
-
-
-## Scenario
+The responsibility of when updates are fed into the system is completely up to the upload approver, e.g. to PHE or to PHW. This also allows for system independent coordination with public comms if needed at the same time.
 
 We expect to receive a new updated list of risky venues between `00:00am and 02:00am UTC` (but also accept late uploads) so distribution to UK users can ideally be finished until early morning (lead time <4h). During summer, UK is one hour ahead, which leads to an acceptable UK time update window `01:00am and 03:00am DST`, so the API client may safely assume always UTC.
 
 After a successful upload the new json file is going to replace the existing one (if it exists) and it is going to be the one that all the clients will see (no merging is done and no old versions are stored). If another file is received the same day it will be distributed to mobile clients with the same latency like earlier uploads: min 2h, best we expect 4h, worst case 6 to 24 hours.
 
 
-## Endpoints
-
-- Upload a csv file with a full list of identified risk venues
-```
-POST https://<FQDN>/upload/identified-risk-venues
-```
-- Payload content-type: ```text/csv```
-
-## Payload Example
+## Request Payload Example
 
 ```csv
 # venue_id, start_time, end_time, message_type, optional_parameter

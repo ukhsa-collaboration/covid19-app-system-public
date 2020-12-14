@@ -6,10 +6,14 @@ API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
 - Create Isolation Payment Token: ```POST https://<FQDN>/isolation-payment/ipc-token/create```
 - Update Isolation Payment Token: ```POST https://<FQDN>/isolation-payment/ipc-token/update```
+
+### Parameters
+
 - FQDN: Target-environment specific CNAME of the Mobile Submission CloudFront distribution
-- Request- and response Content-Type: ```application/json```
+- Authorization required and signatures provided - see [API security](./security.md)
+- Request and response Content-Type: ```application/json```
 - See also: standard attributes of mobile submission APIs (API key, response body signing, throttling error code, etc.)
-- Relaxed JSON parsing (backwards- and forwards compatibility): Additional unexpected JSON properties are ignored
+- Relaxed JSON parsing (backwards and forwards compatibility): Additional unexpected JSON properties are ignored
 
 ## Example: Create Isolation Payment Token
 

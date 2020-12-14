@@ -4,17 +4,22 @@ _This is an internal API, intended for use by the NHS COVID-19 app. External pro
 
 API group: [Download](FIXME - similar to ../api-patterns.md#Distribution, but ext-system-facing)
 
+## HTTP request and response
+
 - Endpoint schema: ```https://<FQDN>/download/risky-venue-messages-configuration```
-  - FQDN: One (CDN-) hostname for all download APIs
+
+### Parameters
+
+- FQDN: One (CDN-) hostname for all download APIs
+- Authorization NOT required and signatures provided - see [API security](./security.md)
 - Payload content-type: application/json
-- Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
 
 ## Scenario
 
 - Rush website downloads the list of risky venue message configurations periodically (i.e. between hourly and daily) and caches the configuration locally
 - User of rush website can chose one of the offered message types (and must provide a parameter value, if supported by the selected message type)
 
-## Payload Example
+## Response Example
 
 ```json
 {

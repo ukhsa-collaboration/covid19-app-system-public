@@ -37,6 +37,17 @@ namespace :download do
         local_target = File.join(post_districts_out_dir, "tier-metadata.json")
         run_command("Download tier meta data of #{tgt_env} deployment", NHSx::AWS::Commandlines.download_from_s3(object_name, local_target), $configuration)
       end
+
+      desc "Download post district v2 data locally"
+      task :"post-districts:#{tgt_env}" => [:"login:#{account}"] do
+        include NHSx::TargetEnvironment
+        post_districts_out_dir = File.join($configuration.out, "downloads/")
+
+        target_config = target_environment_configuration(tgt_env, account, $configuration)
+        object_name = "#{target_config["post_districts_distribution_store"]}/distribution/risky-post-districts-v2"
+        local_target = File.join(post_districts_out_dir, "#{tgt_env}-arearisk.json")
+        run_command("Download area risk data of #{tgt_env} deployment", NHSx::AWS::Commandlines.download_from_s3(object_name, local_target), $configuration)
+      end
     end
   end
 end

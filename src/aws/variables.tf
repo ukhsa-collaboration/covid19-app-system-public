@@ -143,10 +143,6 @@ variable "analytics_submission_scale_down_cron" {
   description = "cron schedule"
 }
 
-variable "isolation_payment_website" {
-  description = "The website for claiming isolation payments"
-}
-
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
@@ -158,17 +154,7 @@ variable "isolation_token_expiry_in_weeks" {
   default     = 2
 }
 
-variable "isolation_payment_trust_mappings" {
-  description = "value: principals which have access to Isolation Payment verify- and consume Lambdas. key: target environment"
-  type        = map(list(string))
-}
-
-variable "isolation_payment_countries_whitelisted" {
-  description = "The countries whitelisted for isolation payment"
-  default     = "England,Wales"
-}
-
-variable "isolation_payment_token_creation_enabled" {
-  description = "Feature flag to enable/disable token creation/update endpoints"
-  default     = true
+variable "isolation_payment" {
+  description = "Isolation payment configuraton ('enabled', 'gateway_website_prefix', 'countries_whitelisted'). Keys: target environment or 'default'"
+  type        = map(map(string))
 }

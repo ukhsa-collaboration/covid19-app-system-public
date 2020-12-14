@@ -1,4 +1,5 @@
 namespace :clean do
+  desc "Clean up orphan branch environments"
   task :orphans do
     include NHSx::Terraform
 

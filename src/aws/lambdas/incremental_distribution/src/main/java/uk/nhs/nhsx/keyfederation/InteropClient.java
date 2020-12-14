@@ -42,34 +42,7 @@ public class InteropClient {
         this.jws = jws;
     }
 
-    public List<DiagnosisKeysDownloadResponse> downloadKeys(final LocalDate date, final BatchTag batchTag, int maxBatchDownloadCount, Context context) {
-        var batch = Optional.ofNullable(batchTag).map(b -> "?batchTag=" + b.value).orElse("");
-        var exposureKeysNextBatch = getExposureKeysBatch(date, batch);
-
-        ArrayList<DiagnosisKeysDownloadResponse> responses = new ArrayList<>();
-        long iterationDuration = 0L;
-        for (int i = 0; i < maxBatchDownloadCount && exposureKeysNextBatch.isPresent(); i++) {
-            var startTime = System.currentTimeMillis();
-            var diagnosisKeysDownloadResponse = exposureKeysNextBatch.get();
-            responses.add(diagnosisKeysDownloadResponse);
-            logger.info("Downloaded {} keys from federated server, BatchTag {} (batch {})",
-                    diagnosisKeysDownloadResponse.exposures.size(),
-                    diagnosisKeysDownloadResponse.batchTag,
-                    i);
-            exposureKeysNextBatch = getExposureKeysBatch(date, "?batchTag=" + diagnosisKeysDownloadResponse.batchTag);
-            iterationDuration = Math.max(iterationDuration,System.currentTimeMillis() - startTime);
-            if(iterationDuration >= context.getRemainingTimeInMillis()){
-                logger.warn("There is not enough time to complete another iteration");
-                break;
-            }
-        }
-
-        logger.info("Downloaded keys from federated server finished, batchCount={}", responses.size());
-
-        return responses;
-    }
-
-    private Optional<DiagnosisKeysDownloadResponse> getExposureKeysBatch(LocalDate date, String batchTag) {
+    public Optional<DiagnosisKeysDownloadResponse> getExposureKeysBatch(LocalDate date, String batchTag) {
         var request = HttpRequest.newBuilder()
             .header("Authorization", "Bearer " + authToken)
             .uri(URI.create(interopBaseUrl + "/diagnosiskeys/download/" + date.format(FORMATTER) + batchTag))

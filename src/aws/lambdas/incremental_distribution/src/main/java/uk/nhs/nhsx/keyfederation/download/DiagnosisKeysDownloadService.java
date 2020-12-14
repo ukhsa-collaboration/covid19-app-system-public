@@ -11,7 +11,9 @@ import uk.nhs.nhsx.keyfederation.InteropClient;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -54,24 +56,43 @@ public class DiagnosisKeysDownloadService {
         batchTagService
             .getLatestFederationBatch()
             .ifPresentOrElse(
-                it -> processedBatches.set(processBatches(interopClient.downloadKeys(it.batchDate, it.batchTag, maxSubsequentBatchDownloadCount,context))),
-                () -> processedBatches.set(processBatches(interopClient.downloadKeys(dateNow().minusDays(initialDownloadHistoryDays), null, maxSubsequentBatchDownloadCount,context)))
+                it -> processedBatches.set(downloadKeysAndProcess(it.batchDate, it.batchTag, maxSubsequentBatchDownloadCount,context)),
+                () -> processedBatches.set(downloadKeysAndProcess(dateNow().minusDays(initialDownloadHistoryDays), null, maxSubsequentBatchDownloadCount,context))
             );
         return processedBatches.get();
     }
 
-    private LocalDate dateNow() {
-        return LocalDate.ofInstant(clock.get(), ZoneId.of("UTC"));
-    }
+    private int downloadKeysAndProcess(final LocalDate date, final BatchTag batchTag, int maxBatchDownloadCount, Context context) {
+        var processedBatches = 0;
+        var batch = Optional.ofNullable(batchTag).map(b -> "?batchTag=" + b.value).orElse("");
+        var exposureKeysNextBatch = interopClient.getExposureKeysBatch(date, batch);
 
-    private int processBatches(List<DiagnosisKeysDownloadResponse> batches) {
-        if (!batches.isEmpty()) {
-            batches.forEach(this::convertAndSaveKeys);
-        } else {
-            logger.info("No batches were found from federation server download");
+        var iterationDuration = 0L;
+        for (int i= 1; i <= maxBatchDownloadCount && exposureKeysNextBatch.isPresent(); i++) {
+            var startTime = System.currentTimeMillis();
+            var diagnosisKeysDownloadResponse = exposureKeysNextBatch.get();
+            this.convertAndSaveKeys(diagnosisKeysDownloadResponse);
+
+            logger.info("Downloaded {} keys from federated server, BatchTag {} (batch {})",
+                diagnosisKeysDownloadResponse.exposures.size(),
+                diagnosisKeysDownloadResponse.batchTag,
+                i);
+            processedBatches++;
+            iterationDuration = Math.max(iterationDuration,System.currentTimeMillis() - startTime);
+            if(iterationDuration >= context.getRemainingTimeInMillis()){
+                logger.warn("There is not enough time to complete another iteration");
+                break;
+            }
+            exposureKeysNextBatch = interopClient.getExposureKeysBatch(date, "?batchTag=" + diagnosisKeysDownloadResponse.batchTag);
         }
 
-        return batches.size();
+        logger.info("Downloaded keys from federated server finished, batchCount={}", processedBatches);
+
+        return processedBatches;
+    }
+
+    private LocalDate dateNow() {
+        return LocalDate.ofInstant(clock.get(), ZoneId.of("UTC"));
     }
 
     private void convertAndSaveKeys(DiagnosisKeysDownloadResponse diagnosisKeysDownloadResponse) {

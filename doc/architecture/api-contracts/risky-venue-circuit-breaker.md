@@ -2,23 +2,25 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
-## Scenario
+## HTTP request and response
 
-We assume the circuit breaker counts the number of identified risk venues over some time period (e.g. 2h) and hence relies only on getting the venueIds.
+- Circuit Breaker Request: ```POST https://<FQDN>/circuit-breaker/venue/request```
+- Circuit Breaker Resolution: ```GET https://<FQDN>/circuit-breaker/venue/resolution/<approval_token>```
 
-### Initial request
+### Parameters
 
-- Endpoint schema: ```[POST] https://<FQDN>/circuit-breaker/venue/request```
-    - FQDN: Hostname can be different per API
-- Authorization: ```Authorization: Bearer <API KEY>```
-    - One API KEY for all mobile phone-facing APIs
-- Request body: empty
+- FQDN: Hostname can be different per API
+- Authorization required and signatures provided - see [API security](./security.md)
 - Response payload content-type: application/json
 
-### Response Headers
-- Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
+## Scenario
 
-#### Respose Payload Example
+Used as a pre-requisite to check if a notification should be sent to the mobile app making the request.
+
+### Example: Initial request
+```POST https://<FQDN>/circuit-breaker/venue/request```
+
+#### Response Payload Example
 
 ```json
 {
@@ -29,11 +31,7 @@ We assume the circuit breaker counts the number of identified risk venues over s
 
 ### Poll for resolution status
 
-- Endpoint schema: ```[GET] https://<FQDN>/circuit-breaker/venue/resolution/<approval_token>```
-    - FQDN: Hostname can be different per API
-- Authorization: ```Authorization: Bearer <API KEY>```
-    - One API KEY for all mobile phone-facing APIs
-- Response payload content-type: application/json
+```GET https://<FQDN>/circuit-breaker/venue/resolution/<approval_token>```
 
 #### Response Payload Example
 

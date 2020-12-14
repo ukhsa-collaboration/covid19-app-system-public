@@ -95,6 +95,7 @@ module Gaudi
         require "time"
         test_end_date = mandatory("TEST_END_DATE")
         raise GaudiError, "Invalid TEST_END_DATE" unless Time.iso8601(test_end_date)
+
         return test_end_date
       end
 
@@ -107,10 +108,14 @@ module Gaudi
         return number_of_tokens
       end
 
+      # Pass the value for a ACCOUNT
       def account
-        account_name = ENV["ACCOUNT"]
-        account_name = "dev" if account_name.nil?
-        return account_name
+        ENV.fetch("ACCOUNT", "dev")
+      end
+
+      # Pass the value for a BRANCH
+      def branch
+        ENV.fetch("BRANCH", "master")
       end
     end
   end

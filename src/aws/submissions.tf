@@ -406,19 +406,16 @@ module "virology_submission" {
 }
 
 module "isolation_payment_submission" {
-  source                                   = "./modules/submission_isolation_payment"
-  lambda_repository_bucket                 = module.artifact_repository.bucket_name
-  lambda_object_key                        = module.artifact_repository.lambda_object_key
-  burst_limit                              = var.burst_limit
-  rate_limit                               = var.rate_limit
-  isolation_payment_website                = var.isolation_payment_website
-  isolation_token_expiry_in_weeks          = var.isolation_token_expiry_in_weeks
-  isolation_payment_countries_whitelisted  = var.isolation_payment_countries_whitelisted
-  isolation_payment_trust_mappings         = var.isolation_payment_trust_mappings
-  custom_oai                               = random_uuid.submission-custom-oai.result
-  alarm_topic_arn                          = var.alarm_topic_arn
-  tags                                     = var.tags
-  isolation_payment_token_creation_enabled = var.isolation_payment_token_creation_enabled
+  source                          = "./modules/submission_isolation_payment"
+  lambda_repository_bucket        = module.artifact_repository.bucket_name
+  lambda_object_key               = module.artifact_repository.lambda_object_key
+  burst_limit                     = var.burst_limit
+  rate_limit                      = var.rate_limit
+  isolation_token_expiry_in_weeks = var.isolation_token_expiry_in_weeks
+  configuration                   = lookup(var.isolation_payment, terraform.workspace, var.isolation_payment["default"])
+  custom_oai                      = random_uuid.submission-custom-oai.result
+  alarm_topic_arn                 = var.alarm_topic_arn
+  tags                            = var.tags
 }
 
 module "submission_apis" {
@@ -433,6 +430,7 @@ module "submission_apis" {
   analytics_submission_health_path               = "/submission/mobile-analytics/health"
   analytics_events_submission_endpoint           = module.analytics_events_submission.endpoint
   analytics_events_submission_path               = "/submission/mobile-analytics-events"
+  analytics_events_submission_health_path        = "/submission/mobile-analytics-events/health"
   diagnosis_keys_submission_endpoint             = module.diagnosis_keys_submission.endpoint
   diagnosis_keys_submission_path                 = "/submission/diagnosis-keys"
   diagnosis_keys_submission_health_path          = "/submission/diagnosis-keys/health"
@@ -501,13 +499,12 @@ output "isolation_payment_tokens_table" {
   value = module.isolation_payment_submission.ipc_tokens_table
 }
 
-output "isolation_payment_gateway_role" {
-  value = module.isolation_payment_submission.gateway_role
-}
-
 # Health endpoints
 output "analytics_submission_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/mobile-analytics/health"
+}
+output "analytics_events_submission_health_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/submission/mobile-analytics-events/health"
 }
 output "diagnosis_keys_submission_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/diagnosis-keys/health"

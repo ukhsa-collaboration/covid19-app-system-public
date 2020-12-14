@@ -90,7 +90,7 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
             return HttpResponses.serviceUnavailable();
         }
 
-        var requestBody = Jackson.deserializeMaybeValidating(request.getBody(), TokenUpdateRequest.class, TokenUpdateRequest::dateFormatValidator);
+        var requestBody = Jackson.deserializeMaybeValidating(request.getBody(), TokenUpdateRequest.class, TokenUpdateRequest::validator);
         if (requestBody.isPresent()) {
             return ok(Jackson.toJson(service.handleIsolationPaymentUpdate(requestBody.get())));
         }

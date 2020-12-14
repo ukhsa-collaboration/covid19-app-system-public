@@ -2,17 +2,23 @@
 
 API group: [Upload](../guidebook.md#system-apis-and-interfaces)
 
+## HTTP request and response
+
+- Upload Risky Postal Districts - ```POST https://<FQDN>/upload/high-risk-postal-districts```
+
+### Parameters
+- Authorization required and signatures NOT provided - see [API security](./security.md)
+- Payload content-type: ```application/json```
+- `POST` semantics (idempotent): a previously uploaded list of high-risk postal districts will be completely replaced
+
+## Scenario
+
 The high-risk postal districts are provided by UK public available CV-19 data sources.
 
 The upload service will process the input (see payload example below) and will produce the correct payloads for both distribution versions (see [version 1](risky-post-district-distribution.md) and [version 2](risky-post-district-distribution-v2.md) of the post district distribution API)
 
-## Endpoints
 
-```bash
-POST https://<FQDN>/upload/high-risk-postal-districts
-```
-
-### Payload example
+### Request Payload Example
 
 ```json
 {
@@ -36,9 +42,6 @@ POST https://<FQDN>/upload/high-risk-postal-districts
   }
 }
 ```
-
-- `POST` semantics (idempotent): a previously uploaded list of high-risk postal districts will be completely replaced
-- Payload content-type: ```application/json```
 
 ## Validation
 

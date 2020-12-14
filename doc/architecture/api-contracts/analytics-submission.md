@@ -2,19 +2,23 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/submission/mobile-analytics```
-  - FQDN: Hostname can be different per API
-- Authorization: ```Authorization: Bearer <API KEY>```
-  - One API KEY for all mobile phone-facing APIs
+## HTTP request and response
+
+- Submit Mobile Analytics: ```POST https://<FQDN>/submission/mobile-analytics```
+
+### Parameters
+
+- FQDN: Target-environment specific CNAME of the Mobile Submission CloudFront distribution 
+- Authorization required and signatures NOT provided - see [API security](./security.md)
 - Extensibility: new Key-Value Pairs can be added to the request without breaking request processing
 
 ## Scenario
 
 Mobile clients collect and send app analytics periodically (roughly once per 24h) to the backend.
  
-## Mobile Payload Example
+## Example: Submit Mobile Analytics
 
-### iOS Payload Example
+### iOS Request Payload Example
 ```json
 {
   "metadata" : {
@@ -65,7 +69,7 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
 }
 ```
 
-### Android Payload Example
+### Android Request Payload Example
 ```json
 {
   "metadata" : {

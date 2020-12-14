@@ -26,7 +26,7 @@ module NHSx
       test_output = File.join(system_config.out, "reports", report_name)
       test_location = File.join(system_config.base, ROBOT_TEST_LOCATION, test_category)
       to_include = robot_test_suites.join(" --suite ") # --suite can be repeated any number of times
-      cmdline = "robot --console dotted --outputdir #{test_output} --variable TEST_CONFIGURATION_FILE:\"#{test_config}\" --suite #{to_include} #{test_location}"
+      cmdline = "robot --console dotted --xunit #{test_output} --outputdir #{test_output} --variable TEST_CONFIGURATION_FILE:\"#{test_config}\" --suite #{to_include} #{test_location}"
 
       run_command("Run #{report_name} tests", cmdline, system_config)
     end

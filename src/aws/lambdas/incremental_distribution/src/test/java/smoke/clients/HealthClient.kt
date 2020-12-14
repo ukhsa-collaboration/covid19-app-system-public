@@ -32,6 +32,8 @@ class HealthClient(private val client: JavaHttpClient,
 
     fun emptySubmissionEndpoint() = getHealthContent(config.emptySubmissionEndpoint, config.authHeaders.mobile)
 
+    fun analyticsEventSubmission() = getHealthContent(config.analyticsEventsSubmissionHealthEndpoint, config.authHeaders.mobile)
+
     private fun getHealthContent(uri: String, authHeader: String): Response {
         logger.info("getHealthContent: $uri")
 

@@ -2,10 +2,13 @@
 
 API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/distribution/symptomatic-questionnaire```
-  - FQDN: One (CDN-) hostname for all distribute APIs
+## HTTP request and response
+- Symptomatic Questionnaire: ```GET https://<FQDN>/distribution/symptomatic-questionnaire```
+
+### Parameters
+- FQDN: One (CDN-) hostname for all distribute APIs
+- Authorization NOT required and signatures provided - see [API security](./security.md)
 - Payload content-type: application/json
-- Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
 
 ## Scenario
 - Client downloads the questionnaire and renders `title` and `description` of each item in the symptoms array
@@ -13,7 +16,7 @@ API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 - Client uses the `riskThreshold` to check if the total risk is above or below this value and progress to the next screen accordingly
 - Client uses the `symptomsOnsetWindowDays` for the selection of the date when the symptoms have started
  
-## Payload Example
+### Response Example (structure)
 
 ```json
 {

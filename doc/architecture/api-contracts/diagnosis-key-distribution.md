@@ -2,16 +2,26 @@
 
 API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema for daily ZIPs: ```https://<FQDN>/distribution/daily/yyyyMMdd00.zip```
-    - ```yyyyMMdd00``` (formatted UTC timestamp): 14 valid values (the last 14 days < today)
-- Endpoint schema for two-hourly ZIPs: ```[GET] https://<FQDN>/distribution/two-hourly/yyyyMMddhh.zip```
-    - ```yyyyMMddhh``` (formatted UTC timestamp, ```hh``` = ```hour of day - hour of day % 2```): ```14*12``` valid values (the last ```14*12``` two-hour periods < current two-hour period)
+## HTTP request and response
+
+- Daily ZIP of diagnosis keys: ```GET https://<FQDN>/distribution/daily/yyyyMMdd00.zip```
+- Two-hourly ZIP of diagnosis keys: ```GET https://<FQDN>/distribution/two-hourly/yyyyMMddhh.zip```
+
+### Parameters
+
 - FQDN: One (CDN-) hostname for all distribute APIs
-- The client downloads diagnosis keys periodically (newly available keys since the last successful download)
-- If the downloads fails, the client will try again in the next download cycle
+- Authorization NOT required and signatures provided - see [API security](./security.md)
+- ```yyyyMMdd00``` (formatted UTC timestamp): 14 valid values (the last 14 days < today)
+- ```yyyyMMddhh``` (formatted UTC timestamp, ```hh``` = ```hour of day - hour of day % 2```): ```14*12``` valid values (the last ```14*12``` two-hour periods < current two-hour period)
+
+### Response
+- Content-Type: `application/zip`
 - The file format ("the ZIPs" in the scenario below) is described here: https://developers.google.com/android/exposure-notifications/exposure-key-file-format
 
 ## Scenario
+
+- The client downloads diagnosis keys periodically (newly available keys since the last successful download)
+- If the downloads fails, the client will try again in the next download cycle
 
 ### First app launch after install
 

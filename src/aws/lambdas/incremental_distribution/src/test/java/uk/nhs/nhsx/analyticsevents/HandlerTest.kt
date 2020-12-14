@@ -130,6 +130,19 @@ class HandlerTest {
     }
 
     @Test
+    fun `no json payload returns bad request`() {
+        val request = ProxyRequestBuilder()
+            .withMethod(HttpMethod.POST)
+            .withPath("/submission/mobile-analytics-events")
+            .withBearerToken("anything")
+            .build()
+
+        val response = handler.handleRequest(request, ContextBuilder.aContext())
+
+        assertThat(response.statusCode).isEqualTo(400)
+    }
+
+    @Test
     fun `http get not allowed`() {
         val request = ProxyRequestBuilder()
             .withMethod(HttpMethod.GET)

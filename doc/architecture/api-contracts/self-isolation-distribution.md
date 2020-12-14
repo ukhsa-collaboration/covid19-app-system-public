@@ -2,15 +2,20 @@
 
 API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
-- Endpoint schema: ```https://<FQDN>/distribution/self-isolation```
-  - FQDN: One (CDN-) hostname for all distribute APIs
+## HTTP request and response
+
+- Self Isolation Configuration: ```https://<FQDN>/distribution/self-isolation```
+
+## Parameters
+
+- FQDN: One (CDN-) hostname for all distribute APIs
+- Authorization NOT required and signatures provided - see [API security](./security.md)
 - Payload content-type: application/json
-- Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
 
 ## Scenario
 Mobile clients fetch this configuration to be able to calculate self isolation duration intervals
 
-## Payload Example
+### Response Example (structure)
 
 ```json
 {

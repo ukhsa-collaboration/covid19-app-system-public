@@ -21,7 +21,3 @@ output "gateway_id" {
 output "ipc_tokens_table" {
   value = aws_dynamodb_table.isolation_payment_tokens_table.id
 }
-
-output "gateway_role" {
-  value = module.isolation_payment_gateway_role.arn
-}

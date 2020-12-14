@@ -23,7 +23,7 @@ public class PayloadValidator {
             validateEvents(payload);
 
             return Optional.of(payload);
-        } catch (IOException | ValidationException e) {
+        } catch (IOException | ValidationException | IllegalArgumentException e) {
             log.info("Payload was invalid", e);
             return Optional.empty();
         }

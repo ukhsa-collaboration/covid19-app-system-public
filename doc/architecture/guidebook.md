@@ -94,7 +94,7 @@ use the v1 methods as a [fallback on iOS](#fallback-behaviour) when the v2 OS re
 In v1, calls to provide keys to the GAEN API are limited to 20 per day. In the initially released version of the app which uses v1,
 the app schedules a background task to run every 2 hours to download any new bundles of keys and provide them to the GAEN API.
 
-> NOTE: This background task behaviour is specific to versions <3.9 of the NHS COVID-19 app, and not v1 of the GAEN API.
+> NOTE: This background task behaviour is specific to versions < 3.9 of the NHS COVID-19 app, and not v1 of the GAEN API.
 
 The API then checks if any of the newly downloaded keys match with the keys the device has encountered and stored locally. If there is
 a match, we then request further information about the encounter.
@@ -246,7 +246,7 @@ The system architecture diagram below specifies the complete system showing the 
 * As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
 * Security and operations is built on AWS cloud-native components.
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-10-26.png "Figure: System Architecture")
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-11-27.png "Figure: System Architecture")
 
 The port names in the system architecture are usually defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
 
@@ -355,7 +355,7 @@ All APIs adhere to the following **structure and foundational features**
 
 * Cloudfront presents SSL certificate with our host name in it, pinned on the root certificate(s) of the chain for our mobile app
 * TLS 1.2 (tls1.2_2018 policy) is used for connection encryption
-* Authorisation with API Key specially issued for each API: ```Authorization: Bearer <API KEY>```
+* [Authorisation with API Key](./api-contracts/security.md#authentication) specially issued for each API: ```Authorization: Bearer <API KEY>```
 * Secure process for generating and distributing API Keys relies on out-of-band identity authentication:
   1. We generate and exchange GPG public keys and establish a trust relationship (e.g. phone call) with third party (ext system responsible)
   1. We generate the API key using the third-party's public key, encrypt and send it via mail
@@ -367,7 +367,7 @@ All APIs adhere to the following **structure and foundational features**
 #### Signature of responses via Submission and Distribution
 
 The majority of APIs in the submission and distribution API groups will include a HTTP header containing a signature to support verification of payloads.
-  * Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
+  * [Signature (ECDSA_SHA_256) of response body](./api-contracts/security.md#response-signature): ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
   * One Signing Key #1 for all APIs
   * Public Key #1 embedded into mobile apps (in obfuscated form)
   * Clients (mobile apps) must verify signature

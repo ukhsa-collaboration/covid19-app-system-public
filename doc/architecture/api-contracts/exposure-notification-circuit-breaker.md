@@ -2,19 +2,21 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
-## Scenario
+## HTTP request and response
 
-### Initial request
+- Circuit Breaker Request: ```POST https://<FQDN>/circuit-breaker/exposure-notification/request```
+- Circuit Breaker Resolution: ```GET https://<FQDN>/circuit-breaker/exposure-notification/resolution/<approval_token>```
 
-- Endpoint schema: ```[POST] https://<FQDN>/circuit-breaker/exposure-notification/request```
-    - FQDN: Hostname can be different per API
-- Authorisation: ```Authorization: Bearer <API KEY>```
-    - One API KEY for all mobile phone-facing APIs
+### Parameters
+- FQDN: Hostname can be different per API
+- Authorization required and signatures provided - see [API security](./security.md)
 - Request payload content-type: application/json
 - Response payload content-type: application/json
 
-### Response Headers
-- Signature (ECDSA_SHA_256) of response body: ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
+## Scenario
+
+### Example: Initial request
+```POST https://<FQDN>/circuit-breaker/exposure-notification/request```
 
 #### Payload Example
 
@@ -22,7 +24,7 @@ API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 {
   "matchedKeyCount" : 2,
   "daysSinceLastExposure": 3,
-  "maximumRiskScore" : 150,
+  "maximumRiskScore" : 150.0,
   "riskCalculationVersion": 2
 }
 ```
@@ -47,17 +49,13 @@ Currently there are two risk calculation versions with the following mapping:
 }
 ```
 
-### Poll for resolution status
+### Example: Poll for resolution status
 
-- Endpoint schema: ```[GET] https://<FQDN>/circuit-breaker/exposure-notification/resolution/<approval_token>```
-    - FQDN: Hostname can be different per API
-- Authorisation: ```Authorization: Bearer <API KEY>```
-    - One API KEY for all mobile phone-facing APIs    
-- Response payload content-type: application/json
+```GET https://<FQDN>/circuit-breaker/exposure-notification/resolution/<approval_token>```
 
 #### Response Payload Example
 
-```json| 
+```json
 {
   "approval": "yes"|"no"|"pending"
 }
