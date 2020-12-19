@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
 import org.skyscreamer.jsonassert.JSONParser
-import uk.nhs.nhsx.ContextBuilder
-import uk.nhs.nhsx.ProxyRequestBuilder
-import uk.nhs.nhsx.TestData
+import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
@@ -31,7 +31,7 @@ import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
-import uk.nhs.nhsx.virology.persistence.VirologyDynamoService
+import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import java.time.Duration
 import java.util.Optional
 
@@ -53,7 +53,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request success`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
         every { persistenceService.getTestResult(any()) } returns Optional.of(TestData.positiveTestResult)
         every { persistenceService.markForDeletion(any(), any()) } just Runs
 
@@ -80,7 +80,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request success no content`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
         every { persistenceService.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
         every { persistenceService.markForDeletion(any(), any()) } just Runs
 
@@ -107,7 +107,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request missing token`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
         every { persistenceService.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
         every { persistenceService.markForDeletion(any(), any()) } just Runs
 
@@ -134,7 +134,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request null token`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
         every { persistenceService.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
         every { persistenceService.markForDeletion(any(), any()) } just Runs
 
@@ -161,7 +161,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request that does not exist`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
         every { persistenceService.getTestResult(any()) } returns Optional.empty()
 
         val service = VirologyService(
@@ -187,7 +187,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request for incorrect request json`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
 
         val service = VirologyService(
             persistenceService,
@@ -212,7 +212,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request for missing body`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
 
         val service = VirologyService(
             persistenceService,
@@ -236,7 +236,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test order request success`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
         val tokenGenerator = mockk<TokensGenerator>()
         every { persistenceService.persistTestOrder(any(), any()) } returns TestOrder(
             "cc8f0b6z", "polling-token", "submission-token"
@@ -269,7 +269,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test register request success`() {
-        val persistenceService = mockk<VirologyDynamoService>()
+        val persistenceService = mockk<VirologyPersistenceService>()
         val tokenGenerator = mockk<TokensGenerator>()
         every { persistenceService.persistTestOrder(any(), any()) } returns TestOrder(
             "cc8f0b6z", "polling-token", "submission-token"

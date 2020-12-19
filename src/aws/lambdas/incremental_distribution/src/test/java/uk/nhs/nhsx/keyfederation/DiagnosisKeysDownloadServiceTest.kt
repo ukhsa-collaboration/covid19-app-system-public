@@ -11,6 +11,7 @@ import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadService
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
+import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
 import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.time.LocalDate

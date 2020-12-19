@@ -6,7 +6,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.ProxyRequestBuilder;
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.signature.KeyId;
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner;

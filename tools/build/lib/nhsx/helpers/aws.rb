@@ -244,7 +244,7 @@ module NHSx
       JSON.parse(cmd.output)["EventSourceMappings"]
     end
 
-    def get_even_source_mapping_uuid(function_name, event_source_arn, function_arn, system_config)
+    def get_event_source_mapping_uuid(function_name, event_source_arn, function_arn, system_config)
       mappings = list_event_source_mappings(function_name, system_config)
       mappings.find { |mapping| mapping["EventSourceArn"] == event_source_arn and mapping["FunctionArn"] == function_arn }["UUID"]
     end

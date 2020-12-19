@@ -7,10 +7,17 @@ namespace :queue do
         desc "Queue a deployment to the #{tgt_env} target environment in CodeBuild"
         task :"#{tgt_env}" => prerequisites do
           include Zuehlke::Templates
+          include NHSx::Versions
+
+          if tgt_env == "branch"
+            branch_name = subsystem_version_metadata("backend", $configuration)["BranchName"]
+          else
+            branch_name = $configuration.branch
+          end
 
           build_parameters = {
             "project_name" => "deploy-app-system",
-            "source_version" => $configuration.branch,
+            "source_version" => branch_name,
             "target_environment" => tgt_env,
             "account" => account,
           }

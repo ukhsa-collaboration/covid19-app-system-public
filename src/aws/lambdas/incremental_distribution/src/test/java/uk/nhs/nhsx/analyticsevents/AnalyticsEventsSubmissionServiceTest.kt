@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
-import uk.nhs.nhsx.diagnosiskeydist.FakeS3
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
 
 @Suppress("UNCHECKED_CAST")
 class AnalyticsEventsSubmissionServiceTest {

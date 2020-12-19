@@ -47,6 +47,7 @@ public class AnalyticsEventsSubmissionService {
         var transformedMetadata = new LinkedHashMap<>();
         transformedMetadata.putAll(metadata);
         transformedMetadata.put("postalDistrict", PostCodeDeserializer.mergeSmallPostcodes(currentPostalDistrict));
+        transformedMetadata.remove("localAuthority");
 
         var transformedPayload = new LinkedHashMap<>(payload);
         transformedPayload.put("uuid", UUID.randomUUID());

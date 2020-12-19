@@ -148,7 +148,10 @@
           [ ".", "${risky_venues_circuit_breaker_function}-errors" ],
           [ ".", "${risky_venues_upload_function}-errors" ],
           [ ".", "${virology_submission_function}-errors" ],
-          [ ".", "${virology_upload_function}-errors" ]
+          [ ".", "${virology_upload_function}-errors" ],
+          [ ".", "${isolation_payment_order_function}-errors" ],
+          [ ".", "${isolation_payment_verify_function}-errors" ],
+          [ ".", "${isolation_payment_consume_function}-errors" ]
         ],
         "view": "pie",
         "region": "eu-west-2",
@@ -202,8 +205,8 @@
 
     {
       "type": "metric",
-      "x": 6,
-      "y": 27,
+      "x": 15,
+      "y": 33,
       "width": 9,
       "height": 6,
       "properties": {
@@ -221,7 +224,7 @@
     {
       "type": "metric",
       "x": 0,
-      "y": 33,
+      "y": 27,
       "width": 6,
       "height": 6,
       "properties": {
@@ -241,7 +244,7 @@
     {
       "type": "metric",
       "x": 6,
-      "y": 33,
+      "y": 27,
       "width": 9,
       "height": 6,
       "properties": {
@@ -257,9 +260,27 @@
       }
     },
     {
+      "type": "metric",
+      "x": 15,
+      "y": 27,
+      "width": 9,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [ "ErrorLogCount", "${risky_venues_circuit_breaker_function}-errors" ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "eu-west-2",
+        "period": 60,
+        "title": "Risky Venues Circuit Breaker",
+        "stat": "Sum"
+      }
+    },
+    {
         "type": "metric",
         "x": 0,
-        "y": 39,
+        "y": 33,
         "width": 6,
         "height": 6,
         "properties": {
@@ -278,7 +299,7 @@
     {
         "type": "metric",
         "x": 6,
-        "y": 39,
+        "y": 33,
         "width": 9,
         "height": 6,
         "properties": {
@@ -292,25 +313,61 @@
             "title": "Advanced Analytics ",
             "stat": "Sum"
         }
+    },    
+    {
+        "type": "metric",
+        "x": 0,
+        "y": 39,
+        "width": 6,
+        "height": 6,
+        "properties": {
+            "metrics": [
+                [ "ErrorLogCount", "${isolation_payment_order_function}-errors" ]
+            ],
+            "view": "timeSeries",
+            "stacked": false,
+            "region": "eu-west-2",
+            "period": 60,
+            "title": "Isolation Payment Order",
+            "stat": "Sum"
+        }
     },
     {
-      "type": "metric",
-      "x": 15,
-      "y": 33,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [ "ErrorLogCount", "${risky_venues_circuit_breaker_function}-errors" ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Risky Venues Circuit Breaker",
-        "stat": "Sum"
-      }
+        "type": "metric",
+        "x": 6,
+        "y": 39,
+        "width": 9,
+        "height": 6,
+        "properties": {
+            "metrics": [
+                [ "ErrorLogCount", "${isolation_payment_verify_function}-errors" ]
+            ],
+            "view": "timeSeries",
+            "stacked": false,
+            "region": "eu-west-2",
+            "period": 60,
+            "title": "Isolation Payment Verify",
+            "stat": "Sum"
+        }
     },
+    {
+        "type": "metric",
+        "x": 15,
+        "y": 39,
+        "width": 9,
+        "height": 6,
+        "properties": {
+            "metrics": [
+                [ "ErrorLogCount", "${isolation_payment_consume_function}-errors" ]
+            ],
+            "view": "timeSeries",
+            "stacked": false,
+            "region": "eu-west-2",
+            "period": 60,
+            "title": "Isolation Payment Consume",
+            "stat": "Sum"
+        }
+    },    
     {
       "type": "metric",
       "x": 12,
@@ -329,7 +386,10 @@
           [ ".", "${risky_venues_circuit_breaker_function}-errors" ],
           [ ".", "${risky_venues_upload_function}-errors" ],
           [ ".", "${virology_submission_function}-errors" ],
-          [ ".", "${virology_upload_function}-errors" ]
+          [ ".", "${virology_upload_function}-errors" ],
+          [ ".", "${isolation_payment_order_function}-errors" ],          
+          [ ".", "${isolation_payment_verify_function}-errors" ],
+          [ ".", "${isolation_payment_consume_function}-errors" ]
         ],
         "view": "timeSeries",
         "stacked": true,

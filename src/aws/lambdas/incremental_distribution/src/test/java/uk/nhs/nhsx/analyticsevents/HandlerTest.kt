@@ -4,8 +4,8 @@ import com.amazonaws.HttpMethod
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.ContextBuilder
-import uk.nhs.nhsx.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
@@ -14,7 +14,7 @@ import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
-import uk.nhs.nhsx.diagnosiskeydist.FakeS3
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
 
 class HandlerTest {
 

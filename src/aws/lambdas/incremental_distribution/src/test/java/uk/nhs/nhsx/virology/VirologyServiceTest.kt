@@ -9,7 +9,7 @@ import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.TestData
+import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequest
@@ -20,7 +20,7 @@ import uk.nhs.nhsx.virology.order.VirologyRequestType
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
-import uk.nhs.nhsx.virology.persistence.VirologyDynamoService
+import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyLookupResult
 import uk.nhs.nhsx.virology.result.VirologyResultRequest
@@ -37,7 +37,7 @@ class VirologyServiceTest {
 
     private val now = Instant.ofEpochSecond(0)
     private val clock = Supplier { now }
-    private val persistenceService = mockk<VirologyDynamoService>()
+    private val persistenceService = mockk<VirologyPersistenceService>()
     private val tokensGenerator = TokensGenerator()
     private val fourWeeksExpireAt = Duration.ofDays(4 * 7.toLong()).seconds
     private val websiteConfig = VirologyWebsiteConfig(

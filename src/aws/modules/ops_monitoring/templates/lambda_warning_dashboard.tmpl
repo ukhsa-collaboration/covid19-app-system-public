@@ -18,7 +18,10 @@
               [ ".", "${risky_venues_circuit_breaker_function}-warnings" ],
               [ ".", "${risky_venues_upload_function}-warnings" ],
               [ ".", "${virology_submission_function}-warnings" ],
-              [ ".", "${virology_upload_function}-warnings" ]
+              [ ".", "${virology_upload_function}-warnings" ],
+              [ ".", "${isolation_payment_order_function}-warnings" ],
+              [ ".", "${isolation_payment_verify_function}-warnings" ],
+              [ ".", "${isolation_payment_consume_function}-warnings" ]
             ],
             "view": "pie",
             "region": "eu-west-2",
@@ -49,7 +52,10 @@
                   [ ".", "${risky_venues_circuit_breaker_function}-warnings" ],
                   [ ".", "${risky_venues_upload_function}-warnings" ],
                   [ ".", "${virology_submission_function}-warnings" ],
-                  [ ".", "${virology_upload_function}-warnings" ]
+                  [ ".", "${virology_upload_function}-warnings" ],
+                  [ ".", "${isolation_payment_order_function}-warnings" ],
+                  [ ".", "${isolation_payment_verify_function}-warnings" ],
+                  [ ".", "${isolation_payment_consume_function}-warnings" ]
              ],
                 "view": "timeSeries",
                 "stacked": true,
@@ -228,8 +234,8 @@
             },
             {
                 "type": "metric",
-                "x": 0,
-                "y": 39,
+                "x": 12,
+                "y": 27,
                 "width": 12,
                 "height": 6,
                 "properties": {
@@ -241,6 +247,60 @@
                     "region": "eu-west-2",
                     "period": 60,
                     "title": "Advanced Analytics ",
+                    "stat": "Sum"
+                }
+            },
+            {
+                "type": "metric",
+                "x": 0,
+                "y": 39,
+                "width": 12,
+                "height": 6,
+                "properties": {
+                    "metrics": [
+                        [ "WarningLogCount", "${isolation_payment_order_function}-warnings" ]
+                    ],
+                    "view": "timeSeries",
+                    "stacked": false,
+                    "region": "eu-west-2",
+                    "period": 60,
+                    "title": "Isolation Payment Orders ",
+                    "stat": "Sum"
+                }
+            },
+            {
+                "type": "metric",
+                "x": 12,
+                "y": 39,
+                "width": 12,
+                "height": 6,
+                "properties": {
+                    "metrics": [
+                        [ "WarningLogCount", "${isolation_payment_verify_function}-warnings" ]
+                    ],
+                    "view": "timeSeries",
+                    "stacked": false,
+                    "region": "eu-west-2",
+                    "period": 60,
+                    "title": "Isolation Payment Verify ",
+                    "stat": "Sum"
+                }
+            },
+            {
+                "type": "metric",
+                "x": 0,
+                "y": 45,
+                "width": 12,
+                "height": 6,
+                "properties": {
+                    "metrics": [
+                        [ "WarningLogCount", "${isolation_payment_consume_function}-warnings" ]
+                    ],
+                    "view": "timeSeries",
+                    "stacked": false,
+                    "region": "eu-west-2",
+                    "period": 60,
+                    "title": "Isolation Payment Consume ",
                     "stat": "Sum"
                 }
             }

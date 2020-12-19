@@ -42,6 +42,7 @@ App -> App: risk analysis check matches, none found
 ...
 
 App -> SubmissionAPI: send daily analytics data 
+App -> SubmissionAPI: send analytics event data 
 ...
 end
 

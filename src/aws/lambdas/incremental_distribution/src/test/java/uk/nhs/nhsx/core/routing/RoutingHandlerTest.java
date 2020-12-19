@@ -2,7 +2,7 @@ package uk.nhs.nhsx.core.routing;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.ContextBuilder;
+import uk.nhs.nhsx.testhelper.ContextBuilder;
 import uk.nhs.nhsx.core.HttpResponses;
 
 import java.util.HashMap;

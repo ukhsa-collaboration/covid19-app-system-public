@@ -11,7 +11,7 @@ import uk.nhs.nhsx.core.SystemObjectMapper;
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.virology.order.TokensGenerator;
-import uk.nhs.nhsx.virology.persistence.VirologyDynamoService;
+import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService;
 import uk.nhs.nhsx.virology.tokengen.CtaProcessorRequest;
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorService;
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorStore;
@@ -44,7 +44,7 @@ public class VirologyProcessorHandler implements RequestHandler<Map<String, Stri
     private static VirologyProcessorService virologyProcessorService() {
         return new VirologyProcessorService(
             new VirologyService(
-                new VirologyDynamoService(
+                new VirologyPersistenceService(
                     AmazonDynamoDBClientBuilder.defaultClient(),
                     virologyConfig()
                 ),

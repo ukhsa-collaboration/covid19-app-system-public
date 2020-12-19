@@ -14,14 +14,12 @@ API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
 ## Scenario
 - Mobile app downloads following configuration json and:
-    - The `exposureNotification` is used to do the initial setup of the exposure api (based on the German configuration values)
+    - The `exposureNotification` is used to do the initial setup of the exposure api 
     - The `riskCalculation` is used to then calculate the risk (based on government policy on acceptable true positive and false positive rates for alerting users)
 
-[Read more about the German risk score calculation](https://github.com/corona-warn-app/cwa-documentation/blob/master/solution_architecture.md#risk-score-calculation)
+[Read more about our algorithm and configuration](https://www.turing.ac.uk/blog/technical-roadmap-uks-contract-tracing-app-functionality)
 
-[Read more about the German exposure & risk configuration](https://github.com/corona-warn-app/cwa-documentation/blob/master/cwa-risk-assessment.md#current-configuration)
-
-[Read more about Exposure Notification Configuration](https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Android-Exposure-Notification-API-documentation-v1.3.2.pdf)
+[Read more about the API for Exposure Notification Configuration](https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Android-Exposure-Notification-API-documentation-v1.3.2.pdf)
 
 ## Example: Exposure Configuration
 ```GET https://<FQDN>/distribution/exposure-configuration```

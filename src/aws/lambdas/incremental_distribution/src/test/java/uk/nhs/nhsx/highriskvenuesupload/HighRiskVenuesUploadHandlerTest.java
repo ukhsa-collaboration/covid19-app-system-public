@@ -4,7 +4,7 @@ import com.amazonaws.HttpMethod;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.ProxyRequestBuilder;
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder;
 import uk.nhs.nhsx.core.TestEnvironments;
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 
@@ -17,8 +17,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static uk.nhs.nhsx.ContextBuilder.aContext;
-import static uk.nhs.nhsx.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
+import static uk.nhs.nhsx.testhelper.ContextBuilder.aContext;
+import static uk.nhs.nhsx.testhelper.data.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
 
 public class HighRiskVenuesUploadHandlerTest {
 

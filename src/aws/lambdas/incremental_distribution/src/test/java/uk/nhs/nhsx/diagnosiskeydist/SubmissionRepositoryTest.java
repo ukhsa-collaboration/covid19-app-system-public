@@ -2,7 +2,7 @@ package uk.nhs.nhsx.diagnosiskeydist;
 
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.TestData;
+import uk.nhs.nhsx.testhelper.data.TestData;
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
@@ -16,8 +16,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static uk.nhs.nhsx.TestData.STORED_KEYS_PAYLOAD_DESERIALIZED;
-import static uk.nhs.nhsx.TestData.STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET;
+import static uk.nhs.nhsx.testhelper.data.TestData.STORED_KEYS_PAYLOAD_DESERIALIZED;
+import static uk.nhs.nhsx.testhelper.data.TestData.STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET;
 
 public class SubmissionRepositoryTest {
 

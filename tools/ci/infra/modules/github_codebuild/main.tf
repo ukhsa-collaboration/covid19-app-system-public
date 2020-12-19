@@ -22,9 +22,10 @@ resource "aws_codebuild_project" "this" {
   tags = var.tags
 
   artifacts {
-    type      = "S3"
-    location  = var.artifacts_bucket_name
-    packaging = "ZIP"
+    type                   = "S3"
+    location               = var.artifacts_bucket_name
+    packaging              = "ZIP"
+    override_artifact_name = true
   }
 
   environment {
@@ -51,10 +52,9 @@ resource "aws_codebuild_project" "this" {
   }
 
   source {
-    buildspec       = data.template_file.buildspec.rendered
-    type            = "GITHUB"
-    location        = var.repository
-    git_clone_depth = 10
+    buildspec = data.template_file.buildspec.rendered
+    type      = "GITHUB"
+    location  = var.repository
 
     git_submodules_config {
       fetch_submodules = false

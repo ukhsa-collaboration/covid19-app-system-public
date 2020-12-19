@@ -83,7 +83,7 @@ module Gaudi
       def test_result
         test_result = ENV.fetch("TEST_RESULT", "POSITIVE")
 
-        raise GaudiError, "Invalid TEST_RESULT" unless ["POSITIVE", "NEGATIVE"].include?(test_result)
+        raise GaudiError, "Invalid TEST_RESULT" unless ["POSITIVE", "NEGATIVE", "VOID"].include?(test_result)
 
         return test_result
       end

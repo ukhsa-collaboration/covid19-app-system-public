@@ -1,5 +1,7 @@
 package uk.nhs.nhsx.analyticssubmission.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import static uk.nhs.nhsx.analyticssubmission.PostCodeDeserializer.mergeSmallPostcodes;
 
 public class StoredAnalyticsSubmissionPayload {
@@ -13,6 +15,7 @@ public class StoredAnalyticsSubmissionPayload {
     public final String deviceModel;
     public final String operatingSystemVersion;
     public final String latestApplicationVersion;
+    //public final String localAuthority;
 
     //    Metrics
     public final Long cumulativeDownloadBytes;
@@ -47,12 +50,16 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer isIsolatingForSelfDiagnosedBackgroundTick;
     public final Integer isIsolatingForTestedPositiveBackgroundTick;
     public final Integer isIsolatingForHadRiskyContactBackgroundTick;
+    public final Integer receivedRiskyContactNotification;
+    public final Integer startedIsolation;
+    public final Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
 
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
                                              String operatingSystemVersion,
                                              String latestApplicationVersion,
+                                             //String localAuthority,
                                              Long cumulativeDownloadBytes,
                                              Long cumulativeUploadBytes,
                                              Long cumulativeCellularDownloadBytes,
@@ -86,7 +93,10 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer hasTestedPositiveBackgroundTick,
                                              Integer isIsolatingForSelfDiagnosedBackgroundTick,
                                              Integer isIsolatingForTestedPositiveBackgroundTick,
-                                             Integer isIsolatingForHadRiskyContactBackgroundTick) {
+                                             Integer isIsolatingForHadRiskyContactBackgroundTick,
+                                             Integer receivedRiskyContactNotification,
+                                             Integer startedIsolation,
+                                             Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -125,6 +135,10 @@ public class StoredAnalyticsSubmissionPayload {
         this.isIsolatingForSelfDiagnosedBackgroundTick = isIsolatingForSelfDiagnosedBackgroundTick;
         this.isIsolatingForTestedPositiveBackgroundTick = isIsolatingForTestedPositiveBackgroundTick;
         this.isIsolatingForHadRiskyContactBackgroundTick = isIsolatingForHadRiskyContactBackgroundTick;
+        this.receivedRiskyContactNotification = receivedRiskyContactNotification;
+        this.startedIsolation = startedIsolation;
+        this.receivedPositiveTestResultWhenIsolatingDueToRiskyContact = receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
+        //this.localAuthority = localAuthority;
     }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload) {
@@ -133,6 +147,7 @@ public class StoredAnalyticsSubmissionPayload {
                 clientPayload.metadata.deviceModel,
                 clientPayload.metadata.operatingSystemVersion,
                 clientPayload.metadata.latestApplicationVersion,
+                // clientPayload.metadata.localAuthority,
                 clientPayload.metrics.cumulativeDownloadBytes,
                 clientPayload.metrics.cumulativeUploadBytes,
                 clientPayload.metrics.cumulativeCellularDownloadBytes,
@@ -166,6 +181,9 @@ public class StoredAnalyticsSubmissionPayload {
                 clientPayload.metrics.hasTestedPositiveBackgroundTick,
                 clientPayload.metrics.isIsolatingForSelfDiagnosedBackgroundTick,
                 clientPayload.metrics.isIsolatingForTestedPositiveBackgroundTick,
-                clientPayload.metrics.isIsolatingForHadRiskyContactBackgroundTick);
+                clientPayload.metrics.isIsolatingForHadRiskyContactBackgroundTick,
+                clientPayload.metrics.receivedRiskyContactNotification,
+                clientPayload.metrics.startedIsolation,
+                clientPayload.metrics.receivedPositiveTestResultWhenIsolatingDueToRiskyContact);
     }
 }

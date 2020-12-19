@@ -5,9 +5,9 @@ import com.amazonaws.services.dynamodbv2.document.Item;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.ProxyRequestBuilder;
-import uk.nhs.nhsx.TestData;
-import uk.nhs.nhsx.analyticssubmission.FakeS3Storage;
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder;
+import uk.nhs.nhsx.testhelper.data.TestData;
+import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage;
 import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
@@ -29,10 +29,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static uk.nhs.nhsx.ContextBuilder.aContext;
-import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasBody;
-import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasHeader;
-import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasStatus;
+import static uk.nhs.nhsx.testhelper.ContextBuilder.aContext;
+import static uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody;
+import static uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasHeader;
+import static uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus;
 
 public class DiagnosisKeysSubmissionHandlerTest {
 

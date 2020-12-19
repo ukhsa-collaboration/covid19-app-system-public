@@ -21,3 +21,8 @@ variable "canary_deploy_region" {
   description = "region in which canaries are to be deployed (needed to create an aws provider)"
   type        = string
 }
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
+}

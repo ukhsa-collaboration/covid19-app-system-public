@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -13,11 +12,13 @@ import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
-import uk.nhs.nhsx.diagnosiskeydist.s3.FakeDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.keyfederation.*
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
+import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
 import java.security.KeyPairGenerator
 import java.security.spec.ECGenParameterSpec
 import java.time.LocalDate
@@ -199,7 +200,7 @@ class KeyFederationDownloadHandlerTest {
             batchTagService,
             { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(KmsCompatibleSigner(keyPair.private))) },
             fakeS3Storage
-        ).handleRequest(null, uk.nhs.nhsx.ContextBuilder.aContext())
+        ).handleRequest(null, ContextBuilder.aContext())
 
         assertThat(fakeS3Storage.count).isEqualTo(1)
 
@@ -252,7 +253,7 @@ class KeyFederationDownloadHandlerTest {
             batchTagService,
             { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(KmsCompatibleSigner(keyPair.private))) },
             fakeS3Storage
-        ).handleRequest(null, uk.nhs.nhsx.ContextBuilder.aContext() )
+        ).handleRequest(null, ContextBuilder.aContext() )
 
 
         assertThat(fakeS3Storage.count).isEqualTo(0)

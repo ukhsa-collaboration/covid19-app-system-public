@@ -12,22 +12,25 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public class IsolationPaymentGatewayService {
-    private static final Logger logger = LogManager.getLogger(IsolationPaymentMobileService.class);
+    
+    private static final Logger logger = LogManager.getLogger(IsolationPaymentGatewayService.class);
     
     private final Supplier<Instant> systemClock;
-    private final IsolationDynamoService dynamoService;
+    private final IsolationPaymentPersistence persistence;
     private final String auditLogPrefix;
 
-    public IsolationPaymentGatewayService(Supplier<Instant> systemClock, IsolationDynamoService dynamoService, String auditLogPrefix) {
+    public IsolationPaymentGatewayService(Supplier<Instant> systemClock,
+                                          IsolationPaymentPersistence persistence,
+                                          String auditLogPrefix) {
         this.systemClock = systemClock;
-        this.dynamoService = dynamoService;
+        this.persistence = persistence;
         this.auditLogPrefix = auditLogPrefix;
     }
 
     public IsolationResponse verifyIsolationToken(String ipcToken) {
         Optional<IsolationToken> isolationToken;
         try {
-            isolationToken = dynamoService.getIsolationToken(ipcToken);
+            isolationToken = persistence.getIsolationToken(ipcToken);
         }
         catch (Exception e) {
             logger.error("{} VerifyToken exception: tokenId={}", auditLogPrefix, ipcToken, e);
@@ -36,25 +39,25 @@ public class IsolationPaymentGatewayService {
 
         if (!isolationToken.isPresent()) {
             logger.info("{} VerifyToken failed: token not found, tokenId={}", auditLogPrefix, ipcToken);
-            return new IsolationResponse(ipcToken, TokenStatus.INVALID.value);
+            return new IsolationResponse(ipcToken, TokenStateExternal.EXT_INVALID.value);
         }
 
-        if (!TokenStatus.VALID.value.equals(isolationToken.get().tokenStatus)) {
+        if (!TokenStateInternal.INT_UPDATED.value.equals(isolationToken.get().tokenStatus)) {
             logger.info("{} VerifyToken failed: token in wrong state, ipcToken={}", auditLogPrefix, isolationToken.get());
-            return new IsolationResponse(ipcToken, TokenStatus.INVALID.value);
+            return new IsolationResponse(ipcToken, TokenStateExternal.EXT_INVALID.value);
         }
 
         var updatedToken = IsolationToken.clonedToken(isolationToken.get());
         updatedToken.validatedTimestamp = systemClock.get().getEpochSecond();
 
         try {
-            dynamoService.updateIsolationToken(updatedToken, TokenStatus.VALID);
+            persistence.updateIsolationToken(updatedToken, TokenStateInternal.INT_UPDATED);
 
             logger.info("{} VerifyToken successful: existing.ipcToken={}, updated.ipcToken={}", auditLogPrefix, isolationToken.get(), updatedToken);
 
             return new IsolationResponse(
                 ipcToken,
-                TokenStatus.VALID.value,
+                TokenStateExternal.EXT_VALID.value,
                 convertToString(updatedToken.riskyEncounterDate),
                 convertToString(updatedToken.isolationPeriodEndDate),
                 convertToString(updatedToken.createdTimestamp),
@@ -76,7 +79,7 @@ public class IsolationPaymentGatewayService {
     public IsolationResponse consumeIsolationToken(String ipcToken) {
         Optional<IsolationToken> isolationToken;
         try {
-            isolationToken = dynamoService.getIsolationToken(ipcToken);
+            isolationToken = persistence.getIsolationToken(ipcToken);
         }
         catch (Exception e) {
             logger.error("{} ConsumeToken exception: tokenId={}", auditLogPrefix, ipcToken, e);
@@ -85,20 +88,20 @@ public class IsolationPaymentGatewayService {
 
         if (!isolationToken.isPresent()) {
             logger.info("{} ConsumeToken failed: token not found, tokenId={}", auditLogPrefix, ipcToken);
-            return new IsolationResponse(ipcToken, TokenStatus.INVALID.value);
+            return new IsolationResponse(ipcToken, TokenStateExternal.EXT_INVALID.value);
         }
 
-        if (!TokenStatus.VALID.value.equals(isolationToken.get().tokenStatus)) {
+        if (!TokenStateInternal.INT_UPDATED.value.equals(isolationToken.get().tokenStatus)) {
             logger.info("{} ConsumeToken failed: token in wrong state, ipcToken={}", auditLogPrefix, isolationToken.get());
-            return new IsolationResponse(ipcToken, TokenStatus.INVALID.value);
+            return new IsolationResponse(ipcToken, TokenStateExternal.EXT_INVALID.value);
         }
 
         try {
-            dynamoService.deleteIsolationToken(ipcToken, TokenStatus.VALID);
+            persistence.deleteIsolationToken(ipcToken, TokenStateInternal.INT_UPDATED);
 
             logger.info("{} ConsumeToken successful: deleted.ipcToken={}", auditLogPrefix, isolationToken.get());
 
-            return new IsolationResponse(ipcToken, TokenStatus.CONSUMED.value);
+            return new IsolationResponse(ipcToken, TokenStateExternal.EXT_CONSUMED.value);
         }
         catch (Exception e) {
             logger.error("{} ConsumeToken exception: ipcToken={}", auditLogPrefix, isolationToken.get(), e);

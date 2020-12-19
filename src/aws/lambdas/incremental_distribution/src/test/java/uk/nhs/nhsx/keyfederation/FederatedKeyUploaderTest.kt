@@ -4,12 +4,13 @@ import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.TestData
+import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
+import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
 import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.time.LocalDateTime

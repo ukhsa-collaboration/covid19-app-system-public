@@ -134,6 +134,10 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "deviceModel"
       type = "string"
     }
+    /*columns {
+      name = "localAuthority"
+      type = "string"
+    }*/
     columns {
       name = "latestApplicationVersion"
       type = "string"
@@ -274,6 +278,18 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
     }
     columns {
       name = "isIsolatingForHadRiskyContactBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyContactNotification"
+      type = "int"
+    }
+    columns {
+      name = "startedIsolation"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultWhenIsolatingDueToRiskyContact"
       type = "int"
     }
   }

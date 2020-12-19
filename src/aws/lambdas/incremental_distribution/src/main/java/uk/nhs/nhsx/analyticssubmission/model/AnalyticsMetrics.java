@@ -33,6 +33,9 @@ public class AnalyticsMetrics {
     public Integer isIsolatingForSelfDiagnosedBackgroundTick;
     public Integer isIsolatingForTestedPositiveBackgroundTick;
     public Integer isIsolatingForHadRiskyContactBackgroundTick;
+    public Integer receivedRiskyContactNotification;
+    public Integer startedIsolation;
+    public Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
 
 
     public AnalyticsMetrics() { }

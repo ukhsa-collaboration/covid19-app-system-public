@@ -16,7 +16,7 @@ import uk.nhs.nhsx.core.SystemObjectMapper
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
-import uk.nhs.nhsx.diagnosiskeydist.s3.FakeDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
 import uk.nhs.nhsx.keyfederation.InteropClient
 import java.security.KeyPairGenerator

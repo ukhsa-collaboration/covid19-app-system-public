@@ -3,7 +3,7 @@ locals {
 }
 
 resource "aws_s3_bucket" "this" {
-  bucket = local.identifier_prefix
+  bucket = var.name
   acl    = "private"
 
   force_destroy = true
@@ -24,6 +24,15 @@ resource "aws_s3_bucket" "this" {
   website {
     index_document = "index.html"
     error_document = "error.html"
+  }
+
+  lifecycle_rule {
+    enabled = true
+    id      = "${var.name}-clean-up"
+    prefix  = "public/query-results/"
+    expiration {
+      days = 45
+    }
   }
 }
 

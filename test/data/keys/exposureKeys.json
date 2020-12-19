@@ -1,0 +1,14 @@
+{
+  "temporaryExposureKeys": [
+    {
+      "key": "W2zb3BeMWt6Xr2u0ABG32Q==",
+      "rollingStartNumber": 12345,
+      "rollingPeriod": 144
+    },
+    {
+      "key": "kzQt9Lf3xjtAlMtm7jkSqw==",
+      "rollingStartNumber": 12499,
+      "rollingPeriod": 100
+    }
+  ]
+}

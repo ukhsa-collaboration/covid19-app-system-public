@@ -11,13 +11,13 @@ import uk.nhs.nhsx.core.exceptions.HttpStatusCode;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static uk.nhs.nhsx.ProxyRequestBuilder.request;
+import static uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request;
 import static uk.nhs.nhsx.core.routing.Routing.Method.POST;
 import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.catchExceptions;
-import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasStatus;
+import static uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus;
 
 public class RoutingTest {
 

@@ -30,11 +30,11 @@ public class VirologyService {
 
     private static final Logger logger = LogManager.getLogger(VirologyService.class);
 
-    private final VirologyDynamoService persistenceService;
+    private final VirologyPersistenceService persistenceService;
     private final TokensGenerator tokensGenerator;
     private final Supplier<Instant> systemClock;
 
-    public VirologyService(VirologyDynamoService persistenceService,
+    public VirologyService(VirologyPersistenceService persistenceService,
                            TokensGenerator tokensGenerator,
                            Supplier<Instant> systemClock) {
         this.persistenceService = persistenceService;

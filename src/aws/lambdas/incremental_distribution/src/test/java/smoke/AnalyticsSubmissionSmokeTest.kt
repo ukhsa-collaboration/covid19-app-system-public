@@ -7,11 +7,8 @@ import org.http4k.core.Status
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
 import smoke.clients.AnalyticsKeysSubmissionClient
-import smoke.clients.AwsLambda
-import smoke.clients.requireBodyText
-import smoke.clients.requireStatusCode
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.iOSPayloadFrom
+import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.Companion.iOSPayloadFrom
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetadata
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
@@ -33,6 +30,15 @@ class AnalyticsSubmissionSmokeTest {
         val uploadResponse = submitAnalytics(Jackson.toJson(payload))
         assertThat(uploadResponse, hasStatus(Status.OK))
     }
+    /*@Test
+    fun `submit ios analytics data with local authorities`() {
+        val analyticsMetrics = AnalyticsMetrics()
+        val analyticsMetadata = AnalyticsMetadata("AB10", "iPhone-smoke-test", "iPhone OS 13.5.1 (17F80)", "3.0", "localAuthority")
+
+        val payload =  ClientAnalyticsSubmissionPayload(AnalyticsWindow(startDate, endDate), analyticsMetadata, analyticsMetrics, false)
+        val uploadResponse = submitAnalytics(Jackson.toJson(payload))
+        assertThat(uploadResponse, hasStatus(Status.OK))
+    }*/
 
     @Test
     fun `submit android analytics data`() {

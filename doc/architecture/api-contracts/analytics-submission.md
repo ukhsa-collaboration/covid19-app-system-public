@@ -63,7 +63,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "hasTestedPositiveBackgroundTick": 1,
     "isIsolatingForSelfDiagnosedBackgroundTick": 1,
     "isIsolatingForTestedPositiveBackgroundTick": 1,
-    "isIsolatingForHadRiskyContactBackgroundTick": 1
+    "isIsolatingForHadRiskyContactBackgroundTick": 1,
+    "receivedRiskyContactNotification": 1,
+    "startedIsolation": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -110,7 +112,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "hasTestedPositiveBackgroundTick": 1,
     "isIsolatingForSelfDiagnosedBackgroundTick": 1,
     "isIsolatingForTestedPositiveBackgroundTick": 1,
-    "isIsolatingForHadRiskyContactBackgroundTick": 1
+    "isIsolatingForHadRiskyContactBackgroundTick": 1,
+    "receivedRiskyContactNotification": 1,
+    "startedIsolation": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -136,6 +140,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `isIsolatingForSelfDiagnosedBackgroundTick`
   * `isIsolatingForTestedPositiveBackgroundTick`
   * `isIsolatingForHadRiskyContactBackgroundTick`
+  * `receivedRiskyContactNotification`
+  * `startedIsolation`
 
 ### Responses
 | Status Code | Description |

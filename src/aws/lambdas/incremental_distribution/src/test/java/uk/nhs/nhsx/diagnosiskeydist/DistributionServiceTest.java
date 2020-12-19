@@ -5,7 +5,7 @@ import com.amazonaws.services.kms.model.SigningAlgorithmSpec;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import uk.nhs.nhsx.BatchExport;
+import uk.nhs.nhsx.testhelper.BatchExport;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
@@ -17,6 +17,7 @@ import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber;
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.SaveToFileKeyDistributor;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
+import uk.nhs.nhsx.testhelper.mocks.FakeS3;
 
 import java.io.File;
 import java.nio.file.Path;

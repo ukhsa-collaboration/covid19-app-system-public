@@ -14,7 +14,7 @@ namespace :deploy do
     task :"ci-infra:#{account}" do
       include NHSx::Terraform
       terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", account)
-      deploy_to_workspace("default", terraform_configuration, $configuration)
+      deploy_to_workspace("ci-infra", terraform_configuration, $configuration)
     end
   end
 end
@@ -34,7 +34,7 @@ namespace :plan do
     task :"ci-infra:#{account}" do
       include NHSx::Terraform
       terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", account)
-      plan_for_workspace("ci", terraform_configuration, $configuration)
+      plan_for_workspace("ci-infra", terraform_configuration, $configuration)
     end
   end
 end
@@ -46,5 +46,11 @@ namespace :destroy do
     workspace_name = "branch"
     terraform_configuration = File.join($configuration.base, NHSx::Terraform::DEV_ACCOUNT)
     delete_workspace(workspace_name, terraform_configuration, $configuration)
+  end
+  desc "Destroy the CodeBuild pipelines in dev"
+  task :"ci-infra:dev" do
+    include NHSx::Terraform
+    terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", "dev")
+    delete_workspace("ci-infra", terraform_configuration, $configuration)
   end
 end

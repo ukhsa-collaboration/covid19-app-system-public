@@ -14,7 +14,7 @@ import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.routing.Routing;
 import uk.nhs.nhsx.core.routing.RoutingHandler;
 import uk.nhs.nhsx.virology.order.TokensGenerator;
-import uk.nhs.nhsx.virology.persistence.VirologyDynamoService;
+import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService;
 import uk.nhs.nhsx.virology.result.VirologyResultRequest;
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest;
 
@@ -85,7 +85,7 @@ public class VirologyUploadHandler extends RoutingHandler {
 
     private static VirologyService virologyService() {
         return new VirologyService(
-            new VirologyDynamoService(
+            new VirologyPersistenceService(
                 AmazonDynamoDBClientBuilder.defaultClient(),
                 virologyConfig()
             ),

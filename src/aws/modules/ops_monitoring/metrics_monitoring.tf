@@ -2,7 +2,10 @@ locals {
   submission_lambdas = [
     var.analytics_submission_function,
     var.diagnosis_keys_submission_function,
-    var.virology_submission_function
+    var.virology_submission_function,
+    var.isolation_payment_order_function,
+    var.isolation_payment_verify_function,
+    var.isolation_payment_consume_function
   ]
 
   circuit_breaker_lambdas = [

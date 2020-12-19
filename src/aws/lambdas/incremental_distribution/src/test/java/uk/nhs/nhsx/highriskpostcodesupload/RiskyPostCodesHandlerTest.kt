@@ -10,12 +10,13 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.ContextBuilder
-import uk.nhs.nhsx.ProxyRequestBuilder
-import uk.nhs.nhsx.TestDatedSigner
+import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.TestDatedSigner
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
+import uk.nhs.nhsx.testhelper.mocks.FakeCsvUploadServiceS3
 import java.nio.charset.StandardCharsets
 
 class RiskyPostCodesHandlerTest {

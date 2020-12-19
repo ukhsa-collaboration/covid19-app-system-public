@@ -41,6 +41,9 @@ module "cloudwatch_analytics" {
   risky_venues_upload_function                   = module.risky_venues_upload.lambda_function_name
   virology_submission_function                   = module.virology_submission.lambda_function_name
   virology_upload_function                       = module.virology_upload.lambda_function_name
+  isolation_payment_order_function               = module.isolation_payment_submission.order_lambda_function_name
+  isolation_payment_verify_function              = module.isolation_payment_submission.verify_lambda_function_name
+  isolation_payment_consume_function             = module.isolation_payment_submission.consume_lambda_function_name
   advanced_analytics_function                    = module.advanced_analytics_export.lambda_function_name
   virology_submission_api_gateway_id             = module.virology_submission.gateway_id
   virology_upload_api_gateway_id                 = module.virology_upload.gateway_id

@@ -1,9 +1,0 @@
-{
-  "durationDays": {
-    "indexCaseSinceSelfDiagnosisOnset": 6,
-    "indexCaseSinceSelfDiagnosisUnknownOnset": 4,
-    "contactCase": 14,
-    "maxIsolation": 21,
-    "pendingTasksRetentionPeriod": 14
-  }
-}

@@ -2,6 +2,8 @@
 
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
+This API is used for time-based traffic obfuscation.
+
 ## HTTP request and response
 
 - Empty Submission: ```POST https://<FQDN>/submission/empty-submission```

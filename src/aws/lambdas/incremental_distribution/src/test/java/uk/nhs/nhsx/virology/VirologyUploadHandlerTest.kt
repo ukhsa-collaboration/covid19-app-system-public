@@ -13,13 +13,12 @@ import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.nhs.nhsx.ContextBuilder
-import uk.nhs.nhsx.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.core.TestEnvironments
-import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
-import uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasBody
-import uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasStatus
+import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
+import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse

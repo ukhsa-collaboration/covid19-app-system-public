@@ -152,7 +152,7 @@ module NHSx
 
       signature_info = generate_signature_info(bundle_id)
 
-      tek_export = generate_tek_export("test/robot/data/keys/PoCSmokeTest.json", signature_info)
+      tek_export = generate_tek_export("test/data/keys/exposureKeys.json", signature_info)
       write_export_bin(export_bin_path, tek_export)
 
       aws_signature = aws_sign_export_bin(export_bin_path, export_bin_digest_path, server_key_arn)

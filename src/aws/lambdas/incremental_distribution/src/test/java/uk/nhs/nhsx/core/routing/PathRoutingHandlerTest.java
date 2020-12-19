@@ -3,7 +3,7 @@ package uk.nhs.nhsx.core.routing;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.ProxyRequestBuilder;
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder;
 
 import java.util.Optional;
 

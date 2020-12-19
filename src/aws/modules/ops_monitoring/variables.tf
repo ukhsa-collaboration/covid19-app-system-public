@@ -64,6 +64,18 @@ variable "virology_upload_function" {
   description = "name of lambda function"
 }
 
+variable "isolation_payment_order_function" {
+  description = "name of lambda function"
+}
+
+variable "isolation_payment_verify_function" {
+  description = "name of lambda function"
+}
+
+variable "isolation_payment_consume_function" {
+  description = "name of lambda function"
+}
+
 variable "advanced_analytics_function" {
   description = "name of lambda function"
 }

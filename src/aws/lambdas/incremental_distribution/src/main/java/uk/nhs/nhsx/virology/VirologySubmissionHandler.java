@@ -20,7 +20,7 @@ import uk.nhs.nhsx.virology.lookup.VirologyLookupRequest;
 import uk.nhs.nhsx.virology.order.VirologyRequestType;
 import uk.nhs.nhsx.virology.order.TokensGenerator;
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig;
-import uk.nhs.nhsx.virology.persistence.VirologyDynamoService;
+import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -103,7 +103,7 @@ public class VirologySubmissionHandler extends RoutingHandler {
 
     private static VirologyService virologyService(Supplier<Instant> clock, Environment environment) {
         return new VirologyService(
-            new VirologyDynamoService(
+            new VirologyPersistenceService(
                 AmazonDynamoDBClientBuilder.defaultClient(),
                 virologyConfig(environment)
             ),

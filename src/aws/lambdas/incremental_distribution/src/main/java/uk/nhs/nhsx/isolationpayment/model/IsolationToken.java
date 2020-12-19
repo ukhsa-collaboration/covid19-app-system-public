@@ -7,6 +7,7 @@ import uk.nhs.nhsx.isolationpayment.TokenGenerator;
 import java.time.Instant;
 import java.time.Period;
 import java.time.chrono.ChronoZonedDateTime;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class IsolationToken {

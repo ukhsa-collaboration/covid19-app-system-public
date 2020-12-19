@@ -23,12 +23,13 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemObjectMapper
-import uk.nhs.nhsx.diagnosiskeydist.s3.FakeDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.JWS
+import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -89,7 +90,7 @@ class DiagnosisKeysUploadServiceTest {
 
         val service = DiagnosisKeysUploadService(
             InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", jws),
-            MockSubmissionRepository(listOf(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()))),
+            FakeSubmissionRepository(listOf(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()))),
             InMemoryBatchTagService(),
             "GB-EAW",
             false, -1,
@@ -237,7 +238,7 @@ class DiagnosisKeysUploadServiceTest {
         val batchTagService = Mockito.spy(InMemoryBatchTagService())
         val service = DiagnosisKeysUploadService(
             InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", jws),
-            MockSubmissionRepository(listOf(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()))),
+            FakeSubmissionRepository(listOf(Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant()))),
             batchTagService,
             "GB-EAW",
             false, -1,

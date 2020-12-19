@@ -25,7 +25,7 @@ public class PostCodeDeserializer {
 
     public static String mergeSmallPostcodes(String postcode, Map<String, String> mapping) {
         return Optional.ofNullable(mapping.get(postcode)).orElseGet(() -> {
-            logger.info("Post district not found in mapping. Persisting post district as \"UNKNOWN\".");
+            logger.warn("Post district {} not found in mapping. Persisting post district as \"UNKNOWN\".",postcode);
             return "UNKNOWN";
         });
     }

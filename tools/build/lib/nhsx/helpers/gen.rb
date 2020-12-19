@@ -8,7 +8,7 @@ module NHSx
     include NHSx::TargetEnvironment
     include Gaudi::Utilities
     # Uses terraform output to query the target environment and generate
-    # the test configuration file that drives the robot tests
+    # the test configuration file that drives the sanity tests
     #
     # The configuration is generated under out/gen/config
     #

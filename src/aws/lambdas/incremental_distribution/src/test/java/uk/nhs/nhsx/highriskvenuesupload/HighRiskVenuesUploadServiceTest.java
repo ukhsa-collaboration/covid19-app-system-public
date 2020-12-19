@@ -2,8 +2,8 @@ package uk.nhs.nhsx.highriskvenuesupload;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.TestDatedSigner;
-import uk.nhs.nhsx.analyticssubmission.FakeS3Storage;
+import uk.nhs.nhsx.testhelper.TestDatedSigner;
+import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
@@ -18,8 +18,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
-import static uk.nhs.nhsx.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
-import static uk.nhs.nhsx.TestData.STORED_RISKY_VENUES_UPLOAD_PAYLOAD;
+import static uk.nhs.nhsx.testhelper.data.TestData.RISKY_VENUES_UPLOAD_PAYLOAD;
+import static uk.nhs.nhsx.testhelper.data.TestData.STORED_RISKY_VENUES_UPLOAD_PAYLOAD;
 import static uk.nhs.nhsx.core.signature.SigningHeadersTest.matchesMeta;
 
 public class HighRiskVenuesUploadServiceTest {

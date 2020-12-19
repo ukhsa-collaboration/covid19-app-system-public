@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static uk.nhs.nhsx.ProxyRequestBuilder.request;
-import static uk.nhs.nhsx.matchers.ProxyResponseAssertions.hasStatus;
+import static uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request;
+import static uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus;
 
 public class StandardHandlersTest {
 

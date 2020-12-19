@@ -9,16 +9,10 @@ import org.apache.logging.log4j.LogManager
 import org.http4k.asString
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Status
+import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import smoke.clients.AwsLambda
-import smoke.clients.BatchProcessingClient
-import smoke.clients.DiagnosisKeysSubmissionClient
-import smoke.clients.EnCircuitBreakerClient
-import smoke.clients.ExportBatchClient
-import smoke.clients.HealthClient
-import smoke.clients.VirologyClient
-import smoke.clients.requireStatusCode
+import smoke.clients.*
 import smoke.env.EnvConfig
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
@@ -31,7 +25,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Base64
+import java.util.*
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -80,6 +74,7 @@ class TempExpKeysBatchSmokeTest {
     @Test
     fun `single submission batch processing (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
 
         val virologyTestResponse = scenario.virologyOrderAndUploadResult("POSITIVE")
         val encodedSubmissionKeys = scenario.submitKeys(virologyTestResponse)
@@ -91,6 +86,7 @@ class TempExpKeysBatchSmokeTest {
     @Test
     fun `negative virology result with single submission batch processing (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
 
         val virologyTestResponse = scenario.virologyOrderAndUploadResult("NEGATIVE")
         val encodedSubmissionKeys = scenario.submitKeys(virologyTestResponse)
@@ -102,6 +98,7 @@ class TempExpKeysBatchSmokeTest {
     @Test
     fun `single submission batch processing via token exchange (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
 
         val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys("POSITIVE")
 
@@ -112,6 +109,7 @@ class TempExpKeysBatchSmokeTest {
     @Test
     fun `negative virology result with single submission batch processing via token exchange (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
 
         val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys("NEGATIVE")
 
@@ -122,6 +120,7 @@ class TempExpKeysBatchSmokeTest {
     @Test
     fun `single submission batch processing filtering out invalid keys (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
 
         // generate some valid keys and add 1 invalid key
         val validKeys = scenario.generateKeyData(Random.nextInt(5))
@@ -138,6 +137,9 @@ class TempExpKeysBatchSmokeTest {
 
     @Test
     fun `bulk submission batch processing (latest 2 hour window)`() {
+        val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
+
         val executor = Executors.newFixedThreadPool(numberOfRuns)
 
         val encodedSubmissionKeys =
@@ -154,7 +156,6 @@ class TempExpKeysBatchSmokeTest {
 
         logger.info("submitted ${encodedSubmissionKeys.size} key(s)")
 
-        val scenario = TempExpKeysScenario(config)
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
     }
@@ -162,6 +163,7 @@ class TempExpKeysBatchSmokeTest {
     @Test
     fun `single submission batch processing with onset of symptoms date`() {
         val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
 
         val virologyTestResponse = scenario.virologyOrderAndUploadResult("POSITIVE")
         val payload = scenario.submitKeysWithOnsetDays(virologyTestResponse)
@@ -275,21 +277,16 @@ class TempExpKeysBatchSmokeTest {
             return exportBatchClient.getLatestTwoHourlyTekExport()
         }
 
-        fun isOutsideProcessingWindow(): Boolean {
+        fun isInsideProcessingWindow(): Boolean {
             val dateTime = LocalDateTime.ofInstant(Instant.now(), ZoneId.of("UTC"))
             if (dateTime.hour % 2 != 0 && dateTime.minute >= 45) {
-                return true
+                return false
             }
-            return false
+            return true
         }
 
         fun checkTekExportContentsContains(expectedKeys: List<String>,
                                            tekExport: Exposure.TemporaryExposureKeyExport) {
-            if (isOutsideProcessingWindow()) {
-                logger.info("skipping non processable batch window")
-                return
-            }
-
             val receivedEncodedKeys = tekExport.keysList
                 .map { Base64.getEncoder().encode(it.keyData.asReadOnlyByteBuffer()).asString() }
 
@@ -301,11 +298,6 @@ class TempExpKeysBatchSmokeTest {
 
         fun checkTekExportContentsDoesNotContain(expectedKeys: List<String>,
                                                  tekExport: Exposure.TemporaryExposureKeyExport) {
-            if (isOutsideProcessingWindow()) {
-                logger.info("skipping non processable batch window")
-                return
-            }
-
             val receivedEncodedKeys = tekExport.keysList
                 .map { Base64.getEncoder().encode(it.keyData.asReadOnlyByteBuffer()).asString() }
 
@@ -317,11 +309,6 @@ class TempExpKeysBatchSmokeTest {
 
         fun checkTekExportContentsContainsOnsetDays(submissionPayload: ClientTemporaryExposureKeysPayload,
                                                     tekExport: Exposure.TemporaryExposureKeyExport) {
-            if (isOutsideProcessingWindow()) {
-                logger.info("skipping non processable batch window")
-                return
-            }
-
             val receivedEncodedKeys = tekExport.keysList
             checkTekExportKeysMatchSubmissionPayloadKeys(submissionPayload.temporaryExposureKeys, receivedEncodedKeys)
         }

@@ -1,8 +1,3 @@
-provider "aws" {
-  alias  = "useast"
-  region = "us-east-1"
-}
-
 module "exposure_configuration_distribution" {
   source                   = "./modules/distribution"
   name                     = "exposure-configuration"

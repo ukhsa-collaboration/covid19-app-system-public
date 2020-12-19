@@ -10,7 +10,10 @@ resource "aws_cloudwatch_dashboard" "lambda_error_dashboard" {
     risky_venues_circuit_breaker_function          = var.risky_venues_circuit_breaker_function,
     risky_venues_upload_function                   = var.risky_venues_upload_function,
     virology_submission_function                   = var.virology_submission_function,
-    virology_upload_function                       = var.virology_upload_function
+    virology_upload_function                       = var.virology_upload_function,
+    isolation_payment_order_function               = var.isolation_payment_order_function,
+    isolation_payment_verify_function              = var.isolation_payment_verify_function,
+    isolation_payment_consume_function             = var.isolation_payment_consume_function
   })
 }
 
@@ -26,7 +29,10 @@ resource "aws_cloudwatch_dashboard" "lambda_warning_dashboard" {
     risky_venues_circuit_breaker_function          = var.risky_venues_circuit_breaker_function,
     risky_venues_upload_function                   = var.risky_venues_upload_function,
     virology_submission_function                   = var.virology_submission_function,
-    virology_upload_function                       = var.virology_upload_function
+    virology_upload_function                       = var.virology_upload_function,
+    isolation_payment_order_function               = var.isolation_payment_order_function,
+    isolation_payment_verify_function              = var.isolation_payment_verify_function,
+    isolation_payment_consume_function             = var.isolation_payment_consume_function
   })
 }
 

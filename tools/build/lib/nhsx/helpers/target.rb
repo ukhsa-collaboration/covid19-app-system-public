@@ -91,5 +91,15 @@ module NHSx
     def zero_test_authentication_headers(system_config)
       run_command("Zero out #{TEST_API_KEY_HEADERS_SECRET}", NHSx::AWS::Commandlines.update_secret(TEST_API_KEY_HEADERS_SECRET, "0"), system_config)
     end
+
+    def get_aae_mapping_uuid(target_env_config, format)
+      identifier = "_events" if format == "json"
+      lambda_arn = target_env_config["aae#{identifier}_export_function_arn"]
+      event_source_arn = target_env_config["aae#{identifier}_export_event_source_arn"]
+      function_name = target_env_config["aae#{identifier}_export_function_name"]
+      uuid = get_event_source_mapping_uuid(function_name, event_source_arn, lambda_arn, $configuration)
+      raise GaudiError, "Could not find event source mapping uuid for #{function_name}" if uuid.nil?
+      uuid
+    end
   end
 end

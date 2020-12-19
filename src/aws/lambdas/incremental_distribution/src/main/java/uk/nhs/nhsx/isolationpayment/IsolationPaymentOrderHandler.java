@@ -30,6 +30,7 @@ import static uk.nhs.nhsx.core.routing.Routing.routes;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
 
 public class IsolationPaymentOrderHandler extends RoutingHandler {
+
     private static final Environment.EnvironmentKey<String> ISOLATION_TOKEN_TABLE = string("ISOLATION_PAYMENT_TOKENS_TABLE");
     private static final Environment.EnvironmentKey<String> ISOLATION_PAYMENT_WEBSITE = string("ISOLATION_PAYMENT_WEBSITE");
     private static final Environment.EnvironmentKey<Integer> TOKEN_EXPIRY_IN_WEEKS = integer("TOKEN_EXPIRY_IN_WEEKS");
@@ -50,11 +51,14 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
             environment,
             awsAuthentication(ApiName.Mobile),
             signResponseWithKeyGivenInSsm(clock, environment),
-            isolationPaymentService(clock, environment)
+            isolationPaymentService(clock, TokenGenerator::getToken, environment)
         );
     }
 
-    public IsolationPaymentOrderHandler(Environment environment, Authenticator authenticator, ResponseSigner signer, IsolationPaymentMobileService service) {
+    public IsolationPaymentOrderHandler(Environment environment, 
+                                        Authenticator authenticator, 
+                                        ResponseSigner signer, 
+                                        IsolationPaymentMobileService service) {
         this.environment = environment;
         this.service = service;
 
@@ -99,15 +103,18 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
         }
     }
 
-    private static IsolationPaymentMobileService isolationPaymentService(Supplier<Instant> clock, Environment environment) {
-        var isolationDynamoService = new IsolationDynamoService(
+    private static IsolationPaymentMobileService isolationPaymentService(Supplier<Instant> clock,
+                                                                         Supplier<String> tokenGenerator,
+                                                                         Environment environment) {
+        var persistence = new IsolationPaymentPersistence(
             AmazonDynamoDBClientBuilder.defaultClient(),
             environment.access.required(ISOLATION_TOKEN_TABLE)
         );
 
         return new IsolationPaymentMobileService(
             clock,
-            isolationDynamoService,
+            tokenGenerator,
+            persistence,
             environment.access.required(ISOLATION_PAYMENT_WEBSITE),
             environment.access.required(TOKEN_EXPIRY_IN_WEEKS),
             environment.access.required(COUNTRIES_WHITELISTED),

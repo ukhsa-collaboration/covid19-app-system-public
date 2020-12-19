@@ -36,39 +36,38 @@ The Test and Trace Application is about speed, precision and reach in context of
 
 The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journeys, from left to right, clock-wise:
 
-![Figure: Domains](diagrams/img/cv19-app-system-domain-model-domains-2020-10-26.png "Figure: Domain Model")
+![Figure: Domains](diagrams/img/cv19-app-system-domain-model-domains-2020-12-09.png "Figure: Domain Model")
 
 ### Domain Model
 
 Our concepts include terminology of the GAEN framework. Please see the [GAEN API](https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Android-Exposure-Notification-API-documentation-v1.3.2.pdf) for detailed data models and concept definitions.
 
-* **Encounter detection** provides temporary exposure key histories for index cases; we probably use attenuation duration only (and not the AG risk scoring)
-* **Diagnosis keys** are polled periodically from the backend and then matched on mobile client side using the AG-API (provide diagnosis keys, and get exposure information and summary)
-* **Personal risk score** as a user-centric risk visualisation of one or several results of the risk analysis
-* Risk indicators for analysis: Self-diagnosis, Test results, Exposure notification, Identified risk venues and High-risk postcodes
-* **Symptoms** trigger isolation advice, but **not** a diagnosis key upload
+* **Encounter detection** provides temporary exposure key histories for index cases
+* **App Settings and Onboarding** for multiple languages and user specified postcode districts
+* **Diagnosis keys** are polled periodically from the backend and then matched on mobile client side using the GAEN API as part of the Apple / Google mobile platforms
+* **Symptoms** trigger Isolation Advice, but **not** a diagnosis key upload
 * **Isolation advice** offers **ordering a test**
-* Based on **test result**, diagnosis key upload with exposure notification and/or index case advice is (re)triggered
-* Lists of venues identified by public health organisations as risk venues are polled and matched with information from Venue QR codes scanned by the app's **Venue Check In**.
-* **High risk postcodes** are polled and matched with postcode prefix
-* **User Notifications** can be triggered by different risk indicators, for the particular user
-* The important **difference between user and exposure notification** is that the latter always and only refers to diagnosis key matches for the contacts of an index case (cascading). User notifications in contrast are triggered only by and for user owned data like postcodes, QR codes or social distancing behaviour.
-* **System analytics** is the one and only domain getting anonymised user related data. Design and implementation needs to address in particular privacy and security concerns.
-![Figure: Domain Model](diagrams/img/cv19-app-system-domain-model-domain-model-2020-09-26.png "Figure: Domain Model")
+* **Isolation advice** triggered by **Exposure Notification** offers **claiming an isolation payment**
+* Based on a positive **Virology test result**, diagnosis key upload with exposure notification and/or index case advice is (re)triggered
+* Lists of venues identified by public health organisations as risk venues are polled and matched with information from Venue QR codes scanned by the app's **Venue Check-In**.
+* High risk postcodes as an example of certain **Area risk levels** are polled and matched with the user specified postcode district
+* **User Notifications** can be triggered by either risky venues with the visited venues, or area risk level with the user specified postcode district level
+* The important **difference between User and Exposure Notification** is that the latter always and only refers to diagnosis key matches for the contacts of an index case (cascading). User notifications in contrast are triggered only by and for user owned data like postcode districts or QR codes of visited venues.
+* **App and System analytics** is the one and only domain getting anonymised usage or installation related data. Design and implementation addresses in particular all privacy and security concerns of NCSC, the ICO and the GAEN Framework T&Cs.
 
 ### Domain Dependencies
 
-* Encounter detection depends on the user devices with their iOS and Android OS and their implementation of the AG Exposure Notification Framework.
-* Symptoms, Index case advice and the Personal isolation companion depend on approved policies and data from UK health authorities.
-* Virology testing depends on UK testing labs with their specific organisation, processes and technical interfaces.
-* Import of hot spot venue QR codes depends on a 3rd party system which implemented a QR code solution for checking in at venues.
-* Import of high risk postcodes depends on corresponding CV19 related data sources.
+* Encounter detection depends on the Apple / Google mobile platform, user devices with their iOS and Android OS and their implementation of the GAEN Framework.
+* Symptoms, Isolation advice and the Isolation payment claims depend on approved policies and data from UK health authorities and government.
+* Virology testing depends on UK test booking web sites. And testing labs with their specific organisation, processes and technical interfaces, test result notification services and processes for manual token distribution depend on APIs provided by that domain
+* Venue Check-In depends on the QR system with the two components for generating QR Posters and for labelling venues as a risk venue (used by PHE, CTAS)
+* Import of area risk levels depends on corresponding CV19 related data sources from PHE, JBC and Local Authorities
 
 ### Data Model
 
-The following data model provides a black box view on the system's data model. It uses the data specifications of our Data Dictionary and Payload specifications of our [API contracts](#system-apis-and-interfaces).
+The following data model provides a black box view on the system's data model. It uses the payload specifications of our [API contracts](#system-apis-and-interfaces).
 
-![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2020-10-26.png "Figure: Data Model")
+![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2020-12-09.png "Figure: Data Model")
 
 ### GAEN Framework
 Background and an explanation of the framework's basic functionality can be found [here](https://blog.google/documents/73/Exposure_Notification_-_FAQ_v1.1.pdf)
@@ -222,9 +221,9 @@ It's worth noting that if the app falls back to using version 1 of the GAEN API,
 
 ## System Overview
 
-The NHS CV19 system architecture has four major parts, mobile app, cloud backend with API services, external systems and operations.
+The NHS CV19 App and Cloud Services (CV19 App System)  has five major parts: Mobile apps, Cloud backend with API services, Infrastructure, Exposure Notification (EN) configuration and algorithm, and Dependent systems.
 
-![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2020-10-23.png "Figure: Overview")
+![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2020-12-09.png "Figure: Overview")
 
 It adheres to following principles
 
@@ -246,7 +245,7 @@ The system architecture diagram below specifies the complete system showing the 
 * As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
 * Security and operations is built on AWS cloud-native components.
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-11-27.png "Figure: System Architecture")
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-12-09.png "Figure: System Architecture")
 
 The port names in the system architecture are usually defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
 
@@ -258,7 +257,7 @@ System flows describe the behavioural interactions between the app, the backend 
 
 This is the flow on first app install, and in normal use when the app is collecting exposures and QR code check-ins and checking these against distributed positive diagnosis keys, identified risk venues and high-risk postcodes.
 
-![System flow: installation and normal use](diagrams/img/system-flow_install-and-normal-2020-09-14.png "Figure: Installation and normal use")
+![System flow: installation and normal use](diagrams/img/system-flow_install-and-normal-2020-12-08.png "Figure: Installation and normal use")
 
 On **first install and when the app is opened** after it has been closed completely on the mobile device, it checks version availability with our backend service as well as the Apple and Google app stores. This check then may notify the user of mandatory or optional available app updates. It also allows to deactivate all but the availability check functionality, hence acting as a kind of "kill switch".
 
@@ -284,6 +283,9 @@ On a daily basis the app will submit anonymous **mobile analytics** data:
   * Symptoms Questionnaire
   * Test results
   * Isolation
+
+In addition, the app will submit anonymous **mobile analytics events** data to enable AAE to determine the epidemiological effectiveness of encounter detection:
+* [ExposureWindow](https://developers.google.com/android/exposure-notifications/exposure-notifications-api#exposurewindow) data
 
 The analytics data is stored in the backend without any reference to the submitting device or app installation.
 
@@ -514,4 +516,4 @@ The CV19 App System infrastructure and operations uses AWS cloud-native componen
 * Operations
 * CDOC integration
 
-![Figure: Cloud Infrastructure](diagrams/img/cv19-app-system-cloud-infrastructure-2020-08-12.png "Figure: Cloud Infrastructure")
+![Figure: Cloud Infrastructure](diagrams/img/cv19-app-system-cloud-infrastructure-2020-12-08.png "Figure: Cloud Infrastructure")

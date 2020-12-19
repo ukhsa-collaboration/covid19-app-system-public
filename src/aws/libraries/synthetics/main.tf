@@ -11,6 +11,23 @@ locals {
   function_name = "${terraform.workspace}-${var.name}"
 }
 
+# This is a temporary workaround.
+# See https://github.com/chanzuckerberg/terraform-provider-snowflake/issues/255
+# When https://github.com/hashicorp/terraform-provider-aws/pull/13140 is merged this should be deleted
+terraform {
+
+  required_providers {
+    synthetics = {
+      source  = "MaksymBilenko/synthetics"
+      version = ">= 0.1"
+    }
+  }
+}
+
+provider "synthetics" {
+  region = var.region
+}
+
 // There appears to be no way to make the archive_file resource realise that
 // the templated source code has changed.
 // So we just delete the zip file to force archive_file to re-create it.
@@ -52,6 +69,7 @@ resource "null_resource" "zip_file_changed" {
 
 resource "synthetics_canary" "watchdog" {
   count                = var.enabled ? 1 : 0
+  runtime_version      = "syn-nodejs-2.2"
   name                 = null_resource.zip_file_changed.triggers.function_name
   execution_role_arn   = var.lambda_exec_role_arn
   artifact_s3_location = "s3://${var.artifact_s3_bucket}/${null_resource.zip_file_changed.triggers.function_name}"

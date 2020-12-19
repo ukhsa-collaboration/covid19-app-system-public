@@ -2,8 +2,8 @@ package uk.nhs.nhsx.diagnosiskeyssubmission;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import org.junit.jupiter.api.Test;
-import uk.nhs.nhsx.TestData;
-import uk.nhs.nhsx.analyticssubmission.FakeS3Storage;
+import uk.nhs.nhsx.testhelper.data.TestData;
+import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage;
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;

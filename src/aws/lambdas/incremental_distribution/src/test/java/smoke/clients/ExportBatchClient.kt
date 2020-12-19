@@ -8,7 +8,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import smoke.env.EnvConfig
-import uk.nhs.nhsx.BatchExport
+import uk.nhs.nhsx.testhelper.BatchExport
 import java.lang.Thread.sleep
 import java.time.Duration
 import java.time.Instant
