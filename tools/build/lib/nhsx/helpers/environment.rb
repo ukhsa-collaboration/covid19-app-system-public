@@ -108,6 +108,28 @@ module Gaudi
         return number_of_tokens
       end
 
+      # Pass test/virology start date when invoking the virology token generation lambda
+      #
+      # Eg: START_DATE=2020-10-10T00:00:00Z
+      def start_date
+        require "time"
+        start_date = mandatory("START_DATE")
+        raise GaudiError, "Invalid START_DATE" unless Time.iso8601(start_date)
+
+        return start_date
+      end
+
+      # Pass test/virology number of days when invoking the virology token generation lambda
+      #
+      # Eg: NUMBER_OF_DAYS=7
+      def number_of_days
+        number_of_days = mandatory("NUMBER_OF_DAYS")
+        number_of_days = number_of_days.to_i
+        raise GaudiError, "Invalid NUMBER_OF_DAYS" unless number_of_days
+
+        return number_of_days
+      end
+
       # Pass the value for a ACCOUNT
       def account
         ENV.fetch("ACCOUNT", "dev")

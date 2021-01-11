@@ -61,7 +61,7 @@ namespace :publish do
         target_config = target_environment_configuration(tgt_env, account, $configuration)
         terraform_configuration = File.join($configuration.base, "src/aws/accounts", account)
         select_workspace(tgt_env, terraform_configuration, $configuration)
-        static_content_file = $configuration.static_content
+        static_content_file = File.join($configuration.base,"src/static/tier-metadata.json")
         publish_static_content(static_content_file, "tier-metadata", "post_districts_distribution_store", target_config, $configuration)
 
         post_districts_out_dir = File.join($configuration.out, "gen/post_districts")

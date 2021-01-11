@@ -56,7 +56,7 @@
       0.5,
       0
     ],
-    "riskThreshold": 180
+    "riskThreshold": 120
   },
   "riskScore": {
     "sampleResolution": 1.0,
@@ -82,11 +82,11 @@
       "beta": 0.0,
       "kappa": 0.0
     }
-  },  
+  },
   "v2RiskCalculation": {
-    "daysSinceOnsetToInfectiousness":[0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,0,0,0,0,0],
-    "infectiousnessWeights": [0.0, 0.4, 1.0],
+    "daysSinceOnsetToInfectiousness": [0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,2,2,2,1,1,1,1,1,1,0,0,0,0,0],
+    "infectiousnessWeights": [0.0,0.4,1.0],
     "reportTypeWhenMissing": 1,
-    "riskThreshold": 120
+    "riskThreshold": 100
   }
 }

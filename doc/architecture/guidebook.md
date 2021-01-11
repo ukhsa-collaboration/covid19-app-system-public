@@ -36,7 +36,7 @@ The Test and Trace Application is about speed, precision and reach in context of
 
 The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journeys, from left to right, clock-wise:
 
-![Figure: Domains](diagrams/img/cv19-app-system-domain-model-domains-2020-12-09.png "Figure: Domain Model")
+![Figure: Domains](diagrams/img/cv19-app-system-domain-model-domains-2020-12-21.png "Figure: Domain Model")
 
 ### Domain Model
 

@@ -6,27 +6,21 @@ namespace :queue do
         prerequisites = [:"login:#{account}"]
         desc "Queue a deployment to the #{tgt_env} target environment in CodeBuild"
         task :"#{tgt_env}" => prerequisites do
-          include Zuehlke::Templates
-          include NHSx::Versions
+          include NHSx::Queue
+          queue("deploy-app-system", tgt_env, account, $configuration)
+        end
+      end
+    end
 
-          if tgt_env == "branch"
-            branch_name = subsystem_version_metadata("backend", $configuration)["BranchName"]
-          else
-            branch_name = $configuration.branch
+    namespace :tier_metadata do
+      NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+        tgt_envs.each do |tgt_env|
+          prerequisites = [:"login:#{account}"]
+          desc "Queue a deployment to the #{tgt_env} target environment in CodeBuild"
+          task :"#{tgt_env}" => prerequisites do
+            include NHSx::Queue
+            queue("deploy-tier-metadata", tgt_env, account, $configuration)
           end
-
-          build_parameters = {
-            "project_name" => "deploy-app-system",
-            "source_version" => branch_name,
-            "target_environment" => tgt_env,
-            "account" => account,
-          }
-          build_config = File.join($configuration.out, "codebuild", "#{Time.now.strftime("%Y%m%d%H%M%S")}-deploy-app-system.json")
-          write_file(build_config, from_template(File.join($configuration.base, "tools/templates/codebuild.json.erb"), build_parameters))
-          cmdline = "aws codebuild start-build --cli-input-json file://#{build_config}"
-          cmd = run_command("Triggering deployment for #{tgt_env}", cmdline, $configuration)
-          job_metadata = JSON.parse(cmd.output)
-          puts "Deployment triggered"
         end
       end
     end
