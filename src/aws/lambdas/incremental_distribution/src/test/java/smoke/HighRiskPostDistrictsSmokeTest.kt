@@ -1,24 +1,24 @@
 package smoke
 
-import com.fasterxml.jackson.core.type.TypeReference
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.JavaHttpClient
 import org.junit.jupiter.api.Test
-import smoke.clients.RiskyPostDistrictsUploadClient
-import smoke.clients.StaticContentClient
+import smoke.actors.MobileApp
+import smoke.actors.RiskParties
+import smoke.actors.ApiVersion.V1
+import smoke.actors.ApiVersion.V2
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.core.SystemObjectMapper.MAPPER
 
 class HighRiskPostDistrictsSmokeTest {
 
     private val config = SmokeTests.loadConfig()
     private val client = JavaHttpClient()
 
-    private val staticContentClient = StaticContentClient(client, config)
-    private val riskyPostDistrictsUploadClient = RiskyPostDistrictsUploadClient(client, config)
+    private val mobileApp = MobileApp(client, config)
+    private val riskParties = RiskParties(client, config)
 
     @Test
-    fun `uploads and downloads risky post districts`() {
+    fun `mobile app can download updated risky postcodes`() {
         val json = """{
           "postDistricts": {
             "AB10": {
@@ -50,11 +50,10 @@ class HighRiskPostDistrictsSmokeTest {
             }
           }
         }""".trimIndent()
-        riskyPostDistrictsUploadClient.upload(json)
+        riskParties.uploadsRiskyPostcodes(json)
 
         // download v1
-        val staticContentV1 = staticContentClient.riskyPostDistricts()
-        val postDistrictsMapV1 = MAPPER.readValue(staticContentV1, object : TypeReference<Map<String, Any>>() {})
+        val postDistrictsMapV1 = mobileApp.pollRiskyPostcodes(V1)
         assertThat(postDistrictsMapV1).isEqualTo(
             mapOf("postDistricts" to
                 mapOf(
@@ -67,9 +66,7 @@ class HighRiskPostDistrictsSmokeTest {
         )
 
         // download v2
-        val staticContentV2 = staticContentClient.riskyPostDistrictsV2()
-        val postDistrictsMapV2 = MAPPER.readValue(staticContentV2, object : TypeReference<Map<String, Any>>() {})
-        println(postDistrictsMapV2)
+        val postDistrictsMapV2 = mobileApp.pollRiskyPostcodes(V2)
 
         assertThat(postDistrictsMapV2["postDistricts"]).isEqualTo(
             mapOf(

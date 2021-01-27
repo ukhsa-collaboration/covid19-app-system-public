@@ -41,4 +41,5 @@ public class VirologyResultValidator {
             throw new ApiResponseException(UNPROCESSABLE_ENTITY_422, "validation error: Invalid test result value");
         }
     }
+
 }

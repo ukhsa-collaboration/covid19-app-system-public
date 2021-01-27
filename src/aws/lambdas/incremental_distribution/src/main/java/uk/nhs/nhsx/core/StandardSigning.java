@@ -15,18 +15,16 @@ import java.util.function.Supplier;
 
 public class StandardSigning {
 
-    public static final Environment.EnvironmentKey<ParameterName> SSM_KEY_ID_PARAMETER_NAME = Environment.EnvironmentKey.value("SSM_KEY_ID_PARAMETER_NAME", ParameterName.class); 
-    
-    public static ResponseSigner signResponseWithKeyGivenInSsm(Supplier<Instant> clock, Environment environment) {
-        return new AwsResponseSigner(
-            datedSigner(clock, environment)
-        );
+    public static final Environment.EnvironmentKey<ParameterName> SSM_KEY_ID_PARAMETER_NAME = Environment.EnvironmentKey.value("SSM_KEY_ID_PARAMETER_NAME", ParameterName::of);
+
+    public static ResponseSigner signResponseWithKeyGivenInSsm(Environment environment, Supplier<Instant> clock) {
+        return new AwsResponseSigner(datedSigner(environment, clock));
     }
 
-    public static RFC2616DatedSigner datedSigner(Supplier<Instant> clock, Environment environment) {
+    public static RFC2616DatedSigner datedSigner(Environment environment, Supplier<Instant> clock) {
         return datedSigner(clock, new AwsSsmParameters(), environment.access.required(SSM_KEY_ID_PARAMETER_NAME));
     }
-    
+
     public static RFC2616DatedSigner datedSigner(Supplier<Instant> clock, Parameters parameters, ParameterName parameterName) {
         return new RFC2616DatedSigner(clock, signContentWithKeyFromParameter(parameters, parameterName));
     }

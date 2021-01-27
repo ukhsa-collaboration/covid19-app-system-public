@@ -25,7 +25,7 @@ namespace :validate do
     include NHSx::Validate
     config_file_location = File.join($configuration.base, "/src/static/tier-metadata.json")
     file_content = JSON.parse(File.read(config_file_location))
-    tiers = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 EN.Tier4.MassTest EN.Border.Tier1 WA.Tier1 WA.Tier2 WA.Tier3 EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh]
+    tiers = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 EN.Tier4.MassTest EN.Border.Tier1 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4 EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh EN.NationalRestrictions]
     languages = %w[ar bn cy en gu pa pl ro so tr ur zh]
     tiers.each do |tier|
       puts "Validating #{tier}"
@@ -33,7 +33,9 @@ namespace :validate do
 
       metadata = file_content[tier]
       valid_key?(metadata, "colorScheme") & string?(metadata, "colorScheme")
-      validate_languages(metadata, %w[name heading content linkTitle linkUrl], languages)
+      validation_errors = validate_languages(metadata, %w[name content linkTitle linkUrl], languages)
+
+      raise GaudiError, "Validation failed for #{tier}:\n#{validation_errors.join("\n")}" unless validation_errors.empty?
 
       validate_policy_data(metadata, languages) if %w[EN.Tier1 EN.Tier2 EN.Tier3].include? tier
     end

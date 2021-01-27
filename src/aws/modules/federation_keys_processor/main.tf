@@ -39,8 +39,10 @@ module "processing_upload_lambda" {
     UPLOAD_RISK_LEVEL_DEFAULT_ENABLED = true
     UPLOAD_RISK_LEVEL_DEFAULT         = 0
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days     = var.log_retention_in_days
+  app_alarms_topic          = var.alarm_topic_arn
+  tags                      = var.tags
+  invocations_alarm_enabled = false
 }
 
 module "processing_download_lambda" {
@@ -73,8 +75,10 @@ module "processing_download_lambda" {
     DOWNLOAD_RISK_LEVEL_DEFAULT_ENABLED = true
     DOWNLOAD_RISK_LEVEL_DEFAULT         = 7
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days     = var.log_retention_in_days
+  app_alarms_topic          = var.alarm_topic_arn
+  tags                      = var.tags
+  invocations_alarm_enabled = false
 }
 
 resource "aws_dynamodb_table" "this" {

@@ -12,7 +12,6 @@ import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import smoke.clients.AwsLambda
-import smoke.clients.VirologyClient
 import smoke.env.SmokeTests
 
 class MaintenanceModeTest {
@@ -33,7 +32,7 @@ class MaintenanceModeTest {
     @Test
     fun `order virology test`() {
         AwsLambda.enableMaintenanceMode(config.virologySubmissionLambdaFunctionName)
-        val uri = "${VirologyClient.baseUrlFrom(config)}/home-kit/order"
+        val uri = "${config.virologyKitEndpoint}/home-kit/order"
         val request = postRequest(uri)
         val response = client(request)
 
@@ -43,7 +42,7 @@ class MaintenanceModeTest {
     @Test
     fun `retrieve virology test result`() {
         AwsLambda.enableMaintenanceMode(config.virologySubmissionLambdaFunctionName)
-        val uri = "${VirologyClient.baseUrlFrom(config)}/results"
+        val uri = "${config.virologyKitEndpoint}/results"
         val request = postRequest(uri)
         val response = client(request)
 
@@ -53,7 +52,7 @@ class MaintenanceModeTest {
     @Test
     fun `upload npex test result`() {
         AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
-        val uri = VirologyClient.npexUploadEndpoint(config)
+        val uri = config.testResultsNpexUploadEndpoint
         val request = postRequest(uri)
         val response = client(request)
 
@@ -63,7 +62,7 @@ class MaintenanceModeTest {
     @Test
     fun `upload fiorano test result`() {
         AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
-        val uri = VirologyClient.fioranoUploadEndpoint(config)
+        val uri = config.testResultsFioranoUploadEndpoint
         val request = postRequest(uri)
         val response = client(request)
 
@@ -73,7 +72,7 @@ class MaintenanceModeTest {
     @Test
     fun `upload english token-gen test result`() {
         AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
-        val uri = VirologyClient.engTokenGenUploadEndpoint(config)
+        val uri = config.engTokenGenUploadEndpoint
         val request = postRequest(uri)
         val response = client(request)
 
@@ -83,7 +82,7 @@ class MaintenanceModeTest {
     @Test
     fun `upload welsh token-gen test result`() {
         AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
-        val uri = VirologyClient.wlsTokenGenUploadEndpoint(config)
+        val uri = config.wlsTokenGenUploadEndpoint
         val request = postRequest(uri)
         val response = client(request)
 

@@ -24,8 +24,10 @@ module "virology_tokens_processing_lambda" {
     submission_tokens_table     = var.virology_submission_tokens_table_id
     test_orders_index           = var.test_orders_index
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days     = var.log_retention_in_days
+  app_alarms_topic          = var.alarm_topic_arn
+  tags                      = var.tags
+  invocations_alarm_enabled = false
 }
 
 module "virology_tokens_bucket" {

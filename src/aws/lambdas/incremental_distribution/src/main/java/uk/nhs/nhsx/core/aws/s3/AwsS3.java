@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AwsS3 extends S3Storage {
-    List<S3ObjectSummary> getObjectSummaries(String bucketName);
-    Optional<S3Object> getObject(String bucketName, String key);
-    void deleteObject(String bucketName, String objectKeyName);
+    List<S3ObjectSummary> getObjectSummaries(BucketName bucketName);
+
+    Optional<S3Object> getObject(Locator locator);
+
+    void deleteObject(Locator locator);
 }

@@ -24,6 +24,7 @@ public class VirologyProcessorHandler implements RequestHandler<Map<String, Stri
     private final VirologyProcessorService virologyProcessorService;
     private static final int MAX_RETRY_COUNT = 3;
 
+    @SuppressWarnings("unused")
     public VirologyProcessorHandler() {
         this(virologyProcessorService());
     }

@@ -4,6 +4,44 @@ module NHSx
   module Virology
     include NHSx::AWS
 
+    def order(url, target_env_config, system_config)
+      authentication_token = target_env_config["auth_headers"]["mobile"]
+      lambda_function = target_env_config["virology_submission_lambda_function_name"]
+      custom_oai = NHSx::AWS::Commandlines.get_lambda_custom_oai(lambda_function, system_config)
+
+      headers = {
+        "Authorization" => authentication_token,
+        "x-custom-oai" => custom_oai
+      }
+
+      resp = Faraday.post(url) do |req|
+        req.headers = headers
+      end
+
+      raise GaudiError, "Expecting status code to be 200 but was #{resp.status}" unless resp.status == 200
+
+      JSON.parse(resp.body)
+    end
+
+    def upload_result(url, payload, target_env_config, system_config)
+      authentication_token = target_env_config["auth_headers"]["testResultUpload"]
+      lambda_function = target_env_config["virology_upload_lambda_function_name"]
+      custom_oai = NHSx::AWS::Commandlines.get_lambda_custom_oai(lambda_function, system_config)
+
+      headers = {
+        "Content-Type" => "application/json",
+        "Authorization" => authentication_token,
+        "x-custom-oai" => custom_oai
+      }
+
+      resp = Faraday.post(url) do |req|
+        req.headers = headers
+        req.body = JSON.dump(payload)
+      end
+
+      raise GaudiError, "Expecting status code to be 202 but was #{resp.status}" unless resp.status == 202
+    end
+
     def generate_single(config_file, system_config)
       # virology out dir (format: YYYYmmdd)
       date = Time.iso8601(system_config.test_end_date).strftime("%Y%m%d")
@@ -15,9 +53,10 @@ module NHSx
       # lambda and payload
       lambda_function = config_file["virology_tokens_processing_function"]
       payload = {
-          "testResult" => system_config.test_result,
-          "testEndDate" => system_config.test_end_date,
-          "numberOfTokens" => system_config.number_of_tokens
+        "testResult" => system_config.test_result,
+        "testEndDate" => system_config.test_end_date,
+        "testKit" => system_config.test_kit,
+        "numberOfTokens" => system_config.number_of_tokens
       }
       payload_json = "'#{JSON.dump(payload)}'"
 
@@ -70,9 +109,9 @@ module NHSx
         raise GaudiError, "Local virology dir for #{local_test_end_date_dir} already exists #{virology_out_dir}" unless !File.exist?(virology_single_day_dir)
 
         {
-            'TEST_END_DATE' => test_end_date_time.strftime('%Y-%m-%dT00:00:00Z'),
-            'NUMBER_OF_TOKENS' => number_of_tokens,
-            'TEST_RESULT' => test_result
+          'TEST_END_DATE' => test_end_date_time.strftime('%Y-%m-%dT00:00:00Z'),
+          'NUMBER_OF_TOKENS' => number_of_tokens,
+          'TEST_RESULT' => test_result
         }
       }
 

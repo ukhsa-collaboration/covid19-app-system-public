@@ -3,15 +3,19 @@ package uk.nhs.nhsx.keyfederation.upload;
 import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.Environment.EnvironmentKey;
 import uk.nhs.nhsx.core.FeatureFlag;
-import uk.nhs.nhsx.core.WorkspaceFeatureFlag;
 import uk.nhs.nhsx.core.StandardSigning;
+import uk.nhs.nhsx.core.WorkspaceFeatureFlag;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName;
 import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 
 import java.util.List;
 
-import static uk.nhs.nhsx.core.Environment.EnvironmentKey.*;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.bool;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.integer;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.string;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.strings;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.value;
 
 public class KeyFederationUploadConfig {
 
@@ -64,9 +68,9 @@ public class KeyFederationUploadConfig {
     private static final EnvironmentKey<List<String>> UPLOAD_ENABLED_WORKSPACES = strings("UPLOAD_ENABLED_WORKSPACES");
     private static final EnvironmentKey<Boolean> UPLOAD_RISK_LEVEL_DEFAULT_ENABLED = bool("UPLOAD_RISK_LEVEL_DEFAULT_ENABLED");
     private static final EnvironmentKey<Integer> UPLOAD_RISK_LEVEL_DEFAULT = integer("UPLOAD_RISK_LEVEL_DEFAULT");
-    private static final EnvironmentKey<BucketName> SUBMISSION_BUCKET_NAME = value("SUBMISSION_BUCKET_NAME", BucketName.class);
+    private static final EnvironmentKey<BucketName> SUBMISSION_BUCKET_NAME = value("SUBMISSION_BUCKET_NAME", BucketName::of);
     private static final EnvironmentKey<String> INTEROP_BASE_URL = string("INTEROP_BASE_URL");
-    private static final EnvironmentKey<SecretName> INTEROP_AUTH_TOKEN_SECRET_NAME = value("INTEROP_AUTH_TOKEN_SECRET_NAME", SecretName.class);
+    private static final EnvironmentKey<SecretName> INTEROP_AUTH_TOKEN_SECRET_NAME = value("INTEROP_AUTH_TOKEN_SECRET_NAME", SecretName::of);
     private static final EnvironmentKey<String> PROCESSOR_STATE_TABLE = string("PROCESSOR_STATE_TABLE");
     private static final EnvironmentKey<String> REGION = string("REGION");
     private static final EnvironmentKey<List<String>> FEDERATED_KEY_UPLOAD_PREFIXES = strings("FEDERATED_KEY_UPLOAD_PREFIXES");

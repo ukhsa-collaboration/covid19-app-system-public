@@ -24,6 +24,7 @@ public class WorkspaceFeatureFlag implements FeatureFlag {
         this.enabledWorkspaces = enabledWorkspaces;
     }
 
+    @Override
     public boolean isEnabled() {
         return enabledWorkspaces.contains(ALL_SPECIFIER)
             || (enabledWorkspaces.contains(BRANCH_SPECIFIER) && !workspace.startsWith(NAMED_ENV_PREFIX))

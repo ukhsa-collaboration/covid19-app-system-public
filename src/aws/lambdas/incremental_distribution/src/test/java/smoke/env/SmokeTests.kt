@@ -10,27 +10,18 @@ object SmokeTests {
 
     private val logger = LogManager.getLogger(SmokeTests::class.java)
 
+    val sleeper = Sleeper.Companion.Real
+
     init {
         Tracing.disableXRayComplaintsForMainClasses()
     }
 
-    fun loadConfig(): EnvConfig =
-        deserializeOrThrow(loadConfigAsString())
+    fun loadConfig(): EnvConfig = deserializeOrThrow(loadConfigAsString())
 
-    private fun loadConfigAsString(): String {
-        val envConfigFileName = loadConfigFileName()
-        return loadConfigFileFor(envConfigFileName)
-    }
+    private fun loadConfigAsString() = loadConfigFileFor(loadConfigFileName())
 
-    private fun loadConfigFileName(): String {
-        val envName = "SMOKE_TEST_CONFIG"
-        if (System.getenv(envName) == null) {
-            return "../../../../out/gen/config/test_config_branch.json"
-        }
-        else {
-            return System.getenv(envName);
-        }
-    }
+    private fun loadConfigFileName() =
+        System.getenv("SMOKE_TEST_CONFIG") ?: "../../../../out/gen/config/test_config_branch.json"
 
     private fun loadConfigFileFor(envConfigFileName: String): String {
         try {
@@ -39,24 +30,21 @@ object SmokeTests {
         } catch (e: FileNotFoundException) {
             throw IllegalStateException(
                 "Config file not found: ${envConfigFileName}, " +
-                "run following commands to generate it: rake gen:config:<tgt_env>"
+                    "run following commands to generate it: rake gen:config:<tgt_env>"
             )
         }
     }
 
-    fun loadStaticContent(fileName: String): String =
-        loadFile("../../../../src/static/$fileName").readText()
+    fun loadStaticContent(fileName: String): String = loadFile("../../../../src/static/$fileName").readText()
 
     private fun loadFile(filePath: String): File = File(filePath)
 
-    private inline fun <reified T> deserializeOrThrow(value: String): T {
-        return Jackson.deserializeMaybe(value, T::class.java)
-            .orElseThrow {
-                IllegalStateException(
-                    "Unable to deserialize configuration file, " +
-                        "check generated config file against ${EnvConfig::class.simpleName} class"
-                )
-            }
-    }
+    private inline fun <reified T> deserializeOrThrow(value: String) = Jackson.deserializeMaybe(value, T::class.java)
+        .orElseThrow {
+            IllegalStateException(
+                "Unable to deserialize configuration file, " +
+                    "check generated config file against ${EnvConfig::class.simpleName} class"
+            )
+        }
 }
 

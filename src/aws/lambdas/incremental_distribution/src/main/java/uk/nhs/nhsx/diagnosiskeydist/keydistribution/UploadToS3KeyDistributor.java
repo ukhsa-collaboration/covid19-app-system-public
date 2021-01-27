@@ -2,7 +2,10 @@ package uk.nhs.nhsx.diagnosiskeydist.keydistribution;
 
 import com.google.common.io.ByteSource;
 import org.apache.http.entity.ContentType;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
+import uk.nhs.nhsx.core.aws.s3.Locator;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
 import uk.nhs.nhsx.core.aws.s3.S3Storage;
 import uk.nhs.nhsx.core.signature.DatedSignature;
@@ -17,6 +20,8 @@ import static com.google.common.io.Files.asByteSource;
 
 public class UploadToS3KeyDistributor implements KeyDistributor {
 
+    private static final Logger logger = LogManager.getLogger(UploadToS3KeyDistributor.class);
+
     private final S3Storage s3Storage;
     private final DatedSigner signer;
 
@@ -27,8 +32,8 @@ public class UploadToS3KeyDistributor implements KeyDistributor {
 
     @Override
     public void distribute(BucketName name, ObjectKey key, File binFile, File sigFile) throws IOException {
-
         File zipFile = File.createTempFile("export", ".zip");
+
         try {
             KeyFileUtility.zipFiles(zipFile, binFile, sigFile);
             ByteSource byteSource = asByteSource(zipFile);
@@ -36,14 +41,14 @@ public class UploadToS3KeyDistributor implements KeyDistributor {
             DatedSignature signatureResult = signer.sign(new DistributionSignature(byteSource));
 
             s3Storage.upload(
-                S3Storage.Locator.of(name, key), 
+                Locator.of(name, key),
                 ContentType.create("application/zip"),
                 byteSource,
                 SigningHeaders.fromDatedSignature(signatureResult)
             );
-
         } finally {
-            zipFile.delete();
+            boolean ok = zipFile.delete();
+            if (!ok) logger.warn("Could not delete {}", zipFile.getAbsolutePath());
         }
     }
 }

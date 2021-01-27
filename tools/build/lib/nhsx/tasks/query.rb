@@ -33,6 +33,7 @@ namespace :query do
           puts "ctaToken #{token} is #{test_result_entry["status"]}"
           puts "Polling token is #{token_data["testResultPollingToken"]}"
           puts "result is #{test_result_entry["testResult"]}" if test_result_entry["status"] == "available"
+          puts "testKit is #{test_result_entry["testKit"]}"
         end
         puts "queried at #{Time.now.strftime("%H:%M:%S %d/%m/%Y")}"
         puts "*" * 80

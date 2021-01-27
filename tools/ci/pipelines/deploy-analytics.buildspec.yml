@@ -8,7 +8,7 @@ phases:
       - rake config:codebuild
       - rake deploy:analytics:$TARGET_ENVIRONMENT
 artifacts:
-  name: $(date +%Y%m%d%H%M%S)-deploy-analytics-$($TARGET_ENVIRONMENT)
+  name: $(date +%Y%m%d%H%M%S)-deploy-analytics-$TARGET_ENVIRONMENT.zip
   files:
     - "out/**/*"
   discard-paths: no

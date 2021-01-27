@@ -6,25 +6,35 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
 import com.natpryce.snodge.mutants
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import org.hamcrest.CoreMatchers.*
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
-import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode
-import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.*
+import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_EMPTY_PAIR
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_INVALID_PAIR
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_IOS
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_PAYLOAD_ANDROID
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_PAYLOAD_ANDROID_WITH_LOCAL_AUTHORITY
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_PAYLOAD_IOS
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_PAYLOAD_IOS_NEW_METRICS
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_PAYLOAD_IOS_WITH_LOCAL_AUTHORITY
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_ANDROID
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_IOS
+import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
+import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
 import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage
 import java.io.IOException
 import java.nio.charset.StandardCharsets
-import java.util.Map
 import java.util.function.Consumer
 import kotlin.random.Random
 
@@ -39,9 +49,9 @@ class AnalyticsSubmissionHandlerTest {
         false,
         BUCKET_NAME
     )
-    private val handler = Handler(
-        TestEnvironments.TEST.apply(Map.of("MAINTENANCE_MODE", "false")),
-        { e: String? -> true },
+    private val handler = AnalyticsSubmissionHandler(
+        TestEnvironments.TEST.apply(mapOf("MAINTENANCE_MODE" to "false")),
+        { true },
         s3Storage,
         kinesisFirehose,
         objectKeyNameProvider,
@@ -63,12 +73,12 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_PAYLOAD_IOS))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_PAYLOAD_IOS))
     }
 
     @Test
@@ -81,12 +91,12 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_IOS))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_IOS))
     }
 
     @Test
@@ -99,12 +109,66 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(iOSPayloadFromNewMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_PAYLOAD_IOS_NEW_METRICS))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_PAYLOAD_IOS_NEW_METRICS))
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun iosPayloadWithInvalidPairOfValidPostCodeAndValidLocalAuthority() {
+        val requestEvent = ProxyRequestBuilder.request()
+            .withMethod(HttpMethod.POST)
+            .withPath("/submission/mobile-analytics")
+            .withBearerToken("anything")
+            .withJson(iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "YO62", "", "E07000152"))
+            .build()
+        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_INVALID_PAIR))
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun iosPayloadWithInvalidLocalAuthority() {
+        val requestEvent = ProxyRequestBuilder.request()
+            .withMethod(HttpMethod.POST)
+            .withPath("/submission/mobile-analytics")
+            .withBearerToken("anything")
+            .withJson(iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "YO62", "", "Houston"))
+            .build()
+        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_INVALID_PAIR))
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun iosPayloadWithEmptyPostCodeAndLocalAuthority() {
+        val requestEvent = ProxyRequestBuilder.request()
+            .withMethod(HttpMethod.POST)
+            .withPath("/submission/mobile-analytics")
+            .withBearerToken("anything")
+            .withJson(iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "", "", ""))
+            .build()
+        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_EMPTY_PAIR))
     }
 
     @Test
@@ -117,12 +181,12 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "F4KEP0STC0DE"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_IOS))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_IOS))
     }
 
     @Test
@@ -135,12 +199,12 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "F4KEP0STC0DE"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_ANDROID))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_ANDROID))
     }
 
     @Test
@@ -153,12 +217,12 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID))
     }
 
     @Test
@@ -171,12 +235,12 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_PAYLOAD_ANDROID))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_PAYLOAD_ANDROID))
     }
 
     @Test
@@ -188,9 +252,9 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.NOT_FOUND_404))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(0))
+        assertThat(responseEvent, hasStatus(NOT_FOUND_404))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(0))
     }
 
     @Test
@@ -202,33 +266,33 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.METHOD_NOT_ALLOWED_405))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(0))
+        assertThat(responseEvent, hasStatus(METHOD_NOT_ALLOWED_405))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(0))
     }
 
     @Test
     fun badRequestWhenEmptyBody() {
         val responseEvent = responseFor("")
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(0))
+        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(0))
     }
 
     @Test
     fun badRequestWhenMalformedJson() {
         val responseEvent = responseFor("{")
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(0))
+        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(0))
     }
 
     @Test
     fun badRequestWhenEmptyJsonObject() {
         val responseEvent = responseFor("{}")
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(0))
+        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(0))
     }
 
     @Disabled("Mutated postcode won't be in mapping causing a 500 error")
@@ -239,34 +303,34 @@ class AnalyticsSubmissionHandlerTest {
             .forEach(Consumer { json: String ->
                 if (json != originalJson) {
                     val response = responseFor(json)
-                    MatcherAssert.assertThat(response, CoreMatchers.not(CoreMatchers.anyOf(
-                        ProxyResponseAssertions.hasStatus(HttpStatusCode.INTERNAL_SERVER_ERROR_500),
-                        ProxyResponseAssertions.hasStatus(HttpStatusCode.FORBIDDEN_403)
+                    assertThat(response, not(anyOf(
+                        hasStatus(INTERNAL_SERVER_ERROR_500),
+                        hasStatus(FORBIDDEN_403)
                     ))
                     )
-                    MatcherAssert.assertThat(response, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
+                    assertThat(response, hasBody(equalTo(null)))
                 }
             })
     }
 
     @Test
-    fun badRequestWhenDodgyStartDate() {
+    fun badRequestWhenStartDateIsInInvalidFormat() {
         val responseEvent = responseFor(
             iOSPayloadFrom("2020-06-2001:00:00Z", "2020-06-20T22:00:00Z")
         )
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(0))
+        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(0))
     }
 
     @Test
-    fun badRequestWhenDodgyEndDate() {
+    fun badRequestWhenEndDateBeforeStartDate() {
         val responseEvent = responseFor(
             iOSPayloadFrom("2020-06-20T22:00:00Z", "2020-06-20T22:00:00")
         )
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(0))
+        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(0))
     }
 
     private fun responseFor(requestPayload: String): APIGatewayProxyResponseEvent {
@@ -288,12 +352,12 @@ class AnalyticsSubmissionHandlerTest {
             .withJson(iOSPayloadFromWithLocalAuthority("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-        //MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_PAYLOAD_IOS_WITH_LOCAL_AUTHORITY))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_PAYLOAD_IOS_WITH_LOCAL_AUTHORITY))
     }
 
     @Test
@@ -303,15 +367,15 @@ class AnalyticsSubmissionHandlerTest {
             .withMethod(HttpMethod.POST)
             .withPath("/submission/mobile-analytics")
             .withBearerToken("anything")
-            .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z","AB10","localAuthority"))
+            .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "SY5", "E06000051"))
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasStatus(HttpStatusCode.OK_200))
-        MatcherAssert.assertThat(responseEvent, ProxyResponseAssertions.hasBody(CoreMatchers.equalTo(null)))
-        MatcherAssert.assertThat(s3Storage.count, CoreMatchers.equalTo(1))
-        MatcherAssert.assertThat(s3Storage.name, CoreMatchers.equalTo(objectKey.append(".json")))
-        MatcherAssert.assertThat(s3Storage.bucket, CoreMatchers.equalTo(BUCKET_NAME))
-       //MatcherAssert.assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), CoreMatchers.equalTo(TestData.STORED_ANALYTICS_PAYLOAD_ANDROID_WITH_LOCAL_AUTHORITY))
+        assertThat(responseEvent, hasStatus(OK_200))
+        assertThat(responseEvent, hasBody(equalTo(null)))
+        assertThat(s3Storage.count, equalTo(1))
+        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
+        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
+        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(STORED_ANALYTICS_PAYLOAD_ANDROID_WITH_LOCAL_AUTHORITY))
     }
 
     companion object {
@@ -331,7 +395,21 @@ class AnalyticsSubmissionHandlerTest {
                     "isIsolatingForHadRiskyContactBackgroundTick" : 13,    
                     "receivedRiskyContactNotification" : 1,    
                     "startedIsolation" : 1,    
-                    "receivedPositiveTestResultWhenIsolatingDueToRiskyContact" : 1""".trimIndent()
+                    "receivedPositiveTestResultWhenIsolatingDueToRiskyContact" : 1,
+                    "receivedActiveIpcToken": 1,
+                    "haveActiveIpcTokenBackgroundTick": 1,
+                    "selectedIsolationPaymentsButton": 1,
+                    "launchedIsolationPaymentsApplication": 1,
+                    "receivedPositiveLFDTestResultViaPolling":  1,
+                    "receivedNegativeLFDTestResultViaPolling":  1,
+                    "receivedVoidLFDTestResultViaPolling":  1,
+                    "receivedPositiveLFDTestResultEnteredManually": 1,
+                    "receivedNegativeLFDTestResultEnteredManually": 1,
+                    "receivedVoidLFDTestResultEnteredManually": 1,
+                    "hasTestedLFDPositiveBackgroundTick": 1,
+                    "isIsolatingForTestedLFDPositiveBackgroundTick": 1,
+                    "totalExposureWindowsNotConsideredRisky": 1,
+                    "totalExposureWindowsConsideredRisky": 1""".trimIndent()
             return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", metrics)
         }
 
@@ -427,7 +505,7 @@ class AnalyticsSubmissionHandlerTest {
         }
 
         fun iOSPayloadFromWithLocalAuthority(startDate: String, endDate: String): String {
-            return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", "", "localAuthority")
+            return iOSPayloadFromWithMetrics(startDate, endDate, "SY5", "", "E06000051")
         }
 
 
@@ -465,6 +543,7 @@ class AnalyticsSubmissionHandlerTest {
                    "includesMultipleApplicationVersions":false
                 }""".trimIndent()
         }
+
         private fun androidPayloadFrom(startDate: String, endDate: String, postDistrict: String = "AB10", localAuthority: String): String {
             return """
                 {

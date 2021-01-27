@@ -42,6 +42,7 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
     private final IsolationPaymentMobileService service;
     private final Routing.Handler handler;
 
+    @SuppressWarnings("unused")
     public IsolationPaymentOrderHandler() {
         this(Environment.fromSystem(), SystemClock.CLOCK);
     }
@@ -50,14 +51,14 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
         this(
             environment,
             awsAuthentication(ApiName.Mobile),
-            signResponseWithKeyGivenInSsm(clock, environment),
+            signResponseWithKeyGivenInSsm(environment, clock),
             isolationPaymentService(clock, TokenGenerator::getToken, environment)
         );
     }
 
-    public IsolationPaymentOrderHandler(Environment environment, 
-                                        Authenticator authenticator, 
-                                        ResponseSigner signer, 
+    public IsolationPaymentOrderHandler(Environment environment,
+                                        Authenticator authenticator,
+                                        ResponseSigner signer,
                                         IsolationPaymentMobileService service) {
         this.environment = environment;
         this.service = service;
@@ -80,12 +81,9 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
             return HttpResponses.serviceUnavailable();
         }
 
-        var requestBody = Jackson.deserializeMaybe(request.getBody(), TokenGenerationRequest.class);
-        if (requestBody.isPresent()) {
-            return created(Jackson.toJson(service.handleIsolationPaymentOrder(requestBody.get())));
-        } else {
-            return HttpResponses.badRequest();
-        }
+        return Jackson.deserializeMaybe(request.getBody(), TokenGenerationRequest.class)
+            .map(it -> created(Jackson.toJson(service.handleIsolationPaymentOrder(it))))
+            .orElseGet(HttpResponses::badRequest);
     }
 
     private APIGatewayProxyResponseEvent updateToken(APIGatewayProxyRequestEvent request) {
@@ -94,13 +92,9 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
             return HttpResponses.serviceUnavailable();
         }
 
-        var requestBody = Jackson.deserializeMaybeValidating(request.getBody(), TokenUpdateRequest.class, TokenUpdateRequest::validator);
-        if (requestBody.isPresent()) {
-            return ok(Jackson.toJson(service.handleIsolationPaymentUpdate(requestBody.get())));
-        }
-        else {
-            return HttpResponses.badRequest();
-        }
+        return Jackson.deserializeMaybeValidating(request.getBody(), TokenUpdateRequest.class, TokenUpdateRequest::validator)
+            .map(it -> ok(Jackson.toJson(service.handleIsolationPaymentUpdate(it))))
+            .orElseGet(HttpResponses::badRequest);
     }
 
     private static IsolationPaymentMobileService isolationPaymentService(Supplier<Instant> clock,

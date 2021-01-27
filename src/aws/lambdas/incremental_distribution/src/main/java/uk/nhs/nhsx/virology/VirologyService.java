@@ -4,31 +4,36 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.exceptions.ApiResponseException;
 import uk.nhs.nhsx.core.exceptions.TransactionException;
-import uk.nhs.nhsx.virology.exchange.CtaExchangeRequest;
-import uk.nhs.nhsx.virology.exchange.CtaExchangeResponse;
-import uk.nhs.nhsx.virology.exchange.CtaExchangeResult;
+import uk.nhs.nhsx.virology.CountryTestKitWhitelist.CountryTestKitPair;
+import uk.nhs.nhsx.virology.exchange.*;
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequest;
+import uk.nhs.nhsx.virology.lookup.VirologyLookupRequestV2;
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponse;
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2;
 import uk.nhs.nhsx.virology.order.TokensGenerator;
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse;
 import uk.nhs.nhsx.virology.order.VirologyRequestType;
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig;
 import uk.nhs.nhsx.virology.persistence.*;
-import uk.nhs.nhsx.virology.result.*;
+import uk.nhs.nhsx.virology.result.VirologyLookupResult;
+import uk.nhs.nhsx.virology.result.VirologyResultRequest;
+import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest;
+import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse;
 
 import java.time.Instant;
 import java.time.Period;
 import java.util.function.Supplier;
 
 import static uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422;
+import static uk.nhs.nhsx.virology.CountryTestKitWhitelist.isDiagnosisKeysSubmissionSupported;
 import static uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLiveCalculator.DEFAULT_TTL;
 import static uk.nhs.nhsx.virology.result.VirologyResultRequest.*;
+import static uk.nhs.nhsx.virology.result.VirologyResultValidator.validateTestResult;
 
 public class VirologyService {
 
-    private static final int MAX_CTA_EXCHANGE_RETRY_COUNT = 2;
-
     private static final Logger logger = LogManager.getLogger(VirologyService.class);
+    private static final int MAX_CTA_EXCHANGE_RETRY_COUNT = 2;
 
     private final VirologyPersistenceService persistenceService;
     private final TokensGenerator tokensGenerator;
@@ -65,22 +70,47 @@ public class VirologyService {
         return virologyWebsiteConfig.registerWebsite + ctaTokenParam;
     }
 
-    public VirologyLookupResult virologyLookupFor(VirologyLookupRequest virologyLookupRequest) {
+    public VirologyLookupResult virologyLookupForV1(VirologyLookupRequest virologyLookupRequest) {
         return persistenceService
             .getTestResult(virologyLookupRequest.testResultPollingToken)
-            .map(testResult -> {
-                if (testResult.isAvailable()) {
-                    markTestDataForDeletion(testResult, DEFAULT_TTL.apply(systemClock));
-                    return new VirologyLookupResult.Available(
-                        new VirologyLookupResponse(
-                            testResult.testEndDate,
-                            testResult.testResult
-                        )
-                    );
-                }
-                return new VirologyLookupResult.Pending();
-            })
+            .map(this::virologyLookupResultV1)
             .orElseGet(VirologyLookupResult.NotFound::new);
+    }
+
+    public VirologyLookupResult virologyLookupForV2(VirologyLookupRequestV2 request) {
+        return persistenceService
+            .getTestResult(request.testResultPollingToken)
+            .map(it -> virologyLookupResultV2(it, request.country))
+            .orElseGet(VirologyLookupResult.NotFound::new);
+    }
+
+    private VirologyLookupResult virologyLookupResultV1(TestResult testResult) {
+        if (testResult.isAvailable()) {
+            markTestDataForDeletion(testResult, DEFAULT_TTL.apply(systemClock));
+            return new VirologyLookupResult.Available(
+                new VirologyLookupResponse(
+                    testResult.testEndDate,
+                    testResult.testResult,
+                    testResult.testKit
+                )
+            );
+        }
+        return new VirologyLookupResult.Pending();
+    }
+
+    private VirologyLookupResult virologyLookupResultV2(TestResult testResult, Country country) {
+        if (testResult.isAvailable()) {
+            markTestDataForDeletion(testResult, DEFAULT_TTL.apply(systemClock));
+            return new VirologyLookupResult.AvailableV2(
+                new VirologyLookupResponseV2(
+                    testResult.testEndDate,
+                    testResult.testResult,
+                    testResult.testKit,
+                    isDiagnosisKeysSubmissionSupported(CountryTestKitPair.of(country, testResult.testKit))
+                )
+            );
+        }
+        return new VirologyLookupResult.Pending();
     }
 
     private void markTestDataForDeletion(TestResult testResult, VirologyDataTimeToLive virologyDataTimeToLive) {
@@ -95,7 +125,7 @@ public class VirologyService {
     }
 
     public VirologyResultPersistOperation acceptTestResult(VirologyResultRequest testResult) {
-        VirologyResultValidator.validateTestResult(testResult.testResult, testResult.testEndDate);
+        validateTestResult(testResult.testResult, testResult.testEndDate);
 
         switch (testResult.testResult) {
             case NPEX_POSITIVE:
@@ -114,7 +144,7 @@ public class VirologyService {
     }
 
     public VirologyTokenGenResponse acceptTestResultGeneratingTokens(VirologyTokenGenRequest tokenGenRequest) {
-        VirologyResultValidator.validateTestResult(tokenGenRequest.testResult, tokenGenRequest.testEndDate);
+        validateTestResult(tokenGenRequest.testResult, tokenGenRequest.testEndDate);
 
         var expireAt = systemClock.get().plus(Period.ofWeeks(4)).getEpochSecond();
 
@@ -122,7 +152,8 @@ public class VirologyService {
             tokensGenerator::generateVirologyTokens,
             expireAt,
             tokenGenRequest.testResult,
-            tokenGenRequest.testEndDate
+            tokenGenRequest.testEndDate,
+            tokenGenRequest.testKit
         );
 
         logger.info("Token gen created ctaToken: {}", testOrder.ctaToken.value);
@@ -130,36 +161,68 @@ public class VirologyService {
         return VirologyTokenGenResponse.of(testOrder.ctaToken.value);
     }
 
-    public CtaExchangeResult exchangeCtaToken(CtaExchangeRequest ctaExchangeRequest) {
+    public CtaExchangeResult exchangeCtaTokenForV1(CtaExchangeRequest request) {
         return persistenceService
-            .getTestOrder(ctaExchangeRequest.ctaToken)
+            .getTestOrder(request.ctaToken)
             .filter(it -> it.downloadCounter < MAX_CTA_EXCHANGE_RETRY_COUNT)
-            .map(this::mapToCtaExchangeResult)
+            .map(testOrder -> persistenceService
+                .getTestResult(testOrder.testResultPollingToken)
+                .map(testResult -> mapToCtaExchangeResultV1(testOrder, testResult))
+                .orElseGet(ctaTokenNotFound(testOrder)))
             .orElseGet(CtaExchangeResult.NotFound::new);
     }
 
-    private CtaExchangeResult mapToCtaExchangeResult(TestOrder testOrder) {
+    public CtaExchangeResult exchangeCtaTokenForV2(CtaExchangeRequestV2 request) {
         return persistenceService
-            .getTestResult(testOrder.testResultPollingToken)
-            .map(testResult -> {
-                if (testResult.isAvailable()) {
-                    persistenceService.updateOnCtaExchange(testOrder, testResult, DEFAULT_TTL.apply(systemClock));
-                    var response = new CtaExchangeResponse(
-                        testOrder.diagnosisKeySubmissionToken.value,
-                        testResult.testResult,
-                        testResult.testEndDate
-                    );
-                    logger.info("Cta token exchange successful for ctaToken: {}", testOrder.ctaToken.value);
-                    return new CtaExchangeResult.Available(response);
-                }
-                return new CtaExchangeResult.Pending();
-            })
-            .orElseGet(() -> {
-                logger.info("Cta exchange could not find virology result when exchanging " +
-                    "ctaToken:" + testOrder.ctaToken +
-                    ", pollingToken:" + testOrder.testResultPollingToken.value +
-                    ", submissionToken:" + testOrder.diagnosisKeySubmissionToken.value);
-                return new CtaExchangeResult.NotFound();
-            });
+            .getTestOrder(request.ctaToken)
+            .filter(it -> it.downloadCounter < MAX_CTA_EXCHANGE_RETRY_COUNT)
+            .map(testOrder -> persistenceService
+                .getTestResult(testOrder.testResultPollingToken)
+                .map(testResult -> mapToCtaExchangeResultV2(testOrder, testResult, request.country))
+                .orElseGet(ctaTokenNotFound(testOrder)))
+            .orElseGet(CtaExchangeResult.NotFound::new);
     }
+
+    private CtaExchangeResult mapToCtaExchangeResultV1(TestOrder testOrder, TestResult testResult) {
+        if (testResult.isAvailable()) {
+            persistenceService.updateOnCtaExchange(testOrder, testResult, DEFAULT_TTL.apply(systemClock));
+            var response = new CtaExchangeResponse(
+                testOrder.diagnosisKeySubmissionToken.value,
+                testResult.testResult,
+                testResult.testEndDate,
+                testResult.testKit);
+            logger.info("Cta token exchange successful for ctaToken: {}", testOrder.ctaToken.value);
+            return new CtaExchangeResult.Available(response);
+        }
+        return new CtaExchangeResult.Pending();
+    }
+
+    private CtaExchangeResult mapToCtaExchangeResultV2(TestOrder testOrder,
+                                                       TestResult testResult,
+                                                       Country country) {
+        if (testResult.isAvailable()) {
+            persistenceService.updateOnCtaExchange(testOrder, testResult, DEFAULT_TTL.apply(systemClock));
+            var response = new CtaExchangeResponseV2(
+                testOrder.diagnosisKeySubmissionToken.value,
+                testResult.testResult,
+                testResult.testEndDate,
+                testResult.testKit,
+                isDiagnosisKeysSubmissionSupported(CountryTestKitPair.of(country, testResult.testKit))
+            );
+            logger.info("Cta token exchange successful for ctaToken: {}", testOrder.ctaToken.value);
+            return new CtaExchangeResult.AvailableV2(response);
+        }
+        return new CtaExchangeResult.Pending();
+    }
+
+    private Supplier<CtaExchangeResult> ctaTokenNotFound(TestOrder testOrder) {
+        return () -> {
+            logger.info("Cta exchange could not find virology result when exchanging " +
+                "ctaToken:" + testOrder.ctaToken +
+                ", pollingToken:" + testOrder.testResultPollingToken.value +
+                ", submissionToken:" + testOrder.diagnosisKeySubmissionToken.value);
+            return new CtaExchangeResult.NotFound();
+        };
+    }
+
 }

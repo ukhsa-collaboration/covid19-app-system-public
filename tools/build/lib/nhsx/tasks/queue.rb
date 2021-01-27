@@ -7,7 +7,13 @@ namespace :queue do
         desc "Queue a deployment to the #{tgt_env} target environment in CodeBuild"
         task :"#{tgt_env}" => prerequisites do
           include NHSx::Queue
-          queue("deploy-app-system", tgt_env, account, $configuration)
+          build_info = queue("deploy-app-system-#{tgt_env}", tgt_env, account, $configuration)
+          if $configuration.print_logs
+            pipe_logs(build_info)
+            puts "Download the full logs with \n\trake download:codebuild:#{account} JOB_ID=#{build_info.build_id}"
+          else
+            puts "Job queued. Download logs with \n\trake download:codebuild:#{account} JOB_ID=#{build_info.build_id}"
+          end
         end
       end
     end
@@ -19,7 +25,13 @@ namespace :queue do
           desc "Queue a deployment to the #{tgt_env} target environment in CodeBuild"
           task :"#{tgt_env}" => prerequisites do
             include NHSx::Queue
-            queue("deploy-tier-metadata", tgt_env, account, $configuration)
+            build_info = queue("deploy-tier-metadata-#{tgt_env}", tgt_env, account, $configuration)
+            if $configuration.print_logs
+              pipe_logs(build_info)
+              puts "Download the full logs with \n\trake download:codebuild:#{account} JOB_ID=#{build_info.build_id}"
+            else
+              puts "Job queued. Download logs with \n\trake download:codebuild:#{account} JOB_ID=#{build_info.build_id}"
+            end
           end
         end
       end

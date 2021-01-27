@@ -6,10 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions;
 import uk.nhs.nhsx.core.exceptions.TransactionException;
-import uk.nhs.nhsx.virology.CtaToken;
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken;
-import uk.nhs.nhsx.virology.TestResultPollingToken;
-import uk.nhs.nhsx.virology.VirologyConfig;
+import uk.nhs.nhsx.virology.*;
 import uk.nhs.nhsx.virology.result.VirologyResultRequest;
 
 import java.util.List;
@@ -21,6 +18,7 @@ import java.util.function.Supplier;
 import static java.util.Arrays.asList;
 import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.*;
 import static uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions.executeTransaction;
+import static uk.nhs.nhsx.virology.TestKit.LAB_RESULT;
 
 public class VirologyPersistenceService {
 
@@ -47,8 +45,8 @@ public class VirologyPersistenceService {
                 itemValueOrThrow(it, "testResultPollingToken"),
                 itemValueMaybe(it, "testEndDate").orElse(""),
                 itemValueMaybe(it, "testResult").orElse(""),
-                itemValueOrThrow(it, "status")
-            ));
+                itemValueOrThrow(it, "status"),
+                itemValueMaybe(it, "testKit").map(TestKit::valueOf).orElse(LAB_RESULT)));
     }
 
     public Optional<TestOrder> getTestOrder(CtaToken ctaToken) {
@@ -82,21 +80,22 @@ public class VirologyPersistenceService {
     public TestOrder persistTestOrderAndResult(Supplier<TestOrder> testOrderSupplier,
                                                long expireAt,
                                                String testResult,
-                                               String testEndDate) {
+                                               String testEndDate,
+                                               TestKit testKit) {
         return persistTestOrderTransactItems(
             testOrderSupplier,
             testOrder -> {
                 if (VirologyResultRequest.NPEX_POSITIVE.equals(testResult)) {
                     return asList(
                         testOrderCreateOp(testOrder, expireAt),
-                        testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate),
-                        submissionTokenCreateOp(testOrder, expireAt)
+                        testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit),
+                        submissionTokenCreateOp(testOrder, expireAt, testKit)
                     );
                 }
 
                 return asList(
                     testOrderCreateOp(testOrder, expireAt),
-                    testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate)
+                    testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit)
                 );
             }
         );
@@ -159,8 +158,8 @@ public class VirologyPersistenceService {
         }
     }
 
-    public void updateOnCtaExchange(TestOrder testOrder, 
-                                    TestResult testResult, 
+    public void updateOnCtaExchange(TestOrder testOrder,
+                                    TestResult testResult,
                                     VirologyDataTimeToLive virologyTimeToLive) {
         try {
             updateCtaExchangeTimeToLiveAndCounter(testOrder, testResult, virologyTimeToLive);
@@ -174,8 +173,8 @@ public class VirologyPersistenceService {
         }
     }
 
-    private void updateCtaExchangeTimeToLiveAndCounter(TestOrder testOrder, 
-                                                       TestResult testResult, 
+    private void updateCtaExchangeTimeToLiveAndCounter(TestOrder testOrder,
+                                                       TestResult testResult,
                                                        VirologyDataTimeToLive virologyTimeToLive) {
         if (testResult.isPositive() && submissionTokenPresent(testOrder)) {
             executeTransaction(dynamoDbClient,
@@ -254,7 +253,8 @@ public class VirologyPersistenceService {
     private TransactWriteItem testResultAvailableCreateOp(TestOrder testOrder,
                                                           long expireAt,
                                                           String testResult,
-                                                          String testEndDate) {
+                                                          String testEndDate,
+                                                          TestKit testKit) {
 
         return new TransactWriteItem().withPut(
             new Put()
@@ -265,7 +265,8 @@ public class VirologyPersistenceService {
                         "status", stringAttribute("available"),
                         "testResult", stringAttribute(testResult),
                         "testEndDate", stringAttribute(testEndDate),
-                        "expireAt", numericAttribute(expireAt)
+                        "expireAt", numericAttribute(expireAt),
+                        "testKit", stringAttribute(testKit.name())
                     )
                 )
         );
@@ -280,7 +281,7 @@ public class VirologyPersistenceService {
                 .withExpressionAttributeValues(attributeMap(":expireAt", testDataExpireAt))
         );
     }
-    
+
     private TransactWriteItem testOrderTtlAndCounterUpdateOp(CtaToken ctaToken, long testDataExpireAt) {
         return new TransactWriteItem().withUpdate(
             new Update()
@@ -318,10 +319,14 @@ public class VirologyPersistenceService {
         );
     }
 
-    public VirologyResultPersistOperation persistPositiveTestResult(VirologyResultRequest.Positive testResult, long expireAt) {
+    public VirologyResultPersistOperation persistPositiveTestResult(VirologyResultRequest.Positive testResult,
+                                                                    long expireAt) {
         return persistTestResult(
             testResult,
-            order -> List.of(resultPollingTokenUpdateOp(order, testResult), submissionTokenCreateOp(order, expireAt))
+            order -> List.of(
+                resultPollingTokenUpdateOp(order, testResult),
+                submissionTokenCreateOp(order, expireAt, testResult.testKit)
+            )
         );
     }
 
@@ -366,14 +371,15 @@ public class VirologyPersistenceService {
             new Update()
                 .withTableName(config.testResultsTable)
                 .withKey(attributeMap("testResultPollingToken", testOrder.testResultPollingToken.value))
-                .withUpdateExpression("set #s = :status, testEndDate = :testEndDate, testResult = :testResult")
+                .withUpdateExpression("set #s = :status, testEndDate = :testEndDate, testResult = :testResult, testKit = :testKit")
                 .withConditionExpression("#s = :pendingStatus")
                 .withExpressionAttributeValues(
                     Map.of(
                         ":status", stringAttribute("available"),
                         ":testEndDate", stringAttribute(testResult.testEndDate),
                         ":testResult", stringAttribute(testResult.testResult),
-                        ":pendingStatus", stringAttribute("pending")
+                        ":pendingStatus", stringAttribute("pending"),
+                        ":testKit", stringAttribute(testResult.testKit.name())
                     )
                 )
                 .withExpressionAttributeNames(
@@ -382,13 +388,14 @@ public class VirologyPersistenceService {
         );
     }
 
-    private TransactWriteItem submissionTokenCreateOp(TestOrder testOrder, long expireAt) {
+    private TransactWriteItem submissionTokenCreateOp(TestOrder testOrder, long expireAt, TestKit testKit) {
         return new TransactWriteItem().withPut(
             new Put()
                 .withTableName(config.submissionTokensTable)
                 .withItem(
                     Map.of(
                         "diagnosisKeySubmissionToken", stringAttribute(testOrder.diagnosisKeySubmissionToken.value),
+                        "testKit", stringAttribute(testKit.name()),
                         "expireAt", numericAttribute(expireAt)
                     )
                 )

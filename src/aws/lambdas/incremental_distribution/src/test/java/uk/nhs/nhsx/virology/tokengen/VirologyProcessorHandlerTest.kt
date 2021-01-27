@@ -18,6 +18,7 @@ class VirologyProcessorHandlerTest {
         val input = mapOf(
             "testResult" to "POSITIVE",
             "testEndDate" to "2020-10-06T00:00:00Z",
+            "testKit" to "LAB_RESULT",
             "numberOfTokens" to "1000"
         )
         every { service.generateAndStoreTokens(any()) } returns CtaProcessorResult.Success("some-file.zip", "some-message")
@@ -25,7 +26,7 @@ class VirologyProcessorHandlerTest {
         val json = handler.handleRequest(input, mockk())
         assertThat(json).containsSubsequence("some-file.zip")
 
-        val expectedEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z", 1000)
+        val expectedEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z","LAB_RESULT", 1000)
         verify { service.generateAndStoreTokens(expectedEvent) }
     }
 

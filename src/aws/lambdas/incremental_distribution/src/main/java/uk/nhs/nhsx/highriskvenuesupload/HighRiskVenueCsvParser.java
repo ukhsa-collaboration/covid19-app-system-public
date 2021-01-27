@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static uk.nhs.nhsx.core.DateFormatValidator.DATE_TIME_PATTERN;
 
 public class HighRiskVenueCsvParser {
@@ -39,30 +40,33 @@ public class HighRiskVenueCsvParser {
     private static final String DEFAULT_MESSAGE_TYPE = "M1";
     private static final String DEFAULT_OPTIONAL_PARAMETER = "";
     private static final int CSV_CONTENT_MAX_SIZE = 1048576;
-    private static boolean messageTypeFeatureFlag;
     private static final List<String> MESSAGE_TYPES_WITH_OPTIONAL_PARAMETER = List.of("M3");
+
+    private final boolean messageTypeFeatureFlag;
 
     public HighRiskVenueCsvParser() {
         this(false);
     }
+
     public HighRiskVenueCsvParser(boolean messageTypeFeatureFlag) {
-        HighRiskVenueCsvParser.messageTypeFeatureFlag = messageTypeFeatureFlag;
+        this.messageTypeFeatureFlag = messageTypeFeatureFlag;
     }
 
     public VenuesParsingResult toJson(String csv) {
         try {
-            HighRiskVenues riskyVenues = HighRiskVenueCsvParser.parse(csv);
-            return VenuesParsingResult.ok(Jackson.toJson(riskyVenues));
+            return VenuesParsingResult.ok(Jackson.toJson(parse(csv)));
         } catch (VenuesParsingException e) {
             return VenuesParsingResult.failure(e.getMessage());
         }
     }
 
-    private static HighRiskVenues parse(String csv) {
-        if (Strings.isNullOrEmpty(csv) || csv.trim().isEmpty())
+    private HighRiskVenues parse(String csv) {
+        if (Strings.isNullOrEmpty(csv) || csv.trim().isEmpty()) {
             throwParsingExceptionWith("No payload");
-        if (csv.getBytes().length > CSV_CONTENT_MAX_SIZE)
+        }
+        if (csv.getBytes(UTF_8).length > CSV_CONTENT_MAX_SIZE) {
             throwParsingExceptionWith("Csv content is more than 1MB");
+        }
 
         String[] rows = csv.split("\\r?\\n");
 
@@ -89,7 +93,6 @@ public class HighRiskVenueCsvParser {
     }
 
     private static class VenueRisk {
-
         final String venueId;
         final String startTime;
         final String endTime;

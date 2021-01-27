@@ -20,6 +20,7 @@ public class IsolationPaymentConsumeHandler implements RequestHandler<IsolationR
     private static final Environment.EnvironmentKey<String> AUDIT_LOG_PREFIX = string("AUDIT_LOG_PREFIX");
     private final IsolationPaymentGatewayService service;
 
+    @SuppressWarnings("unused")
     public IsolationPaymentConsumeHandler() {
         this(Environment.fromSystem(), SystemClock.CLOCK);
     }

@@ -60,7 +60,7 @@ class RiskyPostCodesHandlerTest {
     private val awsCloudFront = mockk<AwsCloudFront>()
     private val s3Storage = FakeCsvUploadServiceS3()
     private val datedSigner = TestDatedSigner("date")
-    private val handler = Handler(environment, { true }, datedSigner, s3Storage, awsCloudFront)
+    private val handler = HighRiskPostcodesUploadHandler(environment, { true }, datedSigner, s3Storage, awsCloudFront)
 
     @Test
     fun `accepts payload`() {

@@ -30,6 +30,12 @@ variable "logs_bucket_id" {
   description = "The name of the bucket to which S3 access logs are saved."
 }
 
+variable "log_retention_in_days" {
+  description = "Days for which events in the associated CloudWatch log group are retained. 0 (the default) means forever"
+  type        = number
+  default     = 0
+}
+
 variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }

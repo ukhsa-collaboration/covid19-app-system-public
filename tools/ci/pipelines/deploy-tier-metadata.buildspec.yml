@@ -1,14 +1,14 @@
 version: 0.2
 env:
   shell: bash
-  git-credential-helper: 'yes'
+  git-credential-helper: "yes"
 phases:
   build:
     commands:
-      - 'rake config:codebuild'
-      - 'rake publish:tier_metadata:$TARGET_ENVIRONMENT'
+      - "rake config:codebuild"
+      - "rake publish:tier_metadata:$TARGET_ENVIRONMENT"
 artifacts:
-  name: $(date +%Y%m%d%H%M%S)-deploy-tier-metadata-$($TARGET_ENVIRONMENT)
+  name: $(date +%Y%m%d%H%M%S)-deploy-tier-metadata-$TARGET_ENVIRONMENT.zip
   files:
     - out/**/*
-  discard-paths: 'no'
+  discard-paths: "no"

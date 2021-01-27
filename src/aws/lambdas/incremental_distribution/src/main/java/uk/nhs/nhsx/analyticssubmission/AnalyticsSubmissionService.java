@@ -9,7 +9,10 @@ import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload;
 import uk.nhs.nhsx.analyticssubmission.model.StoredAnalyticsSubmissionPayload;
 import uk.nhs.nhsx.core.Jackson;
-import uk.nhs.nhsx.core.aws.s3.*;
+import uk.nhs.nhsx.core.aws.s3.Locator;
+import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
+import uk.nhs.nhsx.core.aws.s3.S3Storage;
+import uk.nhs.nhsx.core.aws.s3.Sources;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -45,12 +48,13 @@ public class AnalyticsSubmissionService {
         }
     }
 
+
     private void uploadToS3(String json) {
         var objectKey = objectKeyNameProvider.generateObjectKeyName().append(".json");
         log.info("Uploading {} to {}", objectKey, config.bucketName.value);
 
         s3Storage.upload(
-            S3Storage.Locator.of(config.bucketName, objectKey),
+            Locator.of(config.bucketName, objectKey),
             ContentType.APPLICATION_JSON,
             Sources.byteSourceFor(json)
         );

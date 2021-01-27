@@ -13,8 +13,17 @@ namespace :deploy do
     desc "Deploys the AWS resources required for operation of the pipelines in #{account}"
     task :"ci-infra:#{account}" do
       include NHSx::Terraform
+      include NHSx::Git
       terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", account)
-      deploy_to_workspace("ci-infra", terraform_configuration, $configuration)
+
+      template_file = File.join($configuration.base, "tools/templates/ci-infra.tfvars.erb")
+      params = {
+        "sha" => current_sha,
+        "target_environments" => NHSx::TargetEnvironment::TARGET_ENVIRONMENTS[account],
+      }
+      variables_file = File.join($configuration.out, "ci-infra.tfvars")
+      write_file(variables_file, from_template(template_file, params))
+      deploy_to_workspace("ci-infra", terraform_configuration, [variables_file], $configuration)
     end
   end
 end
@@ -41,14 +50,14 @@ end
 
 namespace :destroy do
   desc "Destroys the temporary target environment for the current branch"
-  task :branch do
+  task :branch => :"login:dev" do
     include NHSx::Terraform
     workspace_name = "branch"
     terraform_configuration = File.join($configuration.base, NHSx::Terraform::DEV_ACCOUNT)
     delete_workspace(workspace_name, terraform_configuration, $configuration)
   end
   desc "Destroy the CodeBuild pipelines in dev"
-  task :"ci-infra:dev" do
+  task :"ci-infra:dev" => :"login:dev" do
     include NHSx::Terraform
     terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", "dev")
     delete_workspace("ci-infra", terraform_configuration, $configuration)

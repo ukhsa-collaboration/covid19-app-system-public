@@ -7,7 +7,7 @@ namespace :deploy do
       task :"#{tgt_env}" do
         include NHSx::Terraform
         terraform_configuration = File.join($configuration.base, NHSx::Terraform::DORETO_DEV_ACCOUNT)
-        deploy_to_workspace(tgt_env, terraform_configuration, $configuration)
+        deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
         if tgt_env != "branch"
           push_git_tag_subsystem(tgt_env, "doreto", "Deployed doreto on #{tgt_env}", $configuration)
         end

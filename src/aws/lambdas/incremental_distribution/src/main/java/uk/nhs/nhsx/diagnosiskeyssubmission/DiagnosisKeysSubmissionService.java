@@ -11,9 +11,9 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
+import uk.nhs.nhsx.virology.TestKit;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Optional;
@@ -21,7 +21,6 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
 
 public class DiagnosisKeysSubmissionService {
@@ -39,7 +38,8 @@ public class DiagnosisKeysSubmissionService {
     public DiagnosisKeysSubmissionService(S3Storage s3Storage,
                                           AwsDynamoClient awsDynamoClient,
                                           ObjectKeyNameProvider objectKeyNameProvider,
-                                          String tableName, BucketName name,
+                                          String tableName,
+                                          BucketName name,
                                           Supplier<Instant> clock) {
         this.bucketName = name;
         this.s3Storage = s3Storage;
@@ -86,9 +86,9 @@ public class DiagnosisKeysSubmissionService {
     }
 
     private boolean isKeyValid(String key) {
-        var isValid =  key != null && isBase64EncodedAndLessThan32Bytes(key);
+        var isValid = key != null && isBase64EncodedAndLessThan32Bytes(key);
 
-        if(!isValid){
+        if (!isValid) {
             logger.info("Key is invalid. Key={}", key);
         }
         return isValid;
@@ -137,7 +137,15 @@ public class DiagnosisKeysSubmissionService {
 
     private void acceptPayload(ClientTemporaryExposureKeysPayload payload) {
         matchDiagnosisToken(payload.diagnosisKeySubmissionToken)
-            .ifPresent(item -> storeKeysAndDeleteToken(payload));
+            .map(this::testkitFrom)
+            .ifPresent(it -> storeKeysAndDeleteToken(it, payload));
+    }
+
+    private TestKit testkitFrom(Item item) {
+        return Optional.ofNullable(item.get("testKit"))
+            .map(Object::toString)
+            .map(TestKit::valueOf)
+            .orElse(TestKit.LAB_RESULT);
     }
 
     private Optional<Item> matchDiagnosisToken(UUID token) {
@@ -152,15 +160,21 @@ public class DiagnosisKeysSubmissionService {
         return Optional.ofNullable(item);
     }
 
-    private void storeKeysAndDeleteToken(ClientTemporaryExposureKeysPayload payload) {
-        uploadToS3(payload);
+    private void storeKeysAndDeleteToken(TestKit testKit, ClientTemporaryExposureKeysPayload payload) {
+        uploadToS3(testKit, payload);
         deleteToken(payload.diagnosisKeySubmissionToken);
     }
 
-    private void uploadToS3(ClientTemporaryExposureKeysPayload payload) {
-        StoredTemporaryExposureKeyPayload uploadPayload = convertToStoredModel(payload);
-        ObjectKey objectKey = objectKeyNameProvider.generateObjectKeyName().append(".json");
-        s3Storage.upload(S3Storage.Locator.of(bucketName, objectKey), ContentType.APPLICATION_JSON, Sources.byteSourceFor(Jackson.toJson(uploadPayload)));
+    private void uploadToS3(TestKit testKit, ClientTemporaryExposureKeysPayload payload) {
+        var uploadPayload = convertToStoredModel(payload);
+        var provider = new TestKitAwareObjectKeyNameProvider(objectKeyNameProvider, testKit);
+        var objectKey = provider.generateObjectKeyName().append(".json");
+
+        s3Storage.upload(
+            Locator.of(bucketName, objectKey),
+            ContentType.APPLICATION_JSON,
+            Sources.byteSourceFor(Jackson.toJson(uploadPayload))
+        );
     }
 
     private StoredTemporaryExposureKeyPayload convertToStoredModel(ClientTemporaryExposureKeysPayload payload) {

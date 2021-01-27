@@ -7,13 +7,16 @@ package uk.nhs.nhsx.core.random.crockford;
 
 import com.google.common.io.BaseEncoding;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toList;
 
 public class CrockfordDammRandomStringGenerator {
 
@@ -26,18 +29,18 @@ public class CrockfordDammRandomStringGenerator {
     private final List<Pattern> disallowedRegexes;
 
     public CrockfordDammRandomStringGenerator() {
-        this(new BufferedReader(new InputStreamReader(CrockfordDammRandomStringGenerator.class.getResourceAsStream("banned-words-regex-list.txt"))).lines());
+        this(readBannedWordsFromClasspath());
     }
-    
-    public CrockfordDammRandomStringGenerator(Stream<String> bannedWordsRegexList) {
+
+    public CrockfordDammRandomStringGenerator(List<String> bannedWordsRegexList) {
         this(new SecureRandom(), bannedWordsRegexList);
     }
 
-    public CrockfordDammRandomStringGenerator(SecureRandom random, Stream<String> bannedWordsRegexList) {
+    public CrockfordDammRandomStringGenerator(SecureRandom random, List<String> bannedWordsRegexList) {
         this.random = random;
-        this.disallowedRegexes = bannedWordsRegexList
-                .map(Pattern::compile)
-                .collect(Collectors.toList());
+        this.disallowedRegexes = bannedWordsRegexList.stream()
+            .map(Pattern::compile)
+            .collect(toList());
     }
 
     public String generate() {
@@ -54,15 +57,24 @@ public class CrockfordDammRandomStringGenerator {
         }
     }
 
+    private static List<String> readBannedWordsFromClasspath() {
+        try {
+            URL resource = CrockfordDammRandomStringGenerator.class.getResource("banned-words-regex-list.txt");
+            return Files.readAllLines(Paths.get(requireNonNull(resource).toURI()), UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static DammChecksum checksum() {
         return new DammChecksum(CROCKFORD_BASE32_ALPHABET);
     }
-    
+
     public static class DammChecksum {
 
         private static final int DAMM_MODULUS = 32;
         private static final int DAMM_MASK = 5;
-        
+
         private final String alphabet;
 
         public DammChecksum(String alphabet) {
@@ -82,8 +94,8 @@ public class CrockfordDammRandomStringGenerator {
         // See https://stackoverflow.com/questions/23431621/extending-the-damm-algorithm-to-base-32
         private char checksum(String linkingId) {
             return alphabet.charAt(linkingId.chars()
-                    .map(alphabet::indexOf)
-                    .reduce(0, this::dammOperation));
+                .map(alphabet::indexOf)
+                .reduce(0, this::dammOperation));
         }
 
         private int dammOperation(int checksum, int digit) {
@@ -106,14 +118,13 @@ public class CrockfordDammRandomStringGenerator {
         return builder.toString();
     }
 
-
     public boolean isBannedWord(String linkingId) {
         String normalisedLinkingId = linkingId
-                .replace('4', 'a')
-                .replace('8', 'b')
-                .replace('3', 'e')
-                .replace('9', 'g')
-                .replace('5', 's');
+            .replace('4', 'a')
+            .replace('8', 'b')
+            .replace('3', 'e')
+            .replace('9', 'g')
+            .replace('5', 's');
         return disallowedRegexes.stream().anyMatch(p -> p.matcher(normalisedLinkingId).find());
     }
 }

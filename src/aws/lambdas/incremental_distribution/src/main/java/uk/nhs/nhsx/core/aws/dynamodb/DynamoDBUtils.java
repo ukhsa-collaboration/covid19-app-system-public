@@ -14,12 +14,6 @@ public class DynamoDBUtils implements AwsDynamoClient {
 	}
 
 	@Override
-	public void putItem (String tableName, Item item) {
-		Table table = dynamoDB.getTable(tableName);
-    	table.putItem(item);
-	}
-
-	@Override
 	public Item getItem(String tableName, String hashKeyName, String hashKeyValue) {
 		Table table = dynamoDB.getTable(tableName);
 		return table.getItem(hashKeyName, hashKeyValue);

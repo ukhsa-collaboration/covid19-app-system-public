@@ -9,9 +9,9 @@ import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
+import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequest
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequest
@@ -30,7 +30,7 @@ import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.time.Duration
 import java.time.Instant
-import java.util.Optional
+import java.util.*
 import java.util.function.Supplier
 
 class VirologyServiceTest {
@@ -96,7 +96,7 @@ class VirologyServiceTest {
 
     @Test
     fun `virology lookup with result available`() {
-        val testResult = TestData.positiveTestResult
+        val testResult = TestData.positivePcrTestResult
         every { persistenceService.getTestResult(any()) } returns Optional.of(testResult)
         every { persistenceService.markForDeletion(any(), any()) } just Runs
         val service = VirologyService(
@@ -106,7 +106,7 @@ class VirologyServiceTest {
         )
         val pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7")
         val request = VirologyLookupRequest(pollingToken)
-        val lookupResult = service.virologyLookupFor(request)
+        val lookupResult = service.virologyLookupForV1(request)
 
         assertThat(lookupResult).isInstanceOf(VirologyLookupResult.Available::class.java)
         val resultAvailable = lookupResult as VirologyLookupResult.Available
@@ -124,13 +124,13 @@ class VirologyServiceTest {
 
     @Test
     fun `virology lookup with result pending`() {
-        every { persistenceService.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
+        every { persistenceService.getTestResult(any()) } returns Optional.of(TestData.pendingTestResultNoTestKit)
 
         val service = VirologyService(persistenceService, TokensGenerator(), SystemClock.CLOCK)
         val pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7")
         val request = VirologyLookupRequest(pollingToken)
 
-        val lookupResult = service.virologyLookupFor(request)
+        val lookupResult = service.virologyLookupForV1(request)
         assertThat(lookupResult).isInstanceOf(VirologyLookupResult.Pending::class.java)
     }
 
@@ -142,7 +142,7 @@ class VirologyServiceTest {
         val pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7")
         val request = VirologyLookupRequest(pollingToken)
 
-        val lookupResult = service.virologyLookupFor(request)
+        val lookupResult = service.virologyLookupForV1(request)
         assertThat(lookupResult).isInstanceOf(VirologyLookupResult.NotFound::class.java)
     }
 
@@ -158,7 +158,7 @@ class VirologyServiceTest {
         every { persistenceService.updateOnCtaExchange(any(), any(), any()) } just Runs
 
         val service = VirologyService(persistenceService, TokensGenerator(), clock)
-        val result = service.exchangeCtaToken(CtaExchangeRequest(ctaToken)) as CtaExchangeResult.Available
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequest(ctaToken)) as CtaExchangeResult.Available
 
         assertThat(result.ctaExchangeResponse.diagnosisKeySubmissionToken).isEqualTo("sub-token")
         assertThat(result.ctaExchangeResponse.testEndDate).isEqualTo("2020-04-23T18:34:03Z")
@@ -176,13 +176,13 @@ class VirologyServiceTest {
         val ctaToken = CtaToken.of("cc8f0b6z")
         val testResultPollingToken = TestResultPollingToken.of("poll-token")
         val testTokens = TestOrder(ctaToken.value, testResultPollingToken.value, "sub-token")
-        val testResult = TestData.pendingTestResult
+        val testResult = TestData.pendingTestResultNoTestKit
 
         every { persistenceService.getTestOrder(ctaToken) } returns Optional.of(testTokens)
         every { persistenceService.getTestResult(testResultPollingToken) } returns Optional.of(testResult)
 
         val service = VirologyService(persistenceService, TokensGenerator(), clock)
-        val result = service.exchangeCtaToken(CtaExchangeRequest(ctaToken))
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequest(ctaToken))
 
         assertThat(result).isInstanceOf(CtaExchangeResult.Pending::class.java)
         verifySequence {
@@ -197,7 +197,7 @@ class VirologyServiceTest {
         every { persistenceService.getTestOrder(ctaToken) } returns Optional.empty()
 
         val service = VirologyService(persistenceService, TokensGenerator(), clock)
-        val result = service.exchangeCtaToken(CtaExchangeRequest(ctaToken))
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequest(ctaToken))
 
         assertThat(result).isInstanceOf(CtaExchangeResult.NotFound::class.java)
         verifySequence { persistenceService.getTestOrder(ctaToken) }
@@ -213,7 +213,7 @@ class VirologyServiceTest {
         every { persistenceService.getTestResult(testResultPollingToken) } returns Optional.empty()
 
         val service = VirologyService(persistenceService, TokensGenerator(), clock)
-        val result = service.exchangeCtaToken(CtaExchangeRequest(ctaToken))
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequest(ctaToken))
 
         assertThat(result).isInstanceOf(CtaExchangeResult.NotFound::class.java)
         verifySequence {
@@ -237,7 +237,7 @@ class VirologyServiceTest {
 
         val service = VirologyService(persistenceService, TokensGenerator(), clock)
 
-        assertThat(service.exchangeCtaToken(CtaExchangeRequest(ctaToken))).isInstanceOf(CtaExchangeResult.NotFound::class.java)
+        assertThat(service.exchangeCtaTokenForV1(CtaExchangeRequest(ctaToken))).isInstanceOf(CtaExchangeResult.NotFound::class.java)
 
         verify(exactly = 1) { persistenceService.getTestOrder(ctaToken) }
     }
@@ -320,7 +320,7 @@ class VirologyServiceTest {
             "09657719-fe58-46a3-a3a3-a8db82d48043",
             "9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"
         )
-        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any()) } returns testOrderTokens
+        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any(), any()) } returns testOrderTokens
 
         val service = VirologyService(persistenceService, tokensGenerator, clock)
 
@@ -331,7 +331,7 @@ class VirologyServiceTest {
         assertThat(response).isEqualTo(VirologyTokenGenResponse.of("074qbxqq"))
         verify(exactly = 1) {
             persistenceService.persistTestOrderAndResult(
-                any(), fourWeeksExpireAt, "POSITIVE", "2020-08-07T00:00:00Z"
+                any(), fourWeeksExpireAt, "POSITIVE", "2020-08-07T00:00:00Z", any()
             )
         }
     }
@@ -343,7 +343,7 @@ class VirologyServiceTest {
             "09657719-fe58-46a3-a3a3-a8db82d48043",
             "9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"
         )
-        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any()) } returns testOrderTokens
+        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any(), any()) } returns testOrderTokens
 
         val service = VirologyService(persistenceService, tokensGenerator, clock)
         val response = service.acceptTestResultGeneratingTokens(
@@ -353,7 +353,7 @@ class VirologyServiceTest {
         assertThat(response).isEqualTo(VirologyTokenGenResponse.of("1e19z5zt"))
         verify(exactly = 1) {
             persistenceService.persistTestOrderAndResult(
-                any(), fourWeeksExpireAt, "NEGATIVE", "2020-06-07T00:00:00Z"
+                any(), fourWeeksExpireAt, "NEGATIVE", "2020-06-07T00:00:00Z", any()
             )
         }
     }
@@ -365,7 +365,7 @@ class VirologyServiceTest {
             "09657719-fe58-46a3-a3a3-a8db82d48043",
             "9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"
         )
-        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any()) } returns testOrderTokens
+        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any(), any()) } returns testOrderTokens
 
         val service = VirologyService(persistenceService, tokensGenerator, clock)
         val response = service.acceptTestResultGeneratingTokens(
@@ -375,7 +375,7 @@ class VirologyServiceTest {
         assertThat(response).isEqualTo(VirologyTokenGenResponse.of("1e19z5zt"))
         verify(exactly = 1) {
             persistenceService.persistTestOrderAndResult(
-                any(), fourWeeksExpireAt, "VOID", "2020-06-07T00:00:00Z"
+                any(), fourWeeksExpireAt, "VOID", "2020-06-07T00:00:00Z", any()
             )
         }
     }
@@ -387,7 +387,7 @@ class VirologyServiceTest {
             "09657719-fe58-46a3-a3a3-a8db82d48043",
             "9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"
         )
-        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any()) } returns testOrderTokens
+        every { persistenceService.persistTestOrderAndResult(any(), any(), any(), any(), any()) } returns testOrderTokens
 
         val service = VirologyService(persistenceService, tokensGenerator, clock)
         service.acceptTestResultGeneratingTokens(
@@ -396,7 +396,7 @@ class VirologyServiceTest {
 
         verify(exactly = 1) {
             persistenceService.persistTestOrderAndResult(
-                any(), fourWeeksExpireAt, "VOID", "2020-06-07T00:00:00Z"
+                any(), fourWeeksExpireAt, "VOID", "2020-06-07T00:00:00Z", any()
             )
         }
     }
@@ -412,6 +412,49 @@ class VirologyServiceTest {
         }
             .isInstanceOf(ApiResponseException::class.java)
             .hasMessage("validation error: Invalid test result value")
+    }
+
+    @Test
+    fun `virology lookup for v1 with lfd test type is found`() {
+        val testResult = TestData.positiveLfdTestResult
+        every { persistenceService.getTestResult(any()) } returns Optional.of(testResult)
+        every { persistenceService.markForDeletion(any(), any()) } just Runs
+        val service = VirologyService(
+            persistenceService,
+            TokensGenerator(),
+            clock
+        )
+        val pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7")
+        val request = VirologyLookupRequest(pollingToken)
+        val lookupResult = service.virologyLookupForV1(request)
+
+        assertThat(lookupResult).isInstanceOf(VirologyLookupResult.Available::class.java)
+
+        verify {
+            persistenceService.getTestResult(pollingToken)
+        }
+    }
+
+    @Test
+    fun `exchanges cta token v1 with lfd test type is found`() {
+        val ctaToken = CtaToken.of("cc8f0b6z")
+        val testResultPollingToken = TestResultPollingToken.of("poll-token")
+        val testTokens = TestOrder(ctaToken.value, testResultPollingToken.value, "sub-token")
+        val testResult = TestData.positiveLfdTestResult
+
+        every { persistenceService.getTestOrder(ctaToken) } returns Optional.of(testTokens)
+        every { persistenceService.getTestResult(testResultPollingToken) } returns Optional.of(testResult)
+        every { persistenceService.updateOnCtaExchange(any(), any(), any()) } just Runs
+
+        val service = VirologyService(persistenceService, TokensGenerator(), clock)
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequest(ctaToken))
+
+        assertThat(result).isInstanceOf(CtaExchangeResult.Available::class.java)
+        verifySequence {
+            persistenceService.getTestOrder(ctaToken)
+            persistenceService.getTestResult(testResultPollingToken)
+            persistenceService.updateOnCtaExchange(testTokens, testResult, any())
+        }
     }
 
     private fun npexTestResultWith(testResult: String) =

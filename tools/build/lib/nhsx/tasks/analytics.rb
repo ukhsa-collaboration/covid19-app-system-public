@@ -8,7 +8,7 @@ namespace :deploy do
         task :"#{tgt_env}" => prerequisites do
           include NHSx::Terraform
           terraform_configuration = File.join($configuration.base, "src/analytics/accounts", account)
-          deploy_to_workspace(tgt_env, terraform_configuration, $configuration)
+          deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
           if tgt_env != "branch"
             push_git_tag_subsystem(tgt_env, "analytics", "Deployed analytics on #{tgt_env}", $configuration)
           end
@@ -91,7 +91,13 @@ namespace :queue do
           desc "Queue a deployment to the #{tgt_env} target environment in CodeBuild"
           task :"#{tgt_env}" => prerequisites do
             include NHSx::Queue
-            queue("deploy-analytics", tgt_env, account, $configuration)
+            build_info = queue("deploy-analytics-#{tgt_env}", tgt_env, account, $configuration)
+            if $configuration.print_logs
+              pipe_logs(build_info)
+              puts "Download the full logs with \n\trake download:codebuild:#{account} JOB_ID=#{build_info.build_id}"
+            else
+              puts "Job queued. Download logs with \n\trake download:codebuild:#{account} JOB_ID=#{build_info.build_id}"
+            end
           end
         end
       end

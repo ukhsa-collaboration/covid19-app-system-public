@@ -3,6 +3,8 @@ package uk.nhs.nhsx.diagnosiskeydist.s3
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import java.util.*
 import java.util.function.Predicate
@@ -16,7 +18,11 @@ class SubmissionFromS3RepositoryTest {
             S3ObjectSummary().apply { key = "my-prefix-def"; lastModified = Date() },
             S3ObjectSummary().apply { key = "abcdef"; lastModified = Date() }
         ))
-        val submissionRepository = SubmissionFromS3Repository(fakeS3) { true }
+        val submissionRepository = SubmissionFromS3Repository(
+            fakeS3,
+            { true },
+            BucketName.of("SUBMISSION_BUCKET")
+        )
         val submissions = submissionRepository.loadAllSubmissions()
 
         assertThat(submissions).hasSize(3)
@@ -32,7 +38,11 @@ class SubmissionFromS3RepositoryTest {
             S3ObjectSummary().apply { key = "now"; lastModified = Date(now) },
             S3ObjectSummary().apply { key = "young"; lastModified = Date(now + 60000) }
         ))
-        val submissionRepository = SubmissionFromS3Repository(fakeS3) { true }
+        val submissionRepository = SubmissionFromS3Repository(
+            fakeS3,
+            { true },
+            BucketName.of("SUBMISSION_BUCKET")
+        )
         val submissions = submissionRepository.loadAllSubmissions(now, 100, 100)
 
         assertThat(submissions).hasSize(1)
@@ -49,7 +59,11 @@ class SubmissionFromS3RepositoryTest {
             S3ObjectSummary().apply { key = "D"; lastModified = Date(now + 60000) },
             S3ObjectSummary().apply { key = "D"; lastModified = Date(now - 60000) }
         ))
-        val submissionRepository = SubmissionFromS3Repository(fakeS3) { true }
+        val submissionRepository = SubmissionFromS3Repository(
+            fakeS3,
+            { true },
+            BucketName.of("SUBMISSION_BUCKET")
+        )
         val submissions = submissionRepository.loadAllSubmissions(now, 3, 3)
 
         assertThat(submissions).hasSize(3)
@@ -62,7 +76,11 @@ class SubmissionFromS3RepositoryTest {
             S3ObjectSummary().apply { key = "my-prefix-def"; lastModified = Date() },
             S3ObjectSummary().apply { key = "abcdef"; lastModified = Date() }
         ))
-        val submissionRepository = SubmissionFromS3Repository(fakeS3) { objectKey -> !objectKey.startsWith("my-prefix") }
+        val submissionRepository = SubmissionFromS3Repository(
+            fakeS3,
+            { objectKey -> !objectKey.value.startsWith("my-prefix") },
+            BucketName.of("SUBMISSION_BUCKET")
+        )
         val submissions = submissionRepository.loadAllSubmissions()
 
         assertThat(submissions).hasSize(1)
@@ -76,8 +94,12 @@ class SubmissionFromS3RepositoryTest {
             S3ObjectSummary().apply { key = "/mobile/abc"; lastModified = Date() }
         ))
         val allowedPrefixes = "/nearform/IE,/nearform/NIR,/mobile".split(",".toRegex()).toTypedArray()
-        val matchesPrefix = Predicate { objectKey: String -> Arrays.stream(allowedPrefixes).anyMatch { prefix: String? -> objectKey.startsWith(prefix!!) } }
-        val submissionRepository = SubmissionFromS3Repository(fakeS3, matchesPrefix)
+        val matchesPrefix = Predicate { objectKey: ObjectKey -> Arrays.stream(allowedPrefixes).anyMatch { prefix: String? -> objectKey.value.startsWith(prefix!!) } }
+        val submissionRepository = SubmissionFromS3Repository(
+            fakeS3,
+            matchesPrefix,
+            BucketName.of("SUBMISSION_BUCKET")
+        )
         val submissions = submissionRepository.loadAllSubmissions()
 
         assertThat(submissions).hasSize(1)
@@ -91,7 +113,11 @@ class SubmissionFromS3RepositoryTest {
             S3ObjectSummary().apply { key = "/mobile/abc"; lastModified = Date() }
         ), listOf("my-prefix-abc"))
 
-        val submissionRepository = SubmissionFromS3Repository(fakeS3) { true }
+        val submissionRepository = SubmissionFromS3Repository(
+            fakeS3,
+            { true },
+            BucketName.of("SUBMISSION_BUCKET")
+        )
         val submissions = submissionRepository.loadAllSubmissions()
 
         assertThat(submissions).hasSize(2)

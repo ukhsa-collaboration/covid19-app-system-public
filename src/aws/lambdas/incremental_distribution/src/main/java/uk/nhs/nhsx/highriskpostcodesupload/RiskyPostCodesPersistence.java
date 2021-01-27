@@ -7,8 +7,8 @@ import org.apache.http.entity.ContentType;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.aws.s3.AwsS3;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
+import uk.nhs.nhsx.core.aws.s3.Locator;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
-import uk.nhs.nhsx.core.aws.s3.S3Storage;
 import uk.nhs.nhsx.core.signature.DatedSigner;
 import uk.nhs.nhsx.core.signature.DistributionSignature;
 import uk.nhs.nhsx.core.signature.SigningHeaders;
@@ -49,7 +49,7 @@ public class RiskyPostCodesPersistence {
 
     public void uploadToBackup(String json) {
         s3Client.upload(
-            S3Storage.Locator.of(bucketName, backupJsonKeyName),
+            Locator.of(bucketName, backupJsonKeyName),
             ContentType.APPLICATION_JSON,
             byteSourceFor(json)
         );
@@ -57,7 +57,7 @@ public class RiskyPostCodesPersistence {
 
     public void uploadToRaw(String csv) {
         s3Client.upload(
-            S3Storage.Locator.of(bucketName, rawCsvKeyName),
+            Locator.of(bucketName, rawCsvKeyName),
             ContentType.TEXT_PLAIN,
             byteSourceFor(csv)
         );
@@ -76,7 +76,7 @@ public class RiskyPostCodesPersistence {
         var signatureResult = signer.sign(new DistributionSignature(byteSource));
 
         s3Client.upload(
-            S3Storage.Locator.of(bucketName, objectKey),
+            Locator.of(bucketName, objectKey),
             ContentType.APPLICATION_JSON,
             byteSource,
             SigningHeaders.fromDatedSignature(signatureResult)
@@ -85,7 +85,7 @@ public class RiskyPostCodesPersistence {
 
     public Map<String, Map<String, Object>> retrievePostDistrictRiskLevels() {
         return s3Client
-            .getObject(this.bucketName.value, this.metaDataObjKeyName.value)
+            .getObject(Locator.of(bucketName, metaDataObjKeyName))
             .map(this::convertS3ObjectToRiskLevels)
             .orElseThrow(() -> new RuntimeException(
                 "Missing post district metadata. Bucket: " + this.bucketName.value +

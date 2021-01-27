@@ -29,6 +29,7 @@ module "submission_lambda" {
   lambda_timeout               = 20
   lambda_memory                = 1024
   lambda_environment_variables = merge({ SUBMISSION_STORE = module.submission_store.bucket_name }, var.lambda_environment_variables)
+  log_retention_in_days        = var.log_retention_in_days
   app_alarms_topic             = var.alarm_topic_arn
   publish                      = var.provisioned_concurrent_executions != 0 ? true : false
   tags                         = var.tags

@@ -84,3 +84,9 @@ module "postcode_demographic_geographic_lookup" {
     Feature = "Postcode Demographic Geographic Lookup"
   })
 }
+
+module "sip_analytics" {
+  source        = "./modules/sip_analytics"
+  database_name = aws_glue_catalog_database.this.name
+  location      = var.sip_analytics_bucket_location
+}

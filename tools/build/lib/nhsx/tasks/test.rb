@@ -1,7 +1,7 @@
 namespace :test do
   NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
-    desc "Runs all maven smoke tests against the #{tgt_env} target environment"
-    task :"maven:smoke:#{tgt_env}" do
+    desc "Runs all smoke tests against the #{tgt_env} target environment"
+    task :"smoke:#{tgt_env}" do
       include NHSx::Test
       run_target_environment_smoke_tests(tgt_env, "dev", $configuration)
     end

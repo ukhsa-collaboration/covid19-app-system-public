@@ -20,6 +20,8 @@ import java.util.function.Supplier;
 import static uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.startsWith;
 import static uk.nhs.nhsx.core.StandardSigning.signResponseWithKeyGivenInSsm;
 import static uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication;
+import static uk.nhs.nhsx.core.routing.Routing.Method.GET;
+import static uk.nhs.nhsx.core.routing.Routing.Method.POST;
 import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
@@ -30,16 +32,17 @@ public class RiskyVenueHandler extends RoutingHandler {
     private static final ParameterName poll = ParameterName.of("venue-notification-poll");
 
     private final Routing.Handler handler;
-    
+
+    @SuppressWarnings("unused")
     public RiskyVenueHandler() {
-        this(SystemClock.CLOCK, Environment.fromSystem());
+        this(Environment.fromSystem(), SystemClock.CLOCK);
     }
 
-    public RiskyVenueHandler(Supplier<Instant> clock, Environment environment) {
+    public RiskyVenueHandler(Environment environment, Supplier<Instant> clock) {
         this(
             environment,
             awsAuthentication(ApiName.Mobile),
-            signResponseWithKeyGivenInSsm(clock, environment),
+            signResponseWithKeyGivenInSsm(environment, clock),
             new AwsSsmParameters()
         );
     }
@@ -59,19 +62,19 @@ public class RiskyVenueHandler extends RoutingHandler {
             environment, authenticator,
             signer,
             routes(
-                path(Routing.Method.POST, startsWith("/circuit-breaker/venue/request"),
+                path(POST, startsWith("/circuit-breaker/venue/request"),
                     (r) -> {
                         CircuitBreakerResult result = circuitBreakerService.getApprovalToken();
                         return mapResultToResponse(result);
                     }
                 ),
-                path(Routing.Method.GET, startsWith("/circuit-breaker/venue/resolution"),
+                path(GET, startsWith("/circuit-breaker/venue/resolution"),
                     (r) -> {
                         CircuitBreakerResult result = circuitBreakerService.getResolution(r.getPath());
                         return mapResultToResponse(result);
                     }
                 ),
-                path(Routing.Method.POST, "/circuit-breaker/venue/health", (r) ->
+                path(POST, "/circuit-breaker/venue/health", (r) ->
                     HttpResponses.ok()
                 )
             )

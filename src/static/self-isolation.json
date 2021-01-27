@@ -4,6 +4,7 @@
     "indexCaseSinceSelfDiagnosisUnknownOnset": 9,
     "contactCase": 11,
     "maxIsolation": 21,
-    "pendingTasksRetentionPeriod": 14
+    "pendingTasksRetentionPeriod": 14,
+    "indexCaseSinceTestResultEndDate": 11
   }
 }

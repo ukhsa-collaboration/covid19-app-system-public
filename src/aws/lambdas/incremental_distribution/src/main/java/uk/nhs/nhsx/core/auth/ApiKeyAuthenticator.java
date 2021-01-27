@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ApiKeyAuthenticator implements Authenticator {
 
@@ -32,7 +33,7 @@ public class ApiKeyAuthenticator implements Authenticator {
                 }
             )
             .orElse(false);
-        if ( ! success ) {
+        if (!success) {
             logger.info("Failed to authenticate...");
         }
         return success;
@@ -49,7 +50,7 @@ public class ApiKeyAuthenticator implements Authenticator {
     private Optional<String> base64Decode(String value) {
         try {
             byte[] decode = Base64.getDecoder().decode(value);
-            return Optional.of(new String(decode));
+            return Optional.of(new String(decode, UTF_8));
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

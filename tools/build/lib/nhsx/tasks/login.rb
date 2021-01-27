@@ -8,6 +8,7 @@ namespace :login do
 
     mfa_login($configuration.aws_role, "prod")
     ENV["AWS_PROFILE"] = "nhs-auth-prod"
+    ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
     ENV["ACCOUNT"] = "prod"
   end
 
@@ -16,10 +17,12 @@ namespace :login do
 
     mfa_login($configuration.aws_role, "staging")
     ENV["AWS_PROFILE"] = "nhs-auth-staging"
+    ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
     ENV["ACCOUNT"] = "staging"
   end
 
   task :dev do
     ENV["ACCOUNT"] = "dev"
+    ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
   end
 end

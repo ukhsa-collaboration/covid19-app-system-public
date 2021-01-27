@@ -34,7 +34,7 @@ namespace :synth do
           include NHSx::Generate
           accounts_folder = File.dirname(NHSx::Terraform::SYNTH_DEV_ACCOUNT)
           terraform_configuration = File.join($configuration.base, accounts_folder, account)
-          deploy_to_workspace(tgt_env, terraform_configuration, $configuration)
+          deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
           if tgt_env != "branch"
             push_git_tag_subsystem(tgt_env, "synth", "Deployed synthetics on #{tgt_env}", $configuration)
             push_timestamped_tag("synth", tgt_env, "Deployed synthetics on #{tgt_env}", $configuration)

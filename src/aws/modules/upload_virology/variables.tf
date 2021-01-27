@@ -18,6 +18,12 @@ variable "custom_oai" {
   description = "Secret shared between CloudFront Distribution and Lambda"
 }
 
+variable "log_retention_in_days" {
+  description = "Days for which events in the associated CloudWatch log group are retained. 0 (the default) means forever"
+  type        = number
+  default     = 0
+}
+
 variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }
@@ -26,3 +32,10 @@ variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
 }
+
+variable "virology_v2_apis_enabled" {
+  description = "Feature flag for enabling V2 Virology APIs"
+  default     = false
+  type        = bool
+}
+

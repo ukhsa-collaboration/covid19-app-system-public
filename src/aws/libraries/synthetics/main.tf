@@ -47,7 +47,7 @@ resource "null_resource" "canary_changed" {
 
 data "archive_file" "lambda_exporter" {
   type        = "zip"
-  output_path = "${null_resource.canary_changed.triggers.lambda_path}"
+  output_path = null_resource.canary_changed.triggers.lambda_path
   source {
     content  = local.lambda_source
     filename = "nodejs/node_modules/canary.js"

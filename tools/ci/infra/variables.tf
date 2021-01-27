@@ -17,3 +17,6 @@ variable "github_credentials" {
   description = "The secrets manager entry containing the GitHub API token"
   type        = string
 }
+variable "target_environments" {
+  description = "the list of target environments hosted in this account"
+}

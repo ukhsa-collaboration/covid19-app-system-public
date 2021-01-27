@@ -21,6 +21,7 @@ variable "lambda_execution_role_arn" {
 variable "lambda_timeout" {
   description = "The timeout for the lambda execution"
 }
+
 variable "lambda_memory" {
   description = "The ammount of memory to allocate for the lambda"
 }
@@ -28,6 +29,12 @@ variable "lambda_memory" {
 variable "lambda_environment_variables" {
   description = "A map of environment variable --> value to pass as environment to the lambda"
   type        = map
+}
+
+variable "log_retention_in_days" {
+  description = "Days for which events in the associated CloudWatch log group are retained. 0 (the default) means forever"
+  type        = number
+  default     = 0
 }
 
 variable "app_alarms_topic" {
@@ -48,4 +55,10 @@ variable "tags" {
 
 variable "reserved_concurrent_executions" {
   default = -1
+}
+
+variable "invocations_alarm_enabled" {
+  description = "Flag to enable the alarm for lambda invocations"
+  type        = bool
+  default     = true
 }

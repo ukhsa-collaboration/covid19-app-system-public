@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 public class CachingSecretManager implements SecretManager {
 
     private final LoadingCache<SecretName, Optional<SecretValue>> cache;
+    private final LoadingCache<SecretName, byte[]> cacheBinary;
 
     public CachingSecretManager(SecretManager delegate) {
         cache = CacheBuilder.newBuilder()
@@ -23,12 +24,32 @@ public class CachingSecretManager implements SecretManager {
                         }
                     }
                 );
+
+        cacheBinary = CacheBuilder.newBuilder()
+            .expireAfterWrite(Duration.ofMinutes(5))
+            .build(
+                new CacheLoader<>() {
+                    @Override
+                    public byte[] load(SecretName secretName) {
+                        return delegate.getSecretBinary(secretName);
+                    }
+                }
+            );
     }
 
     @Override
     public Optional<SecretValue> getSecret(SecretName secretName) {
         try {
             return cache.get(secretName);
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Unable to load secret", e);
+        }
+    }
+
+    @Override
+    public byte[] getSecretBinary(SecretName secretName) {
+        try {
+            return cacheBinary.get(secretName);
         } catch (ExecutionException e) {
             throw new RuntimeException("Unable to load secret", e);
         }

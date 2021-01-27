@@ -26,16 +26,18 @@ module NHSx
     end
 
     def validate_languages(metadata, keys, languages)
+      validation_errors = []
       keys.each do |key|
         valid_key?(metadata, key) & hash?(metadata, key)
         nested_metadata = metadata[key]
         languages.each do |language|
-          if nested_metadata[language].nil?
-            puts "Missing text for language #{language} in #{key}"
+          if nested_metadata[language].nil? || nested_metadata[language].empty?
+            validation_errors << "Missing text for language #{language} in #{key}"
           else
             valid_key?(nested_metadata, language) && string?(nested_metadata, language)
           end
         end
+        return validation_errors
       end
     end
 

@@ -1,8 +1,6 @@
 package uk.nhs.nhsx.analyticssubmission.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import static uk.nhs.nhsx.analyticssubmission.PostCodeDeserializer.mergeSmallPostcodes;
+import static uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer.replacePostDistrictLA;
 
 public class StoredAnalyticsSubmissionPayload {
 
@@ -15,7 +13,7 @@ public class StoredAnalyticsSubmissionPayload {
     public final String deviceModel;
     public final String operatingSystemVersion;
     public final String latestApplicationVersion;
-    //public final String localAuthority;
+    public final String localAuthority;
 
     //    Metrics
     public final Long cumulativeDownloadBytes;
@@ -53,13 +51,26 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer receivedRiskyContactNotification;
     public final Integer startedIsolation;
     public final Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
-
+    public final Integer receivedActiveIpcToken;
+    public final Integer haveActiveIpcTokenBackgroundTick;
+    public final Integer selectedIsolationPaymentsButton;
+    public final Integer launchedIsolationPaymentsApplication;
+    public final Integer receivedPositiveLFDTestResultViaPolling;
+    public final Integer receivedNegativeLFDTestResultViaPolling;
+    public final Integer receivedVoidLFDTestResultViaPolling;
+    public final Integer receivedPositiveLFDTestResultEnteredManually;
+    public final Integer receivedNegativeLFDTestResultEnteredManually;
+    public final Integer receivedVoidLFDTestResultEnteredManually;
+    public final Integer hasTestedLFDPositiveBackgroundTick;
+    public final Integer isIsolatingForTestedLFDPositiveBackgroundTick;
+    public final Integer totalExposureWindowsNotConsideredRisky;
+    public final Integer totalExposureWindowsConsideredRisky;
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
                                              String operatingSystemVersion,
                                              String latestApplicationVersion,
-                                             //String localAuthority,
+                                             String localAuthority,
                                              Long cumulativeDownloadBytes,
                                              Long cumulativeUploadBytes,
                                              Long cumulativeCellularDownloadBytes,
@@ -96,7 +107,21 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer isIsolatingForHadRiskyContactBackgroundTick,
                                              Integer receivedRiskyContactNotification,
                                              Integer startedIsolation,
-                                             Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact) {
+                                             Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact,
+                                             Integer receivedActiveIpcToken,
+                                             Integer haveActiveIpcTokenBackgroundTick,
+                                             Integer selectedIsolationPaymentsButton,
+                                             Integer launchedIsolationPaymentsApplication,
+                                             Integer receivedPositiveLFDTestResultViaPolling,
+                                             Integer receivedNegativeLFDTestResultViaPolling,
+                                             Integer receivedVoidLFDTestResultViaPolling,
+                                             Integer receivedPositiveLFDTestResultEnteredManually,
+                                             Integer receivedNegativeLFDTestResultEnteredManually,
+                                             Integer receivedVoidLFDTestResultEnteredManually,
+                                             Integer hasTestedLFDPositiveBackgroundTick,
+                                             Integer isIsolatingForTestedLFDPositiveBackgroundTick,
+                                             Integer totalExposureWindowsNotConsideredRisky,
+                                             Integer totalExposureWindowsConsideredRisky) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -138,52 +163,82 @@ public class StoredAnalyticsSubmissionPayload {
         this.receivedRiskyContactNotification = receivedRiskyContactNotification;
         this.startedIsolation = startedIsolation;
         this.receivedPositiveTestResultWhenIsolatingDueToRiskyContact = receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
-        //this.localAuthority = localAuthority;
+        this.receivedActiveIpcToken = receivedActiveIpcToken;
+        this.haveActiveIpcTokenBackgroundTick = haveActiveIpcTokenBackgroundTick;
+        this.selectedIsolationPaymentsButton = selectedIsolationPaymentsButton;
+        this.launchedIsolationPaymentsApplication = launchedIsolationPaymentsApplication;
+        this.localAuthority = localAuthority;
+        this.receivedPositiveLFDTestResultViaPolling = receivedPositiveLFDTestResultViaPolling;
+        this.receivedNegativeLFDTestResultViaPolling = receivedNegativeLFDTestResultViaPolling;
+        this.receivedVoidLFDTestResultViaPolling = receivedVoidLFDTestResultViaPolling;
+        this.receivedPositiveLFDTestResultEnteredManually = receivedPositiveLFDTestResultEnteredManually;
+        this.receivedNegativeLFDTestResultEnteredManually = receivedNegativeLFDTestResultEnteredManually;
+        this.receivedVoidLFDTestResultEnteredManually = receivedVoidLFDTestResultEnteredManually;
+        this.hasTestedLFDPositiveBackgroundTick = hasTestedLFDPositiveBackgroundTick;
+        this.isIsolatingForTestedLFDPositiveBackgroundTick = isIsolatingForTestedLFDPositiveBackgroundTick;
+        this.totalExposureWindowsNotConsideredRisky = totalExposureWindowsNotConsideredRisky;
+        this.totalExposureWindowsConsideredRisky = totalExposureWindowsConsideredRisky;
     }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload) {
+        PostDistrictLADTuple PostalDistrictLADTuple = replacePostDistrictLA(clientPayload.metadata.postalDistrict, clientPayload.metadata.localAuthority);
         return new StoredAnalyticsSubmissionPayload(
-                mergeSmallPostcodes(clientPayload.metadata.postalDistrict),
-                clientPayload.metadata.deviceModel,
-                clientPayload.metadata.operatingSystemVersion,
-                clientPayload.metadata.latestApplicationVersion,
-                // clientPayload.metadata.localAuthority,
-                clientPayload.metrics.cumulativeDownloadBytes,
-                clientPayload.metrics.cumulativeUploadBytes,
-                clientPayload.metrics.cumulativeCellularDownloadBytes,
-                clientPayload.metrics.cumulativeCellularUploadBytes,
-                clientPayload.metrics.cumulativeWifiDownloadBytes,
-                clientPayload.metrics.cumulativeWifiUploadBytes,
-                clientPayload.metrics.checkedIn,
-                clientPayload.metrics.canceledCheckIn,
-                clientPayload.metrics.receivedVoidTestResult,
-                clientPayload.metrics.isIsolatingBackgroundTick,
-                clientPayload.metrics.hasHadRiskyContactBackgroundTick,
-                clientPayload.metrics.receivedPositiveTestResult,
-                clientPayload.metrics.receivedNegativeTestResult,
-                clientPayload.metrics.hasSelfDiagnosedPositiveBackgroundTick,
-                clientPayload.metrics.completedQuestionnaireAndStartedIsolation,
-                clientPayload.metrics.encounterDetectionPausedBackgroundTick,
-                clientPayload.metrics.completedQuestionnaireButDidNotStartIsolation,
-                clientPayload.metrics.totalBackgroundTasks,
-                clientPayload.metrics.runningNormallyBackgroundTick,
-                clientPayload.metrics.completedOnboarding,
-                clientPayload.analyticsWindow.startDate,
-                clientPayload.analyticsWindow.endDate,
-                clientPayload.includesMultipleApplicationVersions,
-                clientPayload.metrics.receivedVoidTestResultEnteredManually,
-                clientPayload.metrics.receivedPositiveTestResultEnteredManually,
-                clientPayload.metrics.receivedNegativeTestResultEnteredManually,
-                clientPayload.metrics.receivedVoidTestResultViaPolling,
-                clientPayload.metrics.receivedPositiveTestResultViaPolling,
-                clientPayload.metrics.receivedNegativeTestResultViaPolling,
-                clientPayload.metrics.hasSelfDiagnosedBackgroundTick,
-                clientPayload.metrics.hasTestedPositiveBackgroundTick,
-                clientPayload.metrics.isIsolatingForSelfDiagnosedBackgroundTick,
-                clientPayload.metrics.isIsolatingForTestedPositiveBackgroundTick,
-                clientPayload.metrics.isIsolatingForHadRiskyContactBackgroundTick,
-                clientPayload.metrics.receivedRiskyContactNotification,
-                clientPayload.metrics.startedIsolation,
-                clientPayload.metrics.receivedPositiveTestResultWhenIsolatingDueToRiskyContact);
+            PostalDistrictLADTuple.postDistrict,
+            clientPayload.metadata.deviceModel,
+            clientPayload.metadata.operatingSystemVersion,
+            clientPayload.metadata.latestApplicationVersion,
+            PostalDistrictLADTuple.localAuthorityId,
+            clientPayload.metrics.cumulativeDownloadBytes,
+            clientPayload.metrics.cumulativeUploadBytes,
+            clientPayload.metrics.cumulativeCellularDownloadBytes,
+            clientPayload.metrics.cumulativeCellularUploadBytes,
+            clientPayload.metrics.cumulativeWifiDownloadBytes,
+            clientPayload.metrics.cumulativeWifiUploadBytes,
+            clientPayload.metrics.checkedIn,
+            clientPayload.metrics.canceledCheckIn,
+            clientPayload.metrics.receivedVoidTestResult,
+            clientPayload.metrics.isIsolatingBackgroundTick,
+            clientPayload.metrics.hasHadRiskyContactBackgroundTick,
+            clientPayload.metrics.receivedPositiveTestResult,
+            clientPayload.metrics.receivedNegativeTestResult,
+            clientPayload.metrics.hasSelfDiagnosedPositiveBackgroundTick,
+            clientPayload.metrics.completedQuestionnaireAndStartedIsolation,
+            clientPayload.metrics.encounterDetectionPausedBackgroundTick,
+            clientPayload.metrics.completedQuestionnaireButDidNotStartIsolation,
+            clientPayload.metrics.totalBackgroundTasks,
+            clientPayload.metrics.runningNormallyBackgroundTick,
+            clientPayload.metrics.completedOnboarding,
+            clientPayload.analyticsWindow.startDate,
+            clientPayload.analyticsWindow.endDate,
+            clientPayload.includesMultipleApplicationVersions,
+            clientPayload.metrics.receivedVoidTestResultEnteredManually,
+            clientPayload.metrics.receivedPositiveTestResultEnteredManually,
+            clientPayload.metrics.receivedNegativeTestResultEnteredManually,
+            clientPayload.metrics.receivedVoidTestResultViaPolling,
+            clientPayload.metrics.receivedPositiveTestResultViaPolling,
+            clientPayload.metrics.receivedNegativeTestResultViaPolling,
+            clientPayload.metrics.hasSelfDiagnosedBackgroundTick,
+            clientPayload.metrics.hasTestedPositiveBackgroundTick,
+            clientPayload.metrics.isIsolatingForSelfDiagnosedBackgroundTick,
+            clientPayload.metrics.isIsolatingForTestedPositiveBackgroundTick,
+            clientPayload.metrics.isIsolatingForHadRiskyContactBackgroundTick,
+            clientPayload.metrics.receivedRiskyContactNotification,
+            clientPayload.metrics.startedIsolation,
+            clientPayload.metrics.receivedPositiveTestResultWhenIsolatingDueToRiskyContact,
+            clientPayload.metrics.receivedActiveIpcToken,
+            clientPayload.metrics.haveActiveIpcTokenBackgroundTick,
+            clientPayload.metrics.selectedIsolationPaymentsButton,
+            clientPayload.metrics.launchedIsolationPaymentsApplication,
+            clientPayload.metrics.receivedPositiveLFDTestResultViaPolling,
+            clientPayload.metrics.receivedNegativeLFDTestResultViaPolling,
+            clientPayload.metrics.receivedVoidLFDTestResultViaPolling,
+            clientPayload.metrics.receivedPositiveLFDTestResultEnteredManually,
+            clientPayload.metrics.receivedNegativeLFDTestResultEnteredManually,
+            clientPayload.metrics.receivedVoidLFDTestResultEnteredManually,
+            clientPayload.metrics.hasTestedLFDPositiveBackgroundTick,
+            clientPayload.metrics.isIsolatingForTestedLFDPositiveBackgroundTick,
+            clientPayload.metrics.totalExposureWindowsNotConsideredRisky,
+            clientPayload.metrics.totalExposureWindowsConsideredRisky
+        );
     }
 }

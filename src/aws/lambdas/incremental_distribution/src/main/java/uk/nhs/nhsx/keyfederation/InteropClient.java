@@ -1,6 +1,5 @@
 package uk.nhs.nhsx.keyfederation;
 
-import com.amazonaws.services.lambda.runtime.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Jackson;
@@ -16,8 +15,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,12 +31,13 @@ public class InteropClient {
     private final String authToken;
     private final JWS jws;
 
-    private final HttpClient client = HttpClient.newHttpClient();
+    private final HttpClient client;
 
     public InteropClient(String interopBaseUrl, String authToken, JWS jws) {
         this.interopBaseUrl = interopBaseUrl;
         this.authToken = authToken;
         this.jws = jws;
+        client = HttpClient.newHttpClient();
     }
 
     public Optional<DiagnosisKeysDownloadResponse> getExposureKeysBatch(LocalDate date, String batchTag) {

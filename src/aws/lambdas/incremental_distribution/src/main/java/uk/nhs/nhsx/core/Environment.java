@@ -1,18 +1,18 @@
 package uk.nhs.nhsx.core;
 
+import kotlin.jvm.functions.Function1;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.core.exceptions.Defect;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
 import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toList;
 
 public class Environment {
 
@@ -45,7 +45,7 @@ public class Environment {
 
     public static Environment fromName(String name, Environment.Access access) {
         return new Environment(
-            EnvironmentName.of(name), environmentTypeFrom(name), access
+                EnvironmentName.of(name), environmentTypeFrom(name), access
         );
     }
 
@@ -86,6 +86,10 @@ public class Environment {
         default <T> T required(EnvironmentKey<T> key) {
             return optional(key).orElseThrow(() -> new IllegalArgumentException(String.format("Environment variable %s is missing", key.name)));
         }
+
+        default <T> T defaulted(EnvironmentKey<T> key, Supplier<T> value) {
+            return optional(key).orElseGet(value);
+        }
     }
 
     public static class EnvironmentName extends ValueType<EnvironmentName> {
@@ -125,25 +129,18 @@ public class Environment {
         }
 
         public static <T> EnvironmentKey<List<T>> list(String name, Function<String, T> conversion) {
-            return define(name, s -> Arrays.stream(s.split(",")).filter(it -> !it.isBlank()).map(conversion).collect(Collectors.toList()));
+            return define(name, s -> Arrays.stream(s.split(","))
+                .filter(it -> !it.isBlank())
+                .map(conversion)
+                .collect(toList()));
         }
 
         public static EnvironmentKey<List<String>> strings(String name) {
             return list(name, identity());
         }
 
-        public static <T extends ValueType<T>> EnvironmentKey<T> value(String name, Class<T> clazz) {
-            return define(name, valueTypeConverterFor(clazz));
-        }
-
-        private static <T extends ValueType<T>> Function<String, T> valueTypeConverterFor(Class<T> clazz) {
-            return s -> {
-                try {
-                    return clazz.cast(clazz.getMethod("of", String.class).invoke(null, s));
-                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    throw new Defect("ValueType missing expected method String of(String)", e);
-                }
-            };
+        public static <T extends ValueType<T>> EnvironmentKey<T> value(String name, Function1<String, T> fn) {
+            return define(name, fn::invoke);
         }
     }
 }

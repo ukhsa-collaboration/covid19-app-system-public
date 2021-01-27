@@ -55,11 +55,11 @@ public class ENIntervalNumber {
      * @param timestampSeconds "the number of seconds that have elapsed since the Unix epoch, minus leap seconds; the Unix epoch is 00:00:00 UTC on 1 January 1970."
      */
     public static ENIntervalNumber enIntervalNumberFromTimestampInUnixEpochTime(long timestampSeconds) {
-        return new ENIntervalNumber((long) (timestampSeconds / (60 * 10)));
+        return new ENIntervalNumber(timestampSeconds / (60 * 10));
     }
 
     public long toTimestampInUnixEpochTime() {
-        return enIntervalNumber * 10 * 60l;
+        return enIntervalNumber * 10 * 60L;
     }
 
     public long toTimestampInMillis() {

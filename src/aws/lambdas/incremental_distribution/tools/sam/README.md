@@ -28,4 +28,3 @@ and a sample API request. This needs to be a JSON file that looks as if it is co
 our lambdas, an API Gateway Proxy Request. There is an example one called `sample-apigw-analytics-submission.json`
 
 ![Example Configuration](sam-setup-intellij.png)
-

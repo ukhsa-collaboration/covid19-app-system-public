@@ -1,20 +1,49 @@
 package uk.nhs.nhsx.virology.result;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import uk.nhs.nhsx.core.exceptions.ApiResponseException;
+import uk.nhs.nhsx.virology.TestKit;
+
 import java.util.Objects;
 
-import static uk.nhs.nhsx.virology.result.VirologyResultRequest.FIORANO_INDETERMINATE;
-import static uk.nhs.nhsx.virology.result.VirologyResultRequest.NPEX_VOID;
+import static uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422;
+import static uk.nhs.nhsx.virology.TestKit.LAB_RESULT;
+import static uk.nhs.nhsx.virology.TestKit.RAPID_RESULT;
+import static uk.nhs.nhsx.virology.result.VirologyResultRequest.*;
 
 public class VirologyTokenGenRequest {
 
     public final String testResult;
     public final String testEndDate;
-    
+    public TestKit testKit;
+
+    @JsonCreator
     public VirologyTokenGenRequest(String testResult, String testEndDate) {
-        if (FIORANO_INDETERMINATE.equals(testResult))
-            testResult = NPEX_VOID;
+        this(testResult, testEndDate, null);
+    }
+
+    public VirologyTokenGenRequest(String testResult, String testEndDate, TestKit testKit) {
+        this.testResult = FIORANO_INDETERMINATE.equals(testResult) ? NPEX_VOID : testResult;
         this.testEndDate = testEndDate;
-        this.testResult = testResult;
+        this.testKit = testKit;
+    }
+
+    public static VirologyTokenGenRequest v1TestKitValidator(VirologyTokenGenRequest request) {
+        final TestKit testKit = request.testKit;
+        boolean isValid = testKit == null;
+        if (!isValid)
+            throw new ApiResponseException(UNPROCESSABLE_ENTITY_422, "validation error: Invalid test type value");
+        return request;
+    }
+
+    public static VirologyTokenGenRequest v2TestKitValidator(VirologyTokenGenRequest request) {
+        final TestKit testKit = request.testKit;
+        final boolean pcr = LAB_RESULT.equals(testKit);
+        final boolean lfdPositive = RAPID_RESULT == testKit && NPEX_POSITIVE.contentEquals(request.testResult);
+        boolean isValid = pcr || lfdPositive;
+        if (!isValid)
+            throw new ApiResponseException(UNPROCESSABLE_ENTITY_422, "validation error: Invalid test type value");
+        return request;
     }
 
     @Override
@@ -22,13 +51,12 @@ public class VirologyTokenGenRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VirologyTokenGenRequest that = (VirologyTokenGenRequest) o;
-        return Objects.equals(testEndDate, that.testEndDate) &&
-            Objects.equals(testResult, that.testResult);
+        return testResult.equals(that.testResult) && testEndDate.equals(that.testEndDate) && Objects.equals(testKit, that.testKit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(testEndDate, testResult);
+        return Objects.hash(testResult, testEndDate, testKit);
     }
 
     @Override
@@ -36,6 +64,7 @@ public class VirologyTokenGenRequest {
         return "VirologyTokenGenRequest{" +
             "testResult='" + testResult + '\'' +
             ", testEndDate='" + testEndDate + '\'' +
+            ", testKit=" + testKit +
             '}';
     }
 }

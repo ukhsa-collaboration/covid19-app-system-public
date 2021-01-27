@@ -2,13 +2,12 @@ version: 0.2
 phases:
   build:
     commands:
-      - git log --oneline
       - rake lint:terraform
       - rake validate:static
       - rake validate:tier-metadata
       - rake plan:ci
 artifacts:
-  name: $(date +%Y%m%d%H%M%S)-$CODEBUILD_SOURCE_VERSION
+  name: $(date +%Y%m%d%H%M%S)-$(echo $CODEBUILD_SOURCE_VERSION | sed -e 's;/;-;g').zip
   files:
     - "out/**/*"
   discard-paths: no

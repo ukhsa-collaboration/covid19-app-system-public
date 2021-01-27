@@ -5,9 +5,11 @@ module "app-system-ci" {
     Owner       = "Zuhlke"
     Application = "TestTraceAppCI"
     Criticality = "Tier 3"
+    Revision    = var.ci-infra-revision
   }
   service_role = "arn:aws:iam::123456789012:role/dev-ApplicationDeploymentCodeBuild"
   account      = "dev"
   # Secrets manager entry containing the GitHub API token
-  github_credentials = "/ci/github"
+  github_credentials  = "/ci/github"
+  target_environments = var.target_environments
 }

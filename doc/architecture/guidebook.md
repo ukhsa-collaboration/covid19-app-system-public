@@ -305,7 +305,7 @@ For the Isolation advice please note, that no identifiable user state is stored 
 
 This is the flow that is taken when the app recommends to a user that they take a Virology test after having entered symptoms in the questionnaire.
 
-Wenn the user interacts with the symptoms questionnaire, the App has the latest symptoms configuration and a mapping from symptoms to advice which is then shown to the user. With the advice there is an option to order a test and a start of the isolation countdown. The countdown is not synchronised with the backend, so in case the device is wiped or lost, thre is no means to recover the isolation state for that user.
+When the user interacts with the symptoms questionnaire, the App has the latest symptoms configuration and a mapping from symptoms to advice which is then shown to the user. With the advice there is an option to order a test and a start of the isolation countdown. The countdown is not synchronised with the backend, so in case the device is wiped or lost, there is no means to recover the isolation state for that user.
 
 The testing process involves ordering and registering tests through the UK  Virology Testing website, which is external to the App system. Note the flow step for actual Virology Testing is a horribly over-simplified view of a complex process outside of our system.
 
@@ -325,9 +325,9 @@ This is the flow where the App user manually enters a test result code, received
 
 The notification service uses an App System API to upload the test result **and** get a test result verification token. The token is then send via SMS/Mail to the citizen together with the result so she can verify the test result with the app and submit diagnosis keys for contact exposure notifications.
 
-### Venue check in, matching identifed risk venues and alert user
+### Venue check in, matching identified risk venues and alert user
 
-The venue check-in flow shows how idenitfied risk venues are imported from external systems, matched in the App against visited venues and then may trigger a corresponding notification for the App user.  
+The venue check-in flow shows how identified risk venues are imported from external systems, matched in the App against visited venues and then may trigger a corresponding notification for the App user.  
 
 ![System flow: check in](diagrams/img/system-flow_check-in-2020-09-14.png "Figure: Venue check in, matching at risk venues and alert user")
 
@@ -413,7 +413,7 @@ Note, the port name in the system architecture is defined by ```API Group\API Na
 | - | - | - | - |
 | Diagnosis Key | Submission | [diagnosis-key-submission.md](./api-contracts/diagnosis-key-submission.md) | In event of positive diagnosis the app can upload anonymous exposure keys to the server |
 | Virology Testing | Submission | [virology-testing-api.md ](./api-contracts/virology-testing-api.md) | Allows clients to book a coronavirus test using a CTA Token that is passed into the test booking website. Clients can also periodically poll for test results using the CTA Token. New for v3.3 - clients can request a result for a test that was not booked via the app, they will input a CTA token into the app. |
-| Mobile Analytics  | Submission | [analytics-submission.md](./api-contracts/analytics-submission.md) | Allows clients to submit analytics data daily. Not testable from mobile application. |
+| Mobile Analytics  | Submission | [analytics-submission-mobile.md](./api-contracts/analytics-submission-mobile.md) | Allows clients to submit analytics data daily. Not testable from mobile application. |
 | Mobile Analytics Events | Submission | [mobile-analytics-submission.md](./api-contracts/mobile-analytics-submission.md) | Allows clients to send anonymous epidemiological data to the backend. |
 | Isolation Payment | Submission | [isolation-payment-mobile.md](./api-contracts/isolation-payment-mobile.md) | Allows clients to request isolation payment using a IPC Token that is passed to the isolation payment website. |
 
@@ -478,7 +478,8 @@ After receiving the token the mobile client polls the backend until it receives 
 | API Name | API Group | API Contract | User/Client impact |
 | - | - | - | - |
 | Federated Server Connector | Connector | [diagnosis-key-federation.md](./api-contracts/diagnosis-key-federation.md) | Up/Download federated diagnosis keys. |
-| AAE Exporter | Exporter | [mobile-analytics-events-aae.md](./api-contracts/mobile-analytics-events-aae.md) | Export analytics data. |
+| AAE Exporter (Analytics) | Exporter | [analytics-submission-aae-quicksight.md](./api-contracts/analytics-submission-aae-quicksight.md) | Export analytics data. |
+| AAE Exporter (Epidemiological) | Exporter | [mobile-analytics-events-aae.md](./api-contracts/mobile-analytics-events-aae.md) | Export epidemiological data. |
 
 ## Tech Stacks and Repositories
 

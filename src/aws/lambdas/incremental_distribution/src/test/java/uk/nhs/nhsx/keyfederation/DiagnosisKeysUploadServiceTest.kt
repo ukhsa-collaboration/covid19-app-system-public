@@ -23,6 +23,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mockito
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemObjectMapper
+import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest
@@ -53,7 +54,7 @@ class DiagnosisKeysUploadServiceTest {
     private val context = Mockito.mock(Context::class.java)
 
     @Test
-    fun testPreUploadTransformations() {
+    fun testUpdateRiskLevelIfDefaultEnabled() {
         val service = DiagnosisKeysUploadService(
             null,
             null,
@@ -64,12 +65,12 @@ class DiagnosisKeysUploadServiceTest {
             100,
             null
         )
-        val transformed = service.preUploadTransformations(ExposureUpload("key",
+        val transformed = service.updateRiskLevelIfDefaultEnabled(ExposureUpload("key",
             0,
             4,
             144,
             null))
-        assertEquals(2, transformed.transmissionRiskLevel);
+        assertEquals(2, transformed.transmissionRiskLevel)
     }
 
     @Test
@@ -139,8 +140,10 @@ class DiagnosisKeysUploadServiceTest {
                             key = "bar"
                             lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                         }
-                    ))
-            ) { true },
+                    )),
+                { true },
+                BucketName.of("SUBMISSION_BUCKET")
+            ),
             InMemoryBatchTagService(),
             "GB-EAW",
             false, -1,
@@ -194,7 +197,8 @@ class DiagnosisKeysUploadServiceTest {
                     key = "bar"
                     lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                 }
-            ))) { objectKey -> !objectKey.startsWith("prefix") },
+            )), { objectKey -> !objectKey.value.startsWith("prefix") }, BucketName.of("SUBMISSION_BUCKET")
+            ),
             InMemoryBatchTagService(),
             "GB-EAW",
             false, -1,
@@ -293,8 +297,10 @@ class DiagnosisKeysUploadServiceTest {
                             key = "def"
                             lastModified = lastModifiedDateBatchTwo
                         }
-                    ))
-            ) { true },
+                    )),
+                { true },
+                BucketName.of("SUBMISSION_BUCKET")
+            ),
             InMemoryBatchTagService(),
             "GB-EAW",
             false, -1,
@@ -307,7 +313,7 @@ class DiagnosisKeysUploadServiceTest {
 
     }
 
-  
+
     fun `continue uploading the keys if we have enough time to execute the next batch`() {
         wireMockRule.stubFor(post("/diagnosiskeys/upload")
             .willReturn(
@@ -347,8 +353,10 @@ class DiagnosisKeysUploadServiceTest {
                             key = "def"
                             lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
                         }
-                    ))
-            ) { true },
+                    )),
+                { true },
+                BucketName.of("SUBMISSION_BUCKET")
+            ),
             InMemoryBatchTagService(),
             "GB-EAW",
             false, -1,

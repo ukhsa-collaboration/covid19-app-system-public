@@ -4,10 +4,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Jackson;
-import uk.nhs.nhsx.core.aws.s3.BucketName;
-import uk.nhs.nhsx.core.aws.s3.ObjectKey;
-import uk.nhs.nhsx.core.aws.s3.S3Storage;
-import uk.nhs.nhsx.core.aws.s3.Sources;
+import uk.nhs.nhsx.core.aws.s3.*;
 import uk.nhs.nhsx.diagnosiskeyssubmission.DiagnosisKeysSubmissionService;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
@@ -15,14 +12,12 @@ import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse;
 import uk.nhs.nhsx.keyfederation.download.ExposureKeysPayload;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Supplier;
 
-import static java.time.ZoneOffset.UTC;
 import static java.util.stream.Collectors.toList;
 
 public class FederatedKeyUploader {
@@ -173,6 +168,6 @@ public class FederatedKeyUploader {
             federatedKeySourcePrefix + "/" + exposureKeysPayload.origin + "/" +
             dateStringProvider.get() + "/" + exposureKeysPayload.batchTag + ".json"
         );
-        s3Storage.upload(S3Storage.Locator.of(bucketName, objectKey), ContentType.APPLICATION_JSON, Sources.byteSourceFor(Jackson.toJson(payload)));
+        s3Storage.upload(Locator.of(bucketName, objectKey), ContentType.APPLICATION_JSON, Sources.byteSourceFor(Jackson.toJson(payload)));
     }
 }

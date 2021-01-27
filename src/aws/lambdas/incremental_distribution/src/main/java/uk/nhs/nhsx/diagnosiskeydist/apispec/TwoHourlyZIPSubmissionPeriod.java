@@ -2,122 +2,120 @@ package uk.nhs.nhsx.diagnosiskeydist.apispec;
 
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TimeZone;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
-public class TwoHourlyZIPSubmissionPeriod extends ZIPSubmissionPeriod {
-	private static final TimeZone TIME_ZONE_UTC = TimeZone.getTimeZone("UTC");
-	private static final String TWO_HOURLY_PATH_PREFIX = "distribution/two-hourly/";
-	private static final int TOTAL_TWO_HOURLY_ZIPS = ENIntervalNumber.MAX_DIAGNOSIS_KEY_AGE_DAYS * 12;
+import static com.google.common.base.Preconditions.checkState;
+import static java.lang.String.format;
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoField.*;
+import static java.time.temporal.ChronoUnit.HOURS;
 
-	public TwoHourlyZIPSubmissionPeriod(Date twoHourlyDate) {
-		super(assertValid(twoHourlyDate));
-	}
+public class TwoHourlyZIPSubmissionPeriod implements ZIPSubmissionPeriod {
+    private static final String TWO_HOURLY_PATH_PREFIX = "distribution/two-hourly/";
+    private static final int TOTAL_TWO_HOURLY_ZIPS = ENIntervalNumber.MAX_DIAGNOSIS_KEY_AGE_DAYS * 12;
+    private static final DateTimeFormatter HOURLY_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHH").withZone(UTC);
 
-	private static Date assertValid(Date twoHourlyDate) {
-		Calendar cal = utcCalendar(twoHourlyDate);
+    private final Instant periodEndDateExclusive;
 
-		if (cal.get(Calendar.MINUTE) != 0) throw new IllegalStateException();
-		if (cal.get(Calendar.SECOND) != 0) throw new IllegalStateException();
-		if (cal.get(Calendar.MILLISECOND) != 0) throw new IllegalStateException();
-		if (cal.get(Calendar.HOUR_OF_DAY) % 2 == 1) throw new IllegalStateException();
+    public TwoHourlyZIPSubmissionPeriod(Instant dailyPeriodEndDate) {
+        periodEndDateExclusive = requireValid(dailyPeriodEndDate);
+    }
 
-		return twoHourlyDate;
-	}
+    private static Instant requireValid(Instant endDate) {
+        var date = endDate.atZone(UTC);
+        checkState(date.get(HOUR_OF_DAY) % 2 == 0);
+        checkState(date.get(MINUTE_OF_HOUR) == 0);
+        checkState(date.get(SECOND_OF_MINUTE) == 0);
+        checkState(date.get(NANO_OF_SECOND) == 0);
+        return endDate;
+    }
 
-	public String zipPath() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(TWO_HOURLY_PATH_PREFIX);
-		sb.append(twoHourlyKey());
-		sb.append(".zip");
+    /**
+     * @return end date (exclusive) of the two-hourly period comprising the Diagnosis Keys posted to the Submission Service at <code>diagnosisKeySubmission</code>
+     */
+    public static TwoHourlyZIPSubmissionPeriod periodForSubmissionDate(Instant diagnosisKeySubmission) {
+        var hour = diagnosisKeySubmission
+            .truncatedTo(HOURS)
+            .atZone(UTC)
+            .getHour();
 
-		return sb.toString();
-	}
+        return new TwoHourlyZIPSubmissionPeriod(
+            diagnosisKeySubmission
+                .truncatedTo(HOURS)
+                .atZone(UTC)
+                .withHour(hour - (hour % 2))
+                .plus(Duration.ofHours(2))
+                .toInstant()
+        );
+    }
 
-	private String twoHourlyKey() {
-		return hourlyFormat().format(periodEndDateExclusive);
-	}
+    @Override
+    public String zipPath() {
+        return TWO_HOURLY_PATH_PREFIX + twoHourlyKey() + ".zip";
+    }
 
-	/**
-	 * @return true, if <code>diagnosisKeySubmissionDate</code> is covered by the two-hourly period represented by (<code>twoHourlyDate</code> shifted by <code>twoHourlyDateOffsetMinutes</code>)
-	 */
-	public boolean isCoveringSubmissionDate(Date diagnosisKeySubmissionDate, int twoHourlyDateOffsetMinutes) {
-		Calendar cal = utcCalendar(periodEndDateExclusive);
-		cal.add(Calendar.MINUTE, twoHourlyDateOffsetMinutes);
+    private String twoHourlyKey() {
+        return HOURLY_FORMAT.format(periodEndDateExclusive);
+    }
 
-		Date toExclusive = cal.getTime();
+    /**
+     * @return true, if <code>diagnosisKeySubmissionDate</code> is covered by the two-hourly period represented by (<code>twoHourlyDate</code> shifted by <code>twoHourlyDateOffsetMinutes</code>)
+     */
+    @Override
+    public boolean isCoveringSubmissionDate(Instant diagnosisKeySubmission, Duration offset) {
+        var toExclusive = periodEndDateExclusive
+            .plus(offset);
 
-		cal.add(Calendar.HOUR_OF_DAY, -2);
-		Date fromInclusive = cal.getTime();
+        var fromInclusive = toExclusive
+            .minus(Duration.ofHours(2));
 
-		return diagnosisKeySubmissionDate.getTime() >= fromInclusive.getTime() && diagnosisKeySubmissionDate.getTime() < toExclusive.getTime();
-	}
+        return (diagnosisKeySubmission.isAfter(fromInclusive) || diagnosisKeySubmission.equals(fromInclusive)) && diagnosisKeySubmission.isBefore(toExclusive);
+    }
 
-	/**
-	 * @return list of valid <code>TwoHourlyPeriod</code> ending with <code>this</code> <code>TwoHourlyPeriod</code>
-	 */
-	public List<TwoHourlyZIPSubmissionPeriod> allPeriodsToGenerate() {
-		List<TwoHourlyZIPSubmissionPeriod> twoHourlyDates = new LinkedList<>();
+    /**
+     * @return list of valid <code>TwoHourlyPeriod</code> ending with <code>this</code> <code>TwoHourlyPeriod</code>
+     */
+    @Override
+    public List<TwoHourlyZIPSubmissionPeriod> allPeriodsToGenerate() {
+        var periods = new ArrayList<TwoHourlyZIPSubmissionPeriod>();
+        var currentInstant = periodEndDateExclusive;
+        for (var i = 0; i < TOTAL_TWO_HOURLY_ZIPS; i++) {
+            periods.add(new TwoHourlyZIPSubmissionPeriod(currentInstant));
+            currentInstant = currentInstant.minus(Duration.ofHours(2));
+        }
+        return periods;
+    }
 
-		Calendar cal = utcCalendar(periodEndDateExclusive);
-		for (int i = 0; i < TOTAL_TWO_HOURLY_ZIPS; i++) {
-			twoHourlyDates.add(new TwoHourlyZIPSubmissionPeriod(cal.getTime()));
+    @Override
+    public Instant getStartInclusive() {
+        return periodEndDateExclusive.minus(Duration.ofHours(2));
+    }
 
-			cal.add(Calendar.HOUR_OF_DAY, -2);
-		}
+    @Override
+    public Instant getEndExclusive() {
+        return periodEndDateExclusive;
+    }
 
-		return twoHourlyDates;
-	}
+    @Override
+    public String toString() {
+        return format("2 hours: from %s (inclusive) to %s (exclusive)",
+            HOURLY_FORMAT.format(getStartInclusive()),
+            HOURLY_FORMAT.format(getEndExclusive()));
+    }
 
-	/**
-	 * @return end date (exclusive) of the two-hourly period comprising the Diagnosis Keys posted to the Submission Service at <code>diagnosisKeySubmissionDate</code>
-	 */
-	public static TwoHourlyZIPSubmissionPeriod periodForSubmissionDate(Date diagnosisKeySubmissionDate) {
-		Calendar cal = utcCalendar(diagnosisKeySubmissionDate);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TwoHourlyZIPSubmissionPeriod that = (TwoHourlyZIPSubmissionPeriod) o;
+        return Objects.equals(periodEndDateExclusive, that.periodEndDateExclusive);
+    }
 
-		int hour = cal.get(Calendar.HOUR_OF_DAY);
-		cal.set(Calendar.HOUR_OF_DAY, hour - hour % 2);
-
-		cal.add(Calendar.HOUR_OF_DAY, 2);
-
-		return new TwoHourlyZIPSubmissionPeriod(cal.getTime());
-	}
-
-	private static SimpleDateFormat hourlyFormat() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHH");
-		simpleDateFormat.setTimeZone(TIME_ZONE_UTC);
-
-		return simpleDateFormat;
-	}
-
-	private static Calendar utcCalendar(Date dailyDate) {
-		Calendar cal = Calendar.getInstance(TIME_ZONE_UTC);
-		cal.setTime(dailyDate);
-
-		return cal;
-	}
-
-
-	public Date getEndExclusive() {
-		return periodEndDateExclusive;
-	}
-
-	public Date getStartInclusive() {
-		Calendar cal = utcCalendar(periodEndDateExclusive);
-		cal.add(Calendar.HOUR_OF_DAY, -2);
-
-		return cal.getTime();
-	}
-
-	@Override
-	public String toString() {
-		return "2 hours: from " + hourlyFormat().format(getStartInclusive()) + " (inclusive) to " + hourlyFormat().format(getEndExclusive()) + " (exclusive)";
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(periodEndDateExclusive);
+    }
 }

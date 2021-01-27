@@ -1,15 +1,5 @@
 package uk.nhs.nhsx.isolationpayment.model;
 
-import uk.nhs.nhsx.core.DateFormatValidator;
-import uk.nhs.nhsx.core.SystemClock;
-import uk.nhs.nhsx.isolationpayment.TokenGenerator;
-
-import java.time.Instant;
-import java.time.Period;
-import java.time.chrono.ChronoZonedDateTime;
-import java.util.Objects;
-import java.util.function.Supplier;
-
 public class IsolationToken {
     public String tokenId;
     public String tokenStatus;
@@ -23,8 +13,15 @@ public class IsolationToken {
 
     public IsolationToken() {}
 
-    public IsolationToken(String tokenId, String tokenStatus, Long riskyEncounterDate, Long isolationPeriodEndDate, Long createdTimestamp,
-                   Long updatedTimestamp, Long validatedTimestamp, Long consumedTimestamp, Long expireAt)
+    public IsolationToken(String tokenId,
+                          String tokenStatus,
+                          Long riskyEncounterDate,
+                          Long isolationPeriodEndDate,
+                          Long createdTimestamp,
+                          Long updatedTimestamp,
+                          Long validatedTimestamp,
+                          Long consumedTimestamp,
+                          Long expireAt)
     {
         this.tokenId = tokenId;
         this.tokenStatus = tokenStatus;

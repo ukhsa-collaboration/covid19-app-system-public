@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.isolationpayment
 
+import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException
 import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -93,6 +94,16 @@ class IsolationPaymentMobileServiceTest {
     fun `does not update tokens that are in valid state`() {
         val token = IsolationToken("token-id", TokenStateInternal.INT_UPDATED.value, 0, 5000, 1000, 2000, 3000, 4000, 0)
         every { persistence.getIsolationToken(any()) } returns Optional.of(token)
+
+        val request = TokenUpdateRequest("token-id", "1970-01-01T00:00:00Z", "1970-01-01T00:00:01Z")
+        val response = service.handleIsolationPaymentUpdate(request)
+        assertThat(response.websiteUrlWithQuery).isEqualTo("https://test/path?ipcToken=token-id")
+    }
+
+    @Test
+    fun `update token does not throw exception on conditional check failure`() {
+        every { persistence.updateIsolationToken(any(), TokenStateInternal.INT_CREATED) } throws ConditionalCheckFailedException("")
+        every { persistence.getIsolationToken(any()) } returns Optional.of(IsolationToken())
 
         val request = TokenUpdateRequest("token-id", "1970-01-01T00:00:00Z", "1970-01-01T00:00:01Z")
         val response = service.handleIsolationPaymentUpdate(request)

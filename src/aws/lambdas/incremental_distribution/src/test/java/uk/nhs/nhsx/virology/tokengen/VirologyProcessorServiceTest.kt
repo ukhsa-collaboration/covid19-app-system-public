@@ -8,6 +8,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.virology.TestKit
 import uk.nhs.nhsx.virology.VirologyService
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
@@ -28,9 +29,9 @@ class VirologyProcessorServiceTest {
 
     private val csvSlot = slot<CtaTokensCsv>()
     private val zipSlot = slot<CtaTokensZip>()
-    private val tokenGenRequest = VirologyTokenGenRequest("POSITIVE", "2020-10-06T00:00:00Z")
-    private val multiTokenEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z", 3)
-    private val singleTokenEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z", 1)
+    private val tokenGenRequest = VirologyTokenGenRequest("POSITIVE", "2020-10-06T00:00:00Z", TestKit.LAB_RESULT)
+    private val multiTokenEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z", "LAB_RESULT",3)
+    private val singleTokenEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z", "LAB_RESULT",1)
 
     @Test
     fun `generates tokens`() {

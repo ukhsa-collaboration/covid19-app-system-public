@@ -27,7 +27,7 @@ namespace :aae do
           prefix = format == "json" ? "events-": ""
           src = "#{env_identifier}-aae-mobile-analytics-#{prefix + format}-export-dlq"
           dst = "#{env_identifier}-aae-mobile-analytics-#{prefix + format}-export"
-          move_and_delete_sqs_event(src, dst)
+          move_and_delete_all_sqs_events(src, dst)
         end
 
       end

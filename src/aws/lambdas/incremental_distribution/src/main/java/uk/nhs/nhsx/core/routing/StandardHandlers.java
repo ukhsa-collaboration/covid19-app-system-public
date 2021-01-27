@@ -14,13 +14,14 @@ import java.util.Base64;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class StandardHandlers {
 
     private static final Logger logger = LogManager.getLogger(StandardHandlers.class);
-    
+
     private static final Environment.EnvironmentKey<String> MAINTENANCE_MODE = Environment.EnvironmentKey.string("MAINTENANCE_MODE");
     private static final Environment.EnvironmentKey<String> CUSTOM_OAI = Environment.EnvironmentKey.string("custom_oai");
-    
 
     public static Routing.Handler withoutSignedResponses(Environment environment, Authenticator authenticator, Routing.Handler delegate) {
         return defaultStack(environment, authenticator, catchExceptions(delegate));
@@ -32,7 +33,7 @@ public class StandardHandlers {
 
     private static Routing.Handler defaultStack(Environment environment, Authenticator authenticator, Routing.Handler handler) {
         return loggingIncomingRequests(
-                filteringWhileMaintenanceModeEnabled(environment,
+            filteringWhileMaintenanceModeEnabled(environment,
                 requiringAuthorizationHeader(
                     requiringCustomAccessIdentity(environment,
                         authorisedBy(authenticator,
@@ -46,11 +47,11 @@ public class StandardHandlers {
 
     public static Routing.Handler loggingIncomingRequests(Routing.Handler delegate) {
         return r -> {
-            String keyName =  apiKeyNameFrom(r.getHeaders().get("authorization")).orElse("none");
+            String keyName = apiKeyNameFrom(r.getHeaders().get("authorization")).orElse("none");
             String requestId = Optional.ofNullable(r.getHeaders().get("Request-Id")).orElse("none");
             String userAgent = Optional.ofNullable(r.getHeaders().get("User-Agent")).orElse("none");
             logger.info("Received http request: method={}, path={},requestId={},apiKeyName={},userAgent={}",
-                r.getHttpMethod(), r.getPath(),requestId,keyName, userAgent);
+                r.getHttpMethod(), r.getPath(), requestId, keyName, userAgent);
             return delegate.handle(r);
         };
     }
@@ -58,8 +59,7 @@ public class StandardHandlers {
     public static Routing.Handler filteringWhileMaintenanceModeEnabled(Environment environment, Routing.Handler delegate) {
         if (Boolean.parseBoolean(environment.access.required(MAINTENANCE_MODE))) {
             return r -> HttpResponses.serviceUnavailable();
-        }
-        else {
+        } else {
             return delegate;
         }
     }
@@ -140,14 +140,14 @@ public class StandardHandlers {
         };
     }
 
-    public static Optional<String> apiKeyNameFrom(String authorizationHeader){
+    public static Optional<String> apiKeyNameFrom(String authorizationHeader) {
         return Optional.ofNullable(authorizationHeader)
             .filter(it -> it.startsWith("Bearer "))
             .map(it -> it.replaceFirst("Bearer ", ""))
             .flatMap(it -> {
                 try {
                     byte[] decode = Base64.getDecoder().decode(it);
-                    return Optional.of(new String(decode));
+                    return Optional.of(new String(decode, UTF_8));
                 } catch (IllegalArgumentException e) {
                     return Optional.empty();
                 }

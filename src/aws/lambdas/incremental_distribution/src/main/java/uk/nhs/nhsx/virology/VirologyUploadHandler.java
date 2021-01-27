@@ -18,8 +18,9 @@ import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService;
 import uk.nhs.nhsx.virology.result.VirologyResultRequest;
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest;
 
-import static uk.nhs.nhsx.core.Jackson.deserializeMaybe;
+import static uk.nhs.nhsx.core.Jackson.deserializeMaybeValidating;
 import static uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication;
+import static uk.nhs.nhsx.core.routing.Routing.Method.POST;
 import static uk.nhs.nhsx.core.routing.Routing.*;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses;
 
@@ -29,6 +30,7 @@ public class VirologyUploadHandler extends RoutingHandler {
 
     private final Routing.Handler handler;
 
+    @SuppressWarnings("unused")
     public VirologyUploadHandler() {
         this(Environment.fromSystem(), awsAuthentication(ApiName.TestResultUpload), virologyService());
     }
@@ -38,45 +40,88 @@ public class VirologyUploadHandler extends RoutingHandler {
             environment,
             authenticator,
             routes(
-                path(Method.POST, "/upload/virology-test/npex-result", (r) ->
-                    handleTestResult(VirologyResultSource.Npex, virologyService, r)
+                listOf(
+                    path(POST, "/upload/virology-test/health", r ->
+                        HttpResponses.ok()
+                    ),
+                    path(POST, "/upload/virology-test/npex-result", r ->
+                        handleV1TestResult(VirologyResultSource.Npex, virologyService, r)
+                    ),
+                    path(POST, "/upload/virology-test/fiorano-result", r ->
+                        handleV1TestResult(VirologyResultSource.Fiorano, virologyService, r)
+                    ),
+                    path(POST, "/upload/virology-test/eng-result-tokengen", r ->
+                        handleV1TokenGen(VirologyTokenExchangeSource.Eng, virologyService, r)
+                    ),
+                    path(POST, "/upload/virology-test/wls-result-tokengen", r ->
+                        handleV1TokenGen(VirologyTokenExchangeSource.Wls, virologyService, r)
+                    )
                 ),
-                path(Method.POST, "/upload/virology-test/fiorano-result", (r) ->
-                    handleTestResult(VirologyResultSource.Fiorano, virologyService, r)
-                ),
-                path(Method.POST, "/upload/virology-test/eng-result-tokengen", (r) ->
-                    handleTokenGen(VirologyTokenExchangeSource.Eng, virologyService, r)
-                ),
-                path(Method.POST, "/upload/virology-test/wls-result-tokengen", (r) ->
-                    handleTokenGen(VirologyTokenExchangeSource.Wls, virologyService, r)
-                ),
-                path(Method.POST, "/upload/virology-test/lfd-result-tokengen", (r) ->
-                    handleTokenGen(VirologyTokenExchangeSource.Lfd, virologyService, r)
-                ),
-                path(Method.POST, "/upload/virology-test/health", (r) ->
-                    HttpResponses.ok()
+
+                includeIf(VirologyV2ApiFeatureFlag.from(environment).isEnabled(),
+                    path(POST, "/upload/virology-test/v2/npex-result", r ->
+                        handleV2TestResult(VirologyResultSource.Npex, virologyService, r)
+                    ),
+                    path(POST, "/upload/virology-test/v2/fiorano-result", r ->
+                        handleV2TestResult(VirologyResultSource.Fiorano, virologyService, r)
+                    ),
+                    path(POST, "/upload/virology-test/v2/eng-result-tokengen", r ->
+                        handleV2TokenGen(VirologyTokenExchangeSource.Eng, virologyService, r)
+                    ),
+                    path(POST, "/upload/virology-test/v2/wls-result-tokengen", r ->
+                        handleV2TokenGen(VirologyTokenExchangeSource.Wls, virologyService, r)
+                    )
                 )
             )
         );
     }
 
-    private static APIGatewayProxyResponseEvent handleTestResult(VirologyResultSource source,
-                                                                 VirologyService virologyService,
-                                                                 APIGatewayProxyRequestEvent request) {
-        return deserializeMaybe(request.getBody(), VirologyResultRequest.class)
+    private static APIGatewayProxyResponseEvent handleV1TestResult(VirologyResultSource source,
+                                                                   VirologyService virologyService,
+                                                                   APIGatewayProxyRequestEvent request) {
+        return deserializeMaybeValidating(request.getBody(), VirologyResultRequest.class, VirologyResultRequest::v1TestKitValidator)
             .map(it -> {
-                logger.info("{} sent virology ctaToken: {}, result: {}", source.name(), it.ctaToken, it.testResult);
+                it.testKit = TestKit.LAB_RESULT;
+                logger.info("{} sent virology ctaToken: {}, result: {}, testKit: {}",
+                    source.name(), it.ctaToken, it.testResult, it.testKit);
                 return virologyService.acceptTestResult(it).toHttpResponse();
             })
             .orElseGet(HttpResponses::unprocessableEntity);
     }
 
-    private static APIGatewayProxyResponseEvent handleTokenGen(VirologyTokenExchangeSource source,
-                                                               VirologyService virologyService,
-                                                               APIGatewayProxyRequestEvent request) {
-        return deserializeMaybe(request.getBody(), VirologyTokenGenRequest.class)
+    private APIGatewayProxyResponseEvent handleV2TestResult(VirologyResultSource source,
+                                                            VirologyService virologyService,
+                                                            APIGatewayProxyRequestEvent request) {
+        return deserializeMaybeValidating(request.getBody(), VirologyResultRequest.class, VirologyResultRequest::v2TestKitValidator)
             .map(it -> {
-                logger.info("{} sent virology token exchange result: {}", source.name(), it.testResult);
+                logger.info("{} sent virology ctaToken: {}, result: {}, testKit: {}",
+                    source.name(), it.ctaToken, it.testResult, it.testKit);
+                return virologyService.acceptTestResult(it).toHttpResponse();
+            })
+            .orElseGet(HttpResponses::unprocessableEntity);
+    }
+
+    private static APIGatewayProxyResponseEvent handleV1TokenGen(VirologyTokenExchangeSource source,
+                                                                 VirologyService virologyService,
+                                                                 APIGatewayProxyRequestEvent request) {
+        return deserializeMaybeValidating(request.getBody(), VirologyTokenGenRequest.class, VirologyTokenGenRequest::v1TestKitValidator)
+            .map(it -> {
+                it.testKit = TestKit.LAB_RESULT;
+                logger.info("{} sent virology token exchange result: {}, testKit: {}",
+                    source.name(), it.testResult, it.testKit);
+                var response = virologyService.acceptTestResultGeneratingTokens(it);
+                return HttpResponses.ok(Jackson.toJson(response));
+            })
+            .orElse(HttpResponses.unprocessableEntity());
+    }
+
+    private APIGatewayProxyResponseEvent handleV2TokenGen(VirologyTokenExchangeSource source,
+                                                          VirologyService virologyService,
+                                                          APIGatewayProxyRequestEvent request) {
+        return deserializeMaybeValidating(request.getBody(), VirologyTokenGenRequest.class, VirologyTokenGenRequest::v2TestKitValidator)
+            .map(it -> {
+                logger.info("{} sent virology token exchange result: {}, testKit: {}",
+                    source.name(), it.testResult, it.testKit);
                 var response = virologyService.acceptTestResultGeneratingTokens(it);
                 return HttpResponses.ok(Jackson.toJson(response));
             })
@@ -109,11 +154,11 @@ public class VirologyUploadHandler extends RoutingHandler {
         return handler;
     }
 
-    private enum VirologyResultSource {
+    public enum VirologyResultSource {
         Npex, Fiorano
     }
 
     public enum VirologyTokenExchangeSource {
-        Eng, Wls, Lfd
+        Eng, Wls
     }
 }

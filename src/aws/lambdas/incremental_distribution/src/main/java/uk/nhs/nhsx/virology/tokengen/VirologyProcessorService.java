@@ -3,6 +3,7 @@ package uk.nhs.nhsx.virology.tokengen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.virology.CtaToken;
+import uk.nhs.nhsx.virology.TestKit;
 import uk.nhs.nhsx.virology.VirologyService;
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest;
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse;
@@ -76,7 +77,7 @@ public class VirologyProcessorService {
     }
 
     private List<CtaToken> generateTokens(CtaProcessorRequest event) {
-        var request = new VirologyTokenGenRequest(event.testResult, event.testEndDate);
+        var request = new VirologyTokenGenRequest(event.testResult, event.testEndDate, TestKit.valueOf(event.testKit));
         var futures = createTokenGenFutures(event, request);
         return collectResultsFrom(futures);
     }

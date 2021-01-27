@@ -1,8 +1,9 @@
 plugins {
     id "java"
-    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+    id "org.jetbrains.kotlin.jvm" version "1.4.21"
     id "com.adarshr.test-logger" version "2.1.1"
     id "jacoco"
+    id "com.github.spotbugs" version "4.6.0"
 }
 
 group = 'com.demo'
@@ -12,7 +13,7 @@ configurations.testImplementation.canBeResolved = true
 
 repositories {
     mavenCentral()
-    maven{
+    maven {
         name "DynamoDB Local Release Repo"
         url "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"
     }
@@ -21,9 +22,9 @@ repositories {
 ext {
     aws_sdk_version = "1.11.826"
     aws_xray_version = "2.4.0"
-    guava_version = "29.0-jre"
-    http4k_version = "3.277.0"
-    jackson_version = "2.11.1"
+    guava_version = "30.1-jre"
+    http4k_version = "3.285.2"
+    jackson_version = "2.12.0"
     log4j_version = "2.13.3"
     junit_version = "5.7.0"
 }
@@ -52,6 +53,21 @@ testlogger {
 jacocoTestReport {
     dependsOn test
 }
+
+spotbugsMain {
+    ignoreFailures = false
+    showStackTraces = false
+    excludeFilter = file("spotbugs-exclude.xml")
+    reports {
+        html {
+            enabled = true
+            destination = file("$projectDir/../../../../out/reports/spotbugs-incremental-distribution.html")
+            stylesheet = 'fancy-hist.xsl'
+        }
+    }
+}
+
+spotbugsTest.enabled = false // do not run spotbugs against the test-suite for now
 
 task copyNativeDependencies(type: Copy) {
     from(configurations.testImplementation) {
@@ -140,63 +156,79 @@ task lambdaZip {
 
 
 dependencies {
-    implementation group: "com.amazonaws", name: "aws-lambda-java-core", version: "1.2.1"
-    implementation group: "com.amazonaws", name: "aws-lambda-java-log4j2", version: "1.2.0"
-    implementation group: "com.amazonaws", name: "aws-lambda-java-events", version: "2.2.9"
+    implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
+    implementation "com.amazonaws:aws-lambda-java-log4j2:1.2.0"
+    implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
 
-    implementation group: "com.amazonaws", name: "aws-java-sdk-kms", version: aws_sdk_version
-    implementation group: "com.amazonaws", name: "aws-java-sdk-cloudfront", version: aws_sdk_version
-    implementation group: "com.amazonaws", name: "aws-java-sdk-secretsmanager", version: aws_sdk_version
-    implementation group: "com.amazonaws", name: "aws-java-sdk-s3", version: aws_sdk_version
-    implementation group: "com.amazonaws", name: "aws-java-sdk-ssm", version: aws_sdk_version
-    implementation group: "com.amazonaws", name: "aws-java-sdk-dynamodb", version: aws_sdk_version
-    implementation group: "com.amazonaws", name: "aws-java-sdk-athena", version: aws_sdk_version
-    implementation group: "com.amazonaws", name: "aws-java-sdk-kinesis", version: aws_sdk_version
+    implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
+    implementation "com.amazonaws:aws-java-sdk-kms"
+    implementation "com.amazonaws:aws-java-sdk-cloudfront"
+    implementation "com.amazonaws:aws-java-sdk-secretsmanager"
+    implementation "com.amazonaws:aws-java-sdk-s3"
+    implementation "com.amazonaws:aws-java-sdk-ssm"
+    implementation "com.amazonaws:aws-java-sdk-dynamodb"
+    implementation "com.amazonaws:aws-java-sdk-kinesis"
 
-    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-core", version: aws_xray_version
-    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-aws-sdk-core", version: aws_xray_version
-    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-aws-sdk", version: aws_xray_version
-    implementation group: "com.amazonaws", name: "aws-xray-recorder-sdk-aws-sdk-instrumentor", version: aws_xray_version
+    implementation platform("com.amazonaws:aws-xray-recorder-sdk-bom:$aws_xray_version")
+    implementation "com.amazonaws:aws-xray-recorder-sdk-core"
+    implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk-core"
+    implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk"
+    implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk-instrumentor"
 
-    implementation group: "org.apache.logging.log4j", name: "log4j-api", version: log4j_version
-    implementation group: "org.apache.logging.log4j", name: "log4j-core", version: log4j_version
+    implementation platform("org.apache.logging.log4j:log4j-bom:$log4j_version")
+    implementation "org.apache.logging.log4j:log4j-api"
+    implementation "org.apache.logging.log4j:log4j-core"
 
-    implementation group: "com.google.guava", name: "guava", version: guava_version
-    implementation group: "com.google.protobuf", name: "protobuf-java", version: "3.12.2"
-    implementation group: "at.favre.lib", name: "bcrypt", version: "0.9.0"
+    implementation "com.google.guava:guava:$guava_version"
 
-    implementation group: "com.fasterxml.jackson.core", name: "jackson-databind", version: jackson_version
-    implementation group: "com.fasterxml.jackson.module", name: "jackson-module-parameter-names", version: jackson_version
-    implementation group: "com.fasterxml.jackson.datatype", name: "jackson-datatype-jdk8", version: jackson_version
-    implementation group: "com.fasterxml.jackson.datatype", name: "jackson-datatype-jsr310", version: jackson_version
+    implementation platform("com.google.protobuf:protobuf-bom:3.12.2")
+    implementation "com.google.protobuf:protobuf-java"
 
-    implementation group: "com.beust", name: "jcommander", version: "1.78"
-    implementation group: "javax.xml.bind", name: "jaxb-api", version: "2.1"
+    implementation "at.favre.lib:bcrypt:0.9.0"
 
-    testImplementation group: "com.amazonaws", name: "aws-java-sdk-lambda", version: "1.11.901"
+    implementation platform("com.fasterxml.jackson:jackson-bom:$jackson_version")
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation "com.fasterxml.jackson.module:jackson-module-parameter-names"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+
+    implementation "com.beust:jcommander:1.78"
+    implementation "javax.xml.bind:jaxb-api:2.1"
+
+    testImplementation "com.amazonaws:aws-java-sdk-athena"
+    testImplementation "com.amazonaws:aws-java-sdk-lambda"
+    testImplementation "com.amazonaws:DynamoDBLocal:1.13.5"
 
     testImplementation platform("org.junit:junit-bom:$junit_version")
     testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "org.junit.jupiter:junit-jupiter-engine"
-    testImplementation group: 'ru.lanwen.wiremock', name: 'wiremock-junit5', version: '1.0.1'
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
-    testImplementation group: "org.hamcrest", name: "hamcrest", version: "2.2"
-    testImplementation group: "com.github.npathai", name: "hamcrest-optional", version: "2.0.0"
-    testImplementation group: "org.assertj", name: "assertj-core", version: "3.18.1"
-    testImplementation group: "org.skyscreamer", name: "jsonassert", version: "1.5.0"
-    testImplementation group: "org.mockito", name: "mockito-core", version: "3.6.0"
-    testImplementation group: "com.natpryce", name: "snodge", version: "3.7.0.0"
-    testRuntimeOnly 'org.glassfish:javax.json:1.1'
+    testImplementation "org.hamcrest:hamcrest:2.2"
+    testImplementation "com.github.npathai:hamcrest-optional:2.0.0"
+    testImplementation "org.assertj:assertj-core:3.18.1"
+    testImplementation "org.skyscreamer:jsonassert:1.5.0"
+    testImplementation "org.mockito:mockito-core:3.6.0"
+    testImplementation "com.natpryce:snodge:3.7.0.0"
+    testRuntimeOnly "org.glassfish:javax.json:1.1"
 
     testImplementation platform("org.http4k:http4k-bom:$http4k_version")
-    testImplementation 'org.http4k:http4k-core'
-    testImplementation 'org.http4k:http4k-testing-hamkrest'
+    testImplementation "org.http4k:http4k-aws"
+    testImplementation "org.http4k:http4k-core"
+    testImplementation "org.http4k:http4k-format-jackson"
+    testImplementation "org.http4k:http4k-testing-hamkrest"
+    testImplementation "org.http4k:http4k-testing-approval"
 
-    testImplementation group: "org.apache.commons", name: "commons-lang3", version: "3.11"
-    testImplementation group: "io.mockk", name: "mockk", version: "1.10.2"
-    testImplementation group: "com.github.tomakehurst", name: "wiremock-jre8", version: "2.27.0"
-    testImplementation group: "org.bitbucket.b_c", name: "jose4j", version: "0.7.2"
-    testImplementation group: 'com.amazonaws', name: 'DynamoDBLocal', version: '1.13.5'
+    testImplementation "io.mockk:mockk:1.10.2"
+    testImplementation "org.apache.commons:commons-lang3:3.11"
+
+    testImplementation "org.bitbucket.b_c:jose4j:0.7.2"
+
+    testImplementation "org.bouncycastle:bcpkix-jdk15on:1.68"
+    testImplementation "org.bouncycastle:bcprov-ext-jdk15on:1.68"
+
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.0"
+    testImplementation "ru.lanwen.wiremock:wiremock-junit5:1.0.1"
 }
 
 tasks.withType(JavaCompile) {

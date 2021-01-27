@@ -33,6 +33,15 @@ variable "days_to_live" {
   type        = number
   default     = 15
 }
+
+variable "override_policy" {
+  description = "An aws_iam_policy_document used to provide additional statements to the bucket policy"
+  type = object({
+    json = string
+  })
+  default = { json = "{}" }
+}
+
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)

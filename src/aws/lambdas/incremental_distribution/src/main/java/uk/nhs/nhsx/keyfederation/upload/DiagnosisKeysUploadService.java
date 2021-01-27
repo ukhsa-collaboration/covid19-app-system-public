@@ -107,7 +107,7 @@ public class DiagnosisKeysUploadService {
 
         List<ExposureUpload> exposureKeys = getUploadRequestRawPayload(newSubmissions);
 
-        var transformedExposureKeys = exposureKeys.stream().map(this::preUploadTransformations).collect(Collectors.toList());
+        var transformedExposureKeys = exposureKeys.stream().map(this::updateRiskLevelIfDefaultEnabled).collect(Collectors.toList());
 
         logger.info("Loading and transforming keys from submissions finished (from {} to {}), keyCount={} (batch {})",
             newSubmissions.isEmpty() ? null : (newSubmissions.get(0).submissionDate),
@@ -137,7 +137,7 @@ public class DiagnosisKeysUploadService {
         return new BatchUploadResult(lastUploadedSubmissionTime, newSubmissions.size());
     }
 
-    public ExposureUpload preUploadTransformations(ExposureUpload upload) {
+    public ExposureUpload updateRiskLevelIfDefaultEnabled(ExposureUpload upload) {
         return new ExposureUpload(upload.keyData,
             upload.rollingStartNumber,
             uploadRiskLevelDefaultEnabled ? uploadRiskLevelDefault : upload.transmissionRiskLevel,

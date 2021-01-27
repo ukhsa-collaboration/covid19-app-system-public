@@ -1,18 +1,17 @@
 package uk.nhs.nhsx.diagnosiskeydist.apispec;
 
-import java.util.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
-public abstract class ZIPSubmissionPeriod {
-	protected final Date periodEndDateExclusive;
+public interface ZIPSubmissionPeriod {
+    String zipPath();
 
-	public ZIPSubmissionPeriod(Date periodEndDateExclusive) {
-		this.periodEndDateExclusive = periodEndDateExclusive;
-	}
+    boolean isCoveringSubmissionDate(Instant diagnosisKeySubmission, Duration periodOffset); //for the server for calculation
 
-	public abstract String zipPath();
-	public abstract boolean isCoveringSubmissionDate(Date diagnosisKeySubmissionDate, int periodOffsetMinutes); //for the server for calculation
-	public abstract List<? extends ZIPSubmissionPeriod> allPeriodsToGenerate();
-	public abstract Date getEndExclusive(); // < end from client perspective -> url
-	public abstract Date getStartInclusive(); // >= start from client perspective
+    List<? extends ZIPSubmissionPeriod> allPeriodsToGenerate();
+
+    Instant getEndExclusive(); // < end from client perspective -> url
+
+    Instant getStartInclusive(); // >= start from client perspective
 }

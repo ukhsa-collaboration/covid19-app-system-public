@@ -16,7 +16,7 @@ public class ExportFileExplorer {
         Tracing.disableXRayComplaintsForMainClasses();
 
         try (var in = new FileInputStream(args.length == 0 ? "export.bin" : args[0])) {
-            in.read(new byte[DistributionService.EK_EXPORT_V1_HEADER.length()]);
+            long skipped = in.skip(DistributionService.EK_EXPORT_V1_HEADER.length());
 
             var export = Exposure.TemporaryExposureKeyExport.parseFrom(in);
 

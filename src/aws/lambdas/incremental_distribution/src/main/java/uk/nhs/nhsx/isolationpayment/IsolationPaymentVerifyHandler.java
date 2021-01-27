@@ -20,19 +20,20 @@ public class IsolationPaymentVerifyHandler implements RequestHandler<IsolationRe
     private static final Environment.EnvironmentKey<String> AUDIT_LOG_PREFIX = string("AUDIT_LOG_PREFIX");
     private final IsolationPaymentGatewayService service;
 
+    @SuppressWarnings("unused")
     public IsolationPaymentVerifyHandler() {
         this(Environment.fromSystem(), SystemClock.CLOCK);
     }
 
     public IsolationPaymentVerifyHandler(Environment environment, Supplier<Instant> clock) {
-        this(isolationPaymentService(clock, environment));
+        this(isolationPaymentService(environment, clock));
     }
 
     public IsolationPaymentVerifyHandler(IsolationPaymentGatewayService service) {
         this.service = service;
     }
 
-    private static IsolationPaymentGatewayService isolationPaymentService(Supplier<Instant> clock, Environment environment) {
+    private static IsolationPaymentGatewayService isolationPaymentService(Environment environment, Supplier<Instant> clock) {
         var persistence = new IsolationPaymentPersistence(
             AmazonDynamoDBClientBuilder.defaultClient(),
             environment.access.required(ISOLATION_TOKEN_TABLE)

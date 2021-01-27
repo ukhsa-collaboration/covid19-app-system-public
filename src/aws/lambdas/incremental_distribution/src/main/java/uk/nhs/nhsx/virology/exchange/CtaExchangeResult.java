@@ -26,6 +26,20 @@ public abstract class CtaExchangeResult {
         }
     }
 
+    public static class AvailableV2 extends CtaExchangeResult {
+        public final CtaExchangeResponseV2 ctaExchangeResponse;
+
+        public AvailableV2(CtaExchangeResponseV2 ctaExchangeResponse) {
+            this.ctaExchangeResponse = ctaExchangeResponse;
+        }
+
+        @Override
+        public APIGatewayProxyResponseEvent toHttpResponse() {
+            logger.info("Cta token exchange: ctaToken found");
+            return HttpResponses.ok(Jackson.toJson(ctaExchangeResponse));
+        }
+    }
+
     public static class Pending extends CtaExchangeResult {
         @Override
         public APIGatewayProxyResponseEvent toHttpResponse() {

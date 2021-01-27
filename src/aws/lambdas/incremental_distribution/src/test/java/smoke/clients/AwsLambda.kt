@@ -1,7 +1,12 @@
 package smoke.clients
 
 import com.amazonaws.services.lambda.AWSLambdaClientBuilder
-import com.amazonaws.services.lambda.model.*
+import com.amazonaws.services.lambda.model.Environment
+import com.amazonaws.services.lambda.model.GetFunctionConfigurationRequest
+import com.amazonaws.services.lambda.model.InvokeRequest
+import com.amazonaws.services.lambda.model.InvokeResult
+import com.amazonaws.services.lambda.model.UpdateFunctionConfigurationRequest
+import com.amazonaws.services.lambda.model.UpdateFunctionConfigurationResult
 
 object AwsLambda {
 

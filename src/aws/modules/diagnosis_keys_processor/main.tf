@@ -13,7 +13,7 @@ module "processing_lambda" {
   lambda_function_name      = local.identifier_prefix
   lambda_repository_bucket  = var.lambda_repository_bucket
   lambda_object_key         = var.lambda_object_key
-  lambda_handler_class      = "uk.nhs.nhsx.diagnosiskeydist.Handler"
+  lambda_handler_class      = "uk.nhs.nhsx.diagnosiskeydist.DiagnosisKeyDistributionHandler"
   lambda_execution_role_arn = module.processor_role.arn
   lambda_timeout            = 900
   lambda_memory             = 3008
@@ -33,8 +33,10 @@ module "processing_lambda" {
     DIAGNOSIS_KEY_SUBMISSION_PREFIXES = var.diagnosis_key_submission_prefixes
 
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days     = var.log_retention_in_days
+  app_alarms_topic          = var.alarm_topic_arn
+  tags                      = var.tags
+  invocations_alarm_enabled = false
 }
 
 resource "aws_cloudwatch_event_rule" "every_two_hours" {

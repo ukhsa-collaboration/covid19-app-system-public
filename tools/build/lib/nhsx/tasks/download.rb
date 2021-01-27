@@ -50,4 +50,25 @@ namespace :download do
       end
     end
   end
+
+  desc "Download the code build artifacts"
+  task :"codebuild:dev" => [:"login:dev"] do
+    include NHSx::Report
+    # get build info
+    job_id = $configuration.job_id
+    build_info = build_info([job_id])
+
+    # download zip from s3 bucket
+    downloads_out_dir = File.join($configuration.out, "downloads/")
+    object_name = build_info.first["artifacts"]["location"]
+    object_name = object_name.sub("arn:aws:s3:::", "")
+    zip_file_path = File.join(downloads_out_dir, "#{object_name}.zip")
+    run_command("Download the build artifacts of #{job_id}", NHSx::AWS::Commandlines.download_from_s3(object_name, zip_file_path), $configuration)
+
+    # unzip to base dir
+    run_command("Unzip archive", "unzip #{zip_file_path} -d #{$configuration.base}", $configuration)
+
+    # remove downloaded s3 zip file
+    File.delete(zip_file_path)
+  end
 end

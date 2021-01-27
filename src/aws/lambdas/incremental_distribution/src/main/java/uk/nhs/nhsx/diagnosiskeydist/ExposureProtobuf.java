@@ -8,6 +8,7 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 
 import java.nio.ByteBuffer;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,11 +40,11 @@ public class ExposureProtobuf {
             .build();
     }
 
-    public Exposure.TemporaryExposureKeyExport buildTemporaryExposureKeyExport(List<StoredTemporaryExposureKey> keys, ZIPSubmissionPeriod period, int periodOffsetMinutes) {
+    public Exposure.TemporaryExposureKeyExport buildTemporaryExposureKeyExport(List<StoredTemporaryExposureKey> keys, ZIPSubmissionPeriod period, long periodOffsetMinutes) {
         return Exposure.TemporaryExposureKeyExport
             .newBuilder()
-            .setStartTimestamp((period.getStartInclusive().getTime() / 1000) + periodOffsetMinutes * 60)
-            .setEndTimestamp((period.getEndExclusive().getTime() / 1000) + periodOffsetMinutes * 60)
+            .setStartTimestamp((Date.from(period.getStartInclusive()).getTime() / 1000) + periodOffsetMinutes * 60L)
+            .setEndTimestamp((Date.from(period.getEndExclusive()).getTime() / 1000) + periodOffsetMinutes * 60L)
             .setBatchNum(1)
             .setBatchSize(1)
             .addSignatureInfos(buildSignatureInfo())

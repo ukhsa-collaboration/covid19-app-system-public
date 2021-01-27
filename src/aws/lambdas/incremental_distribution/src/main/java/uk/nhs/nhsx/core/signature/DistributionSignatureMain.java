@@ -16,6 +16,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+/**
+ * This class is used during the deployment to generate signatures for the S3 static files
+ */
 public class DistributionSignatureMain {
 
     public static class CommandLine {
@@ -30,7 +35,6 @@ public class DistributionSignatureMain {
 
         @Parameter(names = "--help", help = true, description = "Show help")
         private boolean help = false;
-
     }
 
     public static void main(String[] args) throws IOException {
@@ -72,7 +76,7 @@ public class DistributionSignatureMain {
         if (output == null) {
             return System.out;
         } else {
-            return new PrintStream(new FileOutputStream(output));
+            return new PrintStream(new FileOutputStream(output), false, UTF_8);
         }
     }
 }

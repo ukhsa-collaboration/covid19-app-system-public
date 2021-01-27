@@ -1,16 +1,17 @@
 package uk.nhs.nhsx.aae;
 
 import com.amazonaws.services.s3.model.S3Object;
+import com.google.common.io.ByteStreams;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.aws.secretsmanager.AwsSecretManager;
+import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName;
 
 import javax.net.ssl.SSLContext;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -35,7 +36,7 @@ public class AAEUploader {
         this(AAEUploadConfig.fromEnvironment(Environment.fromSystem()), new AwsSecretManager());
     }
 
-    public AAEUploader(AAEUploadConfig config, AwsSecretManager secretManager) {
+    public AAEUploader(AAEUploadConfig config, SecretManager secretManager) {
         this.config = config;
         this.subscription = secretManager.getSecret(SecretName.of(config.subscriptionKeySecretName)).get().value;
 
@@ -84,14 +85,9 @@ public class AAEUploader {
     }
 
     static byte[] getContent(S3Object obj) throws IOException {
-        var bout = new ByteArrayOutputStream();
-        var buf = new byte[4096];
         try (var in = obj.getObjectContent()) {
-            for (int len = in.read(buf); len != -1; len = in.read(buf)) {
-                bout.write(buf, 0, len);
-            }
+            return ByteStreams.toByteArray(in);
         }
-        return bout.toByteArray();
     }
 
     static String getFilename(S3Object obj) {

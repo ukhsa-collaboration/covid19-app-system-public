@@ -4,11 +4,10 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.DeleteObjectsRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.JavaHttpClient
-import org.http4k.core.Response
 import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import smoke.clients.AnalyticsEventsSubmissionClient
+import smoke.actors.MobileApp
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.core.Jackson
 import java.util.UUID
@@ -18,6 +17,8 @@ class AnalyticsEventsSubmissionSmokeTest {
 
     private val config = SmokeTests.loadConfig()
     private val client = JavaHttpClient()
+
+    private val mobileApp = MobileApp(client, config)
 
     @BeforeEach
     fun clearSubmissionStore() {
@@ -32,34 +33,34 @@ class AnalyticsEventsSubmissionSmokeTest {
     fun `submit valid payload`() {
 
         val randomUUID = UUID.randomUUID()
-        val uploadResponse = submitAnalytics("""
-            {
-                "metadata": {
-                    "operatingSystemVersion": "$randomUUID",
-                    "latestApplicationVersion": "3.0",
-                    "deviceModel": "iPhone11,2",
-                    "postalDistrict": "A1"
-                },
-                "events": [
-                    {
-                        "type": "exposure_window",
-                        "version": 1,
-                        "payload": {
-                            "date": "2020-08-24T21:59:00Z",
-                            "infectiousness": "high|none|standard",
-                            "scanInstances": [
-                                {
-                                    "minimumAttenuation": 1,
-                                    "secondsSinceLastScan": 5,
-                                    "typicalAttenuation": 2
-                                }
-                            ],
-                            "riskScore": "FIXME: sample int value (range?) or string value (enum?)"
+        val uploadResponse = mobileApp.submitAnalyticEvents("""
+                {
+                    "metadata": {
+                        "operatingSystemVersion": "$randomUUID",
+                        "latestApplicationVersion": "3.0",
+                        "deviceModel": "iPhone11,2",
+                        "postalDistrict": "A1"
+                    },
+                    "events": [
+                        {
+                            "type": "exposure_window",
+                            "version": 1,
+                            "payload": {
+                                "date": "2020-08-24T21:59:00Z",
+                                "infectiousness": "high|none|standard",
+                                "scanInstances": [
+                                    {
+                                        "minimumAttenuation": 1,
+                                        "secondsSinceLastScan": 5,
+                                        "typicalAttenuation": 2
+                                    }
+                                ],
+                                "riskScore": "FIXME: sample int value (range?) or string value (enum?)"
+                            }
                         }
-                    }
-                ]
-            }
-        """.trimIndent())
+                    ]
+                }
+            """.trimIndent())
 
         assertThat(uploadResponse.status).withFailMessage("unexpected http response code").isEqualTo(Status.OK)
         assertThat(uploadResponse.header("X-Amz-Meta-Signature")).withFailMessage("missing signature header").isNotBlank()
@@ -79,7 +80,7 @@ class AnalyticsEventsSubmissionSmokeTest {
 
     @Test
     fun `submit invalid payload`() {
-        val uploadResponse = submitAnalytics("{}")
+        val uploadResponse = mobileApp.submitAnalyticEvents("{}")
 
         assertThat(uploadResponse.status).withFailMessage("unexpected http response code").isEqualTo(Status.BAD_REQUEST)
         assertThat(uploadResponse.header("X-Amz-Meta-Signature")).withFailMessage("missing signature header").isNotBlank()
@@ -89,7 +90,4 @@ class AnalyticsEventsSubmissionSmokeTest {
         val objectSummaries = s3Client.listObjects(config.analyticsEventsSubmissionStore).objectSummaries
         assertThat(objectSummaries).isEmpty()
     }
-
-
-    private fun submitAnalytics(json: String): Response = AnalyticsEventsSubmissionClient(client, config).upload(json)
 }

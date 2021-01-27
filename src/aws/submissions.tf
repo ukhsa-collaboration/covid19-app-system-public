@@ -5,7 +5,7 @@ module "analytics_submission" {
   name                     = "analytics"
   lambda_repository_bucket = module.artifact_repository.bucket_name
   lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_handler_class     = "uk.nhs.nhsx.analyticssubmission.Handler"
+  lambda_handler_class     = "uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandler"
   lambda_environment_variables = {
     firehose_stream_name    = "${terraform.workspace}-analytics"
     s3_ingest_enabled       = "false"
@@ -16,6 +16,7 @@ module "analytics_submission" {
   rate_limit                        = var.rate_limit
   logs_bucket_id                    = var.logs_bucket_id
   force_destroy_s3_buckets          = var.force_destroy_s3_buckets
+  log_retention_in_days             = var.log_retention_in_days
   alarm_topic_arn                   = var.alarm_topic_arn
   provisioned_concurrent_executions = var.analytics_submission_scale_down_provisioned_concurrent_executions
   tags                              = var.tags
@@ -26,7 +27,7 @@ module "analytics_events_submission" {
   name                     = "analytics-events"
   lambda_repository_bucket = module.artifact_repository.bucket_name
   lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_handler_class     = "uk.nhs.nhsx.analyticsevents.Handler"
+  lambda_handler_class     = "uk.nhs.nhsx.analyticsevents.AnalyticsEventsHandler"
   lambda_environment_variables = {
     SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
     ACCEPT_REQUESTS_ENABLED   = true
@@ -36,6 +37,7 @@ module "analytics_events_submission" {
   rate_limit               = var.rate_limit
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  log_retention_in_days    = var.log_retention_in_days
   alarm_topic_arn          = var.alarm_topic_arn
   tags                     = var.tags
 }
@@ -83,6 +85,7 @@ module "analytics_submission_store_parquet" {
   service                  = "submission-parquet"
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  override_policy          = module.analytics_submission_store_parquet_analytics_access.policy_document
   tags                     = var.tags
 }
 
@@ -131,13 +134,13 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       type = "string"
     }
     columns {
+      name = "localAuthority"
+      type = "string"
+    }
+    columns {
       name = "deviceModel"
       type = "string"
     }
-    /*columns {
-      name = "localAuthority"
-      type = "string"
-    }*/
     columns {
       name = "latestApplicationVersion"
       type = "string"
@@ -292,6 +295,63 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "receivedPositiveTestResultWhenIsolatingDueToRiskyContact"
       type = "int"
     }
+    columns {
+      name = "receivedActiveIpcToken"
+      type = "int"
+    }
+    columns {
+      name = "haveActiveIpcTokenBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "selectedIsolationPaymentsButton"
+      type = "int"
+    }
+    columns {
+      name = "launchedIsolationPaymentsApplication"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedLFDPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedLFDPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "totalExposureWindowsNotConsideredRisky"
+      type = "int"
+    }
+    columns {
+      name = "totalExposureWindowsConsideredRisky"
+      type = "int"
+    }
+
   }
 }
 
@@ -327,6 +387,11 @@ resource "aws_iam_role_policy_attachment" "firehose_glue" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
 }
 
+locals {
+  env_analytics_submission                = lookup(var.analytics_submission, terraform.workspace, var.analytics_submission["default"])
+  analytics_submission_ingestion_interval = tonumber(local.env_analytics_submission["ingestion_interval"])
+}
+
 resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
   name        = "${terraform.workspace}-analytics"
   destination = "extended_s3"
@@ -336,7 +401,7 @@ resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
   extended_s3_configuration {
     role_arn        = aws_iam_role.firehose_role.arn
     bucket_arn      = module.analytics_submission_store_parquet.bucket_arn
-    buffer_interval = 600
+    buffer_interval = local.analytics_submission_ingestion_interval
     buffer_size     = 64
 
     data_format_conversion_configuration {
@@ -368,7 +433,7 @@ module "diagnosis_keys_submission" {
   name                     = "diagnosis-keys"
   lambda_repository_bucket = module.artifact_repository.bucket_name
   lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_handler_class     = "uk.nhs.nhsx.diagnosiskeyssubmission.Handler"
+  lambda_handler_class     = "uk.nhs.nhsx.diagnosiskeyssubmission.DiagnosisKeySubmissionHandler"
   lambda_environment_variables = {
     SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
     submission_tokens_table   = module.virology_upload.submission_tokens_table
@@ -378,6 +443,7 @@ module "diagnosis_keys_submission" {
   rate_limit               = var.rate_limit
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  log_retention_in_days    = var.log_retention_in_days
   alarm_topic_arn          = var.alarm_topic_arn
   replication_enabled      = var.submission_replication_enabled
   lifecycle_rule_enabled   = true
@@ -389,7 +455,7 @@ module "empty_submission" {
   name                     = "empty-submission"
   lambda_repository_bucket = module.artifact_repository.bucket_name
   lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_handler_class     = "uk.nhs.nhsx.emptysubmission.Handler"
+  lambda_handler_class     = "uk.nhs.nhsx.emptysubmission.EmptySubmissionHandler"
   lambda_environment_variables = {
     SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
     custom_oai                = random_uuid.submission-custom-oai.result
@@ -398,6 +464,7 @@ module "empty_submission" {
   rate_limit               = var.rate_limit
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  log_retention_in_days    = var.log_retention_in_days
   alarm_topic_arn          = var.alarm_topic_arn
   replication_enabled      = var.submission_replication_enabled
   lifecycle_rule_enabled   = true
@@ -415,8 +482,10 @@ module "virology_submission" {
   test_orders_table_id                = module.virology_upload.test_orders_table
   test_results_table_id               = module.virology_upload.results_table
   virology_submission_tokens_table_id = module.virology_upload.submission_tokens_table
+  virology_v2_apis_enabled            = var.virology_v2_apis_enabled
   test_orders_index                   = module.virology_upload.test_orders_index_name
   custom_oai                          = random_uuid.submission-custom-oai.result
+  log_retention_in_days               = var.log_retention_in_days
   alarm_topic_arn                     = var.alarm_topic_arn
   tags                                = var.tags
 }
@@ -430,6 +499,7 @@ module "isolation_payment_submission" {
   isolation_token_expiry_in_weeks = var.isolation_token_expiry_in_weeks
   configuration                   = lookup(var.isolation_payment, terraform.workspace, var.isolation_payment["default"])
   custom_oai                      = random_uuid.submission-custom-oai.result
+  log_retention_in_days           = var.log_retention_in_days
   alarm_topic_arn                 = var.alarm_topic_arn
   tags                            = var.tags
 }
@@ -468,6 +538,12 @@ module "submission_apis" {
 
 output "analytics_submission_store" {
   value = module.analytics_submission.store
+}
+output "analytics_submission_parquet_store" {
+  value = module.analytics_submission_store_parquet.bucket_name
+}
+output "analytics_submission_ingestion_interval" {
+  value = local.analytics_submission_ingestion_interval
 }
 output "analytics_events_submission_store" {
   value = module.analytics_events_submission.store
@@ -530,4 +606,7 @@ output "isolation_payment_health_endpoint" {
 }
 output "virology_kit_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/virology-test/health"
+}
+output "virology_kit_submission_gateway_endpoint" {
+  value = module.virology_submission.api_endpoint
 }

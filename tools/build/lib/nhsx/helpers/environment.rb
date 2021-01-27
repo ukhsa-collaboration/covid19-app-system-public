@@ -130,6 +130,13 @@ module Gaudi
         return number_of_days
       end
 
+      def test_kit
+        test_kit = ENV.fetch("TEST_KIT", "LAB_RESULT")
+        valid_values = ["LAB_RESULT", "RAPID_RESULT"]
+        raise GaudiError, "Invalid TEST_KIT, valid input is #{valid_values.join(", ")}" unless valid_values.include?(test_kit)
+        test_kit
+      end
+
       # Pass the value for a ACCOUNT
       def account
         ENV.fetch("ACCOUNT", "dev")
@@ -138,6 +145,19 @@ module Gaudi
       # Pass the value for a BRANCH
       def branch
         ENV.fetch("BRANCH", "master")
+      end
+
+      def target_sha
+        ENV.fetch("TARGET_SHA", current_sha)
+      end
+
+      def print_logs
+        return ENV.fetch("PRINT_LOGS", false)
+      end
+
+      # Pass the value for a codebuild job id
+      def job_id
+        return mandatory("JOB_ID")
       end
     end
   end

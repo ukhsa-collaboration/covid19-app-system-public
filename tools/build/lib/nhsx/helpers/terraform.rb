@@ -122,12 +122,15 @@ module NHSx
     end
 
     # Deploys the system in a Terraform workspace.
-    def deploy_to_workspace(workspace_name, terraform_configuration, system_config)
+    def deploy_to_workspace(workspace_name, terraform_configuration, tf_varfiles, system_config)
       include NHSx::Generate
       simple_name = File.basename(terraform_configuration)
       workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
+      cmdline = "terraform apply -auto-approve -lock=true -no-color"
+      cmdline += " -var-file=#{tf_varfiles.join(" -var-file=")}" unless tf_varfiles.empty?
+
       Dir.chdir(terraform_configuration) do
-        run_tee("Deploy #{workspace_id} for #{simple_name}", "terraform apply -auto-approve -lock=true -no-color", system_config)
+        run_tee("Deploy #{workspace_id} for #{simple_name}", cmdline, system_config)
       end
       return workspace_id
     end

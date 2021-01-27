@@ -2,19 +2,30 @@ package uk.nhs.nhsx.core.routing;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.google.common.collect.ImmutableList;
 import uk.nhs.nhsx.core.HttpResponses;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class Routing {
 
+    public static List<RoutingHandler> listOf(RoutingHandler... routes) {
+        return Arrays.asList(routes);
+    }
+
     public static AggregateRoutingHttpHandler routes(RoutingHandler... routes) {
-        return new AggregateRoutingHttpHandler(Arrays.asList(routes), routeNotFoundHandler, Routing.routeMethodNotAllowedHandler);
+        return routes(Arrays.asList(routes), ImmutableList.of());
+    }
+
+    public static AggregateRoutingHttpHandler routes(List<RoutingHandler> first, List<RoutingHandler> second) {
+        var allRoutes = Stream.concat(first.stream(), second.stream()).collect(toList());
+        return new AggregateRoutingHttpHandler(allRoutes, routeNotFoundHandler, Routing.routeMethodNotAllowedHandler);
     }
 
     public static PathRoutingHandler path(String path, Handler handler) {
@@ -29,6 +40,10 @@ public class Routing {
         return new PathRoutingHandler(pathMatcher, Optional.of(method), handler);
     }
 
+    public static List<Routing.RoutingHandler> includeIf(boolean condition, Routing.RoutingHandler... handlers) {
+        return condition ? Arrays.asList(handlers) : ImmutableList.of();
+    }
+
     public static APIGatewayProxyResponseEvent throttlingResponse(Duration throttleDuration,
                                                                   Supplier<APIGatewayProxyResponseEvent> responseSupplier) {
         var response = responseSupplier.get();
@@ -38,7 +53,7 @@ public class Routing {
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to delay response", e);
         }
-        
+
         return response;
     }
 
@@ -65,7 +80,6 @@ public class Routing {
     }
 
     private static class RouterMatch implements Handler, Comparable<RouterMatch> {
-
         private final Match matchType;
         private final Handler handler;
 
@@ -77,6 +91,19 @@ public class Routing {
         public RouterMatch(Match matchType) {
             this.matchType = matchType;
             this.handler = null;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            RouterMatch that = (RouterMatch) o;
+            return matchType == that.matchType && Objects.equals(handler, that.handler);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(matchType, handler);
         }
 
         @Override

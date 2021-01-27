@@ -3,7 +3,6 @@ package uk.nhs.nhsx.core.aws.s3;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
-import com.google.common.base.Suppliers;
 import com.google.common.io.ByteSource;
 import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static java.util.Arrays.stream;
 
@@ -23,17 +21,21 @@ public class AwsS3Client implements AwsS3 {
 
     private static final Logger logger = LogManager.getLogger(AwsS3Client.class);
 
-    private static final Supplier<AmazonS3> client =
-        Suppliers.memoize(AmazonS3ClientBuilder::defaultClient);
+    private final AmazonS3 client;
+
+    public AwsS3Client() {
+        client = AmazonS3ClientBuilder.defaultClient();
+    }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void upload(Locator locator, ContentType contentType, ByteSource bytes, MetaHeader... meta) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(contentType.getMimeType());
         stream(meta).forEach(m -> metadata.addUserMetadata(m.asS3MetaName(), m.value));
         bytes.sizeIfKnown().toJavaUtil().ifPresent(metadata::setContentLength);
         try (InputStream input = bytes.openBufferedStream()) {
-            client.get().putObject(
+            client.putObject(
                 new PutObjectRequest(locator.bucket.value, locator.key.value, input, metadata)
             );
         } catch (IOException e) {
@@ -42,18 +44,18 @@ public class AwsS3Client implements AwsS3 {
     }
 
     @Override
-    public List<S3ObjectSummary> getObjectSummaries(String bucketName) {
+    public List<S3ObjectSummary> getObjectSummaries(BucketName bucketName) {
         ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request();
-        listObjectsV2Request.setBucketName(bucketName);
+        listObjectsV2Request.setBucketName(bucketName.value);
 
-        ListObjectsV2Result result = client.get().listObjectsV2(listObjectsV2Request);
+        ListObjectsV2Result result = client.listObjectsV2(listObjectsV2Request);
         List<S3ObjectSummary> objectSummaries = new ArrayList<>(result.getObjectSummaries());
 
         while (result.isTruncated()) {
             String token = result.getNextContinuationToken();
             listObjectsV2Request.setContinuationToken(token);
 
-            result = client.get().listObjectsV2(listObjectsV2Request);
+            result = client.listObjectsV2(listObjectsV2Request);
             objectSummaries.addAll(result.getObjectSummaries());
         }
 
@@ -61,9 +63,9 @@ public class AwsS3Client implements AwsS3 {
     }
 
     @Override
-    public Optional<S3Object> getObject(String bucketName, String objectKey) {
+    public Optional<S3Object> getObject(Locator locator) {
         try {
-            return Optional.ofNullable(client.get().getObject(bucketName, objectKey));
+            return Optional.ofNullable(client.getObject(locator.bucket.value, locator.key.value));
         } catch (AmazonS3Exception e) {
             if (!(e.getStatusCode() == 404 && Objects.equals(e.getErrorCode(), "NoSuchKey"))) {
                 logger.warn("Object could not be retrieved", e);
@@ -73,8 +75,8 @@ public class AwsS3Client implements AwsS3 {
     }
 
     @Override
-    public void deleteObject(String bucketName, String objectKey) {
-        client.get().deleteObject(bucketName, objectKey);
+    public void deleteObject(Locator locator) {
+        client.deleteObject(locator.bucket.value, locator.key.value);
     }
 
 }

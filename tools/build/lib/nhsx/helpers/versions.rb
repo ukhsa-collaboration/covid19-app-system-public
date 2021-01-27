@@ -31,7 +31,7 @@ module NHSx
     #
     # TagPrefix is used to differentiate the versioning tags in the repository
     SUBSYSTEMS = {
-      "backend" => "backend-v",
+      "backend" => "Backend-",
     }.freeze
 
     # Returns the full GitVersion metadata for the given subsystem

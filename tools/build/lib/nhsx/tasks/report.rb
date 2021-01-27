@@ -93,4 +93,63 @@ namespace :report do
   end
   task :releases do
   end
+  desc "generates a report of changes between current commit and last release version"
+  task :changes do
+    include NHSx::Git
+    include NHSx::Report
+    include Zuehlke::Templates
+    version_metadata = subsystem_version_metadata("backend", $configuration)
+    target_commit = $configuration.target_sha
+    source_commit = "Backend-#{version_metadata["Major"]}.#{version_metadata["Minor"]}"
+    list_of_commits = list_of_commits(source_commit, target_commit)
+    changeset = {}
+    list_of_commits.each do |sha|
+      msg, ticket, pr = parse_commit_message(commit_message(sha), sha)
+      changeset[sha] = { "filelist" => commit_files(sha), "message" => msg, "ticket" => ticket, "pr" => pr }
+    end
+    significant_changes, insignificant_changes = changeset.partition { |_, object| significant?(object["filelist"]) }
+    significant_changes = Hash[significant_changes]
+    insignificant_changes = Hash[insignificant_changes]
+    puts "*" * 74
+    puts "* Significant Changes"
+    print_out_changeset(significant_changes)
+    puts "*" * 74
+    puts "* Additional Changes"
+    print_out_changeset(insignificant_changes)
+    puts "*" * 74
+
+    template_file = File.join($configuration.base, "tools/templates/changelog.html.erb")
+    params = {
+      "from_version" => source_commit,
+      "to_version" => target_commit,
+      "significant_changes" => significant_changes,
+      "additional_changes" => insignificant_changes,
+    }
+    report_file = File.join($configuration.out, "reports/changelog.html")
+    write_file(report_file, from_template(template_file, params))
+  end
+  desc "Provide a list of latest codebuild jobs that are either running or failed"
+  task :"codebuild:dev" => [:"login:dev"] do
+    include NHSx::Report
+
+    cb_projects = codebuild_projects($configuration)
+    puts "Collecting status of #{cb_projects.length} pipelines"
+
+    latest_builds = cb_projects.map { |project_name| latest_build_for_project(project_name) }
+    job_metadata = build_info(latest_builds)
+
+    failed_jobs = job_metadata.select { |build| build["buildStatus"] == "FAILED" }
+    running_jobs = job_metadata.reject { |build| build["currentPhase"] == "COMPLETED" }
+
+    puts "*" * 74
+    puts "#{running_jobs.length} job(s) running:"
+    running_jobs.each do |job|
+      puts job["id"]
+    end
+    puts "*" * 74
+    puts "#{failed_jobs.length} job(s) failed:"
+    failed_jobs.each do |job|
+      puts "#{job["id"]}\n\t rake download:codebuild:dev JOB_ID=#{job["id"]}"
+    end
+  end
 end

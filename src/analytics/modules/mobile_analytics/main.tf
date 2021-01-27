@@ -53,13 +53,13 @@ resource "aws_glue_catalog_table" "this" {
       type = "string"
     }
     columns {
+      name = "localAuthority"
+      type = "string"
+    }
+    columns {
       name = "deviceModel"
       type = "string"
     }
-    /*columns {
-      name = "localAuthority"
-      type = "string"
-    }*/
     columns {
       name = "latestApplicationVersion"
       type = "string"
@@ -214,6 +214,63 @@ resource "aws_glue_catalog_table" "this" {
       name = "receivedPositiveTestResultWhenIsolatingDueToRiskyContact"
       type = "int"
     }
+    columns {
+      name = "receivedActiveIpcToken"
+      type = "int"
+    }
+    columns {
+      name = "haveActiveIpcTokenBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "selectedIsolationPaymentsButton"
+      type = "int"
+    }
+    columns {
+      name = "launchedIsolationPaymentsApplication"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedLFDPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedLFDPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "totalExposureWindowsNotConsideredRisky"
+      type = "int"
+    }
+    columns {
+      name = "totalExposureWindowsConsideredRisky"
+      type = "int"
+    }
+
   }
 }
 

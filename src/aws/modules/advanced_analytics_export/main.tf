@@ -25,8 +25,10 @@ module "processing_lambda" {
     P12_CERT_PASSWORD_SECRET_NAME = var.p12_cert_password_secret_name
     AAE_SUBSCRIPTION_SECRET_NAME  = var.aae_subscription_secret_name
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days     = var.log_retention_in_days
+  app_alarms_topic          = var.alarm_topic_arn
+  tags                      = var.tags
+  invocations_alarm_enabled = false
 }
 
 resource "aws_sqs_queue" "this" {

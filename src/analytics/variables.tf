@@ -18,3 +18,8 @@ variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
 }
+
+variable "sip_analytics_bucket_location" {
+  description = "The SIP Analytics S3 bucket"
+  type        = string
+}

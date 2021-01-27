@@ -126,6 +126,10 @@ Currently there are two risk calculation versions with the following mapping:
 
 **Verson 1 should never be sent by an app, as exposure windows are only available since version 2** 
 
+### Test Type
+
+```exposureWindowPositiveTest``` events contain a ```testType``` which can have a value of ```"LAB_RESULT"``` for a PCR test, ```"RAPID_RESULT"``` for LFD test or ```"unknown"```.
+
 ### HTTP response codes
 
 | Status Code | Description |

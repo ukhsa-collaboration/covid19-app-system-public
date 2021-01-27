@@ -18,6 +18,7 @@ module "post_districts_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = var.s3_versioning
+  override_policy          = module.post_districts_distribution_analytics_access.policy_document
   tags                     = var.tags
 }
 

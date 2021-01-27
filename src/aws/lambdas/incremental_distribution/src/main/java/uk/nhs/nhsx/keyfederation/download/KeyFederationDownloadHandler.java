@@ -36,6 +36,7 @@ public class KeyFederationDownloadHandler implements RequestHandler<ScheduledEve
     private final BatchTagService batchTagService;
     private final S3Storage awsS3Client;
 
+    @SuppressWarnings("unused")
     public KeyFederationDownloadHandler() {
         this(
             SystemClock.CLOCK,

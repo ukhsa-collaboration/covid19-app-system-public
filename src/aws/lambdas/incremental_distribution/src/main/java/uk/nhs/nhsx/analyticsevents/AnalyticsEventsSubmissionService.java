@@ -3,12 +3,10 @@ package uk.nhs.nhsx.analyticsevents;
 import org.apache.http.entity.ContentType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.analyticssubmission.PostCodeDeserializer;
+import uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer;
+import uk.nhs.nhsx.analyticssubmission.model.PostDistrictLADTuple;
 import uk.nhs.nhsx.core.Jackson;
-import uk.nhs.nhsx.core.aws.s3.BucketName;
-import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
-import uk.nhs.nhsx.core.aws.s3.S3Storage;
-import uk.nhs.nhsx.core.aws.s3.Sources;
+import uk.nhs.nhsx.core.aws.s3.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -46,8 +44,12 @@ public class AnalyticsEventsSubmissionService {
 
         var transformedMetadata = new LinkedHashMap<>();
         transformedMetadata.putAll(metadata);
-        transformedMetadata.put("postalDistrict", PostCodeDeserializer.mergeSmallPostcodes(currentPostalDistrict));
-        transformedMetadata.remove("localAuthority");
+        currentPostalDistrict = (String) metadata.get("postalDistrict");
+        var currentLocalAuthority = (String) metadata.get("localAuthority");
+        PostDistrictLADTuple newPostDistrictLATuple = PostDistrictLaReplacer.replacePostDistrictLA(currentPostalDistrict, currentLocalAuthority);
+
+        transformedMetadata.put("postalDistrict", newPostDistrictLATuple.postDistrict);
+        transformedMetadata.put("localAuthority", newPostDistrictLATuple.localAuthorityId);
 
         var transformedPayload = new LinkedHashMap<>(payload);
         transformedPayload.put("uuid", UUID.randomUUID());
@@ -61,7 +63,7 @@ public class AnalyticsEventsSubmissionService {
         log.info("Uploading {} to {}", objectKey, bucketName.value);
 
         s3Storage.upload(
-            S3Storage.Locator.of(bucketName, objectKey),
+            Locator.of(bucketName, objectKey),
             ContentType.APPLICATION_JSON,
             Sources.byteSourceFor(json)
         );

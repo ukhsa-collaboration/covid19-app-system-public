@@ -1,31 +1,29 @@
 package uk.nhs.nhsx.core;
 
+import java.util.Objects;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.lang.String.format;
+
 public abstract class ValueType<T extends ValueType<T>> implements Comparable<T> {
     public final String value;
 
     protected ValueType(String value) {
+        checkArgument(value != null, format("Cannot have a null %s", getClass().getSimpleName()));
         this.value = value;
-
-        if (value == null) {
-            throw new IllegalArgumentException("Cannot have a null " + getClass().getSimpleName());
-        }
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        @SuppressWarnings("rawtypes")
-		ValueType that = (ValueType) o;
-
-        return value.equals(that.value);
-
+        ValueType<?> valueType = (ValueType<?>) o;
+        return Objects.equals(value, valueType.value);
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return Objects.hash(value);
     }
 
     @Override

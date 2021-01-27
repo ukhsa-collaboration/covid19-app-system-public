@@ -29,8 +29,9 @@ module "isolation_payment_order_lambda" {
     custom_oai                     = var.custom_oai
     TOKEN_CREATION_ENABLED         = var.configuration["enabled"]
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days = var.log_retention_in_days
+  app_alarms_topic      = var.alarm_topic_arn
+  tags                  = var.tags
 }
 
 module "isolation_payment_gateway" {
@@ -82,8 +83,9 @@ module "isolation_payment_verify_lambda" {
     SSM_KEY_ID_PARAMETER_NAME      = "/app/kms/ContentSigningKeyArn"
     custom_oai                     = var.custom_oai
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days = var.log_retention_in_days
+  app_alarms_topic      = var.alarm_topic_arn
+  tags                  = var.tags
 }
 
 module "isolation_payment_consume_role" {
@@ -108,6 +110,7 @@ module "isolation_payment_consume_lambda" {
     SSM_KEY_ID_PARAMETER_NAME      = "/app/kms/ContentSigningKeyArn"
     custom_oai                     = var.custom_oai
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days = var.log_retention_in_days
+  app_alarms_topic      = var.alarm_topic_arn
+  tags                  = var.tags
 }

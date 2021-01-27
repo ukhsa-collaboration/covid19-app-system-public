@@ -2,113 +2,107 @@ package uk.nhs.nhsx.diagnosiskeydist.apispec;
 
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
+import java.util.Objects;
 
-public class DailyZIPSubmissionPeriod extends ZIPSubmissionPeriod {
-	private static final TimeZone TIME_ZONE_UTC = TimeZone.getTimeZone("UTC");
-	private static final String DAILY_PATH_PREFIX = "distribution/daily/";
-	private static final int TOTAL_DAILY_ZIPS = ENIntervalNumber.MAX_DIAGNOSIS_KEY_AGE_DAYS;
+import static com.google.common.base.Preconditions.checkState;
+import static java.lang.String.format;
+import static java.time.ZoneOffset.UTC;
+import static java.time.temporal.ChronoField.*;
+import static java.time.temporal.ChronoUnit.DAYS;
 
-	public DailyZIPSubmissionPeriod(Date dailyPeriodEndDate) {
-		super(assertValid(dailyPeriodEndDate));
-	}
+public class DailyZIPSubmissionPeriod implements ZIPSubmissionPeriod {
+    private static final String DAILY_PATH_PREFIX = "distribution/daily/";
+    private static final int TOTAL_DAILY_ZIPS = ENIntervalNumber.MAX_DIAGNOSIS_KEY_AGE_DAYS;
+    private static final DateTimeFormatter HOURLY_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd'00'").withZone(UTC);
 
-	private static Date assertValid(Date dailyPeriodEndDate) {
-		Calendar cal = utcCalendar(dailyPeriodEndDate);
+    private final Instant periodEndDateExclusive;
 
-		if (cal.get(Calendar.HOUR_OF_DAY) != 0) throw new IllegalStateException();
-		if (cal.get(Calendar.MINUTE) != 0) throw new IllegalStateException();
-		if (cal.get(Calendar.SECOND) != 0) throw new IllegalStateException();
-		if (cal.get(Calendar.MILLISECOND) != 0) throw new IllegalStateException();
+    public DailyZIPSubmissionPeriod(Instant periodEndDateExclusive) {
+        this.periodEndDateExclusive = requireValid(periodEndDateExclusive);
+    }
 
-		return dailyPeriodEndDate;
-	}
+    private static Instant requireValid(Instant endDate) {
+        var date = endDate.atZone(UTC);
+        checkState(date.get(HOUR_OF_DAY) == 0);
+        checkState(date.get(MINUTE_OF_HOUR) == 0);
+        checkState(date.get(SECOND_OF_MINUTE) == 0);
+        checkState(date.get(NANO_OF_SECOND) == 0);
+        return endDate;
+    }
 
-	public String zipPath() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(DAILY_PATH_PREFIX);
-		sb.append(dailyKey());
-		sb.append(".zip");
+    public static DailyZIPSubmissionPeriod periodForSubmissionDate(Instant diagnosisKeySubmission) {
+        return new DailyZIPSubmissionPeriod(
+            diagnosisKeySubmission
+                .truncatedTo(DAYS)
+                .plus(Duration.ofDays(1)));
+    }
 
-		return sb.toString();
-	}
+    @Override
+    public String zipPath() {
+        return DAILY_PATH_PREFIX + dailyKey() + ".zip";
+    }
 
-	private String dailyKey() {
-		return hourlyFormat().format(periodEndDateExclusive);
-	}
+    private String dailyKey() {
+        return HOURLY_FORMAT.format(periodEndDateExclusive);
+    }
 
-	public boolean isCoveringSubmissionDate(Date diagnosisKeySubmissionDate, int twoHourlyDateOffsetMinutes) {
-		Calendar cal = utcCalendar(periodEndDateExclusive);
-		cal.add(Calendar.MINUTE, twoHourlyDateOffsetMinutes);
+    @Override
+    public boolean isCoveringSubmissionDate(Instant diagnosisKeySubmission, Duration offset) {
+        var toExclusive = periodEndDateExclusive
+            .plus(offset);
 
-		Date toExclusive = cal.getTime();
+        var fromInclusive = toExclusive
+            .minus(Duration.ofDays(1));
 
-		cal.add(Calendar.DATE, -1);
-		Date fromInclusive = cal.getTime();
+        return (diagnosisKeySubmission.isAfter(fromInclusive) || diagnosisKeySubmission.equals(fromInclusive)) && diagnosisKeySubmission.isBefore(toExclusive);
+    }
 
-		return diagnosisKeySubmissionDate.getTime() >= fromInclusive.getTime() && diagnosisKeySubmissionDate.getTime() < toExclusive.getTime();
-	}
+    /**
+     * returns DailyPeriods for the past 14 days
+     */
+    @Override
+    public List<DailyZIPSubmissionPeriod> allPeriodsToGenerate() {
+        var periods = new ArrayList<DailyZIPSubmissionPeriod>();
+        var currentInstant = periodEndDateExclusive;
+        for (var i = 0; i < TOTAL_DAILY_ZIPS + 1; i++) {
+            periods.add(new DailyZIPSubmissionPeriod(currentInstant));
+            currentInstant = currentInstant.minus(Duration.ofDays(1));
+        }
+        return periods;
+    }
 
-	/**
-	 * returns DailyPeriods for the past 14 days
-	 */
-	public List<DailyZIPSubmissionPeriod> allPeriodsToGenerate() {
-		List<DailyZIPSubmissionPeriod> periods = new LinkedList<>();
+    @Override
+    public Instant getStartInclusive() {
+        return periodEndDateExclusive.minus(Duration.ofDays(1));
+    }
 
-		Calendar cal = utcCalendar(periodEndDateExclusive);
-		for (int i = 0; i < TOTAL_DAILY_ZIPS + 1; i++) {
-			periods.add(new DailyZIPSubmissionPeriod(cal.getTime()));
-			cal.add(Calendar.DATE, -1);
-		}
+    @Override
+    public Instant getEndExclusive() {
+        return periodEndDateExclusive;
+    }
 
-		return periods;
-	}
+    @Override
+    public String toString() {
+        return format("1 day: from %s (inclusive) to %s (exclusive)",
+            HOURLY_FORMAT.format(getStartInclusive()),
+            HOURLY_FORMAT.format(getEndExclusive()));
+    }
 
-	public static DailyZIPSubmissionPeriod periodForSubmissionDate(Date diagnosisKeySubmissionDate) {
-		Calendar cal = utcCalendar(diagnosisKeySubmissionDate);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DailyZIPSubmissionPeriod that = (DailyZIPSubmissionPeriod) o;
+        return Objects.equals(periodEndDateExclusive, that.periodEndDateExclusive);
+    }
 
-		cal.add(Calendar.DATE, 1);
-
-		return new DailyZIPSubmissionPeriod(cal.getTime());
-	}
-
-	private static SimpleDateFormat hourlyFormat() {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd00");
-		simpleDateFormat.setTimeZone(TIME_ZONE_UTC);
-
-		return simpleDateFormat;
-	}
-
-	private static Calendar utcCalendar(Date dailyDate) {
-		Calendar cal = Calendar.getInstance(TIME_ZONE_UTC);
-		cal.setTime(dailyDate);
-
-		return cal;
-	}
-
-
-	public Date getEndExclusive() {
-		return periodEndDateExclusive;
-	}
-
-	public Date getStartInclusive() {
-		Calendar cal = utcCalendar(periodEndDateExclusive);
-		cal.add(Calendar.DATE, -1);
-
-		return cal.getTime();
-	}
-
-	@Override
-	public String toString() {
-		return "1 day: from " + hourlyFormat().format(getStartInclusive()) + " (inclusive) to " + hourlyFormat().format(getEndExclusive()) + " (exclusive)";
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(periodEndDateExclusive);
+    }
 }

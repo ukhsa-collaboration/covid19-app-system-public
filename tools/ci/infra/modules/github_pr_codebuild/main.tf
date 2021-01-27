@@ -52,10 +52,9 @@ resource "aws_codebuild_project" "this" {
   }
 
   source {
-    buildspec       = data.template_file.buildspec.rendered
-    type            = "GITHUB"
-    location        = var.repository
-    git_clone_depth = 10
+    buildspec = data.template_file.buildspec.rendered
+    type      = "GITHUB"
+    location  = var.repository
 
     git_submodules_config {
       fetch_submodules = false

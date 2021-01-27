@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.isolationpayment;
 
+import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.DateFormatValidator;
@@ -103,6 +104,9 @@ public class IsolationPaymentMobileService {
                 persistence.updateIsolationToken(updatedToken, TokenStateInternal.INT_CREATED);
 
                 logger.info("{} UpdateToken successful: existing.ipcToken={}, updated.ipcToken={}. Returning redirectUrl={}", auditLogPrefix, isolationToken.get(), updatedToken, websiteUrlWithQuery);
+            }
+            catch(ConditionalCheckFailedException e) {
+                logger.warn("{} UpdateToken exception: conditional check failed, existing.ipcToken={}, !updated.ipcToken={}", auditLogPrefix, isolationToken.get(), updatedToken, e);
             }
             catch (Exception e) {
                 logger.error("{} UpdateToken exception: existing.ipcToken={}, !updated.ipcToken={}", auditLogPrefix, isolationToken.get(), updatedToken, e);

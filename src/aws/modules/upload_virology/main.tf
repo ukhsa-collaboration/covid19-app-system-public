@@ -20,14 +20,16 @@ module "upload_lambda" {
   lambda_timeout            = 20
   lambda_memory             = 1024
   lambda_environment_variables = {
-    test_orders_table       = aws_dynamodb_table.test_orders.id
-    test_results_table      = aws_dynamodb_table.test_results.id
-    submission_tokens_table = aws_dynamodb_table.submission_tokens.id
-    test_orders_index       = "${local.identifier_prefix}-ordertokens-index"
-    custom_oai              = var.custom_oai
+    test_orders_table        = aws_dynamodb_table.test_orders.id
+    test_results_table       = aws_dynamodb_table.test_results.id
+    submission_tokens_table  = aws_dynamodb_table.submission_tokens.id
+    test_orders_index        = "${local.identifier_prefix}-ordertokens-index"
+    custom_oai               = var.custom_oai
+    virology_v2_apis_enabled = var.virology_v2_apis_enabled
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days = var.log_retention_in_days
+  app_alarms_topic      = var.alarm_topic_arn
+  tags                  = var.tags
 }
 
 module "upload_gateway" {

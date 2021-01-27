@@ -66,6 +66,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
 }
 
 data "aws_iam_policy_document" "this" {
+  override_json = var.override_policy.json
   statement {
     actions = ["s3:*"]
     principals {

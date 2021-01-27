@@ -26,7 +26,7 @@ AWS IAM (Cross account):
 
 ## Isolation Payment Claim Tokens
 
-States (linear flow - only current state must pe persisted):
+States (linear flow - only current state must be persisted):
 - (not existing)
 - ```created```  : New ```ipcToken``` created (generated from secure random source, >= 32 bytes, hex representation). Token is invalid.
 - ```valid```    : Additional data fields associated with the token (stored in the token item in DynamoDB). Token is valid and can be consumed (once).
@@ -34,7 +34,7 @@ States (linear flow - only current state must pe persisted):
 - - (DynamoDB TTL / expiration date): Expiration date is initially set to ```14 days``` after creation. Expiration date is set to  Isolation Period End Date as soon as the date is known.
   - Token is immediately deleted after successful consumption
 
-Timestamp of state transitions are stored in invidivual columns of the token item in DynamoDB:
+Timestamp of state transitions are stored in individual columns of the token item in DynamoDB:
 - createdTimestamp: Timestamp of the ```/isolation-payment/ipc-token/create``` call
 - updatedTimestamp: Timestamp of the ```/isolation-payment/ipc-token/update``` call
 - validatedTimestamp: Timestamp of the last ```<target-environment>-ipc-token-verify``` invocation

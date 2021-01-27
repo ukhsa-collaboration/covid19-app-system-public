@@ -6,19 +6,20 @@ import com.amazonaws.services.cloudfront.model.AmazonCloudFrontException;
 import com.amazonaws.services.cloudfront.model.CreateInvalidationRequest;
 import com.amazonaws.services.cloudfront.model.InvalidationBatch;
 import com.amazonaws.services.cloudfront.model.Paths;
-import com.google.common.base.Suppliers;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
-import java.util.function.Supplier;
 
 public class AwsCloudFrontClient implements AwsCloudFront {
 
     private static final Logger logger = LogManager.getLogger(AwsCloudFrontClient.class);
 
-    private static final Supplier<AmazonCloudFront> client =
-        Suppliers.memoize(AmazonCloudFrontClientBuilder::defaultClient);
+    private final AmazonCloudFront client;
+
+    public AwsCloudFrontClient() {
+        client = AmazonCloudFrontClientBuilder.defaultClient();
+    }
 
     @Override
     public void invalidateCache(String distributionId, String path) {
@@ -27,7 +28,7 @@ public class AwsCloudFrontClient implements AwsCloudFront {
         CreateInvalidationRequest invalidationRequest = new CreateInvalidationRequest(distributionId, invalidationBatch);
 
         try {
-            client.get().createInvalidation(invalidationRequest);
+            client.createInvalidation(invalidationRequest);
         } catch (AmazonCloudFrontException e) {
             logger.error("CloudFront cache invalidation failed", e);
         }

@@ -51,5 +51,33 @@ module NHSx
         puts "#" * 23
       end
     end
+
+    # gets list of SHA between two references
+    def list_of_commits(from_sha, to_sha)
+      cmdline = "git log --pretty='format:%C(auto)%h' #{from_sha}..#{to_sha}"
+      cmd = Patir::ShellCommand.new(:cmd => cmdline)
+      cmd.run
+      cmd.output.split("\n")
+    end
+
+    def commit_files(sha)
+      cmdline = "git diff-tree --no-commit-id --name-only -r #{sha}"
+      cmd = Patir::ShellCommand.new(:cmd => cmdline)
+      cmd.run
+      cmd.output.split("\n")
+    end
+
+    def print_out_changeset(changeset)
+      changeset.each do |_, object|
+        puts "#{object.fetch("pr", "")} #{object.fetch("ticket", "")} #{object["message"]}"
+      end
+    end
+
+    def commit_message(sha)
+      cmdline = "git show --oneline --no-patch #{sha}"
+      cmd = Patir::ShellCommand.new(:cmd => cmdline)
+      cmd.run
+      return cmd.output.chop
+    end
   end
 end

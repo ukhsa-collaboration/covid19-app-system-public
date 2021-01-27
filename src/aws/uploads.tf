@@ -1,15 +1,18 @@
 locals {
-  risky_venues_upload_pattern              = "upload/identified-risk-venues"
-  risky_post_districts_upload_pattern      = "upload/high-risk-postal-districts"
-  test_results_upload_pattern              = "upload/virology-test/*"
-  test_results_npex_upload_pattern         = "upload/virology-test/npex-result"
-  test_results_fiorano_upload_pattern      = "upload/virology-test/fiorano-result"
-  test_results_eng_tokengen_upload_pattern = "upload/virology-test/eng-result-tokengen"
-  test_results_wls_tokengen_upload_pattern = "upload/virology-test/wls-result-tokengen"
-  test_results_lfd_tokengen_upload_pattern = "upload/virology-test/lfd-result-tokengen"
-  test_results_health_pattern              = "upload/virology-test/health"
-  risky_venues_health_pattern              = "upload/identified-risk-venues/health"
-  risky_post_districts_health_pattern      = "upload/high-risk-postal-districts/health"
+  risky_venues_upload_pattern                 = "upload/identified-risk-venues"
+  risky_post_districts_upload_pattern         = "upload/high-risk-postal-districts"
+  test_results_upload_pattern                 = "upload/virology-test/*"
+  test_results_npex_upload_pattern            = "upload/virology-test/npex-result"
+  test_results_fiorano_upload_pattern         = "upload/virology-test/fiorano-result"
+  test_results_eng_tokengen_upload_pattern    = "upload/virology-test/eng-result-tokengen"
+  test_results_wls_tokengen_upload_pattern    = "upload/virology-test/wls-result-tokengen"
+  test_results_v2_npex_upload_pattern         = "upload/virology-test/v2/npex-result"
+  test_results_v2_fiorano_upload_pattern      = "upload/virology-test/v2/fiorano-result"
+  test_results_v2_eng_tokengen_upload_pattern = "upload/virology-test/v2/eng-result-tokengen"
+  test_results_v2_wls_tokengen_upload_pattern = "upload/virology-test/v2/wls-result-tokengen"
+  test_results_health_pattern                 = "upload/virology-test/health"
+  risky_venues_health_pattern                 = "upload/identified-risk-venues/health"
+  risky_post_districts_health_pattern         = "upload/high-risk-postal-districts/health"
 
   # String patterns passed to lambdas for invalidating cloudfront specific cache objects only
   risky_venues_cache_invalidation_pattern         = "/distribution/risky-venues"
@@ -30,10 +33,11 @@ module "risky_venues_upload" {
   distribution_invalidation_pattern = local.risky_venues_cache_invalidation_pattern
   lambda_repository_bucket          = module.artifact_repository.bucket_name
   lambda_object_key                 = module.artifact_repository.lambda_object_key
-  lambda_handler_class              = "uk.nhs.nhsx.highriskvenuesupload.Handler"
+  lambda_handler_class              = "uk.nhs.nhsx.highriskvenuesupload.HighRiskVenuesUploadHandler"
   burst_limit                       = var.burst_limit
   rate_limit                        = var.rate_limit
   custom_oai                        = random_uuid.uploads-custom-oai.result
+  log_retention_in_days             = var.log_retention_in_days
   alarm_topic_arn                   = var.alarm_topic_arn
   should_parse_additional_fields    = false
   tags                              = local.tags
@@ -47,10 +51,11 @@ module "risky_post_districts_upload" {
   distribution_invalidation_pattern = local.risky_post_districts_cache_invalidation_pattern
   lambda_repository_bucket          = module.artifact_repository.bucket_name
   lambda_object_key                 = module.artifact_repository.lambda_object_key
-  lambda_handler_class              = "uk.nhs.nhsx.highriskpostcodesupload.Handler"
+  lambda_handler_class              = "uk.nhs.nhsx.highriskpostcodesupload.HighRiskPostcodesUploadHandler"
   burst_limit                       = var.burst_limit
   rate_limit                        = var.rate_limit
   custom_oai                        = random_uuid.uploads-custom-oai.result
+  log_retention_in_days             = var.log_retention_in_days
   alarm_topic_arn                   = var.alarm_topic_arn
   tags                              = local.tags
 }
@@ -62,8 +67,10 @@ module "virology_upload" {
   burst_limit              = var.burst_limit
   rate_limit               = var.rate_limit
   custom_oai               = random_uuid.uploads-custom-oai.result
+  log_retention_in_days    = var.log_retention_in_days
   alarm_topic_arn          = var.alarm_topic_arn
   tags                     = var.tags
+  virology_v2_apis_enabled = var.virology_v2_apis_enabled
 }
 
 module "upload_apis" {
@@ -114,8 +121,17 @@ output "test_results_eng_tokengen_upload_endpoint" {
 output "test_results_wls_tokengen_upload_endpoint" {
   value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_wls_tokengen_upload_pattern}"
 }
-output "test_results_lfd_tokengen_upload_endpoint" {
-  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_lfd_tokengen_upload_pattern}"
+output "test_results_v2_npex_upload_endpoint" {
+  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_v2_npex_upload_pattern}"
+}
+output "test_results_v2_fiorano_upload_endpoint" {
+  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_v2_fiorano_upload_pattern}"
+}
+output "test_results_v2_eng_tokengen_upload_endpoint" {
+  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_v2_eng_tokengen_upload_pattern}"
+}
+output "test_results_v2_wls_tokengen_upload_endpoint" {
+  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_v2_wls_tokengen_upload_pattern}"
 }
 output "virology_upload_lambda_function_name" {
   value = module.virology_upload.lambda_function_name
@@ -138,4 +154,7 @@ output "risky_post_districts_upload_health_endpoint" {
 
 output "risky_post_districts_upload_gateway_endpoint" {
   value = module.risky_post_districts_upload.api_endpoint
+}
+output "test_results_upload_gateway_endpoint" {
+  value = module.virology_upload.api_endpoint
 }

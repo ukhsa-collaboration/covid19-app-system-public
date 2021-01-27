@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>Changelog between <%= from_version %> and <%= to_version %></title>
+</head>
+<body>
+<h2>Changelog between <%= from_version %> and <%= to_version %></h2>
+<h3>Significant Changes</h3>
+<table>
+ <% significant_changes.each do |sha, object| %>
+<tr><td><a target="_blank" href="https://github.com/nhsx/covid19-app-system-public/pull/<%= object["pr"] %>"><%= object["pr"] %></a></td><td><a target="_blank" href="https://confluence/browse/<%= object["ticket"] %>"><%= object["ticket"] %></a></td><td><%= object["message"] %></td></tr>
+ <% end %>
+</table>
+
+<h3>Additional Changes</h3>
+<table>
+ <% additional_changes.each do |sha, object| %>
+<tr><td><a target="_blank" href="https://github.com/nhsx/covid19-app-system-public/pull/<%= object["pr"] %>"><%= object["pr"] %></a></td><td><a target="_blank" href="https://confluence/browse/<%= object["ticket"] %>"><%= object["ticket"] %></a></td><td><%= object["message"] %></td></tr>
+ <% end %>
+</table>
+
+</body>
+</html>

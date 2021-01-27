@@ -24,7 +24,8 @@ Mobile clients fetch this configuration to be able to calculate self isolation d
     "indexCaseSinceSelfDiagnosisUnknownOnset": 4,
     "contactCase": 14,
     "maxIsolation": 21,
-    "pendingTasksRetentionPeriod": 14
+    "pendingTasksRetentionPeriod": 14,
+    "indexCaseSinceTestResultEndDate": 11
   }
 }
 ```
@@ -33,7 +34,7 @@ For the complete version check [src/static/self-isolation.json](../../../src/sta
 
 #### Note
 `indexCaseSinceSelfDiagnosisUnknownOnset` used when the user didn’t enter a start date of the symptoms
-
+`indexCaseSinceTestResultEndDate` used when the user manually links a positive test result and wasn’t in isolation before
  
  
   

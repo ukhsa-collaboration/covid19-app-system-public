@@ -10,6 +10,7 @@ import org.http4k.core.Uri
 import org.http4k.hamkrest.hasContentType
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
@@ -19,6 +20,7 @@ import uk.nhs.nhsx.sanity.lambdas.config.Distribution
 import uk.nhs.nhsx.sanity.lambdas.config.Resource.DynamicContent
 import uk.nhs.nhsx.sanity.lambdas.config.Resource.DynamicUrl
 
+@DisabledIfEnvironmentVariable(named = "TARGET_ENVIRONMENT", matches = "dev")
 class DistributionSanityChecks : LambdaSanityCheck() {
 
 //    Check risky venue distribution - GET 200 + IS JSON✅
@@ -42,15 +44,15 @@ class DistributionSanityChecks : LambdaSanityCheck() {
     fun `Risky post districts distribution returns a 200`() {
         val riskyPostDistrict = env.configFor(PostDistrictsDistribution, "post_districts_distribution") as Distribution
         assertThat(insecureClient(Request(GET, riskyPostDistrict.endpointUri)),
-                hasStatus(OK).and(hasContentType(ContentType("application/json")))
+            hasStatus(OK).and(hasContentType(ContentType("application/json")))
         )
     }
 
     @Test
     fun `Risky post districts v2 distribution returns a 200`() {
         val riskyPostDistrict = env.configFor(PostDistrictsDistribution, "post_districts_distribution") as Distribution
-        assertThat(insecureClient(Request(GET, Uri.of(riskyPostDistrict.endpointUri.toString()+"-v2"))),
-                hasStatus(OK).and(hasContentType(ContentType("application/json")))
+        assertThat(insecureClient(Request(GET, Uri.of(riskyPostDistrict.endpointUri.toString() + "-v2"))),
+            hasStatus(OK).and(hasContentType(ContentType("application/json")))
         )
     }
 

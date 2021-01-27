@@ -6,6 +6,10 @@ output "store" {
   value = module.distribution_store.bucket
 }
 
+output "store_policy_document" {
+  value = module.distribution_store.policy_document
+}
+
 output "origin_access_identity_path" {
   value = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
 }

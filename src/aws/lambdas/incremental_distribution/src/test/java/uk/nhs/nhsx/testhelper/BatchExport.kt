@@ -1,6 +1,8 @@
 package uk.nhs.nhsx.testhelper
 
-import batchZipCreation.Exposure.*
+import batchZipCreation.Exposure.TEKSignatureList
+import batchZipCreation.Exposure.TemporaryExposureKey
+import batchZipCreation.Exposure.TemporaryExposureKeyExport
 import uk.nhs.nhsx.diagnosiskeydist.ZipFileUtility
 import java.io.File
 import java.io.InputStream
@@ -29,9 +31,8 @@ object BatchExport {
     }
 
     fun tekExportFrom(inputStream: InputStream): TemporaryExposureKeyExport {
-        val file = createTempFile()
+        val file = Files.createTempFile("tekexportfrom", null).toFile()
         file.outputStream().use { inputStream.copyTo(it) }
         return tekExportFromZipFile(file)
     }
-
 }

@@ -1,0 +1,55 @@
+<!-- This file specifies a spotbugs filter for excluding reports that
+     should not be considered errors.
+
+     The format of this file is documented at:
+
+       https://spotbugs.readthedocs.io/en/latest/filter.html
+
+     When possible, please specify the full names of the bug codes,
+     using the pattern attribute, to make it clearer what reports are
+     being suppressed.  You can find a listing of codes at:
+
+       https://spotbugs.readthedocs.io/en/latest/bugDescriptions.html
+  -->
+
+<FindBugsFilter>
+    <Match>
+        <Or>
+            <!-- Ignore checking for generated protobuf classes -->
+            <Package name="batchZipCreation"/>
+        </Or>
+    </Match>
+
+    <!-- We don't mind having redundant checks for null -->
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>
+    </Match>
+
+    <!-- Ignore unread public and protected fields -->
+    <Match>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+
+    <!-- Ignore unread static variables in IsolationRequest and IsolationResponse -->
+    <Match>
+        <Bug pattern="SS_SHOULD_BE_STATIC"/>
+        <Or>
+            <Class name="uk.nhs.nhsx.isolationpayment.model.IsolationRequest"/>
+            <Class name="uk.nhs.nhsx.isolationpayment.model.IsolationResponse"/>
+        </Or>
+    </Match>
+
+    <!-- Ignore the System.exit() in the ConcurrentExecution -->
+    <Match>
+        <Bug pattern="DM_EXIT"/>
+        <Class name="uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution"/>
+    </Match>
+
+    <!-- Ignore redundant null check in AAEUploader -->
+    <Match>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"/>
+        <Class name="uk.nhs.nhsx.aae.AAEUploader" />
+    </Match>
+
+</FindBugsFilter>
+

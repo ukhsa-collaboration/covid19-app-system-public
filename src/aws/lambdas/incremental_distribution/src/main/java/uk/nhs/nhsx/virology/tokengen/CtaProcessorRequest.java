@@ -8,12 +8,14 @@ public class CtaProcessorRequest {
 
     public final String testResult;
     public final String testEndDate;
+    public final String testKit;
     public final Integer numberOfTokens;
 
-    public CtaProcessorRequest(String testResult, String testEndDate, Integer numberOfTokens) {
+    public CtaProcessorRequest(String testResult, String testEndDate, String testKit, Integer numberOfTokens) {
         VirologyResultValidator.validateTestResult(testResult,testEndDate);
         this.testResult = testResult;
         this.testEndDate = testEndDate;
+        this.testKit = testKit;
         this.numberOfTokens = numberOfTokens;
     }
 
@@ -24,12 +26,13 @@ public class CtaProcessorRequest {
         CtaProcessorRequest that = (CtaProcessorRequest) o;
         return Objects.equals(testResult, that.testResult) &&
             Objects.equals(testEndDate, that.testEndDate) &&
+            Objects.equals(testKit, that.testKit) &&
             Objects.equals(numberOfTokens, that.numberOfTokens);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(testResult, testEndDate, numberOfTokens);
+        return Objects.hash(testResult, testEndDate, testKit, numberOfTokens);
     }
 
     @Override
@@ -37,6 +40,7 @@ public class CtaProcessorRequest {
         return "CtaProcessorRequest{" +
             "testResult='" + testResult + '\'' +
             ", testEndDate='" + testEndDate + '\'' +
+            ", testKit='" + testKit + '\'' +
             ", numberOfTokens=" + numberOfTokens +
             '}';
     }

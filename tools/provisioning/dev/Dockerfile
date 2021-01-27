@@ -1,6 +1,6 @@
 FROM ruby:2.7.1-buster AS ruby
 
-ENV TERRAFORM_VERSION=0.12.29
+ENV TERRAFORM_VERSION=0.13.5
 ENV TERRAFORM_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ENV TERRAFORM_ARCHIVE=terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ENV GITVERSION_VERSION=5.3.6
@@ -8,7 +8,6 @@ ENV GITVERSION_URL=https://github.com/GitTools/GitVersion/releases/download/${GI
 ENV PYTHON_VERSION=3.8.3
 ENV PYTHON_URL=https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
 ENV AWSCLI_URL=https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
-ENV MAVEN_ULR=https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
 
 # Things needed to install the various languages. See later for additional required packages
 
@@ -33,7 +32,8 @@ RUN apt-get update && apt-get -qq -y install \
   ruby-google-protobuf \
   sudo \
   wget \
-  zlib1g-dev
+  zlib1g-dev\ 
+  gnuplot
 
 WORKDIR /work
 
@@ -53,7 +53,8 @@ RUN ./configure --enable-optimizations && \
   ln -s /usr/local/bin/python3.8 /usr/local/bin/python && \
   ln -s /usr/local/bin/python3.8 /usr/local/bin/python3 && \
   ln -s /usr/local/bin/pip3.8 /usr/local/bin/pip3 && \
-  ln -s /usr/local/bin/pip3.8 /usr/local/bin/pip
+  ln -s /usr/local/bin/pip3.8 /usr/local/bin/pip && \
+  pip install --upgrade pip==20.3.3
 
 # AWS installation
 RUN wget ${AWSCLI_URL} && \
@@ -66,13 +67,6 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
 
 # Java installation
 RUN apt-get update && apt-get install -y openjdk-11-jdk-headless
-
-# Maven installation
-RUN	mkdir -p /opt && cd /opt && \
-  wget ${MAVEN_ULR} && \
-  tar xzvf apache-maven-3.6.3-bin.tar.gz && \
-  rm -f apache-maven-3.6.3-bin.tar.gz
-ENV PATH="${PATH}:/opt/apache-maven-3.6.3/bin"
 
 # Additional packages (may be installed by default, but listed here to be obvious that there is a dependency)
 RUN  apt-get -qq -y install gpg groff less

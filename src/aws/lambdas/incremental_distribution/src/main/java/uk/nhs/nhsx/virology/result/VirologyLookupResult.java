@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponse;
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2;
 
 public abstract class VirologyLookupResult {
 
@@ -17,6 +18,20 @@ public abstract class VirologyLookupResult {
         public final VirologyLookupResponse virologyLookupResponse;
 
         public Available(VirologyLookupResponse virologyLookupResponse) {
+            this.virologyLookupResponse = virologyLookupResponse;
+        }
+
+        @Override
+        public APIGatewayProxyResponseEvent toHttpResponse() {
+            logger.info("Virology result found");
+            return HttpResponses.ok(Jackson.toJson(virologyLookupResponse));
+        }
+    }
+
+    public static class AvailableV2 extends VirologyLookupResult {
+        public final VirologyLookupResponseV2 virologyLookupResponse;
+
+        public AvailableV2(VirologyLookupResponseV2 virologyLookupResponse) {
             this.virologyLookupResponse = virologyLookupResponse;
         }
 

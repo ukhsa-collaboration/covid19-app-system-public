@@ -90,6 +90,12 @@ variable "interop_upload_enabled_workspaces" {
   type        = list(string)
 }
 
+variable "log_retention_in_days" {
+  description = "Days for which events in the associated CloudWatch log group are retained. 0 (the default) means forever"
+  type        = number
+  default     = 0
+}
+
 variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }
@@ -143,6 +149,16 @@ variable "analytics_submission_scale_down_cron" {
   description = "cron schedule"
 }
 
+variable "analytics_submission" {
+  description = "Analytics submission config: ('ingestion_interval'). Keys: target environment or 'default'"
+  type        = map(map(string))
+}
+
+variable "analytics_aws_accounts" {
+  description = "list of analytics aws account numbers to enable readonly access to the bucket for athena queries and quicksight"
+  type        = list(string)
+}
+
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
@@ -157,4 +173,10 @@ variable "isolation_token_expiry_in_weeks" {
 variable "isolation_payment" {
   description = "Isolation payment configuraton ('enabled', 'gateway_website_prefix', 'countries_whitelisted'). Keys: target environment or 'default'"
   type        = map(map(string))
+}
+
+variable "virology_v2_apis_enabled" {
+  description = "Feature flag for enabling V2 Virology APIs"
+  default     = false
+  type        = bool
 }

@@ -6,9 +6,12 @@ import com.amazonaws.services.lambda.runtime.events.ScheduledEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Environment;
+import uk.nhs.nhsx.core.EnvironmentKeys;
+import uk.nhs.nhsx.core.ObjectKeyFilters;
 import uk.nhs.nhsx.core.StandardSigning;
 import uk.nhs.nhsx.core.aws.s3.AwsS3;
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
+import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.secretsmanager.AwsSecretManager;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager;
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters;
@@ -19,8 +22,6 @@ import uk.nhs.nhsx.keyfederation.BatchTagService;
 import uk.nhs.nhsx.keyfederation.InteropClient;
 
 import java.util.function.Supplier;
-
-import static uk.nhs.nhsx.core.ObjectKeyFilter.includeMobileAndAllowedPrefixes;
 
 /**
  * Key Federation upload lambda
@@ -35,33 +36,41 @@ public class KeyFederationUploadHandler implements RequestHandler<ScheduledEvent
     private final Supplier<InteropClient> interopClient;
     private final BatchTagService batchTagService;
     private final AwsS3 awsS3Client;
+    private final BucketName submissionBucket;
 
+    @SuppressWarnings("unused")
     public KeyFederationUploadHandler() {
         this(
+            Environment.fromSystem().access.required(EnvironmentKeys.SUBMISSION_BUCKET_NAME),
             KeyFederationUploadConfig.fromEnvironment(Environment.fromSystem()),
             new AwsSecretManager(),
             new AwsS3Client()
         );
     }
 
-    public KeyFederationUploadHandler(KeyFederationUploadConfig config,
-                   SecretManager secretManager,
-                   AwsS3 awsS3Client) {
-        this(config,
+    public KeyFederationUploadHandler(BucketName submissionBucket,
+                                      KeyFederationUploadConfig config,
+                                      SecretManager secretManager,
+                                      AwsS3 awsS3Client) {
+        this(
+            submissionBucket,
+            config,
             new BatchTagDynamoDBService(config.stateTableName),
             () -> buildInteropClient(config, secretManager),
             awsS3Client
         );
     }
 
-    public KeyFederationUploadHandler(KeyFederationUploadConfig config,
-                   BatchTagService batchTagService,
-                   Supplier<InteropClient> interopClient,
-                   AwsS3 awsS3Client) {
+    public KeyFederationUploadHandler(BucketName submissionBucket,
+                                      KeyFederationUploadConfig config,
+                                      BatchTagService batchTagService,
+                                      Supplier<InteropClient> interopClient,
+                                      AwsS3 awsS3Client) {
         this.config = config;
         this.interopClient = interopClient;
         this.batchTagService = batchTagService;
         this.awsS3Client = awsS3Client;
+        this.submissionBucket = submissionBucket;
     }
 
     private static InteropClient buildInteropClient(KeyFederationUploadConfig config, SecretManager secretManager) {
@@ -91,8 +100,8 @@ public class KeyFederationUploadHandler implements RequestHandler<ScheduledEvent
     private int loadKeysAndUploadToFederatedServer(Context context) {
         if (config.uploadFeatureFlag.isEnabled()) {
             try {
-                var objectKeyFilter = includeMobileAndAllowedPrefixes(config.federatedKeyUploadPrefixes);
-                var submissionRepository = new SubmissionFromS3Repository(awsS3Client, objectKeyFilter);
+                var objectKeyFilter = ObjectKeyFilters.federated().withPrefixes(config.federatedKeyUploadPrefixes);
+                var submissionRepository = new SubmissionFromS3Repository(awsS3Client, objectKeyFilter, submissionBucket);
 
                 return new DiagnosisKeysUploadService(
                     interopClient.get(),

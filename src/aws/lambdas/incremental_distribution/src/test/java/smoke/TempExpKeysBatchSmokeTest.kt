@@ -1,26 +1,42 @@
 package smoke
 
 import batchZipCreation.Exposure
+import batchZipCreation.Exposure.TemporaryExposureKeyExport
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasElement
 import com.natpryce.hamkrest.isNullOrEmptyString
 import org.apache.logging.log4j.LogManager
 import org.http4k.asString
-import org.http4k.client.JavaHttpClient
+import org.http4k.client.Java8HttpClient
 import org.http4k.core.Status
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
-import smoke.clients.*
+import smoke.actors.ApiVersion
+import smoke.actors.ApiVersion.V1
+import smoke.actors.ApiVersion.V2
+import smoke.actors.BackgroundActivities
+import smoke.actors.DiagnosisKeySubmissionToken
+import smoke.actors.MobileApp
+import smoke.actors.Synthetics
+import smoke.actors.TestLab
+import smoke.actors.TestResult
+import smoke.actors.TestResult.NEGATIVE
+import smoke.actors.TestResult.POSITIVE
+import smoke.clients.AwsLambda
 import smoke.env.EnvConfig
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
-import uk.nhs.nhsx.virology.exchange.CtaExchangeResponse
+import uk.nhs.nhsx.virology.CtaToken
+import uk.nhs.nhsx.virology.TestKit
+import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
+import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
+import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
+import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
-import uk.nhs.nhsx.virology.order.VirologyOrderResponse
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -41,7 +57,6 @@ class TempExpKeysBatchSmokeTest {
     private val numberOfRuns = 20
 
     companion object {
-
         private val logger = LogManager.getLogger(TempExpKeysBatchSmokeTest::class.java)
         private val config = SmokeTests.loadConfig()
 
@@ -49,13 +64,13 @@ class TempExpKeysBatchSmokeTest {
         @JvmStatic
         fun `before all tests run check if endpoints are healthy`() {
             val config = SmokeTests.loadConfig()
-            val client = JavaHttpClient()
-            val healthClient = HealthClient(client, config)
+            val client = Java8HttpClient()
+            val synthetics = Synthetics(client, config)
             enableBatchProcessingOutsideTimeWindow()
-            healthClient.enCircuitBreakerHealthEndpoint().requireStatusCode(Status.OK)
-            healthClient.diagnosisKeysSubmission().requireStatusCode(Status.OK)
-            healthClient.testResultsHealthEndpoint().requireStatusCode(Status.OK)
-            healthClient.virologyKitHealthEndpoint().requireStatusCode(Status.OK)
+            require(synthetics.checkEnCircuitBreakerHealth() == Status.OK)
+            require(synthetics.checkDiagnosisKeysSubmissionHealth() == Status.OK)
+            require(synthetics.checkTestResultsUploadHealth() == Status.OK)
+            require(synthetics.checkVirologyKitHealth() == Status.OK)
         }
 
         private fun enableBatchProcessingOutsideTimeWindow() {
@@ -72,46 +87,92 @@ class TempExpKeysBatchSmokeTest {
     }
 
     @Test
-    fun `single submission batch processing (latest 2 hour window)`() {
+    fun `single submission batch processing using virology V1 api (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val virologyTestResponse = scenario.virologyOrderAndUploadResult("POSITIVE")
-        val encodedSubmissionKeys = scenario.submitKeys(virologyTestResponse)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT)
+        val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
     }
 
     @Test
-    fun `negative virology result with single submission batch processing (latest 2 hour window)`() {
+    fun `single submission batch processing using virology V2 api (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val virologyTestResponse = scenario.virologyOrderAndUploadResult("NEGATIVE")
-        val encodedSubmissionKeys = scenario.submitKeys(virologyTestResponse)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V2, RAPID_RESULT)
+        val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
+
+        val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
+        scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
+    }
+
+    @Test
+    fun `negative virology result with single submission batch processing using virology V1 (latest 2 hour window)`() {
+        val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
+
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(NEGATIVE, V1, LAB_RESULT)
+        val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsDoesNotContain(encodedSubmissionKeys, tekExport)
     }
 
     @Test
-    fun `single submission batch processing via token exchange (latest 2 hour window)`() {
+    fun `negative virology result with single submission batch processing using virology V2 (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys("POSITIVE")
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(NEGATIVE, V2, LAB_RESULT)
+        val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
+
+        val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
+        scenario.checkTekExportContentsDoesNotContain(encodedSubmissionKeys, tekExport)
+    }
+
+    @Test
+    fun `single submission batch processing via token exchange using virology V1 (latest 2 hour window)`() {
+        val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
+
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(POSITIVE, V1, LAB_RESULT)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
     }
 
     @Test
-    fun `negative virology result with single submission batch processing via token exchange (latest 2 hour window)`() {
+    fun `single submission batch processing via token exchange using virology V2 (latest 2 hour window)`() {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys("NEGATIVE")
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(POSITIVE, V2, RAPID_RESULT)
+
+        val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
+        scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
+    }
+
+    @Test
+    fun `negative virology result with single submission batch processing via token exchange using virology V1 (latest 2 hour window)`() {
+        val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
+
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(NEGATIVE, V1, LAB_RESULT)
+
+        val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
+        scenario.checkTekExportContentsDoesNotContain(encodedSubmissionKeys, tekExport)
+    }
+
+    @Test
+    fun `negative virology result with single submission batch processing via token exchange using virology V2  (latest 2 hour window)`() {
+        val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
+
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(NEGATIVE, V2, LAB_RESULT)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsDoesNotContain(encodedSubmissionKeys, tekExport)
@@ -127,8 +188,8 @@ class TempExpKeysBatchSmokeTest {
         val invalidKeys = listOf("invalid-key")
         val allKeys = listOf(validKeys, invalidKeys).flatten()
 
-        val virologyTestResponse = scenario.virologyOrderAndUploadResult("POSITIVE")
-        scenario.submitKeys(virologyTestResponse, allKeys)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT)
+        scenario.submitKeys(diagnosisKeySubmissionToken, allKeys)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsContains(validKeys, tekExport)
@@ -146,9 +207,8 @@ class TempExpKeysBatchSmokeTest {
             (0..numberOfRuns)
                 .map {
                     executor.submit(Callable {
-                        val scenario = TempExpKeysScenario(config)
-                        val virologyTestResponse = scenario.virologyOrderAndUploadResult("POSITIVE")
-                        scenario.submitKeys(virologyTestResponse)
+                        val scenarioX = TempExpKeysScenario(config)
+                        scenarioX.submitKeys(scenarioX.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT))
                     })
                 }
                 .map { it.get(3, TimeUnit.MINUTES) }
@@ -165,8 +225,8 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val virologyTestResponse = scenario.virologyOrderAndUploadResult("POSITIVE")
-        val payload = scenario.submitKeysWithOnsetDays(virologyTestResponse)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT)
+        val payload = scenario.submitKeysWithOnsetDays(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsContainsOnsetDays(payload, tekExport)
@@ -198,83 +258,85 @@ class TempExpKeysBatchSmokeTest {
             }
     }
 
+    @Test
+    fun `order LAB_RESULT and RAPID_TEST and verify both exposure keys are present in tekExport`() {
+        val scenario = TempExpKeysScenario(config)
+        val (keys, tekExport) = scenario.orderLABandRAPIDTestAndGetLatestTekExport()
+        scenario.checkTekExportContentsContains(keys, tekExport)
+    }
+
     private class TempExpKeysScenario(config: EnvConfig) {
         private val logger = LogManager.getLogger(TempExpKeysScenario::class.java)
 
         private val keyGenerator = CrockfordDammRandomStringGenerator()
-        private val client = JavaHttpClient()
-        private val virologyClient = VirologyClient(client, config)
-        private val diagnosisKeysSubmissionClient = DiagnosisKeysSubmissionClient(client, config)
-        private val enCircuitBreakerClient = EnCircuitBreakerClient(client, config)
-        private val exportBatchClient = ExportBatchClient(client, config)
-        private val batchProcessingClient = BatchProcessingClient(config)
+        private val client = Java8HttpClient()
+        private val mobileApp = MobileApp(client, config)
+        private val testLab = TestLab(client, config)
+        private val backgroundActivities = BackgroundActivities(config)
         private val maxKeysPerRun = 10
 
-        fun tokenGenTestAndSubmitKeys(testResult: String): List<String> {
+        fun tokenGenTestAndSubmitKeys(testResult: TestResult, apiVersion: ApiVersion, testKit: TestKit): List<String> {
             val encodedSubmissionKeys = generateKeyData(Random.nextInt(maxKeysPerRun))
 
-            val testLabResponse = virologyClient.ctaTokenGen(testResult)
-            virologyClient.uploadTestResultWithCheckingConflict(testLabResponse.ctaToken, testResult)
+            val ctaToken = testLab.generateCtaTokenFor(testResult, "2020-04-23T00:00:00Z", Eng, apiVersion, testKit)
 
-            val exchangeResponse: CtaExchangeResponse = (virologyClient.exchangeCtaToken(testLabResponse) as CtaExchangeResult.Available).ctaExchangeResponse
+            testLab.uploadTestResultExpectingConflict(ctaToken, testResult, Npex, apiVersion, testKit)
 
-            // circuit breaker request
-            val tokenResponse = enCircuitBreakerClient.request()
-            assertThat(tokenResponse.approval, equalTo("yes"))
-            assertThat(tokenResponse.approvalToken, !isNullOrEmptyString)
+            val exchangeResponse = (mobileApp.exchange(ctaToken, apiVersion) as CtaExchangeResult.Available).ctaExchangeResponse
+            val diagnosisKeySubmissionToken = DiagnosisKeySubmissionToken(exchangeResponse.diagnosisKeySubmissionToken)
 
-            // circuit breaker approval
-            val resolutionResponse = enCircuitBreakerClient.resolution(tokenResponse)
-            assertThat(resolutionResponse.approval, equalTo("yes"))
+            mobileApp.exposureCircuitBreaker.requestAndApproveCircuitBreak()
 
-            val payload = diagnosisKeysSubmissionClient.createKeysPayload(exchangeResponse.diagnosisKeySubmissionToken, encodedSubmissionKeys)
-            diagnosisKeysSubmissionClient.sendTempExposureKeys(payload)
+            mobileApp.submitKeys(diagnosisKeySubmissionToken, encodedSubmissionKeys)
             return encodedSubmissionKeys
         }
 
-        fun virologyOrderAndUploadResult(testResult: String): VirologyOrderResponse {
-            val virologyOrderResponse = virologyClient.orderTest()
+        fun virologyOrderAndUploadResult(testResult: TestResult,
+                                         apiVersion: ApiVersion,
+                                         testKit: TestKit): DiagnosisKeySubmissionToken {
+            val orderResponse = mobileApp.orderTest(apiVersion)
+            val ctaToken = CtaToken.of(orderResponse.tokenParameterValue)
 
-            virologyClient.checkTestResultNotAvailableYet(virologyOrderResponse.testResultPollingToken)
+            mobileApp.pollForIncompleteTestResult(apiVersion)
 
-            virologyClient.uploadTestResult(virologyOrderResponse, testResult)
-            virologyClient.uploadTestResultWithCheckingConflict(virologyOrderResponse.tokenParameterValue, testResult)
+            testLab.uploadTestResult(ctaToken, testResult, Npex, apiVersion, testKit)
 
-            val retrieveTestResult = virologyClient.retrieveTestResult(virologyOrderResponse.testResultPollingToken)
-            assertThat(retrieveTestResult.testResult, equalTo(testResult))
+            testLab.uploadTestResultExpectingConflict(ctaToken, testResult, Npex, apiVersion, testKit)
 
-            // circuit breaker request
-            val tokenResponse = enCircuitBreakerClient.request()
-            assertThat(tokenResponse.approval, equalTo("yes"))
-            assertThat(tokenResponse.approvalToken, !isNullOrEmptyString)
+            assertThat(mobileApp.pollForCompleteTestResult(apiVersion).testResult, equalTo(testResult.name))
 
-            // circuit breaker approval
-            val resolutionResponse = enCircuitBreakerClient.resolution(tokenResponse)
-            assertThat(resolutionResponse.approval, equalTo("yes"))
-
-            return virologyOrderResponse
+            return DiagnosisKeySubmissionToken(orderResponse.diagnosisKeySubmissionToken)
         }
 
-        fun submitKeys(virologyOrderResponse: VirologyOrderResponse,
+        fun submitKeys(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
                        encodedSubmissionKeys: List<String> = generateKeyData(Random.nextInt(maxKeysPerRun))): List<String> {
-            val payload = diagnosisKeysSubmissionClient.createKeysPayload(
-                virologyOrderResponse.diagnosisKeySubmissionToken,
-                encodedSubmissionKeys
-            )
-            diagnosisKeysSubmissionClient.sendTempExposureKeys(payload)
+            mobileApp.submitKeys(diagnosisKeySubmissionToken, encodedSubmissionKeys)
             return encodedSubmissionKeys
         }
 
-        fun submitKeysWithOnsetDays(virologyOrderResponse: VirologyOrderResponse): ClientTemporaryExposureKeysPayload {
-            val encodedSubmissionKeys = generateKeyData(2)
-            val payload = diagnosisKeysSubmissionClient.createKeysPayloadWithOnsetDays(virologyOrderResponse.diagnosisKeySubmissionToken, encodedSubmissionKeys)
-            diagnosisKeysSubmissionClient.sendTempExposureKeys(payload)
-            return payload
+        fun submitKeysWithOnsetDays(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken): ClientTemporaryExposureKeysPayload {
+            return mobileApp.submitKeysWithOnsetDays(diagnosisKeySubmissionToken, generateKeyData(2))
         }
 
-        fun invokeBatchProcessingAndGetLatestTekExport(): Exposure.TemporaryExposureKeyExport {
-            batchProcessingClient.invokeBatchProcessing()
-            return exportBatchClient.getLatestTwoHourlyTekExport()
+        fun invokeBatchProcessingAndGetLatestTekExport(): TemporaryExposureKeyExport {
+            backgroundActivities.invokesBatchProcessing()
+            return mobileApp.getLatestTwoHourlyTekExport()
+        }
+
+        fun orderLABandRAPIDTestAndGetLatestTekExport(): Pair<List<String>, TemporaryExposureKeyExport> {
+            val firstKeys = mobileApp.orderTest(V2).run {
+                testLab.uploadTestResult(CtaToken.of(tokenParameterValue), POSITIVE, Npex, V2, LAB_RESULT)
+                submitKeys(DiagnosisKeySubmissionToken(diagnosisKeySubmissionToken))
+            }
+
+            val secondKeys = mobileApp.orderTest(V2).run {
+                testLab.uploadTestResult(CtaToken.of(tokenParameterValue), POSITIVE, Npex, V2, RAPID_RESULT)
+                submitKeys(DiagnosisKeySubmissionToken(diagnosisKeySubmissionToken))
+            }
+
+            val export = invokeBatchProcessingAndGetLatestTekExport()
+
+            return Pair(firstKeys + secondKeys, export)
         }
 
         fun isInsideProcessingWindow(): Boolean {
@@ -286,7 +348,7 @@ class TempExpKeysBatchSmokeTest {
         }
 
         fun checkTekExportContentsContains(expectedKeys: List<String>,
-                                           tekExport: Exposure.TemporaryExposureKeyExport) {
+                                           tekExport: TemporaryExposureKeyExport) {
             val receivedEncodedKeys = tekExport.keysList
                 .map { Base64.getEncoder().encode(it.keyData.asReadOnlyByteBuffer()).asString() }
 
@@ -297,7 +359,7 @@ class TempExpKeysBatchSmokeTest {
         }
 
         fun checkTekExportContentsDoesNotContain(expectedKeys: List<String>,
-                                                 tekExport: Exposure.TemporaryExposureKeyExport) {
+                                                 tekExport: TemporaryExposureKeyExport) {
             val receivedEncodedKeys = tekExport.keysList
                 .map { Base64.getEncoder().encode(it.keyData.asReadOnlyByteBuffer()).asString() }
 
@@ -308,7 +370,7 @@ class TempExpKeysBatchSmokeTest {
         }
 
         fun checkTekExportContentsContainsOnsetDays(submissionPayload: ClientTemporaryExposureKeysPayload,
-                                                    tekExport: Exposure.TemporaryExposureKeyExport) {
+                                                    tekExport: TemporaryExposureKeyExport) {
             val receivedEncodedKeys = tekExport.keysList
             checkTekExportKeysMatchSubmissionPayloadKeys(submissionPayload.temporaryExposureKeys, receivedEncodedKeys)
         }
@@ -326,7 +388,11 @@ class TempExpKeysBatchSmokeTest {
         }
 
         fun convertTekKeyToClientKey(tek: Exposure.TemporaryExposureKey): ClientTemporaryExposureKey {
-            val key = ClientTemporaryExposureKey(Base64.getEncoder().encode(tek.keyData.asReadOnlyByteBuffer()).asString(), tek.rollingStartIntervalNumber, tek.rollingPeriod)
+            val key = ClientTemporaryExposureKey(
+                Base64.getEncoder().encode(tek.keyData.asReadOnlyByteBuffer()).asString(),
+                tek.rollingStartIntervalNumber,
+                tek.rollingPeriod
+            )
             if (tek.hasDaysSinceOnsetOfSymptoms()) {
                 key.setDaysSinceOnsetOfSymptoms(tek.daysSinceOnsetOfSymptoms)
             }
@@ -338,7 +404,7 @@ class TempExpKeysBatchSmokeTest {
                 .map { keyGenerator.generate() + keyGenerator.generate() }
                 .map { Base64.getEncoder().encodeToString(it.toByteArray()) }
 
-        fun getAllYesterdaysTwoHourlyExports(): List<Exposure.TemporaryExposureKeyExport> {
+        fun getAllYesterdaysTwoHourlyExports(): List<TemporaryExposureKeyExport> {
             val yesterdayMidnight = LocalDateTime
                 .ofInstant(Instant.now(), ZoneId.of("UTC"))
                 .minusDays(1)
@@ -348,16 +414,14 @@ class TempExpKeysBatchSmokeTest {
                 .map {
                     val twoHourlyWindowStr =
                         yesterdayMidnight.minusHours((2 * it).toLong())
-                            .format(DateTimeFormatter.ofPattern("YYYYMMddHH"))
+                            .format(DateTimeFormatter.ofPattern("yyyyMMddHH"))
                             .toString()
                     "$twoHourlyWindowStr.zip"
                 }
-                .map {
-                    exportBatchClient.getTwoHourlyTekExport(it)
-                }
+                .map { mobileApp.getTwoHourlyTekExport(it) }
         }
 
-        fun getAllDailyExports(): List<Exposure.TemporaryExposureKeyExport> {
+        fun getAllDailyExports(): List<TemporaryExposureKeyExport> {
             val tomorrowMidnight = LocalDateTime
                 .ofInstant(Instant.now(), ZoneId.of("UTC"))
                 .plusDays(1)
@@ -367,13 +431,11 @@ class TempExpKeysBatchSmokeTest {
                 .map {
                     val dailyStr =
                         tomorrowMidnight.minusDays(it.toLong())
-                            .format(DateTimeFormatter.ofPattern("YYYYMMddHH"))
+                            .format(DateTimeFormatter.ofPattern("yyyyMMddHH"))
                             .toString()
                     "$dailyStr.zip"
                 }
-                .map {
-                    exportBatchClient.getDailyTekExport(it)
-                }
+                .map { mobileApp.getDailyTekExport(it) }
         }
     }
 

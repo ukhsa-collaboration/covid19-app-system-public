@@ -36,7 +36,21 @@ public class AnalyticsMetrics {
     public Integer receivedRiskyContactNotification;
     public Integer startedIsolation;
     public Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
+    public Integer receivedActiveIpcToken;
+    public Integer haveActiveIpcTokenBackgroundTick;
+    public Integer selectedIsolationPaymentsButton;
+    public Integer launchedIsolationPaymentsApplication;
+    public Integer receivedPositiveLFDTestResultViaPolling;
+    public Integer receivedNegativeLFDTestResultViaPolling;
+    public Integer receivedVoidLFDTestResultViaPolling;
+    public Integer receivedPositiveLFDTestResultEnteredManually;
+    public Integer receivedNegativeLFDTestResultEnteredManually;
+    public Integer receivedVoidLFDTestResultEnteredManually;
+    public Integer hasTestedLFDPositiveBackgroundTick;
+    public Integer isIsolatingForTestedLFDPositiveBackgroundTick;
+    public Integer totalExposureWindowsNotConsideredRisky;
+    public Integer totalExposureWindowsConsideredRisky;
 
-
-    public AnalyticsMetrics() { }
+    public AnalyticsMetrics() {
+    }
 }

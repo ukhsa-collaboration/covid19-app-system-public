@@ -2,7 +2,7 @@ namespace :i18n do
   desc "Update the system resources with translations from Localise"
   task :update do
     include NHS::I18N
-
+    puts "Parsing #{$configuration.localise_input}"
     translations = load_translations($configuration.localise_input)
     update_questionaire(translations, $configuration)
     update_android_availability_configuration(translations, $configuration)

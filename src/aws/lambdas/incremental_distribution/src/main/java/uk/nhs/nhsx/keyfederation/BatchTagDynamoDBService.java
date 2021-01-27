@@ -16,10 +16,10 @@ import java.util.Optional;
 
 public class BatchTagDynamoDBService implements BatchTagService {
 
-    private final String uploadTimeAttributeName = "uploadTimestamp";
-    private final String primaryKeyAttributeName = "id";
-    private final String primaryKeyAttributeValueDownload = "lastDownloadState";
-    private final String primaryKeyAttributeValueUpload = "lastUploadState";
+    private static final String uploadTimeAttributeName = "uploadTimestamp";
+    private static final String primaryKeyAttributeName = "id";
+    private static final String primaryKeyAttributeValueDownload = "lastDownloadState";
+    private static final String primaryKeyAttributeValueUpload = "lastUploadState";
 
     private final Table table;
 

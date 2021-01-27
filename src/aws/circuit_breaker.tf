@@ -8,6 +8,7 @@ module "exposure_notification_circuit_breaker" {
   rate_limit               = var.rate_limit
   ssm_parameter            = "exposure-notification"
   custom_oai               = random_uuid.submission-custom-oai.result
+  log_retention_in_days    = var.log_retention_in_days
   alarm_topic_arn          = var.alarm_topic_arn
   tags                     = var.tags
 }
@@ -22,6 +23,7 @@ module "risky_venues_circuit_breaker" {
   rate_limit               = var.rate_limit
   ssm_parameter            = "venue-notification"
   custom_oai               = random_uuid.submission-custom-oai.result
+  log_retention_in_days    = var.log_retention_in_days
   alarm_topic_arn          = var.alarm_topic_arn
   tags                     = var.tags
 }

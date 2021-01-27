@@ -11,7 +11,11 @@ import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 
 import java.util.List;
 
-import static uk.nhs.nhsx.core.Environment.EnvironmentKey.*;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.bool;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.integer;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.string;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.strings;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.value;
 
 public class KeyFederationDownloadConfig {
 
@@ -63,9 +67,9 @@ public class KeyFederationDownloadConfig {
     private static final EnvironmentKey<List<String>> DOWNLOAD_ENABLED_WORKSPACES = strings("DOWNLOAD_ENABLED_WORKSPACES");
     private static final EnvironmentKey<Boolean> DOWNLOAD_RISK_LEVEL_DEFAULT_ENABLED = bool("DOWNLOAD_RISK_LEVEL_DEFAULT_ENABLED");
     private static final EnvironmentKey<Integer> DOWNLOAD_RISK_LEVEL_DEFAULT = integer("DOWNLOAD_RISK_LEVEL_DEFAULT");
-    private static final EnvironmentKey<BucketName> SUBMISSION_BUCKET_NAME = value("SUBMISSION_BUCKET_NAME", BucketName.class);
+    private static final EnvironmentKey<BucketName> SUBMISSION_BUCKET_NAME = value("SUBMISSION_BUCKET_NAME", BucketName::of);
     private static final EnvironmentKey<String> INTEROP_BASE_URL = string("INTEROP_BASE_URL");
-    private static final EnvironmentKey<SecretName> INTEROP_AUTH_TOKEN_SECRET_NAME = value("INTEROP_AUTH_TOKEN_SECRET_NAME", SecretName.class);
+    private static final EnvironmentKey<SecretName> INTEROP_AUTH_TOKEN_SECRET_NAME = value("INTEROP_AUTH_TOKEN_SECRET_NAME", SecretName::of);
     private static final EnvironmentKey<String> FEDERATED_KEY_DOWNLOAD_PREFIX = string("FEDERATED_KEY_DOWNLOAD_PREFIX");
     private static final EnvironmentKey<String> PROCESSOR_STATE_TABLE = string("PROCESSOR_STATE_TABLE");
     private static final EnvironmentKey<List<String>> VALID_DOWNLOAD_ORIGINS = strings("VALID_DOWNLOAD_ORIGINS");

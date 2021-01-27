@@ -5,13 +5,10 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.core.aws.s3.AwsS3;
-import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
+import uk.nhs.nhsx.core.aws.s3.*;
 
 import java.util.Optional;
 
@@ -21,10 +18,12 @@ import java.util.Optional;
 public class AAEUploadHandler implements RequestHandler<SQSEvent, String> {
     private static final Logger logger = LogManager.getLogger(AAEUploadHandler.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final String FORMAT_CONVERSION_FAILED_PREFIX = "format-conversion-failed/";
 
     private final AwsS3 s3Client;
     private final AAEUploader aaeUploader;
 
+    @SuppressWarnings("unused")
     public AAEUploadHandler() {
         this(new AwsS3Client(), new AAEUploader());
     }
@@ -55,10 +54,17 @@ public class AAEUploadHandler implements RequestHandler<SQSEvent, String> {
             return "parsing-error";
         }
 
-        try {
-            Optional<S3Object> s3Object = s3Client.getObject(event.getBucketName(), event.getKey());
+        if (event.getKey().startsWith(FORMAT_CONVERSION_FAILED_PREFIX)) {
+            logger.error("S3 object failed conversion to parquet: sqsMessage.id={}, bucketName={}, key={}", sqsMessage.getMessageId(), event.getBucketName(), event.getKey());
+            return "format-conversion-error";
+        }
 
-            if (!s3Object.isPresent()) {
+        try {
+            BucketName bucketName = BucketName.of(event.getBucketName());
+            ObjectKey key = ObjectKey.of(event.getKey());
+            Optional<S3Object> s3Object = s3Client.getObject(Locator.of(bucketName, key));
+
+            if (s3Object.isEmpty()) {
                 logger.warn("S3 object not found: sqsMessage.id={}, bucketName={}, key={}", sqsMessage.getMessageId(), event.getBucketName(), event.getKey());
                 return "not-found";
             }
@@ -69,7 +75,7 @@ public class AAEUploadHandler implements RequestHandler<SQSEvent, String> {
             return "success";
         }
         catch (Exception e) { // -> retry or DLQ
-            logger.error("S3 object NOT uploaded to AAE (retry candidate): sqsMessage.id={}, bucketName={}, key={}", sqsMessage.getMessageId(), event.getBucketName(), event.getKey(), e);
+            logger.warn("S3 object NOT uploaded to AAE (retry candidate): sqsMessage.id={}, bucketName={}, key={}", sqsMessage.getMessageId(), event.getBucketName(), event.getKey(), e);
             throw new RuntimeException(e);
         }
     }

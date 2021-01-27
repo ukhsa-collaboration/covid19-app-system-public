@@ -3,11 +3,9 @@ package uk.nhs.nhsx.core.aws.ssm;
 import java.util.Set;
 import java.util.function.Function;
 
-import static com.google.common.collect.Sets.newHashSet;
-
 public interface Parameters {
 
-    Set<String> positive = newHashSet("yes", "true", "enabled");
+    Set<String> positive = Set.of("yes", "true", "enabled");
 
     <T> Parameter<T> parameter(ParameterName name, Function<String, T> convert);
 

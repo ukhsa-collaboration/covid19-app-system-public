@@ -1,28 +1,49 @@
 package uk.nhs.nhsx.isolationpayment
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.document.DynamoDB
+import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded
+import com.amazonaws.services.dynamodbv2.local.shared.access.AmazonDynamoDBLocal
 import com.amazonaws.services.dynamodbv2.model.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.*
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
+import uk.nhs.nhsx.virology.persistence.VirologyPersistenceLocalTest
 import java.time.Instant
 import java.time.Period
 import java.util.*
 import java.util.function.Supplier
 
 class IsolationPersistenceLocalTest {
-
-    private val dbClient = DynamoDBEmbedded.create().amazonDynamoDB()
     private val tableName = "isolation_tokens_payment_table"
-    private val persistence = IsolationPaymentPersistence(dbClient, tableName)
-    private val dynamoDB = DynamoDB(dbClient)
-    private val isolationTokenTable = dynamoDB.getTable(tableName)
     private val clock = Supplier { Instant.parse("2020-12-01T00:00:00Z") }
+
+    private lateinit var persistence: IsolationPaymentPersistence
+    private lateinit var isolationTokenTable: Table
+
+    companion object {
+        private lateinit var dbLocal: AmazonDynamoDBLocal
+        private lateinit var dbClient: AmazonDynamoDB
+        private lateinit var dynamoDB: DynamoDB
+
+        @JvmStatic
+        @BeforeAll
+        fun setupLocalDynamo() {
+            dbLocal = DynamoDBEmbedded.create()
+            dbClient = dbLocal.amazonDynamoDB()
+            dynamoDB = DynamoDB(dbClient)
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun destroyLocalDynamo() {
+            dbLocal.shutdownNow()
+        }
+    }
 
     @BeforeEach
     fun setup() {
@@ -38,6 +59,15 @@ class IsolationPersistenceLocalTest {
             .withAttributeDefinitions(attributeDefinitions)
             .withProvisionedThroughput(ProvisionedThroughput(100L, 100L))
         dbClient.createTable(request)
+
+        persistence = IsolationPaymentPersistence(dbClient, tableName)
+        dynamoDB = DynamoDB(dbClient)
+        isolationTokenTable = dynamoDB.getTable(tableName)
+    }
+
+    @AfterEach
+    fun destroy() {
+        dbClient.deleteTable(tableName)
     }
 
     @Test

@@ -8,6 +8,7 @@ module "diagnosis_keys_processing" {
   mobile_app_bundle                 = var.mobile_app_bundle
   lambda_repository_bucket          = module.artifact_repository.bucket_name
   lambda_object_key                 = module.artifact_repository.lambda_object_key
+  log_retention_in_days             = var.log_retention_in_days
   alarm_topic_arn                   = var.alarm_topic_arn
   diagnosis_key_submission_prefixes = "nearform/JE,nearform/GB-SCT,nearform/GB-NIR,nearform/GI"
   tags                              = var.tags
@@ -21,6 +22,7 @@ module "federation_keys_processing" {
   interop_base_url                    = var.interop_base_url
   interop_download_enabled_workspaces = var.interop_download_enabled_workspaces
   interop_upload_enabled_workspaces   = var.interop_upload_enabled_workspaces
+  log_retention_in_days               = var.log_retention_in_days
   alarm_topic_arn                     = var.alarm_topic_arn
   tags                                = var.tags
 }
@@ -30,6 +32,7 @@ module "advanced_analytics_export" {
   source                        = "./modules/advanced_analytics_export"
   lambda_repository_bucket      = module.artifact_repository.bucket_name
   lambda_object_key             = module.artifact_repository.lambda_object_key
+  log_retention_in_days         = var.log_retention_in_days
   alarm_topic_arn               = var.alarm_topic_arn
   tags                          = var.tags
   analytics_submission_store    = module.analytics_submission_store_parquet.bucket_name
@@ -46,6 +49,7 @@ module "advanced_analytics_events_export" {
   source                        = "./modules/advanced_analytics_export"
   lambda_repository_bucket      = module.artifact_repository.bucket_name
   lambda_object_key             = module.artifact_repository.lambda_object_key
+  log_retention_in_days         = var.log_retention_in_days
   alarm_topic_arn               = var.alarm_topic_arn
   tags                          = var.tags
   analytics_submission_store    = module.analytics_events_submission.store
@@ -66,6 +70,7 @@ module "virology_tokens_processing" {
   virology_submission_tokens_table_id = module.virology_upload.submission_tokens_table
   test_orders_index                   = module.virology_upload.test_orders_index_name
   logs_bucket_id                      = var.logs_bucket_id
+  log_retention_in_days               = var.log_retention_in_days
   alarm_topic_arn                     = var.alarm_topic_arn
   tags                                = var.tags
 }

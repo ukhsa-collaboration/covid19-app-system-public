@@ -5,6 +5,7 @@ import uk.nhs.nhsx.core.exceptions.Defect;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class Signature {
@@ -16,7 +17,7 @@ public class Signature {
     public Signature(KeyId keyId, SigningAlgorithmSpec algo, byte[] bytes) {
         this.keyId = keyId;
         this.algo = algo;
-        this.bytes = bytes;
+        this.bytes = Arrays.copyOf(bytes, bytes.length);
     }
 
     public ByteBuffer asByteBuffer() {
@@ -45,7 +46,6 @@ public class Signature {
     // From Apache-2 Licenced org.jose4j.jws.EcdsaUsingShaAlgorithm
     // Convert the DER encoding of R and S into a concatenation of R and S
     private byte[] convertDerToConcatenated(byte[] derEncodedBytes, int outputLength) throws IOException {
-
         if (derEncodedBytes.length < 8 || derEncodedBytes[0] != 48) {
             throw new IOException("Invalid format of ECDSA signature");
         }

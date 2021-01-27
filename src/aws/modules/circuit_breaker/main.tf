@@ -25,8 +25,9 @@ module "circuit_breaker_lambda" {
     SSM_CIRCUIT_BREAKER_BASE_NAME = "/app/${terraform.workspace}/cb"
     custom_oai                    = var.custom_oai
   }
-  app_alarms_topic = var.alarm_topic_arn
-  tags             = var.tags
+  log_retention_in_days = var.log_retention_in_days
+  app_alarms_topic      = var.alarm_topic_arn
+  tags                  = var.tags
 }
 
 module "circuit_breaker_gateway" {
