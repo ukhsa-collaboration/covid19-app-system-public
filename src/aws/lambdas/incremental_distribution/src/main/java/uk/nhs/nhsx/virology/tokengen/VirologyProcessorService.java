@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.virology.tokengen;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.ExceptionThrown;
 import uk.nhs.nhsx.virology.CtaToken;
 import uk.nhs.nhsx.virology.TestKit;
 import uk.nhs.nhsx.virology.VirologyService;
@@ -28,28 +28,27 @@ public class VirologyProcessorService {
     private final VirologyProcessorStore virologyProcessorStore;
     private final Supplier<Instant> clock;
     private final int maxRetryCount;
+    private final Events events;
 
     private final ExecutorService executor = Executors.newFixedThreadPool(20);
-
-    private static final Logger logger = LogManager.getLogger(VirologyProcessorService.class);
 
     public VirologyProcessorService(VirologyService virologyService,
                                     VirologyProcessorStore virologyProcessorStore,
                                     Supplier<Instant> clock,
-                                    int maxRetryCount) {
+                                    int maxRetryCount,
+                                    Events events) {
         this.virologyService = virologyService;
         this.virologyProcessorStore = virologyProcessorStore;
         this.clock = clock;
         this.maxRetryCount = maxRetryCount;
+        this.events = events;
     }
 
     public CtaProcessorResult generateAndStoreTokens(CtaProcessorRequest event) {
-        logger.info("Generating tokens from event: {}", event);
         var start = clock.get();
         var tokens = generateTokens(event);
 
         if (tokens.isEmpty()) {
-            logger.info("No tokens generated/stored (empty list)");
             return new CtaProcessorResult.Error("No tokens generated/stored (empty list)");
         }
 
@@ -60,7 +59,6 @@ public class VirologyProcessorService {
             "Generated %d tokens in %d seconds",
             tokens.size(), Duration.between(start, Instant.now()).toSeconds()
         );
-        logger.info(message);
 
         return new CtaProcessorResult.Success(ctaTokensZip.filename, message);
     }
@@ -88,7 +86,7 @@ public class VirologyProcessorService {
             .mapToObj(it ->
                 supplyAsync(() -> generateTokenRetryingOnFailure(request), executor)
                     .exceptionally(ex -> {
-                        logger.error("Exception while generating CTA token", ex);
+                        events.emit(getClass(), new ExceptionThrown<>(ex, "Exception while generating CTA token"));
                         return null;
                     })
             )
@@ -114,9 +112,8 @@ public class VirologyProcessorService {
             try {
                 return virologyService.acceptTestResultGeneratingTokens(request);
             } catch (Exception e) {
-                logger.info("Failed to generate cta token retry: {} with error: {}", numberOfTries, e.getMessage());
+                numberOfTries++;
             }
-            numberOfTries++;
         } while (numberOfTries < maxRetryCount);
 
         throw new RuntimeException("Generate cta token exceeded maximum of " + maxRetryCount + " retries");

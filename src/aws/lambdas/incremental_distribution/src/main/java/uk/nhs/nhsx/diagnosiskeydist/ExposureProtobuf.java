@@ -1,17 +1,17 @@
 package uk.nhs.nhsx.diagnosiskeydist;
 
-import batchZipCreation.Exposure;
-import batchZipCreation.Exposure.TemporaryExposureKey;
+import batchZipCreation.Exposure.*;
 import com.google.protobuf.ByteString;
 import uk.nhs.nhsx.diagnosiskeydist.apispec.ZIPSubmissionPeriod;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 
 import java.nio.ByteBuffer;
+import java.time.Duration;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class ExposureProtobuf {
 
@@ -25,8 +25,8 @@ public class ExposureProtobuf {
         this.mobileAppBundleId = mobileAppBundleId;
     }
 
-    public Exposure.TEKSignatureList buildTEKSignatureList(ByteBuffer byteBufferSignatureResult) {
-        Exposure.TEKSignature tekSignature = Exposure.TEKSignature
+    public TEKSignatureList buildTEKSignatureList(ByteBuffer byteBufferSignatureResult) {
+        TEKSignature tekSignature = TEKSignature
             .newBuilder()
             .setBatchNum(1)
             .setBatchSize(1)
@@ -34,17 +34,19 @@ public class ExposureProtobuf {
             .setSignature(ByteString.copyFrom(byteBufferSignatureResult))
             .build();
 
-        return Exposure.TEKSignatureList
+        return TEKSignatureList
             .newBuilder()
             .addSignatures(tekSignature)
             .build();
     }
 
-    public Exposure.TemporaryExposureKeyExport buildTemporaryExposureKeyExport(List<StoredTemporaryExposureKey> keys, ZIPSubmissionPeriod period, long periodOffsetMinutes) {
-        return Exposure.TemporaryExposureKeyExport
+    public TemporaryExposureKeyExport buildTemporaryExposureKeyExport(List<StoredTemporaryExposureKey> keys,
+                                                                      ZIPSubmissionPeriod period,
+                                                                      Duration offset) {
+        return TemporaryExposureKeyExport
             .newBuilder()
-            .setStartTimestamp((Date.from(period.getStartInclusive()).getTime() / 1000) + periodOffsetMinutes * 60L)
-            .setEndTimestamp((Date.from(period.getEndExclusive()).getTime() / 1000) + periodOffsetMinutes * 60L)
+            .setStartTimestamp(period.getStartInclusive().plus(offset).getEpochSecond())
+            .setEndTimestamp(period.getEndExclusive().plus(offset).getEpochSecond())
             .setBatchNum(1)
             .setBatchSize(1)
             .addSignatureInfos(buildSignatureInfo())
@@ -55,7 +57,7 @@ public class ExposureProtobuf {
     private List<TemporaryExposureKey> buildTekList(List<StoredTemporaryExposureKey> keys) {
         return keys.stream()
             .map(buildTemporaryExposureKey())
-            .collect(Collectors.toList());
+            .collect(toList());
     }
 
     private Function<StoredTemporaryExposureKey, TemporaryExposureKey> buildTemporaryExposureKey() {
@@ -63,7 +65,7 @@ public class ExposureProtobuf {
     }
 
     private TemporaryExposureKey buildTemporaryExposureKey(StoredTemporaryExposureKey tek) {
-        return Exposure.TemporaryExposureKey
+        return TemporaryExposureKey
             .newBuilder()
             .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode(tek.key)))
             .setRollingStartIntervalNumber(tek.rollingStartNumber)
@@ -73,8 +75,8 @@ public class ExposureProtobuf {
             .build();
     }
 
-    private Exposure.SignatureInfo buildSignatureInfo() {
-        return Exposure.SignatureInfo
+    private SignatureInfo buildSignatureInfo() {
+        return SignatureInfo
             .newBuilder()
             .setAndroidPackage(mobileAppBundleId)
             .setAppBundleId(mobileAppBundleId)

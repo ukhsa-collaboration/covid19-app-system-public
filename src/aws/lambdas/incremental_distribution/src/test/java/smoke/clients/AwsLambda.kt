@@ -1,49 +1,60 @@
 package smoke.clients
 
-import com.amazonaws.services.lambda.AWSLambdaClientBuilder
-import com.amazonaws.services.lambda.model.Environment
-import com.amazonaws.services.lambda.model.GetFunctionConfigurationRequest
-import com.amazonaws.services.lambda.model.InvokeRequest
-import com.amazonaws.services.lambda.model.InvokeResult
-import com.amazonaws.services.lambda.model.UpdateFunctionConfigurationRequest
-import com.amazonaws.services.lambda.model.UpdateFunctionConfigurationResult
+import org.http4k.aws.AwsSdkClient
+import org.http4k.client.JavaHttpClient
+import org.http4k.filter.debug
+import software.amazon.awssdk.core.SdkBytes
+import software.amazon.awssdk.services.lambda.LambdaClient
+import software.amazon.awssdk.services.lambda.model.Environment
+import software.amazon.awssdk.services.lambda.model.GetFunctionConfigurationRequest
+import software.amazon.awssdk.services.lambda.model.InvokeRequest
+import software.amazon.awssdk.services.lambda.model.InvokeResponse
+import software.amazon.awssdk.services.lambda.model.UpdateFunctionConfigurationRequest
+import software.amazon.awssdk.services.lambda.model.UpdateFunctionConfigurationResponse
+import java.nio.charset.Charset
+
 
 object AwsLambda {
 
-    fun updateLambdaEnvVar(functionName: String, envVar: Pair<String, String>): UpdateFunctionConfigurationResult {
-        val awsLambdaClient = AWSLambdaClientBuilder.standard().build()
+    private val client = LambdaClient.builder().httpClient(AwsSdkClient(JavaHttpClient().debug())).build()
+
+    fun updateLambdaEnvVar(functionName: String, envVar: Pair<String, String>): UpdateFunctionConfigurationResponse {
+        val awsLambdaClient = client
 
         val configurationResponse = awsLambdaClient.getFunctionConfiguration(
-            GetFunctionConfigurationRequest().withFunctionName(functionName)
+            GetFunctionConfigurationRequest.builder().functionName(functionName).build()
         )
 
-        val environment = configurationResponse.environment
-        environment.variables[envVar.first] = envVar.second
+        val environment = configurationResponse.environment()
 
-        val updateRequest = UpdateFunctionConfigurationRequest()
-            .withFunctionName(functionName)
-            .withEnvironment(Environment().withVariables(environment.variables))
+        val variables = Environment.builder()
+            .variables(environment.variables() + (envVar.first to envVar.second))
+        val updateRequest = UpdateFunctionConfigurationRequest.builder()
+            .functionName(functionName)
+            .environment(variables.build()).build()
 
         return awsLambdaClient.updateFunctionConfiguration(updateRequest)
     }
 
     fun readLambdaEnvVar(functionName: String, envVar: String): String {
-        val awsLambdaClient = AWSLambdaClientBuilder.standard().build()
+        val awsLambdaClient = client
 
         val configurationResponse = awsLambdaClient.getFunctionConfiguration(
-            GetFunctionConfigurationRequest().withFunctionName(functionName)
+            GetFunctionConfigurationRequest.builder().functionName(functionName).build()
         )
 
-        return configurationResponse.environment.variables[envVar]!!
+        return configurationResponse.environment().variables()[envVar]!!
     }
 
-    fun invokeFunction(functionName: String, payload: String? = null): InvokeResult {
-        val awsLambdaClient = AWSLambdaClientBuilder.standard().build()
-        val invokeRequest = InvokeRequest().withFunctionName(functionName)
+    fun invokeFunction(functionName: String, payload: String? = null): InvokeResponse {
+        val awsLambdaClient = client
+        val invokeRequest = InvokeRequest.builder().functionName(functionName)
         return if (payload == null) {
-            awsLambdaClient.invoke(invokeRequest)
+            awsLambdaClient.invoke(invokeRequest.build())
         } else {
-            awsLambdaClient.invoke(invokeRequest.withPayload(payload))
+            awsLambdaClient.invoke(
+                invokeRequest.payload(SdkBytes.fromString(payload, Charset.defaultCharset())).build()
+            )
         }
     }
 
@@ -61,7 +72,7 @@ object AwsLambda {
             lambdaFunctionName,
             envVarName to "$value"
         )
-        val updatedEnvVar = result.environment.variables[envVarName]
+        val updatedEnvVar = result.environment().variables()[envVarName]
         if (updatedEnvVar != "$value")
             throw IllegalStateException("Expected env var: $envVarName to be updated but it was not.")
     }
@@ -72,7 +83,7 @@ object AwsLambda {
             lambdaFunctionName,
             envVarName to "$value"
         )
-        val updatedEnvVar = result.environment.variables[envVarName]
+        val updatedEnvVar = result.environment().variables()[envVarName]
         if (updatedEnvVar != "$value")
             throw IllegalStateException("Expected env var: $envVarName to be updated but it was not.")
     }

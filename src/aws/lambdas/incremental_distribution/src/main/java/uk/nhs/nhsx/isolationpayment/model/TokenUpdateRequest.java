@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.isolationpayment.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import uk.nhs.nhsx.core.DateFormatValidator;
 
 import java.util.regex.Pattern;
@@ -17,7 +18,9 @@ public class TokenUpdateRequest {
         this.isolationPeriodEndDate = isolationPeriodEndDate;
     }
 
-    public static TokenUpdateRequest validator(TokenUpdateRequest request) {
+    @JsonCreator
+    public static TokenUpdateRequest validatedFrom(String ipcToken, String riskyEncounterDate, String isolationPeriodEndDate) {
+        var request = new TokenUpdateRequest(ipcToken, riskyEncounterDate, isolationPeriodEndDate);
         DateFormatValidator.formatter.parse(request.riskyEncounterDate);
         DateFormatValidator.formatter.parse(request.isolationPeriodEndDate);
         if (!VALID_TOKEN_PATTERN.matcher(request.ipcToken).matches()) {

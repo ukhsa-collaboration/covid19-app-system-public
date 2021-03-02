@@ -33,3 +33,6 @@ temp
 # Ignore Gradle project-specific cache directory
 .gradle
 src/aws/lambdas/incremental_distribution/build/
+
+# Ruby
+Gemfile.lock

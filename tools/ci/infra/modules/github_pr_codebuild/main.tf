@@ -68,6 +68,9 @@ resource "aws_codebuild_project" "this" {
 
 
 resource "aws_codebuild_webhook" "this" {
+  depends_on = [
+    aws_codebuild_project.this
+  ]
   project_name = var.name
 
   filter_group {

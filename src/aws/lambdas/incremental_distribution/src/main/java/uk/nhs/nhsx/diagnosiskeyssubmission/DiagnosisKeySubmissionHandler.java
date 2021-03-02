@@ -3,6 +3,7 @@ package uk.nhs.nhsx.diagnosiskeyssubmission;
 import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.EnvironmentKeys;
 import uk.nhs.nhsx.core.HttpResponses;
+import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.StandardSigning;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.UniqueId;
@@ -11,7 +12,14 @@ import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.auth.ResponseSigner;
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient;
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoDBUtils;
-import uk.nhs.nhsx.core.aws.s3.*;
+import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
+import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
+import uk.nhs.nhsx.core.aws.s3.S3Storage;
+import uk.nhs.nhsx.core.aws.s3.UniqueObjectKeyNameProvider;
+import uk.nhs.nhsx.core.events.DiagnosisKeySubmission;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.PrintingJsonEvents;
+import uk.nhs.nhsx.core.events.UnprocessableJson;
 import uk.nhs.nhsx.core.routing.Routing;
 import uk.nhs.nhsx.core.routing.RoutingHandler;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload;
@@ -19,11 +27,11 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayl
 import java.time.Instant;
 import java.util.function.Supplier;
 
-import static uk.nhs.nhsx.core.Jackson.deserializeMaybe;
 import static uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication;
 import static uk.nhs.nhsx.core.routing.Routing.Method.POST;
 import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
+import static uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
 
 public class DiagnosisKeySubmissionHandler extends RoutingHandler {
@@ -32,29 +40,33 @@ public class DiagnosisKeySubmissionHandler extends RoutingHandler {
 
     @SuppressWarnings("unused")
     public DiagnosisKeySubmissionHandler() {
-        this(Environment.fromSystem(), SystemClock.CLOCK);
+        this(Environment.fromSystem(), SystemClock.CLOCK, new PrintingJsonEvents(SystemClock.CLOCK));
     }
 
-    public DiagnosisKeySubmissionHandler(Environment environment, Supplier<Instant> clock) {
+    public DiagnosisKeySubmissionHandler(Environment environment, Supplier<Instant> clock, Events events) {
         this(
             environment,
-            awsAuthentication(ApiName.Mobile),
-            StandardSigning.signResponseWithKeyGivenInSsm(environment, clock),
-            new AwsS3Client(),
+            awsAuthentication(ApiName.Mobile, events),
+            awsAuthentication(ApiName.Health, events),
+            StandardSigning.signResponseWithKeyGivenInSsm(environment, clock, events),
+            new AwsS3Client(events),
             new DynamoDBUtils(),
             new UniqueObjectKeyNameProvider(clock, UniqueId.ID),
-            clock
+            clock,
+            events
         );
     }
 
     DiagnosisKeySubmissionHandler(
-            Environment environment,
-            Authenticator authenticator,
-            ResponseSigner signer,
-            S3Storage s3Storage,
-            AwsDynamoClient awsDynamoClient,
-            ObjectKeyNameProvider objectKeyNameProvider,
-            Supplier<Instant> clock
+        Environment environment,
+        Authenticator mobileAuthenticator,
+        Authenticator healthAuthenticator,
+        ResponseSigner signer,
+        S3Storage s3Storage,
+        AwsDynamoClient awsDynamoClient,
+        ObjectKeyNameProvider objectKeyNameProvider,
+        Supplier<Instant> clock,
+        Events events
     ) {
         DiagnosisKeysSubmissionService service =
             new DiagnosisKeysSubmissionService(
@@ -63,21 +75,26 @@ public class DiagnosisKeySubmissionHandler extends RoutingHandler {
                 objectKeyNameProvider,
                 environment.access.required(EnvironmentKeys.SUBMISSIONS_TOKENS_TABLE),
                 environment.access.required(EnvironmentKeys.SUBMISSION_STORE),
-                clock
+                clock,
+                events
             );
 
-        this.handler = withSignedResponses(environment, authenticator, signer,
+        handler = withSignedResponses(events, environment, signer,
             routes(
-                path(POST, "/submission/diagnosis-keys",
-                    (r) -> {
-                        deserializeMaybe(r.getBody(), ClientTemporaryExposureKeysPayload.class)
-                            .ifPresent(service::acceptTemporaryExposureKeys);
+                authorisedBy(mobileAuthenticator,
+                    path(POST, "/submission/diagnosis-keys", r -> {
+                            events.emit(getClass(), new DiagnosisKeySubmission());
+                            Jackson.readMaybe(r.getBody(), ClientTemporaryExposureKeysPayload.class,  e -> events.emit(getClass(), new UnprocessableJson(e)))
+                                .ifPresent(service::acceptTemporaryExposureKeys);
 
-                        return HttpResponses.ok();
-                    }
+                            return HttpResponses.ok();
+                        }
+                    )
                 ),
-                path(POST, "/submission/diagnosis-keys/health", (r) ->
-                    HttpResponses.ok()
+                authorisedBy(healthAuthenticator,
+                    path(POST, "/submission/diagnosis-keys/health", r ->
+                        HttpResponses.ok()
+                    )
                 )
             )
         );

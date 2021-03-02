@@ -270,7 +270,46 @@ resource "aws_glue_catalog_table" "this" {
       name = "totalExposureWindowsConsideredRisky"
       type = "int"
     }
-
+    columns {
+      name = "acknowledgedStartOfIsolationDueToRiskyContact"
+      type = "int"
+    }
+    columns {
+      name = "hasRiskyContactNotificationsEnabledBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "totalRiskyContactReminderNotifications"
+      type = "int"
+    }
+    columns {
+      name = "receivedUnconfirmedPositiveTestResult"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForUnconfirmedTestBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "launchedTestOrdering"
+      type = "int"
+    }
+    columns {
+      name = "didHaveSymptomsBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didAskForSymptomsOnPositiveTestEntry"
+      type = "int"
+    }
+    columns {
+      name = "declaredNegativeResultFromDCT"
+      type = "int"
+    }
   }
 }
 

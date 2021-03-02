@@ -18,6 +18,7 @@ output "gateway_id" {
   value = module.isolation_payment_gateway.api_gateway_id
 }
 
+
 output "ipc_tokens_table" {
   value = aws_dynamodb_table.isolation_payment_tokens_table.id
 }

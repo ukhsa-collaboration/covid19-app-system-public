@@ -11,7 +11,7 @@ data class Endpoint(val lambda: DeployedLambda, val name: String)
 enum class DeployedLambda(
     val converter: KFunction1<Endpoint, (JsonNode) -> EndpointConfig>,
     val baseEndpoint: String,
-    val tokenJsonName: String? = null,
+    val endpointBearerTokenJsonName: String? = null,
     endpointSuffixes: List<String> = listOf(),
     val healthEndpoint: String = "${baseEndpoint}_health_endpoint"
 ) {

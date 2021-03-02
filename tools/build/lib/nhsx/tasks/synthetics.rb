@@ -68,10 +68,15 @@ namespace :synth do
         desc "Destroy synthetic canaries in the #{tgt_env} target environment"
         desc "Destroy synthetic canaries for the current branch in the dev account" if tgt_env == "branch"
         task :"#{tgt_env}" => prerequisites do
+          include NHSx::AWS
+          include NHSx::AWS_Synth
           include NHSx::Terraform
           accounts_folder = File.dirname(NHSx::Terraform::SYNTH_DEV_ACCOUNT)
           terraform_configuration = File.join($configuration.base, accounts_folder, account)
+          empty_workspace_buckets(tgt_env, terraform_configuration, $configuration)
           delete_workspace(tgt_env, terraform_configuration, $configuration)
+          region = "eu-west-1"
+          delete_orphan_synth_resources(region, $configuration)
         end
       end
     end

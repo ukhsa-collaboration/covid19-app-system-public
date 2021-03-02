@@ -1,8 +1,9 @@
 package uk.nhs.nhsx.keyfederation;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Jackson;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.OutgoingHttpRequest;
+import uk.nhs.nhsx.core.events.UnprocessableJson;
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse;
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest;
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadResponse;
@@ -25,18 +26,19 @@ import static uk.nhs.nhsx.core.UncheckedException.uncheckedGet;
 public class InteropClient {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final Logger logger = LogManager.getLogger(InteropClient.class);
 
     private final String interopBaseUrl;
     private final String authToken;
     private final JWS jws;
+    private final Events events;
 
     private final HttpClient client;
 
-    public InteropClient(String interopBaseUrl, String authToken, JWS jws) {
+    public InteropClient(String interopBaseUrl, String authToken, JWS jws, Events events) {
         this.interopBaseUrl = interopBaseUrl;
         this.authToken = authToken;
         this.jws = jws;
+        this.events = events;
         client = HttpClient.newHttpClient();
     }
 
@@ -48,11 +50,11 @@ public class InteropClient {
 
         var response = uncheckedGet(() -> client.send(request, HttpResponse.BodyHandlers.ofString()));
 
-        logger.debug("GET {} -> {}", request.uri(), response.statusCode());
+        events.emit(getClass(), new OutgoingHttpRequest(request.uri().toString(), request.method(), response.statusCode()));
 
         if (response.statusCode() == 200) {
             return Optional.of(
-                Jackson.deserializeMaybe(response.body(), DiagnosisKeysDownloadResponse.class)
+                Jackson.readMaybe(response.body(), DiagnosisKeysDownloadResponse.class,  e -> events.emit(getClass(), new UnprocessableJson(e)))
                     .orElseThrow(RuntimeException::new)
             );
         }
@@ -61,8 +63,7 @@ public class InteropClient {
             return Optional.empty();
         }
 
-        logger.error("Request to download keys from federated key server with batch tag " + batchTag + " failed with status code " + response.statusCode());
-        throw new RuntimeException("Unexpected HTTP status code " + response.statusCode());
+        throw new RuntimeException("Request to download keys from federated key server with batch tag " + batchTag + " failed with status code " + response.statusCode());
     }
 
     public DiagnosisKeysUploadResponse uploadKeys(String payload) {
@@ -77,17 +78,13 @@ public class InteropClient {
                 .build();
             HttpResponse<String> httpResponse = client.send(uploadRequest, HttpResponse.BodyHandlers.ofString());
 
-            logger.debug("POST {} -> {}", uploadRequest.uri(), httpResponse.statusCode());
-
             if (httpResponse.statusCode() == 200) {
-                return Jackson.deserializeMaybe(httpResponse.body(), DiagnosisKeysUploadResponse.class).orElseThrow(RuntimeException::new);
+                return Jackson.readMaybe(httpResponse.body(), DiagnosisKeysUploadResponse.class,  e -> events.emit(getClass(), new UnprocessableJson(e))).orElseThrow(RuntimeException::new);
             } else {
-                logger.error("Request to upload keys to federated key server failed with status code " + httpResponse.statusCode());
-                throw new RuntimeException("Unexpected HTTP status code " + httpResponse.statusCode());
+                throw new RuntimeException("Request to upload keys to federated key server failed with status code " + httpResponse.statusCode());
             }
         } catch (InterruptedException | IOException  e) {
-            logger.error("Request to upload keys to federated key server failed", e);
-            throw new RuntimeException(e);
+            throw new RuntimeException("Request to upload keys to federated key server failed", e);
         }
     }
 }

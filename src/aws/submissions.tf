@@ -19,6 +19,7 @@ module "analytics_submission" {
   log_retention_in_days             = var.log_retention_in_days
   alarm_topic_arn                   = var.alarm_topic_arn
   provisioned_concurrent_executions = var.analytics_submission_scale_down_provisioned_concurrent_executions
+  policy_document                   = module.analytics_submission_access.policy_document
   tags                              = var.tags
 }
 
@@ -39,6 +40,7 @@ module "analytics_events_submission" {
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   log_retention_in_days    = var.log_retention_in_days
   alarm_topic_arn          = var.alarm_topic_arn
+  policy_document          = module.analytics_events_submission_access.policy_document
   tags                     = var.tags
 }
 
@@ -85,7 +87,7 @@ module "analytics_submission_store_parquet" {
   service                  = "submission-parquet"
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
-  override_policy          = module.analytics_submission_store_parquet_analytics_access.policy_document
+  policy_document          = module.analytics_submission_store_parquet_access.policy_document
   tags                     = var.tags
 }
 
@@ -351,7 +353,46 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "totalExposureWindowsConsideredRisky"
       type = "int"
     }
-
+    columns {
+      name = "acknowledgedStartOfIsolationDueToRiskyContact"
+      type = "int"
+    }
+    columns {
+      name = "hasRiskyContactNotificationsEnabledBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "totalRiskyContactReminderNotifications"
+      type = "int"
+    }
+    columns {
+      name = "receivedUnconfirmedPositiveTestResult"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForUnconfirmedTestBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "launchedTestOrdering"
+      type = "int"
+    }
+    columns {
+      name = "didHaveSymptomsBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didAskForSymptomsOnPositiveTestEntry"
+      type = "int"
+    }
+    columns {
+      name = "declaredNegativeResultFromDCT"
+      type = "int"
+    }
   }
 }
 
@@ -447,6 +488,7 @@ module "diagnosis_keys_submission" {
   alarm_topic_arn          = var.alarm_topic_arn
   replication_enabled      = var.submission_replication_enabled
   lifecycle_rule_enabled   = true
+  policy_document          = module.diagnosis_keys_submission_access.policy_document
   tags                     = var.tags
 }
 
@@ -468,6 +510,7 @@ module "empty_submission" {
   alarm_topic_arn          = var.alarm_topic_arn
   replication_enabled      = var.submission_replication_enabled
   lifecycle_rule_enabled   = true
+  policy_document          = module.empty_submission_access.policy_document
   tags                     = var.tags
 }
 
@@ -482,7 +525,6 @@ module "virology_submission" {
   test_orders_table_id                = module.virology_upload.test_orders_table
   test_results_table_id               = module.virology_upload.results_table
   virology_submission_tokens_table_id = module.virology_upload.submission_tokens_table
-  virology_v2_apis_enabled            = var.virology_v2_apis_enabled
   test_orders_index                   = module.virology_upload.test_orders_index_name
   custom_oai                          = random_uuid.submission-custom-oai.result
   log_retention_in_days               = var.log_retention_in_days
@@ -535,6 +577,17 @@ module "submission_apis" {
   enable_shield_protection                       = var.enable_shield_protection
   tags                                           = var.tags
 }
+############################
+module "circuit_breaker_analytics" {
+  source                         = "./modules/circuit_breaker_analytics"
+  alarm_topic_arn                = var.alarm_topic_arn
+  circuit_breaker_log_group_name = module.exposure_notification_circuit_breaker.lambda_log_group
+  lambda_object_key              = module.artifact_repository.lambda_object_key
+  lambda_repository_bucket       = module.artifact_repository.bucket_name
+  logs_bucket_id                 = var.logs_bucket_id
+  tags                           = var.tags
+  policy_document                = module.circuit_breaker_analytics_store_access.policy_document
+}
 
 output "analytics_submission_store" {
   value = module.analytics_submission.store
@@ -575,6 +628,7 @@ output "isolation_payment_create_endpoint" {
 output "isolation_payment_update_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/isolation-payment/ipc-token/update"
 }
+
 output "virology_submission_lambda_function_name" {
   value = module.virology_submission.lambda_function_name
 }

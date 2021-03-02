@@ -1,5 +1,5 @@
 # Isolation Payment API (Mobile-facing)
- 
+
 API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
 ## HTTP request and response
@@ -21,7 +21,7 @@ Mobile app creates ```ipcToken``` after start of self-isolation period (the gene
 
 Endpoint: ```POST https://<FQDN>/isolation-payment/ipc-token/create```
 
-Request body: 
+Request body:
 ```json
 {
   "country": "England|Wales"

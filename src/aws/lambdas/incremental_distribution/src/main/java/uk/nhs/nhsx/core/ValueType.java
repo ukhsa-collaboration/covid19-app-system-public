@@ -2,8 +2,8 @@ package uk.nhs.nhsx.core;
 
 import java.util.Objects;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
+import static uk.nhs.nhsx.core.Preconditions.checkArgument;
 
 public abstract class ValueType<T extends ValueType<T>> implements Comparable<T> {
     public final String value;

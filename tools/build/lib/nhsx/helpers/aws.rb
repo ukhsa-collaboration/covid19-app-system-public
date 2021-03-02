@@ -11,6 +11,7 @@ module NHSx
     AWS_DEPLOYMENT_ROLES = {
       "staging" => "arn:aws:iam::123456789012:role/staging-ApplicationDeploymentUser",
       "prod" => "arn:aws:iam::123456789012:role/prod-ApplicationDeploymentUser",
+      "aa-dev" => "arn:aws:iam::181706652550:role/AccountDeploymentUser",
     }.freeze
     # The full AWS role ARNs to use when logging in for queries
     AWS_READ_ROLES = {
@@ -26,7 +27,7 @@ module NHSx
       def self.new_lambda_output_file(lambda_function, system_config)
         outdir = File.join(system_config.out, "/logs/lambdas")
         mkdir_p(outdir, :verbose => false)
-        return "#{outdir}/#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{lambda_function}.log"
+        "#{outdir}/#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{lambda_function}.log"
       end
 
       # Invoke an AWS Lambda function by name and put the response under out/logs/lambdas
@@ -113,33 +114,6 @@ module NHSx
         "aws-mfa --duration 3600 --profile #{profile} --assume-role #{role} --long-term-suffix none --short-term-suffix #{suffix}"
       end
 
-      def self.get_active_synth_lambda_layers(region, system_config)
-        cmdline = "aws lambda list-functions --region #{region}"
-        cmd = run_command("Retrieve list of active synth lambda layers", cmdline, system_config)
-        active_synth_lambda_layers = []
-        lambda_layers = JSON.parse(cmd.output)["Functions"].map { |el| el["Layers"] }
-        lambda_layers.map do |layers_list|
-          if !layers_list
-            next
-          end
-          layers_list.map do |layer|
-            if layer["Arn"].match(/:(cwsyn-.*):[^:]*$/)
-              layer_name = layer["Arn"].match(/:(cwsyn-.*):[^:]*$/).captures[0]
-              if !active_synth_lambda_layers.include?(layer_name)
-                active_synth_lambda_layers.push(layer_name)
-              end
-            end
-          end
-        end
-        active_synth_lambda_layers
-      end
-
-      def self.get_all_synth_lambda_layers(region, system_config)
-        cmdline = "aws lambda list-layers --region #{region}"
-        cmd = run_command("Retrieve list of all synth lambda layers", cmdline, system_config)
-        JSON.parse(cmd.output)["Layers"].select { |el| el["LayerName"].start_with?("cwsyn-") }.map { |el| el["LayerName"] }
-      end
-
       def self.get_lambda_layer_versions(layer_name, region)
         "aws lambda list-layer-versions --layer-name #{layer_name} --region #{region}"
       end
@@ -171,13 +145,40 @@ module NHSx
       def self.disable_event_source_mapping(uuid)
         "aws lambda update-event-source-mapping --uuid #{uuid} --no-enabled"
       end
-    end
+
+      def self.delete_lambda_function(function_name, region)
+        "aws lambda delete-function --function-name #{function_name} --region #{region}"
+      end
+
+      def self.delete_log_group(log_group_name, region)
+        "aws logs delete-log-group --log-group-name #{log_group_name} --region #{region}"
+      end
+
+      def self.list_lambda_layers(region)
+        "aws lambda list-layers --region #{region}"
+      end
+
+      def self.list_log_groups(prefix, region)
+        "aws logs describe-log-groups --log-group-name-prefix #{prefix} --region #{region}"
+      end
+
+      def self.list_lambda_functions(region)
+        "aws lambda list-functions --region #{region}"
+      end
+
+      # Lists all S3 buckets known to Terraform in the workspace, extracts their AWS identifier and recursively deletes
+      def self.empty_workspace_buckets
+        'terraform refresh $(terraform state list | grep "aws_s3_bucket\\." ' +
+          '| sed "s/^\\(.*\\)$/ -target=\\1/") | grep -o "id=[^]]*" ' +
+          '| sed "s/^id=\\(.*\\)$/aws s3 rm s3:\\/\\/\\1 --recursive/" | bash > /dev/null'
+      end
+    end # of module Commandlines
 
     def ssm_parameter(parameter_name, system_config)
       cmdline = NHSx::AWS::Commandlines.get_ssm_parameter(parameter_name)
       cmd = run_command("Retrieve #{parameter_name.split("/").last}", cmdline, system_config)
       parameter_data = JSON.parse(cmd.output.chomp)
-      return parameter_data["Parameter"]["Value"]
+      parameter_data["Parameter"]["Value"]
     end
 
     # Return the secret for secret_name
@@ -196,22 +197,40 @@ module NHSx
       run_command("Update #{secret_name}", NHSx::AWS::Commandlines.update_secret(secret_name, string_secret), system_config)
     end
 
-    # Perform an aws-mfa login to prompt for the MFA code
-    def mfa_login(role_name, account)
-      role_arn = aws_role_arn(role_name, account)
-      cmdline = NHSx::AWS::Commandlines.multi_factor_authentication(NHSx::AWS::AWS_AUTH_PROFILE, role_arn, account)
+    def delete_lambda_functions(functions, region, system_config)
+      functions.map do |function_name|
+        delete_lambda_function(function_name, region, system_config)
+      end
+    end
+
+    def delete_log_groups(log_groups, region, system_config)
+      log_groups.map do |log_group_name|
+        delete_log_group(log_group_name, region, system_config)
+      end
+    end
+
+    def delete_lambda_function(function_name, region, system_config)
+      cmdline = NHSx::AWS::Commandlines.delete_lambda_function(function_name, region)
       sh(cmdline)
     end
 
-    def get_orphaned_synthetics_lambda_layers(region, system_config)
-      all_synth_lambda_layers = NHSx::AWS::Commandlines.get_all_synth_lambda_layers(region, system_config)
-      active_synth_lambda_layers = NHSx::AWS::Commandlines.get_active_synth_lambda_layers(region, system_config)
-      all_synth_lambda_layers - active_synth_lambda_layers
+    def delete_log_group(log_group_name, region, system_config)
+      cmdline = NHSx::AWS::Commandlines.delete_log_group(log_group_name, region)
+      sh(cmdline)
+    end
+
+    def delete_lambda_layers(layers, region, system_config)
+      layers.each do |layer_name|
+        layer_versions = get_lambda_layer_versions(layer_name, region, system_config)
+        layer_versions.each do |layer_version|
+          delete_lambda_layer_version(layer_name, layer_version, region)
+        end
+      end
     end
 
     def get_lambda_layer_versions(layer_name, region, system_config)
-      cmd = run_command("Retrieve list of lambda layer versions",
-                        NHSx::AWS::Commandlines.get_lambda_layer_versions(layer_name, region), system_config)
+      cmdline = NHSx::AWS::Commandlines.get_lambda_layer_versions(layer_name, region)
+      cmd = run_command("Retrieve list of lambda layer versions for #{layer_name}", cmdline, system_config)
       JSON.parse(cmd.output)["LayerVersions"].map { |el| el["Version"] }
     end
 
@@ -275,6 +294,19 @@ module NHSx
         AWS_READ_ROLES[account]
       else
         raise GaudiError, "No ARN corresponding to #{role_name}"
+      end
+    end
+
+    # Deletes the contents of any S3 buckets in the Terraform workspace corresponding to the given name
+    def empty_workspace_buckets(workspace_name, terraform_configuration, system_config)
+      workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
+      Dir.chdir(terraform_configuration) do
+        begin
+          # Buckets with a lot of files in them can take too long to delete via Terraform,
+          # so we pre-emptively delete the contents via the command line
+          run_tee("Empty buckets in #{workspace_id}", NHSx::AWS::Commandlines.empty_workspace_buckets, system_config)
+          # The above code is removed from delete_workspace()
+        end
       end
     end
   end

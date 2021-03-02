@@ -1,5 +1,7 @@
 package uk.nhs.nhsx.virology;
 
 public enum TestKit {
-    RAPID_RESULT, LAB_RESULT
+    LAB_RESULT,
+    RAPID_RESULT,
+    RAPID_SELF_REPORTED
 }

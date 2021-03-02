@@ -1,5 +1,7 @@
 package uk.nhs.nhsx.analyticssubmission.model;
 
+import uk.nhs.nhsx.core.events.Events;
+
 import static uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer.replacePostDistrictLA;
 
 public class StoredAnalyticsSubmissionPayload {
@@ -65,6 +67,16 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer isIsolatingForTestedLFDPositiveBackgroundTick;
     public final Integer totalExposureWindowsNotConsideredRisky;
     public final Integer totalExposureWindowsConsideredRisky;
+    public final Integer acknowledgedStartOfIsolationDueToRiskyContact;
+    public final Integer hasRiskyContactNotificationsEnabledBackgroundTick;
+    public final Integer totalRiskyContactReminderNotifications;
+    public final Integer receivedUnconfirmedPositiveTestResult;
+    public final Integer isIsolatingForUnconfirmedTestBackgroundTick;
+    public final Integer launchedTestOrdering;
+    public final Integer didHaveSymptomsBeforeReceivedTestResult;
+    public final Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult;
+    public final Integer didAskForSymptomsOnPositiveTestEntry;
+    public final Integer declaredNegativeResultFromDCT;
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
@@ -121,7 +133,17 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer hasTestedLFDPositiveBackgroundTick,
                                              Integer isIsolatingForTestedLFDPositiveBackgroundTick,
                                              Integer totalExposureWindowsNotConsideredRisky,
-                                             Integer totalExposureWindowsConsideredRisky) {
+                                             Integer totalExposureWindowsConsideredRisky,
+                                             Integer acknowledgedStartOfIsolationDueToRiskyContact,
+                                             Integer hasRiskyContactNotificationsEnabledBackgroundTick,
+                                             Integer totalRiskyContactReminderNotifications,
+                                             Integer receivedUnconfirmedPositiveTestResult,
+                                             Integer isIsolatingForUnconfirmedTestBackgroundTick,
+                                             Integer launchedTestOrdering,
+                                             Integer didHaveSymptomsBeforeReceivedTestResult,
+                                             Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult,
+                                             Integer didAskForSymptomsOnPositiveTestEntry,
+                                             Integer declaredNegativeResultFromDCT) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -178,16 +200,26 @@ public class StoredAnalyticsSubmissionPayload {
         this.isIsolatingForTestedLFDPositiveBackgroundTick = isIsolatingForTestedLFDPositiveBackgroundTick;
         this.totalExposureWindowsNotConsideredRisky = totalExposureWindowsNotConsideredRisky;
         this.totalExposureWindowsConsideredRisky = totalExposureWindowsConsideredRisky;
+        this.acknowledgedStartOfIsolationDueToRiskyContact = acknowledgedStartOfIsolationDueToRiskyContact;
+        this.hasRiskyContactNotificationsEnabledBackgroundTick = hasRiskyContactNotificationsEnabledBackgroundTick;
+        this.totalRiskyContactReminderNotifications = totalRiskyContactReminderNotifications;
+        this.receivedUnconfirmedPositiveTestResult = receivedUnconfirmedPositiveTestResult;
+        this.isIsolatingForUnconfirmedTestBackgroundTick = isIsolatingForUnconfirmedTestBackgroundTick;
+        this.launchedTestOrdering = launchedTestOrdering;
+        this.didHaveSymptomsBeforeReceivedTestResult = didHaveSymptomsBeforeReceivedTestResult;
+        this.didRememberOnsetSymptomsDateBeforeReceivedTestResult = didRememberOnsetSymptomsDateBeforeReceivedTestResult;
+        this.didAskForSymptomsOnPositiveTestEntry = didAskForSymptomsOnPositiveTestEntry;
+        this.declaredNegativeResultFromDCT = declaredNegativeResultFromDCT;
     }
 
-    public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload) {
-        PostDistrictLADTuple PostalDistrictLADTuple = replacePostDistrictLA(clientPayload.metadata.postalDistrict, clientPayload.metadata.localAuthority);
+    public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload, Events events) {
+        PostDistrictLADTuple postalDistrictLADTuple = replacePostDistrictLA(clientPayload.metadata.postalDistrict, clientPayload.metadata.localAuthority, events);
         return new StoredAnalyticsSubmissionPayload(
-            PostalDistrictLADTuple.postDistrict,
+            postalDistrictLADTuple.postDistrict,
             clientPayload.metadata.deviceModel,
             clientPayload.metadata.operatingSystemVersion,
             clientPayload.metadata.latestApplicationVersion,
-            PostalDistrictLADTuple.localAuthorityId,
+            postalDistrictLADTuple.localAuthorityId,
             clientPayload.metrics.cumulativeDownloadBytes,
             clientPayload.metrics.cumulativeUploadBytes,
             clientPayload.metrics.cumulativeCellularDownloadBytes,
@@ -238,7 +270,17 @@ public class StoredAnalyticsSubmissionPayload {
             clientPayload.metrics.hasTestedLFDPositiveBackgroundTick,
             clientPayload.metrics.isIsolatingForTestedLFDPositiveBackgroundTick,
             clientPayload.metrics.totalExposureWindowsNotConsideredRisky,
-            clientPayload.metrics.totalExposureWindowsConsideredRisky
+            clientPayload.metrics.totalExposureWindowsConsideredRisky,
+            clientPayload.metrics.acknowledgedStartOfIsolationDueToRiskyContact,
+            clientPayload.metrics.hasRiskyContactNotificationsEnabledBackgroundTick,
+            clientPayload.metrics.totalRiskyContactReminderNotifications,
+            clientPayload.metrics.receivedUnconfirmedPositiveTestResult,
+            clientPayload.metrics.isIsolatingForUnconfirmedTestBackgroundTick,
+            clientPayload.metrics.launchedTestOrdering,
+            clientPayload.metrics.didHaveSymptomsBeforeReceivedTestResult,
+            clientPayload.metrics.didRememberOnsetSymptomsDateBeforeReceivedTestResult,
+            clientPayload.metrics.didAskForSymptomsOnPositiveTestEntry,
+            clientPayload.metrics.declaredNegativeResultFromDCT
         );
     }
 }

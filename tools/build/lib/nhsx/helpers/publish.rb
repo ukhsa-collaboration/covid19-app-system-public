@@ -1,4 +1,5 @@
 require_relative "target"
+require "shellwords"
 
 module NHSx
   # Methods that codify the conventions for publishing build artifacts
@@ -6,9 +7,10 @@ module NHSx
     include NHSx::TargetEnvironment
 
     # Publishes the given test_data_file as static data for a distribution API
-    def publish_static_content(test_data_file, resource_name, distribution_store, target_config, system_config)
+    def publish_static_content(test_data_file, resource_name, distribution_store, target_config, metadata, system_config)
       object_name = "#{target_config[distribution_store]}/#{resource_name}"
       cmdline = NHSx::AWS::Commandlines.upload_to_s3(test_data_file, object_name, "application/json")
+      cmdline << " --metadata #{Shellwords.escape(metadata)}" unless metadata.empty?
       puts "Deploying #{test_data_file} as #{resource_name} to #{object_name}"
       run_command("Publish test data", cmdline, system_config)
     end
@@ -28,6 +30,15 @@ module NHSx
     # Publish the document reporting tool source code to the hosting S3
     def publish_doreto_website(account, build_path, store_name, target_environment, system_config)
       target_config = doreto_target_environment_configuration(target_environment, account, system_config)
+      content_base_path = File.join(system_config.base, build_path)
+      cmdline = NHSx::AWS::Commandlines.upload_to_s3_recursively(content_base_path, target_config[store_name])
+      puts "Uploading #{content_base_path}\nTarget bucket #{target_config[store_name]}"
+      run_command("Publish object to hosting bucket", cmdline, system_config)
+    end
+
+    # Publish the public dashboard to the hosting S3
+    def publish_pubdash_website(account, build_path, store_name, target_environment, system_config)
+      target_config = pubdash_target_environment_configuration(target_environment, account, system_config)
       content_base_path = File.join(system_config.base, build_path)
       cmdline = NHSx::AWS::Commandlines.upload_to_s3_recursively(content_base_path, target_config[store_name])
       puts "Uploading #{content_base_path}\nTarget bucket #{target_config[store_name]}"

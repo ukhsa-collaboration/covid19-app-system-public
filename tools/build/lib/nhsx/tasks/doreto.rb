@@ -24,7 +24,7 @@ namespace :plan do
       task :"#{tgt_env}" do
         include NHSx::Terraform
         terraform_configuration = File.join($configuration.base, NHSx::Terraform::DORETO_DEV_ACCOUNT)
-        plan_for_workspace(tgt_env, terraform_configuration, $configuration)
+        plan_for_workspace(tgt_env, terraform_configuration, [], $configuration)
       end
     end
   end

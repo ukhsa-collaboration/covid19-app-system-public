@@ -9,7 +9,3 @@ output "bucket_arn" {
 output "bucket_id" {
   value = aws_s3_bucket.this.id
 }
-
-output "policy_document" {
-  value = data.aws_iam_policy_document.this
-}

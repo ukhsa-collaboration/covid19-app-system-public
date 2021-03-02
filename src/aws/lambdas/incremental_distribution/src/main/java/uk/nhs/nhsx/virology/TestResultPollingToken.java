@@ -2,7 +2,7 @@ package uk.nhs.nhsx.virology;
 
 import uk.nhs.nhsx.core.ValueType;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import static uk.nhs.nhsx.core.Preconditions.checkArgument;
 
 public class TestResultPollingToken extends ValueType<TestResultPollingToken> {
 

@@ -4,9 +4,9 @@ import uk.nhs.nhsx.core.aws.s3.BucketName;
 
 public class AnalyticsConfig {
 
-    public final  String firehoseStreamName;
-    public final  boolean s3IngestEnabled;
-    public final  boolean firehoseIngestEnabled;
+    public final String firehoseStreamName;
+    public final boolean s3IngestEnabled;
+    public final boolean firehoseIngestEnabled;
     public final BucketName bucketName;
 
     public AnalyticsConfig(String firehoseStreamName,

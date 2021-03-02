@@ -25,9 +25,10 @@ module "upload_lambda" {
     custom_oai                        = var.custom_oai
     should_parse_additional_fields    = var.should_parse_additional_fields
   }
-  log_retention_in_days = var.log_retention_in_days
-  app_alarms_topic      = var.alarm_topic_arn
-  tags                  = var.tags
+  log_retention_in_days     = var.log_retention_in_days
+  app_alarms_topic          = var.alarm_topic_arn
+  tags                      = var.tags
+  invocations_alarm_enabled = var.invocations_alarm_enabled
 }
 
 module "upload_gateway" {

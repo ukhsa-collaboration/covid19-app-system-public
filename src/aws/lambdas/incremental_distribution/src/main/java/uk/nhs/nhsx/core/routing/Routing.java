@@ -2,11 +2,13 @@ package uk.nhs.nhsx.core.routing;
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.google.common.collect.ImmutableList;
 import uk.nhs.nhsx.core.HttpResponses;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -20,7 +22,7 @@ public class Routing {
     }
 
     public static AggregateRoutingHttpHandler routes(RoutingHandler... routes) {
-        return routes(Arrays.asList(routes), ImmutableList.of());
+        return routes(Arrays.asList(routes), List.of());
     }
 
     public static AggregateRoutingHttpHandler routes(List<RoutingHandler> first, List<RoutingHandler> second) {
@@ -41,7 +43,7 @@ public class Routing {
     }
 
     public static List<Routing.RoutingHandler> includeIf(boolean condition, Routing.RoutingHandler... handlers) {
-        return condition ? Arrays.asList(handlers) : ImmutableList.of();
+        return condition ? Arrays.asList(handlers) : List.of();
     }
 
     public static APIGatewayProxyResponseEvent throttlingResponse(Duration throttleDuration,
@@ -79,8 +81,8 @@ public class Routing {
         }
     }
 
-    private static class RouterMatch implements Handler, Comparable<RouterMatch> {
-        private final Match matchType;
+    protected static class RouterMatch implements Handler, Comparable<RouterMatch> {
+        protected final Match matchType;
         private final Handler handler;
 
         public RouterMatch(Match matchType, Handler handler) {

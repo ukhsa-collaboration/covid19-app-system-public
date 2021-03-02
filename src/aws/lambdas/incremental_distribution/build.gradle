@@ -1,6 +1,8 @@
+import java.text.DecimalFormat
+
 plugins {
     id "java"
-    id "org.jetbrains.kotlin.jvm" version "1.4.21"
+    id "org.jetbrains.kotlin.jvm" version "1.4.30"
     id "com.adarshr.test-logger" version "2.1.1"
     id "jacoco"
     id "com.github.spotbugs" version "4.6.0"
@@ -21,12 +23,12 @@ repositories {
 
 ext {
     aws_sdk_version = "1.11.826"
+    aws_sdk2_version = "2.15.77"
     aws_xray_version = "2.4.0"
-    guava_version = "30.1-jre"
-    http4k_version = "3.285.2"
-    jackson_version = "2.12.0"
+    http4k_version = "4.3.0.0"
+    jackson_version = "2.12.1"
     log4j_version = "2.13.3"
-    junit_version = "5.7.0"
+    junit_version = "5.7.1"
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
@@ -88,6 +90,7 @@ test {
     filter {
         includeTestsMatching "*Test"
         excludeTestsMatching "smoke.*"
+        excludeTestsMatching "contract.*"
         excludeTestsMatching "db.*"
     }
 
@@ -102,23 +105,46 @@ test {
         systemProperty "java.library.path", 'build/libs'
     }
 
+    reports.html.destination = file("$projectDir/../../../../out/reports")
+    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
+
     finalizedBy jacocoTestReport
 }
 
-task testUnit {
+task testUnit(type: Test) {
     dependsOn(check)
+
+    useJUnitPlatform()
+
+    reports.html.destination = file("$projectDir/../../../../out/reports")
+    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
 }
 
 task testSmoke(type: Test) {
     description = 'Runs smoke tests.'
     group = 'verification'
 
+    reports.html.destination = file("$projectDir/../../../../out/reports")
     reports.junitXml.destination = file("$projectDir/../../../../out/reports")
 
     useJUnitPlatform()
 
     filter {
         includeTestsMatching "smoke.*Test"
+    }
+}
+
+task testContracts(type: Test) {
+    description = 'Run contract tests.'
+    group = 'verification'
+
+    reports.html.destination = file("$projectDir/../../../../out/reports")
+    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
+
+    useJUnitPlatform()
+
+    filter {
+        includeTestsMatching "contract.*Test"
     }
 }
 
@@ -163,6 +189,7 @@ dependencies {
     implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
     implementation "com.amazonaws:aws-java-sdk-kms"
     implementation "com.amazonaws:aws-java-sdk-cloudfront"
+    implementation "com.amazonaws:aws-java-sdk-logs"
     implementation "com.amazonaws:aws-java-sdk-secretsmanager"
     implementation "com.amazonaws:aws-java-sdk-s3"
     implementation "com.amazonaws:aws-java-sdk-ssm"
@@ -179,7 +206,8 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-api"
     implementation "org.apache.logging.log4j:log4j-core"
 
-    implementation "com.google.guava:guava:$guava_version"
+    implementation "commons-codec:commons-codec:1.15"
+    implementation "com.github.ben-manes.caffeine:caffeine:2.8.8"
 
     implementation platform("com.google.protobuf:protobuf-bom:3.12.2")
     implementation "com.google.protobuf:protobuf-java"
@@ -196,8 +224,10 @@ dependencies {
     implementation "javax.xml.bind:jaxb-api:2.1"
 
     testImplementation "com.amazonaws:aws-java-sdk-athena"
-    testImplementation "com.amazonaws:aws-java-sdk-lambda"
     testImplementation "com.amazonaws:DynamoDBLocal:1.13.5"
+
+    testImplementation platform("software.amazon.awssdk:bom:${aws_sdk2_version}")
+    testImplementation "software.amazon.awssdk:lambda"
 
     testImplementation platform("org.junit:junit-bom:$junit_version")
     testImplementation "org.junit.jupiter:junit-jupiter-api"
@@ -206,9 +236,8 @@ dependencies {
 
     testImplementation "org.hamcrest:hamcrest:2.2"
     testImplementation "com.github.npathai:hamcrest-optional:2.0.0"
-    testImplementation "org.assertj:assertj-core:3.18.1"
+    testImplementation "org.assertj:assertj-core:3.19.0"
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
-    testImplementation "org.mockito:mockito-core:3.6.0"
     testImplementation "com.natpryce:snodge:3.7.0.0"
     testRuntimeOnly "org.glassfish:javax.json:1.1"
 
@@ -218,7 +247,9 @@ dependencies {
     testImplementation "org.http4k:http4k-format-jackson"
     testImplementation "org.http4k:http4k-testing-hamkrest"
     testImplementation "org.http4k:http4k-testing-approval"
+    testImplementation 'org.http4k:http4k-testing-servirtium'
 
+    testImplementation "org.awaitility:awaitility:4.0.3"
     testImplementation "io.mockk:mockk:1.10.2"
     testImplementation "org.apache.commons:commons-lang3:3.11"
 
@@ -227,10 +258,33 @@ dependencies {
     testImplementation "org.bouncycastle:bcpkix-jdk15on:1.68"
     testImplementation "org.bouncycastle:bcprov-ext-jdk15on:1.68"
 
-    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.0"
-    testImplementation "ru.lanwen.wiremock:wiremock-junit5:1.0.1"
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+    freeCompilerArgs += "-Xjvm-default=enable"
+}
+
+tasks.create("weighDependencies") {
+    doLast {
+        allprojects
+            .forEach {
+                println it.name.toUpperCase()
+                it.configurations
+                    .runtimeClasspath
+                    .resolvedConfiguration
+                    .firstLevelModuleDependencies.forEach {
+                    def sorted = it.allModuleArtifacts.toSorted()
+                    def sum = sorted.sum { it.file.length() }
+
+                    println "  " + it.name + " = " + ( sum ? new DecimalFormat("#.00Mb").format(sum / 1024 / 1000d) : "0Mb")
+                    sorted.forEach { println("    " + it.file.name + " = " + it.file.length()) }
+                }
+            }
+    }
 }

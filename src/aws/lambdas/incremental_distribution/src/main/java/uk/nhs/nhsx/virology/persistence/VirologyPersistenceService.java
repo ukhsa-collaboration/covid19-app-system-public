@@ -1,12 +1,27 @@
 package uk.nhs.nhsx.virology.persistence;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.model.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
+import com.amazonaws.services.dynamodbv2.model.Put;
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
+import com.amazonaws.services.dynamodbv2.model.TransactWriteItem;
+import com.amazonaws.services.dynamodbv2.model.TransactWriteItemsRequest;
+import com.amazonaws.services.dynamodbv2.model.TransactionCanceledException;
+import com.amazonaws.services.dynamodbv2.model.Update;
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.InfoEvent;
 import uk.nhs.nhsx.core.exceptions.TransactionException;
-import uk.nhs.nhsx.virology.*;
+import uk.nhs.nhsx.virology.CtaToken;
+import uk.nhs.nhsx.virology.CtaUpdateOnExchangeFailure;
+import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken;
+import uk.nhs.nhsx.virology.TestKit;
+import uk.nhs.nhsx.virology.TestResultMarkForDeletionFailure;
+import uk.nhs.nhsx.virology.TestResultPersistenceFailure;
+import uk.nhs.nhsx.virology.TestResultPollingToken;
+import uk.nhs.nhsx.virology.VirologyConfig;
+import uk.nhs.nhsx.virology.VirologyOrderNotFound;
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.OrderNotFound;
 import uk.nhs.nhsx.virology.result.VirologyResultRequest;
 
 import java.util.List;
@@ -16,20 +31,29 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.*;
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap;
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemIntegerValueMaybe;
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueMaybe;
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrThrow;
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute;
+import static uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute;
 import static uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions.executeTransaction;
 import static uk.nhs.nhsx.virology.TestKit.LAB_RESULT;
+import static uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.Success;
+import static uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.TransactionFailed;
 
 public class VirologyPersistenceService {
 
-    private static final Logger logger = LogManager.getLogger(VirologyPersistenceService.class);
     private final AmazonDynamoDB dynamoDbClient;
     private final VirologyConfig config;
+    private final Events events;
 
     public VirologyPersistenceService(AmazonDynamoDB dynamoDbClient,
-                                      VirologyConfig config) {
+                                      VirologyConfig config,
+                                      Events events) {
         this.config = config;
         this.dynamoDbClient = dynamoDbClient;
+        this.events = events;
     }
 
     public Optional<TestResult> getTestResult(TestResultPollingToken pollingToken) {
@@ -111,9 +135,7 @@ public class VirologyPersistenceService {
                 dynamoDbClient.transactWriteItems(new TransactWriteItemsRequest().withTransactItems(transactItems));
                 return testOrder;
             } catch (TransactionCanceledException e) {
-                logger.info("Persistence of test order was cancelled by remote DB service due to " +
-                    DynamoTransactions.reasons(e)
-                );
+                events.emit(getClass(), new InfoEvent("Persistence of test order was cancelled by remote DB service due to " + DynamoTransactions.reasons(e)));
             }
             numberOfTries++;
         } while (numberOfTries < config.maxTokenPersistenceRetryCount);
@@ -128,7 +150,7 @@ public class VirologyPersistenceService {
         queryTestOrderFor(testResult)
             .ifPresentOrElse(
                 testOrder -> markTestResultForDeletion(testResult, virologyTimeToLive, testOrder),
-                () -> logger.warn("Could not mark for deletion testResultPollingToken:" + testResult.testResultPollingToken) // FIXME
+                () -> events.emit(getClass(), new TestResultMarkForDeletionFailure(TestResultPollingToken.of(testResult.testResultPollingToken), "")) // FIXME
             );
     }
 
@@ -164,12 +186,10 @@ public class VirologyPersistenceService {
         try {
             updateCtaExchangeTimeToLiveAndCounter(testOrder, testResult, virologyTimeToLive);
         } catch (TransactionException e) {
-            logger.warn(
-                "Cta exchange ttl and counter not updated for " +
-                    "ctaToken:" + testOrder.ctaToken +
-                    ", pollingToken:" + testOrder.testResultPollingToken.value +
-                    ", submissionToken:" + testOrder.diagnosisKeySubmissionToken.value, e
-            );
+            events.emit(getClass(), new CtaUpdateOnExchangeFailure(
+                testOrder.ctaToken,
+                testOrder.testResultPollingToken,
+                testOrder.diagnosisKeySubmissionToken));
         }
     }
 
@@ -197,9 +217,12 @@ public class VirologyPersistenceService {
         }
     }
 
-    private boolean submissionTokenPresent(TestOrder testOrder){
-        var itemResult = dynamoDbClient.getItem(config.submissionTokensTable, attributeMap("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value));
-         return itemResult.getItem() != null;
+    private boolean submissionTokenPresent(TestOrder testOrder) {
+        var itemResult = dynamoDbClient.getItem(
+            config.submissionTokensTable,
+            attributeMap("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value)
+        );
+        return itemResult.getItem() != null;
     }
 
     private Optional<TestOrder> queryTestOrderFor(TestResult testResult) {
@@ -344,14 +367,15 @@ public class VirologyPersistenceService {
                 try {
                     executeTransaction(dynamoDbClient, transactWriteItems.apply(order));
                 } catch (TransactionException e) {
-                    if (e.isConditionFailure()) {
-                        logger.warn("Failed to persist test result due to duplicate ctaToken: " + order.ctaToken);
-                    }
-                    return new VirologyResultPersistOperation.TransactionFailed(e.getMessage());
+                    events.emit(getClass(), new TestResultPersistenceFailure(order.ctaToken, e));
+                    return new TransactionFailed();
                 }
-                return new VirologyResultPersistOperation.Success();
+                return new Success();
             })
-            .orElseGet(VirologyResultPersistOperation.OrderNotFound::new);
+            .orElseGet(() -> {
+                events.emit(getClass(), new VirologyOrderNotFound(testResult.ctaToken));
+                return new OrderNotFound();
+            });
     }
 
     private Optional<TestOrder> getOrder(CtaToken ctaToken) {

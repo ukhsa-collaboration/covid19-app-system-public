@@ -5,7 +5,7 @@
  */
 package uk.nhs.nhsx.core.random.crockford;
 
-import com.google.common.io.BaseEncoding;
+import org.apache.commons.codec.binary.Base32;
 
 import java.net.URL;
 import java.nio.file.Files;
@@ -24,7 +24,7 @@ public class CrockfordDammRandomStringGenerator {
     private static final String CROCKFORD_BASE32_ALPHABET = "0123456789abcdefghjkmnpqrstvwxyz";
 
     private final DammChecksum checksum = checksum();
-    private final BaseEncoding BASE_ENCODER = BaseEncoding.base32();
+    private final Base32 baseEncoder = new Base32(0);
     private final SecureRandom random;
     private final List<Pattern> disallowedRegexes;
 
@@ -47,7 +47,7 @@ public class CrockfordDammRandomStringGenerator {
         while (true) {
             byte[] bytes = new byte[5]; // ceil((7 * 5) / 8)
             random.nextBytes(bytes);
-            String rawBase32 = BASE_ENCODER.encode(bytes).substring(0, 7);
+            String rawBase32 = baseEncoder.encodeAsString(bytes).substring(0, 7);
             String friendlyCode = convertCrockford(rawBase32);
 
             String linkingId = friendlyCode + checksum.checksum(friendlyCode);

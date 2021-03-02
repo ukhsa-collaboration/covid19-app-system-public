@@ -26,12 +26,14 @@ class ObjectKeyFiltersTest {
             "mobile/LAB_RESULT/abc,true",
             "mobile/LAB_RESULT/xyz,true",
             "mobile/RAPID_RESULT/abc,false",
+            "mobile/RAPID_SELF_REPORTED/123,false",
 
             // misc key
             "///,false",
         ]
     )
-    fun `filters LAB_RESULT, mobile root, and allowed federated prefixed keys`(input: String, expected: Boolean) {
+    fun `federated filter - includes LAB_RESULT, mobile root and federated prefix`(input: String,
+                                                                                   expected: Boolean) {
         val includeKeyWithAbcPrefix = ObjectKeyFilters
             .federated()
             .withPrefixes(listOf("abc"))
@@ -60,12 +62,14 @@ class ObjectKeyFiltersTest {
             "mobile/LAB_RESULT/abc,true",
             "mobile/LAB_RESULT/xyz,true",
             "mobile/RAPID_RESULT/abc,true",
+            "mobile/RAPID_SELF_REPORTED/123,true",
 
             // misc key
             "///,false",
         ]
     )
-    fun `filters LAB_RESULT, RAPID_RESULT, mobile root, and allowed federated prefixed keys`(input: String, expected: Boolean) {
+    fun `batch filter - includes all test kits, mobile root and allowed federated prefix`(input: String,
+                                                                                          expected: Boolean) {
         val includeKeyWithAbcPrefix = ObjectKeyFilters
             .batched()
             .withPrefixes(listOf("abc"))

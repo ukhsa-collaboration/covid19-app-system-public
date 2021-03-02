@@ -1,10 +1,11 @@
 package uk.nhs.nhsx.keyfederation.download;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.InfoEvent;
 import uk.nhs.nhsx.keyfederation.BatchTag;
 import uk.nhs.nhsx.keyfederation.BatchTagService;
+import uk.nhs.nhsx.keyfederation.DownloadedExposures;
 import uk.nhs.nhsx.keyfederation.FederatedKeyUploader;
 import uk.nhs.nhsx.keyfederation.InteropClient;
 
@@ -17,8 +18,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class DiagnosisKeysDownloadService {
-    private static final Logger logger = LogManager.getLogger(DiagnosisKeysDownloadService.class);
-
     private final Supplier<Instant> clock;
     private final InteropClient interopClient;
     private final FederatedKeyUploader keyUploader;
@@ -28,6 +27,7 @@ public class DiagnosisKeysDownloadService {
     private final int initialDownloadHistoryDays;
     private final int maxSubsequentBatchDownloadCount;
     private final Context context;
+    private final Events events;
 
     public DiagnosisKeysDownloadService(Supplier<Instant> clock,
                                         InteropClient interopClient,
@@ -37,7 +37,8 @@ public class DiagnosisKeysDownloadService {
                                         int downloadRiskLevelDefault,
                                         int initialDownloadHistoryDays,
                                         int maxSubsequentBatchDownloadCount,
-                                        Context context) {
+                                        Context context,
+                                        Events events) {
         this.clock = clock;
         this.interopClient = interopClient;
         this.keyUploader = keyUploader;
@@ -47,6 +48,7 @@ public class DiagnosisKeysDownloadService {
         this.initialDownloadHistoryDays = initialDownloadHistoryDays;
         this.maxSubsequentBatchDownloadCount = maxSubsequentBatchDownloadCount;
         this.context = context;
+        this.events = events;
     }
 
     public int downloadFromFederatedServerAndStoreKeys() {
@@ -54,8 +56,8 @@ public class DiagnosisKeysDownloadService {
         batchTagService
             .getLatestFederationBatch()
             .ifPresentOrElse(
-                it -> processedBatches.set(downloadKeysAndProcess(it.batchDate, it.batchTag, maxSubsequentBatchDownloadCount,context)),
-                () -> processedBatches.set(downloadKeysAndProcess(dateNow().minusDays(initialDownloadHistoryDays), null, maxSubsequentBatchDownloadCount,context))
+                it -> processedBatches.set(downloadKeysAndProcess(it.batchDate, it.batchTag, maxSubsequentBatchDownloadCount, context)),
+                () -> processedBatches.set(downloadKeysAndProcess(dateNow().minusDays(initialDownloadHistoryDays), null, maxSubsequentBatchDownloadCount, context))
             );
         return processedBatches.get();
     }
@@ -66,25 +68,24 @@ public class DiagnosisKeysDownloadService {
         var exposureKeysNextBatch = interopClient.getExposureKeysBatch(date, batch);
 
         var iterationDuration = 0L;
-        for (int i= 1; i <= maxBatchDownloadCount && exposureKeysNextBatch.isPresent(); i++) {
+        for (int i = 1; i <= maxBatchDownloadCount && exposureKeysNextBatch.isPresent(); i++) {
             var startTime = System.currentTimeMillis();
             var diagnosisKeysDownloadResponse = exposureKeysNextBatch.get();
             this.convertAndSaveKeys(diagnosisKeysDownloadResponse);
 
-            logger.info("Downloaded {} keys from federated server, BatchTag {} (batch {})",
-                diagnosisKeysDownloadResponse.exposures.size(),
+            events.emit(getClass(), new DownloadedExposures(diagnosisKeysDownloadResponse.exposures.size(),
                 diagnosisKeysDownloadResponse.batchTag,
-                i);
+                i));
+
             processedBatches++;
-            iterationDuration = Math.max(iterationDuration,System.currentTimeMillis() - startTime);
-            if(iterationDuration >= context.getRemainingTimeInMillis()){
-                logger.warn("There is not enough time to complete another iteration");
+            iterationDuration = Math.max(iterationDuration, System.currentTimeMillis() - startTime);
+            if (iterationDuration >= context.getRemainingTimeInMillis()) {
                 break;
             }
             exposureKeysNextBatch = interopClient.getExposureKeysBatch(date, "?batchTag=" + diagnosisKeysDownloadResponse.batchTag);
         }
 
-        logger.info("Downloaded keys from federated server finished, batchCount={}", processedBatches);
+        events.emit(getClass(), new InfoEvent("Downloaded keys from federated server finished, batchCount=" + processedBatches));
 
         return processedBatches;
     }

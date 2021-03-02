@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode
-import smoke.actors.MobileApp
 import smoke.actors.ApiVersion
+import smoke.actors.MobileApp
 import smoke.actors.MobileOS.Android
 import smoke.actors.MobileOS.iOS
 import smoke.env.SmokeTests

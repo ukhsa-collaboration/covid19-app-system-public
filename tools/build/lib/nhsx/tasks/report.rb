@@ -93,19 +93,21 @@ namespace :report do
   end
   task :releases do
   end
-  desc "generates a report of changes between current commit and last release version"
+  desc "Generates a report of changes between FROM_VERSION(default the last Backend tag) and TO_VERSION(default local HEAD)"
   task :changes do
     include NHSx::Git
     include NHSx::Report
     include Zuehlke::Templates
+
     version_metadata = subsystem_version_metadata("backend", $configuration)
-    target_commit = $configuration.target_sha
-    source_commit = "Backend-#{version_metadata["Major"]}.#{version_metadata["Minor"]}"
+    target_commit = $configuration.to_version
+    source_commit = $configuration.from_version(version_metadata)
+
     list_of_commits = list_of_commits(source_commit, target_commit)
     changeset = {}
     list_of_commits.each do |sha|
-      msg, ticket, pr = parse_commit_message(commit_message(sha), sha)
-      changeset[sha] = { "filelist" => commit_files(sha), "message" => msg, "ticket" => ticket, "pr" => pr }
+      msg, tickets, pr = parse_commit_message(commit_message(sha), sha)
+      changeset[sha] = { "filelist" => commit_files(sha), "message" => msg, "tickets" => tickets, "pr" => pr }
     end
     significant_changes, insignificant_changes = changeset.partition { |_, object| significant?(object["filelist"]) }
     significant_changes = Hash[significant_changes]

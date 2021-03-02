@@ -26,7 +26,7 @@ class HealthSanityChecks : LambdaSanityCheck() {
     @MethodSource("lambdasWithHealth")
     @ParameterizedTest(name = "Health endpoint returns a 200 {arguments}")
     fun `Health endpoint returns a 200`(healthCheck: HealthCheck) {
-        assertThat(healthCheck.withSecureClient(Request(POST, healthCheck.healthEndpoint)), hasStatus(OK))
+        assertThat(healthCheck.withHealthClient(Request(POST, healthCheck.healthEndpoint)), hasStatus(OK))
     }
 
     @Suppress("unused")

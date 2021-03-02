@@ -23,3 +23,7 @@ variable "sip_analytics_bucket_location" {
   description = "The SIP Analytics S3 bucket"
   type        = string
 }
+
+variable "circuit_breaker_stats_bucket_id" {
+  description = "The Circuit Breaker Analytics S3 bucket"
+}

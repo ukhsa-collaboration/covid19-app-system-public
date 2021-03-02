@@ -10,6 +10,9 @@ import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.auth.ApiName;
 import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.auth.ResponseSigner;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.PrintingJsonEvents;
+import uk.nhs.nhsx.core.events.UnprocessableJson;
 import uk.nhs.nhsx.core.routing.Routing;
 import uk.nhs.nhsx.core.routing.RoutingHandler;
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest;
@@ -19,7 +22,10 @@ import java.time.Instant;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static uk.nhs.nhsx.core.Environment.EnvironmentKey.*;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.bool;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.integer;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.string;
+import static uk.nhs.nhsx.core.Environment.EnvironmentKey.strings;
 import static uk.nhs.nhsx.core.HttpResponses.created;
 import static uk.nhs.nhsx.core.HttpResponses.ok;
 import static uk.nhs.nhsx.core.StandardSigning.signResponseWithKeyGivenInSsm;
@@ -27,6 +33,7 @@ import static uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication;
 import static uk.nhs.nhsx.core.routing.Routing.Method.POST;
 import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
+import static uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
 
 public class IsolationPaymentOrderHandler extends RoutingHandler {
@@ -40,37 +47,42 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
 
     private final Environment environment;
     private final IsolationPaymentMobileService service;
+    private final Events events;
     private final Routing.Handler handler;
 
     @SuppressWarnings("unused")
     public IsolationPaymentOrderHandler() {
-        this(Environment.fromSystem(), SystemClock.CLOCK);
+        this(Environment.fromSystem(), SystemClock.CLOCK, new PrintingJsonEvents(SystemClock.CLOCK));
     }
 
-    public IsolationPaymentOrderHandler(Environment environment, Supplier<Instant> clock) {
+    public IsolationPaymentOrderHandler(Environment environment, Supplier<Instant> clock, Events events) {
         this(
             environment,
-            awsAuthentication(ApiName.Mobile),
-            signResponseWithKeyGivenInSsm(environment, clock),
-            isolationPaymentService(clock, TokenGenerator::getToken, environment)
+            awsAuthentication(ApiName.Mobile, events),
+            signResponseWithKeyGivenInSsm(environment, clock, events),
+            isolationPaymentService(clock, TokenGenerator::getToken, environment, events),
+            events,
+            awsAuthentication(ApiName.Health, events)
         );
     }
 
     public IsolationPaymentOrderHandler(Environment environment,
                                         Authenticator authenticator,
                                         ResponseSigner signer,
-                                        IsolationPaymentMobileService service) {
+                                        IsolationPaymentMobileService service,
+                                        Events events,
+                                        Authenticator healthAuthenticator) {
         this.environment = environment;
         this.service = service;
-
-        handler = withSignedResponses(
+        this.events = events;
+        this.handler = withSignedResponses(
+            events,
             environment,
-            authenticator,
             signer,
             routes(
-                path(POST, "/isolation-payment/ipc-token/create", this::createToken),
-                path(POST, "/isolation-payment/ipc-token/update", this::updateToken),
-                path(POST, "/isolation-payment/health", r -> ok())
+                authorisedBy(authenticator, path(POST, "/isolation-payment/ipc-token/create", this::createToken)),
+                authorisedBy(authenticator, path(POST, "/isolation-payment/ipc-token/update", this::updateToken)),
+                authorisedBy(healthAuthenticator, path(POST, "/isolation-payment/health", r -> ok()))
             )
         );
     }
@@ -81,7 +93,7 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
             return HttpResponses.serviceUnavailable();
         }
 
-        return Jackson.deserializeMaybe(request.getBody(), TokenGenerationRequest.class)
+        return Jackson.readMaybe(request.getBody(), TokenGenerationRequest.class, e -> events.emit(getClass(), new UnprocessableJson(e)))
             .map(it -> created(Jackson.toJson(service.handleIsolationPaymentOrder(it))))
             .orElseGet(HttpResponses::badRequest);
     }
@@ -92,14 +104,15 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
             return HttpResponses.serviceUnavailable();
         }
 
-        return Jackson.deserializeMaybeValidating(request.getBody(), TokenUpdateRequest.class, TokenUpdateRequest::validator)
+        return Jackson.readMaybe(request.getBody(), TokenUpdateRequest.class, e -> events.emit(getClass(), new UnprocessableJson(e)))
             .map(it -> ok(Jackson.toJson(service.handleIsolationPaymentUpdate(it))))
             .orElseGet(HttpResponses::badRequest);
     }
 
     private static IsolationPaymentMobileService isolationPaymentService(Supplier<Instant> clock,
                                                                          Supplier<String> tokenGenerator,
-                                                                         Environment environment) {
+                                                                         Environment environment,
+                                                                         Events events) {
         var persistence = new IsolationPaymentPersistence(
             AmazonDynamoDBClientBuilder.defaultClient(),
             environment.access.required(ISOLATION_TOKEN_TABLE)
@@ -112,7 +125,8 @@ public class IsolationPaymentOrderHandler extends RoutingHandler {
             environment.access.required(ISOLATION_PAYMENT_WEBSITE),
             environment.access.required(TOKEN_EXPIRY_IN_WEEKS),
             environment.access.required(COUNTRIES_WHITELISTED),
-            environment.access.required(AUDIT_LOG_PREFIX)
+            environment.access.required(AUDIT_LOG_PREFIX),
+            events
         );
     }
 

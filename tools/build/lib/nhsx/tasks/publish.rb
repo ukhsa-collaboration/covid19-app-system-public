@@ -28,7 +28,7 @@ namespace :publish do
         terraform_configuration = File.join($configuration.base, NHSx::Terraform::DEV_ACCOUNT)
         select_workspace(tgt_env, terraform_configuration, $configuration)
         static_content_file = $configuration.static_content
-        publish_static_content(static_content_file, "distribution/exposure-configuration", "exposure_configuration_distribution_store", target_config, $configuration)
+        publish_static_content(static_content_file, "distribution/exposure-configuration", "exposure_configuration_distribution_store", target_config, "", $configuration)
       end
       desc "Publish self-isolation test data to #{tgt_env}"
       task :"self_isolation:#{tgt_env}" do
@@ -38,7 +38,7 @@ namespace :publish do
         terraform_configuration = File.join($configuration.base, NHSx::Terraform::DEV_ACCOUNT)
         select_workspace(tgt_env, terraform_configuration, $configuration)
         static_content_file = $configuration.static_content
-        publish_static_content(static_content_file, "distribution/self-isolation", "self_isolation_distribution_store", target_config, $configuration)
+        publish_static_content(static_content_file, "distribution/self-isolation", "self_isolation_distribution_store", target_config, "", $configuration)
       end
       desc "Publish analytics test data to #{tgt_env}"
       task :"analytics_data:#{tgt_env}" do
@@ -54,15 +54,15 @@ namespace :publish do
 
   NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
-      desc "Publish tier meta data to #{tgt_env}"
+      desc "Publish tier metadata to #{tgt_env}"
       task :"tier_metadata:#{tgt_env}" => [:"login:#{account}"] do
         include NHSx::Publish
         include NHSx::Terraform
         target_config = target_environment_configuration(tgt_env, account, $configuration)
         terraform_configuration = File.join($configuration.base, "src/aws/accounts", account)
         select_workspace(tgt_env, terraform_configuration, $configuration)
-        static_content_file = File.join($configuration.base,"src/static/tier-metadata.json")
-        publish_static_content(static_content_file, "tier-metadata", "post_districts_distribution_store", target_config, $configuration)
+        static_content_file = File.join($configuration.base, "src/static/tier-metadata.json")
+        publish_static_content(static_content_file, "tier-metadata", "post_districts_distribution_store", target_config, "", $configuration)
 
         post_districts_out_dir = File.join($configuration.out, "gen/post_districts")
         key_name = "backup/api-payload"
@@ -74,6 +74,27 @@ namespace :publish do
         ENV["UPLOAD_DATA"] = local_target
         Rake::Task["upload:post_districts:#{tgt_env}"].invoke
         tag("te-#{tgt_env}-i18n", "Translations deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
+      end
+      desc "Publish the iOS and Android availability configuration to #{tgt_env}"
+      task :"availability:#{tgt_env}" => [:"login:#{account}", :"gen:signatures:#{account}"] do
+        include NHSx::Publish
+        include NHSx::Terraform
+        target_config = target_environment_configuration(tgt_env, account, $configuration)
+        terraform_configuration = File.join($configuration.base, "src/aws/accounts", account)
+        select_workspace(tgt_env, terraform_configuration, $configuration)
+
+        #Android
+        generated_metadata = File.read(File.join($configuration.out, "signatures/availability-android.json.generated"))
+        static_content_file = File.join($configuration.base, "src/static/availability-android.json")
+        publish_static_content(static_content_file, "distribution/availability-android", "availability_android_distribution_store", target_config, generated_metadata, $configuration)
+
+        #iOS
+
+        generated_metadata = File.read(File.join($configuration.out, "signatures/availability-ios.json.generated"))
+        static_content_file = File.join($configuration.base, "src/static/availability-ios.json")
+
+        publish_static_content(static_content_file, "distribution/availability-ios", "availability_ios_distribution_store", target_config, generated_metadata, $configuration)
+        tag("te-#{tgt_env}-availability", "Availability configuration deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
       end
     end
   end

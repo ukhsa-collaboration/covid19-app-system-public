@@ -31,9 +31,10 @@ module "virology_tokens_processing_lambda" {
 }
 
 module "virology_tokens_bucket" {
-  source         = "../../libraries/submission_s3"
-  name           = "virology-tokens"
-  logs_bucket_id = var.logs_bucket_id
-  service        = "processing"
-  tags           = var.tags
+  source          = "../../libraries/submission_s3"
+  name            = "virology-tokens"
+  logs_bucket_id  = var.logs_bucket_id
+  service         = "processing"
+  policy_document = var.policy_document
+  tags            = var.tags
 }

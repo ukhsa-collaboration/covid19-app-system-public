@@ -1,0 +1,21 @@
+version: 0.2
+env:
+  shell: bash
+  git-credential-helper: yes
+phases:
+  build:
+    commands:
+      - rake config:codebuild BRANCH=master
+      - rake deploy:cta:ci
+      - rake test:smoke:ci
+      - rake deploy:pubdash:ci
+reports:
+  sanity:
+    files:
+      - "out/reports/*.xml"
+    file-format: "JUNITXML"
+artifacts:
+  name: $(date +%Y%m%d%H%M%S)-ci-app-system.zip
+  files:
+    - "out/**/*"
+  discard-paths: no

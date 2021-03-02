@@ -35,6 +35,8 @@ data class EnvConfig(
     @JsonProperty("isolation_payment_consume_lambda_function_name") val isolationPaymentConsumeLambdaFunctionName: String,
     @JsonProperty("isolation_payment_create_endpoint") val isolationPaymentCreateEndpoint: String,
     @JsonProperty("isolation_payment_health_endpoint") val isolationPaymentHealthEndpoint: String,
+    @JsonProperty("isolation_payment_consume_endpoint") val isolationPaymentConsumeEndpoint: String,
+    @JsonProperty("isolation_payment_verify_endpoint") val isolationPaymentVerifyEndpoint: String,
     @JsonProperty("isolation_payment_order_lambda_function_name") val isolationPaymentOrderLambdaFunctionName: String,
     @JsonProperty("isolation_payment_tokens_table") val isolationPaymentTokensTable: String,
     @JsonProperty("isolation_payment_update_endpoint") val isolationPaymentUpdateEndpoint: String,
@@ -81,5 +83,7 @@ data class AuthHeaders(
     @JsonProperty("mobile") val mobile: String,
     @JsonProperty("testResultUpload") val testResultUpload: String,
     @JsonProperty("highRiskVenuesCodeUpload") val highRiskVenuesCodeUpload: String,
-    @JsonProperty("highRiskPostCodeUpload") val highRiskPostCodeUpload: String
+    @JsonProperty("highRiskPostCodeUpload") val highRiskPostCodeUpload: String,
+    @JsonProperty("isolationPayment") val isolationPayment: String,
+    @JsonProperty("health") val health: String
 )

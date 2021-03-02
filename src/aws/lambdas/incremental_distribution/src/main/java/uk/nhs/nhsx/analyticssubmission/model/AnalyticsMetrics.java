@@ -50,6 +50,16 @@ public class AnalyticsMetrics {
     public Integer isIsolatingForTestedLFDPositiveBackgroundTick;
     public Integer totalExposureWindowsNotConsideredRisky;
     public Integer totalExposureWindowsConsideredRisky;
+    public Integer acknowledgedStartOfIsolationDueToRiskyContact;
+    public Integer hasRiskyContactNotificationsEnabledBackgroundTick;
+    public Integer totalRiskyContactReminderNotifications;
+    public Integer receivedUnconfirmedPositiveTestResult;
+    public Integer isIsolatingForUnconfirmedTestBackgroundTick;
+    public Integer launchedTestOrdering;
+    public Integer didHaveSymptomsBeforeReceivedTestResult;
+    public Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult;
+    public Integer didAskForSymptomsOnPositiveTestEntry;
+    public Integer declaredNegativeResultFromDCT;
 
     public AnalyticsMetrics() {
     }

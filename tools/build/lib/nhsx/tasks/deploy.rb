@@ -8,10 +8,40 @@ namespace :deploy do
         include NHSx::Deploy
         deploy_app_system(tgt_env, account, $configuration)
       end
+      desc "Full CTA system deployment with analytics and sanity checks"
+      task :"cta:#{tgt_env}" => prerequisites do
+        begin
+          Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
+          Rake::Task["deploy:#{tgt_env}"].invoke
+          Rake::Task["deploy:analytics:#{tgt_env}"].invoke
+          Rake::Task["test:sanity_check:#{tgt_env}"].invoke
+          Rake::Task["report:changes"].invoke
+        ensure
+          Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
+        end
+      end
+      desc "Tier metadata content deployment"
+      task :"tier_metadata:#{tgt_env}" => [:"login:#{account}"] do
+        begin
+          Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
+          Rake::Task["publish:tier_metadata:#{tgt_env}"].invoke
+        ensure
+          Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
+        end
+      end
+      desc "App availability content deployment"
+      task :"availability:#{tgt_env}" => [:"login:#{account}"] do
+        begin
+          Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
+          Rake::Task["publish:availability:#{tgt_env}"].invoke
+        ensure
+          Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
+        end
+      end
     end
 
     desc "Deploys the AWS resources required for operation of the pipelines in #{account}"
-    task :"ci-infra:#{account}" do
+    task :"ci-infra:#{account}" => [:"login:#{account}"] do
       include NHSx::Terraform
       include NHSx::Git
       terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", account)
@@ -36,14 +66,21 @@ namespace :plan do
       task :"#{tgt_env}" => [:"login:#{account}", :"build:dependencies", :"gen:signatures:#{account}"] do
         include NHSx::Terraform
         terraform_configuration = File.join($configuration.base, "src/aws/accounts", account)
-        plan_for_workspace(tgt_env, terraform_configuration, $configuration)
+        plan_for_workspace(tgt_env, terraform_configuration, [], $configuration)
       end
     end
     desc "Plans the AWS resource deployment required for operation of the pipelines in #{account}"
-    task :"ci-infra:#{account}" do
+    task :"ci-infra:#{account}" => [:"login:#{account}"] do
       include NHSx::Terraform
       terraform_configuration = File.join($configuration.base, "tools/ci/infra/accounts", account)
-      plan_for_workspace("ci-infra", terraform_configuration, $configuration)
+      template_file = File.join($configuration.base, "tools/templates/ci-infra.tfvars.erb")
+      params = {
+        "sha" => current_sha,
+        "target_environments" => NHSx::TargetEnvironment::TARGET_ENVIRONMENTS[account],
+      }
+      variables_file = File.join($configuration.out, "ci-infra.tfvars")
+      write_file(variables_file, from_template(template_file, params))
+      plan_for_workspace("ci-infra", terraform_configuration, [variables_file], $configuration)
     end
   end
 end

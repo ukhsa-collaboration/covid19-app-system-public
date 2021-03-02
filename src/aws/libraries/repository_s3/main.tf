@@ -1,9 +1,9 @@
 locals {
-  identifier_prefix = "${terraform.workspace}-artifact-repository"
+  identifier_prefix = "${terraform.workspace}-${var.lambda_project}-artifact-repository"
   service           = "repository"
-  lambda_source     = "${path.module}/../../../../src/aws/lambdas/incremental_distribution/build/distributions/javalambda-0.0.1-SNAPSHOT.zip"
+  lambda_source     = var.lambda_zip_path
   lambda_hash       = filemd5(local.lambda_source)
-  lambda_key        = "lambda/lambda-${local.lambda_hash}.zip"
+  lambda_key        = "lambda/${var.lambda_project}-${local.lambda_hash}.zip"
 }
 
 resource "aws_s3_bucket" "this" {
@@ -48,27 +48,8 @@ resource "aws_s3_bucket_object" "lambda" {
   etag   = local.lambda_hash
 }
 
-data "aws_iam_policy_document" "this" {
-  statement {
-    actions = ["s3:*"]
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-    resources = ["${aws_s3_bucket.this.arn}/*"]
-
-    effect = "Deny"
-
-    condition {
-      test     = "Bool"
-      values   = ["false"]
-      variable = "aws:SecureTransport"
-    }
-  }
-}
-
 resource "aws_s3_bucket_policy" "this" {
   depends_on = [aws_s3_bucket_public_access_block.this] # in terraform v0.12.29 we encounter conflict when this is executed concurrently with setting public access block
   bucket     = aws_s3_bucket.this.id
-  policy     = data.aws_iam_policy_document.this.json
+  policy     = var.policy_document.json
 }

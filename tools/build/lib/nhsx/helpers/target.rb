@@ -12,6 +12,8 @@ module NHSx
       "testResultUpload" => "test_result",
       "highRiskVenuesCodeUpload" => "venues",
       "highRiskPostCodeUpload" => "post_districts",
+      "health" => "health",
+      "isolationPayment" => "isolation_payment",
     }.freeze
 
     # All the fixed (named) target environments per account: {"account"=>[target_environments]}
@@ -25,10 +27,17 @@ module NHSx
       "dev" => ["load-test", "branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
+      "aa-dev" => ["aa-dev", "branch"],
+      "aa-staging" => ["aa-staging"],
+      "aa-prod" => ["aa-prod"],
     }.freeze
     # All the fixed (named) DoReTo target environments per account: {"account"=>[target_environments]}
     DORETO_TARGET_ENVIRONMENTS = {
       "dev" => ["test", "branch"],
+    }.freeze
+    # All the fixed (named) public dashboard target environments per account: {"account"=>[target_environments]}
+    PUBDASH_TARGET_ENVIRONMENTS = {
+      "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
     }.freeze
     # The parameter name that contains the ARN of the signing key in the SSM paramater store
     SIGNING_KEY_PARAMETER = "/app/kms/SigningKeyArn".freeze
@@ -51,6 +60,13 @@ module NHSx
       target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
 
       return target_config
+    end
+
+    # Retrieves the target environment configuration for public dashboard
+    def pubdash_target_environment_configuration(environment_name, account_name, system_config)
+      terraform_configuration = File.join(system_config.base, NHSx::Terraform::PUBDASH_ACCOUNTS, account_name)
+      target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
+      target_config
     end
 
     def signing_key_id(system_config)

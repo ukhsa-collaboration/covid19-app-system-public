@@ -26,7 +26,6 @@ module "test_order_lambda" {
     register_website          = var.test_register_website
     SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
     custom_oai                = var.custom_oai
-    virology_v2_apis_enabled  = var.virology_v2_apis_enabled
   }
   log_retention_in_days = var.log_retention_in_days
   app_alarms_topic      = var.alarm_topic_arn

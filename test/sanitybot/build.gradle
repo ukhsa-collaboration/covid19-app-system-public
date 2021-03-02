@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
@@ -40,6 +39,7 @@ task testSanity(type: Test) {
         includeTestsMatching "uk.nhs.nhsx.sanity.lambdas.${System.getenv("TARGET_ENVIRONMENT")}.*"
     }
 
+    reports.html.destination = file("$projectDir/../../out/reports")
     reports.junitXml.destination = file("$projectDir/../../out/reports")
 }
 

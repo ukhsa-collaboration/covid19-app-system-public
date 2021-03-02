@@ -25,6 +25,15 @@ variable "test-results-upload-endpoint" {
 variable "test-results-upload-path" {
   description = "The route to the test results upload"
 }
+variable "isolation_payment_endpoint" {
+  description = "The endpoint for the isolation payment submission API"
+}
+variable "isolation_payment_path" {
+  description = "The route for the isolation payment submission"
+}
+variable "isolation_payment_health_path" {
+  description = "The route for the isolation payment health endpoint"
+}
 
 variable "domain" {
   description = "The domain the CloudFront distribution needs to be deployed into"

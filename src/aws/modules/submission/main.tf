@@ -16,6 +16,7 @@ module "submission_store" {
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   replication_enabled      = var.replication_enabled
   lifecycle_rule_enabled   = var.lifecycle_rule_enabled
+  policy_document          = var.policy_document
   tags                     = var.tags
 }
 

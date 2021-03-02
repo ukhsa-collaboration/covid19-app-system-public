@@ -2,26 +2,27 @@ package uk.nhs.nhsx.diagnosiskeydist
 
 import batchZipCreation.Exposure
 import batchZipCreation.Exposure.TemporaryExposureKey
+import batchZipCreation.Exposure.TemporaryExposureKeyExport
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.s3.model.S3ObjectSummary
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.times
-import org.mockito.Mockito.verify
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber
+import uk.nhs.nhsx.diagnosiskeydist.keydistribution.KeyDistributor
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.SaveToFileKeyDistributor
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
@@ -32,182 +33,145 @@ import uk.nhs.nhsx.testhelper.mocks.FakeS3
 import java.io.File
 import java.nio.file.Path
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.*
-import java.util.function.Consumer
-import java.util.stream.Collectors
-import java.util.stream.IntStream
+import java.util.ArrayList
+import java.util.Date
 
 class DistributionServiceTest {
 
-    private val awsS3 = FakeS3()
-    private val awsCloudFront = mock(AwsCloudFront::class.java)
-    private val mobileAppBundleId = "uk.nhs.covid19.internal"
-    private val exposureProtobuf = ExposureProtobuf(mobileAppBundleId)
-
-    private val batchProcessingConfig = BatchProcessingConfig(
-        true,
-        BucketName.of("dist-zip-bucket-name"),
-        "dis-id",
-        "dist-pattern-daily",
-        "dist-pattern-2hourly",
-        ParameterName.of("ssmKeyIdParameterName"),
-        ParameterName.of("ssmContentKeyIdParameterName")
-    )
-    private val signer =
-        Signer { Signature(KeyId.of("key-id"), SigningAlgorithmSpec.ECDSA_SHA_256, byteArrayOf(1, 2, 3)) }
-
-
     @Test
-    fun shouldAbortOutsideServiceWindow(@TempDir distributionFolder: Path) {
-        assertThatThrownBy {
-            val date = toInstant(2020, 7, 14, 19, 30)
-            DistributionService(
-                MockSubmissionRepository(emptyList()),
-                exposureProtobuf,
-                SaveToFileKeyDistributor(distributionFolder.toFile()),
-                signer,
-                awsCloudFront,
-                awsS3,
-                batchProcessingConfig
-            ).distributeKeys(date)
-        }
+    fun `should abort outside service window`(@TempDir folder: Path) {
+        fun distribute() = DistributionServiceBuilder(folder)
+            .build()
+            .distributeKeys("2020-07-14T19:30:00Z".asInstant())
+
+        assertThatThrownBy { distribute() }
             .isInstanceOf(IllegalStateException::class.java)
             .hasMessage("CloudWatch Event triggered Lambda at wrong time.")
     }
 
     @Test
-    fun shouldNotAbortIfFlagIsFalse(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 14, 19, 30)
-        DistributionService(
-            MockSubmissionRepository(emptyList()),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            BatchProcessingConfig(
-                false,
-                BucketName.of("dist-zip-bucket-name"),
-                "",
-                "",
-                "",
-                ParameterName.of(""),
-                ParameterName.of("")
-            )
-        ).distributeKeys(date)
-        assertDailyExportBatchExists(distributionFolder)
-    }
-
-    @Test
-    fun distributeKeysFromSubmissionsOnSingleDay(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 16, 7, 46)
-        val dateBefore = toInstant(2020, 7, 15, 7, 46)
-        DistributionService(
-            MockSubmissionRepository(listOf(date, dateBefore)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
-        assertDailyExportBatchExists(distributionFolder)
-        assertTwoHourlyExportBatchExists(distributionFolder)
-        val latestDailyZipFile = File(distributionFolder.toFile(), "distribution/daily/2020071600.zip")
-        var keys: List<TemporaryExposureKey?> = tekListFromZipFile(latestDailyZipFile)
-        assertEquals(14, keys.size, "keys in latest daily zip file")
-        val earlierDailyZipFile = File(distributionFolder.toFile(), "distribution/daily/2020071500.zip")
-        keys = tekListFromZipFile(earlierDailyZipFile)
-        assertEquals(0, keys.size, "keys in earlier daily zip file")
-    }
-
-    @Test
-    fun distributeKeysFromSubmissionsOnMultipleDays(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 16, 7, 46)
-        val dateBefore = toInstant(2020, 7, 15, 7, 46)
-        val dateBeforeThat = toInstant(2020, 7, 14, 7, 46)
-        val date3DaysBefore = toInstant(2020, 7, 13, 7, 46)
-        DistributionService(
-            MockSubmissionRepository(listOf(date, dateBefore, dateBeforeThat, date3DaysBefore)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
-        assertDailyExportBatchExists(distributionFolder)
-        assertTwoHourlyExportBatchExists(distributionFolder)
-        val latestDailyZipFile = File(distributionFolder.toFile(), "distribution/daily/2020071600.zip")
-        var keys: List<TemporaryExposureKey?> = tekListFromZipFile(latestDailyZipFile)
-        assertEquals(14, keys.size, "keys in latest daily zip file")
-        var earlierDailyZipFile = File(distributionFolder.toFile(), "distribution/daily/2020071500.zip")
-        keys = tekListFromZipFile(earlierDailyZipFile)
-        assertEquals(13, keys.size, "keys in earlier daily zip file")
-        earlierDailyZipFile = File(distributionFolder.toFile(), "distribution/daily/2020071400.zip")
-        keys = tekListFromZipFile(earlierDailyZipFile)
-        assertEquals(12, keys.size, "keys in even earlier daily zip file")
-    }
-
-    @Test
-    fun tekExportHasCorrectSignatureInfo(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 16, 7, 46)
-        DistributionService(
-            MockSubmissionRepository(listOf(date)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
-        val latestDailyZipFile = File(distributionFolder.toFile(), "distribution/daily/2020071600.zip")
-        val temporaryExposureKeyExport = tekExportFromZipFile(latestDailyZipFile)
-        assertThat(temporaryExposureKeyExport.signatureInfosList).hasSize(1)
-        assertThat(temporaryExposureKeyExport.signatureInfosList[0]).isEqualTo(expectedSignatureInfo)
-    }
-
-    @Test
-    fun tekSignatureListHasCorrectSignatureInfo(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 16, 7, 46)
-        DistributionService(
-            MockSubmissionRepository(listOf(date)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
-        val latestDailyZipFile = File(distributionFolder.toFile(), "distribution/daily/2020071600.zip")
-        val tekSignatureList = tekSignatureListFromZipFile(latestDailyZipFile)
-        assertThat(tekSignatureList.signaturesList).hasSize(1)
-        assertThat(tekSignatureList.signaturesList[0].signatureInfo).isEqualTo(expectedSignatureInfo)
-    }
-
-    @Test
-    fun deletesOldObjectsThatDontMatchUploaded(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 16, 7, 46)
-        val notMatchedObjectKey = ObjectKey.of("obj-key-not-uploaded")
-        awsS3.existing.add(
-            object : S3ObjectSummary() {
-                init {
-                    setBucketName(batchProcessingConfig.zipBucketName.value)
-                    setKey(notMatchedObjectKey.value)
-                }
-            }
+    fun `should not abort if flag is false`(@TempDir folder: Path) {
+        val config = BatchProcessingConfig(
+            false,
+            BucketName.of("dist-zip-bucket-name"),
+            "",
+            "",
+            "",
+            ParameterName.of(""),
+            ParameterName.of("")
         )
-        DistributionService(
-            MockSubmissionRepository(listOf(date)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
+
+        DistributionServiceBuilder(folder)
+            .withBatchProcessingConfig(config)
+            .build()
+            .distributeKeys("2020-07-14T19:30:00Z".asInstant())
+
+        assertDailyExportBatchExists(folder)
+    }
+
+    @Test
+    fun `distribute keys from submissions on single day`(@TempDir folder: Path) {
+        val date = "2020-07-16T07:46:00Z".asInstant()
+        val dateBefore = "2020-07-15T07:46:00Z".asInstant()
+
+        DistributionServiceBuilder(folder)
+            .withSubmissionRepository(date, dateBefore)
+            .build()
+            .distributeKeys(date)
+
+        assertDailyExportBatchExists(folder)
+        assertTwoHourlyExportBatchExists(folder)
+
+        folder.load("distribution/daily/2020071600.zip").assertTekList {
+            assertThat(it).describedAs("keys in latest daily zip file").hasSize(14)
+        }
+
+        folder.load("distribution/daily/2020071500.zip").assertTekList {
+            assertThat(it).describedAs("keys in earlier daily zip file").isEmpty()
+        }
+    }
+
+    @Test
+    fun `distribute keys from submissions on multiple days`(@TempDir folder: Path) {
+        val date = "2020-07-16T07:46:00Z".asInstant()
+        val dateBefore = "2020-07-15T07:46:00Z".asInstant()
+        val dateBeforeThat = "2020-07-14T07:46:00Z".asInstant()
+        val date3DaysBefore = "2020-07-13T07:46:00Z".asInstant()
+
+        DistributionServiceBuilder(folder)
+            .withSubmissionRepository(date, dateBefore, dateBeforeThat, date3DaysBefore)
+            .build()
+            .distributeKeys(date)
+
+        assertDailyExportBatchExists(folder)
+        assertTwoHourlyExportBatchExists(folder)
+
+        folder.load("distribution/daily/2020071600.zip").assertTekList {
+            assertThat(it)
+                .describedAs("keys in latest daily zip file")
+                .hasSize(14)
+        }
+
+        folder.load("distribution/daily/2020071500.zip").assertTekList {
+            assertThat(it)
+                .describedAs("keys in earlier daily zip file")
+                .hasSize(13)
+        }
+
+        folder.load("distribution/daily/2020071400.zip").assertTekList {
+            assertThat(it)
+                .describedAs("keys in even earlier daily zip file")
+                .hasSize(12)
+        }
+    }
+
+    @Test
+    fun `tek export has correct signature info`(@TempDir folder: Path) {
+        val date = "2020-07-16T07:46:00Z".asInstant()
+
+        DistributionServiceBuilder(folder)
+            .withSubmissionRepository(date)
+            .build()
+            .distributeKeys(date)
+
+        folder.load("distribution/daily/2020071600.zip").assertTekImport {
+            assertThat(it.signatureInfosList).hasSize(1)
+            assertThat(it.signatureInfosList).first().isEqualTo(expectedSignatureInfo)
+        }
+    }
+
+    @Test
+    fun `tek signature list has correct signature info`(@TempDir folder: Path) {
+        val date = "2020-07-16T07:46:00Z".asInstant()
+
+        DistributionServiceBuilder(folder)
+            .withSubmissionRepository(date)
+            .build()
+            .distributeKeys(date)
+
+        folder.load("distribution/daily/2020071600.zip").assertTkSignatureList {
+            assertThat(it.signaturesList).hasSize(1)
+            assertThat(it.signaturesList)
+                .first()
+                .extracting { i -> i.signatureInfo }
+                .isEqualTo(expectedSignatureInfo)
+        }
+    }
+
+    @Test
+    fun `deletes old objects that dont match uploaded`(@TempDir folder: Path) {
+        val date = "2020-07-16T07:46:00Z".asInstant()
+        val notMatchedObjectKey = ObjectKey.of("obj-key-not-uploaded")
+        val batchProcessingConfig = BatchProcessingConfigs.standard()
+
+        val awsS3 = FakeS3().add(batchProcessingConfig.zipBucketName, notMatchedObjectKey)
+
+        DistributionServiceBuilder(folder)
+            .withSubmissionRepository(date)
+            .withAwsS3(awsS3)
+            .withBatchProcessingConfig(batchProcessingConfig)
+            .build()
+            .distributeKeys(date)
 
         assertThat(awsS3.deleted).contains(
             Locator.of(batchProcessingConfig.zipBucketName, notMatchedObjectKey)
@@ -215,78 +179,77 @@ class DistributionServiceTest {
     }
 
     @Test
-    fun noDeletionIfObjectKeyMatchesUploaded(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 16, 7, 46)
+    fun `no deletion if object key matches uploaded`(@TempDir folder: Path) {
+        val date = "2020-07-16T07:46:00Z".asInstant()
         val matchedObjectKey = ObjectKey.of("distribution/daily/2020070300.zip")
-        awsS3.existing.add(
-            object : S3ObjectSummary() {
-                init {
-                    setBucketName(batchProcessingConfig.zipBucketName.value)
-                    setKey(matchedObjectKey.value)
-                }
-            }
-        )
-        DistributionService(
-            MockSubmissionRepository(listOf(date)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
-        assertThat(awsS3.deleted).hasSize(0)
+        val batchProcessingConfig = BatchProcessingConfigs.standard()
+
+        val awsS3 = FakeS3().add(batchProcessingConfig.zipBucketName, matchedObjectKey)
+
+        DistributionServiceBuilder(folder)
+            .withSubmissionRepository(date)
+            .withAwsS3(awsS3)
+            .withBatchProcessingConfig(batchProcessingConfig)
+            .build()
+            .distributeKeys(date)
+
+        assertThat(awsS3.deleted).isEmpty()
     }
 
     @Test
-    fun invalidatesCloudFrontCaches(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 7, 16, 7, 46)
-        DistributionService(
-            MockSubmissionRepository(listOf(date)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
-        verify(awsCloudFront, times(1))
-            .invalidateCache("dis-id", "dist-pattern-daily")
-        verify(awsCloudFront, times(1))
-            .invalidateCache("dis-id", "dist-pattern-2hourly")
+    fun `invalidates cloud front caches`(@TempDir folder: Path) {
+        val date = "2020-07-16T07:46:00Z".asInstant()
+        val awsCloudFront = mockk<AwsCloudFront>()
+
+        every { awsCloudFront.invalidateCache(any(), any()) } returns Unit
+
+        DistributionServiceBuilder(folder)
+            .withCloudFront(awsCloudFront)
+            .withSubmissionRepository(date)
+            .build()
+            .distributeKeys(date)
+
+        verify(exactly = 1) {
+            awsCloudFront.invalidateCache("dis-id", "dist-pattern-daily")
+        }
+
+        verify(exactly = 1) {
+            awsCloudFront.invalidateCache("dis-id", "dist-pattern-2hourly")
+        }
     }
 
     @Test
-    fun checkDailyBatchExistsAtMidnightBoundary(@TempDir distributionFolder: Path) {
-        val date = toInstant(2020, 9, 16, 23, 47)
-        DistributionService(
-            MockSubmissionRepository(listOf(date)),
-            exposureProtobuf,
-            SaveToFileKeyDistributor(distributionFolder.toFile()),
-            signer,
-            awsCloudFront,
-            awsS3,
-            batchProcessingConfig
-        ).distributeKeys(date)
-        val distributionDailyDir = File(distributionFolder.toFile(), "distribution/daily")
-        assertTrue(File(distributionDailyDir.path + "/2020091700.zip").exists())
-        assertDailyExportBatchExists(distributionFolder)
+    fun `check daily batch exists at midnight boundary`(@TempDir folder: Path) {
+        val date = "2020-09-16T23:47:00Z".asInstant()
+        DistributionServiceBuilder(folder)
+            .withSubmissionRepository(date).build()
+            .distributeKeys(date)
+
+        val distributionDailyDir = folder.load("distribution/daily")
+
+        assertThat(File(distributionDailyDir.path + "/2020091700.zip")).exists()
+        assertDailyExportBatchExists(folder)
     }
 
-    private fun assertDailyExportBatchExists(distributionFolder: Path) {
-        val distributionDailyDir = File(distributionFolder.toFile(), "distribution/daily")
-        assertTrue(distributionDailyDir.exists())
-        assertEquals(15, distributionDailyDir.list().size)
+    private fun assertDailyExportBatchExists(folder: Path) {
+        val dir = folder.load("distribution/daily")
+        assertThat(dir).exists()
+        assertThat(dir.list()!!).hasSize(15)
     }
 
-    private fun assertTwoHourlyExportBatchExists(distributionFolder: Path) {
-        val distributionTwoHourlyDir = File(distributionFolder.toFile(), "distribution/two-hourly")
-        assertTrue(distributionTwoHourlyDir.exists())
-        assertEquals(168, distributionTwoHourlyDir.list().size)
+    private fun assertTwoHourlyExportBatchExists(folder: Path) {
+        val dir = folder.load("distribution/two-hourly")
+        assertThat(dir).exists()
+        assertThat(dir.list()!!).hasSize(168)
     }
 
-    internal class MockSubmissionRepository(submissionDates: List<Instant>) : SubmissionRepository {
+    private class MockSubmissionRepository(submissionDates: List<Instant>) : SubmissionRepository {
         private val submissions: MutableList<Submission> = ArrayList()
+
+        init {
+            submissionDates.forEach { submissions.add(makeKeySet(it)) }
+        }
+
         override fun loadAllSubmissions(
             minimalSubmissionTimeEpocMillisExclusive: Long,
             maxLimit: Int,
@@ -297,32 +260,107 @@ class DistributionServiceTest {
 
         private fun makeKeySet(submissionDate: Instant): Submission {
             val mostRecentKeyRollingStart =
-                ENIntervalNumber.enIntervalNumberFromTimestamp(Date.from(submissionDate)).enIntervalNumber / 144 * 144
-            val keys = IntStream.range(0, 14)
-                .mapToObj { i: Int -> makeKey(mostRecentKeyRollingStart - i * 144) }
-                .collect(Collectors.toList())
+                ENIntervalNumber.enIntervalNumberFromTimestamp(submissionDate).enIntervalNumber / 144 * 144
+
+            val keys = LongRange(0, 14)
+                .map { makeKey(mostRecentKeyRollingStart - it * 144) }
+                .toList()
+
             return Submission(Date.from(submissionDate), StoredTemporaryExposureKeyPayload(keys))
         }
 
-        companion object {
-            private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey {
-                return StoredTemporaryExposureKey("ABC", Math.toIntExact(keyStartTime), 144, 7)
-            }
-        }
-
-        init {
-            submissionDates.forEach(Consumer { it: Instant -> submissions.add(makeKeySet(it)) })
+        private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey {
+            return StoredTemporaryExposureKey("ABC", Math.toIntExact(keyStartTime), 144, 7)
         }
     }
 
-    private fun toInstant(year: Int, month: Int, dayOfMonth: Int, hour: Int, minute: Int): Instant =
-        LocalDateTime.of(year, month, dayOfMonth, hour, minute, 0).toInstant(ZoneOffset.UTC)
+    private fun String.asInstant() = Instant.parse(this)
 
     private val expectedSignatureInfo = Exposure.SignatureInfo.newBuilder()
-        .setAndroidPackage(mobileAppBundleId)
-        .setAppBundleId(mobileAppBundleId)
+        .setAndroidPackage("uk.nhs.covid19.internal")
+        .setAppBundleId("uk.nhs.covid19.internal")
         .setVerificationKeyVersion("v1")
         .setVerificationKeyId("234")
         .setSignatureAlgorithm("1.2.840.10045.4.3.2")
         .build()
+
+
+    class DistributionServiceBuilder(folder: Path) {
+        private val exposureProtobuf = ExposureProtobuf("uk.nhs.covid19.internal")
+        private var submissionRepository: SubmissionRepository = MockSubmissionRepository(emptyList())
+        private var keyDistributor: KeyDistributor = SaveToFileKeyDistributor(folder.toFile())
+        private var signer = Signer {
+            Signature(KeyId.of("key-id"), SigningAlgorithmSpec.ECDSA_SHA_256, byteArrayOf(1, 2, 3))
+        }
+        private var cloudFront = mockk<AwsCloudFront>().also {
+            every { it.invalidateCache(any(), any()) } returns Unit
+        }
+
+        private var awsS3: FakeS3 = FakeS3()
+        private var batchProcessingConfig = BatchProcessingConfigs.standard()
+
+        fun withSubmissionRepository(vararg dates: Instant): DistributionServiceBuilder {
+            this.submissionRepository = MockSubmissionRepository(dates.asList())
+            return this
+        }
+
+        fun withCloudFront(cloudFront: AwsCloudFront): DistributionServiceBuilder {
+            this.cloudFront = cloudFront
+            return this
+        }
+
+        fun withAwsS3(awsS3: FakeS3): DistributionServiceBuilder {
+            this.awsS3 = awsS3
+            return this
+        }
+
+        fun withBatchProcessingConfig(config: BatchProcessingConfig): DistributionServiceBuilder {
+            this.batchProcessingConfig = config
+            return this
+        }
+
+        fun build(): DistributionService {
+            return DistributionService(
+                submissionRepository,
+                exposureProtobuf,
+                keyDistributor,
+                signer,
+                cloudFront,
+                awsS3,
+                batchProcessingConfig,
+                RecordingEvents()
+            )
+        }
+    }
+
+    private object BatchProcessingConfigs {
+        fun standard() = BatchProcessingConfig(
+            true,
+            BucketName.of("dist-zip-bucket-name"),
+            "dis-id",
+            "dist-pattern-daily",
+            "dist-pattern-2hourly",
+            ParameterName.of("ssmKeyIdParameterName"),
+            ParameterName.of("ssmContentKeyIdParameterName")
+        )
+    }
+
+    private fun FakeS3.add(name: BucketName, key: ObjectKey): FakeS3 {
+        this.existing.add(object : S3ObjectSummary() {
+            init {
+                setBucketName(name.value)
+                setKey(key.value)
+            }
+        })
+        return this
+    }
+
+    private fun Path.load(otherPath: String): File = File(this.toFile(), otherPath)
+
+    private fun File.assertTekList(fn: (List<TemporaryExposureKey>) -> Unit) = fn(tekListFromZipFile(this))
+
+    private fun File.assertTekImport(fn: (TemporaryExposureKeyExport) -> Unit) = fn(tekExportFromZipFile(this))
+
+    private fun File.assertTkSignatureList(fn: (Exposure.TEKSignatureList) -> Unit) =
+        fn(tekSignatureListFromZipFile(this))
 }

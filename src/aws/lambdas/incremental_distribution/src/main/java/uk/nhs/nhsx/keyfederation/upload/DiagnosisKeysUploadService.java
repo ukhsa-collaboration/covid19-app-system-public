@@ -1,26 +1,25 @@
 package uk.nhs.nhsx.keyfederation.upload;
 
-
 import com.amazonaws.services.lambda.runtime.Context;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.InfoEvent;
 import uk.nhs.nhsx.diagnosiskeydist.Submission;
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository;
 import uk.nhs.nhsx.keyfederation.BatchTagService;
 import uk.nhs.nhsx.keyfederation.InteropClient;
+import uk.nhs.nhsx.keyfederation.UploadedDiagnosisKeys;
 
+import java.time.Duration;
 import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static uk.nhs.nhsx.core.Jackson.toJson;
 
 public class DiagnosisKeysUploadService {
     private final static int NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE = 0;
-
-    private static final Logger logger = LogManager.getLogger(DiagnosisKeysUploadService.class);
 
     private final InteropClient interopClient;
     private final SubmissionRepository submissionRepository;
@@ -33,8 +32,11 @@ public class DiagnosisKeysUploadService {
     private final int maxUploadBatchLimit;
     private final int maxSubsequentBatchUploadCount;
     private final Context context;
+    private final Events events;
+    private final Supplier<Instant> clock;
 
-    public DiagnosisKeysUploadService(InteropClient interopClient,
+    public DiagnosisKeysUploadService(Supplier<Instant> clock,
+                                      InteropClient interopClient,
                                       SubmissionRepository submissionRepository,
                                       BatchTagService batchTagService,
                                       String region,
@@ -43,8 +45,9 @@ public class DiagnosisKeysUploadService {
                                       int initialUploadHistoryDays,
                                       int maxUploadBatchSize,
                                       int maxSubsequentBatchUploadCount,
-                                      Context context)
-    {
+                                      Context context,
+                                      Events events) {
+        this.clock = clock;
         this.interopClient = interopClient;
         this.submissionRepository = submissionRepository;
         this.batchTagService = batchTagService;
@@ -56,12 +59,14 @@ public class DiagnosisKeysUploadService {
         this.maxUploadBatchLimit = maxUploadBatchSize - 4; //4 mobile submissions/sec
         this.maxSubsequentBatchUploadCount = maxSubsequentBatchUploadCount;
         this.context = context;
+        this.events = events;
     }
 
     public int loadKeysAndUploadToFederatedServer() throws Exception {
         int submissionCount = 0;
         long iterationDuration = 0L;
         Instant lastUploadedSubmissionTime = getLastUploadedTime();
+
         for (int i = 1; i <= maxSubsequentBatchUploadCount; i++) {
             var startTime = System.currentTimeMillis();
             var result = loadKeysAndUploadOneBatchToFederatedServer(lastUploadedSubmissionTime, i);
@@ -70,18 +75,16 @@ public class DiagnosisKeysUploadService {
 
             if (maxUploadBatchSize == NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE
                 || lastUploadedSubmissionTime.equals(result.lastUploadedSubmissionTime)
-                || result.submissionCount < maxUploadBatchLimit)
-            {
+                || result.submissionCount < maxUploadBatchLimit) {
                 break;
             }
 
             lastUploadedSubmissionTime = result.lastUploadedSubmissionTime;
-            iterationDuration = Math.max(iterationDuration,System.currentTimeMillis() - startTime);
-            if(iterationDuration >= context.getRemainingTimeInMillis()){
-                logger.warn("There is not enough time to complete another iteration");
+            iterationDuration = Math.max(iterationDuration, System.currentTimeMillis() - startTime);
+            var remainingTimeInMillis = context.getRemainingTimeInMillis();
+            if (iterationDuration >= remainingTimeInMillis) {
                 break;
             }
-
         }
 
         return submissionCount;
@@ -98,7 +101,8 @@ public class DiagnosisKeysUploadService {
     }
 
     public BatchUploadResult loadKeysAndUploadOneBatchToFederatedServer(Instant lastUploadedSubmissionTime, int batchNumber) throws Exception {
-        logger.info("Begin: Upload diagnosis keys to the Nearform server (batch {})", batchNumber);
+
+        events.emit(getClass(), new InfoEvent("Begin: Upload diagnosis keys to the Nearform server - batch " + batchNumber));
 
         List<Submission> newSubmissions = submissionRepository.loadAllSubmissions(
             lastUploadedSubmissionTime.toEpochMilli(),
@@ -109,19 +113,17 @@ public class DiagnosisKeysUploadService {
 
         var transformedExposureKeys = exposureKeys.stream().map(this::updateRiskLevelIfDefaultEnabled).collect(Collectors.toList());
 
-        logger.info("Loading and transforming keys from submissions finished (from {} to {}), keyCount={} (batch {})",
-            newSubmissions.isEmpty() ? null : (newSubmissions.get(0).submissionDate),
-            newSubmissions.isEmpty() ? null : (newSubmissions.get(newSubmissions.size() - 1).submissionDate),
-            transformedExposureKeys.size(), batchNumber);
+        events.emit(getClass(), new InfoEvent("Loading and transforming keys from submissions finished (from " +
+            (newSubmissions.isEmpty() ? null : (newSubmissions.get(0).submissionDate)) +
+            " to " + (newSubmissions.isEmpty() ? null : (newSubmissions.get(newSubmissions.size() - 1).submissionDate) )+
+            "), keyCount=" + transformedExposureKeys.size() +
+            " (batch " + batchNumber + ")"));
 
         if (!transformedExposureKeys.isEmpty()) {
             String payload = toJson(transformedExposureKeys);
             DiagnosisKeysUploadResponse uploadResponse = interopClient.uploadKeys(payload);
             if (uploadResponse != null) {
-                logger.info("Uploaded {} keys with submission date greater than {} to federation server (batch {})",
-                    uploadResponse.insertedExposures,
-                    lastUploadedSubmissionTime.toString(),
-                    batchNumber);
+                events.emit(getClass(), new UploadedDiagnosisKeys(uploadResponse.insertedExposures, lastUploadedSubmissionTime, batchNumber));
 
                 Instant updatedLastUploadedSubmissionTime = Instant.ofEpochMilli(newSubmissions.stream().map(submission -> submission.submissionDate.getTime()).max(Long::compare).orElseThrow());
                 batchTagService.updateLastUploadState(updatedLastUploadedSubmissionTime.toEpochMilli() / 1000);
@@ -129,9 +131,9 @@ public class DiagnosisKeysUploadService {
                 return new BatchUploadResult(updatedLastUploadedSubmissionTime, newSubmissions.size());
             }
         } else {
-            logger.info("No keys were available for uploading to federation server with submission date greater than {} (batch {})",
-                lastUploadedSubmissionTime.toString(),
-                batchNumber);
+            events.emit(getClass(), new InfoEvent("No keys were available for uploading to federation server with submission date greater than " +
+                lastUploadedSubmissionTime +
+                " -batch " + batchNumber));
         }
 
         return new BatchUploadResult(lastUploadedSubmissionTime, newSubmissions.size());
@@ -148,7 +150,7 @@ public class DiagnosisKeysUploadService {
     public List<ExposureUpload> getUploadRequestRawPayload(List<Submission> submissions) // FIXME filter expired keys (rollingStartNumber & rollingPeriod)
     {
         List<ExposureUpload> exposures = new ArrayList<>();
-        submissions.stream()
+        submissions
             .forEach(submission ->
                 submission.payload.temporaryExposureKeys.forEach(exposure ->
                     exposures.add(
@@ -166,11 +168,11 @@ public class DiagnosisKeysUploadService {
     private Instant getLastUploadedTime() {
         return batchTagService.getLastUploadState()
             .map(it -> {
-                logger.info("Last uploaded timestamp from db {}", it.lastUploadedTimeStamp);
+                events.emit(getClass(), new InfoEvent("Last uploaded timestamp from db " + it.lastUploadedTimeStamp));
                 return Instant.ofEpochSecond(it.lastUploadedTimeStamp);
             })
             .orElse(
-                OffsetDateTime.now(ZoneOffset.UTC).minusDays(initialUploadHistoryDays).toInstant()
+                clock.get().minus(Duration.ofDays(initialUploadHistoryDays))
             );
     }
 }

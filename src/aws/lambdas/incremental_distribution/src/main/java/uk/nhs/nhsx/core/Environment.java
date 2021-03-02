@@ -1,8 +1,6 @@
 package uk.nhs.nhsx.core;
 
 import kotlin.jvm.functions.Function1;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +21,6 @@ public class Environment {
 
     public final EnvironmentType type;
     public final Access access;
-    private final Logger logger = LogManager.getLogger(Environment.class);
 
     private Environment(EnvironmentName name, EnvironmentType type, Access access) {
         this.name = name;
@@ -54,14 +51,6 @@ public class Environment {
             return EnvironmentType.Production;
         }
         return EnvironmentType.NonProduction;
-    }
-
-    public <T> Optional<T> whenNonProduction(String functionality, Function<Environment, T> consumer) {
-        if (type == EnvironmentType.NonProduction) {
-            logger.error("ENABLING TEST FUNCTIONALITY:" + functionality);
-            return Optional.ofNullable(consumer.apply(this));
-        }
-        return Optional.empty();
     }
 
     public enum EnvironmentType {NonProduction, Production}

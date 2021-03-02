@@ -22,11 +22,6 @@ resource "aws_s3_bucket" "this" {
       }
     }
   }
-
-  logging {
-    target_bucket = var.logs_bucket_id
-    target_prefix = "${local.identifier_prefix}/"
-  }
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {
@@ -38,37 +33,8 @@ resource "aws_s3_bucket_public_access_block" "this" {
   restrict_public_buckets = true
 }
 
-data "aws_iam_policy_document" "this" {
-  override_json = var.override_policy.json
-  statement {
-    actions = ["s3:GetObject"]
-    principals {
-      type        = "AWS"
-      identifiers = [var.origin_access_identity_path]
-    }
-    resources = ["${aws_s3_bucket.this.arn}/*"]
-  }
-
-  statement {
-    actions = ["s3:*"]
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-    resources = ["${aws_s3_bucket.this.arn}/*"]
-
-    effect = "Deny"
-
-    condition {
-      test     = "Bool"
-      values   = ["false"]
-      variable = "aws:SecureTransport"
-    }
-  }
-}
-
 resource "aws_s3_bucket_policy" "this" {
   depends_on = [aws_s3_bucket_public_access_block.this] # in terraform v0.12.29 we encounter conflict when this is executed concurrently with setting public access block
   bucket     = aws_s3_bucket.this.id
-  policy     = data.aws_iam_policy_document.this.json
+  policy     = var.policy_document.json
 }

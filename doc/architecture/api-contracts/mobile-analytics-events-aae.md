@@ -1,5 +1,7 @@
 # Epidemiological data exports to AAE (events)
 
+Last updated on 05 Feb 2021. 
+
 API group: Export (interface exposed by AAE and consumed by the England/Wales National Backend)
 
 - Endpoint: HTTPS PUT ```https://<FQDN>/c19appdata/<timestamp epoc millis>_<random id>.json?feedName=Epidemiological```
@@ -31,7 +33,8 @@ The backend generates a ```uuid``` field (random value) to facilitate further up
     "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
     "latestApplicationVersion" : "3.0",
     "deviceModel" : "iPhone11,2",
-    "postalDistrict" : "A1"
+    "postalDistrict" : "A1",
+    "localAuthority" : "E09000012"
   },
   "events": [{
     "type": "exposureWindow",
@@ -53,13 +56,14 @@ The backend generates a ```uuid``` field (random value) to facilitate further up
 }
 ```
 
-## Mobile Payload Example (for event type ```exposureWindowPositiveTest``` version 1)
+## Mobile Payload Example (for event type ```exposureWindowPositiveTest```)
 
 - Stored exposure windows sent to mobile after receiving a positive test.
 - Important (privacy): only one ```exposureWindowPositiveTest``` or ```exposureWindow``` event per submission.
-- FYI: ```testType``` is for future use.
 
-### Payload Example
+### Version 1
+
+#### Payload Example 
 
 ```json
 {
@@ -68,13 +72,51 @@ The backend generates a ```uuid``` field (random value) to facilitate further up
     "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
     "latestApplicationVersion" : "3.0",
     "deviceModel" : "iPhone11,2",
-    "postalDistrict" : "A1"
+    "postalDistrict" : "A1",
+    "localAuthority" : "E09000012"
   },
   "events": [{
     "type": "exposureWindowPositiveTest",
     "version": 1,
     "payload": {
       "testType": "unknown",
+      "date": "2020-08-24T21:59:00Z",
+      "infectiousness": "high|none|standard",
+      "scanInstances": [
+        {
+          "minimumAttenuation": 1,
+          "secondsSinceLastScan": 5,
+          "typicalAttenuation": 2
+        }
+      ],
+      "riskScore": 150,
+      "riskCalculationVersion": 2
+    }
+  }]
+}
+```
+### Version 2
+
+Includes additional requiresConfirmatoryTest field
+
+#### Payload Example 
+
+```json
+{
+  "uuid": "0A0F811A-DA1E-4BAE-AB56-611A5DE4BBA3",
+  "metadata" : {
+    "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
+    "latestApplicationVersion" : "3.0",
+    "deviceModel" : "iPhone11,2",
+    "postalDistrict" : "A1",
+    "localAuthority" : "E09000012"
+  },
+  "events": [{
+    "type": "exposureWindowPositiveTest",
+    "version": 2,
+    "payload": {
+      "testType": "unknown", 
+      "requiresConfirmatoryTest": false,
       "date": "2020-08-24T21:59:00Z",
       "infectiousness": "high|none|standard",
       "scanInstances": [
@@ -113,6 +155,8 @@ The backend generates a ```uuid``` field (random value) to facilitate further up
   * Type: exposureWindow, version: 1
     * One submission per exposure window (i.e. ```events.length == 1```)
   * Type: exposureWindowPositiveTest, version: 1
+    * One submission per exposure window (i.e. ```events.length == 1```)
+  * Type: exposureWindowPositiveTest, version: 2
     * One submission per exposure window (i.e. ```events.length == 1```)
 
 ##### Risk calculation version

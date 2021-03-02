@@ -17,79 +17,21 @@ API group: [Submission](../guidebook.md#system-apis-and-interfaces)
 
 Mobile clients send anonymous epidemiological data to the backend (which sends the data to AAE).
 
-## Mobile Payload Example (for event type ```exposureWindow``` version 1)
+## Mobile Payload (for event type ```exposureWindow``` version 1)
 
 - Exposure windows sent to mobile immediately after encounter detection.
 - Important (privacy): only one ```exposureWindowPositiveTest``` or ```exposureWindow``` event per submission.
 
-### Request Payload Example
 
-```json
-{
-  "metadata" : {
-    "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
-    "latestApplicationVersion" : "3.0",
-    "deviceModel" : "iPhone11,2",
-    "postalDistrict" : "A1",
-    "localAuthority" : "E09000012"
-  },
-  "events": [{
-    "type": "exposureWindow",
-    "version": 1,
-    "payload": {
-      "date": "2020-08-24T21:59:00Z",
-      "infectiousness": "high|none|standard",
-      "scanInstances": [
-        {
-          "minimumAttenuation": 1,
-          "secondsSinceLastScan": 5,
-          "typicalAttenuation": 2
-        }
-      ],
-      "riskScore": 150,
-      "riskCalculationVersion": 2
-    }
-  }]
-}
-```
-
-## Mobile Payload Example (for event type ```exposureWindowPositiveTest``` version 1)
+## Mobile Payload (for event type ```exposureWindowPositiveTest```)
 
 - Stored exposure windows sent to mobile after receiving a positive test.
 - Important (privacy): only one ```exposureWindowPositiveTest``` or ```exposureWindow``` event per submission.
-- FYI: ```testType``` is for future use.
 
-### Request Payload Example
+### Version 2
 
-```json
-{
-  "metadata" : {
-    "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
-    "latestApplicationVersion" : "3.0",
-    "deviceModel" : "iPhone11,2",
-    "postalDistrict" : "A1",
-    "localAuthority" : "E09000012"
-  },
-  "events": [{
-    "type": "exposureWindowPositiveTest",
-    "version": 1,
-    "payload": {
-      "testType": "unknown",
-      "date": "2020-08-24T21:59:00Z",
-      "infectiousness": "high|none|standard",
-      "scanInstances": [
-        {
-          "minimumAttenuation": 1,
-          "secondsSinceLastScan": 5,
-          "typicalAttenuation": 2
-        }
-      ],
-      "riskScore": 150,
-      "riskCalculationVersion": 2
-    }
-  }]
-}
-```
+Includes additional requiresConfirmatoryTest field
+
 
 #### Validation (backend)
 
@@ -113,6 +55,8 @@ Mobile clients send anonymous epidemiological data to the backend (which sends t
     * Privacy rule: One submission per exposure window (i.e. ```events.length == 1```)
   * Type: exposureWindowPositiveTest, version: 1
     * Privacy rule: One submission per exposure window (i.e. ```events.length == 1```)
+  * Type: exposureWindowPositiveTest, version: 2
+    * One submission per exposure window (i.e. ```events.length == 1```)
 
 ##### Risk calculation version
 The calculated risk score can vary between different OS/App versions.

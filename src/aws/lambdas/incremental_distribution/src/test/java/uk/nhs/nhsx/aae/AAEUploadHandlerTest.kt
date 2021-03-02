@@ -8,9 +8,11 @@ import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.any
 import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
+import com.github.tomakehurst.wiremock.client.WireMock.exactly
+import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
-import com.google.common.io.ByteSource
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.throws
 import org.apache.http.entity.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.bouncycastle.asn1.ASN1InputStream
@@ -20,80 +22,123 @@ import org.bouncycastle.cert.X509v3CertificateBuilder
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.MetaHeader
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue
+import uk.nhs.nhsx.core.events.ExceptionThrown
+import uk.nhs.nhsx.core.events.OutgoingHttpRequest
+import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.queued.QueuedEventCompleted
+import uk.nhs.nhsx.core.queued.QueuedEventStarted
 import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.SecureRandom
-import java.util.*
+import java.time.Duration
+import java.time.Instant
+import java.util.Date
+import java.util.Optional
 
-
-class AAEUploadHandlerTest {
-
-    private val wireMockRule: WireMockServer = WireMockServer(0)
-
-    lateinit var handler: AAEUploadHandler
-
-    @BeforeEach
-    fun start() {
-        wireMockRule.start()
-        handler = AAEUploadHandler(
-            FakeParquetS3(),
-            AAEUploader(
-                AAEUploadConfig("${wireMockRule.baseUrl()}/", "", "p12Cert", "p12CertPassword", "subKey"),
-                FakeSecretManager()
-            )
-        )
-    }
-
-    @AfterEach
-    fun stop() = wireMockRule.stop()
+@ExtendWith(WireMockExtension::class)
+class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
 
     @Test
     fun `handle sqs event successfully uploads to aae`() {
-        wireMockRule.stubFor(any(anyUrl()).willReturn(aResponse().withStatus(201)))
+        wireMock.stubFor(
+            put("/TEST_KEY")
+                .willReturn(
+                    aResponse()
+                        .withStatus(201)
+                )
+        )
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
-                SQSEvent.SQSMessage().apply { body = """{ "bucketName": "TEST_BUCKET", "key": "TEST_PREFIX/TEST_KEY" }""" }
+                SQSEvent.SQSMessage().apply {
+                    body = """{ "bucketName": "TEST_BUCKET", "key": "TEST_PREFIX/TEST_KEY" }"""
+                }
             )
         }
 
-        val result = handler.handleRequest(sqsEvent, ContextBuilder.aContext())
-        assertThat(result).isEqualTo("success")
-        wireMockRule.verify(1, putRequestedFor(urlEqualTo("/TEST_KEY")))
+        val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
+
+        assertThat(result).isEqualTo("AAEDataUploadedToS3(sqsMessageId=null, bucketName=TEST_BUCKET, key=TEST_PREFIX/TEST_KEY)")
+
+        events.containsExactly(QueuedEventStarted::class, OutgoingHttpRequest::class, AAEDataUploadedToS3::class, QueuedEventCompleted::class)
+    }
+
+    @Test
+    fun `handle sqs event error upload to aae`() {
+        wireMock.stubFor(
+            put("/TEST_KEY")
+                .willReturn(
+                    aResponse()
+                        .withStatus(500)
+                )
+        )
+
+        val sqsEvent = SQSEvent().apply {
+            records = listOf(
+                SQSEvent.SQSMessage().apply {
+                    body = """{ "bucketName": "TEST_BUCKET", "key": "TEST_PREFIX/TEST_KEY" }"""
+                }
+            )
+        }
+
+        assertThat(
+            { newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext()) },
+            throws<RuntimeException>()
+        )
+
+        events.containsExactly(QueuedEventStarted::class, OutgoingHttpRequest::class, ExceptionThrown::class)
     }
 
     @Test
     fun `handle sqs event cannot find object in s3`() {
-        wireMockRule.stubFor(any(anyUrl()).willReturn(aResponse().withStatus(201)))
+        wireMock.stubFor(
+            any(anyUrl())
+                .willReturn(
+                    aResponse()
+                        .withStatus(201)
+                )
+        )
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
-                SQSEvent.SQSMessage().apply { body = """{ "bucketName": "TEST_BUCKET", "key": "TEST_PREFIX/TEST_KEY_NOT_FOUND" }""" }
+                SQSEvent.SQSMessage()
+                    .apply { body = """{ "bucketName": "TEST_BUCKET", "key": "TEST_PREFIX/TEST_KEY_NOT_FOUND" }""" }
             )
         }
 
-        val result = handler.handleRequest(sqsEvent, ContextBuilder.aContext())
-        assertThat(result).isEqualTo("not-found")
-        wireMockRule.verify(0, putRequestedFor(anyUrl()))
+        val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
+
+        assertThat(result).isEqualTo("S3ObjectNotFound(sqsMessageId=null, bucketName=TEST_BUCKET, key=TEST_PREFIX/TEST_KEY_NOT_FOUND)")
+        wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
+
+        events.containsExactly(QueuedEventStarted::class, S3ObjectNotFound::class, QueuedEventCompleted::class)
+
     }
 
     @Test
     fun `handle sqs event cannot be parsed`() {
-        wireMockRule.stubFor(any(anyUrl()).willReturn(aResponse().withStatus(201)))
+        wireMock.stubFor(
+            any(anyUrl())
+                .willReturn(
+                    aResponse()
+                        .withStatus(201)
+                )
+        )
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
@@ -101,68 +146,101 @@ class AAEUploadHandlerTest {
             )
         }
 
-        val result = handler.handleRequest(sqsEvent, ContextBuilder.aContext())
-        assertThat(result).isEqualTo("parsing-error")
-        wireMockRule.verify(0, putRequestedFor(anyUrl()))
+        val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
+
+        assertThat(result).isEqualTo("ExceptionThrown(exception=java.lang.RuntimeException: SQS message parsing failed (no retry): sqsMessage.id=null, body={}, message=SQS message parsing failed (no retry): sqsMessage.id=null, body={})")
+        wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
+
+        events.containsExactly(QueuedEventStarted::class, ExceptionThrown::class, QueuedEventCompleted::class)
     }
 
     @Test
     fun `handle sqs event format conversion failure`() {
-        wireMockRule.stubFor(any(anyUrl()).willReturn(aResponse().withStatus(201)))
+        wireMock.stubFor(
+            any(anyUrl())
+                .willReturn(
+                    aResponse()
+                        .withStatus(201)
+                )
+        )
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
-                SQSEvent.SQSMessage().apply { body = """{ "bucketName": "TEST_BUCKET", "key": "format-conversion-failed/TEST_KEY_ERROR_FILE" }""" }
+                SQSEvent.SQSMessage().apply {
+                    body = """{ "bucketName": "TEST_BUCKET", "key": "format-conversion-failed/TEST_KEY_ERROR_FILE" }"""
+                }
             )
         }
 
-        val result = handler.handleRequest(sqsEvent, ContextBuilder.aContext())
-        assertThat(result).isEqualTo("format-conversion-error")
-        wireMockRule.verify(0, putRequestedFor(anyUrl()))
+        val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
+
+        assertThat(result).isEqualTo("S3ToParquetObjectConversionFailure(sqsMessageId=null, bucketName=TEST_BUCKET, key=format-conversion-failed/TEST_KEY_ERROR_FILE)")
+        wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
+
+        events.containsExactly(QueuedEventStarted::class, S3ToParquetObjectConversionFailure::class, QueuedEventCompleted::class)
     }
 
+    private val events = RecordingEvents()
+
+    private fun newHandler(server: WireMockServer) = AAEUploadHandler(
+        FakeParquetS3(),
+        AAEUploader(
+            AAEUploadConfig(
+                "${server.baseUrl()}/",
+                "",
+                "p12Cert",
+                "p12CertPassword",
+                "subKey"
+            ),
+            FakeSecretManager(),
+            events
+        ),
+        events
+    )
 }
 
 class FakeSecretManager : SecretManager {
 
-    companion object {
-        const val TEST_PWD = "abc123"
-    }
-
+    private val testPassword = "abc123"
     private val pkcs12: ByteArray
+    private val now = Instant.now()
 
     init {
-        val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
-        keyPairGenerator.initialize(4096)
-        val keyPair = keyPairGenerator.generateKeyPair()
+        val keyPair = KeyPairGenerator.getInstance("RSA").let {
+            it.initialize(4096)
+            it.generateKeyPair()
+        }
 
         val certBuilder = X509v3CertificateBuilder(
             X500Name("cn=example"),
             BigInteger(10, SecureRandom()),
-            Date(System.currentTimeMillis()),
-            Date(System.currentTimeMillis() + 1000 * 60 * 60),
+            Date.from(now),
+            Date.from(now.plus(Duration.ofHours(1))),
             X500Name("dc=name"),
             SubjectPublicKeyInfo.getInstance(ASN1InputStream(keyPair.public.encoded).readObject())
         )
+
         val signer = JcaContentSignerBuilder("SHA256WithRSA").build(keyPair.private)
         val holder = certBuilder.build(signer)
-        val certificate = JcaX509CertificateConverter().setProvider(BouncyCastleProvider()).getCertificate(holder)
 
-        val keyStore = KeyStore.getInstance("PKCS12")
-        keyStore.load(null, null)
-        keyStore.setKeyEntry("main", keyPair.private, TEST_PWD.toCharArray(), arrayOf(certificate))
-        val outputStream = ByteArrayOutputStream()
-        keyStore.store(outputStream, TEST_PWD.toCharArray())
-        pkcs12 = outputStream.toByteArray()
+        val certificate = JcaX509CertificateConverter()
+            .setProvider(BouncyCastleProvider())
+            .getCertificate(holder)
+
+        val keyStore = KeyStore.getInstance("PKCS12").apply {
+            load(null, null)
+            setKeyEntry("main", keyPair.private, testPassword.toCharArray(), arrayOf(certificate))
+        }
+
+        pkcs12 = ByteArrayOutputStream().use {
+            keyStore.store(it, testPassword.toCharArray())
+            it.toByteArray()
+        }
     }
 
-    override fun getSecret(secretName: SecretName?): Optional<SecretValue> {
-        return Optional.of(SecretValue.of(TEST_PWD))
-    }
+    override fun getSecret(secretName: SecretName): Optional<SecretValue> = Optional.of(SecretValue.of(testPassword))
 
-    override fun getSecretBinary(secretName: SecretName?): ByteArray {
-        return pkcs12
-    }
+    override fun getSecretBinary(secretName: SecretName): ByteArray = pkcs12
 }
 
 class FakeParquetS3 : AwsS3 {
@@ -180,17 +258,15 @@ class FakeParquetS3 : AwsS3 {
         }
     )
 
-    override fun upload(locator: Locator?, contentType: ContentType?, bytes: ByteSource?, vararg meta: MetaHeader?) {
+    override fun upload(locator: Locator, contentType: ContentType, bytes: ByteArraySource, meta: List<MetaHeader>) {
         throw UnsupportedOperationException()
     }
 
-    override fun getObjectSummaries(bucketName: BucketName): MutableList<S3ObjectSummary>? {
+    override fun getObjectSummaries(bucketName: BucketName): MutableList<S3ObjectSummary> {
         throw UnsupportedOperationException()
     }
 
-    override fun getObject(locator: Locator): Optional<S3Object> {
-        return Optional.ofNullable(objects[locator.key.value])
-    }
+    override fun getObject(locator: Locator): Optional<S3Object> = Optional.ofNullable(objects[locator.key.value])
 
     override fun deleteObject(locator: Locator) {
         throw UnsupportedOperationException()

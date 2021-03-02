@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.isolationpayment.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -12,7 +13,7 @@ public class IsolationResponse {
     public final String createdTimestamp;
     public final String updatedTimestamp;
 
-    public IsolationResponse(String ipcToken, 
+    public IsolationResponse(String ipcToken,
                              String state, 
                              String riskyEncounterDate, 
                              String isolationPeriodEndDate,
@@ -25,7 +26,7 @@ public class IsolationResponse {
         this.createdTimestamp = createdTimestamp;
         this.updatedTimestamp = updatedTimestamp;
     }
-
+    @JsonCreator
     public IsolationResponse(String ipcToken, String state) {
         this.ipcToken = ipcToken;
         this.state = state;

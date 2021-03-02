@@ -9,35 +9,39 @@ import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload;
 import uk.nhs.nhsx.analyticssubmission.model.StoredAnalyticsSubmissionPayload;
 import uk.nhs.nhsx.core.Jackson;
+import uk.nhs.nhsx.core.aws.s3.ByteArraySource;
 import uk.nhs.nhsx.core.aws.s3.Locator;
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
 import uk.nhs.nhsx.core.aws.s3.S3Storage;
-import uk.nhs.nhsx.core.aws.s3.Sources;
+import uk.nhs.nhsx.core.events.Events;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 public class AnalyticsSubmissionService {
-    
+
     private final static Logger log = LogManager.getLogger(AnalyticsSubmissionService.class);
-    
+
     private final AnalyticsConfig config;
     private final S3Storage s3Storage;
     private final ObjectKeyNameProvider objectKeyNameProvider;
     private final AmazonKinesisFirehose kinesisFirehose;
+    private final Events events;
 
     public AnalyticsSubmissionService(AnalyticsConfig config,
                                       S3Storage s3Storage,
                                       ObjectKeyNameProvider objectKeyNameProvider,
-                                      AmazonKinesisFirehose kinesisFirehose) {
+                                      AmazonKinesisFirehose kinesisFirehose,
+                                      Events events) {
         this.config = config;
         this.s3Storage = s3Storage;
         this.objectKeyNameProvider = objectKeyNameProvider;
         this.kinesisFirehose = kinesisFirehose;
+        this.events = events;
     }
 
     public void accept(ClientAnalyticsSubmissionPayload payload) {
-        String json = Jackson.toJson(StoredAnalyticsSubmissionPayload.convertFrom(payload));
+        String json = Jackson.toJson(StoredAnalyticsSubmissionPayload.convertFrom(payload, events));
 
         if (config.s3IngestEnabled) {
             uploadToS3(json);
@@ -51,12 +55,11 @@ public class AnalyticsSubmissionService {
 
     private void uploadToS3(String json) {
         var objectKey = objectKeyNameProvider.generateObjectKeyName().append(".json");
-        log.info("Uploading {} to {}", objectKey, config.bucketName.value);
 
         s3Storage.upload(
             Locator.of(config.bucketName, objectKey),
             ContentType.APPLICATION_JSON,
-            Sources.byteSourceFor(json)
+            ByteArraySource.fromUtf8String(json)
         );
     }
 

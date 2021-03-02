@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import java.util.*
 import java.util.function.Predicate
@@ -21,7 +22,8 @@ class SubmissionFromS3RepositoryTest {
         val submissionRepository = SubmissionFromS3Repository(
             fakeS3,
             { true },
-            BucketName.of("SUBMISSION_BUCKET")
+            BucketName.of("SUBMISSION_BUCKET"),
+            RecordingEvents()
         )
         val submissions = submissionRepository.loadAllSubmissions()
 
@@ -41,7 +43,8 @@ class SubmissionFromS3RepositoryTest {
         val submissionRepository = SubmissionFromS3Repository(
             fakeS3,
             { true },
-            BucketName.of("SUBMISSION_BUCKET")
+            BucketName.of("SUBMISSION_BUCKET"),
+            RecordingEvents()
         )
         val submissions = submissionRepository.loadAllSubmissions(now, 100, 100)
 
@@ -62,7 +65,8 @@ class SubmissionFromS3RepositoryTest {
         val submissionRepository = SubmissionFromS3Repository(
             fakeS3,
             { true },
-            BucketName.of("SUBMISSION_BUCKET")
+            BucketName.of("SUBMISSION_BUCKET"),
+            RecordingEvents()
         )
         val submissions = submissionRepository.loadAllSubmissions(now, 3, 3)
 
@@ -79,7 +83,8 @@ class SubmissionFromS3RepositoryTest {
         val submissionRepository = SubmissionFromS3Repository(
             fakeS3,
             { objectKey -> !objectKey.value.startsWith("my-prefix") },
-            BucketName.of("SUBMISSION_BUCKET")
+            BucketName.of("SUBMISSION_BUCKET"),
+            RecordingEvents()
         )
         val submissions = submissionRepository.loadAllSubmissions()
 
@@ -98,7 +103,8 @@ class SubmissionFromS3RepositoryTest {
         val submissionRepository = SubmissionFromS3Repository(
             fakeS3,
             matchesPrefix,
-            BucketName.of("SUBMISSION_BUCKET")
+            BucketName.of("SUBMISSION_BUCKET"),
+            RecordingEvents()
         )
         val submissions = submissionRepository.loadAllSubmissions()
 
@@ -116,7 +122,8 @@ class SubmissionFromS3RepositoryTest {
         val submissionRepository = SubmissionFromS3Repository(
             fakeS3,
             { true },
-            BucketName.of("SUBMISSION_BUCKET")
+            BucketName.of("SUBMISSION_BUCKET"),
+            RecordingEvents()
         )
         val submissions = submissionRepository.loadAllSubmissions()
 

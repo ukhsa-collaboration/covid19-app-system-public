@@ -86,7 +86,21 @@ module "postcode_demographic_geographic_lookup" {
 }
 
 module "sip_analytics" {
-  source        = "./modules/sip_analytics"
-  database_name = aws_glue_catalog_database.this.name
-  location      = var.sip_analytics_bucket_location
+  source         = "./modules/sip_analytics"
+  database_name  = aws_glue_catalog_database.this.name
+  location       = var.sip_analytics_bucket_location
+  workgroup_name = module.workgroup.name
+}
+
+module "circuit_breaker_analytics" {
+
+  source                          = "./modules/circuit_breaker_analytics"
+  circuit_breaker_stats_bucket_id = var.circuit_breaker_stats_bucket_id
+  database_name                   = aws_glue_catalog_database.this.name
+  logs_bucket_id                  = var.logs_bucket_id
+  service                         = local.service
+  tags = merge(local.tags, {
+    Feature = "Circuit Breaker Analytics Stats"
+  })
+  workgroup_name = module.workgroup.name
 }

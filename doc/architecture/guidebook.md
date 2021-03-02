@@ -245,7 +245,7 @@ The system architecture diagram below specifies the complete system showing the 
 * As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
 * Security and operations is built on AWS cloud-native components.
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2020-12-09.png "Figure: System Architecture")
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2021-01-21.png "Figure: System Architecture")
 
 The port names in the system architecture are usually defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
 
@@ -257,7 +257,7 @@ System flows describe the behavioural interactions between the app, the backend 
 
 This is the flow on first app install, and in normal use when the app is collecting exposures and QR code check-ins and checking these against distributed positive diagnosis keys, identified risk venues and high-risk postcodes.
 
-![System flow: installation and normal use](diagrams/img/system-flow_install-and-normal-2020-12-08.png "Figure: Installation and normal use")
+![System flow: installation and normal use](diagrams/img/system-flow_install-and-normal-2021-02-03.png "Figure: Installation and normal use")
 
 On **first install and when the app is opened** after it has been closed completely on the mobile device, it checks version availability with our backend service as well as the Apple and Google app stores. This check then may notify the user of mandatory or optional available app updates. It also allows to deactivate all but the availability check functionality, hence acting as a kind of "kill switch".
 
@@ -412,7 +412,7 @@ Note, the port name in the system architecture is defined by ```API Group\API Na
 | API Name | API Group | API Contract | User/Client impact |
 | - | - | - | - |
 | Diagnosis Key | Submission | [diagnosis-key-submission.md](./api-contracts/diagnosis-key-submission.md) | In event of positive diagnosis the app can upload anonymous exposure keys to the server |
-| Virology Testing | Submission | [virology-testing-api.md ](./api-contracts/virology-testing-api.md) | Allows clients to book a coronavirus test using a CTA Token that is passed into the test booking website. Clients can also periodically poll for test results using the CTA Token. New for v3.3 - clients can request a result for a test that was not booked via the app, they will input a CTA token into the app. |
+| Virology Testing | Submission | [virology-testing-api.md ](./api-contracts/virology-testing-api.md) | Allows clients to book a coronavirus test using a CTA Token that is passed into the test booking website. Clients can also periodically poll for test results using the CTA Token. New for v3.3 - clients can request a result for a test that was not booked via the app, they will input a CTA token into the app. To support test types other than PCR tests, we have introduced a non-backward compatible version 2 of the API (V1 is now deprecated). |
 | Mobile Analytics  | Submission | [analytics-submission-mobile.md](./api-contracts/analytics-submission-mobile.md) | Allows clients to submit analytics data daily. Not testable from mobile application. |
 | Mobile Analytics Events | Submission | [mobile-analytics-submission.md](./api-contracts/mobile-analytics-submission.md) | Allows clients to send anonymous epidemiological data to the backend. |
 | Isolation Payment | Submission | [isolation-payment-mobile.md](./api-contracts/isolation-payment-mobile.md) | Allows clients to request isolation payment using a IPC Token that is passed to the isolation payment website. |
@@ -452,8 +452,8 @@ Upload APIs are usually used by external systems to submit data (files, json) to
 | - | - | - | - |
 | Postal District Risk Levels | Upload | [risky-post-district-upload.md](./api-contracts/risky-post-district-upload.md) | Distribution to mobile. |
 | Identified Risk Venues | Upload | [risky-venue-upload.md](./api-contracts/risky-venue-upload.md) | Data source for Risky Venue distribution API. |
-| Test Lab Results | Upload | [test-lab-api.md](./api-contracts/test-lab-api.md) | Data source for Virology Testing API allowing mobile to poll for test result. |
-| Token API  | Upload | [token-api.md](./api-contracts/token-api.md) | Data source for CTA token when test outside of the app has been undertaken. Mobile app allows entry of CTA token to confirm receipt of the test outcome. |
+| Test Lab Results | Upload | [test-lab-api.md](./api-contracts/test-lab-api.md) | Data source for Virology Testing API allowing mobile to poll for test result. To support test types other than PCR tests, we have introduced a non-backward compatible version 2 of the API (V1 is now deprecated). |
+| Token API  | Upload | [token-api.md](./api-contracts/token-api.md) | Data source for CTA token when test outside of the app has been undertaken. Mobile app allows entry of CTA token to confirm receipt of the test outcome. To support test types other than PCR tests, we have introduced a non-backward compatible version 2 of the API (V1 is now deprecated). |
 
 ### Circuit Breaker
 

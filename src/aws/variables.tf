@@ -18,53 +18,53 @@ variable "logs_bucket_id" {
   description = "The name of the bucket to which all S3 access logs are saved"
 }
 
-variable aae_mobile_analytics_enabled_workspaces {
+variable "aae_mobile_analytics_enabled_workspaces" {
   description = "Target environments with enabled SQS processing (allowed values: te-<env>, *, branch)"
   type        = list(string)
 }
 
-variable aae_mobile_analytics_url_prefix {
+variable "aae_mobile_analytics_url_prefix" {
   description = "HTTPS PUT target"
 }
 
-variable aae_mobile_analytics_url_suffix {
+variable "aae_mobile_analytics_url_suffix" {
   description = "HTTPS PUT target (e.g. empty string)"
 }
 
-variable aae_mobile_analytics_p12_cert_secret_name {
+variable "aae_mobile_analytics_p12_cert_secret_name" {
   description = "Name of the SecretsManager secret containing the TLS client cert in (binary secret: .p12 format)"
 }
 
-variable aae_mobile_analytics_p12_cert_password_secret_name {
+variable "aae_mobile_analytics_p12_cert_password_secret_name" {
   description = "Name of the SecretsManager secret containing the password of the TLS client cert (string secret)"
 }
 
-variable aae_mobile_analytics_subscription_secret_name {
+variable "aae_mobile_analytics_subscription_secret_name" {
   description = "Name of the SecretsManager secret containing the Ocp-Apim-Subscription-Key HTTP header value (string secret)"
 }
 
-variable aae_mobile_analytics_events_enabled_workspaces {
+variable "aae_mobile_analytics_events_enabled_workspaces" {
   description = "Target environments with enabled SQS processing (allowed values: te-<env>, *, branch)"
   type        = list(string)
 }
 
-variable aae_mobile_analytics_events_url_prefix {
+variable "aae_mobile_analytics_events_url_prefix" {
   description = "HTTPS PUT target"
 }
 
-variable aae_mobile_analytics_events_url_suffix {
+variable "aae_mobile_analytics_events_url_suffix" {
   description = "HTTPS PUT target (e.g. ?feedName=Epidemiological)"
 }
 
-variable aae_mobile_analytics_events_p12_cert_secret_name {
+variable "aae_mobile_analytics_events_p12_cert_secret_name" {
   description = "Name of the SecretsManager secret containing the TLS client cert in (binary secret: .p12 format)"
 }
 
-variable aae_mobile_analytics_events_p12_cert_password_secret_name {
+variable "aae_mobile_analytics_events_p12_cert_password_secret_name" {
   description = "Name of the SecretsManager secret containing the password of the TLS client cert (string secret)"
 }
 
-variable aae_mobile_analytics_events_subscription_secret_name {
+variable "aae_mobile_analytics_events_subscription_secret_name" {
   description = "Name of the SecretsManager secret containing the Ocp-Apim-Subscription-Key HTTP header value (string secret)"
 }
 
@@ -173,10 +173,4 @@ variable "isolation_token_expiry_in_weeks" {
 variable "isolation_payment" {
   description = "Isolation payment configuraton ('enabled', 'gateway_website_prefix', 'countries_whitelisted'). Keys: target environment or 'default'"
   type        = map(map(string))
-}
-
-variable "virology_v2_apis_enabled" {
-  description = "Feature flag for enabling V2 Virology APIs"
-  default     = false
-  type        = bool
 }

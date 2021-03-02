@@ -8,6 +8,7 @@ module "risky_venues_messages_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  policy_document          = module.risky_venues_messages_distribution_access.policy_document
   tags                     = var.tags
 }
 

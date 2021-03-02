@@ -1,8 +1,10 @@
 package uk.nhs.nhsx.diagnosiskeydist.agspec;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+
+import static java.lang.String.format;
 
 /**
  * see https://covid19-static.cdn-apple.com/applications/covid19/current/static/contact-tracing/pdf/ExposureNotification-CryptographySpecificationv1.2.pdf
@@ -11,7 +13,6 @@ import java.util.TimeZone;
  * see https://developers.google.com/android/exposure-notifications/exposure-key-file-format
  */
 public class ENIntervalNumber {
-    private static final TimeZone TIME_ZONE_UTC = TimeZone.getTimeZone("UTC");
 
     /**
      * "The duration for which a Temporary Exposure Key is valid (in multiples of 10 minutes)"
@@ -36,8 +37,8 @@ public class ENIntervalNumber {
     /**
      * "This function provides a number for each 10 minute time window that’s shared between all devices participating in the protocol"
      */
-    public static ENIntervalNumber enIntervalNumberFromTimestamp(Date timestamp) {
-        return enIntervalNumberFromTimestampInMillis(timestamp.getTime());
+    public static ENIntervalNumber enIntervalNumberFromTimestamp(Instant timestamp) {
+        return enIntervalNumberFromTimestampInMillis(timestamp.toEpochMilli());
     }
 
     /**
@@ -66,27 +67,26 @@ public class ENIntervalNumber {
         return toTimestampInUnixEpochTime() * 1000;
     }
 
-    public Date toTimestamp() {
-        return new Date(toTimestampInMillis());
+    public Instant toTimestamp() {
+        return Instant.ofEpochMilli(toTimestampInMillis());
     }
 
     /**
      * @return true, if <code>diagnosisKeyEnIntervalNumber</code> is valid until <code>date</code>
      */
-    public boolean validUntil(Date date) {
-        if (enIntervalNumber > enIntervalNumberFromTimestamp(date).enIntervalNumber) {
+    public boolean validUntil(Instant instant) {
+        if (enIntervalNumber > enIntervalNumberFromTimestamp(instant).enIntervalNumber) {
             return false;
         }
 
         // check this. Didn't we agree on 15 days, instead of 14? -> yes, 14 from enInverval (start) + TEKRollingPeriod (1 day)
-        return enIntervalNumber + TEKRollingPeriod > enIntervalNumberFromTimestamp(date).enIntervalNumber - MAX_DIAGNOSIS_KEY_AGE_DAYS * TEKRollingPeriod;
+        return enIntervalNumber + TEKRollingPeriod > enIntervalNumberFromTimestamp(instant).enIntervalNumber - MAX_DIAGNOSIS_KEY_AGE_DAYS * TEKRollingPeriod;
     }
 
     @Override
     public String toString() {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        simpleDateFormat.setTimeZone(TIME_ZONE_UTC);
-
-        return "ENIntervalNumber(" + enIntervalNumber + ": " + simpleDateFormat.format(toTimestamp()) + ")";
+        return format("ENIntervalNumber(%d: %s)", enIntervalNumber, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            .withZone(ZoneOffset.UTC)
+            .format(toTimestamp()));
     }
 }

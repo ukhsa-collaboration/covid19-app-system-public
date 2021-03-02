@@ -13,3 +13,7 @@ output "version" {
 output "lambda_function_id" {
   value = aws_lambda_function.this.id
 }
+
+output "lambda_log_group" {
+  value = aws_cloudwatch_log_group.this.name
+}

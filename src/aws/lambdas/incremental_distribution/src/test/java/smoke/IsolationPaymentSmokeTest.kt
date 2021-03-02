@@ -2,32 +2,32 @@ package smoke
 
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.JavaHttpClient
+import org.http4k.filter.debug
 import org.junit.jupiter.api.Test
+import smoke.actors.IpcToken
 import smoke.actors.MobileApp
 import smoke.actors.SIPGateway
-import smoke.actors.IpcToken
 import smoke.actors.UserCountry
 import smoke.actors.UserCountry.England
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.core.DateFormatValidator
 import java.time.OffsetDateTime
+import java.time.ZoneId
 
 class IsolationPaymentSmokeTest {
     private val client = JavaHttpClient()
     private val config = SmokeTests.loadConfig()
-    private val mobileApp = MobileApp(client, config)
+    private val mobileApp = MobileApp(client.debug(), config)
     private val sipGateway = SIPGateway(config)
 
-    private val riskyEncounterDate = OffsetDateTime.now().minusDays(4);
-    private val riskyEncounterDateString = riskyEncounterDate.format(DateFormatValidator.formatter);
+    private val riskyEncounterDate = OffsetDateTime.now(ZoneId.of("UTC")).minusDays(4).withNano(0)
 
-    private val isolationPeriodEndDate = OffsetDateTime.now().plusDays(4);
-    private val isolationPeriodEndDateString = isolationPeriodEndDate.format(DateFormatValidator.formatter);
+    private val isolationPeriodEndDate = OffsetDateTime.now(ZoneId.of("UTC")).plusDays(4).withNano(0)
 
     @Test
     fun `happy path - submit isolation payment, update, verify and consume ipcToken`() {
         val ipcToken = createValidToken()
-        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDateString, isolationPeriodEndDateString)
+        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
         consumeValidToken(ipcToken)
     }
@@ -41,22 +41,22 @@ class IsolationPaymentSmokeTest {
 
     @Test
     fun `update isolation token returns website URL even when an non-existing token is passed`() {
-        mobileApp.updateIsolationToken(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), riskyEncounterDateString, isolationPeriodEndDateString)
+        mobileApp.updateIsolationToken(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), riskyEncounterDate, isolationPeriodEndDate)
     }
 
     @Test
     fun `update isolation token returns 400 if syntactically invalid token or date is passed`() {
-        mobileApp.updateIsolationTokenInvalid(IpcToken("<script>"), riskyEncounterDateString, isolationPeriodEndDateString)
+        mobileApp.updateIsolationTokenInvalid(IpcToken("<script>"), riskyEncounterDate.format(DateFormatValidator.formatter), isolationPeriodEndDate.format(DateFormatValidator.formatter))
 
-        mobileApp.updateIsolationTokenInvalid(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), "<script>", isolationPeriodEndDateString)
+        mobileApp.updateIsolationTokenInvalid(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), "<script>", isolationPeriodEndDate.format(DateFormatValidator.formatter))
 
-        mobileApp.updateIsolationTokenInvalid(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), riskyEncounterDateString, "<script>")
+        mobileApp.updateIsolationTokenInvalid(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), riskyEncounterDate.format(DateFormatValidator.formatter), "<script>")
     }
 
     @Test
     fun `cannot consume ipcToken more than one time`() {
         val ipcToken = createValidToken();
-        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDateString, isolationPeriodEndDateString)
+        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
         consumeValidToken(ipcToken)
         consumeInvalidToken(ipcToken)
@@ -67,7 +67,7 @@ class IsolationPaymentSmokeTest {
         verifyInvalidToken(IpcToken("invalid-token"))
         val ipcToken = createValidToken();
         verifyInvalidToken(ipcToken)
-        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDateString, isolationPeriodEndDateString)
+        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
         verifyValidToken(ipcToken)
     }
@@ -75,12 +75,11 @@ class IsolationPaymentSmokeTest {
     @Test
     fun `update has no effect if token is already verified`() {
         val ipcToken = createValidToken();
-        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDateString, isolationPeriodEndDateString)
+        mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
 
         val otherDate = OffsetDateTime.now();
-        val otherDateString = otherDate.format(DateFormatValidator.formatter);
-        mobileApp.updateIsolationToken(ipcToken, otherDateString, otherDateString)
+        mobileApp.updateIsolationToken(ipcToken, otherDate, otherDate)
 
         verifyValidToken(ipcToken)
     }
@@ -95,8 +94,8 @@ class IsolationPaymentSmokeTest {
     private fun verifyValidToken(ipcToken: IpcToken) {
         val verifyPayload = sipGateway.verifiesIpcToken(ipcToken)
         assertThat(verifyPayload["state"]).isEqualTo("valid")
-        assertThat(verifyPayload["riskyEncounterDate"]).isEqualTo(riskyEncounterDateString)
-        assertThat(verifyPayload["isolationPeriodEndDate"]).isEqualTo(isolationPeriodEndDateString)
+        assertThat(OffsetDateTime.parse(verifyPayload["riskyEncounterDate"])).isEqualTo(riskyEncounterDate)
+        assertThat(OffsetDateTime.parse(verifyPayload["isolationPeriodEndDate"])).isEqualTo(isolationPeriodEndDate)
         assertThat(verifyPayload).containsKey("createdTimestamp")
         assertThat(verifyPayload).containsKey("updatedTimestamp")
     }

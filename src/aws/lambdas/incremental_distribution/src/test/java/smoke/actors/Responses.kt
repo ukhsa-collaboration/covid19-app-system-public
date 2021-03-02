@@ -1,10 +1,9 @@
 package smoke.actors
 
-import com.amazonaws.services.lambda.model.InvokeResult
+import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isNullOrEmptyString
-import org.http4k.asString
 import org.http4k.core.ContentType
 import org.http4k.core.Response
 import org.http4k.core.Status
@@ -12,6 +11,7 @@ import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasContentType
 import org.http4k.hamkrest.hasHeader
 import org.http4k.hamkrest.hasStatus
+import software.amazon.awssdk.services.lambda.model.InvokeResponse
 import uk.nhs.nhsx.core.Jackson
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -87,16 +87,24 @@ inline fun <reified T> Response.deserializeOrThrow(): T {
     requireJsonContentType()
     val bodyString = bodyString()
     return Jackson
-        .deserializeMaybe(bodyString, T::class.java)
+        .readMaybe(
+            bodyString,
+            T::class.java
+        ) { }
         .orElseThrow { IllegalStateException("Unable to deserialize: $bodyString") }
 }
 
-fun InvokeResult.requireStatusCode(expectedStatus: Status): InvokeResult {
-    assertThat(statusCode, equalTo(expectedStatus.code))
+fun InvokeResponse.requireStatusCode(expectedStatus: Status): InvokeResponse {
+    assertThat(statusCode(), equalTo(expectedStatus.code))
     return this
 }
 
-fun InvokeResult.requireBodyText(expectedBodyText: String): InvokeResult {
-    assertThat(payload.asString(), equalTo(expectedBodyText))
+fun InvokeResponse.requireBodyText(expectedBodyText: String): InvokeResponse {
+    assertThat(payload().asUtf8String(), equalTo(expectedBodyText))
+    return this
+}
+
+fun InvokeResponse.requireBodyText(matcher: Matcher<String>): InvokeResponse {
+    assertThat(payload().asUtf8String(), matcher)
     return this
 }

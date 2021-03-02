@@ -1,0 +1,73 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm"
+    id "jacoco"
+}
+
+group 'com.demo'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
+    implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
+
+    implementation "com.amazonaws:aws-lambda-java-log4j2:1.2.0"
+    implementation platform("org.apache.logging.log4j:log4j-bom:$log4j_version")
+    implementation "org.apache.logging.log4j:log4j-api"
+    implementation "org.apache.logging.log4j:log4j-core"
+    implementation "com.amazonaws:aws-java-sdk-athena:1.11.948"
+
+    // fixme: only used because there's a ContentType dependency in S3Storage
+    implementation "org.apache.httpcomponents:httpclient:4.5.13"
+
+    testImplementation platform("org.junit:junit-bom:$junit_version")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation "org.assertj:assertj-core:3.18.1"
+    testImplementation "io.mockk:mockk:1.10.2"
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+test {
+    useJUnitPlatform()
+
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+    scanForTestClasses = false
+
+    filter {
+        includeTestsMatching "*Test"
+        excludeTestsMatching "smoke.*"
+        excludeTestsMatching "contract.*"
+        excludeTestsMatching "db.*"
+    }
+
+    reports.html.destination = file("$projectDir/../../../../out/reports")
+    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
+
+    finalizedBy jacocoTestReport
+}
+
+task zipLambdaDistribution(type: Zip) {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+
+    from compileKotlin
+    from processResources
+    into("lib") {
+        from configurations.runtimeClasspath
+    }
+}
+
+task lambdaZip {
+    dependsOn(check, zipLambdaDistribution)
+}

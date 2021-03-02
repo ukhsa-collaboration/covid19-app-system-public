@@ -1,7 +1,6 @@
 package uk.nhs.nhsx.core.routing
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
-import com.google.common.collect.Maps
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.HttpResponses
@@ -20,7 +19,7 @@ class RoutingHandlerTest {
     @Test
     fun lowercase() {
         val request = APIGatewayProxyRequestEvent()
-        val headers = Maps.newHashMap<String, String>()
+        val headers = mutableMapOf<String, String>()
         headers["Content-Type"] = "something"
         request.headers = headers
         MyRoutingHandler("content-type").handleRequest(request, TestContext())
@@ -29,7 +28,7 @@ class RoutingHandlerTest {
     @Test
     fun uppercase() {
         val request = APIGatewayProxyRequestEvent()
-        val headers = Maps.newHashMap<String, String>()
+        val headers = mutableMapOf<String, String>()
         headers["content-type"] = "something"
         request.headers = headers
         MyRoutingHandler("Content-Type").handleRequest(request, TestContext())

@@ -8,6 +8,9 @@ import uk.nhs.nhsx.virology.TestKit;
 import java.util.Objects;
 
 import static uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422;
+import static uk.nhs.nhsx.virology.TestKit.LAB_RESULT;
+import static uk.nhs.nhsx.virology.TestKit.RAPID_RESULT;
+import static uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED;
 
 public class VirologyResultRequest {
 
@@ -67,8 +70,10 @@ public class VirologyResultRequest {
 
     public static VirologyResultRequest v2TestKitValidator(VirologyResultRequest request) {
         final TestKit testKit = request.testKit;
-        final boolean pcr = TestKit.LAB_RESULT == testKit;
-        final boolean lfdPositive = TestKit.RAPID_RESULT == testKit && NPEX_POSITIVE.contentEquals(request.testResult);
+        final boolean pcr = LAB_RESULT == testKit;
+        final boolean lfd = RAPID_RESULT == testKit || RAPID_SELF_REPORTED == testKit;
+        final boolean lfdPositive = lfd && NPEX_POSITIVE.contentEquals(request.testResult);
+
         boolean isValid = pcr || lfdPositive;
         if (!isValid)
             throw new ApiResponseException(UNPROCESSABLE_ENTITY_422, "validation error: Invalid test type value");

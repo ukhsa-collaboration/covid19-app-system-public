@@ -94,6 +94,7 @@ V2 API
 - `testKit`  one of the following
   - `LAB_RESULT`  
   - `RAPID_RESULT` (**only positive test results are supported**)
+  - `RAPID_SELF_REPORTED` (**only positive test results are supported**)
 
 ### Response Codes
 

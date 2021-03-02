@@ -20,3 +20,16 @@ variable "github_credentials" {
 variable "target_environments" {
   description = "the list of target environments hosted in this account"
 }
+
+variable "allow_dev_pipelines" {
+  description = "Flag to control the deployment of pipelines used for development"
+}
+
+
+variable "build_failure_events_sns_arn" {
+  description = "SNS topic to publish the build failure notifications"
+}
+
+variable "deploy_events_sns_arn" {
+  description = "SNS topic to publish the build status notifications"
+}

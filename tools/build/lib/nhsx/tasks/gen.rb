@@ -88,6 +88,17 @@ namespace :gen do
       end
       update_secrets_entry(NHSx::TargetEnvironment::TEST_API_KEY_HEADERS_SECRET, JSON.dump(authorization_headers).gsub("\"", "\\\""), $configuration)
     end
+
+    desc "Generates API key for synthetics in #{account} account"
+    task :"secrets:synth:#{account}" => [:"login:#{account}"] do
+      include NHSx::TargetEnvironment
+
+      key_name = "/synthetics/api_secret"
+      api_key = "/synthetics/api_key"
+
+      authorization_header = create_and_store_api_key("health", key_name)
+      update_secrets_entry(api_key, authorization_header, $configuration)
+    end
   end
 
   NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |tgt_env|

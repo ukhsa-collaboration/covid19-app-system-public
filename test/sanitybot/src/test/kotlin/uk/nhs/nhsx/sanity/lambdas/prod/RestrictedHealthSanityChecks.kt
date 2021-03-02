@@ -19,12 +19,12 @@ class RestrictedHealthSanityChecks : LambdaSanityCheck() {
     @Test
     fun `risky venues upload returns a 403`() {
         val lambda = env.configFor(RiskyVenuesUpload, "risky_venues_upload") as Upload
-        assertThat(lambda.withSecureClient(Request(POST, lambda.healthEndpoint)), hasStatus(FORBIDDEN))
+        assertThat(lambda.withHealthClient(Request(POST, lambda.healthEndpoint)), hasStatus(FORBIDDEN))
     }
 
     @Test
     fun `risky post districts upload returns a 403`() {
         val lambda = env.configFor(RiskyPostcodeDistrictsUpload, "risky_post_districts_upload") as Upload
-        assertThat(lambda.withSecureClient(Request(POST, lambda.healthEndpoint)), hasStatus(FORBIDDEN))
+        assertThat(lambda.withHealthClient(Request(POST, lambda.healthEndpoint)), hasStatus(FORBIDDEN))
     }
 }

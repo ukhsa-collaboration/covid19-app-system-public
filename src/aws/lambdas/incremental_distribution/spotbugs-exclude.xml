@@ -20,6 +20,11 @@
         </Or>
     </Match>
 
+    <!-- We do not want to analyse kotlin files -->
+    <Match>
+        <Source name="~.*\.kt" />
+    </Match>
+
     <!-- We don't mind having redundant checks for null -->
     <Match>
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"/>

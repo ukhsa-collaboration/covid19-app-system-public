@@ -30,6 +30,7 @@ API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
   "riskLevels": {
     "<risk indicator 1>": {
       "colorScheme": "yellow",
+      "colorSchemeV2": "maroon",
       "name": {
         "en": "[postcode] is in…",
         …
@@ -100,8 +101,10 @@ API group: [Distribution](../guidebook.md#system-apis-and-interfaces)
 
 - "policyData" field is optional. All other fields are required.
 - Acceptable values for the `<risk indicator>` are defined by the API itself. All `<risk indicator>` values used must provide their definition as part of the `riskLevelIndicators` object.
+- Acceptable values for `colorSchemeV2` are `black`, `maroon`, `green`, `yellow`, `red`, `amber`, `neutral`.
 - Acceptable values for `colorScheme` are `green`, `yellow`, `red`, `amber`, `neutral`.
-- Acceptable values for `icon` are `default-icon`, `meeting-people`, `bars-and-pubs`, `worship`, `overnight-stays`, `education`, `travelling`, `exercise`, `weddings-and-funerals`.
+  - Needs to be the same value as `colorSchemeV2`, fallback for the new values is `neutral`, if it's not available in the value list of `colorScheme
+- Acceptable values for `icon` are `default-icon`, `meeting-people`, `bars-and-pubs`, `worship`, `overnight-stays`, `education`, `travelling`, `exercise`, `weddings-and-funerals`, `businesses`, `retail`, `entertainment`, `personal-care`, `large-events`, `clinically-extremely-vulnerable`, `social-distancing`, `face-coverings`, `meeting-outdoors`, `meeting-indoors`, `work`, `international-travel`.
   - For any unrecognised values the mobile app will fall back to using `default-icon`
 - `heading`, `content`, `name`, `title`, `linkTitle`, and `linkUrl`, `footer`, `policyHeading`, and `policyContent` are localised.
 - `heading`, `content`, and `footer` may contain multiple paragraphs of text; they may also be left empty (but must not be null)

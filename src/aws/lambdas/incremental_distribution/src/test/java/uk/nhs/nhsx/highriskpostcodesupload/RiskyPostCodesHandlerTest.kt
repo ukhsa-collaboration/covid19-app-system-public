@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.highriskpostcodesupload
 
-import com.amazonaws.HttpMethod
+import com.amazonaws.HttpMethod.GET
+import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import com.google.common.primitives.Bytes
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -10,14 +10,16 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.Environment
+import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
+import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.events.RiskyPostDistrictUpload
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.testhelper.TestDatedSigner
-import uk.nhs.nhsx.core.Environment
-import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.testhelper.mocks.FakeCsvUploadServiceS3
-import java.nio.charset.StandardCharsets
+import java.nio.charset.StandardCharsets.UTF_8
 
 class RiskyPostCodesHandlerTest {
 
@@ -53,20 +55,26 @@ class RiskyPostCodesHandlerTest {
         "BUCKET_NAME" to "my-bucket",
         "DISTRIBUTION_ID" to "my-distribution",
         "DISTRIBUTION_INVALIDATION_PATTERN" to "invalidation-pattern",
-        "MAINTENANCE_MODE" to "FALSE"
+        "MAINTENANCE_MODE" to "FALSE",
+        "custom_oai" to "OAI"
     )
 
     private val environment = Environment.fromName("test", Environment.Access.TEST.apply(environmentSettings))
     private val awsCloudFront = mockk<AwsCloudFront>()
     private val s3Storage = FakeCsvUploadServiceS3()
     private val datedSigner = TestDatedSigner("date")
-    private val handler = HighRiskPostcodesUploadHandler(environment, { true }, datedSigner, s3Storage, awsCloudFront)
+    private val events = RecordingEvents()
+    private val handler = HighRiskPostcodesUploadHandler(
+        environment, { true }, datedSigner, s3Storage, awsCloudFront, events, { true }
+    )
 
     @Test
     fun `accepts payload`() {
         every { awsCloudFront.invalidateCache(any(), any()) } just Runs
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson(payload)
@@ -78,9 +86,10 @@ class RiskyPostCodesHandlerTest {
 
         val contentToStore = """{"postDistricts":{"CODE2":"M","CODE1":"H","CODE3":"L"}}"""
         assertThat(datedSigner.count).isEqualTo(2)
-        assertThat(datedSigner.content[0]).isEqualTo(Bytes.concat("date:".toByteArray(StandardCharsets.UTF_8), contentToStore.toByteArray(StandardCharsets.UTF_8)))
+        assertThat(datedSigner.content[0]).isEqualTo("date:".toByteArray(UTF_8) + contentToStore.toByteArray(UTF_8))
         assertThat(s3Storage.count).isEqualTo(4)
         assertThat(s3Storage.bucket.value).isEqualTo("my-bucket")
+        events.containsExactly(RiskyPostDistrictUpload::class)
 
         verify(exactly = 1) { awsCloudFront.invalidateCache("my-distribution", "invalidation-pattern") }
     }
@@ -88,7 +97,9 @@ class RiskyPostCodesHandlerTest {
     @Test
     fun `not found when path is wrong`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("dodgy")
             .withBearerToken("anything")
             .withJson(payload)
@@ -104,7 +115,9 @@ class RiskyPostCodesHandlerTest {
     @Test
     fun `not allowed when method is wrong`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.GET)
+            .withMethod(GET)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson(payload)
@@ -120,7 +133,9 @@ class RiskyPostCodesHandlerTest {
     @Test
     fun `unprocessable when wrong content type`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withCsv("some random csv")
@@ -134,7 +149,9 @@ class RiskyPostCodesHandlerTest {
     @Test
     fun `unprocessable when no body`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson(null)
@@ -148,7 +165,9 @@ class RiskyPostCodesHandlerTest {
     @Test
     fun `unprocessable when empty body`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson("")

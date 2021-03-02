@@ -1,10 +1,13 @@
 package uk.nhs.nhsx.core.auth;
 
+// maps to api name defined in -> tools/build/lib/nhsx/helpers/target.rb
 public enum ApiName {
-    Mobile("mobile"), //do not rename -> dependency -> tools/build/lib/nhsx/tasks/secret.rb
-    HighRiskPostCodeUpload("highRiskPostCodeUpload"), //do not rename -> dependency -> tools/build/lib/nhsx/tasks/secret.rb
-    TestResultUpload("testResultUpload"), //do not rename -> dependency -> tools/build/lib/nhsx/tasks/secret.rb
-    HighRiskVenuesUpload("highRiskVenuesCodeUpload"); //do not rename -> dependency -> tools/build/lib/nhsx/tasks/secret.rb
+    Mobile("mobile"),
+    Health("health"),
+    HighRiskPostCodeUpload("highRiskPostCodeUpload"),
+    TestResultUpload("testResultUpload"),
+    HighRiskVenuesUpload("highRiskVenuesCodeUpload"),
+    IsolationPayment("isolationPayment");
 
     public final String name;
 

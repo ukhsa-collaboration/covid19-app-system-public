@@ -7,11 +7,11 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 import static java.time.temporal.ChronoUnit.HOURS;
+import static uk.nhs.nhsx.core.Preconditions.checkState;
 
 public class TwoHourlyZIPSubmissionPeriod implements ZIPSubmissionPeriod {
     private static final String TWO_HOURLY_PATH_PREFIX = "distribution/two-hourly/";

@@ -119,7 +119,7 @@ class TestLab(unauthedHttp: HttpHandler,
                     {
                       "ctaToken": "${token.value}",
                       "testEndDate": "2020-04-23T00:00:00Z",
-                      "testKit": "${testKit.name}"
+                      "testKit": "${testKit.name}",
                       "testResult": "${result.name}"
                     }
                 """

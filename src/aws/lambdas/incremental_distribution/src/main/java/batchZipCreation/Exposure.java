@@ -3,6 +3,7 @@
 
 package batchZipCreation;
 
+@SuppressWarnings("ALL")
 public final class Exposure {
   private Exposure() {}
   public static void registerAllExtensions(

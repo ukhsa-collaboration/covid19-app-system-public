@@ -13,7 +13,6 @@ enum class TestResult {
 
 class MobileDeviceModel(value: String) : ValueType<MobileDeviceModel>(value)
 class TestResultPollingToken(value: String) : ValueType<TestResultPollingToken>(value)
-class DiagnosisKeySubmissionToken(value: String) : ValueType<DiagnosisKeySubmissionToken>(value)
 class IpcToken(value: String) : ValueType<IpcToken>(value)
 
 sealed class UserCountry(value: String) : ValueType<UserCountry>(value) {

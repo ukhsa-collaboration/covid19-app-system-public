@@ -8,17 +8,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.events.InfoEvent
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadService
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
-import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
-import java.util.*
+import java.util.Optional
 import java.util.Optional.empty
 import java.util.function.Supplier
 
@@ -26,13 +27,15 @@ class DiagnosisKeysDownloadServiceTest {
 
     private val fakeS3Storage = FakeS3StorageMultipleObjects()
     private val clock = Supplier { Instant.parse("2020-09-15T00:00:00Z") }
+    private val recordingEvents = RecordingEvents()
 
     private val keyUploader = FederatedKeyUploader(
         fakeS3Storage,
         BucketName.of("some-bucket-name"),
         "federatedKeyPrefix",
         clock,
-        listOf("GB-EAW")
+        listOf("GB-EAW"),
+        recordingEvents
     )
 
     private val interopClient = mockk<InteropClient>()
@@ -67,7 +70,8 @@ class DiagnosisKeysDownloadServiceTest {
             true, 7,
             14,
             100,
-            null
+            null,
+            recordingEvents
         )
         val transformed = service.postDownloadTransformations(ExposureDownload("key",
             0,
@@ -79,21 +83,23 @@ class DiagnosisKeysDownloadServiceTest {
     }
 
     @Test
-    fun `download keys first time`() {
+    fun `download keys first time and emits event`() {
         every { interopClient.getExposureKeysBatch(any(), any()) } returns batch
         every { context.remainingTimeInMillis } returns 10000
 
         val currentDay = LocalDate.of(2020, 9, 15)
         val fourteenDaysPrior = LocalDate.of(2020, 9, 1)
         val batchTagService = InMemoryBatchTagService()
-        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context)
+        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context, recordingEvents)
 
         service.downloadFromFederatedServerAndStoreKeys()
+
+        recordingEvents.containsExactly(DownloadedFederatedDiagnosisKeys::class, DownloadedExposures::class, InfoEvent::class)
 
         assertThat(batchTagService.batchTag!!.value).isEqualTo("abc")
         assertThat(batchTagService.batchDate).isEqualTo(currentDay)
         assertThat(fakeS3Storage.count).isEqualTo(1)
-        assertThat(String(fakeS3Storage.fakeS3Objects.first().bytes.read(), StandardCharsets.UTF_8)).isEqualTo(storedPayload1)
+        assertThat(fakeS3Storage.fakeS3Objects.first().bytes.toUtf8String()).isEqualTo(storedPayload1)
 
         verify {
             interopClient.getExposureKeysBatch(fourteenDaysPrior, "")
@@ -103,17 +109,19 @@ class DiagnosisKeysDownloadServiceTest {
     @Test
     fun `download keys with previous batch tag on previous day`() {
         every { interopClient.getExposureKeysBatch(any(), any()) } returns batch
-        every {context.remainingTimeInMillis} returns 10000
+        every { context.remainingTimeInMillis } returns 10000
 
         val batchTagService = InMemoryBatchTagService(BatchTag.of("xyz"), sep14)
-        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context)
+        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context, recordingEvents)
 
         service.downloadFromFederatedServerAndStoreKeys()
+
+        recordingEvents.containsExactly(DownloadedFederatedDiagnosisKeys::class, DownloadedExposures::class, InfoEvent::class)
 
         assertThat(batchTagService.batchTag!!.value).isEqualTo("abc")
         assertThat(batchTagService.batchDate).isEqualTo(sep15)
         assertThat(fakeS3Storage.count).isEqualTo(1)
-        assertThat(String(fakeS3Storage.fakeS3Objects.first().bytes.read(), StandardCharsets.UTF_8)).isEqualTo(storedPayload1)
+        assertThat(fakeS3Storage.fakeS3Objects.first().bytes.toUtf8String()).isEqualTo(storedPayload1)
 
         verify {
             interopClient.getExposureKeysBatch(sep14, "?batchTag=xyz")
@@ -123,17 +131,19 @@ class DiagnosisKeysDownloadServiceTest {
     @Test
     fun `download keys with previous batch tag on same day`() {
         every { interopClient.getExposureKeysBatch(any(), any()) } returns batch
-        every {context.remainingTimeInMillis} returns 10000
+        every { context.remainingTimeInMillis } returns 10000
 
         val batchTagService = InMemoryBatchTagService(BatchTag.of("xyz"), sep15)
-        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context)
+        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context, recordingEvents)
 
         service.downloadFromFederatedServerAndStoreKeys()
+
+        recordingEvents.containsExactly(DownloadedFederatedDiagnosisKeys::class, DownloadedExposures::class, InfoEvent::class)
 
         assertThat(batchTagService.batchTag!!.value).isEqualTo("abc")
         assertThat(batchTagService.batchDate).isEqualTo(sep15)
         assertThat(fakeS3Storage.count).isEqualTo(1)
-        assertThat(String(fakeS3Storage.fakeS3Objects.first().bytes.read(), StandardCharsets.UTF_8)).isEqualTo(storedPayload1)
+        assertThat(fakeS3Storage.fakeS3Objects.first().bytes.toUtf8String()).isEqualTo(storedPayload1)
         verify {
             interopClient.getExposureKeysBatch(sep15, "?batchTag=xyz")
         }
@@ -142,10 +152,10 @@ class DiagnosisKeysDownloadServiceTest {
     @Test
     fun `download keys has no keys`() {
         every { interopClient.getExposureKeysBatch(any(), any()) } returns empty()
-        every {context.remainingTimeInMillis} returns 10000
+        every { context.remainingTimeInMillis } returns 10000
 
         val batchTagService = InMemoryBatchTagService(BatchTag.of("xyz"), sep01)
-        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 100, context)
+        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 100, context, recordingEvents)
 
         service.downloadFromFederatedServerAndStoreKeys()
 
@@ -163,17 +173,17 @@ class DiagnosisKeysDownloadServiceTest {
             ExposureDownload("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumber, 1, 144, "some-origin", listOf("UNKNOWN")),
             ExposureDownload("QHtCeDEgfmiPUtJWmyIzrw==", rollingStartNumber, 2, 144, "some-origin", listOf("UNKNOWN"))
         )))
-        every {context.remainingTimeInMillis} returns 10000
+        every { context.remainingTimeInMillis } returns 10000
 
         val batchTagService = InMemoryBatchTagService(BatchTag.of("xyz"), sep15)
-        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context)
+        val service = DiagnosisKeysDownloadService(clock, interopClient, keyUploader, batchTagService, false, -1, 14, 1, context, recordingEvents)
 
         service.downloadFromFederatedServerAndStoreKeys()
 
         assertThat(batchTagService.batchTag!!.value).isEqualTo("abc")
         assertThat(batchTagService.batchDate).isEqualTo(sep15)
         assertThat(fakeS3Storage.count).isEqualTo(1)
-        assertThat(String(fakeS3Storage.fakeS3Objects.first().bytes.read(), StandardCharsets.UTF_8)).isEqualTo(storedPayload1)
+        assertThat(fakeS3Storage.fakeS3Objects.first().bytes.toUtf8String()).isEqualTo(storedPayload1)
         verify {
             interopClient.getExposureKeysBatch(sep15, "?batchTag=xyz")
         }
@@ -186,7 +196,7 @@ class DiagnosisKeysDownloadServiceTest {
             ExposureDownload("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumber, 1, 144, "GB-SCO", listOf("GB-SCO")),
             ExposureDownload("QHtCeDEgfmiPUtJWmyIzrw==", rollingStartNumber, 2, 144, "some-origin", listOf("UNKNOWN"))
         )))
-        every {context.remainingTimeInMillis} returns 10000
+        every { context.remainingTimeInMillis } returns 10000
 
         val batchTagService = InMemoryBatchTagService(BatchTag.of("xyz"), sep15)
         val service = DiagnosisKeysDownloadService(clock, interopClient, FederatedKeyUploader(
@@ -194,17 +204,16 @@ class DiagnosisKeysDownloadServiceTest {
             BucketName.of("some-bucket-name"),
             "federatedKeyPrefix",
             clock,
-            listOf("GB-EAW", "GB-SCO")
-        ), batchTagService, false, -1, 14, 1, context)
+            listOf("GB-EAW", "GB-SCO"),
+            recordingEvents
+        ), batchTagService, false, -1, 14, 1, context, recordingEvents)
 
         service.downloadFromFederatedServerAndStoreKeys()
 
         assertThat(batchTagService.batchTag!!.value).isEqualTo("abc")
         assertThat(batchTagService.batchDate).isEqualTo(sep15)
         assertThat(fakeS3Storage.count).isEqualTo(2)
-        assertThat(
-            fakeS3Storage.fakeS3Objects.map { String(it.bytes.read(), StandardCharsets.UTF_8) }
-        ).contains(storedPayload1, storedPayload2)
+        assertThat(fakeS3Storage.fakeS3Objects.map { it.bytes.toUtf8String() }).contains(storedPayload1, storedPayload2)
         verify {
             interopClient.getExposureKeysBatch(sep15, "?batchTag=xyz")
             interopClient.getExposureKeysBatch(sep15, "?batchTag=abc")
@@ -227,7 +236,7 @@ class DiagnosisKeysDownloadServiceTest {
             ExposureDownload("MLSUh0NsJG/XIExJQJiqkg==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"))
         )))
         every { interopClient.getExposureKeysBatch(fourteenDaysPrior, "?batchTag=80e77dc6-8c27-42fb-8e38-1a0b1f51bf01") } returns empty()
-        every {context.remainingTimeInMillis} returns -2
+        every { context.remainingTimeInMillis } returns -2
 
         val batchTagService = InMemoryBatchTagService(null, currentDay)
         val downloadService = DiagnosisKeysDownloadService(clock, interopClient, FederatedKeyUploader(
@@ -235,8 +244,9 @@ class DiagnosisKeysDownloadServiceTest {
             BucketName.of("some-bucket-name"),
             "federatedKeyPrefix",
             clock,
-            listOf("GB-EAW")
-        ), batchTagService, false, -1, 14, 5, context)
+            listOf("GB-EAW"),
+            recordingEvents
+        ), batchTagService, false, -1, 14, 5, context, recordingEvents)
 
         val batchesProcessed = downloadService.downloadFromFederatedServerAndStoreKeys()
 
@@ -259,7 +269,7 @@ class DiagnosisKeysDownloadServiceTest {
             ExposureDownload("MLSUh0NsJG/XIExJQJiqkg==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"))
         )))
         every { interopClient.getExposureKeysBatch(fourteenDaysPrior, "?batchTag=80e77dc6-8c27-42fb-8e38-1a0b1f51bf01") } returns empty()
-        every {context.remainingTimeInMillis} returns 10000
+        every { context.remainingTimeInMillis } returns 10000
 
         val batchTagService = InMemoryBatchTagService(null, currentDay)
         val downloadService = DiagnosisKeysDownloadService(clock, interopClient, FederatedKeyUploader(
@@ -267,8 +277,9 @@ class DiagnosisKeysDownloadServiceTest {
             BucketName.of("some-bucket-name"),
             "federatedKeyPrefix",
             clock,
-            listOf("GB-EAW")
-        ), batchTagService, false, -1, 14, 5, context)
+            listOf("GB-EAW"),
+            recordingEvents
+        ), batchTagService, false, -1, 14, 5, context, recordingEvents)
 
         val batchesProcessed = downloadService.downloadFromFederatedServerAndStoreKeys()
 

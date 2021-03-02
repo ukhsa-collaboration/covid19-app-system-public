@@ -11,7 +11,7 @@ module "distribution_store" {
   force_destroy_s3_buckets    = var.force_destroy_s3_buckets
   s3_versioning               = var.s3_versioning
   tags                        = var.tags
-  override_policy             = var.override_policy
+  policy_document             = var.policy_document
 }
 
 resource "aws_s3_bucket_object" "payload" {

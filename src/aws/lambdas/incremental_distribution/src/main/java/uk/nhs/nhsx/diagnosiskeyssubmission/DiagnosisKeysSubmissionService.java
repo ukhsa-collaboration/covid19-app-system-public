@@ -2,15 +2,22 @@ package uk.nhs.nhsx.diagnosiskeyssubmission;
 
 import com.amazonaws.services.dynamodbv2.document.Item;
 import org.apache.http.entity.ContentType;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient;
-import uk.nhs.nhsx.core.aws.s3.*;
+import uk.nhs.nhsx.core.aws.s3.BucketName;
+import uk.nhs.nhsx.core.aws.s3.ByteArraySource;
+import uk.nhs.nhsx.core.aws.s3.Locator;
+import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
+import uk.nhs.nhsx.core.aws.s3.S3Storage;
+import uk.nhs.nhsx.core.events.Events;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload;
+import uk.nhs.nhsx.keyfederation.InvalidRollingPeriod;
+import uk.nhs.nhsx.keyfederation.InvalidRollingStartNumber;
+import uk.nhs.nhsx.keyfederation.InvalidTemporaryExposureKey;
+import uk.nhs.nhsx.keyfederation.InvalidTransmissionRiskLevel;
 import uk.nhs.nhsx.virology.TestKit;
 
 import java.time.Instant;
@@ -25,28 +32,31 @@ import static java.util.stream.Collectors.toList;
 
 public class DiagnosisKeysSubmissionService {
 
-    private static final Logger logger = LogManager.getLogger(DiagnosisKeysSubmissionService.class);
+    private static final String SUBMISSION_TOKENS_HASH_KEY = "diagnosisKeySubmissionToken";
+    private static final int MAX_KEYS = 14;
 
     private final BucketName bucketName;
     private final S3Storage s3Storage;
     private final AwsDynamoClient awsDynamoClient;
     private final ObjectKeyNameProvider objectKeyNameProvider;
     private final String tableName;
-    private final String submissionTokensHashKey = "diagnosisKeySubmissionToken";
     private final Supplier<Instant> clock;
+    private final Events events;
 
     public DiagnosisKeysSubmissionService(S3Storage s3Storage,
                                           AwsDynamoClient awsDynamoClient,
                                           ObjectKeyNameProvider objectKeyNameProvider,
                                           String tableName,
                                           BucketName name,
-                                          Supplier<Instant> clock) {
+                                          Supplier<Instant> clock,
+                                          Events events) {
         this.bucketName = name;
         this.s3Storage = s3Storage;
         this.awsDynamoClient = awsDynamoClient;
         this.objectKeyNameProvider = objectKeyNameProvider;
         this.tableName = tableName;
         this.clock = clock;
+        this.events = events;
     }
 
     public void acceptTemporaryExposureKeys(ClientTemporaryExposureKeysPayload payload) {
@@ -55,24 +65,21 @@ public class DiagnosisKeysSubmissionService {
     }
 
     private Optional<ClientTemporaryExposureKeysPayload> allValidMaybe(ClientTemporaryExposureKeysPayload payload) {
-        if (payload.temporaryExposureKeys.size() > 14) {
-            logger.warn("Submission contains more than 14 keys");
+        if (payload.temporaryExposureKeys.size() > MAX_KEYS) {
+            events.emit(getClass(), new TemporaryExposureKeysSubmissionOverflow(payload.temporaryExposureKeys.size(), MAX_KEYS));
             return Optional.empty();
         }
 
         var validKeys = payload.temporaryExposureKeys.stream().filter(this::isValidKey).collect(toList());
         var invalidKeysCount = payload.temporaryExposureKeys.size() - validKeys.size();
 
+        events.emit(getClass(), new DownloadedTemporaryExposureKeys(validKeys.size(), invalidKeysCount));
+
         if (validKeys.size() > 0) {
-            if (invalidKeysCount > 0)
-                logger.warn(
-                    "Downloaded from mobile valid keys={}, invalid keys={}",
-                    validKeys.size(), invalidKeysCount
-                );
             return Optional.of(new ClientTemporaryExposureKeysPayload(payload.diagnosisKeySubmissionToken, validKeys));
         }
 
-        logger.warn("Submission contains no key or is empty");
+        events.emit(getClass(), new EmptyTemporaryExposureKeys());
         return Optional.empty();
     }
 
@@ -87,10 +94,7 @@ public class DiagnosisKeysSubmissionService {
 
     private boolean isKeyValid(String key) {
         var isValid = key != null && isBase64EncodedAndLessThan32Bytes(key);
-
-        if (!isValid) {
-            logger.info("Key is invalid. Key={}", key);
-        }
+        if (!isValid) events.emit(getClass(), new InvalidTemporaryExposureKey(key));
         return isValid;
     }
 
@@ -99,21 +103,16 @@ public class DiagnosisKeysSubmissionService {
         long TEN_MINUTES_INTERVAL_SECONDS = 600L;
         var currentInstant = now.getEpochSecond() / TEN_MINUTES_INTERVAL_SECONDS;
         var expiryPeriod = clock.get().minus(14, ChronoUnit.DAYS).getEpochSecond() / TEN_MINUTES_INTERVAL_SECONDS;
-        var isValid = (rollingStartNumber + rollingPeriod) >= expiryPeriod &&
-            rollingStartNumber <= currentInstant;
+        var isValid = (rollingStartNumber + rollingPeriod) >= expiryPeriod && rollingStartNumber <= currentInstant;
         if (!isValid) {
-            logger.debug("Key is invalid. Now={}, rollingStartNumber={}, rollingPeriod={}",
-                now, rollingStartNumber, rollingPeriod);
+            events.emit(getClass(), new InvalidRollingStartNumber(now, rollingStartNumber, rollingPeriod));
         }
         return isValid;
     }
 
     private boolean isRollingPeriodValid(int rollingPeriod) {
-        var isValid = rollingPeriod > 0 && rollingPeriod <= 144;
-
-        if (!isValid) {
-            logger.debug("Key is invalid. rollingPeriod={}", rollingPeriod);
-        }
+        boolean isValid = rollingPeriod > 0 && rollingPeriod <= 144;
+        if(!isValid)  events.emit(getClass(), new InvalidRollingPeriod(rollingPeriod));
         return isValid;
     }
 
@@ -127,11 +126,8 @@ public class DiagnosisKeysSubmissionService {
     }
 
     private boolean isTransmissionRiskLevelValid(int transmissionRiskLevel) {
-        var isValid = transmissionRiskLevel >= 0 && transmissionRiskLevel <= 7;
-
-        if (!isValid) {
-            logger.debug("Key is invalid. transmissionRiskLevel={}", transmissionRiskLevel);
-        }
+        boolean isValid = transmissionRiskLevel >= 0 && transmissionRiskLevel <= 7;
+        if(!isValid)  events.emit(getClass(), new InvalidTransmissionRiskLevel(transmissionRiskLevel));
         return isValid;
     }
 
@@ -151,11 +147,13 @@ public class DiagnosisKeysSubmissionService {
     private Optional<Item> matchDiagnosisToken(UUID token) {
         Item item = awsDynamoClient.getItem(
             tableName,
-            submissionTokensHashKey,
+            SUBMISSION_TOKENS_HASH_KEY,
             token.toString()
         );
 
-        if (item == null) logger.warn("Skipping, token {} not found", token);
+        if (item == null) {
+            events.emit(getClass(), new DiagnosisTokenNotFound(token));
+        }
 
         return Optional.ofNullable(item);
     }
@@ -173,7 +171,7 @@ public class DiagnosisKeysSubmissionService {
         s3Storage.upload(
             Locator.of(bucketName, objectKey),
             ContentType.APPLICATION_JSON,
-            Sources.byteSourceFor(Jackson.toJson(uploadPayload))
+            ByteArraySource.fromUtf8String(Jackson.toJson(uploadPayload))
         );
     }
 
@@ -194,7 +192,7 @@ public class DiagnosisKeysSubmissionService {
     private void deleteToken(UUID diagnosisKeySubmissionToken) {
         awsDynamoClient.deleteItem(
             tableName,
-            submissionTokensHashKey,
+            SUBMISSION_TOKENS_HASH_KEY,
             diagnosisKeySubmissionToken.toString()
         );
     }

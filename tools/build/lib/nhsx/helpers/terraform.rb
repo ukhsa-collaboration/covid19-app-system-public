@@ -14,11 +14,13 @@ module NHSx
     DEV_ACCOUNT = "src/aws/accounts/dev".freeze
     SYNTH_DEV_ACCOUNT = "src/synthetics/accounts/dev".freeze
     ANALYTICS_DEV_ACCOUNT = "src/analytics/accounts/dev".freeze
+    PUBDASH_DEV_ACCOUNT = "src/pubdash/infrastructure/accounts/dev".freeze
     DORETO_DEV_ACCOUNT = "src/documentation_reporting_tool/infrastructure/accounts/dev".freeze
     # The location for the account used by a component of the system for targeting a temporary deployment environment
     # relative to the root of the repository
     APP_SYSTEM_ACCOUNTS = "src/aws/accounts".freeze
     DORETO_ACCOUNTS = "src/documentation_reporting_tool/infrastructure/accounts".freeze
+    PUBDASH_ACCOUNTS = "src/pubdash/infrastructure/accounts".freeze
 
     # Invokes terraform in the correct context
     #
@@ -140,11 +142,13 @@ module NHSx
     # If the workspace does not exist, it will be created
     #
     # We do not use the workspace_name directly, rather generate and ID based on it (see generate_workspace_id)
-    def plan_for_workspace(workspace_name, terraform_configuration, system_config)
+    def plan_for_workspace(workspace_name, terraform_configuration, tf_varfiles,system_config)
       simple_name = File.basename(terraform_configuration)
       workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
+      cmdline = "terraform plan -no-color"
+      cmdline += " -var-file=#{tf_varfiles.join(" -var-file=")}" unless tf_varfiles.empty?
       Dir.chdir(terraform_configuration) do
-        run_tee("Plan #{workspace_id} for #{simple_name}", "terraform plan -no-color", system_config)
+        run_tee("Plan #{workspace_id} for #{simple_name}", cmdline, system_config)
       end
       return workspace_id
     end
@@ -161,7 +165,6 @@ module NHSx
       end
     end
 
-
     def refresh_workspace(terraform_configuration, system_config)
       simple_name = File.basename(terraform_configuration)
       # workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
@@ -169,6 +172,7 @@ module NHSx
         run_tee("Refresh for #{simple_name}", "terraform refresh", system_config)
       end
     end
+
     # Calculates the SHA1 of the workspace name and returns the first 6 characters
     #
     # We do this to control the length of the workspace name as it is used in resource IDs that have name length restrictions

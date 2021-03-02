@@ -6,6 +6,8 @@ phases:
       - rake validate:static
       - rake validate:tier-metadata
       - rake plan:ci
+      - rake plan:analytics:ci
+      - rake plan:pubdash:ci
 artifacts:
   name: $(date +%Y%m%d%H%M%S)-$(echo $CODEBUILD_SOURCE_VERSION | sed -e 's;/;-;g').zip
   files:

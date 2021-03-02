@@ -29,6 +29,10 @@ module NHSx
         @build_info["id"]
       end
 
+      def build_number
+        @build_info["buildNumber"]
+      end
+
       def current_phase
         @build_info["currentPhase"]
       end
@@ -65,8 +69,8 @@ module NHSx
       return build_info
     end
 
-    #Will poll AWS CodeBuild continuously for the status of a running job and
-    #pipe the CloudWatch logs from that job to stdout
+    # Will poll AWS CodeBuild continuously for the status of a running job and
+    # pipe the CloudWatch logs from that job to stdout
     def pipe_logs(build_info)
       next_token = ""
       until build_info.completed?

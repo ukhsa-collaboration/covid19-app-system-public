@@ -74,5 +74,10 @@ resource "aws_glue_catalog_table" "this" {
       type = "float"
     }
 
+    columns {
+      name = "lad20cd"
+      type = "string"
+    }
+
   }
 }

@@ -16,5 +16,7 @@ ij_continuation_indent_size = 4
 
 [{*.kt,*.kts,*.java}]
 ij_continuation_indent_size = 4
-ij_kotlin_name_count_to_use_star_import = 99
-ij_kotlin_name_count_to_use_star_import_for_members = 99
+ij_kotlin_name_count_to_use_star_import = 9999
+ij_kotlin_name_count_to_use_star_import_for_members = 9999
+ij_java_class_count_to_use_import_on_demand = 9999
+ij_java_names_count_to_use_import_on_demand = 9999

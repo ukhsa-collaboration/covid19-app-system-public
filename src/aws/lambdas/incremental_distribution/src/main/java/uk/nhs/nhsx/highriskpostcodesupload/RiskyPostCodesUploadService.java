@@ -4,8 +4,8 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.core.HttpResponses;
 import uk.nhs.nhsx.core.Jackson;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
-
-import static uk.nhs.nhsx.core.Jackson.deserializeMaybe;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.UnprocessableJson;
 
 public class RiskyPostCodesUploadService {
 
@@ -13,19 +13,22 @@ public class RiskyPostCodesUploadService {
     private final AwsCloudFront awsCloudFront;
     private final String cloudFrontDistributionId;
     private final String cloudFrontInvalidationPattern;
+    private final Events events;
 
     public RiskyPostCodesUploadService(RiskyPostCodesPersistence persistence,
                                        AwsCloudFront awsCloudFront,
                                        String cloudFrontDistributionId,
-                                       String cloudFrontInvalidationPattern) {
+                                       String cloudFrontInvalidationPattern,
+                                       Events events) {
         this.persistence = persistence;
         this.awsCloudFront = awsCloudFront;
         this.cloudFrontDistributionId = cloudFrontDistributionId;
         this.cloudFrontInvalidationPattern = cloudFrontInvalidationPattern;
+        this.events = events;
     }
 
     public APIGatewayProxyResponseEvent upload(String rawJson) {
-        return deserializeMaybe(rawJson, RiskyPostDistrictsRequest.class)
+        return Jackson.readMaybe(rawJson, RiskyPostDistrictsRequest.class,  e -> events.emit(getClass(), new UnprocessableJson(e)))
             .map(request -> {
                 var riskLevels = persistence.retrievePostDistrictRiskLevels();
 

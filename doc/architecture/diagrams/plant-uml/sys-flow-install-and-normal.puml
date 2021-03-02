@@ -17,9 +17,22 @@ User -> App : (re)open app
 App -> AppStores : check bundle version
 App <- AppStores : send bundle meta data
 App -> AppAvailability : check app version
-App <- AppAvailability : send minimum OS and App version
+App <- AppAvailability : send minimum/recommended OS and App version
+alt below minimum version for OS (priority) or App
+App -> User: must update
+break update OS / App
+end
+else below recommended version for OS (priority) or App
+App -> User: consider updating
+alt defer
+User-> App : ask me later
+else update
+break update OS / App
+end
+end
+else meets minimum and recommended versions for both OS and App
 App -> App: no update needed
-
+end
 App -> DistributionAPI: poll exposure risk configuration
 App <- DistributionAPI: 
 App -> DistributionAPI: poll self isolation configuration

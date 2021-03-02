@@ -1,23 +1,25 @@
 package uk.nhs.nhsx.circuitbreakers
 
-import com.amazonaws.HttpMethod
+import com.amazonaws.HttpMethod.GET
+import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
-import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Jackson.readMaybe
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
-import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
 import uk.nhs.nhsx.core.aws.ssm.Parameter
+import uk.nhs.nhsx.core.events.CircuitBreakerExposureRequest
+import uk.nhs.nhsx.core.events.CircuitBreakerExposureResolution
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
+import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import java.util.Optional
 
 class ExposureNotificationHandlerTest {
@@ -30,77 +32,98 @@ class ExposureNotificationHandlerTest {
         )
     }
 
-    private val signer = AwsResponseSigner(RFC2616DatedSigner(SystemClock.CLOCK, contentSigner))
+    private val events = RecordingEvents()
+
+    private val signer = AwsResponseSigner(RFC2616DatedSigner(SystemClock.CLOCK, contentSigner), events)
 
     private val initial = Parameter { ApprovalStatus.PENDING }
     private val poll = Parameter { ApprovalStatus.YES }
 
     private val breaker = CircuitBreakerService(initial, poll)
-    private val handler = ExposureNotificationHandler(TestEnvironments.TEST.apply(
-            mapOf("MAINTENANCE_MODE" to "false")), Authenticator { true }, signer, breaker)
-
+    private val handler = ExposureNotificationHandler(
+        TestEnvironments.TEST.apply(
+            mapOf(
+                "MAINTENANCE_MODE" to "false",
+                "custom_oai" to "OAI"
+            )
+        ),
+        { true },
+        signer,
+        breaker,
+        events,
+        { true }
+    )
 
     @Test
-    fun testGetApprovalTokenForValidPayloadForExposure() {
-        val result: CircuitBreakerResult = breaker.approvalToken
-        val approvalValue = JSONObject(result.responseBody).getString("approval")
-
-        assertThat(result.type).isEqualTo(CircuitBreakerResult.ResultType.Ok)
-        assertThat(approvalValue).isEqualTo(ApprovalStatus.PENDING.getName())
-        assertThat(result.responseBody).isNotEmpty()
-    }
-
-    @Test
-    fun handleCircuitBreakerRequestSuccess() {
+    fun `handle circuit breaker request success`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
-            .withJson("""{
-                "matchedKeyCount": 2,
-                "daysSinceLastExposure": 3,
-                "maximumRiskScore": 150.123456
-            }"""
+            .withJson(
+                """
+                {
+                    "matchedKeyCount": 2,
+                    "daysSinceLastExposure": 3,
+                    "maximumRiskScore": 150.123456
+                }
+                """.trimIndent()
             ).build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenResponse = Jackson.deserializeMaybe(response.body, TokenResponse::class.java)
-            .orElse(TokenResponse())
+        val tokenResponse = readMaybe(
+            response.body,
+            TokenResponse::class.java
+        ) { }.orElse(TokenResponse())
         assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
+        events.containsExactly(CircuitBreakerExposureRequest::class)
+
     }
 
     @Test
-    fun handleCircuitBreakerRequestSuccessWithExtraRiskCalculationScoreField() {
+    fun `handle circuit breaker request success with extra risk calculation score field`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
-            .withJson("""{
-                "matchedKeyCount": 2,
-                "daysSinceLastExposure": 3,
-                "maximumRiskScore": 150.123456,
-                "riskCalculationVersion": 8
-            }"""
+            .withJson(
+                """
+                {
+                    "matchedKeyCount": 2,
+                    "daysSinceLastExposure": 3,
+                    "maximumRiskScore": 150.123456,
+                    "riskCalculationVersion": 8
+                }
+                """.trimIndent()
             ).build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenResponse = Jackson.deserializeMaybe(response.body, TokenResponse::class.java)
-            .orElse(TokenResponse())
+        val tokenResponse = readMaybe(
+            response.body,
+            TokenResponse::class.java
+        ) { }.orElse(TokenResponse())
         assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
+        events.containsExactly(CircuitBreakerExposureRequest::class)
     }
 
     @Test
-    fun handleCircuitBreakerRequestInvalidJsonData() {
+    fun `handle circuit breaker request invalid json data`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
             .withJson("{\"invalidField\": null}")
@@ -112,9 +135,11 @@ class ExposureNotificationHandlerTest {
     }
 
     @Test
-    fun handleCircuitBreakerRequestInvalidJsonFormat() {
+    fun `handle circuit breaker request invalid json format`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
             .withJson("{ invalid }")
@@ -126,9 +151,11 @@ class ExposureNotificationHandlerTest {
     }
 
     @Test
-    fun handleCircuitBreakerRequestNoBody() {
+    fun `handle circuit breaker request no body`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
             .build()
@@ -139,9 +166,11 @@ class ExposureNotificationHandlerTest {
     }
 
     @Test
-    fun handleCircuitBreakerNoSuchPath() {
+    fun `handle circuit breaker no such path`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/unknown-feature")
             .withBearerToken("anything")
             .build()
@@ -151,9 +180,11 @@ class ExposureNotificationHandlerTest {
     }
 
     @Test
-    fun handleCircuitBreakerMissingToken() {
+    fun `handle circuit breaker missing token`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.GET)
+            .withMethod(GET)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/resolution")
             .withBearerToken("anything")
             .build()
@@ -163,9 +194,11 @@ class ExposureNotificationHandlerTest {
     }
 
     @Test
-    fun handleCircuitBreakerResolutionSuccess() {
+    fun `handle circuit breaker resolution success`() {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.GET)
+            .withMethod(GET)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/resolution/abc123")
             .withBearerToken("anything")
             .build()
@@ -174,16 +207,12 @@ class ExposureNotificationHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val resolutionResponse = Jackson.deserializeMaybe(response.body, ResolutionResponse::class.java)
+        val resolutionResponse = readMaybe(response.body, ResolutionResponse::class.java) { }
             .orElse(ResolutionResponse())
         assertThat(resolutionResponse.approval).matches(ApprovalStatus.YES.getName())
+        events.containsExactly(CircuitBreakerExposureResolution::class)
     }
 
-    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent): Map<String, String> {
-        return Optional.ofNullable(response.headers).orElse(emptyMap())
-    }
-
-    private fun checkForExposureNotificationObject(json: String): Boolean {
-        return Jackson.deserializeMaybe(json, ExposureNotificationCircuitBreakerRequest::class.java).isPresent
-    }
+    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent) =
+        Optional.ofNullable(response.headers).orElse(emptyMap())
 }

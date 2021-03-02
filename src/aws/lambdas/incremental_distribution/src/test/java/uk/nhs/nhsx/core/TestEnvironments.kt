@@ -1,8 +1,7 @@
 package uk.nhs.nhsx.core
 
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
-import uk.nhs.nhsx.core.TestEnvironments
-import java.util.*
+import java.util.Optional
 import java.util.function.Function
 
 object TestEnvironments {
@@ -12,8 +11,8 @@ object TestEnvironments {
         override fun <T> optional(key: EnvironmentKey<T>): Optional<T> = Optional.empty()
     }
 
-    val EMPTY: Environment = Environment.fromName("empty", NOTHING)
-
     @JvmField
     val TEST = Function { t: Map<String, String> -> Environment.fromName("test", Environment.Access.TEST.apply(t)) }
+
+    fun environmentWith(vararg pairs: Pair<String, String>): Environment = TEST.apply(mapOf(*pairs.toList().toTypedArray()))
 }

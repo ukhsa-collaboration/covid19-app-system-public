@@ -10,6 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.SystemObjectMapper
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
+import uk.nhs.nhsx.core.events.RecordingEvents
 
 class RiskyPostCodesUploadServiceTest {
 
@@ -125,7 +126,7 @@ class RiskyPostCodesUploadServiceTest {
         every { uploadPostDistrictsVersion2(capture(postDistrictsV2Slot)) } just Runs
     }
 
-    private val service = RiskyPostCodesUploadService(persistence, awsCloudFront, "cloudfront-dist-id", "cloudfront-invalidation-pattern")
+    private val service = RiskyPostCodesUploadService(persistence, awsCloudFront, "cloudfront-dist-id", "cloudfront-invalidation-pattern", RecordingEvents())
 
     @Test
     fun `uploads json objects`() {

@@ -8,6 +8,7 @@ module "exposure_configuration_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  policy_document          = module.exposure_configuration_distribution_access.policy_document
   tags                     = var.tags
 }
 
@@ -18,7 +19,7 @@ module "post_districts_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = var.s3_versioning
-  override_policy          = module.post_districts_distribution_analytics_access.policy_document
+  policy_document          = module.post_districts_distribution_access.policy_document
   tags                     = var.tags
 }
 
@@ -29,6 +30,7 @@ module "risky_venues_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = var.s3_versioning
+  policy_document          = module.risky_venues_distribution_access.policy_document
   tags                     = var.tags
 }
 
@@ -42,6 +44,7 @@ module "self_isolation_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  policy_document          = module.self_isolation_distribution_access.policy_document
   tags                     = var.tags
 }
 
@@ -55,6 +58,7 @@ module "symptomatic_questionnaire_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  policy_document          = module.symptomatic_questionnaire_distribution_access.policy_document
   tags                     = var.tags
 }
 
@@ -68,6 +72,7 @@ module "availability_android_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  policy_document          = module.availability_android_distribution_access.policy_document
   tags                     = var.tags
 }
 
@@ -81,6 +86,7 @@ module "availability_ios_distribution" {
   logs_bucket_id           = var.logs_bucket_id
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   s3_versioning            = false
+  policy_document          = module.availability_ios_distribution_access.policy_document
   tags                     = var.tags
 }
 
@@ -103,6 +109,7 @@ module "diagnosis_keys_distribution_store" {
   origin_access_identity_path = aws_cloudfront_origin_access_identity.diagnosis_keys.iam_arn
   logs_bucket_id              = var.logs_bucket_id
   force_destroy_s3_buckets    = var.force_destroy_s3_buckets
+  policy_document             = module.diagnosis_keys_distribution_store_access.policy_document
   tags                        = var.tags
 }
 

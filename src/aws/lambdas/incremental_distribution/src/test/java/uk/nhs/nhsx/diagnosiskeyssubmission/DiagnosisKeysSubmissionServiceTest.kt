@@ -10,13 +10,13 @@ import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.testhelper.data.TestData.STORED_KEYS_PAYLOAD_SUBMISSION
 import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage
 import uk.nhs.nhsx.virology.TestKit
-import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -25,26 +25,34 @@ import java.util.stream.Collectors
 import java.util.stream.IntStream
 
 class DiagnosisKeysSubmissionServiceTest {
+
+    private val events = RecordingEvents()
     private val bucketName = BucketName.of("some-bucket-name")
     private val uuid = "dd3aa1bf-4c91-43bb-afb6-12d0b5dcad43"
     private val s3Storage = FakeS3Storage()
-    private val awsDynamoClient = mockk<AwsDynamoClient>()
+    private val awsDynamoClient = mockk<AwsDynamoClient> {
+        every { deleteItem(any(), any(), any()) } returns mockk()
+    }
     private val objectKey = ObjectKey.of("some-object-key")
     private val objectKeyNameProvider = { objectKey }
     private val tableName = "some-table-name"
     private val hashKey = "diagnosisKeySubmissionToken"
-    var clock = Supplier { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
+    private var clock = Supplier { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
     private var rollingStartNumberLastKey: Long = 2666736 // 2020-09-14 00:00:00 UTC (last key in 14 day history)
     private var rollingStartNumberFirstKey: Long = 2664864 // 2020-09-01 00:00:00 UTC (first key in 14 day history)
     private val service = DiagnosisKeysSubmissionService(
-        s3Storage, awsDynamoClient, objectKeyNameProvider, tableName, bucketName, clock
+        s3Storage, awsDynamoClient, objectKeyNameProvider, tableName, bucketName, clock, events
     )
-    private val dynamoItem = Item.fromJSON("{\"$hashKey\": \"$uuid\"}")
+
+    private fun dynamoVirologyV1Item(uuidStr: String = uuid) =
+        Item.fromJSON("""{"$hashKey": "$uuidStr"}""")
+
+    private fun dynamoVirologyV2Item(uuid: String, testKit: TestKit) =
+        Item.fromMap(dynamoVirologyV1Item(uuid).asMap().apply { this["testKit"] = testKit.name })
 
     @Test
-    fun `accepts temporary exposure keys no testkit defaults to pcr`() {
-        every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoItem
-        every { awsDynamoClient.deleteItem(any(), any(), any()) } returns mockk()
+    fun `accepts temporary exposure keys no testkit defaults to lab result`() {
+        every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoVirologyV1Item()
 
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
@@ -65,9 +73,8 @@ class DiagnosisKeysSubmissionServiceTest {
     fun `accepts temporary exposure keys uses stored testkit`() {
         TestKit.values().forEach {
             val uuid = UUID.randomUUID().toString()
-            val dynamoItem = Item.fromJSON("""{"$hashKey": "$uuid", "testKit": "${it.name}"}""")
+            val dynamoItem = dynamoVirologyV2Item(uuid, it)
             every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoItem
-            every { awsDynamoClient.deleteItem(any(), any(), any()) } returns mockk()
 
             val payload = ClientTemporaryExposureKeysPayload(
                 UUID.fromString(uuid),
@@ -86,14 +93,13 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun acceptsTemporaryExposureKeysWithRiskLevel() {
+    fun `accepts temporary exposure keys with risk level`() {
         val key1 = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumberLastKey.toInt(), 144)
         val key2 = ClientTemporaryExposureKey("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumberFirstKey.toInt(), 144)
         key1.setTransmissionRiskLevel(5)
         key2.setTransmissionRiskLevel(4)
 
-        every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoItem
-        every { awsDynamoClient.deleteItem(any(), any(), any()) } returns mockk()
+        every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoVirologyV1Item()
 
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
@@ -108,7 +114,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun ifMoreThanFourteenExposureKeysThenReject() {
+    fun `if more than fourteen exposure keys then reject`() {
         val key1 = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", 12345, 144)
         val listOfKeys = IntStream.range(0, 15).mapToObj { key1 }.collect(Collectors.toList())
         val payload = ClientTemporaryExposureKeysPayload(
@@ -120,9 +126,8 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun acceptIfAtleastOneValidKey() {
-        every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoItem
-        every { awsDynamoClient.deleteItem(any(), any(), any()) } returns mockk()
+    fun `accept if at least one valid key`() {
+        every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoVirologyV1Item()
 
         val key1 = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumberLastKey.toInt(), 144)
         val key2 = ClientTemporaryExposureKey(null, 12345, 148)
@@ -140,7 +145,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun rejectIfNoValidKeys() {
+    fun `reject if no valid keys`() {
         val key2 = ClientTemporaryExposureKey(null, 12345, 148)
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
@@ -151,9 +156,8 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun ifTokenDoesNotMatchThenKeysAreNotStored() {
+    fun `if token does not match then keys are not stored`() {
         every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns null
-        every { awsDynamoClient.deleteItem(any(), any(), any()) } returns mockk()
 
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
@@ -167,7 +171,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun keyMustBeNonNull() {
+    fun `key must be non null`() {
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(
@@ -179,7 +183,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun keyMustBeBase64Encoded() {
+    fun `key must be base 64 encoded`() {
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(
@@ -191,7 +195,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun keyMustBeLessThan32Bytes() {
+    fun `key must be less than 32 bytes`() {
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(
@@ -203,7 +207,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun rollingStartNumberMustBeNonNegative() {
+    fun `rolling start number must be non negative`() {
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(
@@ -215,7 +219,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun rollingStartNumberMustNotBeInFuture() {
+    fun `rolling start number must not be in future`() {
         val tenMinutesIntervalSeconds = 600L
         val futureRollingStartNumber = clock.get().plus(10, ChronoUnit.DAYS).epochSecond / tenMinutesIntervalSeconds
         val payload = ClientTemporaryExposureKeysPayload(
@@ -229,7 +233,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun rollingPeriodMustBeBetweenZeroTo144() {
+    fun `rolling period must be between zero to 144`() {
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(
@@ -241,7 +245,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun rollingPeriodMustBeNonNegative() {
+    fun `rolling period must be non negative`() {
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(
@@ -253,7 +257,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun transmissionRiskLevelMustBeBetweenZeroTo7() {
+    fun `transmission risk level must be between zero to7`() {
         val key = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumberLastKey.toInt(), 142)
         key.setTransmissionRiskLevel(9)
         val payload = ClientTemporaryExposureKeysPayload(
@@ -265,7 +269,7 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
-    fun transmissionRiskLevelMustBeNonNegative() {
+    fun `transmission risk level must be non negative`() {
         val key = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumberLastKey.toInt(), 142)
         key.setTransmissionRiskLevel(-2)
         val payload = ClientTemporaryExposureKeysPayload(
@@ -291,6 +295,6 @@ class DiagnosisKeysSubmissionServiceTest {
     private fun verifyObjectStored(expectedObjectKey: ObjectKey, expectedStoredPayload: String) {
         assertThat(s3Storage.name, equalTo(expectedObjectKey))
         assertThat(s3Storage.bucket, equalTo(bucketName))
-        assertThat(String(s3Storage.bytes.read(), StandardCharsets.UTF_8), equalTo(expectedStoredPayload))
+        assertThat(s3Storage.bytes.toUtf8String(), equalTo(expectedStoredPayload))
     }
 }

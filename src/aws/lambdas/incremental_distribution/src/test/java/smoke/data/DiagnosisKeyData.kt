@@ -1,17 +1,26 @@
 package smoke.data
 
-import smoke.actors.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
+import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
+import java.security.SecureRandom
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.util.Base64
 import java.util.UUID
 
 object DiagnosisKeyData {
+    private val keyGenerator = CrockfordDammRandomStringGenerator(SecureRandom("".toByteArray()), emptyList())
+
+    fun generateDiagnosisKeyData(numKeys: Int) =
+        (0..numKeys)
+            .map { keyGenerator.generate() + keyGenerator.generate() }
+            .map { Base64.getEncoder().encodeToString(it.toByteArray()) }
 
     fun createKeysPayload(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
                           encodedKeyData: List<String>,

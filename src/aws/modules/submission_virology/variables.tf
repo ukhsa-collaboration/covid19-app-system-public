@@ -56,9 +56,3 @@ variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
 }
-
-variable "virology_v2_apis_enabled" {
-  description = "Feature flag for enabling V2 Virology APIs"
-  default     = false
-  type        = bool
-}

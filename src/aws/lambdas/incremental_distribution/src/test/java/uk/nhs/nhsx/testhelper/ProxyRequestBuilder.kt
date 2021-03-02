@@ -30,8 +30,14 @@ class ProxyRequestBuilder {
         withBody(csv)
             .withHeader("Content-Type", "text/csv")
 
+    fun withCustomOai(oai: String): ProxyRequestBuilder =
+        withHeader("x-custom-oai", oai)
+
+    fun withRequestId(id: String = UUID.randomUUID().toString()): ProxyRequestBuilder =
+        withHeader("Request-Id", id)
+
     fun withBearerToken(token: String): ProxyRequestBuilder =
-        withHeader("Authorization", String.format("Bearer %s", token))
+        withHeader("Authorization", "Bearer $token")
 
     fun withHeader(name: String, value: String): ProxyRequestBuilder {
         headers[name] = value

@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.*
+import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyPostcodeDistrictsUpload
+import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesUpload
+import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.TestResultsUpload
 import uk.nhs.nhsx.sanity.lambdas.config.Upload
 
 class ThirdPartyUploadSanityChecks : LambdaSanityCheck() {
@@ -53,12 +55,12 @@ class ThirdPartyUploadSanityChecks : LambdaSanityCheck() {
     @Test
     fun `risky post districts upload health endpoint returns a 200`() {
         val lambda = env.configFor(RiskyPostcodeDistrictsUpload, "risky_post_districts_upload") as Upload
-        assertThat(lambda.withSecureClient(Request(POST, lambda.healthEndpoint)), hasStatus(OK))
+        assertThat(lambda.withHealthClient(Request(POST, lambda.healthEndpoint)), hasStatus(OK))
     }
 
     @Test
     fun `risky venues upload health endpoint returns a 200`() {
         val lambda = env.configFor(RiskyVenuesUpload, "risky_venues_upload") as Upload
-        assertThat(lambda.withSecureClient(Request(POST, lambda.healthEndpoint)), hasStatus(OK))
+        assertThat(lambda.withHealthClient(Request(POST, lambda.healthEndpoint)), hasStatus(OK))
     }
 }

@@ -6,12 +6,16 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.events.CtaTokensGenerated
+import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.virology.CtaTokensGenerationComplete
 import uk.nhs.nhsx.virology.VirologyProcessorHandler
 
 class VirologyProcessorHandlerTest {
 
     private val service = mockk<VirologyProcessorService>()
-    private val handler = VirologyProcessorHandler(service)
+    private val events = RecordingEvents()
+    private val handler = VirologyProcessorHandler(service, events)
 
     @Test
     fun `event is of accepted type`() {
@@ -26,8 +30,10 @@ class VirologyProcessorHandlerTest {
         val json = handler.handleRequest(input, mockk())
         assertThat(json).containsSubsequence("some-file.zip")
 
-        val expectedEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z","LAB_RESULT", 1000)
+        val expectedEvent = CtaProcessorRequest("POSITIVE", "2020-10-06T00:00:00Z", "LAB_RESULT", 1000)
         verify { service.generateAndStoreTokens(expectedEvent) }
+
+        events.containsExactly(CtaTokensGenerated::class, CtaTokensGenerationComplete::class)
     }
 
     @Test

@@ -2,6 +2,8 @@ locals {
   order_identifier_prefix   = "${terraform.workspace}-ipc-token-order"
   consume_identifier_prefix = "${terraform.workspace}-ipc-token-consume"
   verify_identifier_prefix  = "${terraform.workspace}-ipc-token-verify"
+  api_identifier_prefix     = "${terraform.workspace}-ipc-token-api"
+
 }
 
 module "isolation_payment_order_role" {
@@ -43,7 +45,6 @@ module "isolation_payment_gateway" {
   rate_limit           = var.rate_limit
   tags                 = var.tags
 }
-
 resource "aws_dynamodb_table" "isolation_payment_tokens_table" {
   name         = "${terraform.workspace}-isolation-payment-tokens"
   billing_mode = "PAY_PER_REQUEST"

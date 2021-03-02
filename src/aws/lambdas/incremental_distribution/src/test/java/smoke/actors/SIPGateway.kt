@@ -31,5 +31,5 @@ class SIPGateway(private val envConfig: EnvConfig) {
 
 private fun lambdaCall(functionName: String, payload: String): Map<String, String> {
     val result = AwsLambda.invokeFunction(functionName, payload)
-    return Jackson.readJson(result.payload.asString().unquoted(), object : TypeReference<Map<String, String>>() {})
+    return Jackson.readJson(result.payload().asUtf8String().unquoted(), object : TypeReference<Map<String, String>>() {})
 }

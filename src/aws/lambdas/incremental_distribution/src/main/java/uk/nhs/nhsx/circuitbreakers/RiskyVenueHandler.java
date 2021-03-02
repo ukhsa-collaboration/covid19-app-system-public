@@ -11,6 +11,10 @@ import uk.nhs.nhsx.core.auth.ResponseSigner;
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters;
 import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 import uk.nhs.nhsx.core.aws.ssm.Parameters;
+import uk.nhs.nhsx.core.events.CircuitBreakerVenueRequest;
+import uk.nhs.nhsx.core.events.CircuitBreakerVenueResolution;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.PrintingJsonEvents;
 import uk.nhs.nhsx.core.routing.Routing;
 import uk.nhs.nhsx.core.routing.RoutingHandler;
 
@@ -24,6 +28,7 @@ import static uk.nhs.nhsx.core.routing.Routing.Method.GET;
 import static uk.nhs.nhsx.core.routing.Routing.Method.POST;
 import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
+import static uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses;
 
 public class RiskyVenueHandler extends RoutingHandler {
@@ -35,57 +40,70 @@ public class RiskyVenueHandler extends RoutingHandler {
 
     @SuppressWarnings("unused")
     public RiskyVenueHandler() {
-        this(Environment.fromSystem(), SystemClock.CLOCK);
+        this(Environment.fromSystem(), SystemClock.CLOCK, new PrintingJsonEvents(SystemClock.CLOCK));
     }
 
-    public RiskyVenueHandler(Environment environment, Supplier<Instant> clock) {
+    public RiskyVenueHandler(Environment environment, Supplier<Instant> clock, Events events) {
         this(
             environment,
-            awsAuthentication(ApiName.Mobile),
-            signResponseWithKeyGivenInSsm(environment, clock),
-            new AwsSsmParameters()
+            awsAuthentication(ApiName.Mobile, events),
+            signResponseWithKeyGivenInSsm(environment, clock, events),
+            new AwsSsmParameters(),
+            awsAuthentication(ApiName.Health, events),
+            events
         );
     }
 
-    public RiskyVenueHandler(Environment environment, Authenticator authenticator, ResponseSigner signer, Parameters parameters) {
+    public RiskyVenueHandler(Environment environment, Authenticator authenticator, ResponseSigner signer, Parameters parameters, Authenticator healthAuthenticator, Events events) {
         this(environment,
             authenticator,
             signer,
             new CircuitBreakerService(
                 parameters.ofEnum(initial.withPrefix(environment.access.required(EnvironmentKeys.SSM_CIRCUIT_BREAKER_BASE_NAME)), ApprovalStatus.class, ApprovalStatus.PENDING),
                 parameters.ofEnum(poll.withPrefix(environment.access.required(EnvironmentKeys.SSM_CIRCUIT_BREAKER_BASE_NAME)), ApprovalStatus.class, ApprovalStatus.PENDING)
-            ));
+            ),
+            events,
+            healthAuthenticator);
     }
 
-    public RiskyVenueHandler(Environment environment, Authenticator authenticator, ResponseSigner signer, CircuitBreakerService circuitBreakerService) {
-        this.handler = withSignedResponses(
-            environment, authenticator,
+    public RiskyVenueHandler(Environment environment, Authenticator authenticator, ResponseSigner signer, CircuitBreakerService circuitBreakerService, Events events, Authenticator healthAuthenticator) {
+        handler = withSignedResponses(
+            events,
+            environment,
             signer,
             routes(
-                path(POST, startsWith("/circuit-breaker/venue/request"),
-                    (r) -> {
-                        CircuitBreakerResult result = circuitBreakerService.getApprovalToken();
-                        return mapResultToResponse(result);
-                    }
+                authorisedBy(authenticator,
+                    path(POST, startsWith("/circuit-breaker/venue/request"),
+                        r -> {
+                            events.emit(getClass(), new CircuitBreakerVenueRequest());
+                            return mapResultToResponse(circuitBreakerService.getApprovalToken());
+                        }
+                    )
                 ),
-                path(GET, startsWith("/circuit-breaker/venue/resolution"),
-                    (r) -> {
-                        CircuitBreakerResult result = circuitBreakerService.getResolution(r.getPath());
-                        return mapResultToResponse(result);
-                    }
+                authorisedBy(authenticator,
+                    path(GET, startsWith("/circuit-breaker/venue/resolution"),
+                        r -> {
+                            events.emit(getClass(), new CircuitBreakerVenueResolution());
+                            return mapResultToResponse(circuitBreakerService.getResolution(r.getPath()));
+                        }
+                    )
                 ),
-                path(POST, "/circuit-breaker/venue/health", (r) ->
-                    HttpResponses.ok()
+                authorisedBy(healthAuthenticator,
+                    path(POST, "/circuit-breaker/venue/health", r ->
+                        HttpResponses.ok()
+                    )
                 )
             )
         );
     }
 
     private APIGatewayProxyResponseEvent mapResultToResponse(CircuitBreakerResult result) {
-        if (result.type == CircuitBreakerResult.ResultType.ValidationError)
+        if (result.type == CircuitBreakerResult.ResultType.ValidationError) {
             return HttpResponses.unprocessableEntity("validation error: Content type is not text/json");
-        if (result.type == CircuitBreakerResult.ResultType.MissingPollingTokenError)
+        }
+        if (result.type == CircuitBreakerResult.ResultType.MissingPollingTokenError) {
             return HttpResponses.unprocessableEntity("missing polling token error: Request was submitted without a polling token");
+        }
         return HttpResponses.ok(result.responseBody);
     }
 

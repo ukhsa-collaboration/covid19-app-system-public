@@ -8,6 +8,7 @@ import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.virology.TestKit
 import uk.nhs.nhsx.virology.VirologyService
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
@@ -21,7 +22,7 @@ class VirologyProcessorServiceTest {
     private val virologyService = mockk<VirologyService>()
     private val store = mockk<VirologyProcessorStore>()
     private val maxRetryCount: Int = 3
-    private val processorService = VirologyProcessorService(virologyService, store, clock, maxRetryCount)
+    private val processorService = VirologyProcessorService(virologyService, store, clock, maxRetryCount, RecordingEvents())
 
     private val r1 = VirologyTokenGenResponse.of("pesddgrq")
     private val r2 = VirologyTokenGenResponse.of("gve9v72v")

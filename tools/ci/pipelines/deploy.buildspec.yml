@@ -6,17 +6,14 @@ phases:
   build:
     commands:
       - rake config:codebuild
-      - rake deploy:$TARGET_ENVIRONMENT
-      - rake deploy:analytics:$TARGET_ENVIRONMENT
-      - rake test:sanity_check:$TARGET_ENVIRONMENT
-      - rake report:changes
+      - rake deploy:cta:$TARGET_ENVIRONMENT
 reports:
   sanity:
     files:
       - "out/reports/*.xml"
     file-format: "JUNITXML"
 artifacts:
-  name: $(date +%Y%m%d%H%M%S)-deploy-$TARGET_ENVIRONMENT.zip
+  name: $(date +%Y%m%d%H%M%S)-deploy-cta-$TARGET_ENVIRONMENT.zip
   files:
     - "out/**/*"
   discard-paths: no

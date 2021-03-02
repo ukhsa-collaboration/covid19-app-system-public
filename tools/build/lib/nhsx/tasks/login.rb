@@ -1,28 +1,32 @@
 namespace :login do
-  task :prod do
-    require "highline"
-    include NHSx::AWS
-    cli = HighLine.new
-    answer = cli.ask "Do you really want to perform the task against prod? Type 'prod' to confirm"
-    raise GaudiError, "Aborted login to prod" unless ["prod"].include?(answer.downcase)
+  include NHSx::Login
 
-    mfa_login($configuration.aws_role, "prod")
-    ENV["AWS_PROFILE"] = "nhs-auth-prod"
-    ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
-    ENV["ACCOUNT"] = "prod"
+  task :prod do |t|
+    login_to_mfa_account("prod", true)
   end
 
-  task :staging do
-    include NHSx::AWS
-
-    mfa_login($configuration.aws_role, "staging")
-    ENV["AWS_PROFILE"] = "nhs-auth-staging"
-    ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
-    ENV["ACCOUNT"] = "staging"
+  task :staging do |t|
+    login_to_mfa_account("staging", false)
   end
 
   task :dev do
     ENV["ACCOUNT"] = "dev"
     ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
+
+    unless ENV["CODEBUILD_BUILD_ID"]
+      raise GaudiError, "Looks like you're not running in the docker container...mate" unless $configuration.base.start_with?("/workspace")
+    end
+  end
+
+  task :"aa-dev" do |t|
+    login_to_sso_account("aa-dev", false)
+  end
+
+  task :"aa-prod" do
+    login_to_sso_account("aa-prod", true)
+  end
+
+  task :"aa-staging" do
+    login_to_sso_account("aa-staging", false)
   end
 end

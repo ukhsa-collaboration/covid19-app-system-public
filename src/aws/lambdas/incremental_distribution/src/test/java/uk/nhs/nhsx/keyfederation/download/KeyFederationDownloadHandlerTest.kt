@@ -1,20 +1,25 @@
 package uk.nhs.nhsx.keyfederation.download
 
+import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.exactly
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson
+import org.junit.jupiter.api.extension.ExtendWith
+import uk.nhs.nhsx.core.Jackson.readJson
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
+import uk.nhs.nhsx.core.events.Events
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.keyfederation.BatchTag
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
@@ -25,27 +30,27 @@ import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
+import uk.nhs.nhsx.testhelper.proxy
+import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
+import java.time.Instant
 import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
-import java.util.*
+import java.util.Date
 
-class KeyFederationDownloadHandlerTest {
+@ExtendWith(WireMockExtension::class)
+class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
 
-    private val wireMockRule: WireMockServer = WireMockServer(0)
-
+    private val events: Events = RecordingEvents()
     private lateinit var downloadEnabledConfig: KeyFederationDownloadConfig
 
     @BeforeEach
     fun start() {
-        wireMockRule.start()
         downloadEnabledConfig = KeyFederationDownloadConfig(
             100,
             14,
             { true },
             false, -1,
             BucketName.of("foo"),
-            wireMockRule.baseUrl(),
+            wireMock.baseUrl(),
             SecretName.of("authToken"),
             ParameterName.of("parameter"),
             "federatedKeyDownloadPrefix",
@@ -55,49 +60,58 @@ class KeyFederationDownloadHandlerTest {
         )
     }
 
-    @AfterEach
-    fun stop() = wireMockRule.stop()
-
     @Test
     fun `enable download should call interop`() {
-        wireMockRule.stubFor(get("/diagnosiskeys/download/2020-08-01").willReturn(aResponse()
-            .withStatus(204)
-        ))
+        wireMock.stubFor(
+            get("/diagnosiskeys/download/2020-08-01")
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(204)
+                )
+        )
 
         KeyFederationDownloadHandler(
-            { LocalDate.of(2020, 8, 15).atStartOfDay().toInstant(ZoneOffset.UTC) },
+            { "2020-08-15T00:00:00.000Z".asInstant() },
+            events,
             downloadEnabledConfig,
             InMemoryBatchTagService(),
-            { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(KmsCompatibleSigner(ecPrime256r1.private))) },
-            FakeDiagnosisKeysS3(listOf(
+            interopClient = InteropClient(
+                wireMock.baseUrl(),
+                "DUMMY_TOKEN",
+                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+                events
+            ),
+            awsS3Client = FakeDiagnosisKeysS3(listOf(
                 S3ObjectSummary().apply {
                     key = "foo"
-                    lastModified = Date.from(OffsetDateTime.now(ZoneOffset.UTC).toInstant())
+                    lastModified = Date.from(Instant.now())
                 }
             ))
-        ).handleRequest(null, null)
-
-        wireMockRule.verify(
-            getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01"))
-                .withHeader("Authorization", equalTo("Bearer" + " DUMMY_TOKEN")) // on purpose
-        )
+        ).handleRequest(ScheduledEvent(), proxy())
     }
 
     @Test
     fun `disable download should not call interop`() {
-        wireMockRule.stubFor(get("/diagnosiskeys/download/2020-08-01").willReturn(aResponse()
-            .withStatus(204)
-        ))
+        wireMock.stubFor(
+            get("/diagnosiskeys/download/2020-08-01")
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(204)
+                )
+        )
 
         KeyFederationDownloadHandler(
-            { LocalDate.of(2020, 8, 15).atStartOfDay().toInstant(ZoneOffset.UTC) },
+            { "2020-08-15T00:00:00.000Z".asInstant() },
+            events,
             KeyFederationDownloadConfig(
                 100,
                 14,
                 { false },
                 false, -1,
                 BucketName.of("foo"),
-                wireMockRule.baseUrl(),
+                wireMock.baseUrl(),
                 SecretName.of("authToken"),
                 ParameterName.of("parameter"),
                 "federatedKeyDownloadPrefix",
@@ -106,11 +120,17 @@ class KeyFederationDownloadHandlerTest {
                 "GB-EAW",
             ),
             InMemoryBatchTagService(),
-            { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(KmsCompatibleSigner(ecPrime256r1.private))) },
-            FakeDiagnosisKeysS3(emptyList())
-        ).handleRequest(null, null)
+            interopClient = InteropClient(
+                wireMock.baseUrl(),
+                "DUMMY_TOKEN",
+                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+                events
+            ),
+            awsS3Client = FakeDiagnosisKeysS3(emptyList())
+        ).handleRequest(ScheduledEvent(), proxy())
 
-        wireMockRule.verify(0,
+        wireMock.verify(
+            exactly(0),
             getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01"))
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
         )
@@ -118,150 +138,177 @@ class KeyFederationDownloadHandlerTest {
 
     @Test
     fun `download keys with no content does nothing`() {
-        wireMockRule.stubFor(
-            get("/diagnosiskeys/download/2020-08-01?batchTag=75b326f7-ae6f-42f6-9354-00c0a6b797b3")
-                .willReturn(aResponse().withStatus(204))
+        wireMock.stubFor(
+            get(urlPathEqualTo("/diagnosiskeys/download/2020-08-01"))
+                .withQueryParam("batchTag", equalTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3"))
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(204)
+                )
         )
 
-        val batchTagService = InMemoryBatchTagService(BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3"), LocalDate.of(2020, 8, 1))
+        val batchTagService = InMemoryBatchTagService(
+            BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3"),
+            LocalDate.of(2020, 8, 1)
+        )
+
         val fakeS3Storage = FakeS3StorageMultipleObjects()
 
         KeyFederationDownloadHandler(
-            { LocalDate.of(2020, 8, 1).atStartOfDay().toInstant(ZoneOffset.UTC) },
+            { "2020-08-01T00:00:00.000Z".asInstant() },
+            events,
             downloadEnabledConfig,
             batchTagService,
-            { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(KmsCompatibleSigner(ecPrime256r1.private))) },
-            fakeS3Storage
-        ).handleRequest(null, null)
+            interopClient = InteropClient(
+                wireMock.baseUrl(),
+                "DUMMY_TOKEN",
+                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+                events
+            ),
+            awsS3Client = fakeS3Storage
+        ).handleRequest(ScheduledEvent(), proxy())
 
         assertThat(fakeS3Storage.count).isEqualTo(0)
         assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
-
-        wireMockRule.verify(1,
-            getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01?batchTag=75b326f7-ae6f-42f6-9354-00c0a6b797b3"))
-                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-        )
     }
 
     @Test
     fun `download keys with single page and save to s3`() {
+        wireMock.stubFor(
+            get("/diagnosiskeys/download/2020-08-01")
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json; charset=utf-8")
+                        .withBody(
+                            """
+                            {
+                                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
+                                "exposures": [
+                                    {
+                                        "keyData": "ogNW4Ra+Zdds1ShN56yv3w==",
+                                        "rollingStartNumber": 2660544,
+                                        "transmissionRiskLevel": 0,
+                                        "rollingPeriod": 144,
+                                        "origin": "GB-EAW",
+                                        "regions": [
+                                            "GB"
+                                        ]
+                                    },
+                                    {
+                                        "keyData": "EwoHez3CQgdslvdxaf+ztw==",
+                                        "rollingStartNumber": 2660544,
+                                        "transmissionRiskLevel": 0,
+                                        "rollingPeriod": 144,
+                                        "origin": "GB-EAW",
+                                        "regions": [
+                                            "GB"
+                                        ]
+                                    }
+                                ]
+                            }
+                            """.trimIndent()
+                        )
+                )
+        )
 
-        wireMockRule.stubFor(get("/diagnosiskeys/download/2020-08-01").willReturn(aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json; charset=utf-8")
-            .withBody("""
-            {
-                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                "exposures": [
-                    {
-                        "keyData": "ogNW4Ra+Zdds1ShN56yv3w==",
-                        "rollingStartNumber": 2660544,
-                        "transmissionRiskLevel": 0,
-                        "rollingPeriod": 144,
-                        "origin": "GB-EAW",
-                        "regions": [
-                            "GB"
-                        ]
-                    },
-                    {
-                        "keyData": "EwoHez3CQgdslvdxaf+ztw==",
-                        "rollingStartNumber": 2660544,
-                        "transmissionRiskLevel": 0,
-                        "rollingPeriod": 144,
-                        "origin": "GB-EAW",
-                        "regions": [
-                            "GB"
-                        ]
-                    }
-                ]
-            }
-            """.trimIndent()
-            )
-        ))
-
-        wireMockRule.stubFor(
-            get("/diagnosiskeys/download/2020-08-01?batchTag=75b326f7-ae6f-42f6-9354-00c0a6b797b3")
-                .willReturn(aResponse().withStatus(204))
+        wireMock.stubFor(
+            get(urlPathEqualTo("/diagnosiskeys/download/2020-08-01"))
+                .withQueryParam("batchTag", equalTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3"))
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(204)
+                )
         )
 
         val batchTagService = InMemoryBatchTagService()
         val fakeS3Storage = FakeS3StorageMultipleObjects()
 
         KeyFederationDownloadHandler(
-            { LocalDate.of(2020, 8, 15).atStartOfDay().toInstant(ZoneOffset.UTC) },
+            { "2020-08-15T00:00:00.000Z".asInstant() },
+            events,
             downloadEnabledConfig,
             batchTagService,
-            { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(KmsCompatibleSigner(ecPrime256r1.private))) },
-            fakeS3Storage
-        ).handleRequest(null, ContextBuilder.aContext())
+            interopClient = InteropClient(
+                wireMock.baseUrl(),
+                "DUMMY_TOKEN",
+                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+                events
+            ),
+            awsS3Client = fakeS3Storage
+        ).handleRequest(ScheduledEvent(), ContextBuilder.aContext())
 
         assertThat(fakeS3Storage.count).isEqualTo(1)
 
-        val keys = fakeS3Storage.fakeS3Objects.flatMap {
-            Jackson.readJson(it.bytes.openStream(), StoredTemporaryExposureKeyPayload::class.java).temporaryExposureKeys
-        }.map { it.key }
+        val keys = fakeS3Storage.fakeS3Objects
+            .flatMap {
+                readJson(
+                    it.bytes.openStream(),
+                    StoredTemporaryExposureKeyPayload::class.java
+                ).temporaryExposureKeys
+            }
+            .map { it.key }
 
         assertThat(keys).hasSize(2)
         assertThat(keys).containsAll(listOf("ogNW4Ra+Zdds1ShN56yv3w==", "EwoHez3CQgdslvdxaf+ztw=="))
-
         assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
-
-        wireMockRule.verify(1,
-            getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01"))
-                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-        )
-
-        wireMockRule.verify(1,
-            getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01?batchTag=75b326f7-ae6f-42f6-9354-00c0a6b797b3"))
-                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-        )
     }
 
     @Test
     fun `download keys with single page is empty does nothing`() {
+        wireMock.stubFor(
+            get("/diagnosiskeys/download/2020-08-01")
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json; charset=utf-8")
+                        .withBody(
+                            """
+                        {
+                            "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
+                            "exposures": []
+                        }
+                        """.trimIndent()
+                        )
+                )
+        )
 
-        wireMockRule.stubFor(get("/diagnosiskeys/download/2020-08-01").willReturn(aResponse()
-            .withStatus(200)
-            .withHeader("Content-Type", "application/json; charset=utf-8")
-            .withBody("""
-            {
-                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                "exposures": []
-            }
-            """.trimIndent()
-            )
-        ))
-
-        wireMockRule.stubFor(
-            get("/diagnosiskeys/download/2020-08-01?batchTag=75b326f7-ae6f-42f6-9354-00c0a6b797b3")
-                .willReturn(aResponse().withStatus(204))
+        wireMock.stubFor(
+            get(urlPathEqualTo("/diagnosiskeys/download/2020-08-01"))
+                .withQueryParam("batchTag", equalTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3"))
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(204)
+                )
         )
 
         val batchTagService = InMemoryBatchTagService()
         val fakeS3Storage = FakeS3StorageMultipleObjects()
 
         KeyFederationDownloadHandler(
-            { LocalDate.of(2020, 8, 15).atStartOfDay().toInstant(ZoneOffset.UTC) },
+            { "2020-08-15T00:00:00.000Z".asInstant() },
+            events,
             downloadEnabledConfig,
             batchTagService,
-            { InteropClient(wireMockRule.baseUrl(), "DUMMY_TOKEN", JWS(KmsCompatibleSigner(ecPrime256r1.private))) },
-            fakeS3Storage
-        ).handleRequest(null, ContextBuilder.aContext() )
-
+            interopClient = InteropClient(
+                wireMock.baseUrl(),
+                "DUMMY_TOKEN",
+                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+                events
+            ),
+            awsS3Client = fakeS3Storage
+        ).handleRequest(ScheduledEvent(), ContextBuilder.aContext())
 
         assertThat(fakeS3Storage.count).isEqualTo(0)
         assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
-
-        wireMockRule.verify(1,
-            getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01"))
-                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-        )
-
-        wireMockRule.verify(1,
-            getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01?batchTag=75b326f7-ae6f-42f6-9354-00c0a6b797b3"))
-                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-        )
     }
+
+    private fun String.asInstant() = Instant.parse(this)
 }
 
 

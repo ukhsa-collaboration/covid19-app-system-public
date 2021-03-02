@@ -44,6 +44,18 @@ object ProxyResponseAssertions {
     }
 
     @JvmStatic
+    fun hasHeader(name: String): Matcher<APIGatewayProxyResponseEvent> {
+        return object : TypeSafeDiagnosingMatcher<APIGatewayProxyResponseEvent>() {
+            override fun matchesSafely(event: APIGatewayProxyResponseEvent, mismatch: Description): Boolean =
+                event.headers[name] != null
+
+            override fun describeTo(description: Description) {
+                description.appendText("header ").appendValue(name)
+            }
+        }
+    }
+
+    @JvmStatic
     fun hasBody(body: Matcher<String>): Matcher<APIGatewayProxyResponseEvent> {
         return object : TypeSafeDiagnosingMatcher<APIGatewayProxyResponseEvent>() {
             override fun matchesSafely(event: APIGatewayProxyResponseEvent, mismatch: Description): Boolean {

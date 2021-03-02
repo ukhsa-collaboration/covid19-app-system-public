@@ -4,60 +4,49 @@ import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
 import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest;
 import com.amazonaws.services.simplesystemsmanagement.model.GetParameterResult;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListenableFutureTask;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 
-import java.util.concurrent.ExecutionException;
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
+import static java.lang.String.format;
 
 public class AwsSsmParameters implements Parameters {
 
     private static final ExecutorService executor = Executors.newCachedThreadPool();
-    private static final Logger logger = LogManager.getLogger(AwsSsmParameters.class);
 
     private final AWSSimpleSystemsManagement ssmClient;
+    private final Duration refreshInterval;
+
+    public AwsSsmParameters(AWSSimpleSystemsManagement ssmClient, Duration refreshInterval) {
+        this.ssmClient = ssmClient;
+        this.refreshInterval = refreshInterval;
+    }
 
     public AwsSsmParameters() {
-        ssmClient = AWSSimpleSystemsManagementClientBuilder.defaultClient();
+        this(AWSSimpleSystemsManagementClientBuilder.defaultClient(), Duration.ofMinutes(2));
     }
 
     @Override
     public <T> Parameter<T> parameter(ParameterName name, Function<String, T> convert) {
-        LoadingCache<ParameterName, T> loader = CacheBuilder.newBuilder()
-            .refreshAfterWrite(2, TimeUnit.MINUTES)
-            .build(new CacheLoader<>() {
-                @Override
-                public T load(ParameterName parameterName) {
-                    return AwsSsmParameters.this.load(parameterName, convert);
-                }
-
-                @Override
-                public ListenableFuture<T> reload(ParameterName key, T oldValue) {
-                    ListenableFutureTask<T> task = ListenableFutureTask.create(() -> load(key));
-                    executor.execute(task);
-                    return task;
-                }
-            });
+        LoadingCache<ParameterName, T> loader = Caffeine.newBuilder()
+            .executor(executor)
+            .refreshAfterWrite(refreshInterval)
+            .build(key -> getParameter(key, convert));
 
         return () -> {
             try {
                 return loader.get(name);
-            } catch (ExecutionException e) {
-                throw new RuntimeException("Unable to load parameter for " + name, e);
+            } catch (Exception e) {
+                throw new RuntimeException(format("Unable to load parameter for %s", name), e);
             }
         };
     }
 
-    private <T> T load(ParameterName name, Function<String, T> convert) {
-        logger.info("Reloading value of parameter {}", name);
+    private <T> T getParameter(ParameterName name, Function<String, T> convert) {
         GetParameterRequest request = new GetParameterRequest().withName(name.value);
         GetParameterResult result = ssmClient.getParameter(request);
         return convert.apply(result.getParameter().getValue());

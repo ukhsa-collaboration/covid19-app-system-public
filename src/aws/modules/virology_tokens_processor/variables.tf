@@ -40,6 +40,13 @@ variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }
 
+variable "policy_document" {
+  description = "An aws_iam_policy_document to be attached to the s3 bucket"
+  type = object({
+    json = string
+  })
+}
+
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)

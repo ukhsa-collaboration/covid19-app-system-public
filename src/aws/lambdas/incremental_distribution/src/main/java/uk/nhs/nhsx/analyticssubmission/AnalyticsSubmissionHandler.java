@@ -3,25 +3,34 @@ package uk.nhs.nhsx.analyticssubmission;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder;
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload;
-import uk.nhs.nhsx.core.*;
+import uk.nhs.nhsx.core.Environment;
 import uk.nhs.nhsx.core.Environment.EnvironmentKey;
+import uk.nhs.nhsx.core.EnvironmentKeys;
+import uk.nhs.nhsx.core.HttpResponses;
+import uk.nhs.nhsx.core.Jackson;
+import uk.nhs.nhsx.core.SystemClock;
+import uk.nhs.nhsx.core.UniqueId;
 import uk.nhs.nhsx.core.auth.ApiName;
 import uk.nhs.nhsx.core.auth.Authenticator;
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client;
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider;
 import uk.nhs.nhsx.core.aws.s3.S3Storage;
 import uk.nhs.nhsx.core.aws.s3.UniqueObjectKeyNameProvider;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.MobileAnalyticsSubmission;
+import uk.nhs.nhsx.core.events.PrintingJsonEvents;
+import uk.nhs.nhsx.core.events.UnprocessableJson;
 import uk.nhs.nhsx.core.routing.Routing;
 import uk.nhs.nhsx.core.routing.RoutingHandler;
 
 import java.time.Instant;
 import java.util.function.Supplier;
 
-import static uk.nhs.nhsx.core.Jackson.deserializeMaybe;
 import static uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication;
 import static uk.nhs.nhsx.core.routing.Routing.Method.POST;
 import static uk.nhs.nhsx.core.routing.Routing.path;
 import static uk.nhs.nhsx.core.routing.Routing.routes;
+import static uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy;
 import static uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses;
 
 public class AnalyticsSubmissionHandler extends RoutingHandler {
@@ -34,43 +43,54 @@ public class AnalyticsSubmissionHandler extends RoutingHandler {
 
     @SuppressWarnings("unused")
     public AnalyticsSubmissionHandler() {
-        this(Environment.fromSystem(), SystemClock.CLOCK);
+        this(Environment.fromSystem(), SystemClock.CLOCK, new PrintingJsonEvents(SystemClock.CLOCK));
     }
 
-    public AnalyticsSubmissionHandler(Environment environment, Supplier<Instant> clock) {
+    public AnalyticsSubmissionHandler(Environment environment, Supplier<Instant> clock, Events events) {
         this(
             environment,
-            awsAuthentication(ApiName.Mobile),
-            new AwsS3Client(),
+            awsAuthentication(ApiName.Health, events),
+            awsAuthentication(ApiName.Mobile, events),
+            new AwsS3Client(events),
             AmazonKinesisFirehoseClientBuilder.defaultClient(),
             new UniqueObjectKeyNameProvider(clock, UniqueId.ID),
-            analyticsConfig(environment)
+            analyticsConfig(environment),
+            events
         );
     }
 
     public AnalyticsSubmissionHandler(Environment environment,
-                                      Authenticator authenticator,
+                                      Authenticator healthAuthenticator,
+                                      Authenticator mobileAuthenticator,
                                       S3Storage s3Storage,
                                       AmazonKinesisFirehose kinesisFirehose,
                                       ObjectKeyNameProvider objectKeyNameProvider,
-                                      AnalyticsConfig analyticsConfig) {
+                                      AnalyticsConfig analyticsConfig,
+                                      Events events) {
 
         var service = new AnalyticsSubmissionService(
-            analyticsConfig, s3Storage, objectKeyNameProvider, kinesisFirehose
-        );
+            analyticsConfig, s3Storage, objectKeyNameProvider, kinesisFirehose,
+                events);
 
         this.handler = withoutSignedResponses(
-            environment, authenticator,
+            events,
+            environment,
             routes(
-                path(POST, "/submission/mobile-analytics", (r) ->
-                    deserializeMaybe(r.getBody(), ClientAnalyticsSubmissionPayload.class)
-                        .map(it -> {
-                            service.accept(it);
-                            return HttpResponses.ok();
-                        })
-                        .orElse(HttpResponses.badRequest())),
-                path(POST, "/submission/mobile-analytics/health", (r) ->
-                    HttpResponses.ok()
+                authorisedBy(mobileAuthenticator,
+                    path(POST, "/submission/mobile-analytics", r -> {
+                        events.emit(getClass(), new MobileAnalyticsSubmission());
+                        return Jackson.readMaybe(r.getBody(), ClientAnalyticsSubmissionPayload.class, e -> events.emit(getClass(), new UnprocessableJson(e)))
+                            .map(it -> {
+                                service.accept(it);
+                                return HttpResponses.ok();
+                            })
+                            .orElse(HttpResponses.badRequest());
+                    })
+                ),
+                authorisedBy(healthAuthenticator,
+                    path(POST, "/submission/mobile-analytics/health", r ->
+                        HttpResponses.ok()
+                    )
                 )
             )
         );

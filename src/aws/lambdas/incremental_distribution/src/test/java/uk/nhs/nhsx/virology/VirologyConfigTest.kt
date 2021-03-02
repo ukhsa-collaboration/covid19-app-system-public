@@ -12,8 +12,7 @@ class VirologyConfigTest {
             "testOrdersTableName",
             "testResultsTableName",
             "submissionTokensTableName",
-            "testOrdersIndex",
-            1
+            "testOrdersIndex"
         )
 
         assertThat(virologyConfig).isEqualTo(
@@ -21,35 +20,8 @@ class VirologyConfigTest {
                 "testOrdersTableName",
                 "testResultsTableName",
                 "submissionTokensTableName",
-                "testOrdersIndex",
-                1
+                "testOrdersIndex"
             )
         )
-    }
-
-    @Test
-    fun `throws when max retry count set to zero`() {
-        assertThatThrownBy {
-            VirologyConfig(
-                "testOrdersTableName",
-                "testResultsTableName",
-                "submissionTokensTableName",
-                "testOrdersIndex",
-                0
-            )
-        }.isInstanceOf(IllegalArgumentException::class.java)
-    }
-
-    @Test
-    fun `throws when max retry count is negative`() {
-        assertThatThrownBy {
-            VirologyConfig(
-                "testOrdersTableName",
-                "testResultsTableName",
-                "submissionTokensTableName",
-                "testOrdersIndex",
-                    -1
-            )
-        }.isInstanceOf(IllegalArgumentException::class.java)
     }
 }

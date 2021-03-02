@@ -13,6 +13,7 @@ import smoke.actors.MobileApp
 import smoke.actors.MobileDeviceModel
 import smoke.actors.MobileOS
 import smoke.actors.MobileOS.Android
+import smoke.data.AnalyticsMetricsData.populatedAnalyticsMetrics
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
@@ -36,7 +37,7 @@ class AnalyticsSubmissionSmokeTest {
     @Test
     fun `submit ios analytics data`(approver: Approver) {
         val deviceModel = MobileDeviceModel(UUID.randomUUID().toString())
-        val mobileApp = MobileApp(client, config, MobileOS.iOS, deviceModel)
+        val mobileApp = MobileApp(client, config, os = MobileOS.iOS, model = deviceModel)
         val metrics = populatedAnalyticsMetrics()
 
         assertThat(mobileApp.submitAnalyticsKeys(AnalyticsWindow(startDate, endDate), metrics), equalTo(OK))
@@ -47,7 +48,7 @@ class AnalyticsSubmissionSmokeTest {
     @Test
     fun `submit android analytics data`(approver: Approver) {
         val deviceModel = MobileDeviceModel(UUID.randomUUID().toString())
-        val mobileApp = MobileApp(client, config, Android, deviceModel)
+        val mobileApp = MobileApp(client, config, os = Android, model = deviceModel)
         val metrics = populatedAnalyticsMetrics()
 
         assertThat(mobileApp.submitAnalyticsKeys(AnalyticsWindow(startDate, endDate), metrics), equalTo(OK))
@@ -118,7 +119,16 @@ class AnalyticsSubmissionSmokeTest {
         hasTestedLFDPositiveBackgroundTick = counter++.toInt()
         isIsolatingForTestedLFDPositiveBackgroundTick = counter++.toInt()
         totalExposureWindowsNotConsideredRisky = counter++.toInt()
-        totalExposureWindowsConsideredRisky = counter.toInt()
-        
+        totalExposureWindowsConsideredRisky = counter++.toInt()
+        acknowledgedStartOfIsolationDueToRiskyContact = counter++.toInt()
+        hasRiskyContactNotificationsEnabledBackgroundTick = counter++.toInt()
+        totalRiskyContactReminderNotifications = counter++.toInt()
+        receivedUnconfirmedPositiveTestResult = counter++.toInt()
+        isIsolatingForUnconfirmedTestBackgroundTick = counter++.toInt()
+        launchedTestOrdering = counter++.toInt()
+        didHaveSymptomsBeforeReceivedTestResult = counter++.toInt()
+        didRememberOnsetSymptomsDateBeforeReceivedTestResult = counter++.toInt()
+        didAskForSymptomsOnPositiveTestEntry = counter++.toInt()
+        declaredNegativeResultFromDCT = counter.toInt()
     }
 }

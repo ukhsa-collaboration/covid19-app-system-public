@@ -1,7 +1,8 @@
 package uk.nhs.nhsx.virology
 
 import com.amazonaws.HttpMethod
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
+import com.amazonaws.HttpMethod.GET
+import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
@@ -9,21 +10,30 @@ import com.natpryce.snodge.mutants
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
-import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.events.UnprocessableJson
+import uk.nhs.nhsx.core.events.VirologyResults
+import uk.nhs.nhsx.core.events.VirologyTokenGen
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import uk.nhs.nhsx.testhelper.data.TestData.tokenGenRequestV1
-import uk.nhs.nhsx.testhelper.data.TestData.tokenGenRequestV2
+import uk.nhs.nhsx.testhelper.data.TestData.rapidLabResultV2
+import uk.nhs.nhsx.testhelper.data.TestData.rapidSelfReportedResultV2
+import uk.nhs.nhsx.testhelper.data.TestData.testLabResultV1
+import uk.nhs.nhsx.testhelper.data.TestData.tokenGenPayloadV1
+import uk.nhs.nhsx.testhelper.data.TestData.tokenGenPayloadV2
+import uk.nhs.nhsx.testhelper.data.TestData.tokenGenSelfReportedPayloadV2
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
+import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
@@ -31,155 +41,94 @@ import kotlin.random.Random
 
 class VirologyUploadHandlerTest {
 
-    private val payloadJsonV1 = """{
-        "ctaToken": "cc8f0b6z",
-        "testEndDate": "2020-04-23T00:00:00Z",
-        "testResult": "NEGATIVE"
-    }"""
-
-    private val payloadJsonV2 = """{
-        "ctaToken": "cc8f0b6z",
-        "testEndDate": "2020-04-23T00:00:00Z",
-        "testResult": "POSITIVE",
-        "testKit": "RAPID_RESULT"
-    }"""
-
     private val npexPath = "/upload/virology-test/npex-result"
     private val npexV2Path = "/upload/virology-test/v2/npex-result"
-    private val correctToken = "anything"
-
-    private val environment = TestEnvironments.TEST.apply(mapOf(
-        "MAINTENANCE_MODE" to "false",
-        "virology_v2_apis_enabled" to "true",
-    ))
+    private val tokenGenWlsPathV1 = "/upload/virology-test/wls-result-tokengen"
+    private val tokenGenEngPathV1 = "/upload/virology-test/eng-result-tokengen"
+    private val fioranoPathV1 = "/upload/virology-test/fiorano-result"
+    private val fioranoPathV2 = "/upload/virology-test/v2/fiorano-result"
+    private val tokenGenEngPathV2 = "/upload/virology-test/v2/eng-result-tokengen"
+    private val tokenGenWlsPathV2 = "/upload/virology-test/v2/wls-result-tokengen"
+    private val events = RecordingEvents()
+    private val service = mockk<VirologyService>()
 
     @Test
     fun `accepts npex test result v1 returns 202`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
-        }
-        val handler = VirologyUploadHandler(environment, { true }, service)
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexPath)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV1)
-            .build()
+        val response = sendAndReceive(path = npexPath, payload = testLabResultV1)
 
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.ACCEPTED_202))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("successfully processed")))
+        assertThat(response, hasStatus(HttpStatusCode.ACCEPTED_202))
+        assertThat(response, hasBody(equalTo("successfully processed")))
+        events.containsExactly(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `test order is not present returns 400`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.OrderNotFound()
-        }
-        val handler = VirologyUploadHandler(environment, { true }, service)
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.OrderNotFound()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexPath)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV1)
-            .build()
+        val response = sendAndReceive(path = npexPath, payload = testLabResultV1)
 
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        assertThat(responseEvent, hasBody(CoreMatchers.nullValue(String::class.java)))
+        assertThat(response, hasStatus(HttpStatusCode.BAD_REQUEST_400))
+        assertThat(response, hasBody(nullValue(String::class.java)))
+        events.containsExactly(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `transaction failure returns 409`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.TransactionFailed("")
-        }
-        val handler = VirologyUploadHandler(environment, { true }, service)
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.TransactionFailed()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexPath)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV1)
-            .build()
+        val response = sendAndReceive(path = npexPath, payload = testLabResultV1)
 
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.CONFLICT_409))
-        assertThat(responseEvent, hasBody(CoreMatchers.nullValue(String::class.java)))
+        assertThat(response, hasStatus(HttpStatusCode.CONFLICT_409))
+        assertThat(response, hasBody(nullValue(String::class.java)))
+        events.containsExactly(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `invalid path returns 404`() {
-        val uploadService = Mockito.mock(VirologyService::class.java)
-        val handler = VirologyUploadHandler(environment, { true }, uploadService)
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath("/upload/incorrect/npex-result")
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV1)
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo(null)))
+        val response = sendAndReceive(path = "/upload/incorrect/npex-result", payload = testLabResultV1)
+
+        assertThat(response, hasStatus(HttpStatusCode.NOT_FOUND_404))
+        assertThat(response, hasBody(equalTo(null)))
+        events.containsNoEvents()
     }
 
     @Test
     fun `invalid method returns 405`() {
-        val uploadService = Mockito.mock(VirologyService::class.java)
-        val handler = VirologyUploadHandler(environment, { true }, uploadService)
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.GET)
-            .withPath(npexPath)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV1)
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.METHOD_NOT_ALLOWED_405))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo(null)))
+        val response = sendAndReceive(path = npexPath, payload = testLabResultV1, method = GET)
+
+        assertThat(response, hasStatus(HttpStatusCode.METHOD_NOT_ALLOWED_405))
+        assertThat(response, hasBody(equalTo(null)))
+        events.containsNoEvents()
     }
 
     @Test
     fun `empty body returns 400`() {
-        val uploadService = Mockito.mock(VirologyService::class.java)
-        val handler = VirologyUploadHandler(environment, { true }, uploadService)
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexPath)
-            .withBearerToken(correctToken)
-            .withJson("")
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.UNPROCESSABLE_ENTITY_422))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo(null)))
+        val response = sendAndReceive(path = npexPath, payload = "")
+
+        assertThat(response, hasStatus(HttpStatusCode.UNPROCESSABLE_ENTITY_422))
+        assertThat(response, hasBody(equalTo(null)))
+        events.containsExactly(VirologyResults::class, UnprocessableJson::class)
     }
 
     @Test
     fun `random payload does not cause 500`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
-        }
-        val handler = VirologyUploadHandler(environment, { true }, service)
-        val originalJson = payloadJsonV1
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
 
-        Random.mutants(defaultJsonMutagens().forStrings(), 100, originalJson)
+        Random.mutants(defaultJsonMutagens().forStrings(), 100, testLabResultV1)
+            .filter { it != testLabResultV1 }
             .forEach { json: String ->
-                if (json != originalJson) {
-                    val request = requestEventWithPayload(json)
-                    val response = handler.handleRequest(request, aContext())
-                    assertThat(response, CoreMatchers.not(hasStatus(HttpStatusCode.INTERNAL_SERVER_ERROR_500)))
-                }
+                val response = sendAndReceive(path = npexPath, payload = json)
+                assertThat(response, not(hasStatus(HttpStatusCode.INTERNAL_SERVER_ERROR_500)))
             }
     }
 
     @Test
     fun `accepts english token gen request`() {
-        val service = mockk<VirologyService>(relaxed = true)
         every { service.acceptTestResultGeneratingTokens(any()) } returns VirologyTokenGenResponse.of("cta-123")
 
-        val path = "/upload/virology-test/eng-result-tokengen"
-        val responseEvent = sendTokenGenRequestToV1(path, service)
+        val response = sendAndReceive(path = tokenGenEngPathV1, payload = tokenGenPayloadV1)
 
         verify(exactly = 1) {
             service.acceptTestResultGeneratingTokens(
@@ -187,169 +136,82 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("""{"ctaToken":"cta-123"}""")))
+        assertThat(response, hasStatus(HttpStatusCode.OK_200))
+        assertThat(response, hasBody(equalTo("""{"ctaToken":"cta-123"}""")))
+        events.containsExactly(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
     fun `accepts welsh token gen request`() {
-        val uploadService = mockk<VirologyService>(relaxed = true)
-        every { uploadService.acceptTestResultGeneratingTokens(any()) } returns VirologyTokenGenResponse.of("cta-123")
+        every { service.acceptTestResultGeneratingTokens(any()) } returns VirologyTokenGenResponse.of("cta-123")
 
-        val path = "/upload/virology-test/wls-result-tokengen"
-        val responseEvent = sendTokenGenRequestToV1(path, uploadService)
+        val response = sendAndReceive(path = tokenGenWlsPathV1, payload = tokenGenPayloadV1)
 
         verify(exactly = 1) {
-            uploadService.acceptTestResultGeneratingTokens(
+            service.acceptTestResultGeneratingTokens(
                 VirologyTokenGenRequest("POSITIVE", "2020-09-07T01:01:01Z", LAB_RESULT)
             )
         }
 
-        assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("""{"ctaToken":"cta-123"}""")))
+        assertThat(response, hasStatus(HttpStatusCode.OK_200))
+        assertThat(response, hasBody(equalTo("""{"ctaToken":"cta-123"}""")))
+        events.containsExactly(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
     fun `accepts test result v1 returns 422 on invalid testKit`() {
-        val service = mockk<VirologyService> {}
-        val handler = VirologyUploadHandler(environment, { true }, service)
+        val response = sendAndReceive(path = npexPath, payload = rapidLabResultV2)
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexPath)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV2)
-            .build()
-
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.UNPROCESSABLE_ENTITY_422))
+        assertThat(response, hasStatus(HttpStatusCode.UNPROCESSABLE_ENTITY_422))
+        events.containsExactly(VirologyResults::class)
     }
 
     @Test
-    fun `accepts npex test result v2 returns 202`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
-        }
-        val handler = VirologyUploadHandler(environment, { true }, service)
+    fun `accepts npex rapid lab test result v2 returns 202`() {
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexV2Path)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV2)
-            .build()
+        val response = sendAndReceive(path = npexV2Path, payload = rapidLabResultV2)
 
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.ACCEPTED_202))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("successfully processed")))
+        assertThat(response, hasStatus(HttpStatusCode.ACCEPTED_202))
+        assertThat(response, hasBody(equalTo("successfully processed")))
+        events.containsExactly(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
-    fun `accepts npex test result v2 returns 404 by default`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
-        }
+    fun `v2 returns 422 when receiving v1 payload`() {
+        val response = sendAndReceive(path = npexV2Path, payload = testLabResultV1)
 
-        val environment = TestEnvironments.TEST.apply(mapOf(
-            "MAINTENANCE_MODE" to "false",
-        ))
-
-        val handler = VirologyUploadHandler(environment, { true }, service)
-
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexV2Path)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV2)
-            .build()
-
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
-    }
-
-    @Test
-    fun `accepts test result v2 returns 422 on invalid testType`() {
-        val service = mockk<VirologyService> {}
-        val handler = VirologyUploadHandler(environment, { true }, service)
-
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexV2Path)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV1)
-            .build()
-
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.UNPROCESSABLE_ENTITY_422))
+        assertThat(response, hasStatus(HttpStatusCode.UNPROCESSABLE_ENTITY_422))
+        events.containsExactly(VirologyResults::class)
     }
 
     @Test
     fun `accepts fiorano test result v1 returns 202`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
-        }
-        val handler = VirologyUploadHandler(environment, { true }, service)
-        val path = "/upload/virology-test/fiorano-result"
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(path)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV1)
-            .build()
+        val response = sendAndReceive(path = fioranoPathV1, payload = testLabResultV1)
 
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.ACCEPTED_202))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("successfully processed")))
+        assertThat(response, hasStatus(HttpStatusCode.ACCEPTED_202))
+        assertThat(response, hasBody(equalTo("successfully processed")))
+        events.containsExactly(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `accepts fiorano test result v2 returns 202`() {
-        val service = mockk<VirologyService> {
-            every { acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
-        }
-        val handler = VirologyUploadHandler(environment, { true }, service)
-        val path = "/upload/virology-test/v2/fiorano-result"
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(path)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV2)
-            .build()
+        val response = sendAndReceive(path = fioranoPathV2, payload = rapidLabResultV2)
 
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.ACCEPTED_202))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("successfully processed")))
+        assertThat(response, hasStatus(HttpStatusCode.ACCEPTED_202))
+        assertThat(response, hasBody(equalTo("successfully processed")))
+        events.containsExactly(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
-    fun `accepts fiorano test result v2 returns 404 by default`() {
-        val service = mockk<VirologyService> {}
-        val environment = TestEnvironments.TEST.apply(mapOf(
-            "MAINTENANCE_MODE" to "false",
-        ))
-        val handler = VirologyUploadHandler(environment, { true }, service)
-        val path = "/upload/virology-test/v2/fiorano-result"
-
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(path)
-            .withBearerToken(correctToken)
-            .withJson(payloadJsonV2)
-            .build()
-
-        val responseEvent = handler.handleRequest(requestEvent, aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
-    }
-
-    @Test
-    fun `accepts v2 english token gen request`() {
-        val service = mockk<VirologyService>(relaxed = true)
+    fun `accepts v2 english rapid token gen request`() {
         every { service.acceptTestResultGeneratingTokens(any()) } returns VirologyTokenGenResponse.of("cta-123")
 
-        val path = "/upload/virology-test/v2/eng-result-tokengen"
-        val responseEvent = sendTokenGenRequestToV2(path, service)
+        val response = sendAndReceive(path = tokenGenEngPathV2, payload = tokenGenPayloadV2)
 
         verify(exactly = 1) {
             service.acceptTestResultGeneratingTokens(
@@ -357,80 +219,76 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("""{"ctaToken":"cta-123"}""")))
-    }
-
-    @Test
-    fun `accepts v2 english token gen request and returns 404 by default`() {
-        val service = mockk<VirologyService>{}
-        val environment = TestEnvironments.TEST.apply(mapOf(
-            "MAINTENANCE_MODE" to "false",
-        ))
-        val path = "/upload/virology-test/v2/eng-result-tokengen"
-        val responseEvent = sendTokenGenRequestToV2(path, service, environment)
-
-        assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
+        assertThat(response, hasStatus(HttpStatusCode.OK_200))
+        assertThat(response, hasBody(equalTo("""{"ctaToken":"cta-123"}""")))
+        events.containsExactly(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
     fun `accepts v2 welsh token gen request`() {
-        val uploadService = mockk<VirologyService>(relaxed = true)
-        every { uploadService.acceptTestResultGeneratingTokens(any()) } returns VirologyTokenGenResponse.of("cta-123")
+        every { service.acceptTestResultGeneratingTokens(any()) } returns VirologyTokenGenResponse.of("cta-123")
 
-        val path = "/upload/virology-test/v2/wls-result-tokengen"
-        val responseEvent = sendTokenGenRequestToV2(path, uploadService)
+        val response = sendAndReceive(path = tokenGenWlsPathV2, payload = tokenGenPayloadV2)
 
         verify(exactly = 1) {
-            uploadService.acceptTestResultGeneratingTokens(
+            service.acceptTestResultGeneratingTokens(
                 VirologyTokenGenRequest("POSITIVE", "2020-09-07T01:01:01Z", RAPID_RESULT)
             )
         }
 
-        assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200))
-        assertThat(responseEvent, hasBody(CoreMatchers.equalTo("""{"ctaToken":"cta-123"}""")))
+        assertThat(response, hasStatus(HttpStatusCode.OK_200))
+        assertThat(response, hasBody(equalTo("""{"ctaToken":"cta-123"}""")))
+        events.containsExactly(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
-    fun `accepts v2 welsh token gen request and returns 404 by default`() {
-        val uploadService = mockk<VirologyService>(relaxed = true)
-        val environment = TestEnvironments.TEST.apply(mapOf(
-            "MAINTENANCE_MODE" to "false",
-        ))
-        val path = "/upload/virology-test/v2/wls-result-tokengen"
-        val responseEvent = sendTokenGenRequestToV2(path, uploadService, environment)
+    fun `accepts rapid self reported test result v2 returns 202`() {
+        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
 
-        assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
+        val response = sendAndReceive(path = npexV2Path, payload = rapidSelfReportedResultV2)
+
+        assertThat(response, hasStatus(HttpStatusCode.ACCEPTED_202))
+        assertThat(response, hasBody(equalTo("successfully processed")))
     }
 
-    private fun sendTokenGenRequestToV1(path: String, uploadService: VirologyService, env: Environment = environment): APIGatewayProxyResponseEvent =
-        sendTokenGenRequestTo(path, tokenGenRequestV1, uploadService, env)
+    @Test
+    fun `accepts english rapid self reported token gen request v2`() {
+        every { service.acceptTestResultGeneratingTokens(any()) } returns VirologyTokenGenResponse.of("cta-123")
 
-    private fun sendTokenGenRequestToV2(path: String, uploadService: VirologyService, env: Environment = environment): APIGatewayProxyResponseEvent =
-        sendTokenGenRequestTo(path, tokenGenRequestV2, uploadService, env)
+        val response = sendAndReceive(path = tokenGenEngPathV2, payload = tokenGenSelfReportedPayloadV2)
 
-    private fun sendTokenGenRequestTo(
+        verify(exactly = 1) {
+            service.acceptTestResultGeneratingTokens(
+                VirologyTokenGenRequest("POSITIVE", "2020-09-07T01:01:01Z", RAPID_SELF_REPORTED)
+            )
+        }
+
+        assertThat(response, hasStatus(HttpStatusCode.OK_200))
+        assertThat(response, hasBody(equalTo("""{"ctaToken":"cta-123"}""")))
+    }
+
+    private fun sendAndReceive(
         path: String,
         payload: String,
-        uploadService: VirologyService,
-        environment: Environment,
+        method: HttpMethod = POST
     ): APIGatewayProxyResponseEvent {
         val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+            .withMethod(method)
+            .withCustomOai("OAI")
+            .withRequestId()
             .withPath(path)
             .withJson(payload)
-            .withBearerToken(correctToken)
+            .withBearerToken("anything")
             .build()
 
-        val handler = VirologyUploadHandler(environment, { true }, uploadService)
+        val environment = TestEnvironments.TEST.apply(
+            mapOf(
+                "MAINTENANCE_MODE" to "false",
+                "custom_oai" to "OAI"
+            )
+        )
+
+        val handler = VirologyUploadHandler(environment, events, { true }, service, { true })
         return handler.handleRequest(requestEvent, aContext())
     }
-
-    private fun requestEventWithPayload(requestPayload: String) =
-        ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
-            .withPath(npexPath)
-            .withBearerToken(correctToken)
-            .withJson(requestPayload)
-            .build()
 }

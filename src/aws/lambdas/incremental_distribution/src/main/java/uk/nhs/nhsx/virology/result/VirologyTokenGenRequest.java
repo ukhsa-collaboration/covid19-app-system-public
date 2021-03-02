@@ -9,7 +9,10 @@ import java.util.Objects;
 import static uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422;
 import static uk.nhs.nhsx.virology.TestKit.LAB_RESULT;
 import static uk.nhs.nhsx.virology.TestKit.RAPID_RESULT;
-import static uk.nhs.nhsx.virology.result.VirologyResultRequest.*;
+import static uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED;
+import static uk.nhs.nhsx.virology.result.VirologyResultRequest.FIORANO_INDETERMINATE;
+import static uk.nhs.nhsx.virology.result.VirologyResultRequest.NPEX_POSITIVE;
+import static uk.nhs.nhsx.virology.result.VirologyResultRequest.NPEX_VOID;
 
 public class VirologyTokenGenRequest {
 
@@ -39,7 +42,8 @@ public class VirologyTokenGenRequest {
     public static VirologyTokenGenRequest v2TestKitValidator(VirologyTokenGenRequest request) {
         final TestKit testKit = request.testKit;
         final boolean pcr = LAB_RESULT.equals(testKit);
-        final boolean lfdPositive = RAPID_RESULT == testKit && NPEX_POSITIVE.contentEquals(request.testResult);
+        final boolean lfd = RAPID_RESULT == testKit || RAPID_SELF_REPORTED == testKit;
+        final boolean lfdPositive = lfd && NPEX_POSITIVE.contentEquals(request.testResult);
         boolean isValid = pcr || lfdPositive;
         if (!isValid)
             throw new ApiResponseException(UNPROCESSABLE_ENTITY_422, "validation error: Invalid test type value");

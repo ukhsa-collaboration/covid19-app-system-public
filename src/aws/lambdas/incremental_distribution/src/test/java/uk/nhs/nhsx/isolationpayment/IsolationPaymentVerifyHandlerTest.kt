@@ -6,6 +6,7 @@ import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
@@ -16,7 +17,7 @@ internal class IsolationPaymentVerifyHandlerTest {
     private val state = "state"
 
     private val service = mockk<IsolationPaymentGatewayService>()
-    private val handler = IsolationPaymentVerifyHandler(service)
+    private val handler = IsolationPaymentVerifyHandler(service, RecordingEvents())
 
     @Test
     fun `verifies token and returns isolation payment response`() {

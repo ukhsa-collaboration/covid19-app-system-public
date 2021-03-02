@@ -1,29 +1,31 @@
 package uk.nhs.nhsx.core.signature;
 
-import com.google.common.io.ByteSource;
-import com.google.common.primitives.Bytes;
+import uk.nhs.nhsx.core.aws.s3.ByteArraySource;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
-public class DistributionSignature implements Function<DatedSignature.SignatureDate, byte[]> {
+import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static uk.nhs.nhsx.core.signature.DatedSignature.SignatureDate;
 
-    private final ByteSource bytes;
+public class DistributionSignature implements Function<SignatureDate, byte[]> {
 
-    public DistributionSignature(ByteSource bytes) {
+    private final ByteArraySource bytes;
+
+    public DistributionSignature(ByteArraySource bytes) {
         this.bytes = bytes;
     }
 
     @Override
-    public byte[] apply(DatedSignature.SignatureDate sd) {
-        try {
-            return Bytes.concat(
-                String.format("%s:", sd.string).getBytes(StandardCharsets.UTF_8),
-                bytes.read()
-            );
+    public byte[] apply(SignatureDate signatureDate) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            out.write(format("%s:", signatureDate.string).getBytes(UTF_8));
+            out.write(bytes.toArray());
+            return out.toByteArray();
         } catch (IOException e) {
-            throw new IllegalArgumentException("Unable to read " + bytes, e);
+            throw new IllegalArgumentException("Unable to read bytes", e);
         }
     }
 }

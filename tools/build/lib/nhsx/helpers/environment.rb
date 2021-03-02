@@ -132,9 +132,10 @@ module Gaudi
 
       def test_kit
         test_kit = ENV.fetch("TEST_KIT", "LAB_RESULT")
-        valid_values = ["LAB_RESULT", "RAPID_RESULT"]
+        valid_values = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED"]
         raise GaudiError, "Invalid TEST_KIT, valid input is #{valid_values.join(", ")}" unless valid_values.include?(test_kit)
-        test_kit
+
+        return test_kit
       end
 
       # Pass the value for a ACCOUNT
@@ -143,21 +144,45 @@ module Gaudi
       end
 
       # Pass the value for a BRANCH
+      #
+      # This is aware of execution in a CodeBuild environment so it will return CODEBUILD_SOURCE_VERSION instead of BRANCH in CodeBuild
       def branch
-        ENV.fetch("BRANCH", "master")
-      end
+        branch_name = ENV["CODEBUILD_SOURCE_VERSION"]
+        branch_name ||= ENV.fetch("BRANCH", "master")
 
-      def target_sha
-        ENV.fetch("TARGET_SHA", current_sha)
+        return branch_name
       end
 
       def print_logs
         return ENV.fetch("PRINT_LOGS", false)
       end
 
-      # Pass the value for a codebuild job id
+      # Pass the value for a CodeBuild job id
       def job_id
         return mandatory("JOB_ID")
+      end
+
+      # Pass a version number to be used for a release.
+      def release_version(version_metadata)
+        version_number = mandatory("RELEASE_VERSION").gsub(",", ".")
+        last_release = "#{version_metadata["Major"]}.#{version_metadata["Minor"]}"
+        raise GaudiError, "Only provide the version number, e.g. 2.3" if version_number.to_f.zero?
+
+        raise GaudiError, "Invalid version #{version_number}. Latest release is #{last_release}." if last_release.to_f >= version_number.to_f
+
+        return version_number
+      end
+
+      # Returns the value of FROM_VERSION or the last backend release tag
+      def from_version(version_metadata)
+        return ENV["FROM_VERSION"] if ENV["FROM_VERSION"]
+        source_commit = "Backend-#{version_metadata["Major"]}.#{version_metadata["Minor"]}"
+        return source_commit
+      end
+
+      # Returns the value of TO_VERSION or HEAD
+      def to_version
+        ENV.fetch("TO_VERSION", current_sha)
       end
     end
   end

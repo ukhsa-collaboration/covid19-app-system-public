@@ -8,7 +8,7 @@ variable "lambda_handler_class" {
 
 variable "lambda_environment_variables" {
   description = "A map of environment variable --> value to pass as environment to the lambda"
-  type        = map
+  type        = map(any)
 }
 
 variable "rate_limit" {
@@ -61,6 +61,13 @@ variable "lifecycle_rule_enabled" {
   description = "enables lifecycle rule which expires objects after specific time"
   type        = bool
   default     = false
+}
+
+variable "policy_document" {
+  description = "An aws_iam_policy_document to be attached to the s3 bucket"
+  type = object({
+    json = string
+  })
 }
 
 variable "tags" {

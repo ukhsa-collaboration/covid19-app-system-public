@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Base64;
 
+@SuppressWarnings("StatementWithEmptyBody")
 public class Signature {
 
     public final KeyId keyId;
@@ -45,6 +46,7 @@ public class Signature {
 
     // From Apache-2 Licenced org.jose4j.jws.EcdsaUsingShaAlgorithm
     // Convert the DER encoding of R and S into a concatenation of R and S
+    @SuppressWarnings("SameParameterValue")
     private byte[] convertDerToConcatenated(byte[] derEncodedBytes, int outputLength) throws IOException {
         if (derEncodedBytes.length < 8 || derEncodedBytes[0] != 48) {
             throw new IOException("Invalid format of ECDSA signature");

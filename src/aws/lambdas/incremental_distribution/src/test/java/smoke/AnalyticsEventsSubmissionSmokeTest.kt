@@ -8,6 +8,7 @@ import org.http4k.core.Status
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
+import smoke.data.AnalyticsEventsData.analyticsEvents
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.core.Jackson
 import java.util.UUID
@@ -33,34 +34,7 @@ class AnalyticsEventsSubmissionSmokeTest {
     fun `submit valid payload`() {
 
         val randomUUID = UUID.randomUUID()
-        val uploadResponse = mobileApp.submitAnalyticEvents("""
-                {
-                    "metadata": {
-                        "operatingSystemVersion": "$randomUUID",
-                        "latestApplicationVersion": "3.0",
-                        "deviceModel": "iPhone11,2",
-                        "postalDistrict": "A1"
-                    },
-                    "events": [
-                        {
-                            "type": "exposure_window",
-                            "version": 1,
-                            "payload": {
-                                "date": "2020-08-24T21:59:00Z",
-                                "infectiousness": "high|none|standard",
-                                "scanInstances": [
-                                    {
-                                        "minimumAttenuation": 1,
-                                        "secondsSinceLastScan": 5,
-                                        "typicalAttenuation": 2
-                                    }
-                                ],
-                                "riskScore": "FIXME: sample int value (range?) or string value (enum?)"
-                            }
-                        }
-                    ]
-                }
-            """.trimIndent())
+        val uploadResponse = mobileApp.submitAnalyticEvents(analyticsEvents(randomUUID).trimIndent())
 
         assertThat(uploadResponse.status).withFailMessage("unexpected http response code").isEqualTo(Status.OK)
         assertThat(uploadResponse.header("X-Amz-Meta-Signature")).withFailMessage("missing signature header").isNotBlank()

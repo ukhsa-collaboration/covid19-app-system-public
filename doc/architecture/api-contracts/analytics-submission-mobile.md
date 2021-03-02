@@ -80,7 +80,17 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "hasTestedLFDPositiveBackgroundTick": 1,
     "isIsolatingForTestedLFDPositiveBackgroundTick": 1,
     "totalExposureWindowsNotConsideredRisky": 1,
-    "totalExposureWindowsConsideredRisky": 1
+    "totalExposureWindowsConsideredRisky": 1,
+    "acknowledgedStartOfIsolationDueToRiskyContact": 1,
+    "hasRiskyContactNotificationsEnabledBackgroundTick": 1,
+    "totalRiskyContactReminderNotifications": 1,
+    "receivedUnconfirmedPositiveTestResult": 1,
+    "isIsolatingForUnconfirmedTestBackgroundTick": 1,
+    "launchedTestOrdering": 1,
+    "didHaveSymptomsBeforeReceivedTestResult": 1,
+    "didRememberOnsetSymptomsDateBeforeReceivedTestResult": 1,
+    "didAskForSymptomsOnPositiveTestEntry": 1,
+    "declaredNegativeResultFromDCT": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -142,7 +152,19 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "receivedNegativeLFDTestResultEnteredManually": 1,
     "receivedVoidLFDTestResultEnteredManually": 1,
     "hasTestedLFDPositiveBackgroundTick": 1,
-    "isIsolatingForTestedLFDPositiveBackgroundTick": 1
+    "isIsolatingForTestedLFDPositiveBackgroundTick": 1,
+    "totalExposureWindowsNotConsideredRisky": 1,
+    "totalExposureWindowsConsideredRisky": 1,
+    "acknowledgedStartOfIsolationDueToRiskyContact": 1,
+    "hasRiskyContactNotificationsEnabledBackgroundTick": 1,
+    "totalRiskyContactReminderNotifications": 1,
+    "receivedUnconfirmedPositiveTestResult": 1,
+    "isIsolatingForUnconfirmedTestBackgroundTick": 1,
+    "launchedTestOrdering": 1,
+    "didHaveSymptomsBeforeReceivedTestResult": 1,
+    "didRememberOnsetSymptomsDateBeforeReceivedTestResult": 1,
+    "didAskForSymptomsOnPositiveTestEntry": 1,
+    "declaredNegativeResultFromDCT": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -178,6 +200,18 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `receivedVoidLFDTestResultEnteredManually`
   * `hasTestedLFDPositiveBackgroundTick`
   * `isIsolatingForTestedLFDPositiveBackgroundTick`
+  * `totalExposureWindowsNotConsideredRisky`
+  * `totalExposureWindowsConsideredRisky`
+  * `acknowledgedStartOfIsolationDueToRiskyContact`
+  * `hasRiskyContactNotificationsEnabledBackgroundTick`
+  * `totalRiskyContactReminderNotifications`
+  * `receivedUnconfirmedPositiveTestResult`
+  * `isIsolatingForUnconfirmedTestBackgroundTick`
+  * `launchedTestOrdering`
+  * `didHaveSymptomsBeforeReceivedTestResult`
+  * `didRememberOnsetSymptomsDateBeforeReceivedTestResult`
+  * `didAskForSymptomsOnPositiveTestEntry`
+  * `declaredNegativeResultFromDCT`
 
 ### Responses
 | Status Code | Description |

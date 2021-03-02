@@ -3,6 +3,7 @@ package uk.nhs.nhsx.isolationpayment
 import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
@@ -17,7 +18,7 @@ class IsolationPaymentGatewayServiceTest {
     private val validStateToken = IsolationToken("token-id", TokenStateInternal.INT_UPDATED.value, 0, 0, 0, 0, 0, 0, 0)
     private val auditLogSuffix = "audit-log-suffix"
     private val persistence = mockk<IsolationPaymentPersistence>()
-    private val service = IsolationPaymentGatewayService(clock, persistence, auditLogSuffix)
+    private val service = IsolationPaymentGatewayService(clock, persistence, auditLogSuffix, RecordingEvents())
 
     @Test
     fun `consumes isolation token deleting existing token`() {

@@ -34,8 +34,9 @@ interface Secured {
     val authHeader: String
 }
 
-interface HealthCheck : Secured {
+interface HealthCheck {
     val healthEndpoint: Uri
+    val healthAuthHeader: String
 }
 
 interface StoreBacked {
@@ -55,7 +56,8 @@ sealed class Resource {
         override val content: String
             get() {
                 System.err.println(value)
-                return Path.of("../../$value").toFile().also { System.err.println("loading from: ${it.absolutePath}") }.reader().readText()
+                return Path.of("../../$value").toFile().also { System.err.println("loading from: ${it.absolutePath}") }
+                    .reader().readText()
             }
     }
 
@@ -75,8 +77,8 @@ sealed class Resource {
 /**
  * Distribution lambdas allow the MobileApp to download of data through CloudFront and effectively front an S3 bucket
  */
-class Distribution(name: String, endpointUri: Uri, private val store: String?, override val resource: Resource)
-    : EndpointConfig(name, endpointUri), StoreBacked, ServesResource {
+class Distribution(name: String, endpointUri: Uri, private val store: String?, override val resource: Resource) :
+    EndpointConfig(name, endpointUri), StoreBacked, ServesResource {
 
     override val storeName get() = store ?: throw RuntimeException("Missing storeName in $this")
 
@@ -95,8 +97,8 @@ class Distribution(name: String, endpointUri: Uri, private val store: String?, o
 /**
  * Download lambdas allow Third Parties to download of data through CloudFront and effectively front an S3 bucket
  */
-class Download(name: String, endpointUri: Uri, override val resource: Resource)
-    : EndpointConfig(name, endpointUri), ServesResource {
+class Download(name: String, endpointUri: Uri, override val resource: Resource) : EndpointConfig(name, endpointUri),
+    ServesResource {
     companion object {
         fun from(endpoint: Endpoint) = { config: JsonNode ->
             Download(
@@ -111,15 +113,21 @@ class Download(name: String, endpointUri: Uri, override val resource: Resource)
 /**
  * Upload lambdas allow Third Parties to upload data through CloudFront
  */
-class Upload(name: String, endpointUri: Uri, override val authHeader: String, override val healthEndpoint: Uri)
-    : EndpointConfig(name, endpointUri), HealthCheck, Secured {
+class Upload(
+    name: String,
+    endpointUri: Uri,
+    override val authHeader: String,
+    override val healthEndpoint: Uri,
+    override val healthAuthHeader: String
+) : EndpointConfig(name, endpointUri), HealthCheck, Secured {
     companion object {
         fun from(endpoint: Endpoint) = { config: JsonNode ->
             Upload(
                 endpoint.lambda.name,
                 config.requiredUri("${endpoint.name}_endpoint"),
-                config.authHeader(endpoint.lambda.tokenJsonName!!),
-                config.requiredUri(endpoint.lambda.healthEndpoint)
+                config.authHeader(endpoint.lambda.endpointBearerTokenJsonName!!),
+                config.requiredUri(endpoint.lambda.healthEndpoint),
+                config.authHeader("health")
             )
         }
     }
@@ -129,9 +137,11 @@ class Upload(name: String, endpointUri: Uri, override val authHeader: String, ov
  * Submission lambdas allow the MobileApp to submit data through CloudFront and effectively front an S3 bucket
  */
 class Submission(
-    name: String, endpointUri: Uri,
-    override val healthEndpoint: Uri,
+    name: String,
+    endpointUri: Uri,
     override val authHeader: String,
+    override val healthEndpoint: Uri,
+    override val healthAuthHeader: String,
     override val storeName: String?,
     override val resource: Resource
 ) : EndpointConfig(name, endpointUri), StoreBacked, HealthCheck, Secured, ServesResource {
@@ -140,10 +150,11 @@ class Submission(
             Submission(
                 endpoint.lambda.name,
                 config.requiredUri("${endpoint.name}_endpoint"),
+                config.authHeader(endpoint.lambda.endpointBearerTokenJsonName!!),
                 config.requiredUri(endpoint.lambda.healthEndpoint),
-                config.authHeader(endpoint.lambda.tokenJsonName!!),
+                config.authHeader("health"),
                 config.optionalText(endpoint.lambda.storeJsonName),
-                endpoint.lambda.resource()
+                endpoint.lambda.resource(),
             )
         }
     }
@@ -152,8 +163,8 @@ class Submission(
 /**
  * Processing lambdas run out-of-band and create work, for example on a schedule. They may have an output store
  */
-class Processing(name: String, endpointUri: Uri, override val storeName: String?)
-    : EndpointConfig(name, endpointUri), StoreBacked {
+class Processing(name: String, endpointUri: Uri, override val storeName: String?) : EndpointConfig(name, endpointUri),
+    StoreBacked {
     companion object {
         fun from(endpoint: Endpoint) = { config: JsonNode ->
             Processing(
@@ -168,15 +179,21 @@ class Processing(name: String, endpointUri: Uri, override val storeName: String?
 /**
  * CircuitBreaker lambdas allow flagging of various operations by the Mobile App as a safety feature.
  */
-class CircuitBreaker(name: String, endpointUri: Uri, override val authHeader: String, override val healthEndpoint: Uri)
-    : EndpointConfig(name, endpointUri), HealthCheck, Secured {
+class CircuitBreaker(
+    name: String,
+    endpointUri: Uri,
+    override val authHeader: String,
+    override val healthEndpoint: Uri,
+    override val healthAuthHeader: String
+) : EndpointConfig(name, endpointUri), HealthCheck, Secured {
     companion object {
         fun from(endpoint: Endpoint) = { config: JsonNode ->
             CircuitBreaker(
                 endpoint.name,
                 config.requiredUri("${endpoint.name}_endpoint"),
-                config.authHeader(endpoint.lambda.tokenJsonName!!),
-                config.requiredUri(endpoint.lambda.healthEndpoint)
+                config.authHeader(endpoint.lambda.endpointBearerTokenJsonName!!),
+                config.requiredUri(endpoint.lambda.healthEndpoint),
+                config.authHeader("health"),
             )
         }
     }

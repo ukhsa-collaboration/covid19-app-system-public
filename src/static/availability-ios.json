@@ -48,24 +48,24 @@
     }
   },
   "minimumAppVersion": {
-    "value": "3.0.0",
+    "value": "3.6",
     "description": {
-      "ar": "تحتاج إلى تحديث التطبيق للحصول على آخر نسخة منه لكي يتسنى لك تشغيله على جهازك. يرجى الانتقال إلى متجر التطبيقات وتحديث التطبيق هناك.",
-      "bn": "আপনার ডিভাইসে এই অ্যাপ্লিকেশনটি চালানোর জন্য, আপনাকে এটি সর্বশেষতম সংস্করণে আপডেট করতে হবে। অ্যাপ স্টোর এ যান এবং সেখান থেকে এটি আপডেট করুন।",
-      "cy": "Er mwyn rhedeg yr ap hwn ar eich dyfais, mae angen i chi gael y fersiwn ddiweddaraf. Ewch i'r App Store i gael y fersiwn ddiweddaraf.",
-      "en": "In order to run this app on your device, you need to update it to the latest version. Please go to the app store and update it from there.",
-      "gu": "આ એપને તમારા ડિવાઇસ પર ચલાવવા માટે, તમારે તેને નવીનતમ આવૃત્તિ પર અપડેટ કરવાની જરૂર છે. કૃપા કરીને એપ સ્ટોર પર જાઓ અને ત્યાંથી તેને અપડેટ કરો.",
-      "pa": "ਇਸ ਐਪ ਨੂੰ ਆਪਣੀ ਡਿਵਾਈਸ ਤੇ ਚਲਾਉਣ ਲਈ, ਤੁਹਾਨੂੰ ਇਸ ਨੂੰ ਨਵੇਂ ਸੰਸਕਰਣ ਵਿੱਚ ਅਪਡੇਟ ਕਰਨ ਦੀ ਜ਼ਰੂਰਤ ਹੈ। ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਸਟੋਰ ਤੇ ਜਾਓ ਅਤੇ ਉੱਥੋਂ ਇਸ ਨੂੰ ਅਪਡੇਟ ਕਰੋ।",
-      "pl": "Aby uruchomić tę aplikację na Twoim urządzeniu, musisz zaktualizować ją do najnowszej wersji. Uruchom sklep z aplikacjami i zaktualizuj aplikację.",
-      "ro": "Pentru a rula această aplicație pe dispozitivul dvs., trebuie să o actualizați la cea mai recentă versiune. Vă rugăm să accesați App Store și să o actualizați de acolo.",
-      "so": "Si aad barnaamijkan ugu isticmaasho aaladdaada, waxaad u baahan tahay inaad ku cusbooneysiisaa werinka ugu dambeeyay. Fadlan aad qaybta app store oo halkaas ka cusboonaysiiso.",
-      "tr": "Bu uygulamanın cihazınızda çalıştırılması için bunu en son sürüme yükseltmeniz gerekmektedir. Lütfen uygulama mağazasına giderek bunları oradan güncelleyin.",
-      "ur": "اس ایپ کو اپنے آلہ پر چلانے کے لئے، آپ کو اسے تازہ ترین ورژن میں اپ ڈیٹ کرنے کی ضرورت ہے۔ براہ کرم ایپ اسٹور پر جائیں اور وہاں سے اسے اپ ڈیٹ کریں۔",
-      "zh": "为了在您的设备上运行此应用程序，您需要将其更新到最新版本。 请转到应用商店并从那里进行更新。"
+      "ar": "هذا الإصدار من التطبيق غير مُحدَّثٍ وقد توقف عن العمل.\n\nانتقل إلى متجر التطبيقات وقم بتحديثه إلى أحدث إصدارٍ ليُعينك التطبيق على إبقاء نفسك وأحبائك في أمانٍ.",
+      "bn": "অ্যাপের এই সংস্করণ সেকেলে হয়ে গেছে, আর কাজ করছে না।\n\nঅ্যাপ স্টোরে গিয়ে সর্বশেষ সংস্করণে আপডেট করুন যাতে আপনি নিজেকে ও আপনার প্রিয়জনদের নিরাপদ রাখতে পারেন।",
+      "cy": "Mae'r fersiwn hwn o'r ap yn hen ac nid yw'n gweithio.\n\nEwch i'r App Store a diweddaru'r ap i'r fersiwn diweddaraf i'ch helpu i gadw chi a'ch anwyliaid yn ddiogel.",
+      "en": "This version of the app is out of date and has stopped working.\n\nGo to the App Store and update it to the latest version to help keep you and your loved ones safe.",
+      "gu": "આ ઍપ જૂનું થઇ ગયું છે અને ચાલશે નહિ.\n\nઍપ સ્ટોર પર જાઓ અને તમને અને તમારા પ્રિયજનોને સુરક્ષિત રાખવામાં મદદ માટે તેને લેટેસ્ટ અપડેટ કરો.",
+      "pa": "ਐਪ ਦਾ ਇਹ ਸੰਸਕਰਣ ਪੁਰਾਣਾ ਹੈ ਅਤੇ ਇਸ ਨੇ ਕੰਮ ਕਰਨਾ ਬੰਦ ਕਰ ਦਿੱਤਾ ਹੈ।\n\nਐਪ ਸਟੋਰ ਤੇ ਜਾਓ ਅਤੇ ਤੁਹਾਨੂੰ ਅਤੇ ਆਪਣੇ ਅਜੀਜ਼ਾਂ ਨੂੰ ਸੁਰੱਖਿਅਤ ਰੱਖਣ ਵਿੱਚ ਸਹਾਇਤਾ ਲਈ ਇਸ ਨੂੰ ਨਵੀਨਤਮ ਸੰਸਕਰਣ ਵਿੱਚ ਅਪਡੇਟ ਕਰੋ।",
+      "pl": "Ta wersja aplikacji jest nieaktualna i przestała działać.\n\nOdwiedź App Store i pobierz najnowszą wersję aplikacji, aby nadal móc zapewniać bezpieczeństwo sobie i swoim najbliższym.",
+      "ro": "Această versiune a aplicației a expirat și a încetat să funcționeze.\n\nAccesați App Store și actualizați aplicația la cea mai recentă versiune pentru a vă menține pe dvs. și pe cei dragi în siguranță.",
+      "so": "Nooca app-kan waa mid hore mana shaqaynayo.\n\nTag App Store oo ku cusbooneysii nooca ugu dambeeyay si adiga iyo kuwa aad jeceshahayba aad u nabadgashaan.",
+      "tr": "Uygulamanın bu sürümü güncel değildir ve artık çalışmamaktadır.\n\nKendinizin ve sevdiklerinizin güvende kalmasına yardımcı olmak için App Store'u ziyaret ederek uygulamayı en son sürümüne güncelleyin.",
+      "ur": "ایپ کا یہ ورژن پرانا ہو چکا ہے اور اس نے کام کرنا بند کر دیا ہے۔\n\nایپ اسٹور میں جائیں اور اسے تازہ ترین  ورژن میں اپڈیٹ کریں تاکہ آپ اور آپ کے عزیزوں کو محفوظ رکھنے میں مدد مل سکے۔ ",
+      "zh": "该应用程序的版本已过时，并且已经停止工作。\n\n跳转到应用商店更新至最新版本，帮助保护您和家人安全。"
     }
   },
   "recommendedAppVersion": {
-    "value": "3.0",
+    "value": "3.6",
     "title": {
       "ar": "يرجى تحديث تطبيق مكافحة فيروس كورونا (كوفيد-19) المُقدَّم من هيئة الخدمات الصحية الوطنية (NHS) للحصول على أحدث نسخة من التطبيق",
       "bn": "দয়া করে আপনার এনএইচএস কোভিড-১৯ অ্যাপটি হালনাগাদ করুন",

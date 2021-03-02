@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.analyticssubmission;
 
-import com.google.common.base.Strings;
+import uk.nhs.nhsx.core.Strings;
 
 import java.util.HashMap;
 import java.util.Map;

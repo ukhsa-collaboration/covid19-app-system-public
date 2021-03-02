@@ -3,8 +3,9 @@ package uk.nhs.nhsx.diagnosiskeyssubmission.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 public class ClientTemporaryExposureKeysPayload {
 
@@ -14,8 +15,8 @@ public class ClientTemporaryExposureKeysPayload {
     @JsonCreator
     public ClientTemporaryExposureKeysPayload(UUID diagnosisKeySubmissionToken,
                                               List<ClientTemporaryExposureKey> temporaryExposureKeys) {
-        Objects.requireNonNull(diagnosisKeySubmissionToken);
-        Objects.requireNonNull(temporaryExposureKeys);
+        requireNonNull(diagnosisKeySubmissionToken);
+        requireNonNull(temporaryExposureKeys);
         this.diagnosisKeySubmissionToken = diagnosisKeySubmissionToken;
         this.temporaryExposureKeys = temporaryExposureKeys;
     }

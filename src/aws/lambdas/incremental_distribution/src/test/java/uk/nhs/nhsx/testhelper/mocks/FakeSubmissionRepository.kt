@@ -6,9 +6,10 @@ import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import java.security.SecureRandom
+import java.time.Instant
 import java.util.*
 
-class FakeSubmissionRepository(submissionDates: List<Date>) : SubmissionRepository {
+class FakeSubmissionRepository(submissionDates: List<Instant>) : SubmissionRepository {
 
     private val submissions: List<Submission> = submissionDates.map { makeKeySet(it) }
 
@@ -16,11 +17,10 @@ class FakeSubmissionRepository(submissionDates: List<Date>) : SubmissionReposito
                                     maxLimit: Int,
                                     maxResults: Int): List<Submission> = submissions
 
-    private fun makeKeySet(submissionDate: Date): Submission {
-        val mostRecentKeyRollingStart =
-            ENIntervalNumber.enIntervalNumberFromTimestamp(submissionDate).enIntervalNumber / 144 * 144
+    private fun makeKeySet(submissionDate: Instant): Submission {
+        val mostRecentKeyRollingStart = ENIntervalNumber.enIntervalNumberFromTimestamp(submissionDate).enIntervalNumber / 144 * 144
         val keys = (0..14).map { makeKey(mostRecentKeyRollingStart - it * 144) }
-        return Submission(submissionDate, StoredTemporaryExposureKeyPayload(keys))
+        return Submission(Date.from(submissionDate), StoredTemporaryExposureKeyPayload(keys))
     }
 
     private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey {

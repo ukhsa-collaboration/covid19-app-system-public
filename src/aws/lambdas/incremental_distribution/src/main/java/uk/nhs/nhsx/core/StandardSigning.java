@@ -7,6 +7,7 @@ import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters;
 import uk.nhs.nhsx.core.aws.ssm.ParameterKeyLookup;
 import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 import uk.nhs.nhsx.core.aws.ssm.Parameters;
+import uk.nhs.nhsx.core.events.Events;
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner;
 import uk.nhs.nhsx.core.signature.Signer;
 
@@ -17,8 +18,8 @@ public class StandardSigning {
 
     public static final Environment.EnvironmentKey<ParameterName> SSM_KEY_ID_PARAMETER_NAME = Environment.EnvironmentKey.value("SSM_KEY_ID_PARAMETER_NAME", ParameterName::of);
 
-    public static ResponseSigner signResponseWithKeyGivenInSsm(Environment environment, Supplier<Instant> clock) {
-        return new AwsResponseSigner(datedSigner(environment, clock));
+    public static ResponseSigner signResponseWithKeyGivenInSsm(Environment environment, Supplier<Instant> clock, Events events) {
+        return new AwsResponseSigner(datedSigner(environment, clock), events);
     }
 
     public static RFC2616DatedSigner datedSigner(Environment environment, Supplier<Instant> clock) {

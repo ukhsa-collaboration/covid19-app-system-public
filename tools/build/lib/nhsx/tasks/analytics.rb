@@ -27,7 +27,7 @@ namespace :plan do
         task :"#{tgt_env}" => [:"login:#{account}"] do
           include NHSx::Terraform
           terraform_configuration = File.join($configuration.base, "src/analytics/accounts", account)
-          plan_for_workspace(tgt_env, terraform_configuration, $configuration)
+          plan_for_workspace(tgt_env, terraform_configuration, [], $configuration)
         end
       end
     end

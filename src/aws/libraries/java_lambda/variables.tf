@@ -28,7 +28,7 @@ variable "lambda_memory" {
 
 variable "lambda_environment_variables" {
   description = "A map of environment variable --> value to pass as environment to the lambda"
-  type        = map
+  type        = map(any)
 }
 
 variable "log_retention_in_days" {

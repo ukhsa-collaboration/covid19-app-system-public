@@ -5,18 +5,13 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.http.entity.ContentType;
 import uk.nhs.nhsx.core.Jackson;
-import uk.nhs.nhsx.core.aws.s3.AwsS3;
-import uk.nhs.nhsx.core.aws.s3.BucketName;
-import uk.nhs.nhsx.core.aws.s3.Locator;
-import uk.nhs.nhsx.core.aws.s3.ObjectKey;
+import uk.nhs.nhsx.core.aws.s3.*;
 import uk.nhs.nhsx.core.signature.DatedSigner;
 import uk.nhs.nhsx.core.signature.DistributionSignature;
 import uk.nhs.nhsx.core.signature.SigningHeaders;
 
 import java.io.IOException;
 import java.util.Map;
-
-import static uk.nhs.nhsx.core.aws.s3.Sources.byteSourceFor;
 
 public class RiskyPostCodesPersistence {
 
@@ -51,7 +46,7 @@ public class RiskyPostCodesPersistence {
         s3Client.upload(
             Locator.of(bucketName, backupJsonKeyName),
             ContentType.APPLICATION_JSON,
-            byteSourceFor(json)
+            ByteArraySource.fromUtf8String(json)
         );
     }
 
@@ -59,7 +54,7 @@ public class RiskyPostCodesPersistence {
         s3Client.upload(
             Locator.of(bucketName, rawCsvKeyName),
             ContentType.TEXT_PLAIN,
-            byteSourceFor(csv)
+            ByteArraySource.fromUtf8String(csv)
         );
     }
 
@@ -72,7 +67,7 @@ public class RiskyPostCodesPersistence {
     }
 
     private void uploadPostDistrictsVersion(String riskyPostCodes, ObjectKey objectKey) {
-        var byteSource = byteSourceFor(riskyPostCodes);
+        var byteSource = ByteArraySource.fromUtf8String(riskyPostCodes);
         var signatureResult = signer.sign(new DistributionSignature(byteSource));
 
         s3Client.upload(

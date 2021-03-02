@@ -1,14 +1,12 @@
 package uk.nhs.nhsx.diagnosiskeydist;
 
-import batchZipCreation.Exposure;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront;
 import uk.nhs.nhsx.core.aws.s3.AwsS3;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.Locator;
 import uk.nhs.nhsx.core.aws.s3.ObjectKey;
+import uk.nhs.nhsx.core.events.Events;
 import uk.nhs.nhsx.core.signature.Signature;
 import uk.nhs.nhsx.core.signature.Signer;
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber;
@@ -27,9 +25,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
+import static batchZipCreation.Exposure.TEKSignatureList;
+import static batchZipCreation.Exposure.TemporaryExposureKeyExport;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.shuffle;
 import static uk.nhs.nhsx.diagnosiskeydist.DistributionServiceWindow.ZIP_SUBMISSION_PERIOD_OFFSET;
@@ -38,7 +37,6 @@ import static uk.nhs.nhsx.diagnosiskeydist.DistributionServiceWindow.ZIP_SUBMISS
  * Batch job to generate and upload daily and two-hourly Diagnosis Key Distribution ZIPs every two hours during a 15' window
  */
 public class DistributionService {
-    private static final Logger logger = LogManager.getLogger(DistributionService.class);
 
     private static final int MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES = 6;
 
@@ -54,6 +52,7 @@ public class DistributionService {
     private final AwsCloudFront awsCloudFront;
     private final AwsS3 awsS3;
     private final BatchProcessingConfig config;
+    private final Events events;
 
     private final List<String> uploadedZipFileNames = Collections.synchronizedList(new ArrayList<>());
 
@@ -63,7 +62,8 @@ public class DistributionService {
                         Signer signer,
                         AwsCloudFront awsCloudFront,
                         AwsS3 awsS3,
-                        BatchProcessingConfig config) {
+                        BatchProcessingConfig config,
+                        Events events) {
         this.submissionRepository = submissionRepository;
         this.exposureProtobuf = exposureProtobuf;
         this.keyDistributor = keyDistributor;
@@ -71,16 +71,19 @@ public class DistributionService {
         this.awsCloudFront = awsCloudFront;
         this.awsS3 = awsS3;
         this.config = config;
+        this.events = events;
     }
 
     public void distributeKeys(Instant now) throws Exception {
         DistributionServiceWindow window = new DistributionServiceWindow(now);
 
-        logger.info("Batch run triggered: now={}, earliest start={} (inclusive), latest start={} (exclusive)", now, window.earliestBatchStartDateWithinHourInclusive(), window.latestBatchStartDateWithinHourExclusive());
+        events.emit(getClass(), new DistributionBatchWindow(
+            now,
+            window.earliestBatchStartDateWithinHourInclusive(),
+            window.latestBatchStartDateWithinHourExclusive()
+        ));
 
         if (!window.isValidBatchStartDate()) {
-            logger.error("CloudWatch Event triggered Lambda at wrong time.");
-
             if (config.shouldAbortOutsideTimeWindow) {
                 throw new IllegalStateException("CloudWatch Event triggered Lambda at wrong time.");
             }
@@ -91,7 +94,7 @@ public class DistributionService {
         DailyZIPSubmissionPeriod daily = DailyZIPSubmissionPeriod.periodForSubmissionDate(now);
         TwoHourlyZIPSubmissionPeriod twoHourly = TwoHourlyZIPSubmissionPeriod.periodForSubmissionDate(now);
         for (ZIPSubmissionPeriod lastZipPeriod : List.of(daily, twoHourly)) {
-            try (ConcurrentExecution pool = new ConcurrentExecution("Distribution: " + lastZipPeriod.getClass().getSimpleName(), Duration.ofMinutes(MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES))) {
+            try (ConcurrentExecution pool = new ConcurrentExecution("Distribution: " + lastZipPeriod.getClass().getSimpleName(), Duration.ofMinutes(MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES), events)) {
                 for (ZIPSubmissionPeriod zipPeriod : lastZipPeriod.allPeriodsToGenerate()) {
                     pool.execute(() -> distributeKeys(allSubmissions, window, zipPeriod));
                 }
@@ -106,7 +109,6 @@ public class DistributionService {
         List<S3ObjectSummary> distributionObjectSummaries = awsS3.getObjectSummaries(bucketName);
         for (S3ObjectSummary s3ObjectSummary : distributionObjectSummaries) {
             if (!uploadedZipFileNames.contains(s3ObjectSummary.getKey())) {
-                logger.debug("Deleting outdated ZIP: {}", s3ObjectSummary.getKey());
                 awsS3.deleteObject(Locator.of(bucketName, ObjectKey.of(s3ObjectSummary.getKey())));
             }
         }
@@ -146,10 +148,7 @@ public class DistributionService {
             );
             uploadedZipFileNames.add(objectName);
         } finally {
-            List.of(binFile, sigFile).forEach(it -> {
-                boolean ok = it.delete();
-                if (!ok) logger.warn("Could not delete {}", it.getAbsolutePath());
-            });
+            List.of(binFile, sigFile).forEach(File::delete);
         }
     }
 
@@ -160,8 +159,7 @@ public class DistributionService {
                 for (StoredTemporaryExposureKey key : submission.payload.temporaryExposureKeys) {
                     ENIntervalNumber keyIntervalNumber = new ENIntervalNumber(key.rollingStartNumber);
 
-                    if (keyIntervalNumber.validUntil(Date.from(window.zipExpirationExclusive()))) {
-                        logger.debug("{}: included submission: {}: included: {}", zipPeriod.zipPath(), submission.submissionDate, keyIntervalNumber);
+                    if (keyIntervalNumber.validUntil(window.zipExpirationExclusive())) {
                         temporaryExposureKeys.add(key);
                     }
                 }
@@ -174,19 +172,20 @@ public class DistributionService {
         return temporaryExposureKeys;
     }
 
+    @SuppressWarnings("SameParameterValue")
     private byte[] generateExportFileContentFrom(List<StoredTemporaryExposureKey> temporaryExposureKeys,
                                                  ZIPSubmissionPeriod period,
                                                  Duration periodOffset) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         bout.write(EK_EXPORT_V1_HEADER.getBytes(UTF_8));
-        Exposure.TemporaryExposureKeyExport export = exposureProtobuf.buildTemporaryExposureKeyExport(temporaryExposureKeys, period, periodOffset.toMinutes());
+        TemporaryExposureKeyExport export = exposureProtobuf.buildTemporaryExposureKeyExport(temporaryExposureKeys, period, periodOffset);
         bout.write(export.toByteArray());
         return bout.toByteArray();
     }
 
     private byte[] generateSigFileContentFrom(byte[] binFileContent) {
         Signature signature = signer.sign(binFileContent);
-        Exposure.TEKSignatureList tekSignatureList = exposureProtobuf.buildTEKSignatureList(signature.asByteBuffer());
+        TEKSignatureList tekSignatureList = exposureProtobuf.buildTEKSignatureList(signature.asByteBuffer());
         return tekSignatureList.toByteArray();
     }
 }

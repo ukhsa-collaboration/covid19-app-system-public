@@ -69,7 +69,7 @@ module NHSx
 
     def print_out_changeset(changeset)
       changeset.each do |_, object|
-        puts "#{object.fetch("pr", "")} #{object.fetch("ticket", "")} #{object["message"]}"
+        puts "#{object.fetch("pr", "")} #{object.fetch("tickets", []).join(", ")} #{object["message"]}"
       end
     end
 

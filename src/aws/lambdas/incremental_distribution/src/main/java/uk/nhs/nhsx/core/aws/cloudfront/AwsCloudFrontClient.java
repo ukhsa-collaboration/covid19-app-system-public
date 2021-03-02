@@ -6,18 +6,18 @@ import com.amazonaws.services.cloudfront.model.AmazonCloudFrontException;
 import com.amazonaws.services.cloudfront.model.CreateInvalidationRequest;
 import com.amazonaws.services.cloudfront.model.InvalidationBatch;
 import com.amazonaws.services.cloudfront.model.Paths;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.ExceptionThrown;
 
 import java.util.UUID;
 
 public class AwsCloudFrontClient implements AwsCloudFront {
 
-    private static final Logger logger = LogManager.getLogger(AwsCloudFrontClient.class);
-
     private final AmazonCloudFront client;
+    private final Events events;
 
-    public AwsCloudFrontClient() {
+    public AwsCloudFrontClient(Events events) {
+        this.events = events;
         client = AmazonCloudFrontClientBuilder.defaultClient();
     }
 
@@ -30,7 +30,7 @@ public class AwsCloudFrontClient implements AwsCloudFront {
         try {
             client.createInvalidation(invalidationRequest);
         } catch (AmazonCloudFrontException e) {
-            logger.error("CloudFront cache invalidation failed", e);
+            events.emit(getClass(), new ExceptionThrown<>(e, "CloudFront cache invalidation failed"));
         }
     }
 }

@@ -72,6 +72,7 @@ module "virology_tokens_processing" {
   logs_bucket_id                      = var.logs_bucket_id
   log_retention_in_days               = var.log_retention_in_days
   alarm_topic_arn                     = var.alarm_topic_arn
+  policy_document                     = module.virology_tokens_bucket_access.policy_document
   tags                                = var.tags
 }
 

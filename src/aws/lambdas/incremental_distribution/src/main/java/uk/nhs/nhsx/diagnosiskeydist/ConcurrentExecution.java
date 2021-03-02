@@ -1,7 +1,8 @@
 package uk.nhs.nhsx.diagnosiskeydist;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.ExceptionThrown;
+import uk.nhs.nhsx.core.events.InfoEvent;
 
 import java.time.Duration;
 import java.util.concurrent.ExecutorService;
@@ -9,54 +10,54 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.String.format;
+
 public class ConcurrentExecution implements AutoCloseable {
-	private static final Logger logger = LogManager.getLogger(ConcurrentExecution.class);
+    private final String name;
+    private final Duration timeout;
+    private final Events events;
+    private final AtomicInteger counter;
+    private final long start;
+    private final ExecutorService pool;
 
-	private final String name;
-	private final Duration timeout;
-	private final AtomicInteger counter;
-	private final long start;
-	private final ExecutorService pool;
+    public ConcurrentExecution(String name, Duration timeout, Events events) {
+        this.name = name;
+        this.timeout = timeout;
+        this.events = events;
+        this.counter = new AtomicInteger();
+        this.start = System.currentTimeMillis();
+        this.pool = Executors.newFixedThreadPool(15);
+    }
 
-	public ConcurrentExecution(String name, Duration timeout) {
-		this.name = name;
-		this.timeout = timeout;
-		counter = new AtomicInteger();
-		start = System.currentTimeMillis();
-		pool = Executors.newFixedThreadPool(15);
+    public void execute(Concurrent c) {
+        pool.execute(() -> {
+            try {
+                c.run();
 
-		logger.info("Begin: {}", name);
-	}
+                counter.incrementAndGet();
+            } catch (Exception e) {
+                ExceptionThrown<Exception> event = new ExceptionThrown<>(e, "Error: " + name + ". Terminating lambda.");
+                events.emit(getClass(), event);
 
-	public void execute(Concurrent c) {
-		pool.execute(() -> {
-			try {
-				c.run();
+                System.exit(-1); //hacky but effective: stop Lambda immediately (e.g. all threads) after in an error in one thread
+            }
+        });
+    }
 
-				counter.incrementAndGet();
-			} catch (Exception e) {
-				logger.error("Error: " + name + ". Terminating lambda.", e);
+    @Override
+    public void close() throws Exception {
+        pool.shutdown();
+        boolean terminatedGracefully = pool.awaitTermination(timeout.getSeconds(), TimeUnit.SECONDS);
+        if (!terminatedGracefully) {
+            events.emit(getClass(), ExecutorTimedOutWaitingForShutdown.INSTANCE);
+            pool.shutdownNow();
+            throw new IllegalStateException("Timed-out while waiting for executor service to shutdown");
+        } else {
+            events.emit(getClass(), new InfoEvent(format("Success: %s. Count= %d. Duration=%d", name, counter.get(), System.currentTimeMillis() - start)));
+        }
+    }
 
-				System.exit(-1); //hacky but effective: stop Lambda immediately (e.g. all threads) after in an error in one thread
-			}
-		});
-	}
-
-	@Override
-	public void close() throws Exception {
-		pool.shutdown();
-		boolean terminatedGracefully = pool.awaitTermination(timeout.getSeconds(), TimeUnit.SECONDS);
-		if (!terminatedGracefully) {
-			logger.error("Error: {}. Timed-out while waiting for executor service to shutdown", name);
-			pool.shutdownNow();
-			throw new IllegalStateException("Timed-out while waiting for executor service to shutdown");
-		} else {
-			logger.info("Success: {}. Count={}. Duration={} ms", name, counter.get(), (System.currentTimeMillis() - start));
-		}
-
-	}
-
-	public interface Concurrent {
-		void run() throws Exception;
-	}
+    public interface Concurrent {
+        void run() throws Exception;
+    }
 }

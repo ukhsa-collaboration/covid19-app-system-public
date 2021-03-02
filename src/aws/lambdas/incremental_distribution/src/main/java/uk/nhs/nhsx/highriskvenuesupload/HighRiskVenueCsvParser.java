@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.highriskvenuesupload;
 
-import com.google.common.base.Strings;
 import uk.nhs.nhsx.core.DateFormatValidator;
 import uk.nhs.nhsx.core.Jackson;
+import uk.nhs.nhsx.core.Strings;
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenue;
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues;
 import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow;

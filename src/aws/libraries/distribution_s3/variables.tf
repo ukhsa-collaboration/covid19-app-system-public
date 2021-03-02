@@ -33,12 +33,8 @@ variable "s3_versioning" {
   default     = false
 }
 
-variable "override_policy" {
-  description = "An aws_iam_policy_document used to provide additional statements to the bucket policy"
-  type = object({
-    json = string
-  })
-  default = { json = "{}" }
+variable "policy_document" {
+  description = "An aws_iam_policy_document to be attached to the s3 bucket"
 }
 
 variable "tags" {

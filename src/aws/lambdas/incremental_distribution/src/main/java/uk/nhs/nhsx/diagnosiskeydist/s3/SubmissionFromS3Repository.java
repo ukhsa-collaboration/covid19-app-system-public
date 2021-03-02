@@ -2,9 +2,12 @@ package uk.nhs.nhsx.diagnosiskeydist.s3;
 
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import uk.nhs.nhsx.core.aws.s3.*;
+import uk.nhs.nhsx.core.aws.s3.AwsS3;
+import uk.nhs.nhsx.core.aws.s3.BucketName;
+import uk.nhs.nhsx.core.aws.s3.Locator;
+import uk.nhs.nhsx.core.aws.s3.ObjectKey;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.InfoEvent;
 import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution;
 import uk.nhs.nhsx.diagnosiskeydist.Submission;
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository;
@@ -12,16 +15,19 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Predicate;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static uk.nhs.nhsx.core.Preconditions.checkArgument;
 
 public class SubmissionFromS3Repository implements SubmissionRepository {
-
-    private static final Logger logger = LogManager.getLogger(SubmissionFromS3Repository.class);
 
     private static final int MAXIMAL_S3_LOAD_PROTOBOF_TIME_MINUTES = 6;
     private static final Duration LOAD_SUBMISSIONS_TIMEOUT = Duration.ofMinutes(MAXIMAL_S3_LOAD_PROTOBOF_TIME_MINUTES);
@@ -29,13 +35,16 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
     private final AwsS3 awsS3;
     private final Predicate<ObjectKey> objectKeyFilter;
     private final BucketName submissionBucketName;
+    private final Events events;
 
     public SubmissionFromS3Repository(AwsS3 awsS3,
                                       Predicate<ObjectKey> objectKeyFilter,
-                                      BucketName submissionJsonBucketName) {
+                                      BucketName submissionJsonBucketName,
+                                      Events events) {
         this.awsS3 = awsS3;
         this.objectKeyFilter = objectKeyFilter;
-        submissionBucketName = submissionJsonBucketName;
+        this.submissionBucketName = submissionJsonBucketName;
+        this.events = events;
     }
 
     @Override
@@ -53,10 +62,10 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
 
         summaries = limit(summaries, limit, maxResults);
 
-        logger.info("Submission summaries loaded. Count={}, Duration={}ms", summaries.size(), (System.currentTimeMillis() - start));
+        events.emit(getClass(), new InfoEvent(("Submission summaries loaded. Count="+summaries.size()+", Duration="+(System.currentTimeMillis() - start)+"ms")));
 
         List<Submission> submissions = Collections.synchronizedList(new ArrayList<>());
-        try (ConcurrentExecution pool = new ConcurrentExecution("LoadSubmissions", LOAD_SUBMISSIONS_TIMEOUT)) {
+        try (ConcurrentExecution pool = new ConcurrentExecution("LoadSubmissions", LOAD_SUBMISSIONS_TIMEOUT, events)) {
             for (S3ObjectSummary objectSummary : summaries) {
                 pool.execute(() ->
                     awsS3.getObject(Locator.of(submissionBucketName, ObjectKey.of(objectSummary.getKey())))
@@ -68,9 +77,10 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
-                                logger.debug("Submission loaded: {}", objectSummary.getKey());
+                                events.emit(getClass(), new SubmissionLoaded(submissionBucketName, objectSummary.getKey()));
                             },
-                            () -> logger.warn("Bucket: {} does not have key: {}", submissionBucketName, objectSummary.getKey())
+                            () ->
+                                events.emit(getClass(), new SubmissionMissing(submissionBucketName, objectSummary.getKey()))
                         ));
             }
         }

@@ -5,6 +5,7 @@ import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.isolationpayment.model.*
 import java.time.Instant
 import java.time.Period
@@ -20,6 +21,7 @@ class IsolationPaymentMobileServiceTest {
     private val websiteOrderUrl = "https://test/path?ipcToken="
     private val tokenExpiryInWeeks = 4
     private val countriesWhitelisted = listOf("England", "Wales")
+    private val events = RecordingEvents()
 
     private val service = IsolationPaymentMobileService(
         clock,
@@ -28,7 +30,8 @@ class IsolationPaymentMobileServiceTest {
         websiteOrderUrl,
         tokenExpiryInWeeks,
         countriesWhitelisted,
-        "audit_log"
+        "audit_log",
+        events
     )
 
     @Test
@@ -68,7 +71,17 @@ class IsolationPaymentMobileServiceTest {
 
     @Test
     fun `updates token successfully for existing token`() {
-        val token = IsolationToken("token-id", TokenStateInternal.INT_CREATED.value, 0, 5000, 1000, 2000, 3000, 4000, 0)
+        val token = IsolationToken(
+            "token-id",
+            TokenStateInternal.INT_CREATED.value,
+            0,
+            5000,
+            1000,
+            2000,
+            3000,
+            4000,
+            0
+        )
         every { persistence.getIsolationToken(any()) } returns Optional.of(token)
         every { persistence.updateIsolationToken(any(), any()) } just Runs
 
@@ -92,7 +105,17 @@ class IsolationPaymentMobileServiceTest {
 
     @Test
     fun `does not update tokens that are in valid state`() {
-        val token = IsolationToken("token-id", TokenStateInternal.INT_UPDATED.value, 0, 5000, 1000, 2000, 3000, 4000, 0)
+        val token = IsolationToken(
+            "token-id",
+            TokenStateInternal.INT_UPDATED.value,
+            0,
+            5000,
+            1000,
+            2000,
+            3000,
+            4000,
+            0
+        )
         every { persistence.getIsolationToken(any()) } returns Optional.of(token)
 
         val request = TokenUpdateRequest("token-id", "1970-01-01T00:00:00Z", "1970-01-01T00:00:01Z")
@@ -102,7 +125,12 @@ class IsolationPaymentMobileServiceTest {
 
     @Test
     fun `update token does not throw exception on conditional check failure`() {
-        every { persistence.updateIsolationToken(any(), TokenStateInternal.INT_CREATED) } throws ConditionalCheckFailedException("")
+        every {
+            persistence.updateIsolationToken(
+                any(),
+                TokenStateInternal.INT_CREATED
+            )
+        } throws ConditionalCheckFailedException("")
         every { persistence.getIsolationToken(any()) } returns Optional.of(IsolationToken())
 
         val request = TokenUpdateRequest("token-id", "1970-01-01T00:00:00Z", "1970-01-01T00:00:01Z")

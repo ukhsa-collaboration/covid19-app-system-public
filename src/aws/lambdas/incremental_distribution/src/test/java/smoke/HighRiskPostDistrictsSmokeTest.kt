@@ -3,10 +3,11 @@ package smoke
 import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.JavaHttpClient
 import org.junit.jupiter.api.Test
-import smoke.actors.MobileApp
-import smoke.actors.RiskParties
 import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
+import smoke.actors.MobileApp
+import smoke.actors.RiskParties
+import smoke.data.RiskPartyData
 import smoke.env.SmokeTests
 
 class HighRiskPostDistrictsSmokeTest {
@@ -19,49 +20,20 @@ class HighRiskPostDistrictsSmokeTest {
 
     @Test
     fun `mobile app can download updated risky postcodes`() {
-        val json = """{
-          "postDistricts": {
-            "AB10": {
-              "riskIndicator": "L",
-              "tierIndicator": "EN.Tier1"
-            },
-            "AB11": {
-              "riskIndicator": "H",
-              "tierIndicator": "EN.Tier3"
-            },
-            "AB12": {
-              "riskIndicator": "L",
-              "tierIndicator": "EN.Tier1"
-            },
-            "AB15": {
-              "riskIndicator": "M",
-              "tierIndicator": "EN.Tier2"
-            }
-          },
-          "localAuthorities": {
-            "A1": {
-              "tierIndicator": "EN.Tier3"
-            },
-            "A2": {
-              "tierIndicator": "EN.Tier1"
-            }, 
-            "A3": {
-              "tierIndicator": "EN.Tier2"
-            }
-          }
-        }""".trimIndent()
-        riskParties.uploadsRiskyPostcodes(json)
+
+        riskParties.uploadsRiskyPostcodes(RiskPartyData.generateRiskyPostcodes())
 
         // download v1
         val postDistrictsMapV1 = mobileApp.pollRiskyPostcodes(V1)
         assertThat(postDistrictsMapV1).isEqualTo(
-            mapOf("postDistricts" to
-                mapOf(
-                    "AB10" to "L",
-                    "AB11" to "H",
-                    "AB12" to "L",
-                    "AB15" to "M"
-                )
+            mapOf(
+                "postDistricts" to
+                    mapOf(
+                        "AB10" to "L",
+                        "AB11" to "H",
+                        "AB12" to "L",
+                        "AB15" to "M"
+                    )
             )
         )
 

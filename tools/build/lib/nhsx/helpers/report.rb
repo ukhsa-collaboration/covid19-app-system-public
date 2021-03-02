@@ -45,23 +45,29 @@ module NHSx
     def parse_commit_message(msg, sha)
       ticket = nil
       pr = nil
+      #remove the SHA
       msg.gsub!(sha, "")
-      if /(\(\#(\d\d\d\d+)\))/ =~ msg
+      # Extract the PR number
+      if /(\(?\#(\d\d\d\d+)\)?)/ =~ msg
         pr = $2
         msg.gsub!($1, "")
       end
 
-      if /([Cc][Oo][Vv][- ]\d\d\d\d+)/ =~ msg
+      tickets = []
+      # Get ticket number(s)
+      while /([Cc][Oo][Vv][- _]\d\d\d\d+)/ =~ msg
         ticket = $1
         msg.gsub!(ticket, "")
         ticket.gsub!(" ", "-")
+        ticket.gsub!("_", "-")
         ticket.upcase!
+        tickets << ticket
       end
-      msg.gsub!(/\[.+\]/, "")
+      # Cleanup any free-standing punctuation and tags
+      msg.gsub!(/\[.*\]/, "")
+      msg.gsub!(/^\s*[:\-_]\s*/, "")
       msg.strip!
-      msg.gsub!(/^[:-]/, "")
-      msg.strip!
-      return msg, ticket, pr
+      return msg, tickets, pr
     end
 
     def codebuild_projects(system_config)
@@ -73,6 +79,15 @@ module NHSx
 
     def latest_build_for_project(project_name)
       cmdline = "aws codebuild list-builds-for-project --project-name #{project_name} --sort-order DESCENDING --max-items 1"
+      cmd = Patir::ShellCommand.new(:cmd => cmdline)
+      cmd.run
+      raise GaudiError, "#{cmdline}\n#{cmd.output}\n#{cmd.error}" unless cmd.success?
+
+      return JSON.parse(cmd.output)["ids"]
+    end
+
+    def all_builds_for_project(project_name)
+      cmdline = "aws codebuild list-builds-for-project --project-name #{project_name} --sort-order DESCENDING --max-items 100"
       cmd = Patir::ShellCommand.new(:cmd => cmdline)
       cmd.run
       raise GaudiError, "#{cmdline}\n#{cmd.output}\n#{cmd.error}" unless cmd.success?

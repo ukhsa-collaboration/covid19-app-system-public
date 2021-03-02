@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.analyticssubmission;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import uk.nhs.nhsx.analyticssubmission.model.PostDistrictLADTuple;
+import uk.nhs.nhsx.core.events.Events;
+import uk.nhs.nhsx.core.events.InfoEvent;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,31 +12,32 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class PostDistrictLaReplacer {
 
-    private static final Logger logger = LogManager.getLogger(PostDistrictLaReplacer.class);
     private static final String csvMappingFileLocation = "analyticssubmission/PD_LA_to_MergedPD_LA.csv";
     private static final Map<PostDistrictLADTuple, PostDistrictLADTuple> postDistrictLAMapping = getPostDistrictLAMapping(csvMappingFileLocation);
     private static final String UNKNOWN = "UNKNOWN";
 
-    public static PostDistrictLADTuple replacePostDistrictLA(String postDistrict, String localAuthority) {
+    public static PostDistrictLADTuple replacePostDistrictLA(String postDistrict, String localAuthority, Events events) {
         return replacePostDistrictLA(
             postDistrict,
             Optional.ofNullable(localAuthority).orElse(UNKNOWN),
-            postDistrictLAMapping
+            postDistrictLAMapping,
+            events
         );
     }
 
     public static PostDistrictLADTuple replacePostDistrictLA(String postDistrict,
                                                              String localAuthority,
-                                                             Map<PostDistrictLADTuple, PostDistrictLADTuple> mapping) {
+                                                             Map<PostDistrictLADTuple,
+                                                                 PostDistrictLADTuple> mapping,
+                                                             Events events) {
         return Optional.ofNullable(mapping.get(new PostDistrictLADTuple(postDistrict, localAuthority)))
             .orElseGet(() -> Optional.ofNullable(mapping.get(new PostDistrictLADTuple(postDistrict, "UNKNOWN")))
                 .orElseGet(() -> {
-                    logger.info(format("Post district LA tuple not found in mapping. Persisting post district and localAuthority as \"%s\"", UNKNOWN));
+                    events.emit(PostDistrictLaReplacer.class, new InfoEvent("Post district LA tuple not found in mapping. Persisting post district and localAuthority as " + UNKNOWN));
                     return new PostDistrictLADTuple(UNKNOWN, UNKNOWN);
                 }));
     }

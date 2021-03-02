@@ -87,6 +87,12 @@ public class HttpResponses {
         response.setBody(body);
         return response;
     }
+    public static APIGatewayProxyResponseEvent unprocessableEntityWithJson(String jsonBody) {
+        APIGatewayProxyResponseEvent response = withStatusCode(HttpStatusCode.UNPROCESSABLE_ENTITY_422);
+        response.getHeaders().put("content-type", ContentType.APPLICATION_JSON.getMimeType());
+        response.setBody(jsonBody);
+        return response;
+    }
 
 
     public static APIGatewayProxyResponseEvent internalServerError() {

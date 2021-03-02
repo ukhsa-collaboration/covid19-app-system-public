@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.lang.String.format;
 import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoField.*;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static uk.nhs.nhsx.core.Preconditions.checkState;
 
 public class DailyZIPSubmissionPeriod implements ZIPSubmissionPeriod {
     private static final String DAILY_PATH_PREFIX = "distribution/daily/";

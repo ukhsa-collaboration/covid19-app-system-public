@@ -8,6 +8,7 @@ import org.http4k.filter.ClientFilters.BearerAuth
 import org.http4k.filter.DebuggingFilters.PrintRequestAndResponse
 import uk.nhs.nhsx.sanity.BaseSanityCheck
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda
+import uk.nhs.nhsx.sanity.lambdas.config.HealthCheck
 import uk.nhs.nhsx.sanity.lambdas.config.Secured
 
 abstract class LambdaSanityCheck : BaseSanityCheck() {
@@ -22,6 +23,7 @@ abstract class LambdaSanityCheck : BaseSanityCheck() {
     }
 
     fun Secured.withSecureClient(request: Request) = BearerAuth(authHeader).then(insecureClient)(request)
+    fun HealthCheck.withHealthClient(request: Request) = BearerAuth(healthAuthHeader).then(insecureClient)(request)
 
     protected val insecureClient = setBaseHeaders
         .then(PrintRequestAndResponse(System.err))

@@ -5,8 +5,8 @@ env:
 phases:
   build:
     commands:
-      - "rake config:codebuild"
-      - "rake publish:tier_metadata:$TARGET_ENVIRONMENT"
+      - rake config:codebuild
+      - rake deploy:tier_metadata:$TARGET_ENVIRONMENT
 artifacts:
   name: $(date +%Y%m%d%H%M%S)-deploy-tier-metadata-$TARGET_ENVIRONMENT.zip
   files:

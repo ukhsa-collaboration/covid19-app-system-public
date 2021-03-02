@@ -33,9 +33,3 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "virology_v2_apis_enabled" {
-  description = "Feature flag for enabling V2 Virology APIs"
-  default     = false
-  type        = bool
-}
-

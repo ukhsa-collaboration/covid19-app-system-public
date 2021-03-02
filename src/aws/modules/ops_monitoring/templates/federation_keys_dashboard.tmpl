@@ -7,7 +7,7 @@
             "width": 24,
             "height": 9,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${federation_keys_processing_upload_function}' | fields @timestamp, @message\n| filter @message like /Uploaded \\d+ /\n| parse @message \"Uploaded * keys\" as @numberofkeys\n| stats sum(@numberofkeys) by bin(30s)",
+                "query": "SOURCE '/aws/lambda/${federation_keys_processing_upload_function}' | fields @message, metadata, event\n| filter metadata.name=\"UploadedDiagnosisKeys\"\n| stats sum(event.insertedExposures) by bin(30s)",
                 "region": "eu-west-2",
                 "stacked": false,
                 "title": "Keys uploaded to federation server",
@@ -21,7 +21,7 @@
             "width": 24,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @timestamp, @message\n| filter @message like /Downloaded \\d+ /\n| parse @message \"Downloaded * keys\" as @numberofkeys\n| stats sum(@numberofkeys) by bin(30s)",
+                "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @message, metadata, event\n| filter metadata.name=\"DownloadedExposures\"\n| stats sum(event.downloadedExposures) by bin(30s)",
                 "region": "eu-west-2",
                 "stacked": false,
                 "title": "Keys downloaded from federation server",
@@ -35,7 +35,7 @@
             "width": 24,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @timestamp, @message\n| filter @message like /Downloaded from federated server/\n| parse @message \"Downloaded from federated server valid keys=*, invalid keys=*, origin=*\\\"\" as @validKeys, @invalidKeys, @origin\n| stats sum(@validKeys),sum(@invalidKeys) by @origin",
+                "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @message, metadata, event\n| filter metadata.name=\"DownloadedFederatedDiagnosisKeys\"\n| stats sum(event.validKeys),sum(event.invalidKeys) by event.origin",
                 "region": "eu-west-2",
                 "stacked": false,
                 "title": "Valid/Invalid keys downloaded from federation server",
