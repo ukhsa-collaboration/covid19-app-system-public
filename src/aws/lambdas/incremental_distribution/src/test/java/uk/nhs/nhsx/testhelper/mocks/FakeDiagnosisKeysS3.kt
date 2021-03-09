@@ -13,6 +13,7 @@ import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import java.io.ByteArrayInputStream
+import java.net.URL
 import java.time.Instant
 import java.util.*
 
@@ -48,6 +49,10 @@ class FakeDiagnosisKeysS3(
 
     override fun deleteObject(locator: Locator) {
         // noop
+    }
+
+    override fun getSignedURL(locator: Locator?, expiration: Date?): Optional<URL> {
+        return Optional.of(URL("https://example.com"))
     }
 
     private fun makeKey(locator: Locator, keyStartTime: Long): StoredTemporaryExposureKey {

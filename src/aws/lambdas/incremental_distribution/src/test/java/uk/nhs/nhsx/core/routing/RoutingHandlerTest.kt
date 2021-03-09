@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.HttpResponses
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
-import java.util.*
+import java.util.Optional
 
 class RoutingHandlerTest {
 
@@ -35,8 +35,8 @@ class RoutingHandlerTest {
     }
 
     private class MyRoutingHandler(val header: String) : RoutingHandler() {
-        override fun handler(): Routing.Handler =
-            Routing.Handler { request ->
+        override fun handler(): ApiGatewayHandler =
+            ApiGatewayHandler { request, _ ->
                 Optional.ofNullable(request.headers[header])
                     .map { HttpResponses.ok() }
                     .orElseThrow { RuntimeException("not there") }

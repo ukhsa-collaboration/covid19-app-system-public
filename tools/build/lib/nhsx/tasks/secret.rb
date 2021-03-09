@@ -8,7 +8,7 @@ namespace :secret do
   include BCrypt
 
   NHSx::TargetEnvironment::API_NAMES.each do |api_name, rake_task|
-    NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+    NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
       prerequisites = [:"login:#{account}"]
       desc "Create bearer token and store secret password hash for #{api_name} APIs with API_KEY_NAME"
       task :"#{rake_task}:#{account}" => prerequisites do

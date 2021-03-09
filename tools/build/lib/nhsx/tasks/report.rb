@@ -7,13 +7,13 @@ namespace :report do
 
     puts "There are #{branches.size} remote branches excluding master"
 
-    terraform_configuration = File.join($configuration.base, NHSx::Terraform::DEV_ACCOUNT)
+    terraform_configuration = File.join($configuration.base, NHSx::TargetEnvironment::CTA_DEV_ACCOUNT)
     Dir.chdir(terraform_configuration) do
       run_command("Select default workspace", "terraform workspace select default", $configuration)
       cmd = run_command("List workspaces", "terraform workspace list", $configuration)
       workspaces = cmd.output.chomp.lines.map(&:chomp).map(&:strip).reject { |ln| ln =~ /default/ }
 
-      temporary_workspaces = workspaces - NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].map { |env| "te-#{env}" }
+      temporary_workspaces = workspaces - NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].map { |env| "te-#{env}" }
 
       puts "There are #{branches.size} remote branches excluding master"
       puts "There are #{temporary_workspaces.size} temporary target environments"
@@ -39,7 +39,7 @@ namespace :report do
     te_configs = {}
     repo_tags = tags_and_revisions($configuration)
 
-    NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |te|
+    NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |te|
       next if te == "branch"
 
       begin
@@ -132,26 +132,28 @@ namespace :report do
   end
   desc "Provide a list of latest codebuild jobs that are either running or failed"
   task :"codebuild:dev" => [:"login:dev"] do
-    include NHSx::Report
+    include NHSx::CodeBuild
 
     cb_projects = codebuild_projects($configuration)
     puts "Collecting status of #{cb_projects.length} pipelines"
 
-    latest_builds = cb_projects.map { |project_name| latest_build_for_project(project_name) }
-    job_metadata = build_info(latest_builds)
+    job_metadata = cb_projects.map do |project_name|
+      latest = latest_build_for_project(project_name)
+      latest ? build_info(latest) : nil
+    end.compact
 
-    failed_jobs = job_metadata.select { |build| build["buildStatus"] == "FAILED" }
-    running_jobs = job_metadata.reject { |build| build["currentPhase"] == "COMPLETED" }
+    failed_jobs = job_metadata.select { |build| build.build_status == "FAILED" }
+    running_jobs = job_metadata.reject(&:completed?)
 
     puts "*" * 74
     puts "#{running_jobs.length} job(s) running:"
     running_jobs.each do |job|
-      puts job["id"]
+      puts job.build_id
     end
     puts "*" * 74
     puts "#{failed_jobs.length} job(s) failed:"
     failed_jobs.each do |job|
-      puts "#{job["id"]}\n\t rake download:codebuild:dev JOB_ID=#{job["id"]}"
+      puts "#{job.build_id}\n\t rake download:codebuild:dev JOB_ID=#{job.build_id}"
     end
   end
 end

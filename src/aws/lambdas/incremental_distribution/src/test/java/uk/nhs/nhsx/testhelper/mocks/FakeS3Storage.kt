@@ -8,6 +8,7 @@ import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.MetaHeader
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.S3Storage
+import java.net.URL
 import java.util.*
 
 open class FakeS3Storage : S3Storage {
@@ -26,6 +27,9 @@ open class FakeS3Storage : S3Storage {
         meta: List<MetaHeader>
     ) {
         overwriting(locator, contentType, bytes, meta.toList())
+    }
+    override fun getSignedURL(locator: Locator?, expiration: Date?): Optional<URL> {
+        return Optional.of(URL("https://example.com"))
     }
 
     private fun overwriting(

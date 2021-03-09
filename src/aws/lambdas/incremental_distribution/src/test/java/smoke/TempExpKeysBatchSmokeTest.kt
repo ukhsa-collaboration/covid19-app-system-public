@@ -11,6 +11,7 @@ import org.http4k.client.Java8HttpClient
 import org.http4k.core.Status
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -21,17 +22,12 @@ import smoke.actors.BackgroundActivities
 import smoke.actors.MobileApp
 import smoke.actors.Synthetics
 import smoke.actors.TestLab
-import smoke.actors.TestResult
-import smoke.actors.TestResult.NEGATIVE
-import smoke.actors.TestResult.POSITIVE
-import smoke.actors.TestResultPollingToken
 import smoke.clients.AwsLambda
 import smoke.data.DiagnosisKeyData.generateDiagnosisKeyData
 import smoke.env.EnvConfig
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
-import uk.nhs.nhsx.virology.CtaToken
 import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
 import uk.nhs.nhsx.virology.TestKit
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
@@ -39,8 +35,12 @@ import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
-import uk.nhs.nhsx.virology.result.VirologyLookupResult.Available
-import uk.nhs.nhsx.virology.result.VirologyLookupResult.AvailableV2
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.Available
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.AvailableV2
+import uk.nhs.nhsx.virology.result.TestEndDate
+import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.virology.result.TestResult.Negative
+import uk.nhs.nhsx.virology.result.TestResult.Positive
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -93,7 +93,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(Positive, V1, LAB_RESULT)
         val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
@@ -106,7 +106,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V2, testKit)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(Positive, V2, testKit)
         val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
@@ -118,7 +118,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(NEGATIVE, V1, LAB_RESULT)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(Negative, V1, LAB_RESULT)
         val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
@@ -130,7 +130,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(NEGATIVE, V2, LAB_RESULT)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(Negative, V2, LAB_RESULT)
         val encodedSubmissionKeys = scenario.submitKeys(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
@@ -142,7 +142,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(POSITIVE, V1, LAB_RESULT)
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(Positive, V1, LAB_RESULT)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
@@ -154,7 +154,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(POSITIVE, V2, testKit)
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(Positive, V2, testKit)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
@@ -165,7 +165,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(NEGATIVE, V1, LAB_RESULT)
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(Negative, V1, LAB_RESULT)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsDoesNotContain(encodedSubmissionKeys, tekExport)
@@ -176,7 +176,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(NEGATIVE, V2, LAB_RESULT)
+        val encodedSubmissionKeys = scenario.tokenGenTestAndSubmitKeys(Negative, V2, LAB_RESULT)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
         scenario.checkTekExportContentsDoesNotContain(encodedSubmissionKeys, tekExport)
@@ -192,7 +192,7 @@ class TempExpKeysBatchSmokeTest {
         val invalidKeys = listOf("invalid-key")
         val allKeys = listOf(validKeys, invalidKeys).flatten()
 
-        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(Positive, V1, LAB_RESULT)
         scenario.submitKeys(diagnosisKeySubmissionToken, allKeys)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
@@ -212,7 +212,7 @@ class TempExpKeysBatchSmokeTest {
                 .map {
                     executor.submit(Callable {
                         val scenarioX = TempExpKeysScenario(config)
-                        scenarioX.submitKeys(scenarioX.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT))
+                        scenarioX.submitKeys(scenarioX.virologyOrderAndUploadResult(Positive, V1, LAB_RESULT))
                     })
                 }
                 .map { it.get(3, TimeUnit.MINUTES) }
@@ -227,7 +227,7 @@ class TempExpKeysBatchSmokeTest {
         val scenario = TempExpKeysScenario(config)
         assumeTrue(scenario.isInsideProcessingWindow())
 
-        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(POSITIVE, V1, LAB_RESULT)
+        val diagnosisKeySubmissionToken = scenario.virologyOrderAndUploadResult(Positive, V1, LAB_RESULT)
         val payload = scenario.submitKeysWithOnsetDays(diagnosisKeySubmissionToken)
 
         val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
@@ -279,7 +279,7 @@ class TempExpKeysBatchSmokeTest {
         fun tokenGenTestAndSubmitKeys(testResult: TestResult, apiVersion: ApiVersion, testKit: TestKit): List<String> {
             val encodedSubmissionKeys = generateDiagnosisKeyData(Random.nextInt(maxKeysPerRun))
 
-            val ctaToken = testLab.generateCtaTokenFor(testResult, "2020-04-23T00:00:00Z", Eng, apiVersion, testKit)
+            val ctaToken = testLab.generateCtaTokenFor(testResult, TestEndDate.of(2020, 4, 23), Eng, apiVersion, testKit)
 
             testLab.uploadTestResultExpectingConflict(ctaToken, testResult, Npex, apiVersion, testKit)
 
@@ -294,7 +294,7 @@ class TempExpKeysBatchSmokeTest {
                 }
             }
 
-            val diagnosisKeySubmissionToken = DiagnosisKeySubmissionToken.of(exchangeResponseSubmissionToken)
+            val diagnosisKeySubmissionToken = exchangeResponseSubmissionToken
 
             mobileApp.exposureCircuitBreaker.requestAndApproveCircuitBreak()
 
@@ -306,8 +306,8 @@ class TempExpKeysBatchSmokeTest {
                                          apiVersion: ApiVersion,
                                          testKit: TestKit): DiagnosisKeySubmissionToken {
             val orderResponse = mobileApp.orderTest(apiVersion)
-            val ctaToken = CtaToken.of(orderResponse.tokenParameterValue)
-            val pollingToken = TestResultPollingToken(orderResponse.testResultPollingToken)
+            val ctaToken = orderResponse.tokenParameterValue
+            val pollingToken = orderResponse.testResultPollingToken
 
             mobileApp.pollForIncompleteTestResult(orderResponse, apiVersion)
             testLab.uploadTestResult(ctaToken, testResult, Npex, apiVersion, testKit)
@@ -316,15 +316,15 @@ class TempExpKeysBatchSmokeTest {
             when (apiVersion) {
                 V1 -> {
                     val pollResult = mobileApp.pollForTestResult(pollingToken, apiVersion) as Available
-                    assertThat(pollResult.virologyLookupResponse.testResult, equalTo(testResult.name))
+                    assertThat(pollResult.response.testResult, equalTo(testResult))
                 }
                 V2 -> {
                     val pollResultV2 = mobileApp.pollForTestResult(pollingToken, apiVersion) as AvailableV2
-                    assertThat(pollResultV2.virologyLookupResponse.testResult, equalTo(testResult.name))
+                    assertThat(pollResultV2.response.testResult, equalTo(testResult))
                 }
             }
 
-            return DiagnosisKeySubmissionToken.of(orderResponse.diagnosisKeySubmissionToken)
+            return orderResponse.diagnosisKeySubmissionToken
         }
 
         fun submitKeys(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
@@ -344,13 +344,13 @@ class TempExpKeysBatchSmokeTest {
 
         fun orderLABandRAPIDTestAndGetLatestTekExport(): Pair<List<String>, TemporaryExposureKeyExport> {
             val firstKeys = mobileApp.orderTest(V2).run {
-                testLab.uploadTestResult(CtaToken.of(tokenParameterValue), POSITIVE, Npex, V2, LAB_RESULT)
-                submitKeys(DiagnosisKeySubmissionToken.of(diagnosisKeySubmissionToken))
+                testLab.uploadTestResult(tokenParameterValue, Positive, Npex, V2, LAB_RESULT)
+                submitKeys(diagnosisKeySubmissionToken)
             }
 
             val secondKeys = mobileApp.orderTest(V2).run {
-                testLab.uploadTestResult(CtaToken.of(tokenParameterValue), POSITIVE, Npex, V2, RAPID_RESULT)
-                submitKeys(DiagnosisKeySubmissionToken.of(diagnosisKeySubmissionToken))
+                testLab.uploadTestResult(tokenParameterValue, Positive, Npex, V2, RAPID_RESULT)
+                submitKeys(diagnosisKeySubmissionToken)
             }
 
             val export = invokeBatchProcessingAndGetLatestTekExport()

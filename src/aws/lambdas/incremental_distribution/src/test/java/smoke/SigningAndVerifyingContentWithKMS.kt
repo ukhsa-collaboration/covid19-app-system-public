@@ -16,22 +16,28 @@ import java.security.KeyFactory
 import java.security.spec.X509EncodedKeySpec
 
 class SigningAndVerifyingContentWithKMS {
+
     @Test
     fun `signing and verifying some content with kms`() {
         Tracing.disableXRayComplaintsForMainClasses()
         // generate key using KmsSignature
         val parameterKeyLookup = ParameterKeyLookup(AwsSsmParameters(), ParameterName.of("/app/kms/SigningKeyArn"))
         val payload = """{ "key": 1234 }"""
-        val generated = JWS(KmsSigner { parameterKeyLookup.kmsKeyId }).sign(payload)
+        val kmsClient = AWSKMSClientBuilder.defaultClient()
+        val generated = JWS(KmsSigner(parameterKeyLookup::kmsKeyId, kmsClient)).sign(payload)
 
         // get corresponding public key from kms and create java key from it
-        val publicKey = AWSKMSClientBuilder.defaultClient().getPublicKey(GetPublicKeyRequest().withKeyId(parameterKeyLookup.kmsKeyId.value)).publicKey
+        val publicKey = kmsClient
+            .getPublicKey(
+                GetPublicKeyRequest()
+                    .withKeyId(parameterKeyLookup.kmsKeyId().value)
+            ).publicKey
 
         val kmsPublicKey = KeyFactory.getInstance("EC").let {
             it.generatePublic(
                 X509EncodedKeySpec(
-                    ByteArray(publicKey.remaining()).also {
-                        publicKey.get(it)
+                    ByteArray(publicKey.remaining()).also { b ->
+                        publicKey.get(b)
                     }
                 )
             )
@@ -42,6 +48,7 @@ class SigningAndVerifyingContentWithKMS {
             it.key = kmsPublicKey
             it.compactSerialization = generated
         }
+
         assertThat(jws.payload, equalTo(payload));
         assertThat("signature is valid", jws.verifySignature(), equalTo(true));
         assertThat(jws.headers.getStringHeaderValue("alg"), equalTo("ES256"))

@@ -11,6 +11,7 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.Environment
+import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.RiskyPostDistrictUpload
@@ -65,7 +66,7 @@ class RiskyPostCodesHandlerTest {
     private val datedSigner = TestDatedSigner("date")
     private val events = RecordingEvents()
     private val handler = HighRiskPostcodesUploadHandler(
-        environment, { true }, datedSigner, s3Storage, awsCloudFront, events, { true }
+        environment, CLOCK, events, { true }, datedSigner, s3Storage, awsCloudFront, { true }
     )
 
     @Test
@@ -89,7 +90,7 @@ class RiskyPostCodesHandlerTest {
         assertThat(datedSigner.content[0]).isEqualTo("date:".toByteArray(UTF_8) + contentToStore.toByteArray(UTF_8))
         assertThat(s3Storage.count).isEqualTo(4)
         assertThat(s3Storage.bucket.value).isEqualTo("my-bucket")
-        events.containsExactly(RiskyPostDistrictUpload::class)
+        events.contains(RiskyPostDistrictUpload::class)
 
         verify(exactly = 1) { awsCloudFront.invalidateCache("my-distribution", "invalidation-pattern") }
     }

@@ -1,7 +1,8 @@
 package uk.nhs.nhsx.diagnosiskeyssubmission.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import java.util.Objects;
 
 public class ClientTemporaryExposureKey {

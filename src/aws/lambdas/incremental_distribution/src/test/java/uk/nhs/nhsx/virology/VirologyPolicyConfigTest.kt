@@ -6,38 +6,41 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.virology.Country.Companion.England
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.VirologyPolicyConfig.VirologyCriteria
-import uk.nhs.nhsx.virology.result.VirologyResultRequest.NPEX_NEGATIVE
-import uk.nhs.nhsx.virology.result.VirologyResultRequest.NPEX_POSITIVE
-import uk.nhs.nhsx.virology.result.VirologyResultRequest.NPEX_VOID
+import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.virology.result.TestResult.*
 
 class VirologyPolicyConfigTest {
 
+    private val england = England
+    private val wales = Country.of("Wales")
+
     private val doesNotRequireConfirmatoryTest = setOf(
-        VirologyCriteria.of(Country.of("England"), LAB_RESULT, NPEX_POSITIVE),
-        VirologyCriteria.of(Country.of("England"), LAB_RESULT, NPEX_NEGATIVE),
-        VirologyCriteria.of(Country.of("England"), LAB_RESULT, NPEX_VOID),
-        VirologyCriteria.of(Country.of("England"), RAPID_RESULT, NPEX_POSITIVE),
-        VirologyCriteria.of(Country.of("England"), RAPID_RESULT, NPEX_NEGATIVE),
-        VirologyCriteria.of(Country.of("England"), RAPID_RESULT, NPEX_VOID),
-        VirologyCriteria.of(Country.of("England"), RAPID_SELF_REPORTED, NPEX_NEGATIVE),
-        VirologyCriteria.of(Country.of("England"), RAPID_SELF_REPORTED, NPEX_VOID),
-        VirologyCriteria.of(Country.of("Wales"), LAB_RESULT, NPEX_POSITIVE),
-        VirologyCriteria.of(Country.of("Wales"), LAB_RESULT, NPEX_NEGATIVE),
-        VirologyCriteria.of(Country.of("Wales"), LAB_RESULT, NPEX_VOID),
-        VirologyCriteria.of(Country.of("Wales"), RAPID_RESULT, NPEX_POSITIVE),
-        VirologyCriteria.of(Country.of("Wales"), RAPID_RESULT, NPEX_NEGATIVE),
-        VirologyCriteria.of(Country.of("Wales"), RAPID_RESULT, NPEX_VOID),
-        VirologyCriteria.of(Country.of("Wales"), RAPID_SELF_REPORTED, NPEX_NEGATIVE),
-        VirologyCriteria.of(Country.of("Wales"), RAPID_SELF_REPORTED, NPEX_VOID),
+        VirologyCriteria(england, LAB_RESULT, Positive),
+        VirologyCriteria(england, LAB_RESULT, Negative),
+        VirologyCriteria(england, LAB_RESULT, Void),
+        VirologyCriteria(england, RAPID_RESULT, Positive),
+        VirologyCriteria(england, RAPID_RESULT, Negative),
+        VirologyCriteria(england, RAPID_RESULT, Void),
+        VirologyCriteria(england, RAPID_SELF_REPORTED, Negative),
+        VirologyCriteria(england, RAPID_SELF_REPORTED, Void),
+        VirologyCriteria(wales, LAB_RESULT, Positive),
+        VirologyCriteria(wales, LAB_RESULT, Negative),
+        VirologyCriteria(wales, LAB_RESULT, Void),
+        VirologyCriteria(wales, RAPID_RESULT, Positive),
+        VirologyCriteria(wales, RAPID_RESULT, Negative),
+        VirologyCriteria(wales, RAPID_RESULT, Void),
+        VirologyCriteria(wales, RAPID_SELF_REPORTED, Negative),
+        VirologyCriteria(wales, RAPID_SELF_REPORTED, Void),
     )
 
     private val requiresConfirmatoryTest = setOf(
-        VirologyCriteria.of(Country.of("England"), RAPID_SELF_REPORTED, NPEX_POSITIVE),
-        VirologyCriteria.of(Country.of("Wales"), RAPID_SELF_REPORTED, NPEX_POSITIVE)
+        VirologyCriteria(england, RAPID_SELF_REPORTED, Positive),
+        VirologyCriteria(wales, RAPID_SELF_REPORTED, Positive)
     )
 
     @Test
@@ -60,10 +63,10 @@ class VirologyPolicyConfigTest {
     fun `supports diagnosis key submission`() {
         val config = VirologyPolicyConfig()
         val testCases = listOf(
-            VirologyCriteria.of(Country.of("England"), LAB_RESULT, NPEX_POSITIVE),
-            VirologyCriteria.of(Country.of("England"), RAPID_RESULT, NPEX_POSITIVE),
-            VirologyCriteria.of(Country.of("Wales"), LAB_RESULT, NPEX_POSITIVE),
-            VirologyCriteria.of(Country.of("Wales"), RAPID_RESULT, NPEX_POSITIVE)
+            VirologyCriteria(england, LAB_RESULT, Positive),
+            VirologyCriteria(england, RAPID_RESULT, Positive),
+            VirologyCriteria(wales, LAB_RESULT, Positive),
+            VirologyCriteria(wales, RAPID_RESULT, Positive)
         )
 
         testCases.forEach {
@@ -75,10 +78,10 @@ class VirologyPolicyConfigTest {
     fun `blocks diagnosis key submission for non positive results`() {
         val config = VirologyPolicyConfig()
         val testCases = listOf(
-            VirologyCriteria.of(Country.of("Some-Country"), RAPID_RESULT, NPEX_NEGATIVE),
-            VirologyCriteria.of(Country.of("Some-Country"), LAB_RESULT, NPEX_NEGATIVE),
-            VirologyCriteria.of(Country.of("Some-Country"), RAPID_RESULT, NPEX_VOID),
-            VirologyCriteria.of(Country.of("Some-Country"), LAB_RESULT, NPEX_VOID)
+            VirologyCriteria(Country.of("Some-Country"), RAPID_RESULT, Negative),
+            VirologyCriteria(Country.of("Some-Country"), LAB_RESULT, Negative),
+            VirologyCriteria(Country.of("Some-Country"), RAPID_RESULT, Void),
+            VirologyCriteria(Country.of("Some-Country"), LAB_RESULT, Void)
         )
 
         testCases.forEach {

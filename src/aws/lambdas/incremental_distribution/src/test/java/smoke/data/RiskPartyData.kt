@@ -1,10 +1,13 @@
 package smoke.data
 
-import uk.nhs.nhsx.core.DateFormatValidator
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenue
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
+import uk.nhs.nhsx.highriskvenuesupload.model.MessageType
 import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow
-import java.time.OffsetDateTime
+import uk.nhs.nhsx.highriskvenuesupload.model.VenueId
+import java.time.Duration
+import java.time.Instant
+import java.time.temporal.ChronoUnit.SECONDS
 import java.util.Random
 
 object RiskPartyData {
@@ -45,18 +48,18 @@ object RiskPartyData {
         val venuesList = (0 until numberOfVenues)
             .map {
                 val venueId = (0 until 12).map { validChars[Random().nextInt(validChars.length)] }.joinToString(separator = "")
-                val startTime = OffsetDateTime.now().minusDays(1).format(DateFormatValidator.formatter)
-                val endTime = OffsetDateTime.now().plusDays(1).format(DateFormatValidator.formatter)
-                HighRiskVenue(venueId, RiskyWindow(startTime, endTime))
+                val startTime = Instant.now().minus(Duration.ofDays(1)).truncatedTo(SECONDS)
+                val endTime = Instant.now().plus(Duration.ofDays(1)).truncatedTo(SECONDS)
+                HighRiskVenue(VenueId.of(venueId), RiskyWindow(startTime, endTime), MessageType("M1"))
             }
         return HighRiskVenues(venuesList)
     }
 
     fun generateCsvFrom(highRiskVenues: HighRiskVenues): String {
         val csvRows = highRiskVenues.venues
-            .joinToString(separator = "\n") { """"${it.id}", "${it.riskyWindow.from}", "${it.riskyWindow.until}"""" }
+            .joinToString(separator = "\n") { """"${it.id}", "${it.riskyWindow.from}", "${it.riskyWindow.until}", "${it.messageType}", "${it.optionalParameter ?: ""}" """ }
 
-        return """# venue_id, start_time, end_time
+        return """# venue_id, start_time, end_time, message_type, optional_parameter
             |$csvRows
             """.trimMargin()
     }

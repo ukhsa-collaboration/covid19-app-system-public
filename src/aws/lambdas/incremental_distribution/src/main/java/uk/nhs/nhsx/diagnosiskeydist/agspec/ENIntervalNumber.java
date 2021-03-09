@@ -44,7 +44,7 @@ public class ENIntervalNumber {
     /**
      * "This function provides a number for each 10 minute time window that’s shared between all devices participating in the protocol"
      *
-     * @param timestampMillis "the milliseconds since January 1, 1970, 00:00:00 GMT." (e.g. System.currentTimeMillis())
+     * @param timestampMillis "the milliseconds since January 1, 1970, 00:00:00 GMT."
      */
     public static ENIntervalNumber enIntervalNumberFromTimestampInMillis(long timestampMillis) {
         return enIntervalNumberFromTimestampInUnixEpochTime(timestampMillis / 1000);

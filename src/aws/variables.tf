@@ -174,3 +174,9 @@ variable "isolation_payment" {
   description = "Isolation payment configuraton ('enabled', 'gateway_website_prefix', 'countries_whitelisted'). Keys: target environment or 'default'"
   type        = map(map(string))
 }
+
+variable "zip_submission_period_offset" {
+  description = "The distribution window period offset"
+  type        = string
+  default     = "PT-15M"
+}

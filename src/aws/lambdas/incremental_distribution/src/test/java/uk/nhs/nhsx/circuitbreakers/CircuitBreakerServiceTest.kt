@@ -3,7 +3,7 @@ package uk.nhs.nhsx.circuitbreakers
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.*
+import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.extractPollingToken
 import uk.nhs.nhsx.core.Jackson
 
@@ -18,7 +18,7 @@ class CircuitBreakerServiceTest {
         val result: CircuitBreakerResult = circuitBreakerService.approvalToken
         assertThat(result.type).isEqualTo(ResultType.Ok)
         val approvalValue = JSONObject(result.responseBody).getString("approval")
-        assertThat(approvalValue).isEqualTo(ApprovalStatus.PENDING.getName())
+        assertThat(approvalValue).isEqualTo(ApprovalStatus.PENDING.statusName)
         assertThat(result.responseBody).isNotEmpty
     }
 
@@ -29,17 +29,18 @@ class CircuitBreakerServiceTest {
         val resolutionResponse = resolutionFromResponse(responseEvent)
 
         assertThat(responseEvent.type).isEqualTo(ResultType.Ok)
-        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.getName())
+        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.statusName)
     }
 
     @Test
     fun testGetResolutionWithValidTokenForExposure() {
-        val path = "/circuit-breaker/exposure-notification/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg"
+        val path =
+            "/circuit-breaker/exposure-notification/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg"
         val responseEvent = circuitBreakerService.getResolution(path)
         val resolutionResponse = resolutionFromResponse(responseEvent)
 
         assertThat(responseEvent.type).isEqualTo(ResultType.Ok)
-        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.getName())
+        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.statusName)
     }
 
     @Test
@@ -85,8 +86,7 @@ class CircuitBreakerServiceTest {
         assertThat(extractPollingToken("/circuit-breaker/exposure-notification/resolution/")).isEmpty
     }
 
-    private fun resolutionFromResponse(responseEvent: CircuitBreakerResult): ResolutionResponse {
-        return Jackson.readMaybe(responseEvent.responseBody, ResolutionResponse::class.java) { }
-            .orElseThrow { IllegalStateException("Could not deserialize: " + responseEvent.responseBody) }
-    }
+    private fun resolutionFromResponse(responseEvent: CircuitBreakerResult) =
+        Jackson.readOrNull<ResolutionResponse>(responseEvent.responseBody)
+            ?: throw IllegalStateException("Could not deserialize: " + responseEvent.responseBody)
 }

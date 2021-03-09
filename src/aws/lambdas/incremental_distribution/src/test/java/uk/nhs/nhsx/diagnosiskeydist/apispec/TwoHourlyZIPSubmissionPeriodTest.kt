@@ -5,8 +5,8 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import uk.nhs.nhsx.testhelper.data.asInstant
 import java.time.Duration
-import java.time.Instant
 
 class TwoHourlyZIPSubmissionPeriodTest {
 
@@ -293,6 +293,4 @@ class TwoHourlyZIPSubmissionPeriodTest {
         assertThat(TwoHourlyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant()).toString())
             .isEqualTo("2 hours: from 2020071922 (inclusive) to 2020072000 (exclusive)")
     }
-
-    private fun String.asInstant() = Instant.parse(this)
 }

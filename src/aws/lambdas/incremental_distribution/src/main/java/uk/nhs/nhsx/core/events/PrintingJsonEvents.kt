@@ -1,19 +1,12 @@
 package uk.nhs.nhsx.core.events
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.JsonSerializer
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.module.SimpleModule
 import org.apache.logging.log4j.LogManager
-import uk.nhs.nhsx.core.SystemObjectMapper
-import uk.nhs.nhsx.core.ValueType
-import uk.nhs.nhsx.core.events.EventCategory.*
-import java.io.PrintWriter
-import java.io.StringWriter
-import java.time.Duration
+import org.apache.logging.log4j.ThreadContext
+import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.events.EventCategory.Error
+import uk.nhs.nhsx.core.events.EventCategory.Info
+import uk.nhs.nhsx.core.events.EventCategory.Warning
 import java.time.Instant
-import java.time.format.DateTimeFormatter
-import java.util.*
 import java.util.function.Supplier
 
 class PrintingJsonEvents @JvmOverloads constructor(
@@ -22,13 +15,16 @@ class PrintingJsonEvents @JvmOverloads constructor(
 ) : Events {
 
     override fun invoke(clazz: Class<*>, event: Event) {
-        val asString = EVENTS_OBJECT_MAPPER.writeValueAsString(
+        val asString = Jackson.toJson(
             EventEnvelope(
-                mapOf(
+                listOfNotNull(
                     "category" to event.category(),
                     "name" to event.javaClass.simpleName,
-                    "timestamp" to clock.get()
-                ), event
+                    "timestamp" to clock.get(),
+
+                    // TODO: set by aws-lambda-java-log4j2.. can we do this programmatically?
+                    ThreadContext.get("AWSRequestId")?.let { "awsRequestId" to it }
+                ).toMap(), event
             )
         )
 
@@ -42,30 +38,3 @@ class PrintingJsonEvents @JvmOverloads constructor(
 
 data class EventEnvelope(val metadata: Map<String, Any>, val event: Event) : Event(event.category())
 
-private val EVENTS_OBJECT_MAPPER = SystemObjectMapper.objectMapper()
-    .registerModule(SimpleModule().apply {
-        add(DateTimeFormatter.ISO_INSTANT::format)
-        add(Duration::toString)
-        add(UUID::toString)
-        add(Class<*>::getSimpleName)
-        add { e: EventCategory -> e.name.toUpperCase() }
-        add(ValueType<*>::value)
-        add<Throwable> {
-            StringWriter()
-                .use { output ->
-                    PrintWriter(output)
-                        .use { printer ->
-                            it.printStackTrace(printer);
-                            output.toString()
-                        }
-                }
-        }
-    })
-
-private inline fun <reified T> SimpleModule.add(crossinline fn: (T) -> String) {
-    addSerializer(T::class.java, object : JsonSerializer<T>() {
-        override fun serialize(value: T, gen: JsonGenerator, serializers: SerializerProvider) {
-            gen.writeString(fn(value))
-        }
-    })
-}

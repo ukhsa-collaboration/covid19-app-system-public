@@ -27,3 +27,10 @@ variable "sip_analytics_bucket_location" {
 variable "circuit_breaker_stats_bucket_id" {
   description = "The Circuit Breaker Analytics S3 bucket"
 }
+
+variable "key_federation_download_stats_bucket_id" {
+  description = "The key federation analytics download S3 bucket"
+}
+variable "key_federation_upload_stats_bucket_id" {
+  description = "The key federation analytics upload S3 bucket"
+}

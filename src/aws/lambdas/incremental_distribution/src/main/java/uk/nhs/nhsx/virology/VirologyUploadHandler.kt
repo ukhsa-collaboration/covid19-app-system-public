@@ -5,8 +5,9 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.HttpResponses
-import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Jackson.readStrictOrNull
+import uk.nhs.nhsx.core.Jackson.toJson
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.auth.ApiName.Health
 import uk.nhs.nhsx.core.auth.ApiName.TestResultUpload
@@ -26,8 +27,11 @@ import uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses
 import uk.nhs.nhsx.virology.VirologyConfig.Companion.fromEnvironment
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
-import uk.nhs.nhsx.virology.result.VirologyResultRequest
-import uk.nhs.nhsx.virology.result.VirologyTokenGenRequest
+import uk.nhs.nhsx.virology.result.VirologyResultRequestV1
+import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
+import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV1
+import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
+import uk.nhs.nhsx.virology.result.convertToV2
 
 class VirologyUploadHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
@@ -43,54 +47,54 @@ class VirologyUploadHandler @JvmOverloads constructor(
         Routing.routes(
             authorisedBy(
                 healthAuthenticator,
-                path(POST, "/upload/virology-test/health") { HttpResponses.ok() }
+                path(POST, "/upload/virology-test/health") { _, _ -> HttpResponses.ok() }
             ),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/npex-result") { r ->
-                    events.emit(javaClass, VirologyResults())
+                path(POST, "/upload/virology-test/npex-result") { r, _ ->
+                    events(javaClass, VirologyResults())
                     handleV1TestResult(VirologyResultSource.Npex, virologyService, r)
                 }),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/fiorano-result") { r ->
-                    events.emit(javaClass, VirologyResults())
+                path(POST, "/upload/virology-test/fiorano-result") { r, _ ->
+                    events(javaClass, VirologyResults())
                     handleV1TestResult(VirologyResultSource.Fiorano, virologyService, r)
                 }),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/eng-result-tokengen") { r ->
-                    events.emit(javaClass, VirologyTokenGen())
+                path(POST, "/upload/virology-test/eng-result-tokengen") { r, _ ->
+                    events(javaClass, VirologyTokenGen())
                     handleV1TokenGen(VirologyTokenExchangeSource.Eng, virologyService, r)
                 }),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/wls-result-tokengen") { r ->
-                    events.emit(javaClass, VirologyTokenGen())
+                path(POST, "/upload/virology-test/wls-result-tokengen") { r, _ ->
+                    events(javaClass, VirologyTokenGen())
                     handleV1TokenGen(VirologyTokenExchangeSource.Wls, virologyService, r)
                 }),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/v2/npex-result") { r ->
-                    events.emit(javaClass, VirologyResults())
+                path(POST, "/upload/virology-test/v2/npex-result") { r, _ ->
+                    events(javaClass, VirologyResults())
                     handleV2TestResult(VirologyResultSource.Npex, virologyService, r)
                 }),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/v2/fiorano-result") { r ->
-                    events.emit(javaClass, VirologyResults())
+                path(POST, "/upload/virology-test/v2/fiorano-result") { r, _ ->
+                    events(javaClass, VirologyResults())
                     handleV2TestResult(VirologyResultSource.Fiorano, virologyService, r)
                 }),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/v2/eng-result-tokengen") { r ->
-                    events.emit(javaClass, VirologyTokenGen())
+                path(POST, "/upload/virology-test/v2/eng-result-tokengen") { r, _ ->
+                    events(javaClass, VirologyTokenGen())
                     handleV2TokenGen(VirologyTokenExchangeSource.Eng, virologyService, r)
                 }),
             authorisedBy(
                 authenticator,
-                path(POST, "/upload/virology-test/v2/wls-result-tokengen") { r ->
-                    events.emit(javaClass, VirologyTokenGen())
+                path(POST, "/upload/virology-test/v2/wls-result-tokengen") { r, _ ->
+                    events(javaClass, VirologyTokenGen())
                     handleV2TokenGen(VirologyTokenExchangeSource.Wls, virologyService, r)
                 }
             )
@@ -101,10 +105,23 @@ class VirologyUploadHandler @JvmOverloads constructor(
         source: VirologyResultSource,
         virologyService: VirologyService,
         request: APIGatewayProxyRequestEvent
-    ) = readJsonOrNull<VirologyResultRequest>(request) { VirologyResultRequest.v2TestKitValidator(it) }
-        ?.let {
-            events.emit(javaClass, TestResultUploaded(2, source, it.ctaToken, it.testResult, it.testKit))
-            virologyService.acceptTestResult(it).toHttpResponse()
+    ): APIGatewayProxyResponseEvent =
+        readJsonOrNull<VirologyResultRequestV2>(request)
+            ?.let {
+                events(javaClass, TestResultUploaded(2, source, it.ctaToken, it.testResult, it.testKit))
+                virologyService.acceptTestResult(it).toHttpResponse()
+            }
+            ?: HttpResponses.unprocessableEntity()
+
+    private fun handleV1TestResult(
+        source: VirologyResultSource,
+        virologyService: VirologyService,
+        request: APIGatewayProxyRequestEvent
+    ): APIGatewayProxyResponseEvent = readJsonStrictOrNull<VirologyResultRequestV1>(request)
+        ?.let { r ->
+            r.convertToV2()
+                .also { events(javaClass, TestResultUploaded(1, source, it.ctaToken, it.testResult, it.testKit)) }
+                .let { virologyService.acceptTestResult(it).toHttpResponse() }
         }
         ?: HttpResponses.unprocessableEntity()
 
@@ -113,23 +130,10 @@ class VirologyUploadHandler @JvmOverloads constructor(
         virologyService: VirologyService,
         request: APIGatewayProxyRequestEvent
     ): APIGatewayProxyResponseEvent =
-        readJsonOrNull<VirologyTokenGenRequest>(request) { VirologyTokenGenRequest.v2TestKitValidator(it) }
+        readJsonOrNull<VirologyTokenGenRequestV2>(request)
             ?.let {
                 events(javaClass, CtaTokenGen(2, source, it.testResult, it.testKit))
-                HttpResponses.ok(Jackson.toJson(virologyService.acceptTestResultGeneratingTokens(it)))
-            }
-            ?: HttpResponses.unprocessableEntity()
-
-    private fun handleV1TestResult(
-        source: VirologyResultSource,
-        virologyService: VirologyService,
-        request: APIGatewayProxyRequestEvent
-    ): APIGatewayProxyResponseEvent =
-        readJsonOrNull<VirologyResultRequest>(request) { VirologyResultRequest.v1TestKitValidator(it) }
-            ?.let {
-                it.testKit = TestKit.LAB_RESULT
-                events.emit(javaClass, TestResultUploaded(1, source, it.ctaToken, it.testResult, it.testKit))
-                virologyService.acceptTestResult(it).toHttpResponse()
+                HttpResponses.ok(toJson(virologyService.acceptTestResultGeneratingTokens(it)))
             }
             ?: HttpResponses.unprocessableEntity()
 
@@ -137,14 +141,13 @@ class VirologyUploadHandler @JvmOverloads constructor(
         source: VirologyTokenExchangeSource,
         virologyService: VirologyService,
         request: APIGatewayProxyRequestEvent
-    ): APIGatewayProxyResponseEvent =
-        readJsonOrNull<VirologyTokenGenRequest>(request) { VirologyTokenGenRequest.v1TestKitValidator(it) }
-            ?.let {
-                it.testKit = TestKit.LAB_RESULT
-                events(javaClass, CtaTokenGen(1, source, it.testResult, it.testKit))
-                HttpResponses.ok(Jackson.toJson(virologyService.acceptTestResultGeneratingTokens(it)))
-            }
-            ?: HttpResponses.unprocessableEntity()
+    ): APIGatewayProxyResponseEvent = readJsonStrictOrNull<VirologyTokenGenRequestV1>(request)
+        ?.let { r ->
+            r.convertToV2()
+                .also { events(javaClass, CtaTokenGen(1, source, it.testResult, it.testKit)) }
+                .let { HttpResponses.ok(toJson(virologyService.acceptTestResultGeneratingTokens(it))) }
+        }
+        ?: HttpResponses.unprocessableEntity()
 
     override fun handler() = handler
 
@@ -156,15 +159,11 @@ class VirologyUploadHandler @JvmOverloads constructor(
         Eng, Wls
     }
 
-    private inline fun <reified T> readJsonOrNull(request: APIGatewayProxyRequestEvent, fn: (T) -> T): T? =
-        readOrNull(request.body, T::class.java) { e: Exception -> events.emit(javaClass, UnprocessableJson(e)) }
-            ?.let {
-                try {
-                    fn(it)
-                } catch (e: Exception) {
-                    null
-                }
-            }
+    private inline fun <reified T> readJsonOrNull(request: APIGatewayProxyRequestEvent): T? =
+        readOrNull<T>(request.body) { e: Exception -> events(javaClass, UnprocessableJson(e)) }
+
+    private inline fun <reified T> readJsonStrictOrNull(request: APIGatewayProxyRequestEvent): T? =
+        readStrictOrNull<T>(request.body) { e: Exception -> events(javaClass, UnprocessableJson(e)) }
 
     companion object {
         private fun virologyService(environment: Environment, events: Events): VirologyService = VirologyService(
@@ -173,7 +172,7 @@ class VirologyUploadHandler @JvmOverloads constructor(
                 fromEnvironment(environment),
                 events
             ),
-            TokensGenerator(),
+            TokensGenerator,
             CLOCK,
             VirologyPolicyConfig(),
             events

@@ -102,6 +102,7 @@ POLICY
 
 resource "aws_cloudwatch_event_rule" "this" {
   name = local.identifier_prefix
+  tags = var.tags
 
   event_pattern = <<EOF
 {

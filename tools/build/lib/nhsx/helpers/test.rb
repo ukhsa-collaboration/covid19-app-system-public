@@ -25,7 +25,7 @@ module NHSx
     def run_target_unit_tests
       java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
       gradlew = File.join(java_project_path, "gradlew")
-      cmdline = "#{gradlew} --console plain -p #{java_project_path} testUnit"
+      cmdline = "#{gradlew} --console plain -p #{java_project_path} test"
       run_tee("Runs java unit tests", cmdline, $configuration)
     end
   end

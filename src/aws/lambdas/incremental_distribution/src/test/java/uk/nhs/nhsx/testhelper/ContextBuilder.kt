@@ -5,53 +5,34 @@ import com.amazonaws.services.lambda.runtime.CognitoIdentity
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.LambdaLogger
 import java.nio.charset.StandardCharsets
+import java.util.UUID
 
 class ContextBuilder {
 
-    fun build(): Context {
-        return TestContext()
-    }
+    fun build(): Context = TestContext()
 
     class TestContext : Context {
-        override fun getAwsRequestId(): String {
-            throw UnsupportedOperationException("james didn't write")
-        }
+        override fun getAwsRequestId() = UUID(0,0).toString()
 
-        override fun getLogGroupName(): String {
-            return "test-log-group"
-        }
+        override fun getLogGroupName(): String = "test-log-group"
 
-        override fun getLogStreamName(): String {
-            return "test-log-stream"
-        }
+        override fun getLogStreamName(): String = "test-log-stream"
 
-        override fun getFunctionName(): String {
-            return "function-name"
-        }
+        override fun getFunctionName(): String = "function-name"
 
-        override fun getFunctionVersion(): String {
-            return "function-version"
-        }
+        override fun getFunctionVersion(): String = "function-version"
 
-        override fun getInvokedFunctionArn(): String {
-            return "lambda-function-arn"
-        }
+        override fun getInvokedFunctionArn(): String = "lambda-function-arn"
 
-        override fun getIdentity(): CognitoIdentity? {
-            return null
-        }
+        override fun getIdentity(): CognitoIdentity? = null
 
         override fun getClientContext(): ClientContext {
             throw UnsupportedOperationException("james didn't write")
         }
 
-        override fun getRemainingTimeInMillis(): Int {
-            return 1000
-        }
+        override fun getRemainingTimeInMillis(): Int = 1000
 
-        override fun getMemoryLimitInMB(): Int {
-            return 100
-        }
+        override fun getMemoryLimitInMB(): Int = 100
 
         override fun getLogger(): LambdaLogger {
             return object : LambdaLogger {
@@ -67,12 +48,8 @@ class ContextBuilder {
     }
 
     companion object {
-        fun context(): ContextBuilder {
-            return ContextBuilder()
-        }
+        fun context(): ContextBuilder = ContextBuilder()
 
-        fun aContext(): Context {
-            return ContextBuilder().build()
-        }
+        fun aContext(): Context = ContextBuilder().build()
     }
 }

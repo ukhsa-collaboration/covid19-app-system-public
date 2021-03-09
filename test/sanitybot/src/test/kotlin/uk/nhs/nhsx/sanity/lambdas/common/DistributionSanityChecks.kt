@@ -2,17 +2,23 @@ package uk.nhs.nhsx.sanity.lambdas.common
 
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
+import org.http4k.core.Body
 import org.http4k.core.ContentType
 import org.http4k.core.Method.GET
 import org.http4k.core.Request
+import org.http4k.core.Response
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.Uri
+import org.http4k.format.Jackson.auto
 import org.http4k.hamkrest.hasContentType
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
 import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.PostDistrictsDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesDistribution
@@ -56,6 +62,16 @@ class DistributionSanityChecks : LambdaSanityCheck() {
         )
     }
 
+    @Test
+    fun `Risky post districts v2 distribution matches static tier metadata`() {
+        val riskyPostDistrict = env.configFor(PostDistrictsDistribution, "post_districts_distribution") as Distribution
+        val apiResponse = insecureClient(Request(GET, Uri.of(riskyPostDistrict.endpointUri.toString() + "-v2")))
+        val apiContent = Body.auto<Map<String,Any>>().toLens().extract(apiResponse)
+        val staticTierMetadata = downloadS3Object(riskyPostDistrict.storeName,"tier-metadata")
+        assertThat(apiContent["riskLevels"], equalTo(staticTierMetadata))
+
+    }
+
     @MethodSource("distribution")
     @ParameterizedTest(name = "{arguments}")
     fun `Distribution endpoint returns a 200 and matches resource`(distribution: Distribution) {
@@ -71,5 +87,12 @@ class DistributionSanityChecks : LambdaSanityCheck() {
             endpoints()
                 .filterIsInstance<Distribution>()
                 .filterNot { it.resource == DynamicUrl || it.resource == DynamicContent }
+    }
+
+    private fun downloadS3Object(bucket: String, key: String): Any {
+        val s3 = S3Client.builder().build()
+        val s3ObjectResponse = s3.getObject(GetObjectRequest.builder().bucket(bucket).key(key).build())
+        val http4kResponse = Response(OK).body(s3ObjectResponse)
+        return Body.auto<Map<String,Any>>().toLens().extract(http4kResponse)
     }
 }

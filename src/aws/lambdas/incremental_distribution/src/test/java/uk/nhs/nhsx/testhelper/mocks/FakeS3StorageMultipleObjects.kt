@@ -6,6 +6,7 @@ import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.MetaHeader
 import uk.nhs.nhsx.core.aws.s3.S3Storage
+import java.net.URL
 import java.util.*
 
 class FakeS3StorageMultipleObjects : S3Storage {
@@ -22,5 +23,9 @@ class FakeS3StorageMultipleObjects : S3Storage {
         count++
         bucket = locator.bucket
         fakeS3Objects.add(FakeS3Object(locator.key, contentType, bytes, meta))
+    }
+
+    override fun getSignedURL(locator: Locator?, expiration: Date?): Optional<URL> {
+        return Optional.of(URL("https://example.com"))
     }
 }

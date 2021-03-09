@@ -5,6 +5,7 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.throws
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.Handler
 import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.ExceptionThrown
@@ -16,7 +17,7 @@ class QueuedHandlerTest {
     fun `logs events when successful`() {
         val events = RecordingEvents()
         object : QueuedHandler(events) {
-            override fun handler() = Queued.Handler { _, _ -> Result }
+            override fun handler() = Handler<SQSEvent, Event> { _, _ -> Result }
         }.handleRequest(SQSEvent(), TestContext())
 
         events.containsExactly(QueuedEventStarted::class, Result::class, QueuedEventCompleted::class)
@@ -29,7 +30,7 @@ class QueuedHandlerTest {
         val e = RuntimeException("hello")
         assertThat({
             object : QueuedHandler(events) {
-                override fun handler() = Queued.Handler { _, _ -> throw e }
+                override fun handler() = Handler<SQSEvent, Event> { _, _ -> throw e }
             }.handleRequest(SQSEvent(), TestContext())
         }, throws(equalTo(e)))
 

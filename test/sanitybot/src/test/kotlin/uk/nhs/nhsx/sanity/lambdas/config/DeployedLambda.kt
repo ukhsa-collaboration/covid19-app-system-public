@@ -36,10 +36,9 @@ enum class DeployedLambda(
     IsolationPayment(Submission.Companion::from, "isolation_payment", "mobile", listOf("_create", "_update")),
     PostDistrictsDistribution(Distribution.Companion::from, "post_districts_distribution"),
     RiskyPostcodeDistrictsUpload(Upload.Companion::from, "risky_post_districts_upload", "highRiskPostCodeUpload"),
-
+    RiskyVenueConfigurationDistribution(Distribution.Companion::from, "risky_venue_configuration_distribution"),
     RiskyVenuesCircuitBreaker(CircuitBreaker.Companion::from, "risky_venues_circuit_breaker", "mobile"),
     RiskyVenuesDistribution(Distribution.Companion::from, "risky_venues_distribution"),
-    RiskyVenuesMessagesDownload(Download.Companion::from, "risky_venues_messages_download"), // is this the same thing as a distribution?
     RiskyVenuesUpload(Upload.Companion::from, "risky_venues_upload", "highRiskVenuesCodeUpload"),
     SelfIsolationDistribution(Distribution.Companion::from, "self_isolation_distribution"),
     SymptomaticQuestionnaireDistribution(Distribution.Companion::from, "symptomatic_questionnaire_distribution"),

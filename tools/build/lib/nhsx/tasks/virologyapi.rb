@@ -1,7 +1,7 @@
 require "faraday"
 
 namespace :virology do
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
       namespace :v2 do
         desc "Order and upload virology result v2 for TEST_KIT"
@@ -69,7 +69,7 @@ namespace :virology do
           payload = {
             "ctaToken" => cta_token,
             "testEndDate" => (Time.now.utc + (60 * 60 * 48)).strftime("%Y-%m-%dT00:00:00Z"),
-            "testResult" => test_result
+            "testResult" => test_result,
           }
           url = "#{target_config["test_results_upload_gateway_endpoint"]}/upload/virology-test/npex-result"
 
@@ -88,7 +88,7 @@ namespace :virology do
           test_result = "POSITIVE"
           payload = {
             "testEndDate" => (Time.now.utc + (60 * 60 * 48)).strftime("%Y-%m-%dT00:00:00Z"),
-            "testResult" => test_result
+            "testResult" => test_result,
           }
           url = "#{target_config["test_results_upload_gateway_endpoint"]}/upload/virology-test/eng-result-tokengen"
 

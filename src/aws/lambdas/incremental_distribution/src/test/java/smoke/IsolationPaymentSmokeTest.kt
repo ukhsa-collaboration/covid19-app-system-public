@@ -4,15 +4,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.http4k.client.JavaHttpClient
 import org.http4k.filter.debug
 import org.junit.jupiter.api.Test
-import smoke.actors.IpcToken
 import smoke.actors.MobileApp
 import smoke.actors.SIPGateway
-import smoke.actors.UserCountry
-import smoke.actors.UserCountry.England
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.core.DateFormatValidator
-import java.time.OffsetDateTime
-import java.time.ZoneId
+import uk.nhs.nhsx.virology.Country
+import uk.nhs.nhsx.virology.Country.Companion.England
+import uk.nhs.nhsx.virology.IpcTokenId
+import java.time.Duration
+import java.time.Instant
+import java.time.temporal.ChronoUnit.SECONDS
 
 class IsolationPaymentSmokeTest {
     private val client = JavaHttpClient()
@@ -20,9 +20,8 @@ class IsolationPaymentSmokeTest {
     private val mobileApp = MobileApp(client.debug(), config)
     private val sipGateway = SIPGateway(config)
 
-    private val riskyEncounterDate = OffsetDateTime.now(ZoneId.of("UTC")).minusDays(4).withNano(0)
-
-    private val isolationPeriodEndDate = OffsetDateTime.now(ZoneId.of("UTC")).plusDays(4).withNano(0)
+    private val riskyEncounterDate = Instant.now().minus(Duration.ofDays(4)).truncatedTo(SECONDS)
+    private val isolationPeriodEndDate = Instant.now().plus(Duration.ofDays(4)).truncatedTo(SECONDS)
 
     @Test
     fun `happy path - submit isolation payment, update, verify and consume ipcToken`() {
@@ -34,23 +33,14 @@ class IsolationPaymentSmokeTest {
 
     @Test
     fun `isolation payment order creation is not enabled for non whitelisted countries`() {
-        val isolationCreationResponse = mobileApp.createIsolationToken(UserCountry.Other("Switzerland"))
+        val isolationCreationResponse = mobileApp.createIsolationToken(Country.of("Switzerland"))
         assertThat(isolationCreationResponse.ipcToken).isNull()
         assertThat(isolationCreationResponse.isEnabled).isFalse
     }
 
     @Test
     fun `update isolation token returns website URL even when an non-existing token is passed`() {
-        mobileApp.updateIsolationToken(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), riskyEncounterDate, isolationPeriodEndDate)
-    }
-
-    @Test
-    fun `update isolation token returns 400 if syntactically invalid token or date is passed`() {
-        mobileApp.updateIsolationTokenInvalid(IpcToken("<script>"), riskyEncounterDate.format(DateFormatValidator.formatter), isolationPeriodEndDate.format(DateFormatValidator.formatter))
-
-        mobileApp.updateIsolationTokenInvalid(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), "<script>", isolationPeriodEndDate.format(DateFormatValidator.formatter))
-
-        mobileApp.updateIsolationTokenInvalid(IpcToken("1111111111111111111111111111111111111111111111111111111111111111"), riskyEncounterDate.format(DateFormatValidator.formatter), "<script>")
+        mobileApp.updateIsolationToken(IpcTokenId.of("1".repeat(64)), riskyEncounterDate, isolationPeriodEndDate)
     }
 
     @Test
@@ -63,9 +53,9 @@ class IsolationPaymentSmokeTest {
     }
 
     @Test
-    fun `verify fails if token is invalid or not updated yet`() {
-        verifyInvalidToken(IpcToken("invalid-token"))
-        val ipcToken = createValidToken();
+    fun `verify fails if token is unknown or not updated yet`() {
+        verifyInvalidToken(IpcTokenId.of("Z".repeat(64)))
+        val ipcToken = createValidToken()
         verifyInvalidToken(ipcToken)
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
@@ -78,39 +68,39 @@ class IsolationPaymentSmokeTest {
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
 
-        val otherDate = OffsetDateTime.now();
+        val otherDate = Instant.now();
         mobileApp.updateIsolationToken(ipcToken, otherDate, otherDate)
 
         verifyValidToken(ipcToken)
     }
 
-    private fun createValidToken(): IpcToken {
+    private fun createValidToken(): IpcTokenId {
         val isolationCreationResponse = mobileApp.createIsolationToken(England)
-        assertThat(isolationCreationResponse.ipcToken).isNotEmpty
+        assertThat(isolationCreationResponse.ipcToken.value).isNotEmpty
         assertThat(isolationCreationResponse.isEnabled).isTrue
-        return IpcToken(isolationCreationResponse.ipcToken)
+        return isolationCreationResponse.ipcToken
     }
 
-    private fun verifyValidToken(ipcToken: IpcToken) {
+    private fun verifyValidToken(ipcToken: IpcTokenId) {
         val verifyPayload = sipGateway.verifiesIpcToken(ipcToken)
         assertThat(verifyPayload["state"]).isEqualTo("valid")
-        assertThat(OffsetDateTime.parse(verifyPayload["riskyEncounterDate"])).isEqualTo(riskyEncounterDate)
-        assertThat(OffsetDateTime.parse(verifyPayload["isolationPeriodEndDate"])).isEqualTo(isolationPeriodEndDate)
+        assertThat(Instant.parse(verifyPayload["riskyEncounterDate"])).isEqualTo(riskyEncounterDate)
+        assertThat(Instant.parse(verifyPayload["isolationPeriodEndDate"])).isEqualTo(isolationPeriodEndDate)
         assertThat(verifyPayload).containsKey("createdTimestamp")
         assertThat(verifyPayload).containsKey("updatedTimestamp")
     }
 
-    private fun verifyInvalidToken(ipcToken: IpcToken) {
+    private fun verifyInvalidToken(ipcToken: IpcTokenId) {
         val verifyPayload = sipGateway.verifiesIpcToken(ipcToken)
         assertThat(verifyPayload["state"]).isEqualTo("invalid")
     }
 
-    private fun consumeValidToken(ipcToken: IpcToken) {
+    private fun consumeValidToken(ipcToken: IpcTokenId) {
         val consumePayload = sipGateway.consumesIpcToken(ipcToken)
         assertThat(consumePayload["state"]).isEqualTo("consumed")
     }
 
-    private fun consumeInvalidToken(ipcToken: IpcToken) {
+    private fun consumeInvalidToken(ipcToken: IpcTokenId) {
         val consumePayload = sipGateway.consumesIpcToken(ipcToken)
         assertThat(consumePayload["state"]).isEqualTo("invalid")
     }

@@ -4,11 +4,11 @@ import contract.infra.BackendContractScenario
 import contract.infra.RecordingTest
 import contract.infra.ReplayTest
 import org.junit.jupiter.api.Test
-import smoke.actors.IpcToken
 import smoke.actors.MobileApp
-import smoke.actors.UserCountry
 import smoke.env.SmokeTests
-import java.time.OffsetDateTime
+import uk.nhs.nhsx.virology.Country.Companion.England
+import java.time.Duration
+import java.time.Instant
 
 interface CreateAndUpdateIsolationToken : BackendContractScenario {
     @Test
@@ -17,10 +17,10 @@ interface CreateAndUpdateIsolationToken : BackendContractScenario {
         val mobileApp = MobileApp(mitmHttpClient(), envConfig)
 
         control.addNote("Mobile App creates isolation token")
-        val ipcToken = IpcToken(mobileApp.createIsolationToken(UserCountry.England).ipcToken)
+        val ipcToken = mobileApp.createIsolationToken(England).ipcToken
 
         control.addNote("Mobile App updates isolation token with new dates")
-        mobileApp.updateIsolationToken(ipcToken, OffsetDateTime.now().minusDays(4), OffsetDateTime.now().minusDays(4))
+        mobileApp.updateIsolationToken(ipcToken, Instant.now().minus(Duration.ofDays(4)), Instant.now().minus(Duration.ofDays(4)))
     }
 }
 

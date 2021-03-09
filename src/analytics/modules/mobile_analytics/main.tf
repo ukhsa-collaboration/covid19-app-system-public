@@ -310,6 +310,52 @@ resource "aws_glue_catalog_table" "this" {
       name = "declaredNegativeResultFromDCT"
       type = "int"
     }
+    columns {
+      name = "receivedPositiveSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedSelfRapidPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedSelfRapidPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyVenueM1Warning"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyVenueM2Warning"
+      type = "int"
+    }
+    columns {
+      name = "hasReceivedRiskyVenueM2WarningBackgroundTick"
+      type = "int"
+    }
+
+
   }
 }
 

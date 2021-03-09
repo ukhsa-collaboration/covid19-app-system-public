@@ -48,12 +48,6 @@ variable "alarm_topic_arn" {
   description = "SNS topic to publish application metric alarms to"
 }
 
-variable "should_parse_additional_fields" {
-  description = "Feature flag for risky venue upload with message type"
-  default     = false
-  type        = bool
-}
-
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)

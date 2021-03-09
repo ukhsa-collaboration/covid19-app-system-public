@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.Locator
+import java.net.URL
 import java.util.*
 
 open class FakeS3 : FakeS3Storage(), AwsS3 {

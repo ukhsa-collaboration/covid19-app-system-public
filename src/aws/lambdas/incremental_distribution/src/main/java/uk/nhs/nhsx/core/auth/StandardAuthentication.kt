@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.core.auth
 
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
 import uk.nhs.nhsx.core.aws.secretsmanager.AwsSecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.CachingSecretManager
 import uk.nhs.nhsx.core.aws.xray.Tracing
@@ -14,7 +15,7 @@ object StandardAuthentication {
         val cachingApiKeyAuthorizer = CachingApiKeyAuthorizer(
             SecretManagerKeyAuthorizer(
                 apiName,
-                CachingSecretManager(AwsSecretManager()),
+                CachingSecretManager(AwsSecretManager(AWSSecretsManagerClientBuilder.defaultClient())),
                 events
             )
         )

@@ -2,14 +2,15 @@ package uk.nhs.nhsx.circuitbreakers
 
 import com.amazonaws.HttpMethod.GET
 import com.amazonaws.HttpMethod.POST
-import com.amazonaws.services.kms.model.SigningAlgorithmSpec
+import com.amazonaws.services.kms.model.SigningAlgorithmSpec.ECDSA_SHA_256
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson.readMaybe
+import uk.nhs.nhsx.core.Jackson.readOrNull
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
+import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.aws.ssm.Parameter
 import uk.nhs.nhsx.core.events.CircuitBreakerExposureRequest
 import uk.nhs.nhsx.core.events.CircuitBreakerExposureResolution
@@ -25,11 +26,7 @@ import java.util.Optional
 class ExposureNotificationHandlerTest {
 
     private val contentSigner = Signer {
-        Signature(
-            KeyId.of("some-id"),
-            SigningAlgorithmSpec.ECDSA_SHA_256,
-            "TEST_SIGNATURE".toByteArray()
-        )
+        Signature(KeyId.of("some-id"), ECDSA_SHA_256, "TEST_SIGNATURE".toByteArray())
     }
 
     private val events = RecordingEvents()
@@ -47,10 +44,12 @@ class ExposureNotificationHandlerTest {
                 "custom_oai" to "OAI"
             )
         ),
+        SystemClock.CLOCK,
+        events,
         { true },
+        AwsSsmParameters(),
         signer,
         breaker,
-        events,
         { true }
     )
 
@@ -76,13 +75,10 @@ class ExposureNotificationHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenResponse = readMaybe(
-            response.body,
-            TokenResponse::class.java
-        ) { }.orElse(TokenResponse())
+        val tokenResponse = readOrNull<TokenResponse>(response.body) ?: error("")
         assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
-        events.containsExactly(CircuitBreakerExposureRequest::class)
+        events.contains(CircuitBreakerExposureRequest::class)
 
     }
 
@@ -109,13 +105,10 @@ class ExposureNotificationHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenResponse = readMaybe(
-            response.body,
-            TokenResponse::class.java
-        ) { }.orElse(TokenResponse())
+        val tokenResponse = readOrNull<TokenResponse>(response.body) ?: error("")
         assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
-        events.containsExactly(CircuitBreakerExposureRequest::class)
+        events.contains(CircuitBreakerExposureRequest::class)
     }
 
     @Test
@@ -207,10 +200,9 @@ class ExposureNotificationHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val resolutionResponse = readMaybe(response.body, ResolutionResponse::class.java) { }
-            .orElse(ResolutionResponse())
-        assertThat(resolutionResponse.approval).matches(ApprovalStatus.YES.getName())
-        events.containsExactly(CircuitBreakerExposureResolution::class)
+        val resolutionResponse = readOrNull<ResolutionResponse>(response.body) ?: error("")
+        assertThat(resolutionResponse.approval).matches(ApprovalStatus.YES.statusName)
+        events.contains(CircuitBreakerExposureResolution::class)
     }
 
     private fun headersOrEmpty(response: APIGatewayProxyResponseEvent) =

@@ -1,23 +1,25 @@
 package uk.nhs.nhsx.virology
 
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.virology.Country.Companion.England
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
-import uk.nhs.nhsx.virology.result.VirologyResultRequest.NPEX_POSITIVE
+import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.virology.result.TestResult.Positive
 
 class VirologyPolicyConfig(
     private val requireConfirmatoryTest: Set<VirologyCriteria> =
         setOf(
-            VirologyCriteria.of(Country.of("England"), RAPID_SELF_REPORTED, NPEX_POSITIVE),
-            VirologyCriteria.of(Country.of("Wales"), RAPID_SELF_REPORTED, NPEX_POSITIVE)
+            VirologyCriteria(England, RAPID_SELF_REPORTED, Positive),
+            VirologyCriteria(Country.of("Wales"), RAPID_SELF_REPORTED, Positive)
         ),
     private val supportedCountryTestKitPairs: Set<VirologyCriteria> =
         setOf(
-            VirologyCriteria.of(Country.of("England"), LAB_RESULT, NPEX_POSITIVE),
-            VirologyCriteria.of(Country.of("England"), RAPID_RESULT, NPEX_POSITIVE),
-            VirologyCriteria.of(Country.of("Wales"), LAB_RESULT, NPEX_POSITIVE),
-            VirologyCriteria.of(Country.of("Wales"), RAPID_RESULT, NPEX_POSITIVE)
+            VirologyCriteria(England, LAB_RESULT, Positive),
+            VirologyCriteria(England, RAPID_RESULT, Positive),
+            VirologyCriteria(Country.of("Wales"), LAB_RESULT, Positive),
+            VirologyCriteria(Country.of("Wales"), RAPID_RESULT, Positive)
         ),
     private val blockedV1TestKitQueries: Set<TestKit> =
         setOf(
@@ -41,14 +43,9 @@ class VirologyPolicyConfig(
             MobileAppVersion.Unknown -> false
         }
 
-    data class VirologyCriteria(private val country: Country,
-                                private val testKit: TestKit,
-                                private val testResult: String) {
-        companion object {
-            @JvmStatic
-            fun of(country: Country, testKit: TestKit, testResult: String): VirologyCriteria {
-                return VirologyCriteria(country, testKit, testResult)
-            }
-        }
-    }
+    data class VirologyCriteria(
+        private val country: Country,
+        private val testKit: TestKit,
+        private val testResult: TestResult
+    )
 }

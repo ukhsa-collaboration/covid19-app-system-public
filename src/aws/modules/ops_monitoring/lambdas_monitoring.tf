@@ -44,6 +44,13 @@ resource "aws_cloudwatch_dashboard" "diagnosis_keys_dashboard" {
   })
 }
 
+resource "aws_cloudwatch_dashboard" "sip_dashboard" {
+  dashboard_name = "${var.env}-sip-dashboard"
+  dashboard_body = templatefile("${path.module}/templates/sip_dashboard.tmpl", {
+    env = var.env
+  })
+}
+
 resource "aws_cloudwatch_dashboard" "virology_dashboard" {
   dashboard_name = "${var.env}-virology-dashboard"
   dashboard_body = templatefile("${path.module}/templates/virology_dashboard.tmpl", {

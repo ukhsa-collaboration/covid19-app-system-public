@@ -18,7 +18,7 @@ data class EnvConfig(
     @JsonProperty("availability_ios_distribution_endpoint") val availabilityIosDistUrl: String,
     @JsonProperty("availability_ios_distribution_store") val availability_ios_distribution_store: String,
     @JsonProperty("base_distribution_endpoint") val base_distribution_endpoint: String,
-    @JsonProperty("base_download_endpoint") val baseDownloadEndpoint: String,
+    @JsonProperty("circuit_breaker_analytics_lambda_function_name") val circuitBreakerAnalyticsLambdaFunctionName: String,
     @JsonProperty("diagnosis_keys_distribution_2hourly_endpoint") val diagnosisKeysDist2hourlyEndpoint: String,
     @JsonProperty("diagnosis_keys_distribution_daily_endpoint") val diagnosisKeysDistributionDailyEndpoint: String,
     @JsonProperty("diagnosis_keys_distribution_store") val diagnosis_keys_distribution_store: String,
@@ -30,6 +30,8 @@ data class EnvConfig(
     @JsonProperty("exposure_configuration_distribution_store") val exposure_configuration_distribution_store: String,
     @JsonProperty("exposure_notification_circuit_breaker_endpoint") val exposureNotificationCircuitBreakerEndpoint: String,
     @JsonProperty("exposure_notification_circuit_breaker_health_endpoint") val enCircuitBreakerHealthEndpoint: String,
+    @JsonProperty("federation_key_proc_download_analytics_lambda_function_name") val federationKeyProcDownloadAnalyticsLambdaFunctionName: String,
+    @JsonProperty("federation_key_proc_upload_analytics_lambda_function_name") val federationKeyProcUploadAnalyticsLambdaFunctionName: String,
     @JsonProperty("federation_keys_processing_upload_function") val federationKeysProcessingUploadFunction: String,
     @JsonProperty("federation_keys_processing_download_function") val federationKeysProcessingDownloadFunction: String,
     @JsonProperty("isolation_payment_consume_lambda_function_name") val isolationPaymentConsumeLambdaFunctionName: String,
@@ -46,11 +48,12 @@ data class EnvConfig(
     @JsonProperty("risky_post_districts_upload_endpoint") val riskyPostDistrictsUploadEndpoint: String,
     @JsonProperty("risky_post_districts_upload_gateway_endpoint") val riskyPostDistrictsUploadGatewayEndpoint: String,
     @JsonProperty("risky_post_districts_upload_health_endpoint") val riskyPostDistrictsUploadHealthEndpoint: String,
+    @JsonProperty("risky_venue_configuration_distribution_endpoint") val riskyVenueConfigurationDistributionEndpoint: String,
+    @JsonProperty("risky_venue_configuration_distribution_store") val riskyVenueConfigurationDistributionStore: String,
     @JsonProperty("risky_venues_circuit_breaker_endpoint") val riskyVenuesCircuitBreakerEndpoint: String,
     @JsonProperty("risky_venues_circuit_breaker_health_endpoint") val riskyVenuesCircuitBreakerHealthEndpoint: String,
     @JsonProperty("risky_venues_distribution_endpoint") val riskyVenuesDistUrl: String,
     @JsonProperty("risky_venues_distribution_store") val risky_venues_distribution_store: String,
-    @JsonProperty("risky_venues_messages_download_endpoint") val riskyVenuesMessagesDownloadEndpoint: String,
     @JsonProperty("risky_venues_upload_endpoint") val riskyVenuesUploadEndpoint: String,
     @JsonProperty("risky_venues_upload_health_endpoint") val riskyVenuesUploadHealthEndpoint: String,
     @JsonProperty("self_isolation_distribution_endpoint") val selfIsolationDistUrl: String,
@@ -74,9 +77,13 @@ data class EnvConfig(
     @JsonProperty("virology_submission_lambda_function_name") val virologySubmissionLambdaFunctionName: String,
     @JsonProperty("virology_tokens_processing_function") val virologyTokensProcessingFunction: String,
     @JsonProperty("virology_tokens_processing_output_store") val virology_tokens_processing_output_store: String,
+    @JsonProperty("virology_tokens_processing_sms_topic_arn") val virology_tokens_processing_sms_topic_arn: String,
+    @JsonProperty("virology_tokens_processing_email_topic_arn") val virology_tokens_processing_email_topic_arn: String,
     @JsonProperty("virology_upload_lambda_function_name") val virologyUploadLambdaFunctionName: String,
     @JsonProperty("auth_headers") val authHeaders: AuthHeaders,
-    @JsonProperty("empty_submission_endpoint") val emptySubmissionEndpoint: String
+    @JsonProperty("empty_submission_endpoint") val emptySubmissionEndpoint: String,
+    @JsonProperty("empty_submission_v2_endpoint") val emptySubmissionV2Endpoint: String
+
 )
 
 data class AuthHeaders(

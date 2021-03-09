@@ -3,6 +3,10 @@ require "json"
 module NHSx
   # Helpers that codify the use of the AWS CLI within the NHSx project
   module AWS
+    AWS_CONFIG_PATHS = {
+      "config" => "#{ENV['HOME']}/.aws/config",
+      "credentials" => "#{ENV['HOME']}/.aws/credentials",
+    }.freeze
     # The default region
     AWS_REGION = "eu-west-2".freeze
     # The AWS profile to use when authenticating with MFA
@@ -11,12 +15,17 @@ module NHSx
     AWS_DEPLOYMENT_ROLES = {
       "staging" => "arn:aws:iam::123456789012:role/staging-ApplicationDeploymentUser",
       "prod" => "arn:aws:iam::123456789012:role/prod-ApplicationDeploymentUser",
-      "aa-dev" => "arn:aws:iam::181706652550:role/AccountDeploymentUser",
+      "aa-dev" => "arn:aws:iam::181706652550:role/ApplicationDeploymentUser",
+      "aa-staging" => "arn:aws:iam::074634264982:role/ApplicationDeploymentUser",
+      "aa-prod" => "arn:aws:iam::353189165293:role/ApplicationDeploymentUser",
     }.freeze
     # The full AWS role ARNs to use when logging in for queries
     AWS_READ_ROLES = {
       "staging" => "arn:aws:iam::123456789012:role/staging-ReadOnlyUser",
       "prod" => "arn:aws:iam::123456789012:role/prod-ReadOnlyUser",
+      "aa-dev" => "arn:aws:iam::181706652550:role/ReadOnlyUser",
+      "aa-staging" => "arn:aws:iam::074634264982:role/ReadOnlyUser",
+      "aa-prod" => "arn:aws:iam::353189165293:role/ReadOnlyUser",
     }.freeze
     # The user friendly names for the AWS roles
     AWS_ROLE_NAMES = ["deploy", "read"].freeze
@@ -36,6 +45,15 @@ module NHSx
         "aws --cli-read-timeout 0 --cli-connect-timeout 0 lambda invoke --region #{AWS_REGION} --function-name #{lambda_function} #{payload_cmd} #{output_file}"
       end
 
+      #Execute an Athena query
+      def self.start_athena_query(query, database, workgroup, region = AWS_REGION)
+        "aws athena start-query-execution --query-string \"#{query}\" --query-execution-context Database=#{database} --work-group #{workgroup} --region #{region}"
+      end
+
+      def self.get_athena_named_query(query_id, region = AWS_REGION)
+        "aws athena get-named-query --named-query-id #{query_id} --region #{region}"
+      end
+
       # Retrieve a temporary ECR authentication token
       def self.ecr_login(region = AWS_REGION)
         "aws ecr get-login-password --region #{region}"
@@ -48,11 +66,17 @@ module NHSx
         "aws s3 cp s3://#{object_name} #{local_target}"
       end
 
+      # Download, recursively an object from S3 into the local_target file.
+      def self.download_from_s3_recursively(object_name, local_target)
+        "aws s3 cp s3://#{object_name} #{local_target} --recursive"
+      end
+
       # Upload an object to S3 from the local source.
       #
       # object_name is the full path to the object (including the bucket name)
       def self.upload_to_s3(local_source, object_name, content_type)
-        "aws s3 cp --content-type #{content_type} #{local_source} s3://#{object_name}"
+        c_type = content_type ? " --content-type #{content_type}" : ""
+        "aws s3 cp #{local_source} s3://#{object_name}#{c_type}"
       end
 
       # Upload, recursively, to S3 from the local source.
@@ -67,6 +91,11 @@ module NHSx
       # object_name is the full path to the object (including the bucket name)
       def self.delete_from_s3(object_name)
         "aws s3 rm s3://#{object_name}"
+      end
+
+      # Delete recursively from S3.
+      def self.delete_from_s3_recursively(object_name)
+        "aws s3 rm s3://#{object_name} --recursive"
       end
 
       # Download the public key in .der format for the given key_id into public_key
@@ -113,6 +142,15 @@ module NHSx
       def self.multi_factor_authentication(profile, role, suffix)
         "aws-mfa --duration 3600 --profile #{profile} --assume-role #{role} --long-term-suffix none --short-term-suffix #{suffix}"
       end
+
+      def self.sso_login(sso_profile)
+        "aws sso login --profile #{sso_profile}"
+      end
+
+      def self.sts_assume_role(profile, role, account_number, session_name)
+        "aws sts assume-role --profile=#{profile} --role-arn arn:aws:iam::#{account_number}:role/#{role} --role-session-name=#{session_name}"
+      end
+
 
       def self.get_lambda_layer_versions(layer_name, region)
         "aws lambda list-layer-versions --layer-name #{layer_name} --region #{region}"
@@ -308,6 +346,46 @@ module NHSx
           # The above code is removed from delete_workspace()
         end
       end
+    end
+
+    # Finds the content-type matching on the file extension or nil if content type is not found
+    def content_type_of(file_path)
+      file_extension = File.extname(file_path)
+      case file_extension
+      when ".csv"
+        "text/csv"
+      when ".json"
+        "application/json"
+      else
+        nil
+      end
+    end
+
+    def upload_single_file_to_s3(file_path, s3_location, system_config)
+      content_type = content_type_of(file_path)
+      cmdline = NHSx::AWS::Commandlines.upload_to_s3(file_path, s3_location, content_type)
+      run_command("Uploading #{file_path} to #{s3_location}", cmdline, system_config)
+    end
+
+    def upload_recursively_to_s3(local_dir, s3_location, system_config)
+      cmdline = NHSx::AWS::Commandlines.upload_to_s3_recursively(local_dir, s3_location)
+      run_command("Uploading #{local_dir} to #{s3_location}", cmdline, system_config)
+    end
+
+    def download_recursively_from_s3(s3_location, local_dir, system_config)
+      cmdline = NHSx::AWS::Commandlines.download_from_s3_recursively(s3_location, local_dir)
+      run_command("Downloading #{s3_location} to #{local_dir}", cmdline, system_config)
+    end
+
+    def invoke_lambda(lambda_function, payload, system_config)
+      output_log_file = NHSx::AWS::Commandlines.new_lambda_output_file(lambda_function, system_config)
+      cmd_line = NHSx::AWS::Commandlines.invoke_lambda(lambda_function, payload, output_log_file)
+      run_command("Invoke #{lambda_function} lambda", cmd_line, system_config)
+    end
+
+    def empty_s3_bucket(s3_location, system_config)
+      cmdline = NHSx::AWS::Commandlines.delete_from_s3_recursively(s3_location)
+      run_command("Deleting recursively #{s3_location}", cmdline, system_config)
     end
   end
 end

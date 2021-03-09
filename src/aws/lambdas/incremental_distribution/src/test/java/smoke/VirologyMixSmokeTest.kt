@@ -9,18 +9,17 @@ import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
 import smoke.actors.MobileApp
 import smoke.actors.TestLab
-import smoke.actors.TestResult.POSITIVE
-import smoke.actors.TestResultPollingToken
-import smoke.actors.UserCountry.England
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.virology.CtaToken
+import uk.nhs.nhsx.virology.Country.Companion.England
 import uk.nhs.nhsx.virology.TestKit
 import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
-import uk.nhs.nhsx.virology.result.VirologyLookupResult
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
+import uk.nhs.nhsx.virology.result.TestEndDate
+import uk.nhs.nhsx.virology.result.TestResult.Positive
 
 class VirologyMixSmokeTest {
 
@@ -35,18 +34,18 @@ class VirologyMixSmokeTest {
         val orderResponse = mobileApp.orderTest(V2)
 
         testLab.uploadTestResult(
-            token = CtaToken.of(orderResponse.tokenParameterValue),
-            result = POSITIVE,
+            token = orderResponse.tokenParameterValue,
+            result = Positive,
             testKit = testKit,
             source = Npex,
             apiVersion = V1
         )
 
-        val pollingToken = TestResultPollingToken(orderResponse.testResultPollingToken)
+        val pollingToken = orderResponse.testResultPollingToken
 
-        val response = (mobileApp.pollForTestResult(pollingToken, V2) as VirologyLookupResult.AvailableV2).virologyLookupResponse
-        assertThat(response.testResult).isEqualTo(POSITIVE.name)
-        assertThat(response.testEndDate).isEqualTo("2020-04-23T00:00:00Z")
+        val response = (mobileApp.pollForTestResult(pollingToken, V2) as VirologyLookupResult.AvailableV2).response
+        assertThat(response.testResult).isEqualTo(Positive)
+        assertThat(response.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
         assertThat(response.testKit).isEqualTo(TestKit.LAB_RESULT)
         assertThat(response.diagnosisKeySubmissionSupported).isTrue
         assertThat(response.requiresConfirmatoryTest).isFalse
@@ -58,18 +57,18 @@ class VirologyMixSmokeTest {
         val orderResponse = mobileApp.orderTest(V1)
 
         testLab.uploadTestResult(
-            token = CtaToken.of(orderResponse.tokenParameterValue),
-            result = POSITIVE,
+            token = orderResponse.tokenParameterValue,
+            result = Positive,
             testKit = testKit,
             source = Npex,
             apiVersion = V2
         )
 
-        val pollingToken = TestResultPollingToken(orderResponse.testResultPollingToken)
+        val pollingToken = orderResponse.testResultPollingToken
 
-        val response = (mobileApp.pollForTestResult(pollingToken, V1) as VirologyLookupResult.Available).virologyLookupResponse
-        assertThat(response.testResult).isEqualTo(POSITIVE.name)
-        assertThat(response.testEndDate).isEqualTo("2020-04-23T00:00:00Z")
+        val response = (mobileApp.pollForTestResult(pollingToken, V1) as VirologyLookupResult.Available).response
+        assertThat(response.testResult).isEqualTo(Positive)
+        assertThat(response.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
         assertThat(response.testKit).isEqualTo(testKit)
     }
 
@@ -78,14 +77,14 @@ class VirologyMixSmokeTest {
         val orderResponse = mobileApp.orderTest(V1)
 
         testLab.uploadTestResult(
-            token = CtaToken.of(orderResponse.tokenParameterValue),
-            result = POSITIVE,
+            token = orderResponse.tokenParameterValue,
+            result = Positive,
             testKit = RAPID_SELF_REPORTED,
             source = Npex,
             apiVersion = V2
         )
 
-        val pollingToken = TestResultPollingToken(orderResponse.testResultPollingToken)
+        val pollingToken = orderResponse.testResultPollingToken
 
         repeat(times = 3) {
             val response = mobileApp.pollForTestResult(pollingToken, V1)
@@ -100,8 +99,8 @@ class VirologyMixSmokeTest {
     @EnumSource(value = TestKit::class)
     fun `lab token gen from v1 and app ctaExchange from v2 via different test kits`(testKit: TestKit) {
         val ctaToken = testLab.generateCtaTokenFor(
-            testResult = POSITIVE,
-            testEndDate = "2020-11-19T00:00:00Z",
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
             source = Eng,
             apiVersion = V1,
             testKit = testKit
@@ -110,8 +109,8 @@ class VirologyMixSmokeTest {
         val exchangeResponse = mobileApp.exchange(ctaToken, V2)
 
         val ctaExchangeResponse = (exchangeResponse as CtaExchangeResult.AvailableV2).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.testResult).isEqualTo(POSITIVE.name)
-        assertThat(ctaExchangeResponse.testEndDate).isEqualTo("2020-11-19T00:00:00Z")
+        assertThat(ctaExchangeResponse.testResult).isEqualTo(Positive)
+        assertThat(ctaExchangeResponse.testEndDate).isEqualTo(TestEndDate.of(2020,11,19))
         assertThat(ctaExchangeResponse.testKit).isEqualTo(TestKit.LAB_RESULT)
         assertThat(ctaExchangeResponse.diagnosisKeySubmissionSupported).isTrue
         assertThat(ctaExchangeResponse.requiresConfirmatoryTest).isFalse
@@ -121,8 +120,8 @@ class VirologyMixSmokeTest {
     @EnumSource(value = TestKit::class, names = ["LAB_RESULT", "RAPID_RESULT"])
     fun `lab token gen from v2 and app ctaExchange from v1`(testKit: TestKit) {
         val ctaToken = testLab.generateCtaTokenFor(
-            testResult = POSITIVE,
-            testEndDate = "2020-11-19T00:00:00Z",
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
             source = Eng,
             apiVersion = V2,
             testKit = testKit
@@ -131,16 +130,16 @@ class VirologyMixSmokeTest {
         val exchangeResponse = mobileApp.exchange(ctaToken, V1)
 
         val ctaExchangeResponse = (exchangeResponse as CtaExchangeResult.Available).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.testResult).isEqualTo(POSITIVE.name)
-        assertThat(ctaExchangeResponse.testEndDate).isEqualTo("2020-11-19T00:00:00Z")
+        assertThat(ctaExchangeResponse.testResult).isEqualTo(Positive)
+        assertThat(ctaExchangeResponse.testEndDate).isEqualTo(TestEndDate.of(2020,11,19))
         assertThat(ctaExchangeResponse.testKit).isEqualTo(testKit)
     }
 
     @Test
     fun `lab token gen for self reported test from v2 and app ctaExchange from v1 is not found, v2 is available`() {
         val ctaToken = testLab.generateCtaTokenFor(
-            testResult = POSITIVE,
-            testEndDate = "2020-11-19T00:00:00Z",
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
             source = Eng,
             apiVersion = V2,
             testKit = RAPID_SELF_REPORTED
@@ -160,14 +159,14 @@ class VirologyMixSmokeTest {
         val orderResponse = mobileApp.orderTest(V2)
 
         testLab.uploadTestResult(
-            token = CtaToken.of(orderResponse.tokenParameterValue),
-            result = POSITIVE,
+            token = orderResponse.tokenParameterValue,
+            result = Positive,
             testKit = RAPID_RESULT,
             source = Npex,
             apiVersion = V2
         )
 
-        val pollingToken = TestResultPollingToken(orderResponse.testResultPollingToken)
+        val pollingToken = orderResponse.testResultPollingToken
 
         val response1 = mobileApp.pollForTestResult(pollingToken, V1)
         assertThat(response1).isInstanceOf(VirologyLookupResult.Available::class.java)

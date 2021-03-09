@@ -7,7 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson.readMaybe
+import uk.nhs.nhsx.core.Jackson.readOrNull
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
@@ -21,6 +21,7 @@ import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.virology.IpcTokenId
 import java.util.Optional
 
 class IsolationPaymentOrderHandlerTest {
@@ -61,16 +62,20 @@ class IsolationPaymentOrderHandlerTest {
 
     private val handler = IsolationPaymentOrderHandler(
         environment,
+        SystemClock.CLOCK,
+        RecordingEvents(),
         authenticator,
         signer,
         service,
-        RecordingEvents(),
         { true }
     )
 
     @Test
     fun `token create returns 201 when tokens is created`() {
-        every { service.handleIsolationPaymentOrder(any()) } returns TokenGenerationResponse(true, "some-id")
+        every { service.handleIsolationPaymentOrder(any()) } returns TokenGenerationResponse(
+            true,
+            IpcTokenId.of("1".repeat(64))
+        )
 
         val requestEvent = ProxyRequestBuilder.request()
             .withMethod(POST)
@@ -91,14 +96,8 @@ class IsolationPaymentOrderHandlerTest {
         assertThat(response.statusCode).isEqualTo(201)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenGenerationResponse =
-            readMaybe(
-                response.body,
-                TokenGenerationResponse::class.java
-            ) { }
-                .orElseThrow()
-
-        assertThat(tokenGenerationResponse.ipcToken).isEqualTo("some-id")
+        val tokenGenerationResponse = readOrNull<TokenGenerationResponse>(response.body) ?: error("")
+        assertThat(tokenGenerationResponse.ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
         assertThat(tokenGenerationResponse.isEnabled).isEqualTo(true)
     }
 
@@ -122,10 +121,11 @@ class IsolationPaymentOrderHandlerTest {
     fun `token create returns 503 when feature is disabled`() {
         val handler = IsolationPaymentOrderHandler(
             environmentTokenCreationDisabled,
+            SystemClock.CLOCK,
+            RecordingEvents(),
             authenticator,
             signer,
             service,
-            RecordingEvents(),
             { true }
         )
 
@@ -174,8 +174,7 @@ class IsolationPaymentOrderHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenUpdateResponse = readMaybe(response.body, TokenUpdateResponse::class.java) { }.orElseThrow()
-
+        val tokenUpdateResponse = readOrNull<TokenUpdateResponse>(response.body) ?: error("")
         assertThat(tokenUpdateResponse.websiteUrlWithQuery).isEqualTo("https://test?ipcToken=some-id")
     }
 
@@ -199,10 +198,11 @@ class IsolationPaymentOrderHandlerTest {
     fun `token update returns 503 when feature is disabled`() {
         val handler = IsolationPaymentOrderHandler(
             environmentTokenCreationDisabled,
+            SystemClock.CLOCK,
+            RecordingEvents(),
             authenticator,
             signer,
             service,
-            RecordingEvents(),
             { true }
         )
 

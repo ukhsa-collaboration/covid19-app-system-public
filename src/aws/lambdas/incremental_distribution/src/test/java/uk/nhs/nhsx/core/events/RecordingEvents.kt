@@ -13,7 +13,7 @@ class RecordingEvents : Events, Iterable<Event> {
     private val received = CopyOnWriteArrayList<Event>()
 
     override fun iterator() = received.iterator()
-    
+
     override fun invoke(clazz: Class<*>, event: Event) {
         println("received event: $event")
         received += event
@@ -27,7 +27,9 @@ class RecordingEvents : Events, Iterable<Event> {
         assertThat(received.toList().map { it::class }, equalTo(events.toList()))
     }
 
-    fun contains(event: KClass<*>) {
-        assertThat(received.toList().map { it::class }, hasElement(event))
+    fun contains(vararg events: KClass<*>) {
+        events.forEach { e ->
+            assertThat(received.toList().map { it::class }, hasElement(e))
+        }
     }
 }

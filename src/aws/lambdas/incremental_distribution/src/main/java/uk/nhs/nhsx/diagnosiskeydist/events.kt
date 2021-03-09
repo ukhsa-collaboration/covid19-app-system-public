@@ -13,4 +13,6 @@ data class DistributionBatchWindow(
     val latest: Instant
 ) : Event(Info)
 
-object KeysDistributed : Event(Info)
+object KeysDistributed : Event(Info) {
+    override fun toString(): String = this::class.qualifiedName ?: "KeysDistributed"
+}

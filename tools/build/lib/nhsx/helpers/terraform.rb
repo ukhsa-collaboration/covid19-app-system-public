@@ -1,26 +1,17 @@
-require_relative "versions"
 require "digest"
 require "json"
+require_relative "../../gaudi/helpers/utilities"
+require_relative "../../zuehlke/helpers/templates"
+require_relative "../../zuehlke/helpers/execution"
+require_relative "versions"
 
 module NHSx
   # Methods that standardize terraform invocation
   module Terraform
-    include Zuehlke::Templates
     include Gaudi::Utilities
+    include Zuehlke::Templates
     include Zuehlke::Execution
     include NHSx::Versions
-    # The location for the terraform configuration of the account used for hosting temporary deployment environments
-    # relative to the root of the repository
-    DEV_ACCOUNT = "src/aws/accounts/dev".freeze
-    SYNTH_DEV_ACCOUNT = "src/synthetics/accounts/dev".freeze
-    ANALYTICS_DEV_ACCOUNT = "src/analytics/accounts/dev".freeze
-    PUBDASH_DEV_ACCOUNT = "src/pubdash/infrastructure/accounts/dev".freeze
-    DORETO_DEV_ACCOUNT = "src/documentation_reporting_tool/infrastructure/accounts/dev".freeze
-    # The location for the account used by a component of the system for targeting a temporary deployment environment
-    # relative to the root of the repository
-    APP_SYSTEM_ACCOUNTS = "src/aws/accounts".freeze
-    DORETO_ACCOUNTS = "src/documentation_reporting_tool/infrastructure/accounts".freeze
-    PUBDASH_ACCOUNTS = "src/pubdash/infrastructure/accounts".freeze
 
     # Invokes terraform in the correct context
     #
@@ -81,18 +72,22 @@ module NHSx
 
     # Codifies the naming convention for terraform workspaces related to the target environment
     #
-    # "branch" is a magic value that triggers the calculation of the SHA of the current branch name
-    # and uses the first 5 digits
+    # Workspace names ending in "branch" trigger the calculation of the SHA of the current branch name,
+    # of which the first 6 hex digits are used
     def target_environment_name(workspace_name, account, system_config)
-      if workspace_name == "branch"
+      if /branch$/.match(workspace_name)
         version_metadata = subsystem_version_metadata("backend", system_config)
-        workspace_name = version_metadata["BranchName"]
-        target_environment = generate_workspace_id(workspace_name)
+        branch_name = version_metadata["BranchName"]
+        target_environment = generate_workspace_id(branch_name)
       else
-        target_environment = workspace_name
-        target_environment = "te-#{workspace_name}" if NHSx::TargetEnvironment::TARGET_ENVIRONMENTS[account].include?(workspace_name)
+        # "te" stands for "target environment".
+        # If CTA_TARGET_ENVIRONMENTS contains a list of environment names for the requested account (dev, staging or prod),
+        # and that list contains the workspace name, prefix the workspace name with "te-".
+        # If not, leave it unchanged.
+        environments = NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS[account] || []
+        target_environment = environments.include?(workspace_name) ? "te-#{workspace_name}" : workspace_name
       end
-      return target_environment
+      target_environment
     end
 
     # Switches the terraform workspace to the given workspace_name
@@ -103,9 +98,6 @@ module NHSx
     #
     # If "branch" is passed as the workspace name, then the SHA1 of the current branch is calculated and used as the target environment identifier
     # otherwise the workspace_name is taken as is.
-    #
-    # Multiple workspaces (i.e. multiple target environments) are only allowed
-    # in the DEV_ACCOUNT terraform configuration.
     #
     # Pay attention to the length of workspace names as some AWS resources have a limit and the terraform workspace is prefixed to all
     # resource identifiers.
@@ -142,7 +134,7 @@ module NHSx
     # If the workspace does not exist, it will be created
     #
     # We do not use the workspace_name directly, rather generate and ID based on it (see generate_workspace_id)
-    def plan_for_workspace(workspace_name, terraform_configuration, tf_varfiles,system_config)
+    def plan_for_workspace(workspace_name, terraform_configuration, tf_varfiles, system_config)
       simple_name = File.basename(terraform_configuration)
       workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
       cmdline = "terraform plan -no-color"
@@ -157,19 +149,16 @@ module NHSx
     def delete_workspace(workspace_name, terraform_configuration, system_config)
       workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
       Dir.chdir(terraform_configuration) do
-        begin
-          run_tee("Destroy #{workspace_id}", "terraform destroy -auto-approve -no-color", system_config)
-          run_command("Select default workspace", "terraform workspace select default", system_config)
-          run_command("Delete workspace #{workspace_id}", "terraform workspace delete #{workspace_id}", system_config)
-        end
+        run_command("Destroy #{workspace_id}", "terraform destroy -auto-approve -no-color", system_config)
+        run_command("Select default workspace", "terraform workspace select default", system_config)
+        run_command("Delete workspace #{workspace_id}", "terraform workspace delete #{workspace_id}", system_config)
       end
     end
 
     def refresh_workspace(terraform_configuration, system_config)
       simple_name = File.basename(terraform_configuration)
-      # workspace_id = select_workspace(workspace_name, terraform_configuration, system_config)
       Dir.chdir(terraform_configuration) do
-        run_tee("Refresh for #{simple_name}", "terraform refresh", system_config)
+        run_command("Refresh for #{simple_name}", "terraform refresh", system_config)
       end
     end
 

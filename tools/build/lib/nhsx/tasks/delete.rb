@@ -1,6 +1,5 @@
 namespace :delete do
-
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
     desc "Delete the risky venues file in the S3 bucket of the #{tgt_env} target environment"
     task :"risky_venues:#{tgt_env}" do
       include NHSx::TargetEnvironment
@@ -10,5 +9,4 @@ namespace :delete do
       run_command("Delete risky venues", cmdline, $configuration)
     end
   end
-
 end

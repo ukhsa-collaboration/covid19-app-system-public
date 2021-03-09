@@ -2,6 +2,7 @@ version: 0.2
 phases:
   build:
     commands:
+      - rake test:build_system
       - rake lint:terraform
       - rake validate:static
       - rake validate:tier-metadata

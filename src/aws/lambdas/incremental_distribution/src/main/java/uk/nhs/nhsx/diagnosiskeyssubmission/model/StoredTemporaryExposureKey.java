@@ -11,10 +11,15 @@ public class StoredTemporaryExposureKey {
     public final Integer rollingStartNumber;
     public final Integer rollingPeriod;
     public final Integer transmissionRisk;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public final Integer daysSinceOnsetOfSymptoms;
 
-    public StoredTemporaryExposureKey(String key, Integer rollingStartNumber, Integer rollingPeriod, Integer transmissionRisk, Integer daysSinceOnsetOfSymptoms) {
+    public StoredTemporaryExposureKey(String key,
+                                      Integer rollingStartNumber,
+                                      Integer rollingPeriod,
+                                      Integer transmissionRisk,
+                                      Integer daysSinceOnsetOfSymptoms) {
         this.key = key;
         this.rollingStartNumber = rollingStartNumber;
         this.rollingPeriod = rollingPeriod;
@@ -23,8 +28,11 @@ public class StoredTemporaryExposureKey {
     }
 
     @JsonCreator
-    public StoredTemporaryExposureKey(String key, Integer rollingStartNumber, Integer rollingPeriod, Integer transmissionRisk) {
-        this(key,rollingStartNumber,rollingPeriod,transmissionRisk, null);
+    public StoredTemporaryExposureKey(String key,
+                                      Integer rollingStartNumber,
+                                      Integer rollingPeriod,
+                                      Integer transmissionRisk) {
+        this(key, rollingStartNumber, rollingPeriod, transmissionRisk, null);
     }
 
     @Override

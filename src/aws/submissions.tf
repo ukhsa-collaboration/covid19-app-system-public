@@ -393,6 +393,50 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "declaredNegativeResultFromDCT"
       type = "int"
     }
+    columns {
+      name = "receivedPositiveSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedSelfRapidPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedSelfRapidPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyVenueM1Warning"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyVenueM2Warning"
+      type = "int"
+    }
+    columns {
+      name = "hasReceivedRiskyVenueM2WarningBackgroundTick"
+      type = "int"
+    }
   }
 }
 
@@ -514,6 +558,15 @@ module "empty_submission" {
   tags                     = var.tags
 }
 
+module "empty_submission_v2" {
+  source                   = "./modules/submission_empty"
+  name                     = "empty-submission-v2"
+  tags                     = var.tags
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  policy_document          = module.empty_submission_v2_distribution_access.policy_document
+}
+
 module "virology_submission" {
   source                              = "./modules/submission_virology"
   lambda_repository_bucket            = module.artifact_repository.bucket_name
@@ -553,40 +606,74 @@ module "submission_apis" {
   domain      = var.base_domain
   web_acl_arn = var.waf_arn
 
-  analytics_submission_endpoint                  = module.analytics_submission.endpoint
-  analytics_submission_path                      = "/submission/mobile-analytics"
-  analytics_submission_health_path               = "/submission/mobile-analytics/health"
-  analytics_events_submission_endpoint           = module.analytics_events_submission.endpoint
-  analytics_events_submission_path               = "/submission/mobile-analytics-events"
-  analytics_events_submission_health_path        = "/submission/mobile-analytics-events/health"
-  diagnosis_keys_submission_endpoint             = module.diagnosis_keys_submission.endpoint
-  diagnosis_keys_submission_path                 = "/submission/diagnosis-keys"
-  diagnosis_keys_submission_health_path          = "/submission/diagnosis-keys/health"
-  empty_submission_endpoint                      = module.empty_submission.endpoint
-  empty_submission_path                          = "/submission/empty-submission"
-  exposure_notification_circuit_breaker_endpoint = module.exposure_notification_circuit_breaker.endpoint
-  exposure_notification_circuit_breaker_path     = "/circuit-breaker/exposure-notification/*"
-  isolation_payment_endpoint                     = module.isolation_payment_submission.endpoint
-  isolation_payment_path                         = "/isolation-payment/ipc-token/*"
-  isolation_payment_health_path                  = "/isolation-payment/health"
-  risky_venues_circuit_breaker_endpoint          = module.risky_venues_circuit_breaker.endpoint
-  risky_venues_circuit_breaker_path              = "/circuit-breaker/venue/*"
-  virology_kit_endpoint                          = module.virology_submission.api_endpoint
-  virology_kit_path                              = "/virology-test/*"
-  custom_oai                                     = random_uuid.submission-custom-oai.result
-  enable_shield_protection                       = var.enable_shield_protection
-  tags                                           = var.tags
+  analytics_submission_endpoint                   = module.analytics_submission.endpoint
+  analytics_submission_path                       = "/submission/mobile-analytics"
+  analytics_submission_health_path                = "/submission/mobile-analytics/health"
+  analytics_events_submission_endpoint            = module.analytics_events_submission.endpoint
+  analytics_events_submission_path                = "/submission/mobile-analytics-events"
+  analytics_events_submission_health_path         = "/submission/mobile-analytics-events/health"
+  diagnosis_keys_submission_endpoint              = module.diagnosis_keys_submission.endpoint
+  diagnosis_keys_submission_path                  = "/submission/diagnosis-keys"
+  diagnosis_keys_submission_health_path           = "/submission/diagnosis-keys/health"
+  empty_submission_endpoint                       = module.empty_submission.endpoint
+  empty_submission_path                           = "/submission/empty-submission"
+  empty_submission_v2_bucket_regional_domain_name = module.empty_submission_v2.store_regional_domain_name
+  empty_submission_v2_origin_access_identity_path = module.empty_submission_v2.origin_access_identity_path
+  empty_submission_v2_path                        = "/submission/empty-submission-v2"
+  exposure_notification_circuit_breaker_endpoint  = module.exposure_notification_circuit_breaker.endpoint
+  exposure_notification_circuit_breaker_path      = "/circuit-breaker/exposure-notification/*"
+  isolation_payment_endpoint                      = module.isolation_payment_submission.endpoint
+  isolation_payment_path                          = "/isolation-payment/ipc-token/*"
+  isolation_payment_health_path                   = "/isolation-payment/health"
+  risky_venues_circuit_breaker_endpoint           = module.risky_venues_circuit_breaker.endpoint
+  risky_venues_circuit_breaker_path               = "/circuit-breaker/venue/*"
+  virology_kit_endpoint                           = module.virology_submission.api_endpoint
+  virology_kit_path                               = "/virology-test/*"
+  custom_oai                                      = random_uuid.submission-custom-oai.result
+  enable_shield_protection                        = var.enable_shield_protection
+  tags                                            = var.tags
 }
 ############################
-module "circuit_breaker_analytics" {
-  source                         = "./modules/circuit_breaker_analytics"
-  alarm_topic_arn                = var.alarm_topic_arn
-  circuit_breaker_log_group_name = module.exposure_notification_circuit_breaker.lambda_log_group
-  lambda_object_key              = module.artifact_repository.lambda_object_key
-  lambda_repository_bucket       = module.artifact_repository.bucket_name
-  logs_bucket_id                 = var.logs_bucket_id
-  tags                           = var.tags
-  policy_document                = module.circuit_breaker_analytics_store_access.policy_document
+module "exposure_notification_circuit_breaker_analytics" {
+  source                   = "./modules/log_insights_analytics"
+  service                  = "exposure-notification-circuit-breaker"
+  alarm_topic_arn          = var.alarm_topic_arn
+  log_group_name           = module.exposure_notification_circuit_breaker.lambda_log_group
+  lambda_handler_class     = "uk.nhs.nhsx.analyticslogs.CircuitBreakerAnalyticsHandler"
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  logs_bucket_id           = var.logs_bucket_id
+  tags                     = var.tags
+  policy_document          = module.circuit_breaker_analytics_store_access.policy_document
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+}
+
+module "federation_key_proc_download_analytics" {
+  source                   = "./modules/log_insights_analytics"
+  service                  = "federation-key-proc-download"
+  alarm_topic_arn          = var.alarm_topic_arn
+  log_group_name           = module.federation_keys_processing.download_lambda_log_group
+  lambda_handler_class     = "uk.nhs.nhsx.analyticslogs.KeyFederationDownloadAnalyticsHandler"
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  logs_bucket_id           = var.logs_bucket_id
+  tags                     = var.tags
+  policy_document          = module.federation_key_proc_download_analytics_store_access.policy_document
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+}
+
+module "federation_key_proc_upload_analytics" {
+  source                   = "./modules/log_insights_analytics"
+  service                  = "federation-key-proc-upload"
+  alarm_topic_arn          = var.alarm_topic_arn
+  log_group_name           = module.federation_keys_processing.upload_lambda_log_group
+  lambda_handler_class     = "uk.nhs.nhsx.analyticslogs.KeyFederationUploadAnalyticsHandler"
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  logs_bucket_id           = var.logs_bucket_id
+  tags                     = var.tags
+  policy_document          = module.federation_key_proc_upload_analytics_store_access.policy_document
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
 }
 
 output "analytics_submission_store" {
@@ -619,6 +706,9 @@ output "diagnosis_keys_submission_endpoint" {
 output "empty_submission_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/empty-submission"
 }
+output "empty_submission_v2_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/submission/empty-submission-v2"
+}
 output "virology_kit_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/virology-test"
 }
@@ -627,6 +717,12 @@ output "isolation_payment_create_endpoint" {
 }
 output "isolation_payment_update_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/isolation-payment/ipc-token/update"
+}
+output "isolation_payment_create_gateway_endpoint" {
+  value = "${module.isolation_payment_submission.endpoint}/isolation-payment/ipc-token/create"
+}
+output "isolation_payment_update_gateway_endpoint" {
+  value = "${module.isolation_payment_submission.endpoint}/isolation-payment/ipc-token/update"
 }
 
 output "virology_submission_lambda_function_name" {
@@ -644,7 +740,15 @@ output "isolation_payment_consume_lambda_function_name" {
 output "isolation_payment_tokens_table" {
   value = module.isolation_payment_submission.ipc_tokens_table
 }
-
+output "circuit_breaker_analytics_lambda_function_name" {
+  value = module.exposure_notification_circuit_breaker_analytics.lambda_function_name
+}
+output "federation_key_proc_download_analytics_lambda_function_name" {
+  value = module.federation_key_proc_download_analytics.lambda_function_name
+}
+output "federation_key_proc_upload_analytics_lambda_function_name" {
+  value = module.federation_key_proc_upload_analytics.lambda_function_name
+}
 # Health endpoints
 output "analytics_submission_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/mobile-analytics/health"

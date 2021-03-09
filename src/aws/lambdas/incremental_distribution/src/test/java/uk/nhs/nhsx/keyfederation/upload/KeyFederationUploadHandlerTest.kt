@@ -18,7 +18,8 @@ import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import org.jose4j.jws.JsonWebSignature
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Jackson.readMaybe
+import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Jackson.readOrNull
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.SystemObjectMapper
 import uk.nhs.nhsx.core.TestEnvironments
@@ -73,7 +74,6 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
                 { true },
                 false,
                 -1,
-                BucketName.of("foo"),
                 wireMock.baseUrl(),
                 SecretName.of("authToken"),
                 ParameterName.of("parameter"),
@@ -120,7 +120,6 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
                 { false },
                 false,
                 -1,
-                BucketName.of("foo"),
                 wireMock.baseUrl(),
                 SecretName.of("authToken"),
                 ParameterName.of("parameter"),
@@ -183,7 +182,6 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
                 { true },
                 false,
                 -1,
-                BucketName.of("foo"),
                 wireMock.baseUrl(),
                 SecretName.of("authToken"),
                 ParameterName.of("parameter"),
@@ -236,26 +234,19 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
         private val expectedKeys: List<String>
     ) : StringValuePattern(matchesPayloadPattern) {
 
-        override fun match(value: String?): MatchResult {
-            return readMaybe(
-                value,
-                DiagnosisKeysUploadRequest::class.java
-            ) {}
-                .map {
-                    val jws = JsonWebSignature().apply {
-                        key = ecPrime256r1.public
-                        compactSerialization = it.payload
-                    }
+        override fun match(value: String): MatchResult = readOrNull<DiagnosisKeysUploadRequest>(value)
+            ?.let {
+                val jws = JsonWebSignature().apply {
+                    key = ecPrime256r1.public
+                    compactSerialization = it.payload
+                }
 
-                    val exposures = SystemObjectMapper.MAPPER.readValue(
-                        jws.payload,
-                        object : TypeReference<List<ExposureUpload>>() {})
+                val exposures = SystemObjectMapper.MAPPER.readValue(
+                    jws.payload,
+                    object : TypeReference<List<ExposureUpload>>() {})
 
-                    if (exposures.map { it.keyData }.toSet() == expectedKeys.toSet()) exactMatch() else noMatch()
-                }.orElse(
-                    noMatch()
-                )
-        }
+                if (exposures.map { it.keyData }.toSet() == expectedKeys.toSet()) exactMatch() else noMatch()
+            } ?: noMatch()
 
         override fun getExpected(): String =
             "Cannot display expected response due to custom matching, expecting $expectedKeys keys in payload"

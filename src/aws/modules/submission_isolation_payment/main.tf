@@ -49,6 +49,7 @@ resource "aws_dynamodb_table" "isolation_payment_tokens_table" {
   name         = "${terraform.workspace}-isolation-payment-tokens"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "tokenId"
+  tags         = var.tags
   point_in_time_recovery {
     enabled = true
   }

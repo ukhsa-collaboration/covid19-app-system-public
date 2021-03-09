@@ -68,3 +68,57 @@ resource "aws_iam_role_policy_attachment" "upload_lambda_execution_role" {
   policy_arn = local.lambda_policies[count.index]
   role       = aws_iam_role.upload_lambda_execution_role.name
 }
+
+resource "aws_cloudwatch_metric_alarm" "Errors_4XX" {
+  alarm_name          = "${module.upload_lambda.lambda_function_name}-4XXErrors"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "4xx"
+  namespace           = "AWS/ApiGateway"
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "Triggers when 4xx errors occur in ${module.upload_lambda.lambda_function_name}"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [var.alarm_topic_arn]
+  tags                = var.tags
+  dimensions = {
+    ApiId = module.upload_gateway.api_gateway_id
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "Errors_5XX" {
+  alarm_name          = "${module.upload_lambda.lambda_function_name}-5XXErrors"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "5xx"
+  namespace           = "AWS/ApiGateway"
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "Triggers when 5xx errors occur in ${module.upload_lambda.lambda_function_name}"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [var.alarm_topic_arn]
+  tags                = var.tags
+  dimensions = {
+    ApiId = module.upload_gateway.api_gateway_id
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "Throttles" {
+  alarm_name          = "${module.upload_lambda.lambda_function_name}-Throttles"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "Throttles"
+  namespace           = "AWS/Lambda"
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "Triggers when ${module.upload_lambda.lambda_function_name} is throttled (returns a 429)"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [var.alarm_topic_arn]
+  tags                = var.tags
+  dimensions = {
+    FunctionName = module.upload_lambda.lambda_function_name
+  }
+}

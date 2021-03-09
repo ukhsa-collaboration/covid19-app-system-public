@@ -60,6 +60,17 @@ public class AnalyticsMetrics {
     public Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult;
     public Integer didAskForSymptomsOnPositiveTestEntry;
     public Integer declaredNegativeResultFromDCT;
+    public Integer receivedPositiveSelfRapidTestResultViaPolling;
+    public Integer receivedNegativeSelfRapidTestResultViaPolling;
+    public Integer receivedVoidSelfRapidTestResultViaPolling;
+    public Integer receivedPositiveSelfRapidTestResultEnteredManually;
+    public Integer receivedNegativeSelfRapidTestResultEnteredManually;
+    public Integer receivedVoidSelfRapidTestResultEnteredManually;
+    public Integer isIsolatingForTestedSelfRapidPositiveBackgroundTick;
+    public Integer hasTestedSelfRapidPositiveBackgroundTick;
+    public Integer receivedRiskyVenueM1Warning;
+    public Integer receivedRiskyVenueM2Warning;
+    public Integer hasReceivedRiskyVenueM2WarningBackgroundTick;
 
     public AnalyticsMetrics() {
     }

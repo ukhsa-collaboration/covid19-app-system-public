@@ -2,6 +2,7 @@ package uk.nhs.nhsx.diagnosiskeydist.s3;
 
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import org.jetbrains.annotations.NotNull;
 import uk.nhs.nhsx.core.aws.s3.AwsS3;
 import uk.nhs.nhsx.core.aws.s3.BucketName;
 import uk.nhs.nhsx.core.aws.s3.Locator;
@@ -15,6 +16,7 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -22,10 +24,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
-import static uk.nhs.nhsx.core.Preconditions.checkArgument;
+import static uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.SYSTEM_EXIT_ERROR_HANDLER;
 
 public class SubmissionFromS3Repository implements SubmissionRepository {
 
@@ -36,17 +39,21 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
     private final Predicate<ObjectKey> objectKeyFilter;
     private final BucketName submissionBucketName;
     private final Events events;
+    private final Supplier<Instant> clock;
 
     public SubmissionFromS3Repository(AwsS3 awsS3,
                                       Predicate<ObjectKey> objectKeyFilter,
                                       BucketName submissionJsonBucketName,
-                                      Events events) {
+                                      Events events,
+                                      Supplier<Instant> clock) {
         this.awsS3 = awsS3;
         this.objectKeyFilter = objectKeyFilter;
         this.submissionBucketName = submissionJsonBucketName;
         this.events = events;
+        this.clock = clock;
     }
 
+    @NotNull
     @Override
     public List<Submission> loadAllSubmissions(long minimalSubmissionTimeEpocMillisExclusive,
                                                int limit,
@@ -56,7 +63,7 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
         List<S3ObjectSummary> summaries =
             awsS3.getObjectSummaries(submissionBucketName)
                 .stream()
-                .filter(it -> objectKeyFilter.test(ObjectKey.of(it.getKey())))
+                .filter(it -> objectKeyFilter.test(ObjectKey.Companion.of(it.getKey())))
                 .filter(it -> it.getLastModified().getTime() > minimalSubmissionTimeEpocMillisExclusive)
                 .collect(toList());
 
@@ -65,15 +72,15 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
         events.emit(getClass(), new InfoEvent(("Submission summaries loaded. Count="+summaries.size()+", Duration="+(System.currentTimeMillis() - start)+"ms")));
 
         List<Submission> submissions = Collections.synchronizedList(new ArrayList<>());
-        try (ConcurrentExecution pool = new ConcurrentExecution("LoadSubmissions", LOAD_SUBMISSIONS_TIMEOUT, events)) {
+        try (ConcurrentExecution pool = new ConcurrentExecution("LoadSubmissions", LOAD_SUBMISSIONS_TIMEOUT, events, clock, SYSTEM_EXIT_ERROR_HANDLER)) {
             for (S3ObjectSummary objectSummary : summaries) {
                 pool.execute(() ->
-                    awsS3.getObject(Locator.of(submissionBucketName, ObjectKey.of(objectSummary.getKey())))
+                    awsS3.getObject(Locator.of(submissionBucketName, ObjectKey.Companion.of(objectSummary.getKey())))
                         .ifPresentOrElse(
                             (s3Object) -> {
                                 try (S3ObjectInputStream s3inputStream = s3Object.getObjectContent()) {
                                     StoredTemporaryExposureKeyPayload payload = SubmissionRepository.getTemporaryExposureKeys(s3inputStream);
-                                    submissions.add(new Submission(objectSummary.getLastModified(), payload));
+                                    submissions.add(new Submission(objectSummary.getLastModified().toInstant(), payload));
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -91,7 +98,7 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
     }
 
     public static List<S3ObjectSummary> limit(List<S3ObjectSummary> summaries, int limit, int maxResults) {
-        checkArgument(limit > 0, "limit needs to be greater than 0");
+        if (limit <= 0) throw new IllegalArgumentException("limit needs to be greater than 0");
 
         List<S3ObjectSummary> limited = new LinkedList<>();
 
@@ -116,4 +123,5 @@ public class SubmissionFromS3Repository implements SubmissionRepository {
 
         return limited;
     }
+
 }

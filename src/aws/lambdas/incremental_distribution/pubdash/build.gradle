@@ -17,10 +17,11 @@ dependencies {
     implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
 
     implementation "com.amazonaws:aws-lambda-java-log4j2:1.2.0"
-    implementation platform("org.apache.logging.log4j:log4j-bom:$log4j_version")
-    implementation "org.apache.logging.log4j:log4j-api"
-    implementation "org.apache.logging.log4j:log4j-core"
     implementation "com.amazonaws:aws-java-sdk-athena:1.11.948"
+    implementation "com.amazonaws:aws-java-sdk-sqs:1.11.967"
+
+    implementation platform("dev.forkhandles:forkhandles-bom:$forkhandles_version")
+    implementation "dev.forkhandles:values4k:$forkhandles_version"
 
     // fixme: only used because there's a ContentType dependency in S3Storage
     implementation "org.apache.httpcomponents:httpclient:4.5.13"

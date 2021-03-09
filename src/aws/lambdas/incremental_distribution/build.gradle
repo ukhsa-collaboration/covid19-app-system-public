@@ -25,9 +25,9 @@ ext {
     aws_sdk_version = "1.11.826"
     aws_sdk2_version = "2.15.77"
     aws_xray_version = "2.4.0"
-    http4k_version = "4.3.0.0"
+    forkhandles_version = "1.8.4.3"
+    http4k_version = "4.3.5.4"
     jackson_version = "2.12.1"
-    log4j_version = "2.13.3"
     junit_version = "5.7.1"
 }
 
@@ -36,6 +36,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
         suppressWarnings = false
         jvmTarget = "11"
     }
+}
+
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "11"
+    freeCompilerArgs += "-Xjvm-default=enable"
 }
 
 tasks.withType(JavaCompile) {
@@ -111,27 +116,46 @@ test {
     finalizedBy jacocoTestReport
 }
 
-task testUnit(type: Test) {
-    dependsOn(check)
+task testSmokeParallel(type: Test) {
+    useJUnitPlatform{
+        excludeTags 'serial'
+    }
 
-    useJUnitPlatform()
+    description = 'Runs parallel smoke tests.'
+    group = 'verification'
+
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+    filter {
+        includeTestsMatching "smoke.*Test"
+    }
+
+    reports.html.destination = file("$projectDir/../../../../out/reports")
+    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
+}
+
+task testSmokeSerial(type: Test) {
+    useJUnitPlatform{
+        includeTags 'serial'
+    }
+
+    description = 'Runs serial smoke tests.'
+    group = 'verification'
+
+    filter {
+        includeTestsMatching "smoke.*Test"
+    }
+
+    // include serial tags
+    mustRunAfter(testSmokeParallel)
 
     reports.html.destination = file("$projectDir/../../../../out/reports")
     reports.junitXml.destination = file("$projectDir/../../../../out/reports")
 }
 
 task testSmoke(type: Test) {
-    description = 'Runs smoke tests.'
-    group = 'verification'
-
-    reports.html.destination = file("$projectDir/../../../../out/reports")
-    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
-
-    useJUnitPlatform()
-
-    filter {
-        includeTestsMatching "smoke.*Test"
-    }
+    dependsOn(testSmokeParallel)
+    dependsOn(testSmokeSerial)
 }
 
 task testContracts(type: Test) {
@@ -182,7 +206,6 @@ task lambdaZip {
 
 
 dependencies {
-    implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
     implementation "com.amazonaws:aws-lambda-java-log4j2:1.2.0"
     implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
 
@@ -193,6 +216,7 @@ dependencies {
     implementation "com.amazonaws:aws-java-sdk-secretsmanager"
     implementation "com.amazonaws:aws-java-sdk-s3"
     implementation "com.amazonaws:aws-java-sdk-ssm"
+    implementation "com.amazonaws:aws-java-sdk-sns"
     implementation "com.amazonaws:aws-java-sdk-dynamodb"
     implementation "com.amazonaws:aws-java-sdk-kinesis"
 
@@ -201,10 +225,6 @@ dependencies {
     implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk-core"
     implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk"
     implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk-instrumentor"
-
-    implementation platform("org.apache.logging.log4j:log4j-bom:$log4j_version")
-    implementation "org.apache.logging.log4j:log4j-api"
-    implementation "org.apache.logging.log4j:log4j-core"
 
     implementation "commons-codec:commons-codec:1.15"
     implementation "com.github.ben-manes.caffeine:caffeine:2.8.8"
@@ -217,17 +237,24 @@ dependencies {
     implementation platform("com.fasterxml.jackson:jackson-bom:$jackson_version")
     implementation "com.fasterxml.jackson.core:jackson-databind"
     implementation "com.fasterxml.jackson.module:jackson-module-parameter-names"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
     implementation "com.beust:jcommander:1.78"
     implementation "javax.xml.bind:jaxb-api:2.1"
+    implementation "net.lingala.zip4j:zip4j:2.7.0"
+    implementation "org.apache.commons:commons-csv:1.8"
 
-    testImplementation "com.amazonaws:aws-java-sdk-athena"
+    implementation platform("org.http4k:http4k-bom:$http4k_version")
+    implementation platform("dev.forkhandles:forkhandles-bom:$forkhandles_version")
+    implementation "dev.forkhandles:values4k:$forkhandles_version"
+
     testImplementation "com.amazonaws:DynamoDBLocal:1.13.5"
 
     testImplementation platform("software.amazon.awssdk:bom:${aws_sdk2_version}")
     testImplementation "software.amazon.awssdk:lambda"
+    testImplementation "software.amazon.awssdk:athena"
 
     testImplementation platform("org.junit:junit-bom:$junit_version")
     testImplementation "org.junit.jupiter:junit-jupiter-api"
@@ -241,13 +268,13 @@ dependencies {
     testImplementation "com.natpryce:snodge:3.7.0.0"
     testRuntimeOnly "org.glassfish:javax.json:1.1"
 
-    testImplementation platform("org.http4k:http4k-bom:$http4k_version")
     testImplementation "org.http4k:http4k-aws"
     testImplementation "org.http4k:http4k-core"
     testImplementation "org.http4k:http4k-format-jackson"
     testImplementation "org.http4k:http4k-testing-hamkrest"
     testImplementation "org.http4k:http4k-testing-approval"
     testImplementation 'org.http4k:http4k-testing-servirtium'
+    testImplementation 'org.http4k:http4k-resilience4j'
 
     testImplementation "org.awaitility:awaitility:4.0.3"
     testImplementation "io.mockk:mockk:1.10.2"
@@ -263,11 +290,6 @@ dependencies {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-}
-
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-    freeCompilerArgs += "-Xjvm-default=enable"
 }
 
 tasks.create("weighDependencies") {

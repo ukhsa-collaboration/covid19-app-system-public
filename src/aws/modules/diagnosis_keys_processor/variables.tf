@@ -40,6 +40,12 @@ variable "diagnosis_key_submission_prefixes" {
   description = "Allowed prefixes for the diagnosis key submissions"
 }
 
+variable "zip_submission_period_offset" {
+  description = "The distribution window period offset"
+  type        = string
+  default     = "PT-15M"
+}
+
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)

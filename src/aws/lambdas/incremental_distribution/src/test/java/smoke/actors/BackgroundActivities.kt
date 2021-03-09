@@ -2,10 +2,14 @@ package smoke.actors
 
 import com.natpryce.hamkrest.containsSubstring
 import org.http4k.core.Status.Companion.OK
+import org.joda.time.DateTime
 import smoke.clients.AwsLambda
 import smoke.env.EnvConfig
+import software.amazon.awssdk.services.lambda.model.InvokeResponse
+import java.time.Instant
 
 class BackgroundActivities(private val envConfig: EnvConfig) {
+
     fun invokesBatchProcessing() {
 
         AwsLambda.invokeFunction(envConfig.diagnosisKeysProcessingFunction)
@@ -19,6 +23,11 @@ class BackgroundActivities(private val envConfig: EnvConfig) {
         AwsLambda.invokeFunction(envConfig.federationKeysProcessingUploadFunction)
             .requireStatusCode(OK)
             .requireBodyText(containsSubstring("InteropConnectorUploadStats"))
+    }
+
+    fun invokeAnalyticsLogs(scheduledEventTime: Instant, functionName: String): InvokeResponse {
+        return AwsLambda.invokeFunction(functionName, """{ "time": "${DateTime(scheduledEventTime.toEpochMilli())}" }""")
+            .requireStatusCode(OK)
     }
 }
 

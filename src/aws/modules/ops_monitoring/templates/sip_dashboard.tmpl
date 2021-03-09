@@ -1,0 +1,88 @@
+{
+    "widgets": [
+        {
+            "type": "log",
+            "x": 0,
+            "y": 27,
+            "width": 24,
+            "height": 12,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${env}-ipc-token-consume' | SOURCE '/aws/lambda/${env}-ipc-token-order' | SOURCE '/aws/lambda/${env}-ipc-token-verify' | fields @timestamp, @message\n| filter metadata.category=\"WARNING\" or metadata.category=\"ERROR\" or metadata.category=\"INFO\" or metadata.category=\"AUDIT\"\n| filter @message not like /\\[ERR|\\[WARN|\\[INFO/\n| sort @timestamp desc\n| limit 100",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Most recent SIP Info/Warn/Error Logs",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 15,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${env}-ipc-token-consume' | SOURCE '/aws/lambda/${env}-ipc-token-order' | SOURCE '/aws/lambda/${env}-ipc-token-verify' | fields @timestamp, @message\n| filter @message like /IPC_TOKEN_AUDIT/\n| parse @message /(?<create_fail>CreateToken failed)/\n| parse @message /(?<update_fail>UpdateToken failed)/\n| parse @message /(?<verify_fail>VerifyToken failed)/\n| parse @message /(?<consume_fail>ConsumeToken failed)/\n| stats \ncount(create_fail),\ncount(update_fail),\ncount(verify_fail),\ncount(consume_fail)\n by bin(1h)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "SIP Audit Logs: Create, Update, Verify, Consume: Error counts per hour",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 3,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${env}-ipc-token-consume' | SOURCE '/aws/lambda/${env}-ipc-token-order' | SOURCE '/aws/lambda/${env}-ipc-token-verify' | fields @timestamp, @message\n| filter metadata.category=\"WARNING\" or metadata.category=\"ERROR\"\n| filter @message not like /\\[ERR|\\[WARN/\n| sort @timestamp desc\n| limit 100",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Most recent SIP Errors and Warnings",
+                "view": "table"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 21,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${env}-ipc-token-consume' | SOURCE '/aws/lambda/${env}-ipc-token-order' | SOURCE '/aws/lambda/${env}-ipc-token-verify' | fields @timestamp, @message\n| filter @message like /IPC_TOKEN_AUDIT/\n| parse @message /(?<create_success>CreateToken successful)/\n| parse @message /(?<update_success>UpdateToken successful)/\n| parse @message /(?<verify_success>VerifyToken successful)/\n| parse @message /(?<consume_success>ConsumeToken successful)/\n| stats \ncount(create_success),\ncount(update_success),\ncount(verify_success),\ncount(consume_success)\n by bin(1h)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "SIP Audit Logs: Create, Update, Verify, Consume: Success counts per hour",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 3,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${env}-ipc-token-consume' | SOURCE '/aws/lambda/${env}-ipc-token-order' | SOURCE '/aws/lambda/${env}-ipc-token-verify' | fields @timestamp, @message\n| filter @message like /IPC_TOKEN_AUDIT/\n| parse @message /(?<create_fail>CreateIPCTokenFailed)/\n| parse @message /(?<update_fail>UpdateIPCTokenFailed)/\n| parse @message /(?<verify_fail>VerifyIsolationTokenFailed)/\n| parse @message /(?<consume_fail>ConsumeIsolationTokenFailed)/\n| stats \ncount(create_fail),\ncount(update_fail),\ncount(verify_fail),\ncount(consume_fail)\n by bin(1h)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "SIP Audit Logs: Create, Update, Verify, Consume: Error counts per hour",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "type": "log",
+            "x": 0,
+            "y": 9,
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${env}-ipc-token-consume' | SOURCE '/aws/lambda/${env}-ipc-token-order' | SOURCE '/aws/lambda/${env}-ipc-token-verify' | fields @timestamp, @message\n| filter metadata.category=\"AUDIT\"\n| parse @message /(?<create_success>CreateIPCTokenSucceeded)/\n| parse @message /(?<update_success>UpdateIsolationTokenSucceeded)/\n| parse @message /(?<verify_success>UpdateIPCTokenSucceeded)/\n| parse @message /(?<consume_success>ConsumeIsolationTokenSucceeded)/\n| stats \ncount(create_success),\ncount(update_success),\ncount(verify_success),\ncount(consume_success)\n by bin(1h)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "SIP Audit Logs: Create, Update, Verify, Consume: Success counts per hour",
+                "view": "timeSeries"
+            }
+        }
+    ]
+}

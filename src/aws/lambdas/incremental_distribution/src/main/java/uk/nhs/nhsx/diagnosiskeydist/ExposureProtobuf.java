@@ -1,6 +1,10 @@
 package uk.nhs.nhsx.diagnosiskeydist;
 
-import batchZipCreation.Exposure.*;
+import batchZipCreation.Exposure.SignatureInfo;
+import batchZipCreation.Exposure.TEKSignature;
+import batchZipCreation.Exposure.TEKSignatureList;
+import batchZipCreation.Exposure.TemporaryExposureKey;
+import batchZipCreation.Exposure.TemporaryExposureKeyExport;
 import com.google.protobuf.ByteString;
 import uk.nhs.nhsx.diagnosiskeydist.apispec.ZIPSubmissionPeriod;
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey;

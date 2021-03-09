@@ -6,7 +6,7 @@ import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson.readMaybe
+import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
@@ -20,6 +20,7 @@ import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.proxy
 import java.util.Optional
 
 class RiskyVenueHandlerTest {
@@ -40,13 +41,14 @@ class RiskyVenueHandlerTest {
     private val poll = Parameter { ApprovalStatus.YES }
 
     private val breaker = CircuitBreakerService(initial, poll)
+
     private val handler = RiskyVenueHandler(
         TestEnvironments.TEST.apply(
             mapOf(
                 "MAINTENANCE_MODE" to "false",
                 "custom_oai" to "OAI"
             )
-        ), { true }, signer, breaker, events, { true }
+        ), SystemClock.CLOCK, events, { true }, proxy(), signer, breaker, { true }
     )
 
     @Test
@@ -64,13 +66,10 @@ class RiskyVenueHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenResponse = readMaybe(
-            response.body,
-            TokenResponse::class.java
-        ) { }.orElse(TokenResponse())
+        val tokenResponse = Jackson.readOrNull<TokenResponse>(response.body) ?: error("")
         assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
-        events.containsExactly(CircuitBreakerVenueRequest::class)
+        events.contains(CircuitBreakerVenueRequest::class)
     }
 
     @Test
@@ -146,13 +145,11 @@ class RiskyVenueHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val resolutionResponse = readMaybe(response.body, ResolutionResponse::class.java) {}
-            .orElse(ResolutionResponse())
-        assertThat(resolutionResponse.approval).matches(ApprovalStatus.YES.getName())
-        events.containsExactly(CircuitBreakerVenueResolution::class)
+        val resolutionResponse = Jackson.readOrNull<ResolutionResponse>(response.body) ?: error("")
+        assertThat(resolutionResponse.approval).matches(ApprovalStatus.YES.statusName)
+        events.contains(CircuitBreakerVenueResolution::class)
     }
 
-    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent): Map<String, String> {
-        return Optional.ofNullable(response.headers).orElse(emptyMap())
-    }
+    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent) =
+        Optional.ofNullable(response.headers).orElse(emptyMap())
 }

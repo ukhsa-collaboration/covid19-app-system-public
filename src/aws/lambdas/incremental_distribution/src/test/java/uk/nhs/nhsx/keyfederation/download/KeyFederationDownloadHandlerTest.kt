@@ -3,13 +3,7 @@ package uk.nhs.nhsx.keyfederation.download
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import com.github.tomakehurst.wiremock.client.WireMock.exactly
-import com.github.tomakehurst.wiremock.client.WireMock.get
-import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
-import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
-import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,13 +22,14 @@ import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
 import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
 import uk.nhs.nhsx.testhelper.proxy
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Instant
 import java.time.LocalDate
-import java.util.Date
+import java.util.*
 
 @ExtendWith(WireMockExtension::class)
 class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
@@ -55,8 +50,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
             ParameterName.of("parameter"),
             "federatedKeyDownloadPrefix",
             "DUMMY_TABLE",
-            listOf("GB-EAW"),
-            "GB-EAW"
+            listOf("GB-EAW","GB-NIR")
         )
     }
 
@@ -116,8 +110,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                 ParameterName.of("parameter"),
                 "federatedKeyDownloadPrefix",
                 "DUMMY_TABLE",
-                listOf("GB-EAW"),
-                "GB-EAW",
+                listOf("GB-EAW")
             ),
             InMemoryBatchTagService(),
             interopClient = InteropClient(
@@ -176,7 +169,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
     @Test
     fun `download keys with single page and save to s3`() {
         wireMock.stubFor(
-            get("/diagnosiskeys/download/2020-08-01")
+            get("/diagnosiskeys/download/2021-01-28")
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
                 .willReturn(
                     aResponse()
@@ -188,25 +181,70 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                                 "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
                                 "exposures": [
                                     {
-                                        "keyData": "ogNW4Ra+Zdds1ShN56yv3w==",
-                                        "rollingStartNumber": 2660544,
+                                        "keyData": "9m008UTn46C32jsWEw1Dnw==",
+                                        "rollingStartNumber": 2686464,
                                         "transmissionRiskLevel": 0,
                                         "rollingPeriod": 144,
-                                        "origin": "GB-EAW",
+                                        "origin": "GB-NIR",
+                                        "reportType": 1,
+                                        "daysSinceOnset": 0,
+                                        "testType": 1,
                                         "regions": [
                                             "GB"
                                         ]
                                     },
                                     {
-                                        "keyData": "EwoHez3CQgdslvdxaf+ztw==",
-                                        "rollingStartNumber": 2660544,
+                                        "keyData": "p05ot/jyF58G/95CkujQYQ==",
+                                        "rollingStartNumber": 2686896,
                                         "transmissionRiskLevel": 0,
-                                        "rollingPeriod": 144,
-                                        "origin": "GB-EAW",
+                                        "rollingPeriod": 101,
+                                        "origin": "GB-NIR",
+                                        "reportType": 1,
+                                        "daysSinceOnset": 0,
+                                        "testType": 1,
                                         "regions": [
                                             "GB"
                                         ]
-                                    }
+                                    },
+                                    {
+                                        "keyData": "ViRF6pOEFdVnk73aBrEwcA==",
+                                        "rollingStartNumber": 2686896,
+                                        "transmissionRiskLevel": 0,
+                                        "rollingPeriod": 101,
+                                        "origin": "GB-NIR",
+                                        "reportType": 1,
+                                        "daysSinceOnset": 0,
+                                        "testType": 1,
+                                        "regions": [
+                                            "GB"
+                                        ]
+                                    },
+                                    {
+                                        "keyData": "6X8NHosmohtYiMbqHrdaJA==",
+                                        "rollingStartNumber": 2686896,
+                                        "transmissionRiskLevel": 0,
+                                        "rollingPeriod": 101,
+                                        "origin": "GB-NIR",
+                                        "reportType": 3,
+                                        "daysSinceOnset": 0,
+                                        "testType": 1,
+                                        "regions": [
+                                            "GB"
+                                        ]
+                                    },
+                                    {
+                                        "keyData": "Y4cQpuB6Jyhs6fKn2GjCEw==",
+                                        "rollingStartNumber": 2686896,
+                                        "transmissionRiskLevel": 0,
+                                        "rollingPeriod": 101,
+                                        "origin": "GB-NIR",
+                                        "reportType": 1,
+                                        "daysSinceOnset": 0,
+                                        "testType": 3,
+                                        "regions": [
+                                            "GB"
+                                        ]
+                                    }                                                                        
                                 ]
                             }
                             """.trimIndent()
@@ -215,7 +253,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
         )
 
         wireMock.stubFor(
-            get(urlPathEqualTo("/diagnosiskeys/download/2020-08-01"))
+            get(urlPathEqualTo("/diagnosiskeys/download/2021-01-28"))
                 .withQueryParam("batchTag", equalTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3"))
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
                 .willReturn(
@@ -228,7 +266,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
         val fakeS3Storage = FakeS3StorageMultipleObjects()
 
         KeyFederationDownloadHandler(
-            { "2020-08-15T00:00:00.000Z".asInstant() },
+            { "2021-02-11T00:00:00.000Z".asInstant() },
             events,
             downloadEnabledConfig,
             batchTagService,
@@ -252,8 +290,8 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
             }
             .map { it.key }
 
-        assertThat(keys).hasSize(2)
-        assertThat(keys).containsAll(listOf("ogNW4Ra+Zdds1ShN56yv3w==", "EwoHez3CQgdslvdxaf+ztw=="))
+        assertThat(keys).hasSize(3)
+        assertThat(keys).containsAll(listOf("9m008UTn46C32jsWEw1Dnw==", "p05ot/jyF58G/95CkujQYQ==","ViRF6pOEFdVnk73aBrEwcA=="))
         assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
     }
 
@@ -307,8 +345,6 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
         assertThat(fakeS3Storage.count).isEqualTo(0)
         assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
     }
-
-    private fun String.asInstant() = Instant.parse(this)
 }
 
 

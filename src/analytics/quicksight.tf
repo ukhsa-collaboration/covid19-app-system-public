@@ -92,15 +92,17 @@ module "sip_analytics" {
   workgroup_name = module.workgroup.name
 }
 
-module "circuit_breaker_analytics" {
+module "log_insights_analytics" {
 
-  source                          = "./modules/circuit_breaker_analytics"
-  circuit_breaker_stats_bucket_id = var.circuit_breaker_stats_bucket_id
-  database_name                   = aws_glue_catalog_database.this.name
-  logs_bucket_id                  = var.logs_bucket_id
-  service                         = local.service
+  source                                  = "./modules/log_insights_analytics"
+  circuit_breaker_stats_bucket_id         = var.circuit_breaker_stats_bucket_id
+  key_federation_download_stats_bucket_id = var.key_federation_download_stats_bucket_id
+  key_federation_upload_stats_bucket_id   = var.key_federation_upload_stats_bucket_id
+  database_name                           = aws_glue_catalog_database.this.name
+  logs_bucket_id                          = var.logs_bucket_id
+  service                                 = local.service
   tags = merge(local.tags, {
-    Feature = "Circuit Breaker Analytics Stats"
+    Feature = "Log Insights Analytics Stats"
   })
   workgroup_name = module.workgroup.name
 }

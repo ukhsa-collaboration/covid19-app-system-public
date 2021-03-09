@@ -1,7 +1,6 @@
 package uk.nhs.nhsx.isolationpayment
 
 import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException
-import uk.nhs.nhsx.core.DateFormatValidator
 import uk.nhs.nhsx.core.events.CreateIPCTokenFailed
 import uk.nhs.nhsx.core.events.CreateIPCTokenNotEnabled
 import uk.nhs.nhsx.core.events.CreateIPCTokenSucceeded
@@ -17,6 +16,7 @@ import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
+import uk.nhs.nhsx.virology.IpcTokenId
 import java.time.Instant
 import java.time.Period
 import java.util.*
@@ -24,7 +24,7 @@ import java.util.function.Supplier
 
 class IsolationPaymentMobileService(
     private val systemClock: Supplier<Instant>,
-    private val tokenGenerator: Supplier<String>,
+    private val tokenGenerator: Supplier<IpcTokenId>,
     private val persistence: IsolationPaymentPersistence,
     private val isolationPaymentWebsite: String,
     private val tokenExpiryInWeeks: Int,
@@ -34,7 +34,7 @@ class IsolationPaymentMobileService(
 ) {
 
     fun handleIsolationPaymentOrder(request: TokenGenerationRequest): TokenGenerationResponse {
-        val isEnabled = countriesWhitelisted.contains(request.country)
+        val isEnabled = countriesWhitelisted.contains(request.country.value)
 
         if (!isEnabled) {
             events.emit(javaClass, CreateIPCTokenNotEnabled(auditLogPrefix, request.country))
@@ -81,8 +81,8 @@ class IsolationPaymentMobileService(
 
             try {
                 updatedToken.apply {
-                    riskyEncounterDate = toDateOrThrow(request.riskyEncounterDate)
-                    isolationPeriodEndDate = toDateOrThrow(request.isolationPeriodEndDate)
+                    riskyEncounterDate = request.riskyEncounterDate.epochSecond
+                    isolationPeriodEndDate = request.isolationPeriodEndDate.epochSecond
                     updatedTimestamp = systemClock.get().epochSecond
                     tokenStatus = TokenStateInternal.INT_UPDATED.value
                     expireAt = updatedToken.isolationPeriodEndDate
@@ -132,7 +132,4 @@ class IsolationPaymentMobileService(
         }
         return TokenUpdateResponse(websiteUrlWithQuery)
     }
-
-    private fun toDateOrThrow(input: String?) =
-        DateFormatValidator.toZonedDateTimeMaybe(input).map { it.toEpochSecond() }.orElseThrow()
 }

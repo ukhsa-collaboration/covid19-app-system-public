@@ -2,13 +2,15 @@ package uk.nhs.nhsx.analyticssubmission.model;
 
 import uk.nhs.nhsx.core.events.Events;
 
+import java.time.Instant;
+
 import static uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer.replacePostDistrictLA;
 
 public class StoredAnalyticsSubmissionPayload {
 
     //    Window
-    public final String startDate;
-    public final String endDate;
+    public final Instant startDate;
+    public final Instant endDate;
 
     //    Metadata
     public final String postalDistrict;
@@ -77,6 +79,18 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult;
     public final Integer didAskForSymptomsOnPositiveTestEntry;
     public final Integer declaredNegativeResultFromDCT;
+    public final Integer receivedPositiveSelfRapidTestResultViaPolling;
+    public final Integer receivedNegativeSelfRapidTestResultViaPolling;
+    public final Integer receivedVoidSelfRapidTestResultViaPolling;
+    public final Integer receivedPositiveSelfRapidTestResultEnteredManually;
+    public final Integer receivedNegativeSelfRapidTestResultEnteredManually;
+    public final Integer receivedVoidSelfRapidTestResultEnteredManually;
+    public final Integer isIsolatingForTestedSelfRapidPositiveBackgroundTick;
+    public final Integer hasTestedSelfRapidPositiveBackgroundTick;
+    public final Integer receivedRiskyVenueM1Warning;
+    public final Integer receivedRiskyVenueM2Warning;
+    public final Integer hasReceivedRiskyVenueM2WarningBackgroundTick;
+
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
@@ -103,8 +117,8 @@ public class StoredAnalyticsSubmissionPayload {
                                              int totalBackgroundTasks,
                                              int runningNormallyBackgroundTick,
                                              int completedOnboarding,
-                                             String startDate,
-                                             String endDate,
+                                             Instant startDate,
+                                             Instant endDate,
                                              boolean includesMultipleApplicationVersions,
                                              Integer receivedVoidTestResultEnteredManually,
                                              Integer receivedPositiveTestResultEnteredManually,
@@ -143,7 +157,18 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer didHaveSymptomsBeforeReceivedTestResult,
                                              Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult,
                                              Integer didAskForSymptomsOnPositiveTestEntry,
-                                             Integer declaredNegativeResultFromDCT) {
+                                             Integer declaredNegativeResultFromDCT,
+                                             Integer receivedPositiveSelfRapidTestResultViaPolling,
+                                             Integer receivedNegativeSelfRapidTestResultViaPolling,
+                                             Integer receivedVoidSelfRapidTestResultViaPolling,
+                                             Integer receivedPositiveSelfRapidTestResultEnteredManually,
+                                             Integer receivedNegativeSelfRapidTestResultEnteredManually,
+                                             Integer receivedVoidSelfRapidTestResultEnteredManually,
+                                             Integer isIsolatingForTestedSelfRapidPositiveBackgroundTick,
+                                             Integer hasTestedSelfRapidPositiveBackgroundTick,
+                                             Integer receivedRiskyVenueM1Warning,
+                                             Integer receivedRiskyVenueM2Warning,
+                                             Integer hasReceivedRiskyVenueM2WarningBackgroundTick) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -210,10 +235,21 @@ public class StoredAnalyticsSubmissionPayload {
         this.didRememberOnsetSymptomsDateBeforeReceivedTestResult = didRememberOnsetSymptomsDateBeforeReceivedTestResult;
         this.didAskForSymptomsOnPositiveTestEntry = didAskForSymptomsOnPositiveTestEntry;
         this.declaredNegativeResultFromDCT = declaredNegativeResultFromDCT;
-    }
+        this.receivedPositiveSelfRapidTestResultViaPolling = receivedPositiveSelfRapidTestResultViaPolling;
+        this.receivedNegativeSelfRapidTestResultViaPolling = receivedNegativeSelfRapidTestResultViaPolling;
+        this.receivedVoidSelfRapidTestResultViaPolling = receivedVoidSelfRapidTestResultViaPolling;
+        this.receivedPositiveSelfRapidTestResultEnteredManually = receivedPositiveSelfRapidTestResultEnteredManually;
+        this.receivedNegativeSelfRapidTestResultEnteredManually = receivedNegativeSelfRapidTestResultEnteredManually;
+        this.receivedVoidSelfRapidTestResultEnteredManually = receivedVoidSelfRapidTestResultEnteredManually;
+        this.isIsolatingForTestedSelfRapidPositiveBackgroundTick = isIsolatingForTestedSelfRapidPositiveBackgroundTick;
+        this.hasTestedSelfRapidPositiveBackgroundTick = hasTestedSelfRapidPositiveBackgroundTick;
+        this.receivedRiskyVenueM1Warning = receivedRiskyVenueM1Warning;
+        this.receivedRiskyVenueM2Warning = receivedRiskyVenueM2Warning;
+        this.hasReceivedRiskyVenueM2WarningBackgroundTick = hasReceivedRiskyVenueM2WarningBackgroundTick;
+        }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload, Events events) {
-        PostDistrictLADTuple postalDistrictLADTuple = replacePostDistrictLA(clientPayload.metadata.postalDistrict, clientPayload.metadata.localAuthority, events);
+        PostDistrictPair postalDistrictLADTuple = replacePostDistrictLA(clientPayload.metadata.postalDistrict, clientPayload.metadata.localAuthority, events);
         return new StoredAnalyticsSubmissionPayload(
             postalDistrictLADTuple.postDistrict,
             clientPayload.metadata.deviceModel,
@@ -280,7 +316,17 @@ public class StoredAnalyticsSubmissionPayload {
             clientPayload.metrics.didHaveSymptomsBeforeReceivedTestResult,
             clientPayload.metrics.didRememberOnsetSymptomsDateBeforeReceivedTestResult,
             clientPayload.metrics.didAskForSymptomsOnPositiveTestEntry,
-            clientPayload.metrics.declaredNegativeResultFromDCT
-        );
+            clientPayload.metrics.declaredNegativeResultFromDCT,
+            clientPayload.metrics.receivedPositiveSelfRapidTestResultViaPolling,
+            clientPayload.metrics.receivedNegativeSelfRapidTestResultViaPolling,
+            clientPayload.metrics.receivedVoidSelfRapidTestResultViaPolling,
+            clientPayload.metrics.receivedPositiveSelfRapidTestResultEnteredManually,
+            clientPayload.metrics.receivedNegativeSelfRapidTestResultEnteredManually,
+            clientPayload.metrics.receivedVoidSelfRapidTestResultEnteredManually,
+            clientPayload.metrics.isIsolatingForTestedSelfRapidPositiveBackgroundTick,
+            clientPayload.metrics.hasTestedSelfRapidPositiveBackgroundTick,
+            clientPayload.metrics.receivedRiskyVenueM1Warning,
+            clientPayload.metrics.receivedRiskyVenueM2Warning,
+            clientPayload.metrics.hasReceivedRiskyVenueM2WarningBackgroundTick);
     }
 }

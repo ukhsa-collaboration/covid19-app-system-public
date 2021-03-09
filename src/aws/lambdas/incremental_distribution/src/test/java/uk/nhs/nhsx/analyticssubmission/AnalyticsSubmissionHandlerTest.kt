@@ -9,27 +9,22 @@ import com.natpryce.snodge.json.forStrings
 import com.natpryce.snodge.mutants
 import io.mockk.every
 import io.mockk.mockk
-import org.hamcrest.CoreMatchers.anyOf
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
+import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.MobileAnalyticsSubmission
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.BAD_REQUEST_400
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.FORBIDDEN_403
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.INTERNAL_SERVER_ERROR_500
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.METHOD_NOT_ALLOWED_405
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.NOT_FOUND_404
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.OK_200
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.*
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_EMPTY_PAIR
@@ -60,6 +55,7 @@ class AnalyticsSubmissionHandlerTest {
         false,
         BUCKET_NAME
     )
+
     private val events = RecordingEvents()
     private val handler = AnalyticsSubmissionHandler(
         TestEnvironments.TEST.apply(
@@ -68,13 +64,14 @@ class AnalyticsSubmissionHandlerTest {
                 "custom_oai" to "OAI"
             )
         ),
+        SystemClock.CLOCK,
+        events,
         { true },
         { true },
         s3Storage,
         kinesisFirehose,
         objectKeyNameProvider,
-        config,
-        events
+        config
     )
 
     @BeforeEach
@@ -82,211 +79,6 @@ class AnalyticsSubmissionHandlerTest {
         every { objectKeyNameProvider.generateObjectKeyName() } returns objectKey
     }
 
-    @Test
-    fun acceptsiOSPayloadAndReturns200() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_PAYLOAD_IOS))
-
-        events.containsExactly(MobileAnalyticsSubmission::class)
-    }
-
-    @Test
-    fun acceptsiOSPayloadMergesPostDistrictsAndReturns200() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_IOS))
-        events.containsExactly(MobileAnalyticsSubmission::class)
-    }
-
-    @Test
-    fun acceptsiOSPayloadWithNewMetricFieldsAndReturns200() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(iOSPayloadFromNewMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_PAYLOAD_IOS_NEW_METRICS))
-        events.containsExactly(MobileAnalyticsSubmission::class)
-    }
-
-    @Test
-    fun iosPayloadWithInvalidPairOfValidPostCodeAndValidLocalAuthority() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(
-                iOSPayloadFromWithMetrics(
-                    "2020-07-27T23:00:00Z",
-                    "2020-07-28T22:59:00Z",
-                    "YO62",
-                    "",
-                    "E07000152"
-                )
-            )
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_INVALID_PAIR))
-    }
-
-    @Test
-    fun iosPayloadWithInvalidLocalAuthority() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "YO62", "", "Houston"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_INVALID_PAIR))
-    }
-
-    @Test
-    fun iosPayloadWithEmptyPostCodeAndLocalAuthority() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "", "", ""))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_EMPTY_PAIR))
-    }
-
-    @Test
-    fun iosPayloadWithPostcodeNotFoundInMappingSavesPostDistrictAsUnknown() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "F4KEP0STC0DE"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_IOS))
-        events.containsExactly(MobileAnalyticsSubmission::class, InfoEvent::class)
-    }
-
-    @Test
-    fun androidPayloadWithPostcodeNotFoundInMappingSavesPostDistrictAsUnknown() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "F4KEP0STC0DE"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_ANDROID))
-        events.containsExactly(MobileAnalyticsSubmission::class, InfoEvent::class)
-    }
-
-    @Test
-    fun acceptsAndroidPayloadMergesPostDistrictsAndReturns200() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID))
-        events.containsExactly(MobileAnalyticsSubmission::class)
-    }
-
-    @Test
-    fun acceptsAndroidPayloadAndReturns200() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_PAYLOAD_ANDROID))
-        events.containsExactly(MobileAnalyticsSubmission::class)
-    }
 
     @Test
     fun notFoundWhenPathIsWrong() {
@@ -323,28 +115,19 @@ class AnalyticsSubmissionHandlerTest {
     @Test
     fun badRequestWhenEmptyBody() {
         val responseEvent = responseFor("")
-        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(0))
-        events.containsExactly(MobileAnalyticsSubmission::class, UnprocessableJson::class)
+        assertStatusIs400(responseEvent)
     }
 
     @Test
     fun badRequestWhenMalformedJson() {
         val responseEvent = responseFor("{")
-        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(0))
-        events.containsExactly(MobileAnalyticsSubmission::class, UnprocessableJson::class)
+        assertStatusIs400(responseEvent)
     }
 
     @Test
     fun badRequestWhenEmptyJsonObject() {
         val responseEvent = responseFor("{}")
-        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(0))
-        events.containsExactly(MobileAnalyticsSubmission::class, UnprocessableJson::class)
+        assertStatusIs400(responseEvent)
     }
 
     @Disabled("Mutated postcode won't be in mapping causing a 500 error")
@@ -357,11 +140,11 @@ class AnalyticsSubmissionHandlerTest {
                     val response = responseFor(json)
                     assertThat(
                         response, not(
-                            anyOf(
-                                hasStatus(INTERNAL_SERVER_ERROR_500),
-                                hasStatus(FORBIDDEN_403)
-                            )
+                        anyOf(
+                            hasStatus(INTERNAL_SERVER_ERROR_500),
+                            hasStatus(FORBIDDEN_403)
                         )
+                    )
                     )
                     assertThat(response, hasBody(equalTo(null)))
                 }
@@ -373,21 +156,22 @@ class AnalyticsSubmissionHandlerTest {
         val responseEvent = responseFor(
             iOSPayloadFrom("2020-06-2001:00:00Z", "2020-06-20T22:00:00Z")
         )
-        assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(0))
-        events.containsExactly(MobileAnalyticsSubmission::class, UnprocessableJson::class)
+        assertStatusIs400(responseEvent)
     }
 
     @Test
-    fun badRequestWhenEndDateBeforeStartDate() {
+    fun badRequestWhenEndDateIsInInvalidFormat() {
         val responseEvent = responseFor(
             iOSPayloadFrom("2020-06-20T22:00:00Z", "2020-06-20T22:00:00")
         )
+        assertStatusIs400(responseEvent)
+    }
+
+    private fun assertStatusIs400(responseEvent: APIGatewayProxyResponseEvent) {
         assertThat(responseEvent, hasStatus(BAD_REQUEST_400))
         assertThat(responseEvent, hasBody(equalTo(null)))
         assertThat(s3Storage.count, equalTo(0))
-        events.containsExactly(MobileAnalyticsSubmission::class, UnprocessableJson::class)
+        events.contains(MobileAnalyticsSubmission::class, UnprocessableJson::class)
     }
 
     private fun responseFor(requestPayload: String): APIGatewayProxyResponseEvent {
@@ -402,35 +186,69 @@ class AnalyticsSubmissionHandlerTest {
         return handler.handleRequest(requestEvent, ContextBuilder.aContext())
     }
 
-    @Test
-    fun acceptsiOSPayloadWithLocalAuthorityAndReturns200() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/submission/mobile-analytics")
-            .withBearerToken("anything")
-            .withJson(iOSPayloadFromWithLocalAuthority("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
-            .build()
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(OK_200))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_PAYLOAD_IOS_WITH_LOCAL_AUTHORITY))
-        events.containsExactly(MobileAnalyticsSubmission::class)
+
+    enum class TestCombo(val payload: String, val expectedJson: String) {
+        WITH_LOCAL_AUTHORITY_ANDROID(
+            payload = androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "SY5", "E06000051"),
+            expectedJson = STORED_ANALYTICS_PAYLOAD_ANDROID_WITH_LOCAL_AUTHORITY
+        ),
+        WITH_LOCAL_AUTHORITY_IOS(
+            payload = iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "SY5", "", "E06000051"),
+            expectedJson = STORED_ANALYTICS_PAYLOAD_IOS_WITH_LOCAL_AUTHORITY
+        ),
+        WITH_IOS(
+            payload = iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"),
+            expectedJson = STORED_ANALYTICS_PAYLOAD_IOS
+        ),
+        WITH_MERGED_DISTRICTS_IOS(
+            payload = iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"),
+            expectedJson = STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_IOS
+        ),
+        WITH_NEW_METRICS_IOS(
+            payload = iOSPayloadFromNewMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"),
+            expectedJson = STORED_ANALYTICS_PAYLOAD_IOS_NEW_METRICS
+        ),
+        WITH_INVALID_PAIR_POSTCODE_LOCAL_AUTHORITY_IOS(
+            payload = iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "YO62", "", "E07000152"),
+            expectedJson = STORED_ANALYTICS_INVALID_PAIR
+        ),
+        WITH_INVALID_LOCAL_AUTHORITY_IOS(
+            payload = iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "YO62", "", "Houston"),
+            expectedJson = STORED_ANALYTICS_INVALID_PAIR
+        ),
+        WITH_EMPTY_POSTCODE_LOCAL_AUTHORITY_IOS(
+            payload = iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "", "", ""),
+            expectedJson = STORED_ANALYTICS_EMPTY_PAIR
+        ),
+        WITH_UNKNOWN_POSTCODE_IOS(
+            payload = iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "F4KEP0STC0DE"),
+            expectedJson = STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_IOS
+        ),
+        WITH_UNKNOWN_POSTCODE_ANDROID(
+            payload = androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "F4KEP0STC0DE"),
+            expectedJson = STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_ANDROID
+        ),
+        WITH_MERGED_DISTRICTS_ANDROID(
+        payload = androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"),
+        expectedJson = STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID
+        ),
+        WITH_ANDROID(
+            payload = androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"),
+            expectedJson = STORED_ANALYTICS_PAYLOAD_ANDROID
+        ),
     }
 
-    @Test
-    fun acceptsAndroidPayloadWithLocalAuthorityAndReturns200() {
+
+    @ParameterizedTest
+    @EnumSource(TestCombo::class)
+    fun assertPayloadReturns200AndMatches(testCombo: TestCombo) {
         val requestEvent = ProxyRequestBuilder.request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/submission/mobile-analytics")
             .withBearerToken("anything")
-            .withJson(androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "SY5", "E06000051"))
+            .withJson(testCombo.payload)
             .build()
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(OK_200))
@@ -438,8 +256,8 @@ class AnalyticsSubmissionHandlerTest {
         assertThat(s3Storage.count, equalTo(1))
         assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
         assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_ANALYTICS_PAYLOAD_ANDROID_WITH_LOCAL_AUTHORITY))
-        events.containsExactly(MobileAnalyticsSubmission::class)
+        assertThat(s3Storage.bytes.toUtf8String(), equalTo(testCombo.expectedJson))
+        events.contains(MobileAnalyticsSubmission::class)
     }
 
     companion object {
@@ -483,7 +301,18 @@ class AnalyticsSubmissionHandlerTest {
                     "didHaveSymptomsBeforeReceivedTestResult":1,
                     "didRememberOnsetSymptomsDateBeforeReceivedTestResult":1,
                     "didAskForSymptomsOnPositiveTestEntry":1,
-                    "declaredNegativeResultFromDCT":1""".trimIndent()
+                    "declaredNegativeResultFromDCT":1,
+                    "receivedPositiveSelfRapidTestResultViaPolling":1,
+                    "receivedNegativeSelfRapidTestResultViaPolling":1,
+                    "receivedVoidSelfRapidTestResultViaPolling":1,
+                    "receivedPositiveSelfRapidTestResultEnteredManually":1,
+                    "receivedNegativeSelfRapidTestResultEnteredManually":1,
+                    "receivedVoidSelfRapidTestResultEnteredManually":1,
+                    "isIsolatingForTestedSelfRapidPositiveBackgroundTick":1,
+                    "hasTestedSelfRapidPositiveBackgroundTick":1,
+                    "receivedRiskyVenueM1Warning":1,
+                    "receivedRiskyVenueM2Warning":1,
+                    "hasReceivedRiskyVenueM2WarningBackgroundTick":1""".trimIndent()
             return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", metrics)
         }
 
@@ -581,16 +410,8 @@ class AnalyticsSubmissionHandlerTest {
             """.trimIndent()
         }
 
-        private fun iOSPayloadFrom(startDate: String, endDate: String): String {
-            return iOSPayloadFrom(startDate, endDate, "AB10")
-        }
-
-        fun iOSPayloadFrom(startDate: String, endDate: String, postDistrict: String): String {
-            return iOSPayloadFromWithMetrics(startDate, endDate, postDistrict, "")
-        }
-
-        fun iOSPayloadFromWithLocalAuthority(startDate: String, endDate: String): String {
-            return iOSPayloadFromWithMetrics(startDate, endDate, "SY5", "", "E06000051")
+        fun iOSPayloadFrom(startDate: String, endDate: String, postDistrict: String = "AB10"): String {
+            return iOSPayloadFromWithMetrics(startDate, endDate, postDistrict, "", "E06000051")
         }
 
 

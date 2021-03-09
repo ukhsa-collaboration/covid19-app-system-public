@@ -24,7 +24,7 @@ namespace :build do
   end
 
   desc "Adds the external package dependencies to the lambdas"
-  task :dependencies => [:"gen:version", :"build:java"] #, :"build:python"]
+  task :dependencies => [:"gen:version", :"build:java"]
 
   task :batch_creation => [:"gen:proto:java"] do
     java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
@@ -42,4 +42,29 @@ namespace :build do
   end
 
   task :java => [:"build:batch_creation"]
+
+  desc "Builds public dashboard"
+  task :pubdash do
+    # public dashboard lambda
+    project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
+    build_gradle_path = File.join(project_path, "build.gradle")
+    output_path = File.join($configuration.out, "pubdash/build/distributions")
+    jar_file = File.join(output_path, "pubdash-0.0.1-SNAPSHOT.zip")
+    src_pattern = "#{$configuration.base}/src/aws/lambdas/incremental_distribution/src/**/*"
+    gradlew = File.join(project_path, "gradlew")
+
+    file jar_file => Rake::FileList[src_pattern, build_gradle_path] do
+      cmdline = "#{gradlew} --console plain -p #{project_path} :pubdash:clean pubdash:lambdaZip"
+      run_tee("Build public dashboard lambda", cmdline, $configuration)
+    end
+    Rake::Task[jar_file].invoke
+
+    # public dashboard webapp
+    project_dir = File.join($configuration.base, "src/pubdash/webapp/src/.")
+    Dir.chdir(project_dir) do
+      run_command("Install public dashboard webapp dependencies", "npm ci", $configuration)
+      run_command("Build public dashboard webapp", "npm run build", $configuration)
+      run_command("Run public dashboard webapp tests", "npm run test:nowatch", $configuration)
+    end
+  end
 end

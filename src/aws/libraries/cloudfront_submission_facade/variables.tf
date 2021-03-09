@@ -91,6 +91,18 @@ variable "empty_submission_path" {
   description = "The route for the empty submission"
 }
 
+variable "empty_submission_v2_bucket_regional_domain_name" {
+  description = "The S3 bucket regional domain name"
+}
+
+variable "empty_submission_v2_path" {
+  description = "The route for the empty submission V2"
+}
+
+variable "empty_submission_v2_origin_access_identity_path" {
+  description = "The origin access controlling access to the store"
+}
+
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)

@@ -10,7 +10,9 @@ import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
 import com.natpryce.snodge.mutants
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
@@ -107,21 +109,21 @@ class DiagnosisKeySubmissionHandlerTest {
     private val environment = Environment.fromName("test", Environment.Access.TEST.apply(environmentSettings))
     private val s3Storage = FakeS3Storage()
     private val awsDynamoClient = mockk<AwsDynamoClient>().also {
-        every { it.deleteItem(any(), any(), any()) } returns DeleteItemOutcome(DeleteItemResult())
+        every { it.deleteItem(any(), any(), any()) } just runs
     }
     private val objectKeyNameProvider = mockk<ObjectKeyNameProvider>()
     private val clock = Supplier { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
     private val events = RecordingEvents()
     private val handler = DiagnosisKeySubmissionHandler(
         environment,
+        clock,
+        events,
         { true },
         { true },
-        { _: APIGatewayProxyRequestEvent?, resp: APIGatewayProxyResponseEvent -> resp.headers["signed"] = "yup" },
+        { _, resp -> resp.headers["signed"] = "yup" },
         s3Storage,
         awsDynamoClient,
-        objectKeyNameProvider,
-        clock,
-        events
+        objectKeyNameProvider
     )
 
     @Test
@@ -138,7 +140,7 @@ class DiagnosisKeySubmissionHandlerTest {
         assertThat(s3Storage.name, equalTo(ObjectKey.of("mobile/LAB_RESULT/${objectKey.value}.json")))
         assertThat(s3Storage.bucket.value, equalTo("store"))
         assertThat(s3Storage.bytes.toUtf8String(), equalTo(TestData.STORED_KEYS_PAYLOAD_SUBMISSION))
-        events.containsExactly(DiagnosisKeySubmission::class, DownloadedTemporaryExposureKeys::class)
+        events.contains(DiagnosisKeySubmission::class, DownloadedTemporaryExposureKeys::class)
     }
 
     @Test
@@ -156,7 +158,7 @@ class DiagnosisKeySubmissionHandlerTest {
         assertThat(s3Storage.name, equalTo(ObjectKey.of("mobile/LAB_RESULT/${objectKey.value}.json")))
         assertThat(s3Storage.bucket.value, equalTo("store"))
         assertThat(s3Storage.bytes.toUtf8String(), equalTo(STORED_KEYS_PAYLOAD_DAYS_SINCE_ONSET_SUBMISSION))
-        events.containsExactly(DiagnosisKeySubmission::class, DownloadedTemporaryExposureKeys::class)
+        events.contains(DiagnosisKeySubmission::class, DownloadedTemporaryExposureKeys::class)
     }
 
     @Test
@@ -174,7 +176,7 @@ class DiagnosisKeySubmissionHandlerTest {
         assertThat(s3Storage.name, equalTo(ObjectKey.of("mobile/LAB_RESULT/${objectKey.value}.json")))
         assertThat(s3Storage.bucket.value, equalTo("store"))
         assertThat(s3Storage.bytes.toUtf8String(), equalTo(TestData.STORED_KEYS_PAYLOAD_WITH_RISK_LEVEL))
-        events.containsExactly(DiagnosisKeySubmission::class, DownloadedTemporaryExposureKeys::class)
+        events.contains(DiagnosisKeySubmission::class, DownloadedTemporaryExposureKeys::class)
     }
 
     @Test
@@ -215,7 +217,7 @@ class DiagnosisKeySubmissionHandlerTest {
         assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200))
         assertThat(responseEvent, hasBody(equalTo(null)))
         verifyNoMockInteractions()
-        events.containsExactly(DiagnosisKeySubmission::class, UnprocessableJson::class)
+        events.contains(DiagnosisKeySubmission::class, UnprocessableJson::class)
     }
 
     @Test
@@ -224,7 +226,7 @@ class DiagnosisKeySubmissionHandlerTest {
         assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200))
         assertThat(responseEvent, hasBody(equalTo(null)))
         verifyNoMockInteractions()
-        events.containsExactly(DiagnosisKeySubmission::class, UnprocessableJson::class)
+        events.contains(DiagnosisKeySubmission::class, UnprocessableJson::class)
     }
 
     @Test
@@ -233,7 +235,7 @@ class DiagnosisKeySubmissionHandlerTest {
         assertThat(responseEvent, hasStatus(HttpStatusCode.OK_200))
         assertThat(responseEvent, hasBody(equalTo(null)))
         verifyNoMockInteractions()
-        events.containsExactly(DiagnosisKeySubmission::class, UnprocessableJson::class)
+        events.contains(DiagnosisKeySubmission::class, UnprocessableJson::class)
     }
 
     @Test

@@ -5,14 +5,27 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded
 import com.amazonaws.services.dynamodbv2.local.shared.access.AmazonDynamoDBLocal
-import com.amazonaws.services.dynamodbv2.model.*
+import com.amazonaws.services.dynamodbv2.model.AttributeDefinition
+import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException
+import com.amazonaws.services.dynamodbv2.model.CreateTableRequest
+import com.amazonaws.services.dynamodbv2.model.KeySchemaElement
+import com.amazonaws.services.dynamodbv2.model.KeyType
+import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
+import com.amazonaws.services.dynamodbv2.model.PutItemRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.*
-import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericNullableAttribute
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
-import uk.nhs.nhsx.virology.persistence.VirologyPersistenceLocalTest
+import uk.nhs.nhsx.virology.IpcTokenId
 import java.time.Instant
 import java.time.Period
 import java.util.*
@@ -104,7 +117,7 @@ class IsolationPersistenceLocalTest {
 
         persistence.insertIsolationToken(token)
 
-        val item = isolationTokenTable.getItem("tokenId", token.tokenId)
+        val item = isolationTokenTable.getItem("tokenId", token.tokenId.value)
 
         assertThat(item.getString("tokenStatus")).isEqualTo(TokenStateInternal.INT_CREATED.value)
         assertThat(item.getLong("expireAt")).isEqualTo(token.expireAt)
@@ -137,11 +150,12 @@ class IsolationPersistenceLocalTest {
 
     @Test
     fun `update throws when token id condition fails`() {
-        val token = getIsolationToken()
-        persistence.insertIsolationToken(token)
+        val token = getIsolationToken().also {
+            persistence.insertIsolationToken(it)
+        }
 
         token.tokenStatus = TokenStateInternal.INT_UPDATED.value
-        token.tokenId = "random-id"
+        token.tokenId = IpcTokenId.of("2".repeat(64))
 
         assertThatThrownBy {
             persistence.updateIsolationToken(token, TokenStateInternal.INT_CREATED) // wrong token id
@@ -172,11 +186,15 @@ class IsolationPersistenceLocalTest {
 
     @Test
     fun `delete throws when token id condition fails`() {
-        val token = getIsolationToken()
-        persistence.insertIsolationToken(token)
+        getIsolationToken().also {
+            persistence.insertIsolationToken(it)
+        }
 
         assertThatThrownBy {
-            persistence.deleteIsolationToken("random-id", TokenStateInternal.INT_CREATED) // wrong token id
+            persistence.deleteIsolationToken(
+                IpcTokenId.of("2".repeat(64)),
+                TokenStateInternal.INT_CREATED
+            ) // wrong token id
         }.isInstanceOf(ConditionalCheckFailedException::class.java)
     }
 
@@ -191,7 +209,7 @@ class IsolationPersistenceLocalTest {
     }
 
     private fun getIsolationToken(): IsolationToken {
-        val tokenId = "tokenId"
+        val tokenId = IpcTokenId.of("1".repeat(64))
         val createdDate = clock.get().epochSecond
         val ttl = clock.get().plus(Period.ofWeeks(4)).epochSecond
         return IsolationToken(tokenId, TokenStateInternal.INT_CREATED.value, 0, 0, createdDate, 0, 0, 0, ttl)
@@ -199,7 +217,7 @@ class IsolationPersistenceLocalTest {
 
     private fun itemMapFrom(token: IsolationToken): Map<String, AttributeValue> =
         mapOf(
-            "tokenId" to stringAttribute(token.tokenId),
+            "tokenId" to stringAttribute(token.tokenId.value),
             "tokenStatus" to stringAttribute(token.tokenStatus),
             "riskyEncounterDate" to numericNullableAttribute(token.riskyEncounterDate),
             "isolationPeriodEndDate" to numericNullableAttribute(token.isolationPeriodEndDate),

@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeydist
 
+import net.lingala.zip4j.ZipFile
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -25,6 +26,17 @@ object ZipFileUtility {
             zipEntry = zipStream.nextEntry
         }
         zipStream.close()
+        return destDir
+    }
+
+    fun extractZipFileToTempLocation(file: File, password:String): File {
+        val destDir = Files.createTempDirectory(TEMP_DIR).toFile()
+
+        val zipFile = ZipFile (file)
+        if (zipFile.isEncrypted) {
+            zipFile.setPassword(password.toCharArray())
+        }
+        zipFile.extractAll(destDir.absolutePath)
         return destDir
     }
 }

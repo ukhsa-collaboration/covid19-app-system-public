@@ -1,21 +1,21 @@
 package uk.nhs.nhsx.testhelper.wiremock
 
 import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.client.VerificationException
 import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.common.ConsoleNotifier
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
+import com.github.tomakehurst.wiremock.verification.LoggedRequest
+import com.github.tomakehurst.wiremock.verification.NearMiss
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
-import com.github.tomakehurst.wiremock.client.VerificationException
-
-import com.github.tomakehurst.wiremock.verification.NearMiss
-
-import com.github.tomakehurst.wiremock.verification.LoggedRequest
 
 class WireMockExtension : BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-    private val server: WireMockServer = WireMockServer(0)
+    private val server: WireMockServer = WireMockServer(WireMockConfiguration().port(0).notifier(ConsoleNotifier(true)))
 
     override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean =
         parameterContext.parameter.type.equals(WireMockServer::class.java)

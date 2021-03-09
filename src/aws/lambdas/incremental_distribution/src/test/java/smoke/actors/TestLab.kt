@@ -7,7 +7,8 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.then
-import smoke.actors.ApiVersion.*
+import smoke.actors.ApiVersion.V1
+import smoke.actors.ApiVersion.V2
 import smoke.env.EnvConfig
 import uk.nhs.nhsx.virology.CtaToken
 import uk.nhs.nhsx.virology.TestKit
@@ -17,7 +18,10 @@ import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Wls
+import uk.nhs.nhsx.virology.result.TestEndDate
+import uk.nhs.nhsx.virology.result.TestResult
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
+import java.time.Instant
 
 class TestLab(unauthedHttp: HttpHandler,
               private val envConfig: EnvConfig) {
@@ -25,20 +29,20 @@ class TestLab(unauthedHttp: HttpHandler,
     private val authedHttp = SetAuthHeader(envConfig.authHeaders.testResultUpload).then(unauthedHttp)
 
     fun generateCtaTokenFor(testResult: TestResult,
-                            testEndDate: String,
+                            testEndDate: TestEndDate,
                             source: VirologyTokenExchangeSource,
                             apiVersion: ApiVersion,
                             testKit: TestKit): CtaToken {
         val payload = when (apiVersion) {
             V1 -> """
                     {
-                      "testEndDate": "$testEndDate",
+                      "testEndDate": "${TestEndDate.show(testEndDate)}",
                       "testResult": "$testResult"         
                     }
             """
             V2 -> """
                     {
-                      "testEndDate": "$testEndDate",
+                      "testEndDate": "${TestEndDate.show(testEndDate)}",
                       "testResult": "$testResult",
                       "testKit": "${testKit.name}"  
                     }"""
@@ -62,7 +66,7 @@ class TestLab(unauthedHttp: HttpHandler,
                 .body(payload)
         } ?: error("no uri available!"))
             .requireStatusCode(Status.OK)
-            .deserializeOrThrow<VirologyTokenGenResponse>().ctaToken.let { CtaToken.of(it) }
+            .deserializeOrThrow<VirologyTokenGenResponse>().ctaToken
     }
 
     fun uploadTestResult(token: CtaToken,
@@ -86,7 +90,7 @@ class TestLab(unauthedHttp: HttpHandler,
             {
               "ctaToken": "${token.value}",
               "testEndDate": "2020-04-23T00:00:00Z",
-              "testResult": "${result.name}"
+              "testResult": "${result.wireValue}"
             }
         """
         V2 -> """
@@ -94,7 +98,7 @@ class TestLab(unauthedHttp: HttpHandler,
               "ctaToken": "${token.value}",
               "testEndDate": "2020-04-23T00:00:00Z",
               "testKit": "${testKit.name}",
-              "testResult": "${result.name}"
+              "testResult": "${result.wireValue}"
             }
         """
     }
@@ -120,7 +124,7 @@ class TestLab(unauthedHttp: HttpHandler,
                       "ctaToken": "${token.value}",
                       "testEndDate": "2020-04-23T00:00:00Z",
                       "testKit": "${testKit.name}",
-                      "testResult": "${result.name}"
+                      "testResult": "${result.wireValue}"
                     }
                 """
         sendVirologyResults(payload, source, V2)

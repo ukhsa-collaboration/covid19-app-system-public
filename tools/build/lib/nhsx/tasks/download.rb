@@ -1,5 +1,5 @@
 namespace :download do
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
       desc "Sync the diagnosis keys two-hourly zips for #{tgt_env} locally"
       task :"dg-2h:#{tgt_env}" => [:"login:#{account}"] do
@@ -57,11 +57,10 @@ namespace :download do
 
     # get build info
     job_id = $configuration.job_id
-    build_info = build_info([job_id])
-
+    job_info = build_info(job_id)
     # download zip from s3 bucket
     downloads_out_dir = File.join($configuration.out, "downloads/")
-    object_name = build_info.first["artifacts"]["location"]
+    object_name = job_info.artifacts
     object_name = object_name.sub("arn:aws:s3:::", "")
     zip_file_path = File.join(downloads_out_dir, "#{object_name}.zip")
     if object_name == "dev-build-artifacts-archive/ci-app-system"
@@ -73,8 +72,26 @@ namespace :download do
       # remove downloaded s3 zip file
       File.delete(zip_file_path)
     end
-    include NHSx::Queue #redefines build_info - needs to be cleaned up
-    bi = NHSx::Queue::CodeBuildInfo.new(build_info.first)
-    pipe_logs(bi)
+    stream_log_segments(job_info)
+  end
+
+  desc "Download the code build artifacts from staging"
+  task :"codebuild:staging" => [:"login:staging", :"clean:wipe"] do
+    include NHSx::Report
+
+    # get build info
+    job_id = $configuration.job_id
+    job_info = build_info(job_id)
+    # download zip from s3 bucket
+    downloads_out_dir = File.join($configuration.out, "downloads/")
+    object_name = job_info.artifacts
+    object_name = object_name.sub("arn:aws:s3:::", "")
+    zip_file_path = File.join(downloads_out_dir, "#{object_name}.zip")
+    run_command("Download the build artifacts of #{job_id}", NHSx::AWS::Commandlines.download_from_s3(object_name, zip_file_path), $configuration)
+    # unzip to base dir
+    run_command("Unzip archive", "unzip #{zip_file_path} -d #{$configuration.base}", $configuration)
+    # remove downloaded s3 zip file
+    File.delete(zip_file_path)
+    stream_log_segments(job_info)
   end
 end

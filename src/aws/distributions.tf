@@ -90,6 +90,21 @@ module "availability_ios_distribution" {
   tags                     = var.tags
 }
 
+module "risky_venue_configuration_distribution" {
+  source                   = "./modules/distribution"
+  name                     = "risky-venue-configuration"
+  default_payload          = "/distribution/risky-venue-configuration"
+  payload_source           = abspath("../../../static/risky-venue-configuration.json")
+  metadata_signature       = abspath("../../../../out/signatures/risky-venue-configuration.json.sig")
+  metadata_signature_date  = abspath("../../../../out/signatures/risky-venue-configuration.json.date")
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = false
+  policy_document          = module.risky_venue_configuration_distribution_access.policy_document
+  tags                     = var.tags
+}
+
+
 resource "aws_cloudfront_origin_access_identity" "diagnosis_keys" {
   comment = "Origin access ID for the key distribution service in ${terraform.workspace}"
 }
@@ -153,6 +168,10 @@ module "distribution_apis" {
   availability_ios_payload                     = module.availability_ios_distribution.name
   availability_ios_origin_access_identity_path = module.availability_ios_distribution.origin_access_identity_path
 
+  risky_venue_configuration_bucket_regional_domain_name = module.risky_venue_configuration_distribution.store.bucket_regional_domain_name
+  risky_venue_configuration_payload                     = module.risky_venue_configuration_distribution.name
+  risky_venue_configuration_origin_access_identity_path = module.risky_venue_configuration_distribution.origin_access_identity_path
+
   domain                   = var.base_domain
   web_acl_arn              = var.waf_arn
   enable_shield_protection = var.enable_shield_protection
@@ -190,6 +209,9 @@ output "availability_android_distribution_endpoint" {
 output "availability_ios_distribution_endpoint" {
   value = "https://${module.distribution_apis.distribution_domain_name}/distribution/${module.availability_ios_distribution.name}"
 }
+output "risky_venue_configuration_distribution_endpoint" {
+  value = "https://${module.distribution_apis.distribution_domain_name}/distribution/${module.risky_venue_configuration_distribution.name}"
+}
 
 output "exposure_configuration_distribution_store" {
   value = module.exposure_configuration_distribution.store.bucket
@@ -214,4 +236,7 @@ output "availability_android_distribution_store" {
 }
 output "availability_ios_distribution_store" {
   value = module.availability_ios_distribution.store.bucket
+}
+output "risky_venue_configuration_distribution_store" {
+  value = module.risky_venue_configuration_distribution.store.bucket
 }

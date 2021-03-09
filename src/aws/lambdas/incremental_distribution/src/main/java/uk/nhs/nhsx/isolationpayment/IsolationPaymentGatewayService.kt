@@ -1,6 +1,5 @@
 package uk.nhs.nhsx.isolationpayment
 
-import uk.nhs.nhsx.core.DateFormatValidator
 import uk.nhs.nhsx.core.events.ConsumeIsolationTokenFailed
 import uk.nhs.nhsx.core.events.ConsumeIsolationTokenSucceeded
 import uk.nhs.nhsx.core.events.Events
@@ -12,9 +11,8 @@ import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
+import uk.nhs.nhsx.virology.IpcTokenId
 import java.time.Instant
-import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.*
 import java.util.function.Supplier
 
@@ -25,7 +23,7 @@ class IsolationPaymentGatewayService(
     private val events: Events
 ) {
 
-    fun verifyIsolationToken(ipcToken: String): IsolationResponse {
+    fun verifyIsolationToken(ipcToken: IpcTokenId): IsolationResponse {
         val isolationToken: Optional<IsolationToken> = try {
             persistence.getIsolationToken(ipcToken)
         } catch (e: Exception) {
@@ -72,23 +70,17 @@ class IsolationPaymentGatewayService(
             IsolationResponse(
                 ipcToken,
                 TokenStateExternal.EXT_VALID.value,
-                convertToString(updatedToken.riskyEncounterDate),
-                convertToString(updatedToken.isolationPeriodEndDate),
-                convertToString(updatedToken.createdTimestamp),
-                convertToString(updatedToken.updatedTimestamp)
+                Instant.ofEpochSecond(updatedToken.riskyEncounterDate),
+                Instant.ofEpochSecond(updatedToken.isolationPeriodEndDate),
+                Instant.ofEpochSecond(updatedToken.createdTimestamp),
+                Instant.ofEpochSecond(updatedToken.updatedTimestamp)
             )
         } catch (e: Exception) {
             throw RuntimeException("$auditLogPrefix VerifyToken exception: existing.ipcToken${isolationToken.get()} !updated.ipcToken=$updatedToken")
         }
     }
 
-    private fun convertToString(date: Long): String {
-        return DateFormatValidator.formatter
-            .withZone(ZoneId.from(ZoneOffset.UTC))
-            .format(Instant.ofEpochSecond(date))
-    }
-
-    fun consumeIsolationToken(ipcToken: String): IsolationResponse {
+    fun consumeIsolationToken(ipcToken: IpcTokenId): IsolationResponse {
         val isolationToken: Optional<IsolationToken> = try {
             persistence.getIsolationToken(ipcToken)
         } catch (e: Exception) {

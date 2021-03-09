@@ -43,11 +43,12 @@ class AnalyticsEventsHandlerTest {
                 "ACCEPT_REQUESTS_ENABLED" to "true"
             )
         ),
+        SystemClock.CLOCK,
+        RecordingEvents(),
         { true },
         signer,
         FakeS3(),
         { ObjectKey.of("foo") },
-        RecordingEvents(),
         { true }
     )
 
@@ -172,11 +173,12 @@ class AnalyticsEventsHandlerTest {
                     "custom_oai" to "OAI",
                 )
             ),
+            SystemClock.CLOCK,
+            RecordingEvents(),
             { true },
             signer,
             FakeS3(),
             { ObjectKey.of("foo") },
-            RecordingEvents(),
             { true }
         )
 

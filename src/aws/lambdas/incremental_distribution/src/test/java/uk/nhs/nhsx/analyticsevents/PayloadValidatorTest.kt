@@ -1,5 +1,8 @@
 package uk.nhs.nhsx.analyticsevents
 
+import com.natpryce.hamkrest.absent
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.present
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -7,7 +10,8 @@ class PayloadValidatorTest {
 
     @Test
     fun `valid payload returns value`() {
-        val payload = PayloadValidator().maybeValidPayload("""
+        val payload = PayloadValidator().maybeValidPayload(
+            """
             {
                 "metadata": {
                     "operatingSystemVersion": "iPhone OS 13.5.1 (17F80)",
@@ -34,25 +38,27 @@ class PayloadValidatorTest {
                     }
                 ]
             }
-        """.trimIndent())
-        assertThat(payload).isPresent
+        """.trimIndent()
+        )
+        assertThat(payload, present())
     }
 
     @Test
     fun `empty json returns empty`() {
         val payload = PayloadValidator().maybeValidPayload("{}")
-        assertThat(payload).isEmpty
+        assertThat(payload, absent())
     }
 
     @Test
     fun `invalid json returns empty`() {
         val payload = PayloadValidator().maybeValidPayload("!@£$%^")
-        assertThat(payload).isEmpty
+        assertThat(payload, absent())
     }
 
     @Test
     fun `missing fields in json returns empty`() {
-        val payload = PayloadValidator().maybeValidPayload("""
+        val payload = PayloadValidator().maybeValidPayload(
+            """
             {
                 "metadata": {
                     "operatingSystemVersion": "iPhone OS 13.5.1 (17F80)"
@@ -76,13 +82,15 @@ class PayloadValidatorTest {
                     }
                 ]
             }
-        """.trimIndent())
-        assertThat(payload).isEmpty
+        """.trimIndent()
+        )
+        assertThat(payload, absent())
     }
 
     @Test
     fun `missing events payload returns empty`() {
-        val payload = PayloadValidator().maybeValidPayload("""
+        val payload = PayloadValidator().maybeValidPayload(
+            """
             {
                 "metadata": {
                     "operatingSystemVersion": "iPhone OS 13.5.1 (17F80)",
@@ -91,13 +99,15 @@ class PayloadValidatorTest {
                     "postalDistrict": "A1"
                 }
             }
-        """.trimIndent())
-        assertThat(payload).isEmpty
+        """.trimIndent()
+        )
+        assertThat(payload, absent())
     }
 
     @Test
     fun `empty events payload returns empty`() {
-        val payload = PayloadValidator().maybeValidPayload("""
+        val payload = PayloadValidator().maybeValidPayload(
+            """
             {
                 "metadata": {
                     "operatingSystemVersion": "iPhone OS 13.5.1 (17F80)",
@@ -109,26 +119,30 @@ class PayloadValidatorTest {
                     {}
                 ]
             }
-        """.trimIndent())
-        assertThat(payload).isEmpty
+        """.trimIndent()
+        )
+        assertThat(payload, absent())
     }
 
     @Test
     fun `invalid metadata type returns empty`() {
-        val payload = PayloadValidator().maybeValidPayload("""
+        val payload = PayloadValidator().maybeValidPayload(
+            """
             {
                 "metadata": "not supposed to be a string",
                 "events": [
                     {}
                 ]
             }
-        """.trimIndent())
-        assertThat(payload).isEmpty
+        """.trimIndent()
+        )
+        assertThat(payload, absent())
     }
 
     @Test
     fun `invalid events type returns empty`() {
-        val payload = PayloadValidator().maybeValidPayload("""
+        val payload = PayloadValidator().maybeValidPayload(
+            """
             {
                 "metadata": {
                     "operatingSystemVersion": "iPhone OS 13.5.1 (17F80)",
@@ -138,8 +152,9 @@ class PayloadValidatorTest {
                 },
                 "events": "not supposed to be a string"
             }
-        """.trimIndent())
-        assertThat(payload).isEmpty
+        """.trimIndent()
+        )
+        assertThat(payload, absent())
     }
 
 }

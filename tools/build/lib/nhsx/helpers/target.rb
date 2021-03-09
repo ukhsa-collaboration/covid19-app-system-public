@@ -1,10 +1,26 @@
 require_relative "terraform"
+require_relative "aws"
 
 module NHSx
   # Methods to query and manipulate the target environment
   module TargetEnvironment
     include NHSx::Terraform
     include NHSx::AWS
+
+    # The location for the account used by a component of the system for targeting a temporary deployment environment
+    # relative to the root of the repository
+    APP_SYSTEM_ACCOUNTS = "src/aws/accounts".freeze
+    ANALYTICS_ACCOUNTS = "src/analytics/accounts".freeze
+    DORETO_ACCOUNTS = "src/documentation_reporting_tool/infrastructure/accounts".freeze
+    PUBDASH_ACCOUNTS = "src/pubdash/infrastructure/accounts".freeze
+
+    # The location for the terraform configuration of the account used for hosting temporary deployment environments
+    # relative to the root of the repository
+    CTA_DEV_ACCOUNT = "src/aws/accounts/dev".freeze
+    SYNTH_DEV_ACCOUNT = "src/synthetics/accounts/dev".freeze
+    ANALYTICS_DEV_ACCOUNT = "src/analytics/accounts/dev".freeze
+    PUBDASH_DEV_ACCOUNT = "src/pubdash/infrastructure/accounts/dev".freeze
+    DORETO_DEV_ACCOUNT = "src/documentation_reporting_tool/infrastructure/accounts/dev".freeze
 
     # Define the API endpoint category names and corresponding rake targets - see uk.nhs.nhsx.core.auth.ApiName
     API_NAMES = {
@@ -17,17 +33,17 @@ module NHSx
     }.freeze
 
     # All the fixed (named) target environments per account: {"account"=>[target_environments]}
-    TARGET_ENVIRONMENTS = {
+    CTA_TARGET_ENVIRONMENTS = {
       "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
     }.freeze
     # All the fixed (named) Analytics target environments per account: {"account"=>[target_environments]}
     ANALYTICS_TARGET_ENVIRONMENTS = {
-      "dev" => ["load-test", "branch"],
+      "dev" => ["load-test", "ci", "fnctnl", "qa", "branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
-      "aa-dev" => ["aa-dev", "branch"],
+      "aa-dev" => ["aa-dev"],
       "aa-staging" => ["aa-staging"],
       "aa-prod" => ["aa-prod"],
     }.freeze
@@ -38,6 +54,25 @@ module NHSx
     # All the fixed (named) public dashboard target environments per account: {"account"=>[target_environments]}
     PUBDASH_TARGET_ENVIRONMENTS = {
       "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
+      "staging" => ["staging"],
+      "prod" => ["prod"],
+    }.freeze
+    # Mapping for AWS_DEPLOYMENT_ROLES and AWS_READ_ROLES to Halo provided roles to switch from
+    DOMAIN_HALO_ROLES = {
+      "ApplicationDeploymentUser" => {
+        "analytics" => {
+          "aa-dev" => "WlAlyticDevApplicationDeployer",
+          "aa-staging" => "WlAlyticStgApplicationDeployer",
+          "aa-prod" => "WlAlyticProdApplicationDeployer",
+        },
+      },
+      "ReadOnlyUser" => {
+        "analytics" => {
+          "aa-dev" => "WlAlyticDevReadOnly",
+          "aa-staging" => "WlAlyticStgReadOnly",
+          "aa-prod" => "WlAlyticProdReadOnly",
+        },
+      },
     }.freeze
     # The parameter name that contains the ARN of the signing key in the SSM paramater store
     SIGNING_KEY_PARAMETER = "/app/kms/SigningKeyArn".freeze
@@ -47,16 +82,17 @@ module NHSx
     TEST_API_KEY_HEADERS_SECRET = "AuthenticationHeadersForTests".freeze
     # Retrieves the target environment configuration
     def target_environment_configuration(environment_name, account_name, system_config)
-      terraform_configuration = File.join(system_config.base, NHSx::Terraform::APP_SYSTEM_ACCOUNTS, account_name)
+      terraform_configuration = File.join(system_config.base, APP_SYSTEM_ACCOUNTS, account_name)
       target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
       target_config["auth_headers"] = authentication_headers_for_test(system_config)
+      target_config["target_environment_name"] = environment_name
 
       return target_config
     end
 
     # Retrieves the target environment configuration for the Document Reporting Tool subsystem
     def doreto_target_environment_configuration(environment_name, account_name, system_config)
-      terraform_configuration = File.join(system_config.base, NHSx::Terraform::DORETO_ACCOUNTS, account_name)
+      terraform_configuration = File.join(system_config.base, DORETO_ACCOUNTS, account_name)
       target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
 
       return target_config
@@ -64,9 +100,16 @@ module NHSx
 
     # Retrieves the target environment configuration for public dashboard
     def pubdash_target_environment_configuration(environment_name, account_name, system_config)
-      terraform_configuration = File.join(system_config.base, NHSx::Terraform::PUBDASH_ACCOUNTS, account_name)
+      terraform_configuration = File.join(system_config.base, PUBDASH_ACCOUNTS, account_name)
       target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
       target_config
+    end
+
+    # Retrieves the target environment configuration
+    def analytics_target_environment_configuration(environment_name, account_name, system_config)
+      terraform_configuration = File.join(system_config.base, ANALYTICS_ACCOUNTS, account_name)
+      target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
+      return target_config
     end
 
     def signing_key_id(system_config)
@@ -93,7 +136,7 @@ module NHSx
     end
 
     # Returns the list of the names of all secrets in the SystemsManager that match used_for_tests*
-    def test_secrets(system_config)
+    def testing_secrets(system_config)
       all_scts = all_secrets(system_config)
       all_scts.select { |item| /used_for_tests/ =~ item }
     end

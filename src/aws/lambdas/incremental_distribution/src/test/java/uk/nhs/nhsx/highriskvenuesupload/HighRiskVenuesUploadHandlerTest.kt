@@ -7,6 +7,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.RiskyVenuesUpload
@@ -20,13 +21,15 @@ class HighRiskVenuesUploadHandlerTest {
     private val service = mockk<HighRiskVenuesUploadService>()
     private val events = RecordingEvents()
     private val handler = HighRiskVenuesUploadHandler(
-        TestEnvironments.TEST.apply(
-            mapOf(
-                "MAINTENANCE_MODE" to "false",
-                "custom_oai" to "OAI"
-            )
-        ), { true }, service,
-        { true }, events
+        TestEnvironments.TEST.apply(mapOf(
+            "MAINTENANCE_MODE" to "false",
+            "custom_oai" to "OAI")
+        ),
+        SystemClock.CLOCK,
+        events,
+        { true },
+        service,
+        { true }
     )
 
     @Test
@@ -47,7 +50,7 @@ class HighRiskVenuesUploadHandlerTest {
 
         verify(exactly = 1) { service.upload(RISKY_VENUES_UPLOAD_PAYLOAD) }
 
-        events.containsExactly(RiskyVenuesUpload::class)
+        events.contains(RiskyVenuesUpload::class)
     }
 
     @Test
@@ -65,7 +68,7 @@ class HighRiskVenuesUploadHandlerTest {
         assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.UNPROCESSABLE_ENTITY_422.code)
         assertThat(responseEvent.body).isEqualTo("some-error")
         verify(exactly = 1) { service.upload(RISKY_VENUES_UPLOAD_PAYLOAD) }
-        events.containsExactly(RiskyVenuesUpload::class, HighRiskVenueUploadFileInvalid::class)
+        events.contains(RiskyVenuesUpload::class, HighRiskVenueUploadFileInvalid::class)
     }
 
     @Test

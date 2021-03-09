@@ -11,6 +11,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary
 import org.apache.http.entity.ContentType
 import uk.nhs.nhsx.core.events.Events
 import java.io.IOException
+import java.net.URL
 import java.util.*
 
 class AwsS3Client(private val events: Events) : AwsS3 {
@@ -69,7 +70,20 @@ class AwsS3Client(private val events: Events) : AwsS3 {
         }
     }
 
+
+
     private fun AmazonS3Exception.is404() = statusCode == 404 && errorCode == "NoSuchKey"
 
     override fun deleteObject(locator: Locator) = client.deleteObject(locator.bucket.value, locator.key.value)
+
+    override fun getSignedURL(locator: Locator, expiration: Date): Optional<URL> {
+        return try {
+            Optional.ofNullable(client.generatePresignedUrl(locator.bucket.value,locator.key.value,expiration))
+        } catch (e: AmazonS3Exception) {
+            if (!e.is404()) {
+                events.emit(javaClass, S3Error(locator, e.statusCode, e.errorCode))
+            }
+            Optional.empty()
+        }
+    }
 }

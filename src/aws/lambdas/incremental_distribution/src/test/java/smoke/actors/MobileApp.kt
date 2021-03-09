@@ -1,11 +1,7 @@
 package smoke.actors
 
 import batchZipCreation.Exposure
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isNullOrEmptyString
@@ -13,17 +9,15 @@ import org.assertj.core.api.Assertions.assertThat
 import org.http4k.core.ContentType
 import org.http4k.core.ContentType.Companion.APPLICATION_JSON
 import org.http4k.core.HttpHandler
-import org.http4k.core.Method
+import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.core.then
-import org.http4k.filter.debug
+import org.http4k.filter.ResilienceFilters
 import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
-import smoke.actors.MobileOS.Android
-import smoke.actors.MobileOS.iOS
 import smoke.data.DiagnosisKeyData.createKeysPayload
 import smoke.data.DiagnosisKeyData.createKeysPayloadWithOnsetDays
 import smoke.env.EnvConfig
@@ -33,10 +27,12 @@ import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.circuitbreakers.ResolutionResponse
 import uk.nhs.nhsx.circuitbreakers.TokenResponse
-import uk.nhs.nhsx.core.DateFormatValidator
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemObjectMapper.MAPPER
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.core.headers.MobileOS
+import uk.nhs.nhsx.core.headers.MobileOS.Android
+import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest
@@ -45,17 +41,20 @@ import uk.nhs.nhsx.isolationpayment.model.TokenUpdateRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
 import uk.nhs.nhsx.testhelper.BatchExport
 import uk.nhs.nhsx.testhelper.data.TestData.EXPOSURE_NOTIFICATION_CIRCUIT_BREAKER_PAYLOAD
+import uk.nhs.nhsx.virology.Country
+import uk.nhs.nhsx.virology.Country.Companion.England
 import uk.nhs.nhsx.virology.CtaToken
 import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.virology.TestResultPollingToken
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
-import uk.nhs.nhsx.virology.result.VirologyLookupResult
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -66,7 +65,9 @@ class MobileApp(private val unauthedClient: HttpHandler,
                 private val model: MobileDeviceModel? = null,
                 private val clock: Clock = Clock.systemDefaultZone()) {
 
-    private val authedClient = SetAuthHeader(envConfig.authHeaders.mobile).then(unauthedClient)
+    private val authedClient = SetAuthHeader(envConfig.authHeaders.mobile)
+        .then(ResilienceFilters.RetryFailures(isError = { !it.status.successful }))
+        .then(unauthedClient)
     val exposureCircuitBreaker = CircuitBreaker(authedClient, envConfig.exposureNotificationCircuitBreakerEndpoint, EXPOSURE_NOTIFICATION_CIRCUIT_BREAKER_PAYLOAD)
     val venueCircuitBreaker = CircuitBreaker(authedClient, envConfig.riskyVenuesCircuitBreakerEndpoint)
 
@@ -75,8 +76,8 @@ class MobileApp(private val unauthedClient: HttpHandler,
 
     fun pollRiskyPostcodes(version: ApiVersion): Map<String, Any> =
         MAPPER.readValue(when (version) {
-            ApiVersion.V1 -> getStaticContent(envConfig.postDistrictsDistUrl)
-            ApiVersion.V2 -> getStaticContent(envConfig.postDistrictsDistUrl + "-v2")
+            V1 -> getStaticContent(envConfig.postDistrictsDistUrl)
+            V2 -> getStaticContent(envConfig.postDistrictsDistUrl + "-v2")
         }, object : TypeReference<Map<String, Any>>() {})
 
     fun pollRiskyVenues() = deserializeWithOptional(getStaticContent(envConfig.riskyVenuesDistUrl))!!
@@ -88,26 +89,8 @@ class MobileApp(private val unauthedClient: HttpHandler,
 
     fun pollExposureConfig() = getStaticContent(envConfig.exposureConfigurationDistUrl)
     fun pollSelfIsolation() = getStaticContent(envConfig.selfIsolationDistUrl)
-    fun pollRiskyVenuesMessages() = getStaticContent(envConfig.riskyVenuesMessagesDownloadEndpoint)
     fun pollSymptomaticQuestionnaire() = getStaticContent(envConfig.symptomaticQuestionnaireDistUrl)
-
-    fun exchange(ctaToken: CtaToken): CtaExchangeResult {
-        val uri = "${envConfig.virologyKitEndpoint}/cta-exchange"
-        val payload = """
-                {
-                  "ctaToken": "${ctaToken.value}"
-                }
-            """
-        val request = Request(POST, uri)
-            .header("Content-Type", APPLICATION_JSON.value)
-            .body(payload)
-        val response = authedClient(request)
-        return when (response.status.code) {
-            200 -> CtaExchangeResult.Available(response.deserializeOrThrow())
-            404 -> CtaExchangeResult.NotFound()
-            else -> throw RuntimeException("Unhandled response " + response.status.code)
-        }
-    }
+    fun pollRiskyVenueConfiguration() = getStaticContent(envConfig.riskyVenueConfigurationDistributionEndpoint)
 
     fun submitAnalyticsKeys(window: AnalyticsWindow, metrics: AnalyticsMetrics): Status {
         val metadata = when (os) {
@@ -142,8 +125,13 @@ class MobileApp(private val unauthedClient: HttpHandler,
         .body(json)
     )
 
-    fun emptySubmission() {
-        authedClient(Request(POST, envConfig.emptySubmissionEndpoint))
+    fun emptySubmission(): Response {
+        return authedClient(Request(POST, envConfig.emptySubmissionEndpoint))
+    }
+
+
+    fun emptySubmissionV2(): Response {
+        return unauthedClient(Request(GET, envConfig.emptySubmissionV2Endpoint))
     }
 
     fun submitKeys(diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
@@ -159,19 +147,16 @@ class MobileApp(private val unauthedClient: HttpHandler,
         return payload
     }
 
-    fun createIsolationToken(country: UserCountry) = authedClient(Request(POST, envConfig.isolationPaymentCreateEndpoint)
+    fun createIsolationToken(country: Country) = authedClient(Request(POST, envConfig.isolationPaymentCreateEndpoint)
         .header("Content-Type", APPLICATION_JSON.value)
-        .body(Jackson.toJson(TokenGenerationRequest(country.value))))
+        .body(Jackson.toJson(TokenGenerationRequest(country))))
         .requireStatusCode(Status.CREATED)
         .requireSignatureHeaders()
         .deserializeOrThrow<TokenGenerationResponse>()
 
-    fun updateIsolationToken(ipcToken: IpcToken, riskyEncounterDate: OffsetDateTime, isolationPeriodEndDate: OffsetDateTime) {
-        val riskyEncounterDateString = riskyEncounterDate.format(DateFormatValidator.formatter);
-        val isolationPeriodEndDateString = isolationPeriodEndDate.format(DateFormatValidator.formatter);
-
+    fun updateIsolationToken(ipcToken: IpcTokenId, riskyEncounterDate: Instant, isolationPeriodEndDate: Instant) {
         val isolationTokenUpdateResponse = authedClient(submitIsolationTokenUpdateRequest(
-            TokenUpdateRequest(ipcToken.value, riskyEncounterDateString, isolationPeriodEndDateString)
+            TokenUpdateRequest(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         ))
             .requireStatusCode(Status.OK)
             .requireSignatureHeaders()
@@ -179,13 +164,7 @@ class MobileApp(private val unauthedClient: HttpHandler,
         assertThat(isolationTokenUpdateResponse.websiteUrlWithQuery).endsWith(ipcToken.value)
     }
 
-    fun updateIsolationTokenInvalid(ipcToken: IpcToken, riskyEncounterDateString: String, isolationPeriodEndDateString: String) =
-        authedClient(submitIsolationTokenUpdateRequest(TokenUpdateRequest(ipcToken.value, riskyEncounterDateString, isolationPeriodEndDateString)))
-            .requireStatusCode(Status.BAD_REQUEST)
-            .requireSignatureHeaders()
-            .toString()
-
-    private fun getStaticContent(uri: String) = unauthedClient(Request(Method.GET, uri))
+    private fun getStaticContent(uri: String) = unauthedClient(Request(GET, uri))
         .requireStatusCode(Status.OK)
         .requireSignatureHeaders()
         .requireJsonContentType()
@@ -224,7 +203,8 @@ class MobileApp(private val unauthedClient: HttpHandler,
 
     fun pollForTestResult(pollingToken: TestResultPollingToken,
                           version: ApiVersion,
-                          country: UserCountry = UserCountry.England): VirologyLookupResult {
+                          country: Country = England
+    ): VirologyLookupResult {
         val response = retrieveVirologyResultFor(pollingToken, version, country)
 
         return when (response.status.code) {
@@ -239,11 +219,12 @@ class MobileApp(private val unauthedClient: HttpHandler,
     }
 
     fun pollForIncompleteTestResult(orderResponse: VirologyOrderResponse, version: ApiVersion) =
-        checkTestResultNotAvailableYet(TestResultPollingToken(orderResponse.testResultPollingToken), version)
+        checkTestResultNotAvailableYet(orderResponse.testResultPollingToken, version)
 
     fun exchange(ctaToken: CtaToken,
                  version: ApiVersion,
-                 country: UserCountry = UserCountry.England): CtaExchangeResult {
+                 country: Country = England
+    ): CtaExchangeResult {
         val (uri, payload) = when (version) {
             V1 -> Pair(
                 "${envConfig.virologyKitEndpoint}/cta-exchange",
@@ -297,7 +278,8 @@ class MobileApp(private val unauthedClient: HttpHandler,
 
     private fun retrieveVirologyResultFor(pollingToken: TestResultPollingToken,
                                           version: ApiVersion,
-                                          userCountry: UserCountry = UserCountry.England): Response {
+                                          userCountry: Country = England
+    ): Response {
         val (uri, payload) = when (version) {
             V1 -> Pair(
                 "${envConfig.virologyKitEndpoint}/results",
@@ -348,7 +330,7 @@ class CircuitBreaker(private val authedClient: HttpHandler,
             .deserializeOrThrow()
 
     fun resolve(tokenResponse: TokenResponse): ResolutionResponse =
-        authedClient(Request(Method.GET, "$baseUrl/resolution/${tokenResponse.approvalToken}"))
+        authedClient(Request(GET, "$baseUrl/resolution/${tokenResponse.approvalToken}"))
             .requireStatusCode(Status.OK)
             .requireSignatureHeaders()
             .deserializeOrThrow()
@@ -363,13 +345,7 @@ class CircuitBreaker(private val authedClient: HttpHandler,
 }
 
 private fun deserializeWithOptional(staticContentRiskyVenues: String) =
-    LEINIENT_MAPPER.readValue(staticContentRiskyVenues, HighRiskVenues::class.java)
-
-private val LEINIENT_MAPPER = ObjectMapper()
-    .deactivateDefaultTyping()
-    .registerModule(ParameterNamesModule(JsonCreator.Mode.PROPERTIES))
-    .registerModule(Jdk8Module())
-
+    Jackson.readStrictOrNull<HighRiskVenues>(staticContentRiskyVenues)
 
 class DiagnosisKeysDownload(
     private val unauthedClient: HttpHandler,
@@ -385,7 +361,7 @@ class DiagnosisKeysDownload(
         val ofPattern = DateTimeFormatter.ofPattern("yyyyMMddHH")
         val filename = ofPattern.format(twoHourlyWindow) + ".zip"
 
-        val request = Request(Method.GET, "${envConfig.diagnosisKeysDist2hourlyEndpoint}/$filename")
+        val request = Request(GET, "${envConfig.diagnosisKeysDist2hourlyEndpoint}/$filename")
 
         val response = getCloudfrontContentRetrying(request)
             .requireStatusCode(Status.OK)
@@ -398,7 +374,7 @@ class DiagnosisKeysDownload(
     fun getDailyTekExport(date: LocalDate): Exposure.TemporaryExposureKeyExport {
         val fileName = DateTimeFormatter.ofPattern("yyyyMMdd00").format(date) + ".zip"
         val uri = "${envConfig.diagnosisKeysDistributionDailyEndpoint}/$fileName"
-        val request = Request(Method.GET, uri)
+        val request = Request(GET, uri)
 
         val response =
             getCloudfrontContentRetrying(request)

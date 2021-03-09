@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.core.events
 
 import uk.nhs.nhsx.core.events.EventCategory.Metric
+import uk.nhs.nhsx.virology.tokengen.CtaProcessorRequest
 
 /**
  * These are interesting business events that we might want to track
@@ -18,4 +19,4 @@ class CircuitBreakerExposureResolution : Event(Metric)
 class CircuitBreakerExposureRequest : Event(Metric)
 class RiskyPostDistrictUpload : Event(Metric)
 class RiskyVenuesUpload : Event(Metric)
-class CtaTokensGenerated(val event: Map<String, String>) : Event(Metric)
+data class CtaTokensGenerated(val event: CtaProcessorRequest) : Event(Metric)

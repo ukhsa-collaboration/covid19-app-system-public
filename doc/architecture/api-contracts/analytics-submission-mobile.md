@@ -90,7 +90,18 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "didHaveSymptomsBeforeReceivedTestResult": 1,
     "didRememberOnsetSymptomsDateBeforeReceivedTestResult": 1,
     "didAskForSymptomsOnPositiveTestEntry": 1,
-    "declaredNegativeResultFromDCT": 1
+    "declaredNegativeResultFromDCT": 1,
+    "receivedPositiveSelfRapidTestResultViaPolling": 1,
+    "receivedNegativeSelfRapidTestResultViaPolling": 1,
+    "receivedVoidSelfRapidTestResultViaPolling": 1,
+    "receivedPositiveSelfRapidTestResultEnteredManually": 1,
+    "receivedNegativeSelfRapidTestResultEnteredManually": 1,
+    "receivedVoidSelfRapidTestResultEnteredManually": 1,
+    "isIsolatingForTestedSelfRapidPositiveBackgroundTick": 1,
+    "hasTestedSelfRapidPositiveBackgroundTick": 1,
+    "receivedRiskyVenueM1Warning": 1,
+    "receivedRiskyVenueM2Warning ": 1,
+    "hasReceivedRiskyVenueM2WarningBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -164,7 +175,18 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "didHaveSymptomsBeforeReceivedTestResult": 1,
     "didRememberOnsetSymptomsDateBeforeReceivedTestResult": 1,
     "didAskForSymptomsOnPositiveTestEntry": 1,
-    "declaredNegativeResultFromDCT": 1
+    "declaredNegativeResultFromDCT": 1,
+    "receivedPositiveSelfRapidTestResultViaPolling": 1,
+    "receivedNegativeSelfRapidTestResultViaPolling": 1,
+    "receivedVoidSelfRapidTestResultViaPolling": 1,
+    "receivedPositiveSelfRapidTestResultEnteredManually": 1,
+    "receivedNegativeSelfRapidTestResultEnteredManually": 1,
+    "receivedVoidSelfRapidTestResultEnteredManually": 1,
+    "isIsolatingForTestedSelfRapidPositiveBackgroundTick": 1,
+    "hasTestedSelfRapidPositiveBackgroundTick": 1,
+    "receivedRiskyVenueM1Warning": 1,
+    "receivedRiskyVenueM2Warning ": 1,
+    "hasReceivedRiskyVenueM2WarningBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -212,6 +234,18 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `didRememberOnsetSymptomsDateBeforeReceivedTestResult`
   * `didAskForSymptomsOnPositiveTestEntry`
   * `declaredNegativeResultFromDCT`
+  * `receivedPositiveSelfRapidTestResultViaPolling`
+  * `receivedNegativeSelfRapidTestResultViaPolling`
+  * `receivedVoidSelfRapidTestResultViaPolling`
+  * `receivedPositiveSelfRapidTestResultEnteredManually`
+  * `receivedNegativeSelfRapidTestResultEnteredManually`
+  * `receivedVoidSelfRapidTestResultEnteredManually`
+  * `isIsolatingForTestedSelfRapidPositiveBackgroundTick`
+  * `hasTestedSelfRapidPositiveBackgroundTick`
+  * `receivedRiskyVenueM1Warning`
+  * `receivedRiskyVenueM2Warning`
+  * `hasReceivedRiskyVenueM2WarningBackgroundTick`
+
 
 ### Responses
 | Status Code | Description |

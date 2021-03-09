@@ -1,4 +1,6 @@
 require "json"
+require_relative '../../gaudi/helpers/configuration'
+
 # Configuration module for GitVersion
 module Gaudi::Configuration::SystemModules::GitVersion
   #:stopdoc:
@@ -24,6 +26,7 @@ module NHSx
   module Versions
     include Zuehlke::Execution
     include Zuehlke::Templates
+    require_relative '../../zuehlke/helpers/git'
     include Zuehlke::Git
     # A Hash of the subsystems in the following format:
     #
@@ -35,6 +38,7 @@ module NHSx
       "tiers" => "Tiers-",
       "analytics" => "Analytics-",
       "availability" => "Availability-",
+      "pubdash" => "PublicDashboard-",
     }.freeze
 
     # Returns the full GitVersion metadata for the given subsystem

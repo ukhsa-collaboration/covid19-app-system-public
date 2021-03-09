@@ -1,12 +1,18 @@
 package uk.nhs.nhsx.isolationpayment
 
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
+import uk.nhs.nhsx.virology.IpcTokenId
 import java.time.Instant
 import java.util.*
 import java.util.function.Supplier
@@ -14,8 +20,8 @@ import java.util.function.Supplier
 class IsolationPaymentGatewayServiceTest {
 
     private val clock = Supplier { Instant.parse("2020-12-01T00:00:00Z") }
-    private val createdStateToken = IsolationToken("token-id", TokenStateInternal.INT_CREATED.value, 0, 0, 0, 0, 0, 0, 0)
-    private val validStateToken = IsolationToken("token-id", TokenStateInternal.INT_UPDATED.value, 0, 0, 0, 0, 0, 0, 0)
+    private val createdStateToken = IsolationToken(IpcTokenId.of("1".repeat(64)), TokenStateInternal.INT_CREATED.value, 0, 0, 0, 0, 0, 0, 0)
+    private val validStateToken = IsolationToken(IpcTokenId.of("1".repeat(64)), TokenStateInternal.INT_UPDATED.value, 0, 0, 0, 0, 0, 0, 0)
     private val auditLogSuffix = "audit-log-suffix"
     private val persistence = mockk<IsolationPaymentPersistence>()
     private val service = IsolationPaymentGatewayService(clock, persistence, auditLogSuffix, RecordingEvents())
@@ -40,13 +46,13 @@ class IsolationPaymentGatewayServiceTest {
     fun `consumes isolation token handling not found token id`() {
         every { persistence.getIsolationToken(any()) } returns Optional.empty()
 
-        val response = service.consumeIsolationToken("random")
+        val response = service.consumeIsolationToken(IpcTokenId.of("1".repeat(64)))
 
-        assertThat(response.ipcToken).isEqualTo("random")
+        assertThat(response.ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
         assertThat(response.state).isEqualTo(TokenStateExternal.EXT_INVALID.value)
 
         verifySequence {
-            persistence.getIsolationToken("random")
+            persistence.getIsolationToken(IpcTokenId.of("1".repeat(64)))
         }
     }
 
@@ -97,13 +103,13 @@ class IsolationPaymentGatewayServiceTest {
     fun `verifies isolation token handling not found token id`() {
         every { persistence.getIsolationToken(any()) } returns Optional.empty()
 
-        val response = service.verifyIsolationToken("random")
+        val response = service.verifyIsolationToken(IpcTokenId.of("1".repeat(64)))
 
-        assertThat(response.ipcToken).isEqualTo("random")
+        assertThat(response.ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
         assertThat(response.state).isEqualTo(TokenStateExternal.EXT_INVALID.value)
 
         verifySequence {
-            persistence.getIsolationToken("random")
+            persistence.getIsolationToken(IpcTokenId.of("1".repeat(64)))
         }
     }
 

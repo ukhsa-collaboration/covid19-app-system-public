@@ -3,25 +3,27 @@ package smoke
 import com.natpryce.hamkrest.and
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.ContentType.Companion.APPLICATION_JSON
-import org.http4k.core.Method
+import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Status.Companion.SERVICE_UNAVAILABLE
 import org.http4k.filter.debug
 import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import smoke.clients.AwsLambda
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.testhelper.matchers.eventually
 
+@Tag("serial")
 class MaintenanceModeTest {
 
     private val config = SmokeTests.loadConfig()
     private val client = JavaHttpClient().debug()
 
     private fun postRequest(uri: String, authHeader: String) =
-        Request(Method.POST, uri)
+        Request(POST, uri)
             .header("Authorization", authHeader)
             .header("Content-Type", APPLICATION_JSON.value)
 

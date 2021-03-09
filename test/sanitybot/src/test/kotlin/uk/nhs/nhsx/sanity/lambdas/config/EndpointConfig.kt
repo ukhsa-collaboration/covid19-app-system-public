@@ -14,8 +14,8 @@ import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysDistributio
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysSubmission
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.ExposureNotificationDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.PostDistrictsDistribution
+import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenueConfigurationDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesMessagesDownload
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.SelfIsolationDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.SymptomaticQuestionnaireDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.VirologyKit
@@ -219,7 +219,7 @@ private val resources = mapOf(
     ExposureNotificationDistribution to Static("src/static/exposure-configuration.json"),
     SymptomaticQuestionnaireDistribution to Static("src/static/symptomatic-questionnaire.json"),
     SelfIsolationDistribution to Static("src/static/self-isolation.json"),
-    RiskyVenuesMessagesDownload to Static("src/static/risky-venues-messages.json"),
+    RiskyVenueConfigurationDistribution to Static("src/static/risky-venue-configuration.json"),
     RiskyVenuesDistribution to DynamicContent,
     PostDistrictsDistribution to DynamicContent,
     DiagnosisKeysDistribution to DynamicUrl,

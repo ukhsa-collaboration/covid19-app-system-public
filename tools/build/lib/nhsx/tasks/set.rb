@@ -1,5 +1,5 @@
 namespace :set do
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
       desc "Update the result of a ctaToken (define in TOKEN) to positive"
       task :"token:positive:#{tgt_env}" => [:"login:#{account}"] do

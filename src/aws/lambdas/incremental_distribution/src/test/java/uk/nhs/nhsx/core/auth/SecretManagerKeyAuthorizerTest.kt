@@ -9,12 +9,12 @@ import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue
 import uk.nhs.nhsx.core.events.RecordingEvents
-import java.util.*
+import java.util.Optional
 
 class SecretManagerKeyAuthorizerTest {
 
     private val keyName = "test-api"
-    private val secretName = SecretName.of("/" + ApiName.TestResultUpload.name + "/" + keyName)
+    private val secretName = SecretName.of("/" + ApiName.TestResultUpload.keyName + "/" + keyName)
 
     //multiple lines on purpose.
     private val secretHash = "$2a$12\$HyJCSwpZ9yoarm9JjlxH2OJQoMl3Mrtf5rIJNFVhBdvNp5LYsrjcq"

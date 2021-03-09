@@ -106,6 +106,18 @@ variable "availability_ios_origin_access_identity_path" {
   description = "The origin access controlling access to the store"
 }
 
+variable "risky_venue_configuration_bucket_regional_domain_name" {
+  description = "The S3 bucket regional domain name used to construct the URLs"
+}
+
+variable "risky_venue_configuration_payload" {
+  description = "The path (i.e. route) to the payload"
+}
+
+variable "risky_venue_configuration_origin_access_identity_path" {
+  description = "The origin access controlling access to the store"
+}
+
 variable "domain" {
   description = "The domain the CloudFront distribution needs to be deployed into"
 }

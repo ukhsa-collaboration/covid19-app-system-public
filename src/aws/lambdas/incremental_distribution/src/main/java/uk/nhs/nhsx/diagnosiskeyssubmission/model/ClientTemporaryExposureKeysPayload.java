@@ -15,10 +15,7 @@ public class ClientTemporaryExposureKeysPayload {
     @JsonCreator
     public ClientTemporaryExposureKeysPayload(UUID diagnosisKeySubmissionToken,
                                               List<ClientTemporaryExposureKey> temporaryExposureKeys) {
-        requireNonNull(diagnosisKeySubmissionToken);
-        requireNonNull(temporaryExposureKeys);
-        this.diagnosisKeySubmissionToken = diagnosisKeySubmissionToken;
-        this.temporaryExposureKeys = temporaryExposureKeys;
+        this.diagnosisKeySubmissionToken = requireNonNull(diagnosisKeySubmissionToken);
+        this.temporaryExposureKeys = requireNonNull(temporaryExposureKeys);
     }
-
 }

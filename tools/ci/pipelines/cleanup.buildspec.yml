@@ -3,12 +3,7 @@ phases:
   build:
     commands:
       - rake config:codebuild BRANCH=master
-      - rake plan:ci
       - rake clean:orphans
-      - rake plan:analytics:ci
-      - rake clean:analytics:orphans
-      - rake plan:pubdash:ci
-      - rake clean:pubdash:orphans
 artifacts:
   name: $(date +%Y%m%d%H%M%S)-resources-cleanup.zip
   files:

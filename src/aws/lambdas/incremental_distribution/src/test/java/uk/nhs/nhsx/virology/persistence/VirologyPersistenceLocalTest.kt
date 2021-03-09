@@ -29,13 +29,24 @@ import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.exceptions.TransactionException
+import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.virology.CtaToken
+import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
 import uk.nhs.nhsx.virology.TestKit
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.TestResultPollingToken
 import uk.nhs.nhsx.virology.VirologyConfig
 import uk.nhs.nhsx.virology.order.TokensGenerator
-import uk.nhs.nhsx.virology.result.VirologyResultRequest
+import uk.nhs.nhsx.virology.persistence.TestResultAvailability.AVAILABLE
+import uk.nhs.nhsx.virology.persistence.TestState.AvailableTestResult
+import uk.nhs.nhsx.virology.persistence.TestState.PendingTestResult
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.OrderNotFound
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.TransactionFailed
+import uk.nhs.nhsx.virology.result.TestEndDate
+import uk.nhs.nhsx.virology.result.TestResult.Negative
+import uk.nhs.nhsx.virology.result.TestResult.Positive
+import uk.nhs.nhsx.virology.result.TestResult.Void
+import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import java.time.Instant
 import java.time.Period
 import java.util.function.Supplier
@@ -54,46 +65,43 @@ class VirologyPersistenceLocalTest {
     private lateinit var submissionTable: Table
     private lateinit var persistence: VirologyPersistenceService
 
-    private val nowDateTime = "2020-12-01T00:00:00Z"
-    private val clock = Supplier { Instant.parse(nowDateTime) }
-    private val fourWeeksTtl = clock.get().plus(Period.ofWeeks(4)).epochSecond
+    private val nowString = "2020-12-01T00:00:00Z"
+    private val clock = Supplier { nowString.asInstant() }
+    private val fourWeeksTtl = clock.get().plus(Period.ofWeeks(4))
 
     private val testOrder = TestOrder(
-        "cc8f0b6z",
-        "09657719-fe58-46a3-a3a3-a8db82d48043",
-        "9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"
+        CtaToken.of("cc8f0b6z"),
+        TestResultPollingToken.of("09657719-fe58-46a3-a3a3-a8db82d48043"),
+        DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0")
     )
 
-    private fun positiveTestResult(testKit: TestKit = LAB_RESULT) = TestResult(
-        testOrder.testResultPollingToken.value,
-        nowDateTime,
-        VirologyResultRequest.NPEX_POSITIVE,
-        "available",
-        testKit
-    )
+    private fun positiveTestResult(testKit: TestKit = LAB_RESULT) =
+        AvailableTestResult(
+            testOrder.testResultPollingToken,
+            TestEndDate.parse(nowString),
+            Positive,
+            testKit
+        )
 
-    private fun negativeTestResult(testKit: TestKit = LAB_RESULT) = TestResult(
-        testOrder.testResultPollingToken.value,
-        nowDateTime,
-        VirologyResultRequest.NPEX_NEGATIVE,
-        "available",
-        testKit
-    )
+    private fun negativeTestResult(testKit: TestKit = LAB_RESULT) =
+        AvailableTestResult(
+            testOrder.testResultPollingToken,
+            TestEndDate.parse(nowString),
+            Negative,
+            testKit
+        )
 
-    private fun voidTestResult(testKit: TestKit = LAB_RESULT) = TestResult(
-        testOrder.testResultPollingToken.value,
-        nowDateTime,
-        VirologyResultRequest.NPEX_VOID,
-        "available",
-        testKit
-    )
+    private fun voidTestResult(testKit: TestKit = LAB_RESULT) =
+        AvailableTestResult(
+            testOrder.testResultPollingToken,
+            TestEndDate.parse(nowString),
+            Void,
+            testKit
+        )
 
-    private val pendingTestResult = TestResult(
-        testOrder.testResultPollingToken.value,
-        null,
-        null,
-        "pending",
-        null
+    private val pendingTestResult = PendingTestResult(
+        testOrder.testResultPollingToken,
+        LAB_RESULT
     )
 
     companion object {
@@ -138,9 +146,9 @@ class VirologyPersistenceLocalTest {
     @Test
     fun `gets virology order`() {
         val itemMap = mapOf(
-            "ctaToken" to stringAttribute(testOrder.ctaToken.value),
-            "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken.value),
-            "diagnosisKeySubmissionToken" to stringAttribute(testOrder.diagnosisKeySubmissionToken.value),
+            "ctaToken" to stringAttribute(testOrder.ctaToken),
+            "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
+            "diagnosisKeySubmissionToken" to stringAttribute(testOrder.diagnosisKeySubmissionToken),
             "expireAt" to numericAttribute(fourWeeksTtl)
         )
 
@@ -151,9 +159,9 @@ class VirologyPersistenceLocalTest {
         dbClient.putItem(request)
 
         persistence
-            .getTestOrder(CtaToken.of(testOrder.ctaToken.value))
+            .getTestOrder(testOrder.ctaToken)
             .map {
-                assertThat(it.ctaToken).isEqualTo(CtaToken.of(testOrder.ctaToken.value))
+                assertThat(it.ctaToken).isEqualTo(testOrder.ctaToken)
                 assertThat(it.diagnosisKeySubmissionToken).isEqualTo(testOrder.diagnosisKeySubmissionToken)
                 assertThat(it.testResultPollingToken).isEqualTo(testOrder.testResultPollingToken)
             }
@@ -162,7 +170,7 @@ class VirologyPersistenceLocalTest {
 
     @Test
     fun `gets empty for order not found`() {
-        assertThat(persistence.getTestOrder(CtaToken.of(testOrder.ctaToken.value))).isEmpty
+        assertThat(persistence.getTestOrder(testOrder.ctaToken)).isEmpty
     }
 
     @Test
@@ -171,9 +179,9 @@ class VirologyPersistenceLocalTest {
 
         val itemMap = mapOf(
             "testResultPollingToken" to stringAttribute(testResult.testResultPollingToken),
-            "testEndDate" to stringAttribute(testResult.testEndDate),
-            "testResult" to stringAttribute(testResult.testResult),
-            "status" to stringAttribute(testResult.status),
+            "testEndDate" to stringAttribute(TestEndDate.show(testResult.testEndDate)),
+            "testResult" to stringAttribute(testResult.testResult.wireValue),
+            "status" to stringAttribute(AVAILABLE.text),
             "testKit" to stringAttribute(testResult.testKit.name)
         )
 
@@ -184,12 +192,12 @@ class VirologyPersistenceLocalTest {
         dbClient.putItem(request)
 
         persistence
-            .getTestResult(TestResultPollingToken.of(testResult.testResultPollingToken))
+            .getTestResult(testResult.testResultPollingToken)
             .map {
+                it as AvailableTestResult
                 assertThat(it.testResultPollingToken).isEqualTo(testResult.testResultPollingToken)
                 assertThat(it.testEndDate).isEqualTo(testResult.testEndDate)
                 assertThat(it.testResult).isEqualTo(testResult.testResult)
-                assertThat(it.status).isEqualTo(testResult.status)
                 assertThat(it.testKit).isEqualTo(testResult.testKit)
             }
             .orElseThrow { RuntimeException("Token not found") }
@@ -199,7 +207,7 @@ class VirologyPersistenceLocalTest {
     fun `gets pending virology result`() {
         val itemMap = mapOf(
             "testResultPollingToken" to stringAttribute(pendingTestResult.testResultPollingToken),
-            "status" to stringAttribute(pendingTestResult.status),
+            "status" to stringAttribute(TestResultAvailability.PENDING.text),
             "testKit" to stringAttribute(TestKit.RAPID_RESULT.name)
         )
 
@@ -210,12 +218,10 @@ class VirologyPersistenceLocalTest {
         dbClient.putItem(request)
 
         persistence
-            .getTestResult(TestResultPollingToken.of(pendingTestResult.testResultPollingToken))
+            .getTestResult(pendingTestResult.testResultPollingToken)
             .map {
+                it as PendingTestResult
                 assertThat(it.testResultPollingToken).isEqualTo(pendingTestResult.testResultPollingToken)
-                assertThat(it.testEndDate).isEmpty()
-                assertThat(it.testResult).isEmpty()
-                assertThat(it.status).isEqualTo(pendingTestResult.status)
                 assertThat(it.testKit).isEqualTo(TestKit.RAPID_RESULT)
             }
             .orElseThrow { RuntimeException("Token not found") }
@@ -225,7 +231,7 @@ class VirologyPersistenceLocalTest {
     fun `gets pending virology result - defaults to LAB_RESULT if no testKit stored`() {
         val itemMap = mapOf(
             "testResultPollingToken" to stringAttribute(pendingTestResult.testResultPollingToken),
-            "status" to stringAttribute(pendingTestResult.status)
+            "status" to stringAttribute(TestResultAvailability.PENDING.text)
         )
 
         val request = PutItemRequest()
@@ -235,12 +241,10 @@ class VirologyPersistenceLocalTest {
         dbClient.putItem(request)
 
         persistence
-            .getTestResult(TestResultPollingToken.of(pendingTestResult.testResultPollingToken))
+            .getTestResult(pendingTestResult.testResultPollingToken)
             .map {
+                it as PendingTestResult
                 assertThat(it.testResultPollingToken).isEqualTo(pendingTestResult.testResultPollingToken)
-                assertThat(it.testEndDate).isEmpty()
-                assertThat(it.testResult).isEmpty()
-                assertThat(it.status).isEqualTo(pendingTestResult.status)
                 assertThat(it.testKit).isEqualTo(LAB_RESULT)
             }
             .orElseThrow { RuntimeException("Token not found") }
@@ -263,7 +267,7 @@ class VirologyPersistenceLocalTest {
 
         dbClient.putItem(request)
 
-        assertThatThrownBy { persistence.getTestResult(TestResultPollingToken.of(pendingTestResult.testResultPollingToken)) }
+        assertThatThrownBy { persistence.getTestResult(pendingTestResult.testResultPollingToken) }
             .isInstanceOf(RuntimeException::class.java)
             .hasMessage("Required field missing")
     }
@@ -288,16 +292,16 @@ class VirologyPersistenceLocalTest {
 
     @Test
     fun `creating tokens with collision should generate new token`() {
-        val tokens = TokensGenerator().generateVirologyTokens()
+        val tokens = TokensGenerator.generateVirologyTokens()
         val tokensWithCollision = TestOrder(
-            tokens.ctaToken.value,
-            "testResultPollingToken-collision",
-            "diagnosisKeySubmissionToken-collision"
+            tokens.ctaToken,
+            TestResultPollingToken.of("testResultPollingToken-collision"),
+            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-collision")
         )
         val tokensNoCollision = TestOrder(
-            TokensGenerator().generateVirologyTokens().ctaToken.value,
-            "testResultPollingToken-no-collision",
-            "diagnosisKeySubmissionToken-no-collision"
+            TokensGenerator.generateVirologyTokens().ctaToken,
+            TestResultPollingToken.of("testResultPollingToken-no-collision"),
+            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-no-collision")
         )
 
         val tokensSupplier = mockk<Supplier<TestOrder>>()
@@ -314,11 +318,11 @@ class VirologyPersistenceLocalTest {
 
     @Test
     fun `creating tokens with collision should stop after too many retries`() {
-        val tokens = TokensGenerator().generateVirologyTokens()
+        val tokens = TokensGenerator.generateVirologyTokens()
         val tokensWithCollision = TestOrder(
-            tokens.ctaToken.value,
-            "testResultPollingToken-collision",
-            "diagnosisKeySubmissionToken-collision"
+            tokens.ctaToken,
+            TestResultPollingToken.of("testResultPollingToken-collision"),
+            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-collision")
         )
         persistence.persistTestOrder({ tokens }, fourWeeksTtl)
         assertOrderIsPresent(tokens)
@@ -361,6 +365,11 @@ class VirologyPersistenceLocalTest {
         assertSubmissionIsNotPresent()
     }
 
+    private val virologyDataTimeToLive = VirologyDataTimeToLive(
+        Instant.ofEpochSecond(10),
+        Instant.ofEpochSecond(20)
+    )
+
     @Test
     fun `marks existing positive test result for deletion`() {
         val testResult = positiveTestResult()
@@ -375,12 +384,12 @@ class VirologyPersistenceLocalTest {
 
         persistence.markForDeletion(
             testResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
-        assertOrderIsPresent(testOrder, expireAt = 10)
-        assertTestResultIsPresent(testOrder, testResult, expireAt = 10)
-        assertSubmissionIsPresent(testOrder, LAB_RESULT, expireAt = 20)
+        assertOrderIsPresent(testOrder, expireAt = Instant.ofEpochSecond(10))
+        assertTestResultIsPresent(testOrder, testResult, expireAt = Instant.ofEpochSecond(10))
+        assertSubmissionIsPresent(testOrder, LAB_RESULT, expireAt = Instant.ofEpochSecond(20))
     }
 
     @Test
@@ -397,11 +406,11 @@ class VirologyPersistenceLocalTest {
 
         persistence.markForDeletion(
             testResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
-        assertOrderIsPresent(testOrder, expireAt = 10)
-        assertTestResultIsPresent(testOrder, testResult, expireAt = 10)
+        assertOrderIsPresent(testOrder, expireAt = Instant.ofEpochSecond(10))
+        assertTestResultIsPresent(testOrder, testResult, expireAt = Instant.ofEpochSecond(10))
         assertSubmissionIsNotPresent()
     }
 
@@ -411,14 +420,14 @@ class VirologyPersistenceLocalTest {
 
         val testResult = positiveTestResult()
 
-        val positiveResult = VirologyResultRequest(
-            testOrder.ctaToken.value,
+        val positiveResult = VirologyResultRequestV2(
+            testOrder.ctaToken,
             testResult.testEndDate,
             testResult.testResult,
             testResult.testKit
         )
         persistence.persistPositiveTestResult(
-            VirologyResultRequest.Positive.from(positiveResult),
+            positiveResult,
             fourWeeksTtl
         )
 
@@ -426,7 +435,7 @@ class VirologyPersistenceLocalTest {
         assertSubmissionIsNotPresent()
 
         assertThatThrownBy {
-            persistence.markForDeletion(testResult, VirologyDataTimeToLive(10, 20))
+            persistence.markForDeletion(testResult, virologyDataTimeToLive)
         }.isInstanceOf(TransactionException::class.java)
 
         assertSubmissionIsNotPresent()
@@ -434,17 +443,16 @@ class VirologyPersistenceLocalTest {
 
     @Test
     fun `does not mark for deletion if test result not found`() {
-        val randomResult = TestResult(
-            "some-random-id",
-            nowDateTime,
-            VirologyResultRequest.NPEX_POSITIVE,
-            "available",
-            null
+        val randomResult = AvailableTestResult(
+            TestResultPollingToken.of("some-random-id"),
+            TestEndDate.parse(nowString),
+            Positive,
+            LAB_RESULT
         )
 
         persistence.markForDeletion(
             randomResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
         assertOrderIsNotPresent()
@@ -455,19 +463,19 @@ class VirologyPersistenceLocalTest {
     @Test
     fun `persists positive test result for all test kits`() {
         TestKit.values().forEach {
-            val testOrder = TokensGenerator().generateVirologyTokens()
+            val testOrder = TokensGenerator.generateVirologyTokens()
             persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
 
             val testResult = positiveTestResult(it)
 
-            val virologyResultRequest = VirologyResultRequest(
-                testOrder.ctaToken.value,
+            val virologyResultRequest = VirologyResultRequestV2(
+                testOrder.ctaToken,
                 testResult.testEndDate,
                 testResult.testResult,
                 it
             )
             val result = persistence.persistPositiveTestResult(
-                VirologyResultRequest.Positive.from(virologyResultRequest),
+                virologyResultRequest,
                 fourWeeksTtl
             )
 
@@ -479,53 +487,59 @@ class VirologyPersistenceLocalTest {
     }
 
     @Test
-    fun `persists negative test result for all test kits`() {
-        TestKit.values().forEach {
-            val testOrder = TokensGenerator().generateVirologyTokens()
-            persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
+    fun `persists positive test result in db`() {
+        persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
 
-            val testResult = negativeTestResult(it)
+        val testResult = positiveTestResult()
 
-            val virologyResultRequest = VirologyResultRequest(
-                testOrder.ctaToken.value,
-                testResult.testEndDate,
-                testResult.testResult,
-                it
+        val virologyResultRequest = VirologyResultRequestV2(
+            testOrder.ctaToken,
+            testResult.testEndDate,
+            testResult.testResult,
+            testResult.testKit
+        )
+        persistence.persistPositiveTestResult(
+            virologyResultRequest,
+            fourWeeksTtl
+        )
+
+        val result = resultTable.getItem("testResultPollingToken", testOrder.testResultPollingToken.value)
+        val resultMap = result.asMap()
+
+        assertThat(resultMap).isEqualTo(
+            mapOf(
+                "testResultPollingToken" to testOrder.testResultPollingToken.value,
+                "status" to AVAILABLE.text,
+                "testEndDate" to nowString,
+                "testResult" to testResult.testResult.wireValue,
+                "expireAt" to fourWeeksTtl.epochSecond.toBigDecimal(),
+                "testKit" to testResult.testKit.name
             )
-            val result = persistence.persistNonPositiveTestResult(
-                VirologyResultRequest.NonPositive.from(virologyResultRequest)
-            )
-
-            assertOrderIsPresent(testOrder)
-            assertTestResultIsPresent(testOrder, testResult)
-            assertSubmissionIsNotPresent()
-            assertThat(result).isInstanceOf(VirologyResultPersistOperation.Success::class.java)
-        }
+        )
     }
 
     @Test
-    fun `persists void test result for all test kits`() {
-        TestKit.values().forEach {
-            val testOrder = TokensGenerator().generateVirologyTokens()
-            persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
+    fun `persists void test result for Lab test kit`() {
+        val testOrder = TokensGenerator.generateVirologyTokens()
+        persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
 
-            val testResult = voidTestResult(it)
+        val testResult = voidTestResult(LAB_RESULT)
 
-            val virologyResultRequest = VirologyResultRequest(
-                testOrder.ctaToken.value,
-                testResult.testEndDate,
-                testResult.testResult,
-                it
-            )
-            val result = persistence.persistNonPositiveTestResult(
-                VirologyResultRequest.NonPositive.from(virologyResultRequest)
-            )
+        val virologyResultRequest = VirologyResultRequestV2(
+            testOrder.ctaToken,
+            testResult.testEndDate,
+            testResult.testResult,
+            testResult.testKit
+        )
 
-            assertOrderIsPresent(testOrder)
-            assertTestResultIsPresent(testOrder, testResult)
-            assertSubmissionIsNotPresent()
-            assertThat(result).isInstanceOf(VirologyResultPersistOperation.Success::class.java)
-        }
+        val result = persistence.persistNonPositiveTestResult(
+            virologyResultRequest
+        )
+
+        assertOrderIsPresent(testOrder)
+        assertTestResultIsPresent(testOrder, testResult)
+        assertSubmissionIsNotPresent()
+        assertThat(result).isInstanceOf(VirologyResultPersistOperation.Success::class.java)
     }
 
     @Test
@@ -533,57 +547,59 @@ class VirologyPersistenceLocalTest {
         persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
 
         val positiveTestResult = positiveTestResult()
-        val positiveResult = VirologyResultRequest(
-            testOrder.ctaToken.value,
+        val positiveResult = VirologyResultRequestV2(
+            testOrder.ctaToken,
             positiveTestResult.testEndDate,
             positiveTestResult.testResult,
             positiveTestResult.testKit
         )
         persistence.persistPositiveTestResult(
-            VirologyResultRequest.Positive.from(positiveResult),
+            positiveResult,
             fourWeeksTtl
         )
 
         val negativeTestResult = negativeTestResult()
-        val negativeResult = VirologyResultRequest(
-            testOrder.ctaToken.value,
+        val negativeResult = VirologyResultRequestV2(
+            testOrder.ctaToken,
             negativeTestResult.testEndDate,
             negativeTestResult.testResult,
             negativeTestResult.testKit
         )
         val result = persistence.persistNonPositiveTestResult(
-            VirologyResultRequest.NonPositive.from(negativeResult)
+            negativeResult
         )
 
         assertThat(result)
-            .isInstanceOf(VirologyResultPersistOperation.TransactionFailed::class.java)
+            .isInstanceOf(TransactionFailed::class.java)
     }
 
     @Test
     fun `order not found when persisting a result for a order that does not exist`() {
         val positiveTestResult = positiveTestResult()
-        val positiveResult = VirologyResultRequest(
-            testOrder.ctaToken.value,
+        val positiveResult = VirologyResultRequestV2(
+            testOrder.ctaToken,
             positiveTestResult.testEndDate,
-            positiveTestResult.testResult
+            positiveTestResult.testResult,
+            positiveTestResult.testKit
         )
         persistence.persistPositiveTestResult(
-            VirologyResultRequest.Positive.from(positiveResult),
+            positiveResult,
             fourWeeksTtl
         )
 
         val negativeTestResult = negativeTestResult()
-        val negativeResult = VirologyResultRequest(
-            testOrder.ctaToken.value,
+        val negativeResult = VirologyResultRequestV2(
+            testOrder.ctaToken,
             negativeTestResult.testEndDate,
-            negativeTestResult.testResult
+            negativeTestResult.testResult,
+            negativeTestResult.testKit
         )
         val result = persistence.persistNonPositiveTestResult(
-            VirologyResultRequest.NonPositive.from(negativeResult)
+            negativeResult
         )
 
         assertThat(result)
-            .isInstanceOf(VirologyResultPersistOperation.OrderNotFound::class.java)
+            .isInstanceOf(OrderNotFound::class.java)
     }
 
     @Test
@@ -601,12 +617,12 @@ class VirologyPersistenceLocalTest {
         persistence.updateOnCtaExchange(
             testOrder,
             testResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
-        assertOrderIsPresent(testOrder, expireAt = 10, downloadCount = 1)
-        assertTestResultIsPresent(testOrder, testResult, expireAt = 10)
-        assertSubmissionIsPresent(testOrder, LAB_RESULT, expireAt = 20)
+        assertOrderIsPresent(testOrder, expireAt = Instant.ofEpochSecond(10), downloadCount = 1)
+        assertTestResultIsPresent(testOrder, testResult, expireAt = Instant.ofEpochSecond(10))
+        assertSubmissionIsPresent(testOrder, LAB_RESULT, expireAt = Instant.ofEpochSecond(20))
     }
 
     @Test
@@ -632,11 +648,11 @@ class VirologyPersistenceLocalTest {
         persistence.updateOnCtaExchange(
             testOrder,
             testResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
-        assertOrderIsPresent(testOrder, expireAt = 10, downloadCount = 1)
-        assertTestResultIsPresent(testOrder, testResult, expireAt = 10)
+        assertOrderIsPresent(testOrder, expireAt = Instant.ofEpochSecond(10), downloadCount = 1)
+        assertTestResultIsPresent(testOrder, testResult, expireAt = Instant.ofEpochSecond(10))
         assertSubmissionIsNotPresent()
     }
 
@@ -655,11 +671,11 @@ class VirologyPersistenceLocalTest {
         persistence.updateOnCtaExchange(
             testOrder,
             testResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
-        assertOrderIsPresent(testOrder, expireAt = 10, downloadCount = 1)
-        assertTestResultIsPresent(testOrder, testResult, expireAt = 10)
+        assertOrderIsPresent(testOrder, expireAt = Instant.ofEpochSecond(10), downloadCount = 1)
+        assertTestResultIsPresent(testOrder, testResult, expireAt = Instant.ofEpochSecond(10))
         assertSubmissionIsNotPresent()
     }
 
@@ -678,16 +694,16 @@ class VirologyPersistenceLocalTest {
         persistence.updateOnCtaExchange(
             testOrder,
             testResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
         persistence.updateOnCtaExchange(
             testOrder,
             testResult,
-            VirologyDataTimeToLive(10, 20)
+            virologyDataTimeToLive
         )
 
-        assertOrderIsPresent(testOrder, expireAt = 10, downloadCount = 2)
+        assertOrderIsPresent(testOrder, expireAt = Instant.ofEpochSecond(10), downloadCount = 2)
     }
 
     private fun createOrderTable() {
@@ -760,60 +776,74 @@ class VirologyPersistenceLocalTest {
         dbClient.createTable(request)
     }
 
-    private fun assertOrderIsPresent(testOrder: TestOrder,
-                                     expireAt: Long = fourWeeksTtl,
-                                     downloadCount: Int? = null) {
-        val ctaToken = testOrder.ctaToken.value
-        val order = orderTable.getItem("ctaToken", ctaToken)
+    private fun assertOrderIsPresent(
+        testOrder: TestOrder,
+        expireAt: Instant = fourWeeksTtl,
+        downloadCount: Int? = null
+    ) {
+        val ctaToken = testOrder.ctaToken
+        val order = orderTable.getItem("ctaToken", ctaToken.value)
 
         val expectedOrderMap = mutableMapOf<String, Any>(
-            "ctaToken" to ctaToken,
+            "ctaToken" to ctaToken.value,
             "diagnosisKeySubmissionToken" to testOrder.diagnosisKeySubmissionToken.value,
             "testResultPollingToken" to testOrder.testResultPollingToken.value,
-            "expireAt" to expireAt.toBigDecimal()
+            "expireAt" to expireAt.epochSecond.toBigDecimal()
         )
 
-        if (downloadCount != null)
+        if (downloadCount != null) {
             expectedOrderMap["downloadCount"] = downloadCount.toBigDecimal()
+        }
 
         assertThat(order.asMap()).isEqualTo(expectedOrderMap)
     }
 
-    private fun assertTestResultIsPresent(testOrder: TestOrder,
-                                          testResult: TestResult,
-                                          expireAt: Long = fourWeeksTtl) {
+    private fun assertTestResultIsPresent(
+        testOrder: TestOrder,
+        testState: TestState,
+        expireAt: Instant = fourWeeksTtl
+    ) {
         val testResultPollingToken = testOrder.testResultPollingToken.value
         val result = resultTable.getItem("testResultPollingToken", testResultPollingToken)
+        val resultMap = result.asMap()
 
-        assertThat(result.asMap()).isEqualTo(
-            when (testResult.status) {
-                "pending" -> mapOf(
-                    "testResultPollingToken" to testResultPollingToken,
-                    "status" to "pending",
-                    "expireAt" to expireAt.toBigDecimal()
-                )
-                else -> mapOf(
-                    "testResultPollingToken" to testResultPollingToken,
-                    "status" to testResult.status,
-                    "testEndDate" to testResult.testEndDate,
-                    "testResult" to testResult.testResult,
-                    "expireAt" to expireAt.toBigDecimal(),
-                    "testKit" to testResult.testKit.name
+        when (testState) {
+            is AvailableTestResult -> {
+                assertThat(resultMap).isEqualTo(
+                    mapOf(
+                        "testResultPollingToken" to testResultPollingToken,
+                        "status" to AVAILABLE.text,
+                        "testEndDate" to TestEndDate.show(testState.testEndDate),
+                        "testResult" to testState.testResult.wireValue,
+                        "expireAt" to expireAt.epochSecond.toBigDecimal(),
+                        "testKit" to testState.testKit.name
+                    )
                 )
             }
-        )
+            is PendingTestResult -> {
+                assertThat(resultMap).isEqualTo(
+                    mapOf(
+                        "testResultPollingToken" to testResultPollingToken,
+                        "status" to TestResultAvailability.PENDING.text,
+                        "expireAt" to expireAt.epochSecond.toBigDecimal()
+                    )
+                )
+            }
+        }
     }
 
-    private fun assertSubmissionIsPresent(testOrder: TestOrder,
-                                          testKit: TestKit,
-                                          expireAt: Long = fourWeeksTtl) {
+    private fun assertSubmissionIsPresent(
+        testOrder: TestOrder,
+        testKit: TestKit,
+        expireAt: Instant = fourWeeksTtl
+    ) {
         val diagnosisKeySubmissionToken = testOrder.diagnosisKeySubmissionToken.value
         val submission = submissionTable.getItem("diagnosisKeySubmissionToken", diagnosisKeySubmissionToken)
 
         assertThat(submission.asMap()).isEqualTo(
             mapOf(
                 "diagnosisKeySubmissionToken" to diagnosisKeySubmissionToken,
-                "expireAt" to expireAt.toBigDecimal(),
+                "expireAt" to expireAt.epochSecond.toBigDecimal(),
                 "testKit" to testKit.name
             )
         )
@@ -830,7 +860,8 @@ class VirologyPersistenceLocalTest {
     }
 
     private fun assertSubmissionIsNotPresent() {
-        val submission = submissionTable.getItem("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value)
+        val submission =
+            submissionTable.getItem("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value)
         assertThat(submission).isNull()
     }
 }

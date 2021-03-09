@@ -8,18 +8,17 @@ import org.junit.jupiter.params.provider.EnumSource
 import smoke.actors.ApiVersion.V1
 import smoke.actors.MobileApp
 import smoke.actors.TestLab
-import smoke.actors.TestResult.NEGATIVE
-import smoke.actors.TestResult.POSITIVE
-import smoke.actors.TestResultPollingToken
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.virology.CtaToken
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.Available
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.NotFound
-import uk.nhs.nhsx.virology.result.VirologyLookupResult
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
+import uk.nhs.nhsx.virology.result.TestEndDate
+import uk.nhs.nhsx.virology.result.TestResult.Negative
+import uk.nhs.nhsx.virology.result.TestResult.Positive
 
 class VirologyV1SmokeTest {
 
@@ -34,17 +33,17 @@ class VirologyV1SmokeTest {
         val orderResponse = mobileApp.orderTest(V1)
 
         testLab.uploadTestResult(
-            token = CtaToken.of(orderResponse.tokenParameterValue),
-            result = POSITIVE,
+            token = orderResponse.tokenParameterValue,
+            result = Positive,
             source = source,
             apiVersion = V1,
             testKit = LAB_RESULT
         )
-        val pollingToken = TestResultPollingToken(orderResponse.testResultPollingToken)
-        val testResponse = (mobileApp.pollForTestResult(pollingToken, V1) as VirologyLookupResult.Available).virologyLookupResponse
+        val pollingToken = orderResponse.testResultPollingToken
+        val testResponse = (mobileApp.pollForTestResult(pollingToken, V1) as VirologyLookupResult.Available).response
 
-        assertThat(testResponse.testResult).isEqualTo(POSITIVE.name)
-        assertThat(testResponse.testEndDate).isEqualTo("2020-04-23T00:00:00Z")
+        assertThat(testResponse.testResult).isEqualTo(Positive)
+        assertThat(testResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
         assertThat(testResponse.testKit).isEqualTo(LAB_RESULT)
     }
 
@@ -52,8 +51,8 @@ class VirologyV1SmokeTest {
     @EnumSource(VirologyTokenExchangeSource::class)
     fun `lab token gen and ctaExchange via different sources`(source: VirologyTokenExchangeSource) {
         val ctaToken = testLab.generateCtaTokenFor(
-            testResult = POSITIVE,
-            testEndDate = "2020-11-19T00:00:00Z",
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
             source = source,
             apiVersion = V1,
             testKit = LAB_RESULT
@@ -62,8 +61,8 @@ class VirologyV1SmokeTest {
         val exchangeResponse = mobileApp.exchange(ctaToken, V1)
 
         val ctaExchangeResponse = (exchangeResponse as Available).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.testResult).isEqualTo(POSITIVE.name)
-        assertThat(ctaExchangeResponse.testEndDate).isEqualTo("2020-11-19T00:00:00Z")
+        assertThat(ctaExchangeResponse.testResult).isEqualTo(Positive)
+        assertThat(ctaExchangeResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 11, 19))
         assertThat(ctaExchangeResponse.testKit).isEqualTo(LAB_RESULT)
     }
 
@@ -71,25 +70,25 @@ class VirologyV1SmokeTest {
     fun `test result can be polled more than twice`() {
         val orderResponse = mobileApp.orderTest(V1)
         testLab.uploadTestResult(
-            token = CtaToken.of(orderResponse.tokenParameterValue),
-            result = POSITIVE,
+            token = orderResponse.tokenParameterValue,
+            result = Positive,
             source = Npex,
             apiVersion = V1,
             testKit = LAB_RESULT
         )
 
         repeat(times = 3) {
-            val pollingToken = TestResultPollingToken(orderResponse.testResultPollingToken)
-            val testResponse = (mobileApp.pollForTestResult(pollingToken, V1) as VirologyLookupResult.Available).virologyLookupResponse
-            assertThat(testResponse.testResult).isEqualTo(POSITIVE.name)
+            val pollingToken = orderResponse.testResultPollingToken
+            val testResponse = (mobileApp.pollForTestResult(pollingToken, V1) as VirologyLookupResult.Available).response
+            assertThat(testResponse.testResult).isEqualTo(Positive)
         }
     }
 
     @Test
     fun `not found when exchanging cta token more than twice`() {
         val ctaToken = testLab.generateCtaTokenFor(
-            testResult = NEGATIVE,
-            testEndDate = "2020-11-17T00:00:00Z",
+            testResult = Negative,
+            testEndDate = TestEndDate.of(2020, 11, 19),
             source = VirologyTokenExchangeSource.Eng,
             apiVersion = V1,
             testKit = LAB_RESULT

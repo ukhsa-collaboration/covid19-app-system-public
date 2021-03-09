@@ -47,7 +47,7 @@ public class AwsSsmParameters implements Parameters {
     }
 
     private <T> T getParameter(ParameterName name, Function<String, T> convert) {
-        GetParameterRequest request = new GetParameterRequest().withName(name.value);
+        GetParameterRequest request = new GetParameterRequest().withName(name.getValue());
         GetParameterResult result = ssmClient.getParameter(request);
         return convert.apply(result.getParameter().getValue());
     }

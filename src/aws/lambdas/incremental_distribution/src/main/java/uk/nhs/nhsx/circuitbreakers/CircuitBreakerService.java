@@ -22,13 +22,8 @@ public class CircuitBreakerService {
     }
 
     public CircuitBreakerResult getApprovalToken() {
-        String token = TokenGenerator.getToken();
-
-        TokenResponse tokenResponse = new TokenResponse();
-        tokenResponse.setApprovalToken(token);
-        tokenResponse.setApproval(initial.value().getName());
-
-        return CircuitBreakerResult.ok(Jackson.toJson(tokenResponse));
+        TokenResponse response = new TokenResponse(TokenGenerator.getToken(), initial.value().getStatusName());
+        return CircuitBreakerResult.ok(Jackson.toJson(response));
     }
 
     public CircuitBreakerResult getResolution(String path) {
@@ -38,9 +33,7 @@ public class CircuitBreakerService {
             return CircuitBreakerResult.missingPollingTokenError();
         }
 
-        ResolutionResponse resolutionResponse = new ResolutionResponse();
-        ApprovalStatus status = poll.value();
-        resolutionResponse.setApproval(status.getName());
+        ResolutionResponse resolutionResponse = new ResolutionResponse(poll.value().getStatusName());
 
         return CircuitBreakerResult.ok(Jackson.toJson(resolutionResponse));
     }

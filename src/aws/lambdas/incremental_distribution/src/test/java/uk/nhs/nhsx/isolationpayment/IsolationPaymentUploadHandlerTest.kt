@@ -1,13 +1,12 @@
 package uk.nhs.nhsx.isolationpayment
 
 import com.amazonaws.HttpMethod.POST
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.circuitbreakers.TokenResponse
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
@@ -16,10 +15,10 @@ import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import java.util.*
+import uk.nhs.nhsx.virology.IpcTokenId
 
 class IsolationPaymentUploadHandlerTest {
-    private val ipcToken = "ipc-token"
+    private val ipcToken = IpcTokenId.of("1".repeat(64))
 
     private val service = mockk<IsolationPaymentGatewayService>()
     private val authenticator = Authenticator { true }
@@ -33,9 +32,6 @@ class IsolationPaymentUploadHandlerTest {
 
     private val handler =
         IsolationPaymentUploadHandler(environment, authenticator, service, RecordingEvents(), { true })
-
-    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent): Map<String, String> =
-        Optional.ofNullable(response.headers).orElse(emptyMap())
 
     @Test
     fun `consuming token returns isolation payment response with given token`() {
@@ -63,14 +59,10 @@ class IsolationPaymentUploadHandlerTest {
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
 
-        val bodyIsolationResponse = Jackson.readMaybe(
-            response.body,
-            IsolationResponse::class.java
-        ) { }
-        assertThat(bodyIsolationResponse.isPresent).isEqualTo(true)
-        assertThat(bodyIsolationResponse.get().contractVersion).isEqualTo(1)
-        assertThat(bodyIsolationResponse.get().ipcToken).isEqualTo(ipcToken)
-        assertThat(bodyIsolationResponse.get().state).isEqualTo(TokenStateExternal.EXT_CONSUMED.value)
+        val bodyIsolationResponse = Jackson.readOrNull<IsolationResponse>(response.body) ?: error("")
+        assertThat(bodyIsolationResponse.contractVersion).isEqualTo(1)
+        assertThat(bodyIsolationResponse.ipcToken).isEqualTo(ipcToken)
+        assertThat(bodyIsolationResponse.state).isEqualTo(TokenStateExternal.EXT_CONSUMED.value)
 
         verifySequence {
             service.consumeIsolationToken(ipcToken)
@@ -102,25 +94,14 @@ class IsolationPaymentUploadHandlerTest {
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
 
-        val bodyIsolationResponse = Jackson.readMaybe(
-            response.body,
-            IsolationResponse::class.java
-        ) { }
-        assertThat(bodyIsolationResponse.isPresent).isEqualTo(true)
-        assertThat(bodyIsolationResponse.get().contractVersion).isEqualTo(1)
-        assertThat(bodyIsolationResponse.get().ipcToken).isEqualTo(ipcToken)
-        assertThat(bodyIsolationResponse.get().state).isEqualTo(TokenStateExternal.EXT_VALID.value)
+        val bodyIsolationResponse = Jackson.readOrNull<IsolationResponse>(response.body) ?: error("")
+        assertThat(bodyIsolationResponse.contractVersion).isEqualTo(1)
+        assertThat(bodyIsolationResponse.ipcToken).isEqualTo(ipcToken)
+        assertThat(bodyIsolationResponse.state).isEqualTo(TokenStateExternal.EXT_VALID.value)
 
         verifySequence {
             service.verifyIsolationToken(ipcToken)
         }
-    }
-
-    @Test
-    fun `throws when isolation request is invalid`() {
-
-        assertThatThrownBy { handler.handleRequest(null, ContextBuilder.aContext()) }
-            .isInstanceOf(RuntimeException::class.java)
     }
 
     @Test

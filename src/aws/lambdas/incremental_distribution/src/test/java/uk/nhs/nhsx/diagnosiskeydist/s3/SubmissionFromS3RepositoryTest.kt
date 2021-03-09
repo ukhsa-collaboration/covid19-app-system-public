@@ -3,11 +3,14 @@ package uk.nhs.nhsx.diagnosiskeydist.s3
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.diagnosiskeydist.loadAllSubmissions
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
-import java.util.*
+import java.util.Arrays
+import java.util.Date
 import java.util.function.Predicate
 
 class SubmissionFromS3RepositoryTest {
@@ -23,7 +26,8 @@ class SubmissionFromS3RepositoryTest {
             fakeS3,
             { true },
             BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents()
+            RecordingEvents(),
+            SystemClock.CLOCK
         )
         val submissions = submissionRepository.loadAllSubmissions()
 
@@ -44,7 +48,8 @@ class SubmissionFromS3RepositoryTest {
             fakeS3,
             { true },
             BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents()
+            RecordingEvents(),
+            SystemClock.CLOCK
         )
         val submissions = submissionRepository.loadAllSubmissions(now, 100, 100)
 
@@ -66,7 +71,8 @@ class SubmissionFromS3RepositoryTest {
             fakeS3,
             { true },
             BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents()
+            RecordingEvents(),
+            SystemClock.CLOCK
         )
         val submissions = submissionRepository.loadAllSubmissions(now, 3, 3)
 
@@ -84,7 +90,8 @@ class SubmissionFromS3RepositoryTest {
             fakeS3,
             { objectKey -> !objectKey.value.startsWith("my-prefix") },
             BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents()
+            RecordingEvents(),
+            SystemClock.CLOCK
         )
         val submissions = submissionRepository.loadAllSubmissions()
 
@@ -104,7 +111,8 @@ class SubmissionFromS3RepositoryTest {
             fakeS3,
             matchesPrefix,
             BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents()
+            RecordingEvents(),
+            SystemClock.CLOCK
         )
         val submissions = submissionRepository.loadAllSubmissions()
 
@@ -123,7 +131,8 @@ class SubmissionFromS3RepositoryTest {
             fakeS3,
             { true },
             BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents()
+            RecordingEvents(),
+            SystemClock.CLOCK
         )
         val submissions = submissionRepository.loadAllSubmissions()
 

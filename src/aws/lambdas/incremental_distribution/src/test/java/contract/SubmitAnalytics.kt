@@ -5,13 +5,13 @@ import contract.infra.RecordingTest
 import contract.infra.ReplayTest
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
-import smoke.actors.MobileOS.Android
-import smoke.actors.MobileOS.iOS
+import uk.nhs.nhsx.core.headers.MobileOS.Android
+import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import smoke.data.AnalyticsMetricsData
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
-import uk.nhs.nhsx.core.DateFormatValidator
-import java.time.OffsetDateTime
+import java.time.Duration
+import java.time.Instant
 
 interface SubmitAnalyticsKeys : BackendContractScenario {
 
@@ -21,9 +21,11 @@ interface SubmitAnalyticsKeys : BackendContractScenario {
 
         MobileApp(mitmHttpClient(), envConfig, iOS).submitAnalyticsKeys(
             AnalyticsWindow(
-                DateFormatValidator.formatter.format(OffsetDateTime.now().minusDays(1)),
-                DateFormatValidator.formatter.format(OffsetDateTime.now().plusDays(1))),
-            AnalyticsMetricsData.populatedAnalyticsMetrics())
+                Instant.now().minus(Duration.ofDays(1)),
+                Instant.now().plus(Duration.ofDays(1))
+            ),
+            AnalyticsMetricsData.populatedAnalyticsMetrics()
+        )
     }
 
     @Test
@@ -32,9 +34,11 @@ interface SubmitAnalyticsKeys : BackendContractScenario {
 
         MobileApp(mitmHttpClient(), envConfig, Android).submitAnalyticsKeys(
             AnalyticsWindow(
-                DateFormatValidator.formatter.format(OffsetDateTime.now().minusDays(1)),
-                DateFormatValidator.formatter.format(OffsetDateTime.now().plusDays(1))),
-            AnalyticsMetricsData.populatedAnalyticsMetrics())
+                Instant.now().minus(Duration.ofDays(1)),
+                Instant.now().plus(Duration.ofDays(1))
+            ),
+            AnalyticsMetricsData.populatedAnalyticsMetrics()
+        )
     }
 }
 

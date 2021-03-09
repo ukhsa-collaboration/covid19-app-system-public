@@ -11,6 +11,7 @@ module "diagnosis_keys_processing" {
   log_retention_in_days             = var.log_retention_in_days
   alarm_topic_arn                   = var.alarm_topic_arn
   diagnosis_key_submission_prefixes = "nearform/JE,nearform/GB-SCT,nearform/GB-NIR,nearform/GI"
+  zip_submission_period_offset      = var.zip_submission_period_offset
   tags                              = var.tags
 }
 
@@ -118,4 +119,12 @@ output "virology_tokens_processing_function" {
 
 output "virology_tokens_processing_output_store" {
   value = module.virology_tokens_processing.output_store
+}
+
+output "virology_tokens_processing_sms_topic_arn" {
+  value = module.virology_tokens_processing.sms_topic_arn
+}
+
+output "virology_tokens_processing_email_topic_arn" {
+  value = module.virology_tokens_processing.email_topic_arn
 }

@@ -4,8 +4,8 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.core.Environment
+import uk.nhs.nhsx.core.Environment.Companion.fromSystem
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
-import uk.nhs.nhsx.core.Environment.fromSystem
 import uk.nhs.nhsx.core.HttpResponses
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.SystemClock
@@ -15,6 +15,7 @@ import uk.nhs.nhsx.core.auth.StandardAuthentication
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
+import uk.nhs.nhsx.core.routing.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
@@ -49,22 +50,20 @@ class IsolationPaymentUploadHandler(
     )
 
     private fun consumeToken(request: APIGatewayProxyRequestEvent): APIGatewayProxyResponseEvent =
-        Jackson.readMaybe(
-            request.body,
-            IsolationRequest::class.java
-        ) { e: Exception -> events.emit(javaClass, UnprocessableJson(e)) }
-            .map { service.consumeIsolationToken(it.ipcToken) }
-            .map { mapToResponse(it) }
-            .orElseGet { HttpResponses.badRequest() }
+        Jackson.readOrNull<IsolationRequest>(request.body) {
+            events.emit(javaClass, UnprocessableJson(it))
+        }
+            ?.let { service.consumeIsolationToken(it.ipcToken) }
+            ?.let { mapToResponse(it) }
+            ?: HttpResponses.badRequest()
 
     private fun verifyToken(request: APIGatewayProxyRequestEvent): APIGatewayProxyResponseEvent =
-        Jackson.readMaybe(
-            request.body,
-            IsolationRequest::class.java
-        ) { e: Exception -> events.emit(javaClass, UnprocessableJson(e)) }
-            .map { service.verifyIsolationToken(it.ipcToken) }
-            .map { mapToResponse(it) }
-            .orElseGet { HttpResponses.badRequest() }
+        Jackson.readOrNull<IsolationRequest>(request.body) {
+            events.emit(javaClass, UnprocessableJson(it))
+        }
+            ?.let { service.verifyIsolationToken(it.ipcToken) }
+            ?.let { mapToResponse(it) }
+            ?: HttpResponses.badRequest()
 
     private fun mapToResponse(tokenResponse: IsolationResponse): APIGatewayProxyResponseEvent =
         if (tokenResponse.state == TokenStateExternal.EXT_INVALID.value) {
@@ -72,7 +71,7 @@ class IsolationPaymentUploadHandler(
         } else
             HttpResponses.ok(Jackson.toJson(tokenResponse))
 
-    override fun handler(): Routing.Handler = handler
+    override fun handler(): ApiGatewayHandler = handler
 
     companion object {
         private val ISOLATION_TOKEN_TABLE = EnvironmentKey.string("ISOLATION_PAYMENT_TOKENS_TABLE")
@@ -90,19 +89,19 @@ class IsolationPaymentUploadHandler(
         )
     }
 
-    private val handler: Routing.Handler = StandardHandlers.withoutSignedResponses(
+    private val handler: ApiGatewayHandler = StandardHandlers.withoutSignedResponses(
         events,
         environment,
         Routing.routes(
             authorisedBy(
                 authenticator,
-                path(POST, "/isolation-payment/ipc-token/consume-token") { consumeToken(it) }),
+                path(POST, "/isolation-payment/ipc-token/consume-token") { it, _ -> consumeToken(it) }),
             authorisedBy(
                 authenticator,
-                path(POST, "/isolation-payment/ipc-token/verify-token") { verifyToken(it) }),
+                path(POST, "/isolation-payment/ipc-token/verify-token") { it, _ -> verifyToken(it) }),
             authorisedBy(
                 healthAuthenticator,
-                path(POST, "/isolation-payment/health") { HttpResponses.ok() })
+                path(POST, "/isolation-payment/health") { _, _ -> HttpResponses.ok() })
         )
     )
 }

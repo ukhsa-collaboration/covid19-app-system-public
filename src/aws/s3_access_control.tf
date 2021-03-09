@@ -58,13 +58,20 @@ module "diagnosis_keys_distribution_store_access" {
   origin_access_identity_arn = aws_cloudfront_origin_access_identity.diagnosis_keys.iam_arn
 }
 
-module "risky_venues_messages_distribution_access" {
+module "risky_venue_configuration_distribution_access" {
   source                     = "./modules/s3_access_policies"
   policy_type                = "secure_origin_access"
-  s3_bucket_arn              = module.risky_venues_messages_distribution.store.arn
-  origin_access_identity_arn = module.risky_venues_messages_distribution.origin_access_identity_arn
+  s3_bucket_arn              = module.risky_venue_configuration_distribution.store.arn
+  origin_access_identity_arn = module.risky_venue_configuration_distribution.origin_access_identity_arn
 }
 
+
+module "empty_submission_v2_distribution_access" {
+  source                     = "./modules/s3_access_policies"
+  policy_type                = "secure_origin_access"
+  s3_bucket_arn              = module.empty_submission_v2.store_arn
+  origin_access_identity_arn = module.empty_submission_v2.origin_access_identity_arn
+}
 # other bucket types (submission, repository, etc.) have default secure access
 
 module "analytics_submission_access" {
@@ -115,5 +122,19 @@ module "circuit_breaker_analytics_store_access" {
   policy_type            = "cross_account_readonly"
   prefix                 = "analytics"
   principal_aws_accounts = var.analytics_aws_accounts
-  s3_bucket_arn          = module.circuit_breaker_analytics.bucket_arn
+  s3_bucket_arn          = module.exposure_notification_circuit_breaker_analytics.analytics_bucket_arn
+}
+module "federation_key_proc_download_analytics_store_access" {
+  source                 = "./modules/s3_access_policies"
+  policy_type            = "cross_account_readonly"
+  prefix                 = "analytics"
+  principal_aws_accounts = var.analytics_aws_accounts
+  s3_bucket_arn          = module.federation_key_proc_download_analytics.analytics_bucket_arn
+}
+module "federation_key_proc_upload_analytics_store_access" {
+  source                 = "./modules/s3_access_policies"
+  policy_type            = "cross_account_readonly"
+  prefix                 = "analytics"
+  principal_aws_accounts = var.analytics_aws_accounts
+  s3_bucket_arn          = module.federation_key_proc_upload_analytics.analytics_bucket_arn
 }

@@ -425,6 +425,34 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = "https-only"
   }
 
+  origin {
+    domain_name = var.empty_submission_v2_bucket_regional_domain_name
+    origin_id   = var.empty_submission_v2_bucket_regional_domain_name
+
+    s3_origin_config {
+      origin_access_identity = var.empty_submission_v2_origin_access_identity_path
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = var.empty_submission_v2_path
+    allowed_methods  = ["HEAD", "GET", "OPTIONS"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.empty_submission_v2_bucket_regional_domain_name
+    compress         = true
+    default_ttl      = 31536000
+    min_ttl          = 31536000
+    max_ttl          = 31536000
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+
   #retain_on_delete = # not a good idead: "true" causes "Error: CloudFrontOriginAccessIdentityInUse: The CloudFront origin access identity is still being used" in other places
 
   restrictions {

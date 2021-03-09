@@ -21,50 +21,23 @@ namespace :config do
   end
 
   task :"codebuild:wait" do
-    include NHSx::Report
+    include NHSx::CodeBuild
 
-    project_name = ENV.fetch("CODEBUILD_BUILD_ID", "")
-    raise GaudiError, "No codebuild project detected - missing CODEBUILD_BUILD_ID" if project_name.empty?
+    current_build_id = ENV.fetch("CODEBUILD_BUILD_ID", "")
+    raise GaudiError, "No codebuild project detected - missing CODEBUILD_BUILD_ID" if current_build_id.empty?
 
-    project_name = project_name.split(":").first
+    project_name = current_build_id.split(":").first
 
-    # all latest builds for project
-    latest_builds = all_builds_for_project(project_name)
-
-    # collect builds in progress
-    builds_in_progress = []
-    for e in latest_builds
-      job_metadata = build_info([e])
-      build_job = NHSx::Queue::CodeBuildInfo.new(job_metadata.first)
-      if build_job.build_status == "IN_PROGRESS"
-        builds_in_progress << build_job
-      else
-        break
-      end
-    end
-
-    # print out builds in progress
-    puts "builds in progress: #{builds_in_progress.length}"
-    builds_in_progress.each { |e|
-      puts "#{e.build_id}, #{e.build_number}"
-    }
-
-    # poll for the oldest build in progress and compare id with current build
-    # if it matches it means its this build's turn otherwise wait and discard completed build
+    builds_in_progress = builds_in_progress(project_name)
+    puts "#{builds_in_progress.length} build(s) in the queue:\n#{builds_in_progress.map { |e| " #{e.build_id}, #{e.build_number}" }.join("\n")}"
+    _, running_build = trim_build_queue(builds_in_progress)
+    puts "Waiting on build #{running_build.build_id}"
     loop do
-      oldest_in_progress = NHSx::Queue::CodeBuildInfo.new(build_info([builds_in_progress.last.build_id]).first)
-      puts "checking progress for build: #{oldest_in_progress.build_id}, #{oldest_in_progress.build_number}, #{oldest_in_progress.current_phase}, #{oldest_in_progress.build_status}"
-
-      break if oldest_in_progress.build_id == ENV["CODEBUILD_BUILD_ID"]
-
-      if oldest_in_progress.completed?
-        puts "discarded completed build"
-        builds_in_progress.pop
-      end
+      break if running_build.completed? || current_build_id == running_build.build_id
 
       sleep 30
+      running_build = build_info(running_build.build_id)
     end
-
-    puts "proceeding with build"
+    puts "Proceeding with build #{current_build_id}"
   end
 end

@@ -24,6 +24,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import uk.nhs.nhsx.core.Environment
+import uk.nhs.nhsx.core.SystemClock
+import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
@@ -42,6 +45,7 @@ import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
+import java.net.URL
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -183,6 +187,14 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
     private val events = RecordingEvents()
 
     private fun newHandler(server: WireMockServer) = AAEUploadHandler(
+        TestEnvironments.TEST.apply(
+            mapOf(
+                "MAINTENANCE_MODE" to "false",
+                "custom_oai" to "OAI"
+            )
+        ),
+        SystemClock.CLOCK,
+        events,
         FakeParquetS3(),
         AAEUploader(
             AAEUploadConfig(
@@ -194,8 +206,7 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
             ),
             FakeSecretManager(),
             events
-        ),
-        events
+        )
     )
 }
 
@@ -269,6 +280,9 @@ class FakeParquetS3 : AwsS3 {
     override fun getObject(locator: Locator): Optional<S3Object> = Optional.ofNullable(objects[locator.key.value])
 
     override fun deleteObject(locator: Locator) {
+        throw UnsupportedOperationException()
+    }
+    override fun getSignedURL(locator: Locator?, expiration: Date?): Optional<URL> {
         throw UnsupportedOperationException()
     }
 }

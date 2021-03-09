@@ -131,37 +131,6 @@
       },
       "policies": [
         {
-          "policyIcon": "meeting-people",
-          "policyHeading": {
-            "ar": "مقابلة الأصدقاء والعائلة",
-            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
-            "cy": "Cyfarfod â theuluoedd a ffrindiau",
-            "en": "Meeting friends and family",
-            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
-            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
-            "pl": "Spotkania ze znajomymi i rodziną",
-            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
-            "so": "La kulanka asxaabta iyo qoyska",
-            "tr": "Arkadaşlar ve aile ile buluşma",
-            "ur": "دوستوں اور فیملی سے ملنا",
-            "zh": "与朋友和家人会面"
-          },
-          "policyContent": {
-            "ar": "يُحظر مقابلة الأفراد الآخرين ضمن مجموعات يزيد أفرادها عن ستة أشخاص في الأماكن المغلقة أو المفتوحة، إلا إذا كنت تعيش في نفس المنزل أو كوَّنت معهم مجموعة دعمٍ بالفعل.",
-            "bn": "ঘরের ভিতরে বা বাইরে ছয় জনের বেশি একত্রিত হবেন না, যদি না আপনি তাদের সাথে বাস করেন বা তাদের নিয়ে সাপোর্ট বাবল বা সহায়তা দল গঠন করে থাকেন।",
-            "cy": "Peidiwch â chyfarfod mewn grwpiau o fwy na chwech y tu mewn na'r tu allan, oni bai eich bod yn byw gyda nhw neu wedi ffurfio swigen gymorth gyda nhw.",
-            "en": "Do not meet in groups of more than 6, indoors or outdoors, unless you live with them or have formed a support bubble.",
-            "gu": "ઘરની અંદર કે બહાર છથી વધુ લોકોના ગ્રૂપમાં મળશો નહિ, સિવાય કે તમે તેઓની સાથે રહેતા હો અથવા તમે સપોર્ટ બબલ બનાવ્યો હોય.",
-            "pa": "ਘਰ ਦੇ ਅੰਦਰ ਜਾਂ ਬਾਹਰ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਦੇ ਸਮੂਹਾਂ ਵਿੱਚ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ।",
-            "pl": "Nie wolno spotykać się w grupach więcej niż sześciu osób w pomieszczeniach lub na świeżym powietrzu, chyba że mieszka się z nimi lub stworzyło się bańkę wsparcia.",
-            "ro": "Nu vă întâlniți în grupuri de peste șase persoane în interior sau în aer liber, cu excepția cazului în care locuiți cu persoanele respective sau ați format un grup de sprijin cu aceștia.",
-            "so": "Ha ku kulmin koox ka badan lix qof gudaha iyo dibidda, ilaa aad iyaga la deggan tahay mooyee ama aad samaysatay koox taageero ah.",
-            "tr": "Birlikte yaşamadığınız ya da bir destek balonu içinde yer almadığınız müddetçe kapalı veya açık mekanlarda altı kişiden daha büyük gruplar halinde görüşmeyiniz.",
-            "ur": "اندرون یا بیرون میں چھ سے زائد کے گروپوں میں مت ملیں، جب تک کہ  آپ ان کے ساتھ رہتے ہوں یا آپ نے مدد کا دائرہ بنا لیا ہو۔",
-            "zh": "不要在室内或室外与超过六个人会面，除非你和他们住在一起或形成了一个互助泡沫。"
-          }
-        },
-        {
           "policyIcon": "bars-and-pubs",
           "policyHeading": {
             "ar": "البارات والحانات والمطاعم",
@@ -190,68 +159,6 @@
             "tr": "Mekanlar sadece masa servisi yapabilir. Siparişlerin alımı saat 22.00'de bitmeli ve kapılarını saat 23.00'de kapatmalıdırlar.",
             "ur": "مقامات صرف ٹیبل سروس والی ہونا لازم ہے۔ ان پر لازم ہے کہ 10 بجے رات کو آرڈر لینا بند کر دیں اور 11 بجے رات کو لازماً بند کر دیں۔",
             "zh": "场地必须只提供餐桌服务。他们必须在晚上 10 点前停止接受订单，必须于 11 点之前打烊。"
-          }
-        },
-        {
-          "policyIcon": "travelling",
-          "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
-          },
-          "policyContent": {
-            "ar": "قم بالتمشَّية أو اركب الدّراجات الهوائية إذا أمكن، واحرص على وضع خططٍ مسبقةٍ وتجنَّب الأوقات وخطوط السير المزدحمة عند ركوب وسائل النقل العام. وتجنّب الانتقال إلى المناطق المُصنَّفة في المستوى الثالث إلا لضرورة.",
-            "bn": "সম্ভব হলে হেঁটে বা সাইকেলে যান, আগে থেকে পরিকল্পনা করুন এবং জনপরিবহনে ব্যস্ত সময় এবং সড়ক এড়িয়ে চলুন। টিয়ার থ্রি এলাকায় অহেতুক যাত্রা করবেন না।",
-            "cy": "Cerddwch neu seiclwch os gallwch, cynlluniwch ymlaen llaw, gan osgoi amseroedd a llwybrau prysur ar gludiant cyhoeddus. Osgowch unrhyw daith ddianghenraid i ardaloedd Haen Tri .",
-            "en": "Walk or cycle if possible. Plan ahead and avoid busy times and routes on public transport. Avoid unnecessary travel to tier 3 areas.",
-            "gu": "શક્ય હોય તો ચાલીને જાઓ કે સાઇકલ ચલાવો, અગાઉથી પ્લાન કરો અને પબ્લિક ટ્રાંસ્પોર્ટ અને બિઝી સમય અને માર્ગો ટાળો. ટિયર થ્રી વિસ્તારોમાં બિનજરૂરી ટ્રાવેલ કરવાનું ટાળો.",
-            "pa": "ਜੇ ਸੰਭਵ ਹੋਵੇ ਤਾਂ ਤੁਰ ਕੇ ਜਾਂ ਸਾਈਕਲ 'ਤੇ ਜਾਓ, ਪਹਿਲਾਂ ਤੋਂ ਯੋਜਨਾ ਬਣਾਓ ਅਤੇ ਜਨਤਕ ਟ੍ਰਾਂਸਪੋਰਟ 'ਤੇ ਵਿਅਸਤ ਸਮਿਆਂ ਅਤੇ ਰੂਟਾਂ ਤੋਂ ਬਚੋ। ਟੀਅਰ ਤਿੰਨ ਖੇਤਰਾਂ ਦੀ ਬੇਲੋੜੀ ਯਾਤਰਾ ਤੋਂ ਬਚੋ।",
-            "pl": "Jeżeli jest to możliwe, należy chodzić lub jeździć na rowerze, planować dojazd z wyprzedzeniem oraz unikać godzin szczytu i zatłoczonych tras w komunikacji miejskiej. Należy unikać niepotrzebnych podróży do rejonów położonych w Strefie Trzeciej.",
-            "ro": "Mergeți pe jos sau cu bicicleta, dacă este posibil, planificați deplasările de dinainte și evitați orele și traseele aglomerate în transportul public. Evitați deplasările inutile în zonele cu Nivel de Alertă Trei.",
-            "so": "Soco ama baaskiil wad haddii ay macquul tahay, horay u sii qorshee oo ka fogow wakhtiyada mashquulka iyo waddooyinka gaadiidka dadweynaha. Ka fogow safarka aan loo baahnayn ee deegaanada Heerka Saddexaad.",
-            "tr": "Mümkünse yürüyünüz veya bisiklete bininiz, önceden plan yapınız ve  toplu taşıma araçlarının yoğun saat ve güzergahlarında  seyahat etmekten kaçınınız. Üçüncü Kademe bölgelere gereksiz seyahatten kaçınınız.",
-            "ur": "اگر ممکن ہو تو پیدل چلیں یا سائیکل چلائیں، پہلے سے منصوبہ بنائیں اور عوامی سواری پر مصروف اوقات اور راستوں سے بچیں۔ درجہ تین والے علاقوں میں غیر ضروری سفر سے بچیں۔",
-            "zh": "如果条件允许，请步行或骑自行车，提前计划并避免在繁忙时间段和拥堵的线路段乘坐公共交通工具。避免到三级地区进行不必要的旅行。"
-          }
-        },
-        {
-          "policyIcon": "overnight-stays",
-          "policyHeading": {
-            "ar": "الإقامات الليلية",
-            "bn": "রাত কাটানো",
-            "cy": "Aros dros nos",
-            "en": "Overnight stays",
-            "gu": "રાત્રિરોકાણ",
-            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
-            "pl": "Nocowanie poza domem",
-            "ro": "Șederile peste noapte",
-            "so": "Dhixitaanka habeenimada",
-            "tr": "Yatıya kalma",
-            "ur": "رات بھر قیام",
-            "zh": "过夜"
-          },
-          "policyContent": {
-            "ar": "تظل أماكن الإقامة مفتوحة لاستقبال أفراد العائلة أو مجموعة الدعم أو مجموعة مُكوَّنة من ستة أشخاصٍ كحد أقصى.",
-            "bn": "গোটা পরিবার, সহায়তা দল, বা সর্বোচ্চ 6 জনের সাথে একত্রে থাকা অনুমোদিত। আবাসন খোলা থাকবে।",
-            "cy": "Caniateir gydag aelodau o'r aelwyd, y swigen gefnogaeth neu hyd at 6 o bobl. Mae lletyau'n parhau i fod ar agor.",
-            "en": "Allowed with your household, support bubble, or up to 6 people. Accommodations remain open.",
-            "gu": "ઘરના સભ્ય, સપોર્ટ બબલ અથવા 6 જેટલા લોકો સાથે માન્ય છે. નિવાસસ્થાનો ખુલ્લાં રહેશે.",
-            "pa": "ਘਰ, ਸਹਾਇਤਾ ਦਾਇਰੇ, ਜਾਂ 6 ਤੱਕ ਵਿਅਕਤੀਆਂ ਦੇ ਨਾਲ ਆਗਿਆ ਹੈ। ਰਿਹਾਇਸ਼ਾਂ ਖੁੱਲ੍ਹੀਆਂ ਰਹਿਣਗੀਆਂ।",
-            "pl": "Dozwolone w obrębie gospodarstwa domowego, bańki wsparcia lub do 6 osób. Hotele i pensjonaty pozostają otwarte.",
-            "ro": "Activități permise cu persoanele cu care locuiți, cu membrii grupului de sprijin, sau în limita a 6 persoane. Unitățile de cazare rămân deschise.",
-            "so": "Waxaa loo oggol yahay qoyska, koox taageero ah, ama ilaa 6 qof. Guryaha way furnaan doonaan.",
-            "tr": "Hane halkıyla, destek balonuyla birlikte veya 6 kişiye kadar izin verilir. Konaklama yerleri açık kalacaktır.",
-            "ur": "گھرانے، مدد کا دائرہ یا 6 تک لوگوں کے ساتھ اجازت ہے۔ رہائش گاہیں کھلی رہیں گی۔",
-            "zh": "允许会见家人、互助泡沫成员或最多 6 个人。住宿保持开放。"
           }
         },
         {
@@ -286,34 +193,127 @@
           }
         },
         {
-          "policyIcon": "worship",
+          "policyIcon": "exercise",
           "policyHeading": {
-            "ar": "دور العبادة",
-            "bn": "আরাধনা স্থল",
-            "cy": "Addoldai",
-            "en": "Places of worship",
-            "gu": "ધાર્મિક જગ્યાઓ",
-            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
-            "pl": "Miejsca kultu religijnego",
-            "ro": "Locașurile de cult",
-            "so": "Goobaha cibaadada",
-            "tr": "İbadet mekanları",
-            "ur": "عبادت خانے",
-            "zh": "宗教场所"
+            "ar": "التمارين الرياضية",
+            "bn": "ব্যায়াম",
+            "cy": "Ymarfer corff",
+            "en": "Exercise",
+            "gu": "કસરત",
+            "pa": "ਕਸਰਤ",
+            "pl": "Ćwiczenia fizyczne",
+            "ro": "Sportul",
+            "so": "Jimicsi",
+            "tr": "Egzersiz",
+            "ur": "ورزش",
+            "zh": "运动"
           },
           "policyContent": {
-            "ar": "تظل هذه الأماكن مفتوحة، ولكن يجب عليك عدم التفاعل مع المجموعات التي يزيد عدد أفرادها عن ستة أشخاص في أثناء وجودك هناك.",
-            "bn": "এগুলো খোলা থাকবে, তবে সেখানে অবস্থানকালে ছয় জনের বেশি লোকের সাথে মেলামেশা করবেন না।",
-            "cy": "Mae'r rhain yn aros ar agor, ond peidiwch â rhyngweithio â mwy na chwech o bobl pan fyddwch yno.",
-            "en": "These remain open, but do not interact with more than 6 people when there.",
-            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન છથી વધુ લોકોને મળશો નહિ.",
-            "pa": "ਇਹ ਖੁੱਲੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
-            "pl": "Pozostają otwarte, ale podczas pobytu w nich nie wolno kontaktować się z więcej niż sześcioma osobami.",
-            "ro": "Acestea rămân deschise, însă nu interacționați cu mai mult de șase persoane atunci când sunteți acolo.",
-            "so": "Kuwani way furnaan doonaan, laakiin ha dhexgalin in ka badan lix qof markaa aad halkaas joogtid.",
-            "tr": "Bu mekanlar açık kalacaktır, ancak oradayken altıdan fazla kişiyle etkileşime girmeyiniz.",
-            "ur": "یہ کھلے رہیں گے، لیکن وہاں ہونے پر 6 سے زیادہ لوگوں کے ساتھ بات چیت مت کریں۔",
-            "zh": "这些地方仍然开放，但不要在那里与超过六个人进行互动。"
+            "ar": "يستمر العمل بالمرافق الترفيهية المغلقة. ويمكن إقامة الفصول التدريبية والألعاب الرياضية المُنظَّمة للبالغين في الأماكن المفتوحة بشرط مراعاة القاعدة التي تقتضي عدم اجتماع أكثر من ستة أشخاص. يمكن أيضًا مواصلة الأنشطة المُنظَّمة للنخبة من الرياضيين دون سنِّ 18 عامًا ولذوي الاحتياجات الخاصة.",
+            "bn": "ঘরের ভিতরে অবকাশ কর্মকাণ্ড চালু থাকবে। ঘরের বাইরে পাঠদান ও প্রাপ্তবয়স্কদের দলগত খেলাধুলা অনুষ্ঠিত হতে পারবে কিন্তু ঘরের ভিতরে ছয় জনের নিয়ম অবশ্যই অনুসরণ করতে হবে। অনবদ্য ক্রীড়াবিদ, 18 বয়সের কম বয়সী ও প্রতিবন্ধীদের দলগত কর্মকাণ্ড চলতে পারবে।",
+            "cy": "Mannau cyhoeddus y tu mewn yn aros ar agor. Gellir parhau i gynnal dosbarthiadau a champau wedi'u trefnu i oedolion y tu allan, ond rhaid dilyn y rheol 'chwech o bobl' y tu mewn.  Gellir parhau â gweithgareddau wedi'u trefnu ar gyfer athletwyr elît, rhai dan 18 a phobl anabl.",
+            "en": "Indoor leisure facilities remain open. Classes and organised adult sport can take place outdoors but must follow the rule of 6 indoors. Organised activities for elite athletes, under-18s and disabled people can continue.",
+            "gu": "ઇન્ડોર લીઝર ખુલ્લું રહેશે. વર્ગો અને સંગઠિત ઍડલ્ટ સ્પૉર્ટ્સ બહાર યોજી શકાશે, પરંતુ અંદર છનો નિયમ પાળવાનો રહેશે.  રમતવીરો, 18 વર્ષથી ઓછી ઉંમરના ખેલાડીઓ અને ડિસએબલ લોકો માટેની સંગઠિત પ્રવૃત્તિઓ ચાલુ રહી શકશે.",
+            "pa": "ਅੰਦਰੂਨੀ ਮਨੋਰੰਜਨ ਖੁੱਲ੍ਹਾ ਰਹੇਗਾ। ਕਲਾਸਾਂ ਅਤੇ ਆਯੋਜਿਤ ਬਾਲਗ ਖੇਡਾਂ ਬਾਹਰ ਕੀਤੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ ਪਰ ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਛੇ ਦੇ ਨਿਯਮਾਂ ਦਾ ਪਾਲਣ ਕਰਨਾ ਲਾਜ਼ਮੀ ਹੈ। ਪ੍ਰਸਿੱਧ ਐਥਲੀਟਾਂ, 18 ਸਾਲ ਤੋਂ ਘੱਟ ਉਮਰ ਅਤੇ ਅਪਾਹਜ ਵਿਅਕਤੀਆਂ ਲਈ ਸੰਗਠਿਤ ਗਤੀਵਿਧੀਆਂ ਜਾਰੀ ਰਹਿ ਸਕਦੀਆਂ ਹਨ।",
+            "pl": "Obiekty rekreacyjne pozostają otwarte. Zajęcia i zorganizowany sport dla dorosłych mogą odbywać się na zewnątrz, ale w pomieszczeniach musi być przestrzegana reguła sześciu osób. Zorganizowane zajęcia dla zawodowych sportowców, osób poniżej 18 roku życia i niepełnosprawnych mogą nadal się odbywać.",
+            "ro": "Spațiile de agrement interior rămân deschise. Clasele și formele de sport organizat pentru adulți pot avea loc în aer liber, însă trebuie să respecte regula celor șase persoane în interior. Activitățile organizate pentru atleții de performanță, pentru persoane sub 18 ani și pentru persoane cu dizabilități pot continua.",
+            "so": "Madaddaalinta gudaha wey furnaan doonaan. Fasallada iyo abaabulka isboortiga dadka qaangaarka ah ayaa lagu qaban karaa dibidda laakiin waa inay raacaan sharciga lixda gudaha. Hawlaha abaabulan oo loogu talagalay ciyaartoy caan ah, kuwa ka yar 18-sano iyo dadka naafada ah way sii socon karaan.",
+            "tr": "Kapalı eğlence mekanları açık kalacaktır. Egzersiz sınıfları ve organize yetişkin sporları açık havada yapılabilir ancak kapalı yerlerde altı kişi kuralına uyulmalıdır. Elit sporcular, 18 yaş altı ve engelliler için organize etkinlikler devam edebilir.",
+            "ur": "اندرون میں تفریحی سرگرمیاں کھلی رہیں گی۔ کلاسیں اور بالغان کے منظم کھیل کود بیرون میں ہو سکتے ہیں لیکن اندرون میں چھ کے اصول پر عمل ضرور کریں۔ خاص ایتھلیٹ، 18 سے کم اور معذور افراد کے لیے منظم سرگرمیاں جاری رہ سکتی ہیں۔",
+            "zh": "室内休闲活动照常开放。可以在户外举办培训班和有组织的成人运动，但必须遵守六项室内规则。为精英运动员、18岁以下青少年及残疾人士举办的活动可继续进行。"
+          }
+        },
+        {
+          "policyIcon": "meeting-people",
+          "policyHeading": {
+            "ar": "مقابلة الأصدقاء والعائلة",
+            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
+            "cy": "Cyfarfod â theuluoedd a ffrindiau",
+            "en": "Meeting friends and family",
+            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
+            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
+            "pl": "Spotkania ze znajomymi i rodziną",
+            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
+            "so": "La kulanka asxaabta iyo qoyska",
+            "tr": "Arkadaşlar ve aile ile buluşma",
+            "ur": "دوستوں اور فیملی سے ملنا",
+            "zh": "与朋友和家人会面"
+          },
+          "policyContent": {
+            "ar": "يُحظر مقابلة الأفراد الآخرين ضمن مجموعات يزيد أفرادها عن ستة أشخاص في الأماكن المغلقة أو المفتوحة، إلا إذا كنت تعيش في نفس المنزل أو كوَّنت معهم مجموعة دعمٍ بالفعل.",
+            "bn": "ঘরের ভিতরে বা বাইরে ছয় জনের বেশি একত্রিত হবেন না, যদি না আপনি তাদের সাথে বাস করেন বা তাদের নিয়ে সাপোর্ট বাবল বা সহায়তা দল গঠন করে থাকেন।",
+            "cy": "Peidiwch â chyfarfod mewn grwpiau o fwy na chwech y tu mewn na'r tu allan, oni bai eich bod yn byw gyda nhw neu wedi ffurfio swigen gymorth gyda nhw.",
+            "en": "Do not meet in groups of more than 6, indoors or outdoors, unless you live with them or have formed a support bubble.",
+            "gu": "ઘરની અંદર કે બહાર છથી વધુ લોકોના ગ્રૂપમાં મળશો નહિ, સિવાય કે તમે તેઓની સાથે રહેતા હો અથવા તમે સપોર્ટ બબલ બનાવ્યો હોય.",
+            "pa": "ਘਰ ਦੇ ਅੰਦਰ ਜਾਂ ਬਾਹਰ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਦੇ ਸਮੂਹਾਂ ਵਿੱਚ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ।",
+            "pl": "Nie wolno spotykać się w grupach więcej niż sześciu osób w pomieszczeniach lub na świeżym powietrzu, chyba że mieszka się z nimi lub stworzyło się bańkę wsparcia.",
+            "ro": "Nu vă întâlniți în grupuri de peste șase persoane în interior sau în aer liber, cu excepția cazului în care locuiți cu persoanele respective sau ați format un grup de sprijin cu aceștia.",
+            "so": "Ha ku kulmin koox ka badan lix qof gudaha iyo dibidda, ilaa aad iyaga la deggan tahay mooyee ama aad samaysatay koox taageero ah.",
+            "tr": "Birlikte yaşamadığınız ya da bir destek balonu içinde yer almadığınız müddetçe kapalı veya açık mekanlarda altı kişiden daha büyük gruplar halinde görüşmeyiniz.",
+            "ur": "اندرون یا بیرون میں چھ سے زائد کے گروپوں میں مت ملیں، جب تک کہ  آپ ان کے ساتھ رہتے ہوں یا آپ نے مدد کا دائرہ بنا لیا ہو۔",
+            "zh": "不要在室内或室外与超过六个人会面，除非你和他们住在一起或形成了一个互助泡沫。"
+          }
+        },
+        {
+          "policyIcon": "overnight-stays",
+          "policyHeading": {
+            "ar": "الإقامات الليلية",
+            "bn": "রাত কাটানো",
+            "cy": "Aros dros nos",
+            "en": "Overnight stays",
+            "gu": "રાત્રિરોકાણ",
+            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
+            "pl": "Nocowanie poza domem",
+            "ro": "Șederile peste noapte",
+            "so": "Dhixitaanka habeenimada",
+            "tr": "Yatıya kalma",
+            "ur": "رات بھر قیام",
+            "zh": "过夜"
+          },
+          "policyContent": {
+            "ar": "تظل أماكن الإقامة مفتوحة لاستقبال أفراد العائلة أو مجموعة الدعم أو مجموعة مُكوَّنة من ستة أشخاصٍ كحد أقصى.",
+            "bn": "গোটা পরিবার, সহায়তা দল, বা সর্বোচ্চ 6 জনের সাথে একত্রে থাকা অনুমোদিত। আবাসন খোলা থাকবে।",
+            "cy": "Caniateir gydag aelodau o'r aelwyd, y swigen gefnogaeth neu hyd at 6 o bobl. Mae lletyau'n parhau i fod ar agor.",
+            "en": "Allowed with your household, support bubble, or up to 6 people. Accommodations remain open.",
+            "gu": "ઘરના સભ્ય, સપોર્ટ બબલ અથવા 6 જેટલા લોકો સાથે માન્ય છે. નિવાસસ્થાનો ખુલ્લાં રહેશે.",
+            "pa": "ਘਰ, ਸਹਾਇਤਾ ਦਾਇਰੇ, ਜਾਂ 6 ਤੱਕ ਵਿਅਕਤੀਆਂ ਦੇ ਨਾਲ ਆਗਿਆ ਹੈ। ਰਿਹਾਇਸ਼ਾਂ ਖੁੱਲ੍ਹੀਆਂ ਰਹਿਣਗੀਆਂ।",
+            "pl": "Dozwolone w obrębie gospodarstwa domowego, bańki wsparcia lub do 6 osób. Hotele i pensjonaty pozostają otwarte.",
+            "ro": "Activități permise cu persoanele cu care locuiți, cu membrii grupului de sprijin, sau în limita a 6 persoane. Unitățile de cazare rămân deschise.",
+            "so": "Waxaa loo oggol yahay qoyska, koox taageero ah, ama ilaa 6 qof. Guryaha way furnaan doonaan.",
+            "tr": "Hane halkıyla, destek balonuyla birlikte veya 6 kişiye kadar izin verilir. Konaklama yerleri açık kalacaktır.",
+            "ur": "گھرانے، مدد کا دائرہ یا 6 تک لوگوں کے ساتھ اجازت ہے۔ رہائش گاہیں کھلی رہیں گی۔",
+            "zh": "允许会见家人、互助泡沫成员或最多 6 个人。住宿保持开放。"
+          }
+        },
+        {
+          "policyIcon": "travelling",
+          "policyHeading": {
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
+          },
+          "policyContent": {
+            "ar": "قم بالتمشَّية أو اركب الدّراجات الهوائية إذا أمكن، واحرص على وضع خططٍ مسبقةٍ وتجنَّب الأوقات وخطوط السير المزدحمة عند ركوب وسائل النقل العام. وتجنّب الانتقال إلى المناطق المُصنَّفة في المستوى الثالث إلا لضرورة.",
+            "bn": "সম্ভব হলে হেঁটে বা সাইকেলে যান, আগে থেকে পরিকল্পনা করুন এবং জনপরিবহনে ব্যস্ত সময় এবং সড়ক এড়িয়ে চলুন। টিয়ার থ্রি এলাকায় অহেতুক যাত্রা করবেন না।",
+            "cy": "Cerddwch neu seiclwch os gallwch, cynlluniwch ymlaen llaw, gan osgoi amseroedd a llwybrau prysur ar gludiant cyhoeddus. Osgowch unrhyw daith ddianghenraid i ardaloedd Haen Tri .",
+            "en": "Walk or cycle if possible. Plan ahead and avoid busy times and routes on public transport. Avoid unnecessary travel to tier 3 areas.",
+            "gu": "શક્ય હોય તો ચાલીને જાઓ કે સાઇકલ ચલાવો, અગાઉથી પ્લાન કરો અને પબ્લિક ટ્રાંસ્પોર્ટ અને બિઝી સમય અને માર્ગો ટાળો. ટિયર થ્રી વિસ્તારોમાં બિનજરૂરી ટ્રાવેલ કરવાનું ટાળો.",
+            "pa": "ਜੇ ਸੰਭਵ ਹੋਵੇ ਤਾਂ ਤੁਰ ਕੇ ਜਾਂ ਸਾਈਕਲ 'ਤੇ ਜਾਓ, ਪਹਿਲਾਂ ਤੋਂ ਯੋਜਨਾ ਬਣਾਓ ਅਤੇ ਜਨਤਕ ਟ੍ਰਾਂਸਪੋਰਟ 'ਤੇ ਵਿਅਸਤ ਸਮਿਆਂ ਅਤੇ ਰੂਟਾਂ ਤੋਂ ਬਚੋ। ਟੀਅਰ ਤਿੰਨ ਖੇਤਰਾਂ ਦੀ ਬੇਲੋੜੀ ਯਾਤਰਾ ਤੋਂ ਬਚੋ।",
+            "pl": "Jeżeli jest to możliwe, należy chodzić lub jeździć na rowerze, planować dojazd z wyprzedzeniem oraz unikać godzin szczytu i zatłoczonych tras w komunikacji miejskiej. Należy unikać niepotrzebnych podróży do rejonów położonych w Strefie Trzeciej.",
+            "ro": "Mergeți pe jos sau cu bicicleta, dacă este posibil, planificați deplasările de dinainte și evitați orele și traseele aglomerate în transportul public. Evitați deplasările inutile în zonele cu Nivel de Alertă Trei.",
+            "so": "Soco ama baaskiil wad haddii ay macquul tahay, horay u sii qorshee oo ka fogow wakhtiyada mashquulka iyo waddooyinka gaadiidka dadweynaha. Ka fogow safarka aan loo baahnayn ee deegaanada Heerka Saddexaad.",
+            "tr": "Mümkünse yürüyünüz veya bisiklete bininiz, önceden plan yapınız ve  toplu taşıma araçlarının yoğun saat ve güzergahlarında  seyahat etmekten kaçınınız. Üçüncü Kademe bölgelere gereksiz seyahatten kaçınınız.",
+            "ur": "اگر ممکن ہو تو پیدل چلیں یا سائیکل چلائیں، پہلے سے منصوبہ بنائیں اور عوامی سواری پر مصروف اوقات اور راستوں سے بچیں۔ درجہ تین والے علاقوں میں غیر ضروری سفر سے بچیں۔",
+            "zh": "如果条件允许，请步行或骑自行车，提前计划并避免在繁忙时间段和拥堵的线路段乘坐公共交通工具。避免到三级地区进行不必要的旅行。"
           }
         },
         {
@@ -348,38 +348,7 @@
           }
         },
         {
-          "policyIcon": "exercise",
-          "policyHeading": {
-            "ar": "التمارين الرياضية",
-            "bn": "ব্যায়াম",
-            "cy": "Ymarfer corff",
-            "en": "Exercise",
-            "gu": "કસરત",
-            "pa": "ਕਸਰਤ",
-            "pl": "Ćwiczenia fizyczne",
-            "ro": "Sportul",
-            "so": "Jimicsi",
-            "tr": "Egzersiz",
-            "ur": "ورزش",
-            "zh": "运动"
-          },
-          "policyContent": {
-            "ar": "يستمر العمل بالمرافق الترفيهية المغلقة. ويمكن إقامة الفصول التدريبية والألعاب الرياضية المُنظَّمة للبالغين في الأماكن المفتوحة بشرط مراعاة القاعدة التي تقتضي عدم اجتماع أكثر من ستة أشخاص. يمكن أيضًا مواصلة الأنشطة المُنظَّمة للنخبة من الرياضيين دون سنِّ 18 عامًا ولذوي الاحتياجات الخاصة.",
-            "bn": "ঘরের ভিতরে অবকাশ কর্মকাণ্ড চালু থাকবে। ঘরের বাইরে পাঠদান ও প্রাপ্তবয়স্কদের দলগত খেলাধুলা অনুষ্ঠিত হতে পারবে কিন্তু ঘরের ভিতরে ছয় জনের নিয়ম অবশ্যই অনুসরণ করতে হবে। অনবদ্য ক্রীড়াবিদ, 18 বয়সের কম বয়সী ও প্রতিবন্ধীদের দলগত কর্মকাণ্ড চলতে পারবে।",
-            "cy": "Mannau cyhoeddus y tu mewn yn aros ar agor. Gellir parhau i gynnal dosbarthiadau a champau wedi'u trefnu i oedolion y tu allan, ond rhaid dilyn y rheol 'chwech o bobl' y tu mewn.  Gellir parhau â gweithgareddau wedi'u trefnu ar gyfer athletwyr elît, rhai dan 18 a phobl anabl.",
-            "en": "Indoor leisure facilities remain open. Classes and organised adult sport can take place outdoors but must follow the rule of 6 indoors. Organised activities for elite athletes, under-18s and disabled people can continue.",
-            "gu": "ઇન્ડોર લીઝર ખુલ્લું રહેશે. વર્ગો અને સંગઠિત ઍડલ્ટ સ્પૉર્ટ્સ બહાર યોજી શકાશે, પરંતુ અંદર છનો નિયમ પાળવાનો રહેશે.  રમતવીરો, 18 વર્ષથી ઓછી ઉંમરના ખેલાડીઓ અને ડિસએબલ લોકો માટેની સંગઠિત પ્રવૃત્તિઓ ચાલુ રહી શકશે.",
-            "pa": "ਅੰਦਰੂਨੀ ਮਨੋਰੰਜਨ ਖੁੱਲ੍ਹਾ ਰਹੇਗਾ। ਕਲਾਸਾਂ ਅਤੇ ਆਯੋਜਿਤ ਬਾਲਗ ਖੇਡਾਂ ਬਾਹਰ ਕੀਤੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ ਪਰ ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਛੇ ਦੇ ਨਿਯਮਾਂ ਦਾ ਪਾਲਣ ਕਰਨਾ ਲਾਜ਼ਮੀ ਹੈ। ਪ੍ਰਸਿੱਧ ਐਥਲੀਟਾਂ, 18 ਸਾਲ ਤੋਂ ਘੱਟ ਉਮਰ ਅਤੇ ਅਪਾਹਜ ਵਿਅਕਤੀਆਂ ਲਈ ਸੰਗਠਿਤ ਗਤੀਵਿਧੀਆਂ ਜਾਰੀ ਰਹਿ ਸਕਦੀਆਂ ਹਨ।",
-            "pl": "Obiekty rekreacyjne pozostają otwarte. Zajęcia i zorganizowany sport dla dorosłych mogą odbywać się na zewnątrz, ale w pomieszczeniach musi być przestrzegana reguła sześciu osób. Zorganizowane zajęcia dla zawodowych sportowców, osób poniżej 18 roku życia i niepełnosprawnych mogą nadal się odbywać.",
-            "ro": "Spațiile de agrement interior rămân deschise. Clasele și formele de sport organizat pentru adulți pot avea loc în aer liber, însă trebuie să respecte regula celor șase persoane în interior. Activitățile organizate pentru atleții de performanță, pentru persoane sub 18 ani și pentru persoane cu dizabilități pot continua.",
-            "so": "Madaddaalinta gudaha wey furnaan doonaan. Fasallada iyo abaabulka isboortiga dadka qaangaarka ah ayaa lagu qaban karaa dibidda laakiin waa inay raacaan sharciga lixda gudaha. Hawlaha abaabulan oo loogu talagalay ciyaartoy caan ah, kuwa ka yar 18-sano iyo dadka naafada ah way sii socon karaan.",
-            "tr": "Kapalı eğlence mekanları açık kalacaktır. Egzersiz sınıfları ve organize yetişkin sporları açık havada yapılabilir ancak kapalı yerlerde altı kişi kuralına uyulmalıdır. Elit sporcular, 18 yaş altı ve engelliler için organize etkinlikler devam edebilir.",
-            "ur": "اندرون میں تفریحی سرگرمیاں کھلی رہیں گی۔ کلاسیں اور بالغان کے منظم کھیل کود بیرون میں ہو سکتے ہیں لیکن اندرون میں چھ کے اصول پر عمل ضرور کریں۔ خاص ایتھلیٹ، 18 سے کم اور معذور افراد کے لیے منظم سرگرمیاں جاری رہ سکتی ہیں۔",
-            "zh": "室内休闲活动照常开放。可以在户外举办培训班和有组织的成人运动，但必须遵守六项室内规则。为精英运动员、18岁以下青少年及残疾人士举办的活动可继续进行。"
-          }
-        },
-        {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -407,6 +376,37 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر آپ سے ہو سکے تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "دور العبادة",
+            "bn": "আরাধনা স্থল",
+            "cy": "Addoldai",
+            "en": "Places of worship",
+            "gu": "ધાર્મિક જગ્યાઓ",
+            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
+            "pl": "Miejsca kultu religijnego",
+            "ro": "Locașurile de cult",
+            "so": "Goobaha cibaadada",
+            "tr": "İbadet mekanları",
+            "ur": "عبادت خانے",
+            "zh": "宗教场所"
+          },
+          "policyContent": {
+            "ar": "تظل هذه الأماكن مفتوحة، ولكن يجب عليك عدم التفاعل مع المجموعات التي يزيد عدد أفرادها عن ستة أشخاص في أثناء وجودك هناك.",
+            "bn": "এগুলো খোলা থাকবে, তবে সেখানে অবস্থানকালে ছয় জনের বেশি লোকের সাথে মেলামেশা করবেন না।",
+            "cy": "Mae'r rhain yn aros ar agor, ond peidiwch â rhyngweithio â mwy na chwech o bobl pan fyddwch yno.",
+            "en": "These remain open, but do not interact with more than 6 people when there.",
+            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન છથી વધુ લોકોને મળશો નહિ.",
+            "pa": "ਇਹ ਖੁੱਲੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
+            "pl": "Pozostają otwarte, ale podczas pobytu w nich nie wolno kontaktować się z więcej niż sześcioma osobami.",
+            "ro": "Acestea rămân deschise, însă nu interacționați cu mai mult de șase persoane atunci când sunteți acolo.",
+            "so": "Kuwani way furnaan doonaan, laakiin ha dhexgalin in ka badan lix qof markaa aad halkaas joogtid.",
+            "tr": "Bu mekanlar açık kalacaktır, ancak oradayken altıdan fazla kişiyle etkileşime girmeyiniz.",
+            "ur": "یہ کھلے رہیں گے، لیکن وہاں ہونے پر 6 سے زیادہ لوگوں کے ساتھ بات چیت مت کریں۔",
+            "zh": "这些地方仍然开放，但不要在那里与超过六个人进行互动。"
           }
         }
       ]
@@ -544,37 +544,6 @@
       },
       "policies": [
         {
-          "policyIcon": "meeting-people",
-          "policyHeading": {
-            "ar": "مقابلة الأصدقاء والعائلة",
-            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
-            "cy": "Cyfarfod â theuluoedd a ffrindiau",
-            "en": "Meeting friends and family",
-            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
-            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
-            "pl": "Spotkania ze znajomymi i rodziną",
-            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
-            "so": "La kulanka asxaabta iyo qoyska",
-            "tr": "Arkadaşlar ve aile ile buluşma",
-            "ur": "دوستوں اور فیملی سے ملنا",
-            "zh": "与朋友和家人会面"
-          },
-          "policyContent": {
-            "ar": "تجنَّب مقابلة أي أشخاصٍ في الأماكن المغلقة، إلا إذا كنت تعيش في نفس المنزل أو كوَّنت معهم مجموعة دعمٍ بالفعل. يُحظر زيادة عدد الأفراد عن ستة أشخاصٍ في الأماكن المفتوحة.",
-            "bn": "ঘরের ভিতরে কারো সাথে দেখা করবেন না, যদি না আপনি তাদের সাথে বাস করেন বা তাদের নিয়ে সহায়তা দল গঠন করে থাকেন। ঘরের বাইরে ছয় জনের বেশি নয়।",
-            "cy": "Peidiwch â chyfarfod unrhyw un y tu mewn oni bai eich bod yn byw ar yr un aelwyd neu wedi ffurfio swigen gefnogaeth gyda nhw. Uchafswm o chwech y tu allan.",
-            "en": "Do not meet anyone indoors, unless you live with them or have formed a support bubble. Maximum of 6 outdoors.",
-            "gu": "અંદર કોઈને મળશો નહિ, સિવાય કે તમે તેઓની સાથે રહેતા હો અથવા તમે સપોર્ટ બબલ બનાવ્યો હોય. બહાર વધારામાં વાધારે છ લોકો.",
-            "pa": "ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਕਿਸੇ ਨੂੰ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ। ਇਮਾਰਤ ਦੇ ਬਾਹਰ ਵੱਧ ਤੋਂ ਵੱਧ ਛੇ ਵਿਅਕਤੀ।",
-            "pl": "Nie wolno spotykać się w pomieszczeniach, chyba że mieszka się z tymi osobami lub stworzyło się z nimi bańkę wsparcia. Na zewnątrz można spotkać się maksymalnie z sześcioma osobami.",
-            "ro": "Nu vă întâlniți cu nimeni în interior, cu excepția persoanelor cu care locuiți sau cu care ați format un grup de sprijin. Maxim șase persoane în aer liber.",
-            "so": "Ha kula kulmin qofna gudaha, ilaa aad la noolaatid mooyee ama aad sameysid koox taageero. Ugu badnaan lix qof ee dibidda.",
-            "tr": "Birlikte yaşamadığınız ya da bir destek balonu olmadığınız müddetçe, kapalı mekanlarda kimseyle buluşmayınız. Açık havada en fazla altı kişi ile biraraya gelebilirsiniz.",
-            "ur": "اندرون میں کسی سے مت ملیں، جب تک  کہ آپ ان کے ساتھ رہتے ہوں یا آپ نے مدد کا دائرہ بنا لیا ہو۔ بیرون میں زیادہ سے زیادہ چھ۔",
-            "zh": "不要在室内与任何人会面，除非你和他们住在一起或形成了一个互助泡沫。在户外时，最多与六个人会面。"
-          }
-        },
-        {
           "policyIcon": "bars-and-pubs",
           "policyHeading": {
             "ar": "البارات والحانات والمطاعم",
@@ -603,68 +572,6 @@
             "tr": "Mekanlar sadece yemekle birlikte sipariş edilmek koşuluyla alkol servis edebilir. Siparişlerin alımı saat 22.00'de bitmeli ve kapılarını saat 23.00'de kapatmalıdırlar.",
             "ur": "مقامات صرف معقول کھانے کے ساتھ الکحل پیش کر سکتے ہیں۔ ان پر لازم ہے کہ 10 بجے رات کو آرڈر لینا بند کر دیں اور 11 بجے رات کو لازماً بند کر دیں۔",
             "zh": "场所只能随丰盛的餐饮供应酒类。他们必须在晚上 10 点前停止接受订单，必须于 11 点之前打烊。"
-          }
-        },
-        {
-          "policyIcon": "travelling",
-          "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
-          },
-          "policyContent": {
-            "ar": "يتعين عليك الحدّ من عدد الرحلات التي تُجريها قدر الإمكان. قم بالتمشَّية أو اركب الدّراجات الهوائية إذا أمكن، واحرص على وضع خططٍ مسبقةٍ وتجنَّب الأوقات وخطوط السير المزدحمة عند ركوب وسائل النقل العام. وتجنّب الانتقال إلى المناطق المُصنَّفة في المستوى الثالث إلا لضرورة.",
-            "bn": "সম্ভব হলে আপনার ভ্রমণের সংখ্যা কমান। সম্ভব হলে হেঁটে বা সাইকেলে যান, আগে থেকে পরিকল্পনা করুন এবং জনপরিবহনে ব্যস্ত সময় এবং সড়ক এড়িয়ে চলুন। টিয়ার থ্রি এলাকায় অহেতুক যাত্রা করবেন না।",
-            "cy": "Cwtogwch ar nifer y siwrneiau y byddwch yn eu gwneud lle gallwch. Cerddwch neu seiclwch lle bo modd. Cynlluniwch ymlaen llaw gan osgoi'r adegau a'r llwybrau prysur ar gludiant cyhoeddus. Osgowch deithio dianghenraid i ardaloedd Haen Tri.",
-            "en": "Reduce the number of journeys you make where possible. Walk or cycle if possible. Plan ahead and avoid busy times and routes on public transport. Avoid unnecessary travel to tier 3 areas.",
-            "gu": "જ્યાં બની શકે ત્યાં મૂસાફરી કરવાનું ટાળો. શક્ય હોય તો ચાલીને જાઓ કે સાઇકલ ચલાવો, અગાઉથી પ્લાન કરો અને પબ્લિક ટ્રાંસ્પોર્ટ અને બિઝી સમય અને માર્ગો ટાળો. ટિયર થ્રી વિસ્તારોમાં બિનજરૂરી ટ્રાવેલ કરવાનું ટાળો.",
-            "pa": "ਜਿਥੇ ਵੀ ਸੰਭਵ ਹੋਵੇ ਤੁਹਾਡੇ ਦੁਆਰਾ ਕੀਤੀਆਂ ਜਾਣ ਵਾਲੀਆਂ ਯਾਤਰਾਵਾਂ ਦੀ ਗਿਣਤੀ ਨੂੰ ਘਟਾਓ। ਜੇ ਸੰਭਵ ਹੋਵੇ ਤਾਂ ਤੁਰ ਕੇ ਜਾਂ ਸਾਈਕਲ 'ਤੇ ਜਾਓ, ਪਹਿਲਾਂ ਤੋਂ ਯੋਜਨਾ ਬਣਾਓ ਅਤੇ ਜਨਤਕ ਟ੍ਰਾਂਸਪੋਰਟ 'ਤੇ ਵਿਅਸਤ ਸਮਿਆਂ ਅਤੇ ਰੂਟਾਂ ਤੋਂ ਬਚੋ। ਟੀਅਰ ਤਿੰਨ ਖੇਤਰਾਂ ਦੀ ਬੇਲੋੜੀ ਯਾਤਰਾ ਤੋਂ ਬਚੋ।",
-            "pl": "O ile to możliwe, należy ograniczyć podróże. Jeżeli jest to możliwe, należy chodzić lub jeździć na rowerze, planować dojazd z wyprzedzeniem oraz unikać godzin szczytu i zatłoczonych tras w komunikacji miejskiej. Należy unikać niepotrzebnych podróży do rejonów położonych w Strefie Trzeciej.",
-            "ro": "Reduceți numărul de călătorii, dacă este posibil. Mergeți pe jos sau cu bicicleta, dacă este posibil, planificați deplasările de dinainte și evitați orele și traseele aglomerate cu transportul public. Evitați deplasările inutile în zonele cu Nivel de Alertă Trei.",
-            "so": "Yaree tirada safarada aad ku baxdo sida ugu macquulsan. Soco ama baaskiil wad haddii ay macquul tahay, horay u sii qorshee oo ka fogow wakhtiyada mashquulka iyo waddooyinka gaadiidka dadweynaha. Ka fogow safarka aan loo baahnayn ee deegaanada Heerka Saddexaad.",
-            "tr": "Olabildiğince yolculuklarınızın sayısını azaltınız. Mümkünse yürüyünüz veya bisiklete bininiz, önceden plan yapınız ve  toplu taşıma araçlarının yoğun saat ve güzergahlarında  seyahat etmekten kaçınınız. Üçüncü Kademe bölgelere gereksiz seyahatten kaçınınız.",
-            "ur": "ممکن ہونے پر، آپ جتنا سفر کرتے ہیں ان کی تعداد کم کریں اگر ممکن ہو تو پیدل چلیں یا سائیکل چلائیں، پہلے سے منصوبہ بنائیں اور عوامی سواری پر مصروف اوقات اور راستوں سے بچیں۔ درجہ تین والے علاقوں میں غیر ضروری سفر سے بچیں۔",
-            "zh": "尽可能减少外出次数。如果条件允许，请步行或骑自行车，提前计划并避免在繁忙时间段和拥堵的线路段乘坐公共交通工具。避免到三级地区不必要的旅行。"
-          }
-        },
-        {
-          "policyIcon": "overnight-stays",
-          "policyHeading": {
-            "ar": "الإقامات الليلية",
-            "bn": "রাত কাটানো",
-            "cy": "Aros dros nos",
-            "en": "Overnight stays",
-            "gu": "રાત્રિરોકાણ",
-            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
-            "pl": "Nocowanie poza domem",
-            "ro": "Șederile peste noapte",
-            "so": "Dhixitaanka habeenimada",
-            "tr": "Yatıya kalma",
-            "ur": "رات بھر قیام",
-            "zh": "过夜"
-          },
-          "policyContent": {
-            "ar": "تظل أماكن الإقامة مفتوحة لاستقبال أفراد العائلة أو مجموعة الدعم.",
-            "bn": "আপনার বাড়ির সদস্য বা সহায়তা দলের সদস্যদের সাথে অনুমোদিত। আবাসন খোলা আছে।",
-            "cy": "Wedi'i ganiatáu gydag aelodau'ch cartref neu swigen. Llety yn parhau i fod yn agored.",
-            "en": "Allowed with your household or support bubble. Accommodations remain open.",
-            "gu": "તમારા ઘરનાઓ અથવા સપોર્ટ બબલમાં મંજૂરી છે. એકોમિડેશન ખૂલ્લા રહેશે",
-            "pa": "ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਜਾਂ ਸੁਪੋਰਟ ਬੱਬਲ ਨਾਲ ਆਗਿਆ ਹੈ। ਆਵਾਸ ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ।",
-            "pl": "Dozwolone z domownikami lub osobami z bańki wsparcia. Hotele i pensjonaty pozostają otwarte.",
-            "ro": "Activități permise cu persoanele cu care locuiți sau cu membrii grupului de sprijin. Unitățile de cazare rămân deschise.",
-            "so": "Loo oggol yahay qoyskaaga ama dadka kugu dhow. Guryaha ayaa wali furnaan doonaa.",
-            "tr": "Ev halkı bireyleri ile ya da destek balonuna dahil kişilerle izin verilir. Konaklama yerleri açık kalacaktır.",
-            "ur": "آپ کے گھرانے  یا معاون دائرہ احباب  کی ساتھ  اجازت ہے۔ رہائش کھلی رہے گی.",
-            "zh": "允许由家人或“互助泡沫”成员陪同。住宿设施继续营业。"
           }
         },
         {
@@ -699,34 +606,127 @@
           }
         },
         {
-          "policyIcon": "worship",
+          "policyIcon": "exercise",
           "policyHeading": {
-            "ar": "دور العبادة",
-            "bn": "আরাধনা স্থল",
-            "cy": "Addoldai",
-            "en": "Places of worship",
-            "gu": "ધાર્મિક જગ્યાઓ",
-            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
-            "pl": "Miejsca kultu religijnego",
-            "ro": "Locașurile de cult",
-            "so": "Goobaha cibaadada",
-            "tr": "İbadet mekanları",
-            "ur": "عبادت خانے",
-            "zh": "宗教场所"
+            "ar": "التمارين الرياضية",
+            "bn": "ব্যায়াম",
+            "cy": "Ymarfer corff",
+            "en": "Exercise",
+            "gu": "કસરત",
+            "pa": "ਕਸਰਤ",
+            "pl": "Ćwiczenia fizyczne",
+            "ro": "Sportul",
+            "so": "Jimicsi",
+            "tr": "Egzersiz",
+            "ur": "ورزش",
+            "zh": "运动"
           },
           "policyContent": {
-            "ar": "تظل هذه الأماكن مفتوحة، ولكن يجب عليك عدم التفاعل مع أشخاصٍ من خارج محيط أفراد عائلتك أو مجموعة الدعم في أثناء وجودك هناك.",
-            "bn": "এগুলো খোলা থাকবে, তবে সেখানে অবস্থানকালে আপনার বাসা ও সহায়তা দলের বাইরের কারো সাথে মেলামেশা করবেন না।",
-            "cy": "Mae'r rhain yn aros ar agor, ond peidiwch â rhyngweithio gyda phobl o'r tu allan i'ch aelwyd neu'ch swigen pan fyddwch yno.",
-            "en": "These remain open, but do not interact with people from outside of your household or support bubble when there. ",
-            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન તમારા ઘર અથવા બબલની બહારના લોકોને મળશો નહિ.",
-            "pa": "ਇਹ ਖੁੱਲ੍ਹੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਆਪਣੇ ਘਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਤੋਂ ਬਾਹਰ ਦੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
-            "pl": "Pozostają otwarte, ale podczas pobytu w nich nie wolno kontaktować się z osobami spoza swojego gospodarstwa domowego lub bańki wsparcia.  ",
-            "ro": "Acestea rămân deschise, însă nu interacționați cu persoane din afara locuinței sau grupului dvs. de sprijin, atunci când sunteți acolo.",
-            "so": "Kuwani way furnaan doonaan, laakiin ha dhexgalin in ka badan lix qof markaa aad halkaas joogtid.",
-            "tr": "Bu mekanlar açık kalacaktır, ancak oradayken altıdan fazla kişiyle etkileşime girmeyiniz.",
-            "ur": "یہ کھلے رہیں گے، لیکن وہاں ہونے پر اپنے گھرانے یا دائرے سے باہر کے لوگوں کے ساتھ بات چیت مت کریں۔",
-            "zh": "这些地方保持开放，但不要在那里与家人或泡沫以外的人互动。  "
+            "ar": "يستمر العمل في المرافق الترفيهية المغلقة. ويمكن إقامة الفصول التدريبية والألعاب الرياضية المُنظَّمة للبالغين في الأماكن المفتوحة ويُحظر إقامتها في الأماكن المغلقة إلا إذا كانت في منزلك أو مع مجموعة الدعم الخاصة بك. يمكن أيضًا مواصلة الأنشطة المُنظَّمة للنخبة من الرياضيين دون سنِّ 18 عامًا ولذوي الاحتياجات الخاصة.",
+            "bn": "ইনডোর বা ঘরের ভিতরে অবকাশ কর্মকাণ্ডের সুবিধাসম্বলিত কেন্দ্রগুলো চালু থাকবে। ঘরের বাইরে পাঠদান ও প্রাপ্তবয়স্কদের দলগত খেলাধুলা অনুষ্ঠিত হতে পারবে, তবে ঘরের ভিতরে এগুলো করা অনুচিত, যদি না তাতে কেবল আপনার বাড়ির বা সহায়তা দলের সদস্যরাই অংশ নেন। অনবদ্য ক্রীড়াবিদ, 18 বয়সের কম বয়সী ও প্রতিবন্ধীদের দলগত কর্মকাণ্ড চলতে পারবে।",
+            "cy": "Bydd cyfleusterau hamdden dan do yn parhau i fod ar agor.  Gellir cynnal dosbarthiadau a chwaraeon wedi'u trefnu ar gyfer oedolion yn yr awyr agored ond nid o dan do, oni bai ei fod gydag aelodau'ch cartref neu o fewn eich swigen. Gellir parhau i gynnal gweithgareddau a drefnwyd ar gyfer athletwyr elît, pobl dan 18 a phobl anabl. ",
+            "en": "Indoor leisure facilities remain open. Classes and organised adult sport can take place outdoors but should not take place indoors, unless with your household or bubble. Organised activities for elite athletes, under-18s and disabled people can continue.",
+            "gu": "અંદર કસરત કરવા માટેના લેઝર સેંટર ખૂલ્લા રહેશે. ખેલાડીઓ માટેનાં ક્લાસ બહાર કરી શકાય પણ અંદર ન કરી શકાય, સિવાય કે તમે તમારા બબલમાં કે કુટુંબમાં હોવ. જેઓ ઇલિટ એથલિટ્સ હોય, 18 વર્ષથી ઓછી ઉમંરનાં હોય અને ડિસએબલ્ડ લોકો હોય તેઓ ચાલું રાખી શકે.",
+            "pa": "ਇੰਨਡੋਰ ਮਨੋਰੰਜਨ ਕੇਂਦਰ ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ। ਕਲਾਸਾਂ ਅਤੇ ਸੰਗਠਿਤ ਬਾਲਗ਼ ਖੇਡਾਂ ਬਾਹਰ ਹੋ ਸਕਦੀਆਂ ਹਨ ਪਰ ਇਹ ਘਰ ਦੇ ਅੰਦਰ ਨਹੀਂ ਹੋਣੀਆਂ ਚਾਹੀਦੀਆਂ, ਜਦੋਂ ਤੱਕ ਇਹ ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਜਾਂ ਸੁਪੋਰਟ ਬਬਲ ਨਾਲ ਨਾ ਹੋਣ। ਕੁਲੀਨ ਐਥਲੀਟਾਂ, ਅੰਡਰ -18 ਅਤੇ ਅਪਾਹਜ ਲੋਕਾਂ ਲਈ ਸੰਗਠਿਤ ਗਤੀਵਿਧੀਆਂ ਜਾਰੀ ਰਹਿ ਸਕਦੀਆਂ ਹਨ।",
+            "pl": "Obiekty rekreacyjne pozostają otwarte. Zajęcia i zorganizowany sport dla dorosłych mogą mieć miejsce na świeżym powietrzu, ale nie mogą odbywać się w pomieszczeniach, chyba że z domownikami lub osobami z bańki wsparcia. Zorganizowane zajęcia dla zawodowych sportowców, osób poniżej 18 roku życia i niepełnosprawnych mogą nadal się odbywać.",
+            "ro": "Centrele de agrement interior rămân deschise. Clasele și formele de sport organizat pentru adulți pot avea loc în aer liber, însă nu trebuie să aibă loc în interior, decât alături de persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin. Activitățile organizate pentru atleții de performanță, pentru persoane sub 18 ani și pentru persoane cu dizabilități pot continua.",
+            "so": "Madaddaalinta gudaha wey furnaan doonaan. Fasallada iyo abaabulka isboortiga dadka qaangaarka ah ayaa lagu qaban karaa dibidda laakiin waa inaysan ka dhicin gudaha, marka laga reebo qoyskaaga ama dadka kugu dhow. Hawlaha abaabulan oo loogu talagalay ciyaartoy caan ah, kuwa ka yar 18-sano iyo dadka naafada ah way sii socon karaan.",
+            "tr": "Kapalı eğlence mekanları açık kalacaktır. Egzersiz sınıfları ve organize yetişkin sporları açık havada yapılabilir, ancak kapalı yerlerde sadece aynı hane bireyleri ile ya da destek balonuna dahil kişilerle birlikte yapılabilir. Elit sporcular, 18 yaş altı ve engelliler için organize etkinlikler devam edebilir.",
+            "ur": "اندرونی تفریحی سہولیات کھلی رہیں۔ کلاسیں  اور منظم بالغ کھیل باہر بھی ہوسکتے ہیں  لیکن گھر کے اندر نہیں ہونے چاہیے  ، جب تک  کہ یہ آپ کا گھرانہ یا دائرۂ احباب نہ  ہو  ۔ اہم  کھلاڑیوں ، انڈر 18 اور معذور افراد کے لئے منظم سرگرمیاں جاری رہ سکتی ہیں۔",
+            "zh": "\"室内休闲设施继续开放。班级活动或有组织的成人体育运动可以在室外进行，不得在室内，但与家庭成员或“互助泡沫”成员一起举行活动的情况除外。优秀运动员、18 岁以下的未成年人和残障人士可以继续参加有组织的活动。"
+          }
+        },
+        {
+          "policyIcon": "meeting-people",
+          "policyHeading": {
+            "ar": "مقابلة الأصدقاء والعائلة",
+            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
+            "cy": "Cyfarfod â theuluoedd a ffrindiau",
+            "en": "Meeting friends and family",
+            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
+            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
+            "pl": "Spotkania ze znajomymi i rodziną",
+            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
+            "so": "La kulanka asxaabta iyo qoyska",
+            "tr": "Arkadaşlar ve aile ile buluşma",
+            "ur": "دوستوں اور فیملی سے ملنا",
+            "zh": "与朋友和家人会面"
+          },
+          "policyContent": {
+            "ar": "تجنَّب مقابلة أي أشخاصٍ في الأماكن المغلقة، إلا إذا كنت تعيش في نفس المنزل أو كوَّنت معهم مجموعة دعمٍ بالفعل. يُحظر زيادة عدد الأفراد عن ستة أشخاصٍ في الأماكن المفتوحة.",
+            "bn": "ঘরের ভিতরে কারো সাথে দেখা করবেন না, যদি না আপনি তাদের সাথে বাস করেন বা তাদের নিয়ে সহায়তা দল গঠন করে থাকেন। ঘরের বাইরে ছয় জনের বেশি নয়।",
+            "cy": "Peidiwch â chyfarfod unrhyw un y tu mewn oni bai eich bod yn byw ar yr un aelwyd neu wedi ffurfio swigen gefnogaeth gyda nhw. Uchafswm o chwech y tu allan.",
+            "en": "Do not meet anyone indoors, unless you live with them or have formed a support bubble. Maximum of 6 outdoors.",
+            "gu": "અંદર કોઈને મળશો નહિ, સિવાય કે તમે તેઓની સાથે રહેતા હો અથવા તમે સપોર્ટ બબલ બનાવ્યો હોય. બહાર વધારામાં વાધારે છ લોકો.",
+            "pa": "ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਕਿਸੇ ਨੂੰ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ। ਇਮਾਰਤ ਦੇ ਬਾਹਰ ਵੱਧ ਤੋਂ ਵੱਧ ਛੇ ਵਿਅਕਤੀ।",
+            "pl": "Nie wolno spotykać się w pomieszczeniach, chyba że mieszka się z tymi osobami lub stworzyło się z nimi bańkę wsparcia. Na zewnątrz można spotkać się maksymalnie z sześcioma osobami.",
+            "ro": "Nu vă întâlniți cu nimeni în interior, cu excepția persoanelor cu care locuiți sau cu care ați format un grup de sprijin. Maxim șase persoane în aer liber.",
+            "so": "Ha kula kulmin qofna gudaha, ilaa aad la noolaatid mooyee ama aad sameysid koox taageero. Ugu badnaan lix qof ee dibidda.",
+            "tr": "Birlikte yaşamadığınız ya da bir destek balonu olmadığınız müddetçe, kapalı mekanlarda kimseyle buluşmayınız. Açık havada en fazla altı kişi ile biraraya gelebilirsiniz.",
+            "ur": "اندرون میں کسی سے مت ملیں، جب تک  کہ آپ ان کے ساتھ رہتے ہوں یا آپ نے مدد کا دائرہ بنا لیا ہو۔ بیرون میں زیادہ سے زیادہ چھ۔",
+            "zh": "不要在室内与任何人会面，除非你和他们住在一起或形成了一个互助泡沫。在户外时，最多与六个人会面。"
+          }
+        },
+        {
+          "policyIcon": "overnight-stays",
+          "policyHeading": {
+            "ar": "الإقامات الليلية",
+            "bn": "রাত কাটানো",
+            "cy": "Aros dros nos",
+            "en": "Overnight stays",
+            "gu": "રાત્રિરોકાણ",
+            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
+            "pl": "Nocowanie poza domem",
+            "ro": "Șederile peste noapte",
+            "so": "Dhixitaanka habeenimada",
+            "tr": "Yatıya kalma",
+            "ur": "رات بھر قیام",
+            "zh": "过夜"
+          },
+          "policyContent": {
+            "ar": "تظل أماكن الإقامة مفتوحة لاستقبال أفراد العائلة أو مجموعة الدعم.",
+            "bn": "আপনার বাড়ির সদস্য বা সহায়তা দলের সদস্যদের সাথে অনুমোদিত। আবাসন খোলা আছে।",
+            "cy": "Wedi'i ganiatáu gydag aelodau'ch cartref neu swigen. Llety yn parhau i fod yn agored.",
+            "en": "Allowed with your household or support bubble. Accommodations remain open.",
+            "gu": "તમારા ઘરનાઓ અથવા સપોર્ટ બબલમાં મંજૂરી છે. એકોમિડેશન ખૂલ્લા રહેશે",
+            "pa": "ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਜਾਂ ਸੁਪੋਰਟ ਬੱਬਲ ਨਾਲ ਆਗਿਆ ਹੈ। ਆਵਾਸ ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ।",
+            "pl": "Dozwolone z domownikami lub osobami z bańki wsparcia. Hotele i pensjonaty pozostają otwarte.",
+            "ro": "Activități permise cu persoanele cu care locuiți sau cu membrii grupului de sprijin. Unitățile de cazare rămân deschise.",
+            "so": "Loo oggol yahay qoyskaaga ama dadka kugu dhow. Guryaha ayaa wali furnaan doonaa.",
+            "tr": "Ev halkı bireyleri ile ya da destek balonuna dahil kişilerle izin verilir. Konaklama yerleri açık kalacaktır.",
+            "ur": "آپ کے گھرانے  یا معاون دائرہ احباب  کی ساتھ  اجازت ہے۔ رہائش کھلی رہے گی.",
+            "zh": "允许由家人或“互助泡沫”成员陪同。住宿设施继续营业。"
+          }
+        },
+        {
+          "policyIcon": "travelling",
+          "policyHeading": {
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
+          },
+          "policyContent": {
+            "ar": "يتعين عليك الحدّ من عدد الرحلات التي تُجريها قدر الإمكان. قم بالتمشَّية أو اركب الدّراجات الهوائية إذا أمكن، واحرص على وضع خططٍ مسبقةٍ وتجنَّب الأوقات وخطوط السير المزدحمة عند ركوب وسائل النقل العام. وتجنّب الانتقال إلى المناطق المُصنَّفة في المستوى الثالث إلا لضرورة.",
+            "bn": "সম্ভব হলে আপনার ভ্রমণের সংখ্যা কমান। সম্ভব হলে হেঁটে বা সাইকেলে যান, আগে থেকে পরিকল্পনা করুন এবং জনপরিবহনে ব্যস্ত সময় এবং সড়ক এড়িয়ে চলুন। টিয়ার থ্রি এলাকায় অহেতুক যাত্রা করবেন না।",
+            "cy": "Cwtogwch ar nifer y siwrneiau y byddwch yn eu gwneud lle gallwch. Cerddwch neu seiclwch lle bo modd. Cynlluniwch ymlaen llaw gan osgoi'r adegau a'r llwybrau prysur ar gludiant cyhoeddus. Osgowch deithio dianghenraid i ardaloedd Haen Tri.",
+            "en": "Reduce the number of journeys you make where possible. Walk or cycle if possible. Plan ahead and avoid busy times and routes on public transport. Avoid unnecessary travel to tier 3 areas.",
+            "gu": "જ્યાં બની શકે ત્યાં મૂસાફરી કરવાનું ટાળો. શક્ય હોય તો ચાલીને જાઓ કે સાઇકલ ચલાવો, અગાઉથી પ્લાન કરો અને પબ્લિક ટ્રાંસ્પોર્ટ અને બિઝી સમય અને માર્ગો ટાળો. ટિયર થ્રી વિસ્તારોમાં બિનજરૂરી ટ્રાવેલ કરવાનું ટાળો.",
+            "pa": "ਜਿਥੇ ਵੀ ਸੰਭਵ ਹੋਵੇ ਤੁਹਾਡੇ ਦੁਆਰਾ ਕੀਤੀਆਂ ਜਾਣ ਵਾਲੀਆਂ ਯਾਤਰਾਵਾਂ ਦੀ ਗਿਣਤੀ ਨੂੰ ਘਟਾਓ। ਜੇ ਸੰਭਵ ਹੋਵੇ ਤਾਂ ਤੁਰ ਕੇ ਜਾਂ ਸਾਈਕਲ 'ਤੇ ਜਾਓ, ਪਹਿਲਾਂ ਤੋਂ ਯੋਜਨਾ ਬਣਾਓ ਅਤੇ ਜਨਤਕ ਟ੍ਰਾਂਸਪੋਰਟ 'ਤੇ ਵਿਅਸਤ ਸਮਿਆਂ ਅਤੇ ਰੂਟਾਂ ਤੋਂ ਬਚੋ। ਟੀਅਰ ਤਿੰਨ ਖੇਤਰਾਂ ਦੀ ਬੇਲੋੜੀ ਯਾਤਰਾ ਤੋਂ ਬਚੋ।",
+            "pl": "O ile to możliwe, należy ograniczyć podróże. Jeżeli jest to możliwe, należy chodzić lub jeździć na rowerze, planować dojazd z wyprzedzeniem oraz unikać godzin szczytu i zatłoczonych tras w komunikacji miejskiej. Należy unikać niepotrzebnych podróży do rejonów położonych w Strefie Trzeciej.",
+            "ro": "Reduceți numărul de călătorii, dacă este posibil. Mergeți pe jos sau cu bicicleta, dacă este posibil, planificați deplasările de dinainte și evitați orele și traseele aglomerate cu transportul public. Evitați deplasările inutile în zonele cu Nivel de Alertă Trei.",
+            "so": "Yaree tirada safarada aad ku baxdo sida ugu macquulsan. Soco ama baaskiil wad haddii ay macquul tahay, horay u sii qorshee oo ka fogow wakhtiyada mashquulka iyo waddooyinka gaadiidka dadweynaha. Ka fogow safarka aan loo baahnayn ee deegaanada Heerka Saddexaad.",
+            "tr": "Olabildiğince yolculuklarınızın sayısını azaltınız. Mümkünse yürüyünüz veya bisiklete bininiz, önceden plan yapınız ve  toplu taşıma araçlarının yoğun saat ve güzergahlarında  seyahat etmekten kaçınınız. Üçüncü Kademe bölgelere gereksiz seyahatten kaçınınız.",
+            "ur": "ممکن ہونے پر، آپ جتنا سفر کرتے ہیں ان کی تعداد کم کریں اگر ممکن ہو تو پیدل چلیں یا سائیکل چلائیں، پہلے سے منصوبہ بنائیں اور عوامی سواری پر مصروف اوقات اور راستوں سے بچیں۔ درجہ تین والے علاقوں میں غیر ضروری سفر سے بچیں۔",
+            "zh": "尽可能减少外出次数。如果条件允许，请步行或骑自行车，提前计划并避免在繁忙时间段和拥堵的线路段乘坐公共交通工具。避免到三级地区不必要的旅行。"
           }
         },
         {
@@ -761,38 +761,7 @@
           }
         },
         {
-          "policyIcon": "exercise",
-          "policyHeading": {
-            "ar": "التمارين الرياضية",
-            "bn": "ব্যায়াম",
-            "cy": "Ymarfer corff",
-            "en": "Exercise",
-            "gu": "કસરત",
-            "pa": "ਕਸਰਤ",
-            "pl": "Ćwiczenia fizyczne",
-            "ro": "Sportul",
-            "so": "Jimicsi",
-            "tr": "Egzersiz",
-            "ur": "ورزش",
-            "zh": "运动"
-          },
-          "policyContent": {
-            "ar": "يستمر العمل في المرافق الترفيهية المغلقة. ويمكن إقامة الفصول التدريبية والألعاب الرياضية المُنظَّمة للبالغين في الأماكن المفتوحة ويُحظر إقامتها في الأماكن المغلقة إلا إذا كانت في منزلك أو مع مجموعة الدعم الخاصة بك. يمكن أيضًا مواصلة الأنشطة المُنظَّمة للنخبة من الرياضيين دون سنِّ 18 عامًا ولذوي الاحتياجات الخاصة.",
-            "bn": "ইনডোর বা ঘরের ভিতরে অবকাশ কর্মকাণ্ডের সুবিধাসম্বলিত কেন্দ্রগুলো চালু থাকবে। ঘরের বাইরে পাঠদান ও প্রাপ্তবয়স্কদের দলগত খেলাধুলা অনুষ্ঠিত হতে পারবে, তবে ঘরের ভিতরে এগুলো করা অনুচিত, যদি না তাতে কেবল আপনার বাড়ির বা সহায়তা দলের সদস্যরাই অংশ নেন। অনবদ্য ক্রীড়াবিদ, 18 বয়সের কম বয়সী ও প্রতিবন্ধীদের দলগত কর্মকাণ্ড চলতে পারবে।",
-            "cy": "Bydd cyfleusterau hamdden dan do yn parhau i fod ar agor.  Gellir cynnal dosbarthiadau a chwaraeon wedi'u trefnu ar gyfer oedolion yn yr awyr agored ond nid o dan do, oni bai ei fod gydag aelodau'ch cartref neu o fewn eich swigen. Gellir parhau i gynnal gweithgareddau a drefnwyd ar gyfer athletwyr elît, pobl dan 18 a phobl anabl. ",
-            "en": "Indoor leisure facilities remain open. Classes and organised adult sport can take place outdoors but should not take place indoors, unless with your household or bubble. Organised activities for elite athletes, under-18s and disabled people can continue.",
-            "gu": "અંદર કસરત કરવા માટેના લેઝર સેંટર ખૂલ્લા રહેશે. ખેલાડીઓ માટેનાં ક્લાસ બહાર કરી શકાય પણ અંદર ન કરી શકાય, સિવાય કે તમે તમારા બબલમાં કે કુટુંબમાં હોવ. જેઓ ઇલિટ એથલિટ્સ હોય, 18 વર્ષથી ઓછી ઉમંરનાં હોય અને ડિસએબલ્ડ લોકો હોય તેઓ ચાલું રાખી શકે.",
-            "pa": "ਇੰਨਡੋਰ ਮਨੋਰੰਜਨ ਕੇਂਦਰ ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ। ਕਲਾਸਾਂ ਅਤੇ ਸੰਗਠਿਤ ਬਾਲਗ਼ ਖੇਡਾਂ ਬਾਹਰ ਹੋ ਸਕਦੀਆਂ ਹਨ ਪਰ ਇਹ ਘਰ ਦੇ ਅੰਦਰ ਨਹੀਂ ਹੋਣੀਆਂ ਚਾਹੀਦੀਆਂ, ਜਦੋਂ ਤੱਕ ਇਹ ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਜਾਂ ਸੁਪੋਰਟ ਬਬਲ ਨਾਲ ਨਾ ਹੋਣ। ਕੁਲੀਨ ਐਥਲੀਟਾਂ, ਅੰਡਰ -18 ਅਤੇ ਅਪਾਹਜ ਲੋਕਾਂ ਲਈ ਸੰਗਠਿਤ ਗਤੀਵਿਧੀਆਂ ਜਾਰੀ ਰਹਿ ਸਕਦੀਆਂ ਹਨ।",
-            "pl": "Obiekty rekreacyjne pozostają otwarte. Zajęcia i zorganizowany sport dla dorosłych mogą mieć miejsce na świeżym powietrzu, ale nie mogą odbywać się w pomieszczeniach, chyba że z domownikami lub osobami z bańki wsparcia. Zorganizowane zajęcia dla zawodowych sportowców, osób poniżej 18 roku życia i niepełnosprawnych mogą nadal się odbywać.",
-            "ro": "Centrele de agrement interior rămân deschise. Clasele și formele de sport organizat pentru adulți pot avea loc în aer liber, însă nu trebuie să aibă loc în interior, decât alături de persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin. Activitățile organizate pentru atleții de performanță, pentru persoane sub 18 ani și pentru persoane cu dizabilități pot continua.",
-            "so": "Madaddaalinta gudaha wey furnaan doonaan. Fasallada iyo abaabulka isboortiga dadka qaangaarka ah ayaa lagu qaban karaa dibidda laakiin waa inaysan ka dhicin gudaha, marka laga reebo qoyskaaga ama dadka kugu dhow. Hawlaha abaabulan oo loogu talagalay ciyaartoy caan ah, kuwa ka yar 18-sano iyo dadka naafada ah way sii socon karaan.",
-            "tr": "Kapalı eğlence mekanları açık kalacaktır. Egzersiz sınıfları ve organize yetişkin sporları açık havada yapılabilir, ancak kapalı yerlerde sadece aynı hane bireyleri ile ya da destek balonuna dahil kişilerle birlikte yapılabilir. Elit sporcular, 18 yaş altı ve engelliler için organize etkinlikler devam edebilir.",
-            "ur": "اندرونی تفریحی سہولیات کھلی رہیں۔ کلاسیں  اور منظم بالغ کھیل باہر بھی ہوسکتے ہیں  لیکن گھر کے اندر نہیں ہونے چاہیے  ، جب تک  کہ یہ آپ کا گھرانہ یا دائرۂ احباب نہ  ہو  ۔ اہم  کھلاڑیوں ، انڈر 18 اور معذور افراد کے لئے منظم سرگرمیاں جاری رہ سکتی ہیں۔",
-            "zh": "\"室内休闲设施继续开放。班级活动或有组织的成人体育运动可以在室外进行，不得在室内，但与家庭成员或“互助泡沫”成员一起举行活动的情况除外。优秀运动员、18 岁以下的未成年人和残障人士可以继续参加有组织的活动。"
-          }
-        },
-        {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -820,6 +789,37 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر آپ سے ہو سکے تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "دور العبادة",
+            "bn": "আরাধনা স্থল",
+            "cy": "Addoldai",
+            "en": "Places of worship",
+            "gu": "ધાર્મિક જગ્યાઓ",
+            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
+            "pl": "Miejsca kultu religijnego",
+            "ro": "Locașurile de cult",
+            "so": "Goobaha cibaadada",
+            "tr": "İbadet mekanları",
+            "ur": "عبادت خانے",
+            "zh": "宗教场所"
+          },
+          "policyContent": {
+            "ar": "تظل هذه الأماكن مفتوحة، ولكن يجب عليك عدم التفاعل مع أشخاصٍ من خارج محيط أفراد عائلتك أو مجموعة الدعم في أثناء وجودك هناك.",
+            "bn": "এগুলো খোলা থাকবে, তবে সেখানে অবস্থানকালে আপনার বাসা ও সহায়তা দলের বাইরের কারো সাথে মেলামেশা করবেন না।",
+            "cy": "Mae'r rhain yn aros ar agor, ond peidiwch â rhyngweithio gyda phobl o'r tu allan i'ch aelwyd neu'ch swigen pan fyddwch yno.",
+            "en": "These remain open, but do not interact with people from outside of your household or support bubble when there. ",
+            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન તમારા ઘર અથવા બબલની બહારના લોકોને મળશો નહિ.",
+            "pa": "ਇਹ ਖੁੱਲ੍ਹੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਆਪਣੇ ਘਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਤੋਂ ਬਾਹਰ ਦੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
+            "pl": "Pozostają otwarte, ale podczas pobytu w nich nie wolno kontaktować się z osobami spoza swojego gospodarstwa domowego lub bańki wsparcia.  ",
+            "ro": "Acestea rămân deschise, însă nu interacționați cu persoane din afara locuinței sau grupului dvs. de sprijin, atunci când sunteți acolo.",
+            "so": "Kuwani way furnaan doonaan, laakiin ha dhexgalin in ka badan lix qof markaa aad halkaas joogtid.",
+            "tr": "Bu mekanlar açık kalacaktır, ancak oradayken altıdan fazla kişiyle etkileşime girmeyiniz.",
+            "ur": "یہ کھلے رہیں گے، لیکن وہاں ہونے پر اپنے گھرانے یا دائرے سے باہر کے لوگوں کے ساتھ بات چیت مت کریں۔",
+            "zh": "这些地方保持开放，但不要在那里与家人或泡沫以外的人互动。  "
           }
         }
       ]
@@ -957,37 +957,6 @@
       },
       "policies": [
         {
-          "policyIcon": "meeting-people",
-          "policyHeading": {
-            "ar": "مقابلة الأصدقاء والعائلة",
-            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
-            "cy": "Cyfarfod â theuluoedd a ffrindiau",
-            "en": "Meeting friends and family",
-            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
-            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
-            "pl": "Spotkania ze znajomymi i rodziną",
-            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
-            "so": "La kulanka asxaabta iyo qoyska",
-            "tr": "Arkadaşlar ve aile ile buluşma",
-            "ur": "دوستوں اور فیملی سے ملنا",
-            "zh": "与朋友和家人会面"
-          },
-          "policyContent": {
-            "ar": "تجنَّب مقابلة أي أشخاصٍ في الأماكن المغلقة أو معظم الأماكن المفتوحة مثل الحدائق الخاصة، إلا إذا كنت تعيش في نفس المنزل أو كوَّنت معهم مجموعة دعمٍ بالفعل. يُسمح بوجود ستة أشخاصٍ بحدٍ أقصى في بعض الأماكن العامة المفتوحة مثل المتنزهات أو الحدائق العامة.",
-            "bn": "ঘরের ভিতরে বা ঘরের বাইরে অধিকাংশ জায়গায়, যেমন ব্যক্তিগত বাগানে, কারো সাথে দেখা করবেন না, যদি না আপনি তাদের সাথে বাস করেন বা একটি সহায়তা দল গঠন করে থাকেন। ঘরের বাইরে সবার জন্য উন্মুক্ত কিছু কিছু জায়গায়, যেমন পার্ক বা সরকারি বাগানে, ছয় জন পর্যন্ত মানুষ একসাথে মিলিত হতে পারবেন।",
-            "cy": "Peidiwch â chyfarfod ag unrhyw un y tu mewn neu yn y rhan fwyaf o leoedd y tu allan, fel gerddi preifat, oni bai eich bod yn byw ar yr un aelwyd â nhw neu wedi ffurfio swigen gymorth gyda nhw. Uchafswm o chwech mewn rhai mannau cyhoeddus y tu allan fel parciau neu erddi cyhoeddus.",
-            "en": "Do not meet anyone indoors or in most outdoor places, like private gardens, unless you live with them or have formed a support bubble. Maximum of 6 in some outdoor public spaces like parks or public gardens.",
-            "gu": "અંદર અથવા મોટાભાગનાં બહારનાં સ્થળો જેમ કે ખાનગી બાગ વગેરે જગ્યાઓએ કોઈને મળશો નહિ, સિવાય કે તમે તેઓની સાથે રહેતા હો અથવા તમે સપોર્ટ બબલ બનાવ્યો હોય. પાર્ક અથવા પબ્લિક બગીચાઓ જેવી બહારની કેટલીક જગ્યાઓમાં વધારામાં વાધારે છ લોકો.",
-            "pa": "ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਜਾਂ ਜ਼ਿਆਦਾਤਰ ਬਾਹਰੀ ਸਥਾਨਾਂ ਜਿਵੇਂ ਕਿ ਬਗੀਚਿਆਂ ਵਿੱਚ ਕਿਸੇ ਨੂੰ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ। ਪਾਰਕਾਂ ਜਾਂ ਜਨਤਕ ਬਗੀਚਿਆਂ ਵਰਗੇ ਕੁਝ ਬਾਹਰੀ ਜਨਤਕ ਥਾਵਾਂ ਤੇ ਵੱਧ ਤੋਂ ਵੱਧ ਛੇ ਵਿਅਕਤੀ।",
-            "pl": "Nie wolno spotykać się w pomieszczeniach ani w większości miejsc na świeżym powietrzu, np. w prywatnych ogródkach, chyba że mieszka się z tymi osobami lub stworzyło się z nimi bańkę wsparcia. Spotkania z maksymalnie sześcioma osobami w niektórych miejscach publicznych na świeżym powietrzu, np. w parkach lub ogrodach publicznych.",
-            "ro": "Nu vă întâlniți cu nimeni în interior sau în majoritatea locurilor în aer liber, cum ar fi grădinile private, cu excepția persoanelor cu care locuiți sau cu care ați format un grup de sprijin. Maxim șase persoane în unele spații publice în aer liber, precum parcurile sau grădinile publice.",
-            "so": "Qofna ha kula kulmin guriga gudihiisa ama inta badan meelaha banaanka ah sida jardiinooyinka gaarka loo leeyahay, ilaa aad la nooshahay mooyee ama aad la sameysid koox taageero. Waxaad ku kulmi kartaa kooxo ilaa lix qof meelaha banaan ee dadweynaha sida jardiinooyinka ama jardiinooyinka dadweynaha.",
-            "tr": "Birlikte yaşamadığınız ya da bir destek balonunda olmadığınız müddetçe, kapalı mekanlarda veya özel mülk bahçelerinde kimseyle bir araya gelmeyiniz. Parklar veya halka açık bahçeler gibi kamusal alanlarda en fazla altı kişi ile biraraya gelebilirsiniz.",
-            "ur": "کسی سے بھی اندرون میں یا بیرون کی بیشتر جگہوں جیسے نجی باغیچوں میں مت ملیں، جب تک  کہ آپ ان کے ساتھ رہتے ہوں یا آپ نے مدد کا دائرہ بنا لیا ہو۔ کچھ بیرون کی عوامی جگہوں جیسے پارکوں یا عوامی باغیچوں میں زیادہ سے زیادہ چھ۔",
-            "zh": "不要在室内或多数室外场所（如私人花园）与任何人会面，除非你和他们住在一起或形成了一个互助泡沫。在一些户外公共场所活动，如公园或公共花园，最多限 6 人会面。"
-          }
-        },
-        {
           "policyIcon": "bars-and-pubs",
           "policyHeading": {
             "ar": "البارات والحانات والمطاعم",
@@ -1016,68 +985,6 @@
             "tr": "Paket servisi, arabaya servis veya eve teslimat yapanlar dışındaki mekanlar kapalıdır.",
             "ur": "ٹیک اویز، ڈرائیو تھرو یا ڈیلیوری کو چھوڑ کر، مقامات بند ہیں۔",
             "zh": "除外卖点、免下车或递送点外，其他餐厅场所都已关闭。"
-          }
-        },
-        {
-          "policyIcon": "travelling",
-          "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
-          },
-          "policyContent": {
-            "ar": "تجنَّب الانتقال إلى خارج منطقتك، إلا في حالة الضرورة، لأغراض العمل أو التعليم على سبيل المثال. واحرص على وضع خططٍ مسبقةٍ وتجنَّب الأوقات وخطوط السير المزدحمة عند ركوب وسائل النقل العام.",
-            "bn": "কাজ বা শিক্ষার মতো দরকারি কর্তব্য পালনের জন্য না হলে এলাকার বাইরে যাওয়া পরিহার করুন। আগে থেকে পরিকল্পনা করুন এবং জনপরিবহনে ব্যস্ত সময় ও সড়ক এড়িয়ে চলুন।",
-            "cy": "Osgowch deithio y tu allan i'r ardal, ac eithrio pan fydd angen, er enghraifft ar gyfer gwaith neu addysg. Cynlluniwch ymlaen llaw ac osgoi amseroedd a llwybrau prysur ar gludiant cyhoeddus.",
-            "en": "Avoid travelling out of the area, other than where necessary, such as for work or education. Plan ahead and avoid busy times and routes on public transport.",
-            "gu": "જ્યાં જરૂરી ન હોય તે સિવાયના વિસ્તારની બહાર પ્રવાસ કરવાનું ટાળો, જેમ કે કામ અથવા શિક્ષણ માટે. અગાઉથી આયોજન કરો અને જાહેર પરિવહનમાં વ્યસ્ત સમય અને માર્ગો ટાળો.",
-            "pa": "ਖੇਤਰ ਤੋਂ ਬਾਹਰ ਦੀ ਯਾਤਰਾ ਤੋਂ ਪਰਹੇਜ਼ ਕਰੋ, ਸਿਵਾਏ ਉਸਦੇ ਜਿੱਥੇ ਇਹ ਜ਼ਰੂਰੀ ਹੋਵੇ, ਜਿਵੇਂ ਕਿ ਕੰਮ ਜਾਂ ਸਿੱਖਿਆ ਲਈ। ਪਹਿਲਾਂ ਤੋਂ ਯੋਜਨਾ ਬਣਾਓ ਅਤੇ ਜਨਤਕ ਟ੍ਰਾਂਸਪੋਰਟ 'ਤੇ ਵਿਅਸਤ ਸਮਿਆਂ ਅਤੇ ਰੂਟਾਂ ਤੋਂ ਬਚੋ।",
-            "pl": "Należy unikać wyjazdów poza swój rejon, za wyjątkiem niezbędnych podróży, np. do pracy lub szkoły. Należy planować dojazd z wyprzedzeniem oraz unikać godzin szczytu i zatłoczonych tras w komunikacji miejskiej.",
-            "ro": "Evitați călătoriile în afara zonei dvs., cu excepția celor necesare, cum ar fi pentru muncă sau educație. Planificați deplasările de dinainte și evitați orele și rutele aglomerate în transportul public.",
-            "so": "Ka fogow ka safridda deegaanka, marka laga reebo meelaha lagama maarmaanka u ah, sida shaqo ama waxbarasho. Horay u sii qorshee oo ka fogow wakhtiyada mashquulka iyo waddooyinka gaadiidka dadweynaha.",
-            "tr": "İş veya eğitim gibi gereklilikler dışında, bulunduğunuz bölgenin dışına seyahat etmekten kaçınınız. Önceden plan yapınız ve  toplu taşıma araçlarının yoğun saat ve güzergahlarında  seyahat etmekten kaçınınız.",
-            "ur": "علاقے سے باہر سفر کرنے سے بچیں، سوائے اس کے جہاں لازمی ہو، جیسے کام یا تعلیم کے لیے۔ پہلے سے منصوبہ بنائیں اور عوامی سواری پر مصروف اوقات اور راستوں سے بچیں۔",
-            "zh": "除非工作或教育需要，否则避免离开该地区。提前计划并避免在繁忙时间段和拥堵的线路段乘坐公共交通工具。"
-          }
-        },
-        {
-          "policyIcon": "overnight-stays",
-          "policyHeading": {
-            "ar": "الإقامات الليلية",
-            "bn": "রাত কাটানো",
-            "cy": "Aros dros nos",
-            "en": "Overnight stays",
-            "gu": "રાત્રિરોકાણ",
-            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
-            "pl": "Nocowanie poza domem",
-            "ro": "Șederile peste noapte",
-            "so": "Dhixitaanka habeenimada",
-            "tr": "Yatıya kalma",
-            "ur": "رات بھر قیام",
-            "zh": "过夜"
-          },
-          "policyContent": {
-            "ar": "تجنَّب الإقامة الليلية في جزءٍ آخر من المملكة المتحدة، إلا إذا كنت بصحبة أفراد عائلتك أو مجموعة الدعم. تُغلق أماكن الإقامة أبوابها أمام الزائرين (مع وجود عددٍ محدودٍ من الاستثناءات).",
-            "bn": "পরিবার বা সহায়তা দল ছাড়া যুক্তরাজ্যের অন্য কোনো প্রান্তে রাত কাটানো এড়িয়ে চলুন। আবাসন বন্ধ থাকবে (অল্প কিছু ব্যতিক্রম ছাড়া)।",
-            "cy": "Osgowch aros dros nos yn unrhyw le arall yn y DU, ac eithrio ar eich aelwyd neu gyda'ch swigen gymorth. Lletyau ar gau (gydag ambell eithriad).",
-            "en": "Avoid staying overnight in another part of the UK, other than with your household or support bubble. Accommodations are closed, with limited exceptions.",
-            "gu": "ઘરના સભ્ય કે સપોર્ટ બબલ સિવાયની વ્યક્તિ સાથે યુકેના અન્ય કોઈ વિસ્તારમાં રાત્રિરોકાણ કરવાનું ટાળવું. (મર્યાદિત અપવાદો સાથે) નિવાસસ્થાનો બંધ કરવામાં આવે છે.",
-            "pa": "ਪਰਿਵਾਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਦੇ ਨਾਲ ਤੋਂ ਇਲਾਵਾ ਯੂਕੇ ਦੇ ਕਿਸੇ ਹੋਰ ਹਿੱਸੇ ਵਿੱਚ ਰਾਤ ਭਰ ਰਹਿਣ ਤੋਂ ਪਰਹੇਜ਼ ਕਰੋ। ਰਿਹਾਇਸ਼ਾਂ ਬੰਦ ਹਨ (ਸੀਮਿਤ ਅਪਵਾਦਾਂ ਦੇ ਨਾਲ)।",
-            "pl": "Należy unikać nocowania poza domem w innej części Zjednoczonego Królestwa, za wyjątkiem pobytu ze swoimi domownikami lub osobami z bańki wsparcia. Hotele i pensjonaty są zamknięte (z nielicznymi wyjątkami).",
-            "ro": "Evitați șederile peste noapte într-o altă zonă din Marea Britanie, la persoane cu care nu locuiți sau cu care nu formați un grup de sprijin. Unitățile de cazare sunt închise (cu excepții limitate).",
-            "so": "Ka fogow inaad u dhaxdo meel kale oo ka mid ah Ingiriiska, marka laga reebo qoyska ama koox taageero. Guryaha waa la xirayaa (marka laga reebo xaddidnaan).",
-            "tr": "Hane halkınız ya da destek balonundaki insanlarla kalmanın haricinde, Birleşik Krallık'ın herhangi bir yerinde yatıya kalmaktan kaçınınız. Konaklama yerleri kapalıdır (sınırlı istisnalar hariç).",
-            "ur": "گھرانے کے ساتھ یا مدد کے دائرے کو چھوڑ کر، یوکے کے کسی اور حصے میں رات بھر رہنے سے بچیں۔ رہائش گاہیں بند ہیں (محدود استثناء کے ساتھ)۔",
-            "zh": "避免在英国的其他地区过夜，除非在家人或互助泡沫内。住宿关闭（有少数例外）。"
           }
         },
         {
@@ -1112,34 +1019,127 @@
           }
         },
         {
-          "policyIcon": "worship",
+          "policyIcon": "exercise",
           "policyHeading": {
-            "ar": "دور العبادة",
-            "bn": "আরাধনা স্থল",
-            "cy": "Addoldai",
-            "en": "Places of worship",
-            "gu": "ધાર્મિક જગ્યાઓ",
-            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
-            "pl": "Miejsca kultu religijnego",
-            "ro": "Locașurile de cult",
-            "so": "Goobaha cibaadada",
-            "tr": "İbadet mekanları",
-            "ur": "عبادت خانے",
-            "zh": "宗教场所"
+            "ar": "التمارين الرياضية",
+            "bn": "ব্যায়াম",
+            "cy": "Ymarfer corff",
+            "en": "Exercise",
+            "gu": "કસરત",
+            "pa": "ਕਸਰਤ",
+            "pl": "Ćwiczenia fizyczne",
+            "ro": "Sportul",
+            "so": "Jimicsi",
+            "tr": "Egzersiz",
+            "ur": "ورزش",
+            "zh": "运动"
           },
           "policyContent": {
-            "ar": "تظل هذه الأماكن مفتوحة، ولكن يجب عليك عدم التفاعل مع أشخاصٍ من خارج محيط أفراد عائلتك أو مجموعة الدعم في أثناء وجودك هناك.",
-            "bn": "এগুলো খোলা থাকবে, তবে সেখানে অবস্থানকালে আপনার বাসা ও সহায়তা দলের বাইরের কারো সাথে মেলামেশা করবেন না।",
-            "cy": "Mae'r rhain yn aros ar agor, ond peidiwch â rhyngweithio gyda phobl nad ydynt ar yr un aelwyd neu yn yr un swigen â chi pan fyddwch yno.",
-            "en": "These remain open, but do not interact with people from outside of your household or bubble when there.",
-            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન તમારા ઘર અથવા બબલની બહારના લોકોને મળશો નહિ.",
-            "pa": "ਇਹ ਖੁੱਲੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਆਪਣੇ ਘਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਤੋਂ ਬਾਹਰ ਦੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
-            "pl": "Pozostają otwarte, ale podczas pobytu w nich nie wolno kontaktować się z osobami spoza swojego gospodarstwa domowego lub bańki wsparcia.  ",
-            "ro": "Acestea rămân deschise, însă nu interacționați cu persoane din afara locuinței sau grupului dvs. de sprijin, atunci când sunteți acolo.  ",
-            "so": "Kuwani way furnaan doonaan, laakiin ha dhexgalin in ka badan lix qof markaa aad halkaas joogtid.",
-            "tr": "Bu mekanlar açık kalacaktır, ancak oradayken hane halkınız ya da destek balonunuz dışındaki kişilerle etkileşime girmeyiniz.",
-            "ur": "یہ کھلے رہیں گے، لیکن وہاں ہونے پر اپنے گھرانے یا دائرے سے باہر کے لوگوں کے ساتھ بات چیت مت کریں۔",
-            "zh": "这些地方保持开放，但不要在那里与家人或泡沫以外的人互动。  "
+            "ar": "يستمر العمل في المرافق الترفيهية المغلقة. ويمكن إقامة الفصول التدريبية والألعاب الرياضية المُنظَّمة للبالغين في الأماكن المفتوحة، ولكن يُراعى تجنُّب إجراء الأنشطة المنطوية على مخالطة عالية المُخاطرة. يُحظر إقامة أنشطة التمارين الرياضية الجماعية والألعاب الرياضية في الأماكن المغلقة إلا إذا كانت في منزلك أو مع مجموعة الدعم الخاصة بك. يمكن أيضًا مواصلة الأنشطة المُنظَّمة للنخبة من الرياضيين دون سنِّ 18 عامًا ولذوي الاحتياجات الخاصة.",
+            "bn": "ইনডোর বা ঘরের ভিতরে অবকাশ কর্মকাণ্ডের সুবিধাসম্বলিত কেন্দ্রগুলো চালু থাকবে। ঘরের বাইরে পাঠদান ও প্রাপ্তবয়স্কদের দলগত খেলাধুলা অনুষ্ঠিত হতে পারবে, তবে সংস্পর্শমূলক উচ্চ-ঝুঁকিপূর্ণ কর্মকাণ্ড পরিহার করা উচিত। ঘরের ভিতরে দলগত শরীরচর্চা ও খেলাধুলা করা অনুচিত, যদি না তাতে কেবল আপনার বাড়ির বা সহায়তা দলের সদস্যরাই অংশ নেন। অনবদ্য ক্রীড়াবিদ, 18 বয়সের কম বয়সী ও প্রতিবন্ধীদের দলগত কর্মকাণ্ড চলতে পারবে।",
+            "cy": "Bydd cyfleusterau hamdden dan do yn parhau i fod ar agor. Gellir cynnal dosbarthiadau a chwaraeon wedi'u trefnu ar gyfer oedolion yn yr awyr agored, ond dylai pobl osgoi gweithgaredd lle ceir risg uwch o gyffwrdd. Ni ddylai gweithgareddau ymarfer grŵp na chwaraeon gael eu cynnal o dan do, oni bai eu bod gydag aelodau'ch cartref neu o fewn eich swigen. Gellir parhau i gynnal gweithgareddau a drefnwyd ar gyfer athletwyr elît, pobl dan 18 a phobl anabl. ",
+            "en": "Indoor leisure facilities remain open. Classes and organised adult sport can take place outdoors but people should avoid higher-risk contact activity. Group exercise activities and sports should not take place indoors, unless with your household or bubble. Organised activities for elite athletes, under-18s and disabled people can continue.",
+            "gu": "અંદર કસરત કરવા માટેના લેઝર સેંટર ખૂલ્લા રહેશે. ખેલાડીઓ માટેનાં ક્લાસ ગોઠવ્યા હોય એ બહાર કરી શકે પણ હાય-રિસ્ક કે વધારે જોખમ વાળા  અને જેમાં એક બીજાને અડવાનું હોય એ ટાળવાનું. ગ્રૂપ એક્સસાઇઝ અને સ્પોર્ટસ અંદર ન કરી શકાય, સિવાય કે તમે તમારા બબલમાં કે કુટુંબમાં હોવ. જેઓ ઇલિટ એથલિટ્સ હોય, 18 વર્ષથી ઓછી ઉમંરનાં હોય અને ડિસએબલ્ડ લોકો હોય તેઓ ચાલું રાખી શકે.",
+            "pa": "ਇੰਨਡੋਰ ਮਨੋਰੰਜਨ ਕੇਂਦਰ ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ। ਕਲਾਸਾਂ ਅਤੇ ਸੰਗਠਿਤ ਬਾਲਗ਼ ਖੇਡਾਂ ਬਾਹਰ ਹੋ ਸਕਦੀਆਂ ਹਨ ਪਰ ਲੋਕਾਂ ਨੂੰ ਉੱਚ ਜੋਖਮ ਵਾਲੀਆਂ ਸੰਪਰਕ ਗਤੀਵਿਧੀਆਂ ਤੋਂ ਪਰਹੇਜ਼ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ। ਸਮੂਹਕ ਕਸਰਤ ਦੀਆਂ ਗਤੀਵਿਧੀਆਂ ਅਤੇ ਖੇਡਾਂ ਘਰ ਦੇ ਅੰਦਰ ਨਹੀਂ ਹੋਣੀਆਂ ਚਾਹੀਦੀਆਂ, ਜਦੋਂ ਤੱਕ ਇਹ ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਜਾਂ ਸੁਪੋਰਟ ਬਬਲ ਵਿੱਚ ਨਹੀਂ ਹੁੰਦੀਆਂ। ਕੁਲੀਨ ਐਥਲੀਟਾਂ, ਅੰਡਰ -18 ਅਤੇ ਅਪਾਹਜ ਲੋਕਾਂ ਲਈ ਸੰਗਠਿਤ ਗਤੀਵਿਧੀਆਂ ਜਾਰੀ ਰਹਿ ਸਕਦੀਆਂ ਹਨ।",
+            "pl": "Obiekty rekreacyjne pozostają otwarte. Zajęcia i zorganizowany sport dla dorosłych mogą odbywać się na świeżym powietrzu, ale należy unikać związanych z wyższym ryzykiem sportów kontaktowych. Ćwiczenia i zajęcia sportowe nie mogą odbywać się w pomieszczeniach, chyba że z domownikami lub osobami z bańki wsparcia. Zorganizowane zajęcia dla zawodowych sportowców, osób poniżej 18 roku życia i niepełnosprawnych mogą nadal się odbywać.",
+            "ro": "Centrele de agrement interior rămân deschise. Clasele și formele de sport organizat pentru adulți pot avea loc în aer liber, însă participanții trebuie să evite activitățile de contact cu risc mai ridicat. Exercițiile fizice și sporturile în grup nu trebuie să aibă loc în interior, decât alături de persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin. Activitățile organizate pentru atleții de performanță, pentru persoane sub 18 ani și pentru persoane cu dizabilități pot continua.",
+            "so": "Madaddaalinta gudaha wey furnaan doonaan. Fasallada iyo abaabulka isboortiga dadka qaangaarka ah ayaa lagu qaban karaa dibidda, laakiin dadka waa in ay ka fogadaan dhaqdhaqaaqyada halista sare. Hawlaha jimicsiga kooxeed iyo isboortiga waa inaysan ka dhicin gudaha, marka laga reebo qoyskaaga ama dadka kugu dhow. Hawlaha abaabulan oo loogu talagalay ciyaartoy caan ah, kuwa ka yar 18-sano iyo dadka naafada ah way sii socon karaan.",
+            "tr": "Kapalı eğlence mekanları açık kalacaktır. Egzersiz sınıfları ve organize yetişkin sporları açık havada yapılabilir, ancak yüksek riskli temas gerektiren aktivitelerden kaçınılmalıdır. Aynı hane bireyleri ile ya da destek balonuna dahil kişilerle birlikte olmadığı müddetçe kapalı yerlerde grup egzersiz aktiviteleri ve sporları yapılmamalıdır. Elit sporcular, 18 yaş altı ve engelliler için organize etkinlikler devam edebilir.",
+            "ur": "\"اندرونی تفریحی سہولیات کھلی رہیں۔  کلاسیں  اور منظم کھیل   باہر  ہو سکتے ہیں ، لیکن لوگوں کو زیادہ سے زیادہ خطرہ والے  رابطے سے بچنا چاہئے۔ گروپ ورزش کی سرگرمیاں اور کھیلوں کو گھر کے اندر نہیں ہونا چاہئے ، جب تک کہ    یہ آپ کا گھرانہ یا دائرۂ احباب  نہ ہو۔  اہم  کھلاڑیوں ، انڈر 18 اور معذور افراد کے لئے منظم سرگرمیاں جاری رہ سکتی ہیں۔",
+            "zh": "室内休闲设施继续开放。班级活动或有组织的成人体育运动可以在室外进行，但应避免高风险的接触活动。不得在室内进行集体锻炼和体育运动，但与家庭成员或“互助泡沫”成员一起举行活动的情况除外。优秀运动员、18 岁以下的未成年人和残障人士可以继续参加有组织的活动。"
+          }
+        },
+        {
+          "policyIcon": "meeting-people",
+          "policyHeading": {
+            "ar": "مقابلة الأصدقاء والعائلة",
+            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
+            "cy": "Cyfarfod â theuluoedd a ffrindiau",
+            "en": "Meeting friends and family",
+            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
+            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
+            "pl": "Spotkania ze znajomymi i rodziną",
+            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
+            "so": "La kulanka asxaabta iyo qoyska",
+            "tr": "Arkadaşlar ve aile ile buluşma",
+            "ur": "دوستوں اور فیملی سے ملنا",
+            "zh": "与朋友和家人会面"
+          },
+          "policyContent": {
+            "ar": "تجنَّب مقابلة أي أشخاصٍ في الأماكن المغلقة أو معظم الأماكن المفتوحة مثل الحدائق الخاصة، إلا إذا كنت تعيش في نفس المنزل أو كوَّنت معهم مجموعة دعمٍ بالفعل. يُسمح بوجود ستة أشخاصٍ بحدٍ أقصى في بعض الأماكن العامة المفتوحة مثل المتنزهات أو الحدائق العامة.",
+            "bn": "ঘরের ভিতরে বা ঘরের বাইরে অধিকাংশ জায়গায়, যেমন ব্যক্তিগত বাগানে, কারো সাথে দেখা করবেন না, যদি না আপনি তাদের সাথে বাস করেন বা একটি সহায়তা দল গঠন করে থাকেন। ঘরের বাইরে সবার জন্য উন্মুক্ত কিছু কিছু জায়গায়, যেমন পার্ক বা সরকারি বাগানে, ছয় জন পর্যন্ত মানুষ একসাথে মিলিত হতে পারবেন।",
+            "cy": "Peidiwch â chyfarfod ag unrhyw un y tu mewn neu yn y rhan fwyaf o leoedd y tu allan, fel gerddi preifat, oni bai eich bod yn byw ar yr un aelwyd â nhw neu wedi ffurfio swigen gymorth gyda nhw. Uchafswm o chwech mewn rhai mannau cyhoeddus y tu allan fel parciau neu erddi cyhoeddus.",
+            "en": "Do not meet anyone indoors or in most outdoor places, like private gardens, unless you live with them or have formed a support bubble. Maximum of 6 in some outdoor public spaces like parks or public gardens.",
+            "gu": "અંદર અથવા મોટાભાગનાં બહારનાં સ્થળો જેમ કે ખાનગી બાગ વગેરે જગ્યાઓએ કોઈને મળશો નહિ, સિવાય કે તમે તેઓની સાથે રહેતા હો અથવા તમે સપોર્ટ બબલ બનાવ્યો હોય. પાર્ક અથવા પબ્લિક બગીચાઓ જેવી બહારની કેટલીક જગ્યાઓમાં વધારામાં વાધારે છ લોકો.",
+            "pa": "ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਜਾਂ ਜ਼ਿਆਦਾਤਰ ਬਾਹਰੀ ਸਥਾਨਾਂ ਜਿਵੇਂ ਕਿ ਬਗੀਚਿਆਂ ਵਿੱਚ ਕਿਸੇ ਨੂੰ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ। ਪਾਰਕਾਂ ਜਾਂ ਜਨਤਕ ਬਗੀਚਿਆਂ ਵਰਗੇ ਕੁਝ ਬਾਹਰੀ ਜਨਤਕ ਥਾਵਾਂ ਤੇ ਵੱਧ ਤੋਂ ਵੱਧ ਛੇ ਵਿਅਕਤੀ।",
+            "pl": "Nie wolno spotykać się w pomieszczeniach ani w większości miejsc na świeżym powietrzu, np. w prywatnych ogródkach, chyba że mieszka się z tymi osobami lub stworzyło się z nimi bańkę wsparcia. Spotkania z maksymalnie sześcioma osobami w niektórych miejscach publicznych na świeżym powietrzu, np. w parkach lub ogrodach publicznych.",
+            "ro": "Nu vă întâlniți cu nimeni în interior sau în majoritatea locurilor în aer liber, cum ar fi grădinile private, cu excepția persoanelor cu care locuiți sau cu care ați format un grup de sprijin. Maxim șase persoane în unele spații publice în aer liber, precum parcurile sau grădinile publice.",
+            "so": "Qofna ha kula kulmin guriga gudihiisa ama inta badan meelaha banaanka ah sida jardiinooyinka gaarka loo leeyahay, ilaa aad la nooshahay mooyee ama aad la sameysid koox taageero. Waxaad ku kulmi kartaa kooxo ilaa lix qof meelaha banaan ee dadweynaha sida jardiinooyinka ama jardiinooyinka dadweynaha.",
+            "tr": "Birlikte yaşamadığınız ya da bir destek balonunda olmadığınız müddetçe, kapalı mekanlarda veya özel mülk bahçelerinde kimseyle bir araya gelmeyiniz. Parklar veya halka açık bahçeler gibi kamusal alanlarda en fazla altı kişi ile biraraya gelebilirsiniz.",
+            "ur": "کسی سے بھی اندرون میں یا بیرون کی بیشتر جگہوں جیسے نجی باغیچوں میں مت ملیں، جب تک  کہ آپ ان کے ساتھ رہتے ہوں یا آپ نے مدد کا دائرہ بنا لیا ہو۔ کچھ بیرون کی عوامی جگہوں جیسے پارکوں یا عوامی باغیچوں میں زیادہ سے زیادہ چھ۔",
+            "zh": "不要在室内或多数室外场所（如私人花园）与任何人会面，除非你和他们住在一起或形成了一个互助泡沫。在一些户外公共场所活动，如公园或公共花园，最多限 6 人会面。"
+          }
+        },
+        {
+          "policyIcon": "overnight-stays",
+          "policyHeading": {
+            "ar": "الإقامات الليلية",
+            "bn": "রাত কাটানো",
+            "cy": "Aros dros nos",
+            "en": "Overnight stays",
+            "gu": "રાત્રિરોકાણ",
+            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
+            "pl": "Nocowanie poza domem",
+            "ro": "Șederile peste noapte",
+            "so": "Dhixitaanka habeenimada",
+            "tr": "Yatıya kalma",
+            "ur": "رات بھر قیام",
+            "zh": "过夜"
+          },
+          "policyContent": {
+            "ar": "تجنَّب الإقامة الليلية في جزءٍ آخر من المملكة المتحدة، إلا إذا كنت بصحبة أفراد عائلتك أو مجموعة الدعم. تُغلق أماكن الإقامة أبوابها أمام الزائرين (مع وجود عددٍ محدودٍ من الاستثناءات).",
+            "bn": "পরিবার বা সহায়তা দল ছাড়া যুক্তরাজ্যের অন্য কোনো প্রান্তে রাত কাটানো এড়িয়ে চলুন। আবাসন বন্ধ থাকবে (অল্প কিছু ব্যতিক্রম ছাড়া)।",
+            "cy": "Osgowch aros dros nos yn unrhyw le arall yn y DU, ac eithrio ar eich aelwyd neu gyda'ch swigen gymorth. Lletyau ar gau (gydag ambell eithriad).",
+            "en": "Avoid staying overnight in another part of the UK, other than with your household or support bubble. Accommodations are closed, with limited exceptions.",
+            "gu": "ઘરના સભ્ય કે સપોર્ટ બબલ સિવાયની વ્યક્તિ સાથે યુકેના અન્ય કોઈ વિસ્તારમાં રાત્રિરોકાણ કરવાનું ટાળવું. (મર્યાદિત અપવાદો સાથે) નિવાસસ્થાનો બંધ કરવામાં આવે છે.",
+            "pa": "ਪਰਿਵਾਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਦੇ ਨਾਲ ਤੋਂ ਇਲਾਵਾ ਯੂਕੇ ਦੇ ਕਿਸੇ ਹੋਰ ਹਿੱਸੇ ਵਿੱਚ ਰਾਤ ਭਰ ਰਹਿਣ ਤੋਂ ਪਰਹੇਜ਼ ਕਰੋ। ਰਿਹਾਇਸ਼ਾਂ ਬੰਦ ਹਨ (ਸੀਮਿਤ ਅਪਵਾਦਾਂ ਦੇ ਨਾਲ)।",
+            "pl": "Należy unikać nocowania poza domem w innej części Zjednoczonego Królestwa, za wyjątkiem pobytu ze swoimi domownikami lub osobami z bańki wsparcia. Hotele i pensjonaty są zamknięte (z nielicznymi wyjątkami).",
+            "ro": "Evitați șederile peste noapte într-o altă zonă din Marea Britanie, la persoane cu care nu locuiți sau cu care nu formați un grup de sprijin. Unitățile de cazare sunt închise (cu excepții limitate).",
+            "so": "Ka fogow inaad u dhaxdo meel kale oo ka mid ah Ingiriiska, marka laga reebo qoyska ama koox taageero. Guryaha waa la xirayaa (marka laga reebo xaddidnaan).",
+            "tr": "Hane halkınız ya da destek balonundaki insanlarla kalmanın haricinde, Birleşik Krallık'ın herhangi bir yerinde yatıya kalmaktan kaçınınız. Konaklama yerleri kapalıdır (sınırlı istisnalar hariç).",
+            "ur": "گھرانے کے ساتھ یا مدد کے دائرے کو چھوڑ کر، یوکے کے کسی اور حصے میں رات بھر رہنے سے بچیں۔ رہائش گاہیں بند ہیں (محدود استثناء کے ساتھ)۔",
+            "zh": "避免在英国的其他地区过夜，除非在家人或互助泡沫内。住宿关闭（有少数例外）。"
+          }
+        },
+        {
+          "policyIcon": "travelling",
+          "policyHeading": {
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
+          },
+          "policyContent": {
+            "ar": "تجنَّب الانتقال إلى خارج منطقتك، إلا في حالة الضرورة، لأغراض العمل أو التعليم على سبيل المثال. واحرص على وضع خططٍ مسبقةٍ وتجنَّب الأوقات وخطوط السير المزدحمة عند ركوب وسائل النقل العام.",
+            "bn": "কাজ বা শিক্ষার মতো দরকারি কর্তব্য পালনের জন্য না হলে এলাকার বাইরে যাওয়া পরিহার করুন। আগে থেকে পরিকল্পনা করুন এবং জনপরিবহনে ব্যস্ত সময় ও সড়ক এড়িয়ে চলুন।",
+            "cy": "Osgowch deithio y tu allan i'r ardal, ac eithrio pan fydd angen, er enghraifft ar gyfer gwaith neu addysg. Cynlluniwch ymlaen llaw ac osgoi amseroedd a llwybrau prysur ar gludiant cyhoeddus.",
+            "en": "Avoid travelling out of the area, other than where necessary, such as for work or education. Plan ahead and avoid busy times and routes on public transport.",
+            "gu": "જ્યાં જરૂરી ન હોય તે સિવાયના વિસ્તારની બહાર પ્રવાસ કરવાનું ટાળો, જેમ કે કામ અથવા શિક્ષણ માટે. અગાઉથી આયોજન કરો અને જાહેર પરિવહનમાં વ્યસ્ત સમય અને માર્ગો ટાળો.",
+            "pa": "ਖੇਤਰ ਤੋਂ ਬਾਹਰ ਦੀ ਯਾਤਰਾ ਤੋਂ ਪਰਹੇਜ਼ ਕਰੋ, ਸਿਵਾਏ ਉਸਦੇ ਜਿੱਥੇ ਇਹ ਜ਼ਰੂਰੀ ਹੋਵੇ, ਜਿਵੇਂ ਕਿ ਕੰਮ ਜਾਂ ਸਿੱਖਿਆ ਲਈ। ਪਹਿਲਾਂ ਤੋਂ ਯੋਜਨਾ ਬਣਾਓ ਅਤੇ ਜਨਤਕ ਟ੍ਰਾਂਸਪੋਰਟ 'ਤੇ ਵਿਅਸਤ ਸਮਿਆਂ ਅਤੇ ਰੂਟਾਂ ਤੋਂ ਬਚੋ।",
+            "pl": "Należy unikać wyjazdów poza swój rejon, za wyjątkiem niezbędnych podróży, np. do pracy lub szkoły. Należy planować dojazd z wyprzedzeniem oraz unikać godzin szczytu i zatłoczonych tras w komunikacji miejskiej.",
+            "ro": "Evitați călătoriile în afara zonei dvs., cu excepția celor necesare, cum ar fi pentru muncă sau educație. Planificați deplasările de dinainte și evitați orele și rutele aglomerate în transportul public.",
+            "so": "Ka fogow ka safridda deegaanka, marka laga reebo meelaha lagama maarmaanka u ah, sida shaqo ama waxbarasho. Horay u sii qorshee oo ka fogow wakhtiyada mashquulka iyo waddooyinka gaadiidka dadweynaha.",
+            "tr": "İş veya eğitim gibi gereklilikler dışında, bulunduğunuz bölgenin dışına seyahat etmekten kaçınınız. Önceden plan yapınız ve  toplu taşıma araçlarının yoğun saat ve güzergahlarında  seyahat etmekten kaçınınız.",
+            "ur": "علاقے سے باہر سفر کرنے سے بچیں، سوائے اس کے جہاں لازمی ہو، جیسے کام یا تعلیم کے لیے۔ پہلے سے منصوبہ بنائیں اور عوامی سواری پر مصروف اوقات اور راستوں سے بچیں۔",
+            "zh": "除非工作或教育需要，否则避免离开该地区。提前计划并避免在繁忙时间段和拥堵的线路段乘坐公共交通工具。"
           }
         },
         {
@@ -1174,38 +1174,7 @@
           }
         },
         {
-          "policyIcon": "exercise",
-          "policyHeading": {
-            "ar": "التمارين الرياضية",
-            "bn": "ব্যায়াম",
-            "cy": "Ymarfer corff",
-            "en": "Exercise",
-            "gu": "કસરત",
-            "pa": "ਕਸਰਤ",
-            "pl": "Ćwiczenia fizyczne",
-            "ro": "Sportul",
-            "so": "Jimicsi",
-            "tr": "Egzersiz",
-            "ur": "ورزش",
-            "zh": "运动"
-          },
-          "policyContent": {
-            "ar": "يستمر العمل في المرافق الترفيهية المغلقة. ويمكن إقامة الفصول التدريبية والألعاب الرياضية المُنظَّمة للبالغين في الأماكن المفتوحة، ولكن يُراعى تجنُّب إجراء الأنشطة المنطوية على مخالطة عالية المُخاطرة. يُحظر إقامة أنشطة التمارين الرياضية الجماعية والألعاب الرياضية في الأماكن المغلقة إلا إذا كانت في منزلك أو مع مجموعة الدعم الخاصة بك. يمكن أيضًا مواصلة الأنشطة المُنظَّمة للنخبة من الرياضيين دون سنِّ 18 عامًا ولذوي الاحتياجات الخاصة.",
-            "bn": "ইনডোর বা ঘরের ভিতরে অবকাশ কর্মকাণ্ডের সুবিধাসম্বলিত কেন্দ্রগুলো চালু থাকবে। ঘরের বাইরে পাঠদান ও প্রাপ্তবয়স্কদের দলগত খেলাধুলা অনুষ্ঠিত হতে পারবে, তবে সংস্পর্শমূলক উচ্চ-ঝুঁকিপূর্ণ কর্মকাণ্ড পরিহার করা উচিত। ঘরের ভিতরে দলগত শরীরচর্চা ও খেলাধুলা করা অনুচিত, যদি না তাতে কেবল আপনার বাড়ির বা সহায়তা দলের সদস্যরাই অংশ নেন। অনবদ্য ক্রীড়াবিদ, 18 বয়সের কম বয়সী ও প্রতিবন্ধীদের দলগত কর্মকাণ্ড চলতে পারবে।",
-            "cy": "Bydd cyfleusterau hamdden dan do yn parhau i fod ar agor. Gellir cynnal dosbarthiadau a chwaraeon wedi'u trefnu ar gyfer oedolion yn yr awyr agored, ond dylai pobl osgoi gweithgaredd lle ceir risg uwch o gyffwrdd. Ni ddylai gweithgareddau ymarfer grŵp na chwaraeon gael eu cynnal o dan do, oni bai eu bod gydag aelodau'ch cartref neu o fewn eich swigen. Gellir parhau i gynnal gweithgareddau a drefnwyd ar gyfer athletwyr elît, pobl dan 18 a phobl anabl. ",
-            "en": "Indoor leisure facilities remain open. Classes and organised adult sport can take place outdoors but people should avoid higher-risk contact activity. Group exercise activities and sports should not take place indoors, unless with your household or bubble. Organised activities for elite athletes, under-18s and disabled people can continue.",
-            "gu": "અંદર કસરત કરવા માટેના લેઝર સેંટર ખૂલ્લા રહેશે. ખેલાડીઓ માટેનાં ક્લાસ ગોઠવ્યા હોય એ બહાર કરી શકે પણ હાય-રિસ્ક કે વધારે જોખમ વાળા  અને જેમાં એક બીજાને અડવાનું હોય એ ટાળવાનું. ગ્રૂપ એક્સસાઇઝ અને સ્પોર્ટસ અંદર ન કરી શકાય, સિવાય કે તમે તમારા બબલમાં કે કુટુંબમાં હોવ. જેઓ ઇલિટ એથલિટ્સ હોય, 18 વર્ષથી ઓછી ઉમંરનાં હોય અને ડિસએબલ્ડ લોકો હોય તેઓ ચાલું રાખી શકે.",
-            "pa": "ਇੰਨਡੋਰ ਮਨੋਰੰਜਨ ਕੇਂਦਰ ਖੁੱਲ੍ਹੇ ਰਹਿੰਦੇ ਹਨ। ਕਲਾਸਾਂ ਅਤੇ ਸੰਗਠਿਤ ਬਾਲਗ਼ ਖੇਡਾਂ ਬਾਹਰ ਹੋ ਸਕਦੀਆਂ ਹਨ ਪਰ ਲੋਕਾਂ ਨੂੰ ਉੱਚ ਜੋਖਮ ਵਾਲੀਆਂ ਸੰਪਰਕ ਗਤੀਵਿਧੀਆਂ ਤੋਂ ਪਰਹੇਜ਼ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ। ਸਮੂਹਕ ਕਸਰਤ ਦੀਆਂ ਗਤੀਵਿਧੀਆਂ ਅਤੇ ਖੇਡਾਂ ਘਰ ਦੇ ਅੰਦਰ ਨਹੀਂ ਹੋਣੀਆਂ ਚਾਹੀਦੀਆਂ, ਜਦੋਂ ਤੱਕ ਇਹ ਤੁਹਾਡੇ ਪਰਿਵਾਰ ਜਾਂ ਸੁਪੋਰਟ ਬਬਲ ਵਿੱਚ ਨਹੀਂ ਹੁੰਦੀਆਂ। ਕੁਲੀਨ ਐਥਲੀਟਾਂ, ਅੰਡਰ -18 ਅਤੇ ਅਪਾਹਜ ਲੋਕਾਂ ਲਈ ਸੰਗਠਿਤ ਗਤੀਵਿਧੀਆਂ ਜਾਰੀ ਰਹਿ ਸਕਦੀਆਂ ਹਨ।",
-            "pl": "Obiekty rekreacyjne pozostają otwarte. Zajęcia i zorganizowany sport dla dorosłych mogą odbywać się na świeżym powietrzu, ale należy unikać związanych z wyższym ryzykiem sportów kontaktowych. Ćwiczenia i zajęcia sportowe nie mogą odbywać się w pomieszczeniach, chyba że z domownikami lub osobami z bańki wsparcia. Zorganizowane zajęcia dla zawodowych sportowców, osób poniżej 18 roku życia i niepełnosprawnych mogą nadal się odbywać.",
-            "ro": "Centrele de agrement interior rămân deschise. Clasele și formele de sport organizat pentru adulți pot avea loc în aer liber, însă participanții trebuie să evite activitățile de contact cu risc mai ridicat. Exercițiile fizice și sporturile în grup nu trebuie să aibă loc în interior, decât alături de persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin. Activitățile organizate pentru atleții de performanță, pentru persoane sub 18 ani și pentru persoane cu dizabilități pot continua.",
-            "so": "Madaddaalinta gudaha wey furnaan doonaan. Fasallada iyo abaabulka isboortiga dadka qaangaarka ah ayaa lagu qaban karaa dibidda, laakiin dadka waa in ay ka fogadaan dhaqdhaqaaqyada halista sare. Hawlaha jimicsiga kooxeed iyo isboortiga waa inaysan ka dhicin gudaha, marka laga reebo qoyskaaga ama dadka kugu dhow. Hawlaha abaabulan oo loogu talagalay ciyaartoy caan ah, kuwa ka yar 18-sano iyo dadka naafada ah way sii socon karaan.",
-            "tr": "Kapalı eğlence mekanları açık kalacaktır. Egzersiz sınıfları ve organize yetişkin sporları açık havada yapılabilir, ancak yüksek riskli temas gerektiren aktivitelerden kaçınılmalıdır. Aynı hane bireyleri ile ya da destek balonuna dahil kişilerle birlikte olmadığı müddetçe kapalı yerlerde grup egzersiz aktiviteleri ve sporları yapılmamalıdır. Elit sporcular, 18 yaş altı ve engelliler için organize etkinlikler devam edebilir.",
-            "ur": "\"اندرونی تفریحی سہولیات کھلی رہیں۔  کلاسیں  اور منظم کھیل   باہر  ہو سکتے ہیں ، لیکن لوگوں کو زیادہ سے زیادہ خطرہ والے  رابطے سے بچنا چاہئے۔ گروپ ورزش کی سرگرمیاں اور کھیلوں کو گھر کے اندر نہیں ہونا چاہئے ، جب تک کہ    یہ آپ کا گھرانہ یا دائرۂ احباب  نہ ہو۔  اہم  کھلاڑیوں ، انڈر 18 اور معذور افراد کے لئے منظم سرگرمیاں جاری رہ سکتی ہیں۔",
-            "zh": "室内休闲设施继续开放。班级活动或有组织的成人体育运动可以在室外进行，但应避免高风险的接触活动。不得在室内进行集体锻炼和体育运动，但与家庭成员或“互助泡沫”成员一起举行活动的情况除外。优秀运动员、18 岁以下的未成年人和残障人士可以继续参加有组织的活动。"
-          }
-        },
-        {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -1233,6 +1202,37 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر آپ سے ہو سکے تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "دور العبادة",
+            "bn": "আরাধনা স্থল",
+            "cy": "Addoldai",
+            "en": "Places of worship",
+            "gu": "ધાર્મિક જગ્યાઓ",
+            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
+            "pl": "Miejsca kultu religijnego",
+            "ro": "Locașurile de cult",
+            "so": "Goobaha cibaadada",
+            "tr": "İbadet mekanları",
+            "ur": "عبادت خانے",
+            "zh": "宗教场所"
+          },
+          "policyContent": {
+            "ar": "تظل هذه الأماكن مفتوحة، ولكن يجب عليك عدم التفاعل مع أشخاصٍ من خارج محيط أفراد عائلتك أو مجموعة الدعم في أثناء وجودك هناك.",
+            "bn": "এগুলো খোলা থাকবে, তবে সেখানে অবস্থানকালে আপনার বাসা ও সহায়তা দলের বাইরের কারো সাথে মেলামেশা করবেন না।",
+            "cy": "Mae'r rhain yn aros ar agor, ond peidiwch â rhyngweithio gyda phobl nad ydynt ar yr un aelwyd neu yn yr un swigen â chi pan fyddwch yno.",
+            "en": "These remain open, but do not interact with people from outside of your household or bubble when there.",
+            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન તમારા ઘર અથવા બબલની બહારના લોકોને મળશો નહિ.",
+            "pa": "ਇਹ ਖੁੱਲੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਆਪਣੇ ਘਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਤੋਂ ਬਾਹਰ ਦੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
+            "pl": "Pozostają otwarte, ale podczas pobytu w nich nie wolno kontaktować się z osobami spoza swojego gospodarstwa domowego lub bańki wsparcia.  ",
+            "ro": "Acestea rămân deschise, însă nu interacționați cu persoane din afara locuinței sau grupului dvs. de sprijin, atunci când sunteți acolo.  ",
+            "so": "Kuwani way furnaan doonaan, laakiin ha dhexgalin in ka badan lix qof markaa aad halkaas joogtid.",
+            "tr": "Bu mekanlar açık kalacaktır, ancak oradayken hane halkınız ya da destek balonunuz dışındaki kişilerle etkileşime girmeyiniz.",
+            "ur": "یہ کھلے رہیں گے، لیکن وہاں ہونے پر اپنے گھرانے یا دائرے سے باہر کے لوگوں کے ساتھ بات چیت مت کریں۔",
+            "zh": "这些地方保持开放，但不要在那里与家人或泡沫以外的人互动。  "
           }
         }
       ]
@@ -1370,37 +1370,6 @@
       },
       "policies": [
         {
-          "policyIcon": "meeting-people",
-          "policyHeading": {
-            "ar": "مقابلة الأصدقاء والعائلة",
-            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
-            "cy": "Cyfarfod â theuluoedd a ffrindiau",
-            "en": "Meeting friends and family",
-            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
-            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
-            "pl": "Spotkania ze znajomymi i rodziną",
-            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
-            "so": "La kulanka asxaabta iyo qoyska",
-            "tr": "Arkadaşlar ve aile ile buluşma",
-            "ur": "دوستوں اور فیملی سے ملنا",
-            "zh": "与朋友和家人会面"
-          },
-          "policyContent": {
-            "ar": "يُمنع تمامًا مقابلة الأشخاص في الأماكن المُغلقة أو الأماكن المفتوحة الخاصة إلا إذا كنت تعيش معهم أو كوّنتم معًا مجموعة دعم. يمكن مقابلة الأشخاص بصورة فردية في الأماكن العامة المفتوحة مثل المتنزهات أو الحدائق العامة.",
-            "bn": "ইনডোরে (গৃহাভ্যন্তরে) বা বাইরের ব্যক্তিগত স্থানগুলোতে কারো সঙ্গে দেখা করবেন না, যদি না আপনি তাদের সঙ্গে বাস করেন বা কোনো সাপোর্ট বাবল গঠন করে থাকেন। আপনি পার্ক বা সবার জন্য উন্মুক্ত উদ্যানের মতো বাইরের সর্বজনীন স্থানগুলোতে অন্য একজন মানুষের সঙ্গে ব্যক্তিগতভাবে দেখা করতে পারেন।",
-            "cy": "Peidiwch â chwrdd ag unrhyw un arall dan do neu mewn mannau preifat yn yr awyr agored oni bai eich bod yn byw neu wedi creu swigen gefnogaeth gyda nhw. Fel unigolyn gallwch gwrdd ag un person arall mewn mannau cyhoeddus yn yr awyr agored, fel parciau neu erddi cyhoeddus.",
-            "en": "Do not meet anyone indoors or in private outdoor spaces unless you live with them or have formed a support bubble. You can meet individually with one other person in outdoor public spaces like parks or public gardens.",
-            "gu": "તમે કોઈ વ્યક્તિની સાથે રહેતા ન હો કે તેમની સાથે સપોર્ટ બબલ બનાવ્યો ન હોય તે સિવાય ઘરની અંદર કે બહારની પ્રાયવેટ જગ્યાઓમાં કોઈને મળશો નહિ. તમે પાર્ક અથવા પબ્લિક બાગો જેવી બહારની સાર્વજનિક જગ્યાઓમાં એક વ્યક્તિને મળી શકો છો.",
-            "pa": "ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਜਾਂ ਨਿੱਜੀ ਬਾਹਰੀ ਸਥਾਨਾਂ 'ਤੇ ਕਿਸੇ ਨੂੰ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ। ਤੁਸੀਂ ਬਾਹਰੀ ਜਨਤਕ ਸਥਾਨਾਂ ਜਿਵੇਂ ਕਿ ਪਾਰਕਾਂ ਜਾਂ ਜਨਤਕ ਬਗੀਚਿਆਂ ਵਿੱਚ ਇੱਕ ਹੋਰ ਵਿਅਕਤੀ ਨੂੰ ਵਿਅਕਤੀਗਤ ਤੌਰ 'ਤੇ ਮਿਲ ਸਕਦੇ ਹੋ।",
-            "pl": "Nie należy spotykać się z innymi osobami w pomieszczeniach ani prywatnych ogródkach, chyba że mieszka się z nimi lub stworzyło się bańkę wsparcia. Można spotkać się osobiście z jedną inną osobą w miejscach publicznych na świeżym powietrzu, np. w parkach lub ogrodach publicznych.",
-            "ro": "Nu vă întâlniți cu nimeni în interior sau în spații private în aer liber, cu excepția cazului în care locuiți cu aceștia sau ați format un grup de sprijin cu ei. Vă puteți întâlni individual cu o altă persoană în spații publice în aer liber, cum ar fi parcurile sau grădinile publice.",
-            "so": "Ha kula kulmin qofna gudaha ama goobaha dibidda ee gaarka loo leeyahay marka laga reebo kuwa aad la noolaatid mooyee ama kuwa aad isku soo dhowateen. Waxaad shakhsi ahaan kula kulmi kartaa qof kale meelaha banaan ee dadweynaha sida jardiinooyinka ama beeraha dadweynaha.",
-            "tr": "Birlikte yaşadığınız ya da destek balonu oluşturduğunuz insanlar haricinde kimseyle kapalı mekanlarda ya da şahsa özel dış mekanlarda buluşmayınız. Parklar veya halka açık bahçeler gibi açık havadaki bazı kamusal alanlarda sadece bir kişiyle, tek başınıza görüşebilirsiniz.",
-            "ur": "اندرون میں یا بیرون کی نجی جگہوں میں کسی بھی فرد سے مت ملیں یہاں تک  کہ آپ ان کے ساتھ رہتے ہوں یا آپ نے ایک امدادی دائرہ بنا لیا ہو۔ آپ بیرون کی عوامی جگہوں جیسے پارکوں یا عوامی باغیچوں میں ایک دیگر فرد سے انفرادی طور پر مل سکتے ہیں۔",
-            "zh": "请勿在室内或私人户外场所与任何人会面，除非您和他们住在一起或组成了互助泡泡小组。您可以在公园或公共花园等户外公共场所与其他人单独会面。"
-          }
-        },
-        {
           "policyIcon": "bars-and-pubs",
           "policyHeading": {
             "ar": "البارات والحانات والمطاعم",
@@ -1429,68 +1398,6 @@
             "tr": "Paket servisi, arabaya servis ve eve teslimat yapanlar dışında mekanlar kapalıdır.",
             "ur": "مقامات بند ہیں، جن میں سے ٹیک اویز، ڈرائیو تھرو اور ڈیلیوری کو استثناء حاصل ہے۔",
             "zh": "除外卖点、免下车餐馆和递送点外，其他餐厅场所均已关闭。"
-          }
-        },
-        {
-          "policyIcon": "travelling",
-          "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
-          },
-          "policyContent": {
-            "ar": "يجب البقاء في المنزل وعدم السفر إلا لأغراض العمل أو التعليم أو غير ذلك من الأسباب المُصرِّح بها قانونًا. إذا كان التنقّل أمرًا لا بدّ منه، فيجب البقاء في المنطقة المحلية وتقليل عدد الرحلات التي تجريها قدر الإمكان. يُمنع تمامًا مغادرة المناطق المُصنَّفة في المستوى 4. إذا كنت تقيم في إحدى المناطق المُصنَّفة ضمن المستويات 1 – 3، فيجب عليك عدم دخول المناطق المُصنَّفة في المستوى 4. أمَّا إذا كنت تقيم في إحدى المناطق المُصنَّفة في المستوى 4، فيُحظر السفر للخارج (ما لم يكن هناك استثناء ما).",
-            "bn": "আপনাকে অবশ্যই বাসায় থাকতে হবে এবং শুধুমাত্র কাজ, শিক্ষা বা অন্যান্য আইনত অনুমোদিত কারণেই ভ্রমণ করতে পারবেন। আপনাকে যদি ভ্রমণ করতেই হয়, তাহলে আপনার স্থানীয় অঞ্চলে থাকা উচিত এবং আপনার যাত্রাসংখ্যা কমানো উচিত। টিয়ার-৪ অঞ্চল ছেড়ে বেরোবেন না। আপনি যদি টিয়ার ১-৩ অঞ্চলে বাস করেন, তাহলে আপনার টিয়ার ৪ অঞ্চলে প্রবেশ করা উচিত নয়। আপনি যদি টিয়ার ৪ অঞ্চলে বাস করেন, তাহলে বিদেশে ভ্রমণ করবেন না (যদি না এক্ষেত্রে কোনো ব্যতিক্রম প্রযোজ্য হয়)।",
-            "cy": "Rhaid i chi aros gartref a theithio dim ond ar gyfer gwaith, addysg neu resymau eraill a ganiateir o dan y gyfraith. Os oes yn rhaid i chi deithio, dylech aros yn lleol a lleihau nifer eich teithiau Peidiwch â gadael ardal Haen 4. Os ydych yn byw mewn ardal Haen 1 - 3, ni ddylech fynd i mewn i ardal Haen 4. Os ydych yn byw mewn ardal Haen 4, peidiwch â theithio dramor (oni bai fod eithriad yn berthnasol).",
-            "en": "You must stay at home and only travel for work, education or other legally permitted reasons. If you must travel, you should stay local and reduce the number of journeys you make. Do not leave a Tier 4 area. If you live in Tiers 1 – 3 you should not enter Tier 4 areas. If you live in Tier 4, do not travel abroad (unless an exemption applies).",
-            "gu": "તમારે ઘરે રહેવું જોઈએ અને માત્ર નોકરી, શિક્ષણ કે અન્ય કાનૂની રીતે માન્ય કારણોથી જ પ્રવાસ કરવો જોઈએ. જો તમારે પ્રવાસ કરવો જ પડે એમ હોય તો તમારે સ્થાનિક વિસ્તારમાં જ રહેવું જોઈએ અને તમે કરો એવા પ્રવાસોની સંખ્યા ઓછી કરવી જોઈએ. ટિયર 4 વિસ્તાર છોડશો નહિ. જો તમે ટિયર્સ 1થી 3માં રહેતા હો તો તમારે ટિયર 4 વિસ્તારોમાં પ્રવેશ કરવો જોઈએ નહિ. જો તમે ટિયર 4માં રહેતા હો તો વિદેશપ્રવાસ કરશો નહિ (સિવાય કે કોઈ રાહત લાગુ પડતી હોય)",
-            "pa": "ਤੁਹਾਨੂੰ ਘਰ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਸਿਰਫ ਕੰਮ, ਸਿੱਖਿਆ ਜਾਂ ਕਾਨੂੰਨੀ ਤੌਰ 'ਤੇ ਇਜਾਜ਼ਤ ਦਿੱਤੇ ਹੋਰ ਕਾਰਨਾਂ ਕਰਕੇ ਯਾਤਰਾ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ ਯਾਤਰਾ ਕਰਨੀ ਹੀ ਪਵੇ, ਤਾਂ ਤੁਹਾਨੂੰ ਸਥਾਨਕ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਆਪਣੀਆਂ ਯਾਤਰਾਵਾਂ ਦੀ ਗਿਣਤੀ ਨੂੰ ਘਟਾਉਣਾ ਚਾਹੀਦਾ ਹੈ। ਟੀਅਰ 4 ਖੇਤਰ ਤੋਂ ਬਾਹਰ ਨਾ ਜਾਓ। ਜੇ ਤੁਸੀਂ ਟੀਅਰ 1 - 3 ਵਿੱਚ ਰਹਿੰਦੇ ਹੋ ਤਾਂ ਤੁਹਾਨੂੰ ਟੀਅਰ 4 ਖੇਤਰਾਂ ਵਿੱਚ ਦਾਖਲ ਨਹੀਂ ਹੋਣਾ ਚਾਹੀਦਾ। ਜੇ ਤੁਸੀਂ ਟੀਅਰ 4 ਵਿੱਚ ਰਹਿੰਦੇ ਹੋ, ਤਾਂ ਵਿਦੇਸ਼ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ (ਜਦੋਂ ਤਕ ਕੋਈ ਛੋਟ ਲਾਗੂ ਨਹੀਂ ਹੁੰਦੀ ਹੈ)",
-            "pl": "Należy zostać w domu i przemieszczać się jedynie do pracy, szkoły lub w innych prawnie dozwolonych celach. Jeżeli musisz się przemieszczać, należy poruszać się lokalnie i ograniczyć ilość wykonywanych podróży. Nie należy opuszczać obszaru 4 strefy. Jeżeli mieszkasz w strefach 1–3, nie wolno przemieszczać się do okolic 4 strefy. Jeżeli mieszkasz w 4 strefie, nie wolno podróżować za granicę (chyba, że ma zastosowanie wyjątkowa sytuacja).",
-            "ro": "Trebuie să stați acasă și să vă deplasați doar pentru muncă, educație sau din alte motive permise de lege. Dacă trebuie să vă deplasați, trebuie să faceți acest lucru la nivel local și să reduceți numărul de deplasări efectuate. Nu părăsiți o zonă de nivel 4. Dacă locuiți în zone de nivel 1 – 3, nu vă deplasați în zonele de nivel 4. Dacă locuiți în zone de nivel 4, nu călătoriți în străinătate (cu excepția cazului în care se aplică o scutire)",
-            "so": "Waa inaad guriga joogtaa waxaadna u safri kartaa oo keliya shaqo, waxbarasho ama sababo kale oo sharci ahaan la oggol yahay. Haddii ay khasab tahay inaad safarto, waa inaad deegaanka joogtaa oo aad yareeysaa tirada safarada aad aadeyso. Ha ka bixin aagga Heerka 4. Haddii aad ku nooshahay Heerka 1 – 3 waa inaadan galin aagagga Heerka 4. Haddii aad ku nooshahay Heerka 4, ha u safrin dibadda (marka laga reebo ka dhaafitaan)",
-            "tr": "Evde kalmalı ve sadece iş, eğitim ya da yasal olarak izin verilen diğer sebeplerle seyahat etmelisiniz. Seyahat etmek zorundaysanız, yerel bölgenizde kalmalı ve yaptığınız yolculukların sayısını azaltmalısınız. 4. kademede yer alan bir bölgeden ayrılmayınız. 1 ila 3. Kademelerde yer alan bir bölgede yaşıyorsanız, 4. Kademede yer alan bölgelere girmemelisiniz. 4. Kademede yaşıyorsanız, yurtdışına seyahat etmeyiniz (bir muafiyet geçerli olmadığı müddetçe)",
-            "ur": "آپ پر لازم ہے کہ گھر پر رہیں اور صرف کام، تعلیم یا قانونی طور پر اجازت یافتہ دیگر مقاصد سے ہی سفر کریں۔ اگر آپ کے لیے  سفر کرنا ضروری ہو تو، آپ کو چاہیے کہ مقامی طور پر قیام کریں اور آپ جتنے سفر کرتے ہیں ان کی تعداد کم کریں۔ درجہ 4 کے علاقے سے مت نکلیں۔ اگر آپ درجہ 3 – 1 میں رہتے ہیں تو آپ کو چاہیے کہ درجہ 4 کے علاقوں میں داخل مت ہوں۔ اگر آپ درجہ 4 میں رہتے ہیں تو، بیرون ملک کا سفر مت کریں (جب تک چھوٹ کا اطلاق نہیں ہوتا ہے)",
-            "zh": "您可以基于工作、学习或其他法律允许的原因外出，但其他时间必须呆在家中。如果您必须外出，则应尽量留在当地并减少出行次数。请勿离开四级防控区域。如果您居住在一至三级防控区域，则请勿进入四级区域。如果您居住在四级防控区域，则请勿出境（除非豁免条款适用）"
-          }
-        },
-        {
-          "policyIcon": "overnight-stays",
-          "policyHeading": {
-            "ar": "الإقامات الليلية",
-            "bn": "রাত কাটানো",
-            "cy": "Aros dros nos",
-            "en": "Overnight stays",
-            "gu": "રાત્રિરોકાણ",
-            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
-            "pl": "Nocowanie poza domem",
-            "ro": "Șederile peste noapte",
-            "so": "Dhixitaanka habeenimada",
-            "tr": "Yatıya kalma",
-            "ur": "رات بھر قیام",
-            "zh": "过夜"
-          },
-          "policyContent": {
-            "ar": "يُمنع تمامًا الإقامة الليلية بعيدًا عن المنزل (مع وجود استثناءاتٍ محدودة). تُغلق أماكن الإقامة أبوابها أمام الزائرين (مع وجود استثناءاتٍ محدودة).",
-            "bn": "আপনার বাসার বাইরে রাত কাটানো চলবে না (অল্প কিছু ব্যতিক্রম বাদে)। থাকার জায়গাগুলো বন্ধ থাকবে (অল্প কিছু ব্যতিক্রম বাদে)।",
-            "cy": "Rhaid i chi beidio ag aros oddi cartref dros nos (ac eithrio mewn amgylchiadau cyfyngedig). Mae lletyau ar gau (ac eithrio mewn amgylchiadau cyfyngedig).",
-            "en": "You must not stay overnight away from home (with limited exemptions). Accommodations are closed (with limited exceptions).",
-            "gu": "તમે ઘરેથી દૂર રાત રોકાવું નહિ. (મર્યાદિત રાહતો સાથે). (મર્યાદિત અપવાદો સાથે) એકોમિડેશન્સ બંધ કરવામાં આવે છે.",
-            "pa": "ਤੁਹਾਨੂੰ ਰਾਤ ਭਰ ਘਰ ਤੋਂ ਦੂਰ ਨਹੀਂ ਰਹਿਣਾ ਚਾਹੀਦਾ (ਸੀਮਿਤ ਛੋਟਾਂ ਸਮੇਤ)। ਰਿਹਾਇਸ਼ਾਂ ਬੰਦ ਹਨ (ਸੀਮਤ ਅਪਵਾਦਾਂ ਸਮੇਤ)।",
-            "pl": "Nie należy nocować poza domem (obowiązują nieliczne wyjątki). Hotele i pensjonaty są zamknięte (z nielicznymi wyjątkami).",
-            "ro": "Este interzis statul peste noapte în locuința altcuiva (cu scutiri limitate). Unitățile de cazare sunt închise (cu excepții limitate).",
-            "so": "Waa inaadan meel kale u dhaxin aan ka ahayn xaafadaada (marka laga reebo dhaafitaanno xaddidan). Guryaha waa la xiray (marka laga reebo dhaafitaanno xaddidan).",
-            "tr": "Evinizden uzakta yatıya kalmamalısınız (bu konuda sınırlı muafiyetler söz konusudur). Konaklama yerleri kapalıdır (sınırlı istisnalar dışında).",
-            "ur": "آپ کو رات بھر گھر سے باہم قیام ہرگز نہیں کرنا چاہیے (محدود استثناء کے ساتھ)۔ رہائش گاہیں بند ہیں (محدود استثناء کے ساتھ)۔",
-            "zh": "不得在外留宿（有限豁免）。住宿关闭（有少数例外）。"
           }
         },
         {
@@ -1525,34 +1432,127 @@
           }
         },
         {
-          "policyIcon": "worship",
+          "policyIcon": "exercise",
           "policyHeading": {
-            "ar": "دور العبادة",
-            "bn": "আরাধনা স্থল",
-            "cy": "Addoldai",
-            "en": "Places of worship",
-            "gu": "ધાર્મિક જગ્યાઓ",
-            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
-            "pl": "Miejsca kultu religijnego",
-            "ro": "Locașurile de cult",
-            "so": "Goobaha cibaadada",
-            "tr": "İbadet mekanları",
-            "ur": "عبادت خانے",
-            "zh": "宗教场所"
+            "ar": "التمارين الرياضية",
+            "bn": "ব্যায়াম",
+            "cy": "Ymarfer corff",
+            "en": "Exercise",
+            "gu": "કસરત",
+            "pa": "ਕਸਰਤ",
+            "pl": "Ćwiczenia fizyczne",
+            "ro": "Sportul",
+            "so": "Jimicsi",
+            "tr": "Egzersiz",
+            "ur": "ورزش",
+            "zh": "运动"
           },
           "policyContent": {
-            "ar": "تظل مفتوحة، ولكن يُمنع تمامًا مخالطة أشخاصٍ من خارج أسرتك أو مجموعة الدعم الخاصة بك في أثناء وجودك هناك.",
-            "bn": "এগুলো খোলা থাকবে, তবে সেখানে থাকাকালে আপনার বাড়ি বা সাপোর্ট বাবলের বাইরের লোকেদের সঙ্গে মেলামেশা করবেন না।",
-            "cy": "Mae’r rhain yn parhau i fod ar agor, ond peidiwch â rhyngweithio â phobl nad ydynt yn rhan o’ch aelwyd neu’ch swigen gefnogaeth tra byddwch yno.",
-            "en": "These remain open, but do not interact with people from outside of your household or support bubble when there.",
-            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન તમારા ઘર અથવા સપોર્ટ બબલની બહારના લોકોને મળશો નહિ.",
-            "pa": "ਇਹ ਖੁੱਲ੍ਹੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਆਪਣੇ ਘਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਤੋਂ ਬਾਹਰ ਦੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
-            "pl": "Będą one otwarte, ale przebywając w nich nie wolno mieć kontaktu z osobami spoza swojego gospodarstwa domowego lub bańki wsparcia.",
-            "ro": "Acestea rămân deschise, dar se interzice interacțiunea cu persoane cu care nu locuiți sau care nu fac parte din grupul dvs. de sprijin, cât timp vă aflați acolo.",
-            "so": "Kuwani wali way furnaan doonaan, laakiin ha dhexgelin dadka ka baxsan reerkaaga ama dadka kugu dhow markaad halka joogtaa.",
-            "tr": "Bu açıktır, ancak oradayken ev halkınızın ya da destek balonunuzun dışından insanlarla iletişime girmeyiniz.",
-            "ur": "یہ کھلی رہیں گی، لیکن وہاں جانے پر اپنے گھرانے یا امدادی دائرے کے باہر کے لوگوں سے میل جول مت بنائیں۔",
-            "zh": "这些地方 仍然开放，但请勿在这里与家人或互助泡泡小组以外的人员互动。"
+            "ar": "تخضع المرافق الترفيهية المُغلقة لوقف نشاطها. يمكنك مغادرة المنزل لممارسة الرياضة بصورة فردية أو بصحبة أسرتك أو مجموعة الدعم الخاصة بك أو فردٍ واحدٍ من أسرة أخرى. ويُسمح بممارسة الرياضة في الأماكن المفتوحة مع مراعاة الحدّ الأقصى لعدد الأفراد في هذه التجمّعات. لا تسري هذه القيود على الرياضيين دون سنِّ 18 عامًا والرياضيين من ذوي الاحتياجات الخاصة.",
+            "bn": "ইনডোরভিত্তিক অবকাশ বন্ধ থাকবে। আপনি একা, আপনার বাড়ি বা সাপোর্ট বাবলের সদস্যের সঙ্গে, অথবা অন্য কোনো বাড়ির একজন লোকের সঙ্গে শরীরচর্চা করার জন্য আপনার বাসা ছেড়ে বেরোতে পারেন। আউটডোর খেলাধূলা অনুমোদিত, এবং জমায়েতের ওপর সীমারেখা প্রযোজ্য। এসব সীমা ১৮ বছরের কম বয়সী ও প্রতিবন্ধীদের জন্য খেলাধুলার ওপর প্রযোজ্য নয়।",
+            "cy": "Mae mannau hamdden dan do ar gau. Gallwch adael eich cartref i ymarfer ar eich pen eich hun, gyda rhywun o’ch aelwyd neu’ch swigen gefnogaeth, neu gydag un unigolyn o aelwyd arall. Caniateir chwaraeon yn yr awyr agored, ac mae’r cyfyngiad ar gynulliadau yn berthnasol. Nid yw’r cyfyngiadau hyn yn berthnasol i rai dan 18 na chwaraeon i’r anabl.",
+            "en": "Indoor leisure is closed. You can leave your home to exercise by yourself, with your household or support bubbles, or with one person from another household. Outdoor sport is allowed, and gatherings limit applies. These limits do not apply for under-18s and disabled sport.",
+            "gu": "ફુરસદની ઇન્ડોર પ્રવૃત્તિઓ બંધ છે. તમે જાતે, તમારા ઘરના સભ્ય અથવા સપોર્ટ બબલ્સ સાથે અથવા અન્ય ઘરની એક વ્યક્તિ સાથે કસરત કરવા માટે ઘરની બહાર જઈ શકો છો. આઉટડોર રમત માન્ય છે અને સમૂહમિલનની મર્યાદા લાગુ પડે છે. 18 વર્ષથી ઓછી ઉંમરના લોકો અને વિકલાંગોની રમતો માટે આ મર્યાદાઓ લાગુ પડતી નથી.",
+            "pa": "ਅੰਦਰੂਨੀ ਮਨਪਰਚਾਵਾ ਬੰਦ ਹੈ। ਤੁਸੀਂ ਇਕੱਲੇ, ਆਪਣੇ ਪਰਿਵਾਰ ਜਾਂ ਆਪਣੇ ਸਹਾਇਤਾ ਦਾਇਰੇ ਦੇ ਨਾਲ, ਜਾਂ ਕਿਸੇ ਹੋਰ ਪਰਿਵਾਰ ਤੋਂ ਇੱਕ ਵਿਅਕਤੀ ਦੇ ਨਾਲ ਕਸਰਤ ਕਰਨ ਲਈ ਘਰ ਤੋਂ ਬਾਹਰ ਜਾ ਸਕਦੇ ਹੋ। ਬਾਹਰੀ ਖੇਡ ਦੀ ਆਗਿਆ ਹੈ, ਅਤੇ ਇਕੱਠੇ ਹੋਣ ਦੀ ਸੀਮਾ ਲਾਗੂ ਹੁੰਦੀ ਹੈ। ਇਹ ਸੀਮਾਵਾਂ ਅੰਡਰ-18 ਅਤੇ ਅਸਮਰੱਥ ਵਿਅਕਤੀਆਂ ਲਈ ਖੇਡਾਂ 'ਤੇ ਲਾਗੂ ਨਹੀਂ ਹੁੰਦੀਆਂ ਹਨ।",
+            "pl": "Pomieszczenia rekreacyjne są zamknięte. Można wychodzić z domu w celu aktywności fizycznej na świeżym powietrzu samemu, z domownikami, osobami z bańki wsparcia lub jedną inną osobą. Aktywność sportowa na świeżym powietrzu jest dozwolona, z zastosowaniem limitu osób. Te ograniczenia nie dotyczą aktywności sportowej dla osób poniżej 18 lat i osób niepełnosprawnych.",
+            "ro": "Spațiile de agrement interior sunt închise. Puteți părăsi domiciliul pentru a face exerciții fizice individuale sau cu persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin, sau cu o persoană cu care nu locuiți. Sunt permise activitățile sportive în aer liber, dar se aplică o limită a numărului de persoane. Aceste limite nu se aplică sporturilor pentru persoane sub 18 ani și sporturilor pentru persoane cu dizabilități.",
+            "so": "Madaddaalinta gudaha wey xiran tahay. Waxaad uga tagi kartaa gurigaaga inaad jimicsi ku sameysatid kaligaa, adigoo la joogaa reerkaaga ama dadka kugu dhow, ama hal qof oo reer kale ah. Isboortiga bannaanka waa la oggol yahay, xaddiddaadka kullamada waa in la dhowraa. Xaddidahaani ma khuseeyaan dadka 18-sano ka yar iyo isboortiga dadka naafada ah.",
+            "tr": "Kapalı alanlardaki eğlence mekanları kapalıdır. Tek başınıza, ev halkınız veya destek balonunuzda olan kişilerle ya da başka bir ev halkından bir kişiyle egzersiz yapmak amacıyla evinizden çıkabilirsiniz. Açık hava sporlarına izin verilir ve toplanma sınırı geçerlidir. Bu sınırlar 18 yaş altı ve engelli sporları için geçerli değildir.",
+            "ur": "اندرون میں تفریح بند ہے۔ آپ خود سے، اپنے گھرانے یا امدادی دائرے کے ساتھ، یا کسی دیگر گھرانے کے ایک فرد کے ساتھ ورزش کرنے کے لیے اپنے گھر سے باہر جا سکتے ہیں۔ بیرون میں کھیل کود کی اجازت ہے، اورمجمع کی حد لاگو ہوتی ہے۔ یہ حدود 18 سے کم عمر اور معذور افراد کے کھیل کود پر لاگو نہیں ہوتی ہیں۔",
+            "zh": "室内休闲场所均已关闭。您可以独自出门锻炼，也可以与共同居住的家人、互助泡泡小组成员或其他家庭的一名成员一起锻炼。允许进行户外运动，但有人员聚集限制。这些限制不适用于 18 岁以下的儿童和残障人士运动。"
+          }
+        },
+        {
+          "policyIcon": "meeting-people",
+          "policyHeading": {
+            "ar": "مقابلة الأصدقاء والعائلة",
+            "bn": "বন্ধুবান্ধব এবং পরিবারের সাথে দেখা করা",
+            "cy": "Cyfarfod â theuluoedd a ffrindiau",
+            "en": "Meeting friends and family",
+            "gu": "મિત્રો અને કુટુંબીજનોને મળવું",
+            "pa": "ਦੋਸਤਾਂ ਅਤੇ ਪਰਿਵਾਰ ਨੂੰ ਮਿਲਣਾ",
+            "pl": "Spotkania ze znajomymi i rodziną",
+            "ro": "Întâlnirile cu prietenii și cu membrii familiei",
+            "so": "La kulanka asxaabta iyo qoyska",
+            "tr": "Arkadaşlar ve aile ile buluşma",
+            "ur": "دوستوں اور فیملی سے ملنا",
+            "zh": "与朋友和家人会面"
+          },
+          "policyContent": {
+            "ar": "يُمنع تمامًا مقابلة الأشخاص في الأماكن المُغلقة أو الأماكن المفتوحة الخاصة إلا إذا كنت تعيش معهم أو كوّنتم معًا مجموعة دعم. يمكن مقابلة الأشخاص بصورة فردية في الأماكن العامة المفتوحة مثل المتنزهات أو الحدائق العامة.",
+            "bn": "ইনডোরে (গৃহাভ্যন্তরে) বা বাইরের ব্যক্তিগত স্থানগুলোতে কারো সঙ্গে দেখা করবেন না, যদি না আপনি তাদের সঙ্গে বাস করেন বা কোনো সাপোর্ট বাবল গঠন করে থাকেন। আপনি পার্ক বা সবার জন্য উন্মুক্ত উদ্যানের মতো বাইরের সর্বজনীন স্থানগুলোতে অন্য একজন মানুষের সঙ্গে ব্যক্তিগতভাবে দেখা করতে পারেন।",
+            "cy": "Peidiwch â chwrdd ag unrhyw un arall dan do neu mewn mannau preifat yn yr awyr agored oni bai eich bod yn byw neu wedi creu swigen gefnogaeth gyda nhw. Fel unigolyn gallwch gwrdd ag un person arall mewn mannau cyhoeddus yn yr awyr agored, fel parciau neu erddi cyhoeddus.",
+            "en": "Do not meet anyone indoors or in private outdoor spaces unless you live with them or have formed a support bubble. You can meet individually with one other person in outdoor public spaces like parks or public gardens.",
+            "gu": "તમે કોઈ વ્યક્તિની સાથે રહેતા ન હો કે તેમની સાથે સપોર્ટ બબલ બનાવ્યો ન હોય તે સિવાય ઘરની અંદર કે બહારની પ્રાયવેટ જગ્યાઓમાં કોઈને મળશો નહિ. તમે પાર્ક અથવા પબ્લિક બાગો જેવી બહારની સાર્વજનિક જગ્યાઓમાં એક વ્યક્તિને મળી શકો છો.",
+            "pa": "ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਜਾਂ ਨਿੱਜੀ ਬਾਹਰੀ ਸਥਾਨਾਂ 'ਤੇ ਕਿਸੇ ਨੂੰ ਨਾ ਮਿਲੋ, ਜਦੋਂ ਤੱਕ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹੋ ਜਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੇ ਨਾਲ ਇੱਕ ਸਹਾਇਤਾ ਦਾਇਰਾ ਨਹੀਂ ਬਣਾਇਆ ਹੈ। ਤੁਸੀਂ ਬਾਹਰੀ ਜਨਤਕ ਸਥਾਨਾਂ ਜਿਵੇਂ ਕਿ ਪਾਰਕਾਂ ਜਾਂ ਜਨਤਕ ਬਗੀਚਿਆਂ ਵਿੱਚ ਇੱਕ ਹੋਰ ਵਿਅਕਤੀ ਨੂੰ ਵਿਅਕਤੀਗਤ ਤੌਰ 'ਤੇ ਮਿਲ ਸਕਦੇ ਹੋ।",
+            "pl": "Nie należy spotykać się z innymi osobami w pomieszczeniach ani prywatnych ogródkach, chyba że mieszka się z nimi lub stworzyło się bańkę wsparcia. Można spotkać się osobiście z jedną inną osobą w miejscach publicznych na świeżym powietrzu, np. w parkach lub ogrodach publicznych.",
+            "ro": "Nu vă întâlniți cu nimeni în interior sau în spații private în aer liber, cu excepția cazului în care locuiți cu aceștia sau ați format un grup de sprijin cu ei. Vă puteți întâlni individual cu o altă persoană în spații publice în aer liber, cum ar fi parcurile sau grădinile publice.",
+            "so": "Ha kula kulmin qofna gudaha ama goobaha dibidda ee gaarka loo leeyahay marka laga reebo kuwa aad la noolaatid mooyee ama kuwa aad isku soo dhowateen. Waxaad shakhsi ahaan kula kulmi kartaa qof kale meelaha banaan ee dadweynaha sida jardiinooyinka ama beeraha dadweynaha.",
+            "tr": "Birlikte yaşadığınız ya da destek balonu oluşturduğunuz insanlar haricinde kimseyle kapalı mekanlarda ya da şahsa özel dış mekanlarda buluşmayınız. Parklar veya halka açık bahçeler gibi açık havadaki bazı kamusal alanlarda sadece bir kişiyle, tek başınıza görüşebilirsiniz.",
+            "ur": "اندرون میں یا بیرون کی نجی جگہوں میں کسی بھی فرد سے مت ملیں یہاں تک  کہ آپ ان کے ساتھ رہتے ہوں یا آپ نے ایک امدادی دائرہ بنا لیا ہو۔ آپ بیرون کی عوامی جگہوں جیسے پارکوں یا عوامی باغیچوں میں ایک دیگر فرد سے انفرادی طور پر مل سکتے ہیں۔",
+            "zh": "请勿在室内或私人户外场所与任何人会面，除非您和他们住在一起或组成了互助泡泡小组。您可以在公园或公共花园等户外公共场所与其他人单独会面。"
+          }
+        },
+        {
+          "policyIcon": "overnight-stays",
+          "policyHeading": {
+            "ar": "الإقامات الليلية",
+            "bn": "রাত কাটানো",
+            "cy": "Aros dros nos",
+            "en": "Overnight stays",
+            "gu": "રાત્રિરોકાણ",
+            "pa": "ਰਾਤ ਭਰ ਰਹਿਣਾ",
+            "pl": "Nocowanie poza domem",
+            "ro": "Șederile peste noapte",
+            "so": "Dhixitaanka habeenimada",
+            "tr": "Yatıya kalma",
+            "ur": "رات بھر قیام",
+            "zh": "过夜"
+          },
+          "policyContent": {
+            "ar": "يُمنع تمامًا الإقامة الليلية بعيدًا عن المنزل (مع وجود استثناءاتٍ محدودة). تُغلق أماكن الإقامة أبوابها أمام الزائرين (مع وجود استثناءاتٍ محدودة).",
+            "bn": "আপনার বাসার বাইরে রাত কাটানো চলবে না (অল্প কিছু ব্যতিক্রম বাদে)। থাকার জায়গাগুলো বন্ধ থাকবে (অল্প কিছু ব্যতিক্রম বাদে)।",
+            "cy": "Rhaid i chi beidio ag aros oddi cartref dros nos (ac eithrio mewn amgylchiadau cyfyngedig). Mae lletyau ar gau (ac eithrio mewn amgylchiadau cyfyngedig).",
+            "en": "You must not stay overnight away from home (with limited exemptions). Accommodations are closed (with limited exceptions).",
+            "gu": "તમે ઘરેથી દૂર રાત રોકાવું નહિ. (મર્યાદિત રાહતો સાથે). (મર્યાદિત અપવાદો સાથે) એકોમિડેશન્સ બંધ કરવામાં આવે છે.",
+            "pa": "ਤੁਹਾਨੂੰ ਰਾਤ ਭਰ ਘਰ ਤੋਂ ਦੂਰ ਨਹੀਂ ਰਹਿਣਾ ਚਾਹੀਦਾ (ਸੀਮਿਤ ਛੋਟਾਂ ਸਮੇਤ)। ਰਿਹਾਇਸ਼ਾਂ ਬੰਦ ਹਨ (ਸੀਮਤ ਅਪਵਾਦਾਂ ਸਮੇਤ)।",
+            "pl": "Nie należy nocować poza domem (obowiązują nieliczne wyjątki). Hotele i pensjonaty są zamknięte (z nielicznymi wyjątkami).",
+            "ro": "Este interzis statul peste noapte în locuința altcuiva (cu scutiri limitate). Unitățile de cazare sunt închise (cu excepții limitate).",
+            "so": "Waa inaadan meel kale u dhaxin aan ka ahayn xaafadaada (marka laga reebo dhaafitaanno xaddidan). Guryaha waa la xiray (marka laga reebo dhaafitaanno xaddidan).",
+            "tr": "Evinizden uzakta yatıya kalmamalısınız (bu konuda sınırlı muafiyetler söz konusudur). Konaklama yerleri kapalıdır (sınırlı istisnalar dışında).",
+            "ur": "آپ کو رات بھر گھر سے باہم قیام ہرگز نہیں کرنا چاہیے (محدود استثناء کے ساتھ)۔ رہائش گاہیں بند ہیں (محدود استثناء کے ساتھ)۔",
+            "zh": "不得在外留宿（有限豁免）。住宿关闭（有少数例外）。"
+          }
+        },
+        {
+          "policyIcon": "travelling",
+          "policyHeading": {
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
+          },
+          "policyContent": {
+            "ar": "يجب البقاء في المنزل وعدم السفر إلا لأغراض العمل أو التعليم أو غير ذلك من الأسباب المُصرِّح بها قانونًا. إذا كان التنقّل أمرًا لا بدّ منه، فيجب البقاء في المنطقة المحلية وتقليل عدد الرحلات التي تجريها قدر الإمكان. يُمنع تمامًا مغادرة المناطق المُصنَّفة في المستوى 4. إذا كنت تقيم في إحدى المناطق المُصنَّفة ضمن المستويات 1 – 3، فيجب عليك عدم دخول المناطق المُصنَّفة في المستوى 4. أمَّا إذا كنت تقيم في إحدى المناطق المُصنَّفة في المستوى 4، فيُحظر السفر للخارج (ما لم يكن هناك استثناء ما).",
+            "bn": "আপনাকে অবশ্যই বাসায় থাকতে হবে এবং শুধুমাত্র কাজ, শিক্ষা বা অন্যান্য আইনত অনুমোদিত কারণেই ভ্রমণ করতে পারবেন। আপনাকে যদি ভ্রমণ করতেই হয়, তাহলে আপনার স্থানীয় অঞ্চলে থাকা উচিত এবং আপনার যাত্রাসংখ্যা কমানো উচিত। টিয়ার-৪ অঞ্চল ছেড়ে বেরোবেন না। আপনি যদি টিয়ার ১-৩ অঞ্চলে বাস করেন, তাহলে আপনার টিয়ার ৪ অঞ্চলে প্রবেশ করা উচিত নয়। আপনি যদি টিয়ার ৪ অঞ্চলে বাস করেন, তাহলে বিদেশে ভ্রমণ করবেন না (যদি না এক্ষেত্রে কোনো ব্যতিক্রম প্রযোজ্য হয়)।",
+            "cy": "Rhaid i chi aros gartref a theithio dim ond ar gyfer gwaith, addysg neu resymau eraill a ganiateir o dan y gyfraith. Os oes yn rhaid i chi deithio, dylech aros yn lleol a lleihau nifer eich teithiau Peidiwch â gadael ardal Haen 4. Os ydych yn byw mewn ardal Haen 1 - 3, ni ddylech fynd i mewn i ardal Haen 4. Os ydych yn byw mewn ardal Haen 4, peidiwch â theithio dramor (oni bai fod eithriad yn berthnasol).",
+            "en": "You must stay at home and only travel for work, education or other legally permitted reasons. If you must travel, you should stay local and reduce the number of journeys you make. Do not leave a Tier 4 area. If you live in Tiers 1 – 3 you should not enter Tier 4 areas. If you live in Tier 4, do not travel abroad (unless an exemption applies).",
+            "gu": "તમારે ઘરે રહેવું જોઈએ અને માત્ર નોકરી, શિક્ષણ કે અન્ય કાનૂની રીતે માન્ય કારણોથી જ પ્રવાસ કરવો જોઈએ. જો તમારે પ્રવાસ કરવો જ પડે એમ હોય તો તમારે સ્થાનિક વિસ્તારમાં જ રહેવું જોઈએ અને તમે કરો એવા પ્રવાસોની સંખ્યા ઓછી કરવી જોઈએ. ટિયર 4 વિસ્તાર છોડશો નહિ. જો તમે ટિયર્સ 1થી 3માં રહેતા હો તો તમારે ટિયર 4 વિસ્તારોમાં પ્રવેશ કરવો જોઈએ નહિ. જો તમે ટિયર 4માં રહેતા હો તો વિદેશપ્રવાસ કરશો નહિ (સિવાય કે કોઈ રાહત લાગુ પડતી હોય)",
+            "pa": "ਤੁਹਾਨੂੰ ਘਰ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਸਿਰਫ ਕੰਮ, ਸਿੱਖਿਆ ਜਾਂ ਕਾਨੂੰਨੀ ਤੌਰ 'ਤੇ ਇਜਾਜ਼ਤ ਦਿੱਤੇ ਹੋਰ ਕਾਰਨਾਂ ਕਰਕੇ ਯਾਤਰਾ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ। ਜੇ ਤੁਹਾਨੂੰ ਯਾਤਰਾ ਕਰਨੀ ਹੀ ਪਵੇ, ਤਾਂ ਤੁਹਾਨੂੰ ਸਥਾਨਕ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਆਪਣੀਆਂ ਯਾਤਰਾਵਾਂ ਦੀ ਗਿਣਤੀ ਨੂੰ ਘਟਾਉਣਾ ਚਾਹੀਦਾ ਹੈ। ਟੀਅਰ 4 ਖੇਤਰ ਤੋਂ ਬਾਹਰ ਨਾ ਜਾਓ। ਜੇ ਤੁਸੀਂ ਟੀਅਰ 1 - 3 ਵਿੱਚ ਰਹਿੰਦੇ ਹੋ ਤਾਂ ਤੁਹਾਨੂੰ ਟੀਅਰ 4 ਖੇਤਰਾਂ ਵਿੱਚ ਦਾਖਲ ਨਹੀਂ ਹੋਣਾ ਚਾਹੀਦਾ। ਜੇ ਤੁਸੀਂ ਟੀਅਰ 4 ਵਿੱਚ ਰਹਿੰਦੇ ਹੋ, ਤਾਂ ਵਿਦੇਸ਼ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ (ਜਦੋਂ ਤਕ ਕੋਈ ਛੋਟ ਲਾਗੂ ਨਹੀਂ ਹੁੰਦੀ ਹੈ)",
+            "pl": "Należy zostać w domu i przemieszczać się jedynie do pracy, szkoły lub w innych prawnie dozwolonych celach. Jeżeli musisz się przemieszczać, należy poruszać się lokalnie i ograniczyć ilość wykonywanych podróży. Nie należy opuszczać obszaru 4 strefy. Jeżeli mieszkasz w strefach 1–3, nie wolno przemieszczać się do okolic 4 strefy. Jeżeli mieszkasz w 4 strefie, nie wolno podróżować za granicę (chyba, że ma zastosowanie wyjątkowa sytuacja).",
+            "ro": "Trebuie să stați acasă și să vă deplasați doar pentru muncă, educație sau din alte motive permise de lege. Dacă trebuie să vă deplasați, trebuie să faceți acest lucru la nivel local și să reduceți numărul de deplasări efectuate. Nu părăsiți o zonă de nivel 4. Dacă locuiți în zone de nivel 1 – 3, nu vă deplasați în zonele de nivel 4. Dacă locuiți în zone de nivel 4, nu călătoriți în străinătate (cu excepția cazului în care se aplică o scutire)",
+            "so": "Waa inaad guriga joogtaa waxaadna u safri kartaa oo keliya shaqo, waxbarasho ama sababo kale oo sharci ahaan la oggol yahay. Haddii ay khasab tahay inaad safarto, waa inaad deegaanka joogtaa oo aad yareeysaa tirada safarada aad aadeyso. Ha ka bixin aagga Heerka 4. Haddii aad ku nooshahay Heerka 1 – 3 waa inaadan galin aagagga Heerka 4. Haddii aad ku nooshahay Heerka 4, ha u safrin dibadda (marka laga reebo ka dhaafitaan)",
+            "tr": "Evde kalmalı ve sadece iş, eğitim ya da yasal olarak izin verilen diğer sebeplerle seyahat etmelisiniz. Seyahat etmek zorundaysanız, yerel bölgenizde kalmalı ve yaptığınız yolculukların sayısını azaltmalısınız. 4. kademede yer alan bir bölgeden ayrılmayınız. 1 ila 3. Kademelerde yer alan bir bölgede yaşıyorsanız, 4. Kademede yer alan bölgelere girmemelisiniz. 4. Kademede yaşıyorsanız, yurtdışına seyahat etmeyiniz (bir muafiyet geçerli olmadığı müddetçe)",
+            "ur": "آپ پر لازم ہے کہ گھر پر رہیں اور صرف کام، تعلیم یا قانونی طور پر اجازت یافتہ دیگر مقاصد سے ہی سفر کریں۔ اگر آپ کے لیے  سفر کرنا ضروری ہو تو، آپ کو چاہیے کہ مقامی طور پر قیام کریں اور آپ جتنے سفر کرتے ہیں ان کی تعداد کم کریں۔ درجہ 4 کے علاقے سے مت نکلیں۔ اگر آپ درجہ 3 – 1 میں رہتے ہیں تو آپ کو چاہیے کہ درجہ 4 کے علاقوں میں داخل مت ہوں۔ اگر آپ درجہ 4 میں رہتے ہیں تو، بیرون ملک کا سفر مت کریں (جب تک چھوٹ کا اطلاق نہیں ہوتا ہے)",
+            "zh": "您可以基于工作、学习或其他法律允许的原因外出，但其他时间必须呆在家中。如果您必须外出，则应尽量留在当地并减少出行次数。请勿离开四级防控区域。如果您居住在一至三级防控区域，则请勿进入四级区域。如果您居住在四级防控区域，则请勿出境（除非豁免条款适用）"
           }
         },
         {
@@ -1587,38 +1587,7 @@
           }
         },
         {
-          "policyIcon": "exercise",
-          "policyHeading": {
-            "ar": "التمارين الرياضية",
-            "bn": "ব্যায়াম",
-            "cy": "Ymarfer corff",
-            "en": "Exercise",
-            "gu": "કસરત",
-            "pa": "ਕਸਰਤ",
-            "pl": "Ćwiczenia fizyczne",
-            "ro": "Sportul",
-            "so": "Jimicsi",
-            "tr": "Egzersiz",
-            "ur": "ورزش",
-            "zh": "运动"
-          },
-          "policyContent": {
-            "ar": "تخضع المرافق الترفيهية المُغلقة لوقف نشاطها. يمكنك مغادرة المنزل لممارسة الرياضة بصورة فردية أو بصحبة أسرتك أو مجموعة الدعم الخاصة بك أو فردٍ واحدٍ من أسرة أخرى. ويُسمح بممارسة الرياضة في الأماكن المفتوحة مع مراعاة الحدّ الأقصى لعدد الأفراد في هذه التجمّعات. لا تسري هذه القيود على الرياضيين دون سنِّ 18 عامًا والرياضيين من ذوي الاحتياجات الخاصة.",
-            "bn": "ইনডোরভিত্তিক অবকাশ বন্ধ থাকবে। আপনি একা, আপনার বাড়ি বা সাপোর্ট বাবলের সদস্যের সঙ্গে, অথবা অন্য কোনো বাড়ির একজন লোকের সঙ্গে শরীরচর্চা করার জন্য আপনার বাসা ছেড়ে বেরোতে পারেন। আউটডোর খেলাধূলা অনুমোদিত, এবং জমায়েতের ওপর সীমারেখা প্রযোজ্য। এসব সীমা ১৮ বছরের কম বয়সী ও প্রতিবন্ধীদের জন্য খেলাধুলার ওপর প্রযোজ্য নয়।",
-            "cy": "Mae mannau hamdden dan do ar gau. Gallwch adael eich cartref i ymarfer ar eich pen eich hun, gyda rhywun o’ch aelwyd neu’ch swigen gefnogaeth, neu gydag un unigolyn o aelwyd arall. Caniateir chwaraeon yn yr awyr agored, ac mae’r cyfyngiad ar gynulliadau yn berthnasol. Nid yw’r cyfyngiadau hyn yn berthnasol i rai dan 18 na chwaraeon i’r anabl.",
-            "en": "Indoor leisure is closed. You can leave your home to exercise by yourself, with your household or support bubbles, or with one person from another household. Outdoor sport is allowed, and gatherings limit applies. These limits do not apply for under-18s and disabled sport.",
-            "gu": "ફુરસદની ઇન્ડોર પ્રવૃત્તિઓ બંધ છે. તમે જાતે, તમારા ઘરના સભ્ય અથવા સપોર્ટ બબલ્સ સાથે અથવા અન્ય ઘરની એક વ્યક્તિ સાથે કસરત કરવા માટે ઘરની બહાર જઈ શકો છો. આઉટડોર રમત માન્ય છે અને સમૂહમિલનની મર્યાદા લાગુ પડે છે. 18 વર્ષથી ઓછી ઉંમરના લોકો અને વિકલાંગોની રમતો માટે આ મર્યાદાઓ લાગુ પડતી નથી.",
-            "pa": "ਅੰਦਰੂਨੀ ਮਨਪਰਚਾਵਾ ਬੰਦ ਹੈ। ਤੁਸੀਂ ਇਕੱਲੇ, ਆਪਣੇ ਪਰਿਵਾਰ ਜਾਂ ਆਪਣੇ ਸਹਾਇਤਾ ਦਾਇਰੇ ਦੇ ਨਾਲ, ਜਾਂ ਕਿਸੇ ਹੋਰ ਪਰਿਵਾਰ ਤੋਂ ਇੱਕ ਵਿਅਕਤੀ ਦੇ ਨਾਲ ਕਸਰਤ ਕਰਨ ਲਈ ਘਰ ਤੋਂ ਬਾਹਰ ਜਾ ਸਕਦੇ ਹੋ। ਬਾਹਰੀ ਖੇਡ ਦੀ ਆਗਿਆ ਹੈ, ਅਤੇ ਇਕੱਠੇ ਹੋਣ ਦੀ ਸੀਮਾ ਲਾਗੂ ਹੁੰਦੀ ਹੈ। ਇਹ ਸੀਮਾਵਾਂ ਅੰਡਰ-18 ਅਤੇ ਅਸਮਰੱਥ ਵਿਅਕਤੀਆਂ ਲਈ ਖੇਡਾਂ 'ਤੇ ਲਾਗੂ ਨਹੀਂ ਹੁੰਦੀਆਂ ਹਨ।",
-            "pl": "Pomieszczenia rekreacyjne są zamknięte. Można wychodzić z domu w celu aktywności fizycznej na świeżym powietrzu samemu, z domownikami, osobami z bańki wsparcia lub jedną inną osobą. Aktywność sportowa na świeżym powietrzu jest dozwolona, z zastosowaniem limitu osób. Te ograniczenia nie dotyczą aktywności sportowej dla osób poniżej 18 lat i osób niepełnosprawnych.",
-            "ro": "Spațiile de agrement interior sunt închise. Puteți părăsi domiciliul pentru a face exerciții fizice individuale sau cu persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin, sau cu o persoană cu care nu locuiți. Sunt permise activitățile sportive în aer liber, dar se aplică o limită a numărului de persoane. Aceste limite nu se aplică sporturilor pentru persoane sub 18 ani și sporturilor pentru persoane cu dizabilități.",
-            "so": "Madaddaalinta gudaha wey xiran tahay. Waxaad uga tagi kartaa gurigaaga inaad jimicsi ku sameysatid kaligaa, adigoo la joogaa reerkaaga ama dadka kugu dhow, ama hal qof oo reer kale ah. Isboortiga bannaanka waa la oggol yahay, xaddiddaadka kullamada waa in la dhowraa. Xaddidahaani ma khuseeyaan dadka 18-sano ka yar iyo isboortiga dadka naafada ah.",
-            "tr": "Kapalı alanlardaki eğlence mekanları kapalıdır. Tek başınıza, ev halkınız veya destek balonunuzda olan kişilerle ya da başka bir ev halkından bir kişiyle egzersiz yapmak amacıyla evinizden çıkabilirsiniz. Açık hava sporlarına izin verilir ve toplanma sınırı geçerlidir. Bu sınırlar 18 yaş altı ve engelli sporları için geçerli değildir.",
-            "ur": "اندرون میں تفریح بند ہے۔ آپ خود سے، اپنے گھرانے یا امدادی دائرے کے ساتھ، یا کسی دیگر گھرانے کے ایک فرد کے ساتھ ورزش کرنے کے لیے اپنے گھر سے باہر جا سکتے ہیں۔ بیرون میں کھیل کود کی اجازت ہے، اورمجمع کی حد لاگو ہوتی ہے۔ یہ حدود 18 سے کم عمر اور معذور افراد کے کھیل کود پر لاگو نہیں ہوتی ہیں۔",
-            "zh": "室内休闲场所均已关闭。您可以独自出门锻炼，也可以与共同居住的家人、互助泡泡小组成员或其他家庭的一名成员一起锻炼。允许进行户外运动，但有人员聚集限制。这些限制不适用于 18 岁以下的儿童和残障人士运动。"
-          }
-        },
-        {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -1646,6 +1615,37 @@
             "tr": "Mümkünse evden çalışın.",
             "ur": "گھر سے کام کریں جب تک کہ آپ ایسا کرنے سے قاصر ہوں۔",
             "zh": "除非条件不允许，否则请在家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "دور العبادة",
+            "bn": "আরাধনা স্থল",
+            "cy": "Addoldai",
+            "en": "Places of worship",
+            "gu": "ધાર્મિક જગ્યાઓ",
+            "pa": "ਪੂਜਾ-ਪਾਠ ਦੇ ਸਥਾਨ",
+            "pl": "Miejsca kultu religijnego",
+            "ro": "Locașurile de cult",
+            "so": "Goobaha cibaadada",
+            "tr": "İbadet mekanları",
+            "ur": "عبادت خانے",
+            "zh": "宗教场所"
+          },
+          "policyContent": {
+            "ar": "تظل مفتوحة، ولكن يُمنع تمامًا مخالطة أشخاصٍ من خارج أسرتك أو مجموعة الدعم الخاصة بك في أثناء وجودك هناك.",
+            "bn": "এগুলো খোলা থাকবে, তবে সেখানে থাকাকালে আপনার বাড়ি বা সাপোর্ট বাবলের বাইরের লোকেদের সঙ্গে মেলামেশা করবেন না।",
+            "cy": "Mae’r rhain yn parhau i fod ar agor, ond peidiwch â rhyngweithio â phobl nad ydynt yn rhan o’ch aelwyd neu’ch swigen gefnogaeth tra byddwch yno.",
+            "en": "These remain open, but do not interact with people from outside of your household or support bubble when there.",
+            "gu": "આ ખુલ્લાં રહેશે, પરંતુ ત્યાં હોવા દરમિયાન તમારા ઘર અથવા સપોર્ટ બબલની બહારના લોકોને મળશો નહિ.",
+            "pa": "ਇਹ ਖੁੱਲ੍ਹੇ ਰਹਿਣਗੇ, ਪਰ ਉੱਥੇ ਹੋਣ ਵੇਲੇ ਆਪਣੇ ਘਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਤੋਂ ਬਾਹਰ ਦੇ ਛੇ ਤੋਂ ਵੱਧ ਵਿਅਕਤੀਆਂ ਨਾਲ ਅੰਤਰ-ਕਿਰਿਆ ਨਾ ਕਰੋ।",
+            "pl": "Będą one otwarte, ale przebywając w nich nie wolno mieć kontaktu z osobami spoza swojego gospodarstwa domowego lub bańki wsparcia.",
+            "ro": "Acestea rămân deschise, dar se interzice interacțiunea cu persoane cu care nu locuiți sau care nu fac parte din grupul dvs. de sprijin, cât timp vă aflați acolo.",
+            "so": "Kuwani wali way furnaan doonaan, laakiin ha dhexgelin dadka ka baxsan reerkaaga ama dadka kugu dhow markaad halka joogtaa.",
+            "tr": "Bu açıktır, ancak oradayken ev halkınızın ya da destek balonunuzun dışından insanlarla iletişime girmeyiniz.",
+            "ur": "یہ کھلی رہیں گی، لیکن وہاں جانے پر اپنے گھرانے یا امدادی دائرے کے باہر کے لوگوں سے میل جول مت بنائیں۔",
+            "zh": "这些地方 仍然开放，但请勿在这里与家人或互助泡泡小组以外的人员互动。"
           }
         }
       ]
@@ -1947,7 +1947,7 @@
             "zh": "社交距离"
           },
           "policyContent": {
-            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن أفراد أسرتكم المُوسَّعة.",
+            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن مجموعة الدعم الخاصة بكم.",
             "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন না বা যারা আপনার বাড়ির বৃহত্তর গণ্ডির অংশ নন, তাদের সঙ্গে সামাজিক দূরত্ব বজায় রাখার নিয়ম মেনে চলুন।",
             "cy": "Dilynwch reolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch aelwyd estynedig chi.",
             "en": "Follow social distancing rules with people you do not live with or who are not in your exclusive extended household.",
@@ -1959,37 +1959,6 @@
             "tr": "Birlikte yaşadığınız insanlar veya genel olarak sık görüştüğünüz diğer ev halkları haricinde sosyal mesafe kurallarına uyunuz.",
             "ur": "آپ جن لوگوں کے ساتھ نہیں رہتے ہیں یا جو آپ کے خصوصی توسیعی گھرانے میں نہیں ہیں ان کے ساتھ سماجی دوری  کے اصولوں پر عمل کریں۔",
             "zh": "与不与您同住或不属于您专有大家庭的人员保持社交距离。"
-          }
-        },
-        {
-          "policyIcon": "travelling",
-          "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
-          },
-          "policyContent": {
-            "ar": "يُحظر السفر إلى المناطق ذات الانتشار المرتفع للفيروس بدون مُبررٍ معقولٍ.",
-            "bn": "যুক্তিযুক্ত কারণ ছাড়া উচ্চ প্রাদুর্ভাবযুক্ত এলাকাগুলোতে যাবেন না।",
-            "cy": "Peidiwch â theithio heb esgus rhesymol i ardal sydd â llawer o achosion.",
-            "en": "Do not travel to areas of high prevalence without reasonable excuse.",
-            "gu": "વાજબી કારણ વગર વધુ વાયરસ વાળા વિસ્તારોમાં પ્રવાસ કરશો નહીં.",
-            "pa": "ਬਿਨਾਂ ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਜ਼ਿਆਦਾ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ।",
-            "pl": "Nie należy podróżować do okolic o większej częstości zachorowań bez uzasadnionego powodu.",
-            "ro": "Nu călătoriți în zone cu incidență ridicată fără un motiv rezonabil.",
-            "so": "Ha u safrin meelaha cudurku ku badan yahay adigoon haysan cudurdaar macquul ah. ",
-            "tr": "Makul bir mazeretiniz yoksa, virüsün yoğun olarak görüldüğü bölgelere seyahat etmeyiniz.",
-            "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
-            "zh": "如无合理理由，请勿前往病毒高发区。"
           }
         },
         {
@@ -2024,34 +1993,34 @@
           }
         },
         {
-          "policyIcon": "face-coverings",
+          "policyIcon": "travelling",
           "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
           },
           "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર જગ્યાઓમાં (જો તમે ઠીક હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+            "ar": "يُحظر السفر إلى المناطق ذات الانتشار المرتفع للفيروس بدون مُبررٍ معقولٍ.",
+            "bn": "যুক্তিযুক্ত কারণ ছাড়া উচ্চ প্রাদুর্ভাবযুক্ত এলাকাগুলোতে যাবেন না।",
+            "cy": "Peidiwch â theithio heb esgus rhesymol i ardal sydd â llawer o achosion.",
+            "en": "Do not travel to areas of high prevalence without reasonable excuse.",
+            "gu": "વાજબી કારણ વગર વધુ વાયરસ વાળા વિસ્તારોમાં પ્રવાસ કરશો નહીં.",
+            "pa": "ਬਿਨਾਂ ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਜ਼ਿਆਦਾ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ।",
+            "pl": "Nie należy podróżować do okolic o większej częstości zachorowań bez uzasadnionego powodu.",
+            "ro": "Nu călătoriți în zone cu incidență ridicată fără un motiv rezonabil.",
+            "so": "Ha u safrin meelaha cudurku ku badan yahay adigoon haysan cudurdaar macquul ah. ",
+            "tr": "Makul bir mazeretiniz yoksa, virüsün yoğun olarak görüldüğü bölgelere seyahat etmeyiniz.",
+            "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
+            "zh": "如无合理理由，请勿前往病毒高发区。"
           }
         },
         {
@@ -2086,7 +2055,7 @@
           }
         },
         {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -2114,6 +2083,37 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "أغطية الوجه",
+            "bn": "মুখের আবরণ",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "ફેસમાસ્ક",
+            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
+            "pl": "Osłona twarzy",
+            "ro": "Protecție facială",
+            "so": "Waxyaabaha wajiga lagu daboolo",
+            "tr": "Yüz maskeleri",
+            "ur": "نقاب",
+            "zh": "面罩"
+          },
+          "policyContent": {
+            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
+            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "તમામ ઇન્ડોર જગ્યાઓમાં (જો તમે ઠીક હોવ) ફેસમાસ્ક પહેરો.",
+            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
+            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
+            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
+            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
+            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
+            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
+            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
           }
         }
       ]
@@ -2251,37 +2251,6 @@
       },
       "policies": [
         {
-          "policyIcon": "meeting-people",
-          "policyHeading": {
-            "ar": "التباعد الجسدي",
-            "bn": "সামাজিক দূরত্ব",
-            "cy": "Cadw pellter cymdeithasol",
-            "en": "Social distancing",
-            "gu": "સોશિયલ ડિસ્ટંસિંગ",
-            "pa": "ਸਮਾਜਕ ਦੂਰੀ",
-            "pl": "Dystansowanie społeczne",
-            "ro": "Distanțarea socială",
-            "so": "Kala fogeynta bulshada",
-            "tr": "Sosyal mesafe",
-            "ur": "سماجی دوری",
-            "zh": "社交距离"
-          },
-          "policyContent": {
-            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن أفراد أسرتكم المُوسَّعة.",
-            "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন না বা যারা আপনার বাড়ির বৃহত্তর গণ্ডির অংশ নন, তাদের সঙ্গে সামাজিক দূরত্ব বজায় রাখার নিয়ম মেনে চলুন।",
-            "cy": "Dilynwch reolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch aelwyd estynedig chi.",
-            "en": "Follow social distancing rules with people you do not live with or who are not in your exclusive extended household.",
-            "gu": "જે લોકો સાથે તમે રહેતા હોવ નહીં અથવા જે લોકો તમારા વિશિષ્ટ ઘર પરિવારના સભ્યો નથી તેમની સાથે સોશિયલ ડિસ્ટંસિંગના નિયમોનું પાલન કરો.",
-            "pa": "ਉਹਨਾਂ ਲੋਕਾਂ ਨਾਲ ਸਮਾਜਕ ਦੂਰੀ ਦੇ ਨਿਯਮਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ ਜੋ ਤੁਹਾਡੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹਨ ਜਾਂ ਜਿਹੜੇ ਤੁਹਾਡੇ ਵਿਸ਼ੇਸ਼ ਨਜ਼ਦੀਕੀ ਪਰਿਵਾਰ ਵਿੱਚ ਨਹੀਂ ਹਨ।",
-            "pl": "Należy przestrzegać zasad dystansowania społecznego wobec osób, z którymi się nie mieszka, lub osób spoza swojego poszerzonego gospodarstwa domowego.",
-            "ro": "Respectați regulile de distanțare socială cu persoanele cu care nu locuiți sau care nu fac parte din familia dvs. extinsă exclusivă.",
-            "so": "Raac xeerarka kala fogeynta bulshada ee dadka aadan la nooleyn ama aan ku jirin qoyskaaga gaarka ah.",
-            "tr": "Birlikte yaşadığınız insanlar veya genel olarak sık görüştüğünüz diğer ev halkları haricinde sosyal mesafe kurallarına uyunuz.",
-            "ur": "آپ جن لوگوں کے ساتھ نہیں رہتے ہیں یا جو آپ کے خصوصی توسیعی گھرانے میں نہیں ہیں ان کے ساتھ سماجی دوری  کے اصولوں پر عمل کریں۔",
-            "zh": "与不与您同住或不属于您专有大家庭的人员保持社交距离。"
-          }
-        },
-        {
           "policyIcon": "bars-and-pubs",
           "policyHeading": {
             "ar": "مقابلة الآخرين في الأماكن المُغلقة",
@@ -2313,34 +2282,34 @@
           }
         },
         {
-          "policyIcon": "travelling",
+          "policyIcon": "meeting-people",
           "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
+            "ar": "التباعد الجسدي",
+            "bn": "সামাজিক দূরত্ব",
+            "cy": "Cadw pellter cymdeithasol",
+            "en": "Social distancing",
+            "gu": "સોશિયલ ડિસ્ટંસિંગ",
+            "pa": "ਸਮਾਜਕ ਦੂਰੀ",
+            "pl": "Dystansowanie społeczne",
+            "ro": "Distanțarea socială",
+            "so": "Kala fogeynta bulshada",
+            "tr": "Sosyal mesafe",
+            "ur": "سماجی دوری",
+            "zh": "社交距离"
           },
           "policyContent": {
-            "ar": "يُحظر السفر إلى المناطق ذات الانتشار المرتفع للفيروس بدون مُبررٍ معقولٍ.",
-            "bn": "যুক্তিযুক্ত কারণ ছাড়া উচ্চ প্রাদুর্ভাবযুক্ত অঞ্চলগুলোতে যাবেন না।",
-            "cy": "Peidiwch â theithio heb esgus rhesymol i ardal sydd â llawer o achosion.",
-            "en": "Do not travel to areas of high prevalence without reasonable excuse.",
-            "gu": "વાજબી કારણ વગર વધુ વાયરસ વાળા વિસ્તારોમાં પ્રવાસ કરશો નહીં.",
-            "pa": "ਬਿਨਾਂ ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਜ਼ਿਆਦਾ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ।",
-            "pl": "Nie należy podróżować do okolic o większej częstości zachorowań bez uzasadnionego powodu.",
-            "ro": "Nu călătoriți în zone cu incidență ridicată fără un motiv rezonabil.",
-            "so": "Ha u safrin meelaha cudurku ku badan yahay adigoon haysan cudurdaar macquul ah. ",
-            "tr": "Makul bir mazeretiniz yoksa, virüsün yoğun olarak görüldüğü bölgelere seyahat etmeyiniz.",
-            "ur": "معقول عذر کے بغیر زیادہ پھیلاؤ والے علاقوں میں سفر مت کریں۔",
-            "zh": "如无合理理由，请勿前往病毒高发区。"
+            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن مجموعة الدعم الخاصة بكم.",
+            "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন না বা যারা আপনার বাড়ির বৃহত্তর গণ্ডির অংশ নন, তাদের সঙ্গে সামাজিক দূরত্ব বজায় রাখার নিয়ম মেনে চলুন।",
+            "cy": "Dilynwch reolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch aelwyd estynedig chi.",
+            "en": "Follow social distancing rules with people you do not live with or who are not in your exclusive extended household.",
+            "gu": "જે લોકો સાથે તમે રહેતા હોવ નહીં અથવા જે લોકો તમારા વિશિષ્ટ ઘર પરિવારના સભ્યો નથી તેમની સાથે સોશિયલ ડિસ્ટંસિંગના નિયમોનું પાલન કરો.",
+            "pa": "ਉਹਨਾਂ ਲੋਕਾਂ ਨਾਲ ਸਮਾਜਕ ਦੂਰੀ ਦੇ ਨਿਯਮਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ ਜੋ ਤੁਹਾਡੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹਨ ਜਾਂ ਜਿਹੜੇ ਤੁਹਾਡੇ ਵਿਸ਼ੇਸ਼ ਨਜ਼ਦੀਕੀ ਪਰਿਵਾਰ ਵਿੱਚ ਨਹੀਂ ਹਨ।",
+            "pl": "Należy przestrzegać zasad dystansowania społecznego wobec osób, z którymi się nie mieszka, lub osób spoza swojego poszerzonego gospodarstwa domowego.",
+            "ro": "Respectați regulile de distanțare socială cu persoanele cu care nu locuiți sau care nu fac parte din familia dvs. extinsă exclusivă.",
+            "so": "Raac xeerarka kala fogeynta bulshada ee dadka aadan la nooleyn ama aan ku jirin qoyskaaga gaarka ah.",
+            "tr": "Birlikte yaşadığınız insanlar veya genel olarak sık görüştüğünüz diğer ev halkları haricinde sosyal mesafe kurallarına uyunuz.",
+            "ur": "آپ جن لوگوں کے ساتھ نہیں رہتے ہیں یا جو آپ کے خصوصی توسیعی گھرانے میں نہیں ہیں ان کے ساتھ سماجی دوری  کے اصولوں پر عمل کریں۔",
+            "zh": "与不与您同住或不属于您专有大家庭的人员保持社交距离。"
           }
         },
         {
@@ -2375,34 +2344,34 @@
           }
         },
         {
-          "policyIcon": "face-coverings",
+          "policyIcon": "travelling",
           "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
           },
           "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+            "ar": "يُحظر السفر إلى المناطق ذات الانتشار المرتفع للفيروس بدون مُبررٍ معقولٍ.",
+            "bn": "যুক্তিযুক্ত কারণ ছাড়া উচ্চ প্রাদুর্ভাবযুক্ত অঞ্চলগুলোতে যাবেন না।",
+            "cy": "Peidiwch â theithio heb esgus rhesymol i ardal sydd â llawer o achosion.",
+            "en": "Do not travel to areas of high prevalence without reasonable excuse.",
+            "gu": "વાજબી કારણ વગર વધુ વાયરસ વાળા વિસ્તારોમાં પ્રવાસ કરશો નહીં.",
+            "pa": "ਬਿਨਾਂ ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਜ਼ਿਆਦਾ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ।",
+            "pl": "Nie należy podróżować do okolic o większej częstości zachorowań bez uzasadnionego powodu.",
+            "ro": "Nu călătoriți în zone cu incidență ridicată fără un motiv rezonabil.",
+            "so": "Ha u safrin meelaha cudurku ku badan yahay adigoon haysan cudurdaar macquul ah. ",
+            "tr": "Makul bir mazeretiniz yoksa, virüsün yoğun olarak görüldüğü bölgelere seyahat etmeyiniz.",
+            "ur": "معقول عذر کے بغیر زیادہ پھیلاؤ والے علاقوں میں سفر مت کریں۔",
+            "zh": "如无合理理由，请勿前往病毒高发区。"
           }
         },
         {
@@ -2437,7 +2406,7 @@
           }
         },
         {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -2465,6 +2434,37 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "أغطية الوجه",
+            "bn": "মুখের আবরণ",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "ફેસમાસ્ક",
+            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
+            "pl": "Osłona twarzy",
+            "ro": "Protecție facială",
+            "so": "Waxyaabaha wajiga lagu daboolo",
+            "tr": "Yüz maskeleri",
+            "ur": "نقاب",
+            "zh": "面罩"
+          },
+          "policyContent": {
+            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
+            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
+            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
+            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
+            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
+            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
+            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
+            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
+            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
           }
         }
       ]
@@ -2602,37 +2602,6 @@
       },
       "policies": [
         {
-          "policyIcon": "meeting-people",
-          "policyHeading": {
-            "ar": "التباعد الجسدي",
-            "bn": "সামাজিক দূরত্ব",
-            "cy": "Cadw pellter cymdeithasol",
-            "en": "Social distancing",
-            "gu": "સોશિયલ ડિસ્ટંસિંગ",
-            "pa": "ਸਮਾਜਕ ਦੂਰੀ",
-            "pl": "Dystansowanie społeczne",
-            "ro": "Distanțarea socială",
-            "so": "Kala fogeynta bulshada",
-            "tr": "Sosyal mesafe",
-            "ur": "سماجی دوری",
-            "zh": "社交距离"
-          },
-          "policyContent": {
-            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن أفراد أسرتكم المُوسَّعة.",
-            "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন না বা যারা আপনার বাড়ির বৃহত্তর গণ্ডির অংশ নন, তাদের সঙ্গে সামাজিক দূরত্ব বজায় রাখার নিয়ম মেনে চলুন।",
-            "cy": "Dilynwch reolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch aelwyd estynedig chi.",
-            "en": "Follow social distancing rules with people you do not live with or who are not in your exclusive extended household.",
-            "gu": "જે લોકો સાથે તમે રહેતા હોવ નહીં અથવા જે લોકો તમારા વિશિષ્ટ ઘર પરિવારના સભ્યો નથી તેમની સાથે સોશિયલ ડિસ્ટંસિંગના નિયમોનું પાલન કરો.",
-            "pa": "ਉਹਨਾਂ ਲੋਕਾਂ ਨਾਲ ਸਮਾਜਕ ਦੂਰੀ ਦੇ ਨਿਯਮਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ ਜੋ ਤੁਹਾਡੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹਨ ਜਾਂ ਜਿਹੜੇ ਤੁਹਾਡੇ ਵਿਸ਼ੇਸ਼ ਨਜ਼ਦੀਕੀ ਪਰਿਵਾਰ ਵਿੱਚ ਨਹੀਂ ਹਨ।",
-            "pl": "Należy przestrzegać zasad dystansowania społecznego wobec osób, z którymi się nie mieszka, lub osób spoza swojego poszerzonego gospodarstwa domowego.",
-            "ro": "Respectați regulile de distanțare socială cu persoanele cu care nu locuiți sau care nu fac parte din familia dvs. extinsă exclusivă.",
-            "so": "Raac xeerarka kala fogeynta bulshada ee dadka aadan la nooleyn ama aan ku jirin qoyskaaga gaarka ah.",
-            "tr": "Birlikte yaşadığınız insanlar veya genel olarak sık görüştüğünüz diğer ev halkları haricinde sosyal mesafe kurallarına uyunuz.",
-            "ur": "آپ جن لوگوں کے ساتھ نہیں رہتے ہیں یا جو آپ کے خصوصی توسیعی گھرانے میں نہیں ہیں ان کے ساتھ سماجی دوری  کے اصولوں پر عمل کریں۔",
-            "zh": "与不与您同住或不属于您专有大家庭的人员保持社交距离。"
-          }
-        },
-        {
           "policyIcon": "bars-and-pubs",
           "policyHeading": {
             "ar": "مقابلة الآخرين في الأماكن المُغلقة",
@@ -2664,34 +2633,34 @@
           }
         },
         {
-          "policyIcon": "travelling",
+          "policyIcon": "meeting-people",
           "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
+            "ar": "التباعد الجسدي",
+            "bn": "সামাজিক দূরত্ব",
+            "cy": "Cadw pellter cymdeithasol",
+            "en": "Social distancing",
+            "gu": "સોશિયલ ડિસ્ટંસિંગ",
+            "pa": "ਸਮਾਜਕ ਦੂਰੀ",
+            "pl": "Dystansowanie społeczne",
+            "ro": "Distanțarea socială",
+            "so": "Kala fogeynta bulshada",
+            "tr": "Sosyal mesafe",
+            "ur": "سماجی دوری",
+            "zh": "社交距离"
           },
           "policyContent": {
-            "ar": "يُحظر السفر إلى المناطق ذات الانتشار المرتفع للفيروس بدون مُبررٍ معقولٍ. يجب تجنّب السفر إلى المناطق ذات الانتشار المنخفض للفيروس والسفر الدولي.",
-            "bn": "যুক্তিযুক্ত কারণ ছাড়া উচ্চ প্রাদুর্ভাবযুক্ত অঞ্চলগুলোতে যাবেন না। কম প্রাদুর্ভাবযুক্ত অঞ্চলে ভ্রমণ করা বা আন্তর্জাতিক ভ্রমণ এড়িয়ে চলুন।",
-            "cy": "Peidiwch â theithio heb esgus resymol i ardal sydd â llawer o achosion. Peidiwch â theithio i ardal heb lawer o achosion neu i wledydd eraill.",
-            "en": "Do not travel to areas of high prevalence without reasonable excuse. Avoid travel to areas of low prevalence and international travel.",
-            "gu": "વાજબી કારણ વગર વધુ વ્યાપ વાળા વિસ્તારોમાં પ્રવાસ કરશો નહીં. ઓછો વ્યાપ ધરાવતા વિસ્તારોમાં પ્રવાસ અને આંતરરાષ્ટ્રીય પ્રવાસ કરવાનું ટાળો.",
-            "pa": "ਬਿਨਾਂ ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਜ਼ਿਆਦਾ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ। ਘੱਟ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਅਤੇ ਅੰਤਰਰਾਸ਼ਟਰੀ ਯਾਤਰਾ ਤੋਂ ਪਰਹੇਜ਼ ਕਰੋ।",
-            "pl": "Nie należy podróżować do okolic o większej częstości zachorowań bez uzasadnionego powodu. Należy unikać podróży do okolic o niskiej częstości zachorowań oraz podróży za granicę.",
-            "ro": "Nu călătoriți în zone cu incidență ridicată fără un motiv rezonabil. Evitați călătoriile în zone cu incidență scăzută și călătoriile internaționale.",
-            "so": "Ha u safrin meelaha cudurku ku badan yahay adigoon haysan cudurdaar macquul ah. Ka fogow u safridda meelaha ay ku yar tahay cudurka iyo safarada caalamiga ah.",
-            "tr": "Makul bir mazeretiniz yoksa, virüsün yoğun olarak görüldüğü bölgelere seyahat etmeyiniz. Virüsün yoğun olarak görülmediği yerlere ve başka ülkelere seyahat etmekten de kaçınınız.",
-            "ur": "معقول عذر کے بغیر زیادہ پھیلاؤ والے علاقوں میں سفر مت کریں۔ کم پھیلاؤ والے علاقوں کا سفر کرنے اور بین الاقوامی سفر کرنے سے پرہیز کریں۔",
-            "zh": "如无合理理由，请勿前往病毒高发区。避免前往低发地和进行国际旅行。"
+            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن مجموعة الدعم الخاصة بكم.",
+            "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন না বা যারা আপনার বাড়ির বৃহত্তর গণ্ডির অংশ নন, তাদের সঙ্গে সামাজিক দূরত্ব বজায় রাখার নিয়ম মেনে চলুন।",
+            "cy": "Dilynwch reolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch aelwyd estynedig chi.",
+            "en": "Follow social distancing rules with people you do not live with or who are not in your exclusive extended household.",
+            "gu": "જે લોકો સાથે તમે રહેતા હોવ નહીં અથવા જે લોકો તમારા વિશિષ્ટ ઘર પરિવારના સભ્યો નથી તેમની સાથે સોશિયલ ડિસ્ટંસિંગના નિયમોનું પાલન કરો.",
+            "pa": "ਉਹਨਾਂ ਲੋਕਾਂ ਨਾਲ ਸਮਾਜਕ ਦੂਰੀ ਦੇ ਨਿਯਮਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ ਜੋ ਤੁਹਾਡੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹਨ ਜਾਂ ਜਿਹੜੇ ਤੁਹਾਡੇ ਵਿਸ਼ੇਸ਼ ਨਜ਼ਦੀਕੀ ਪਰਿਵਾਰ ਵਿੱਚ ਨਹੀਂ ਹਨ।",
+            "pl": "Należy przestrzegać zasad dystansowania społecznego wobec osób, z którymi się nie mieszka, lub osób spoza swojego poszerzonego gospodarstwa domowego.",
+            "ro": "Respectați regulile de distanțare socială cu persoanele cu care nu locuiți sau care nu fac parte din familia dvs. extinsă exclusivă.",
+            "so": "Raac xeerarka kala fogeynta bulshada ee dadka aadan la nooleyn ama aan ku jirin qoyskaaga gaarka ah.",
+            "tr": "Birlikte yaşadığınız insanlar veya genel olarak sık görüştüğünüz diğer ev halkları haricinde sosyal mesafe kurallarına uyunuz.",
+            "ur": "آپ جن لوگوں کے ساتھ نہیں رہتے ہیں یا جو آپ کے خصوصی توسیعی گھرانے میں نہیں ہیں ان کے ساتھ سماجی دوری  کے اصولوں پر عمل کریں۔",
+            "zh": "与不与您同住或不属于您专有大家庭的人员保持社交距离。"
           }
         },
         {
@@ -2726,34 +2695,34 @@
           }
         },
         {
-          "policyIcon": "face-coverings",
+          "policyIcon": "travelling",
           "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
           },
           "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+            "ar": "يُحظر السفر إلى المناطق ذات الانتشار المرتفع للفيروس بدون مُبررٍ معقولٍ. يجب تجنّب السفر إلى المناطق ذات الانتشار المنخفض للفيروس والسفر الدولي.",
+            "bn": "যুক্তিযুক্ত কারণ ছাড়া উচ্চ প্রাদুর্ভাবযুক্ত অঞ্চলগুলোতে যাবেন না। কম প্রাদুর্ভাবযুক্ত অঞ্চলে ভ্রমণ করা বা আন্তর্জাতিক ভ্রমণ এড়িয়ে চলুন।",
+            "cy": "Peidiwch â theithio heb esgus resymol i ardal sydd â llawer o achosion. Peidiwch â theithio i ardal heb lawer o achosion neu i wledydd eraill.",
+            "en": "Do not travel to areas of high prevalence without reasonable excuse. Avoid travel to areas of low prevalence and international travel.",
+            "gu": "વાજબી કારણ વગર વધુ વ્યાપ વાળા વિસ્તારોમાં પ્રવાસ કરશો નહીં. ઓછો વ્યાપ ધરાવતા વિસ્તારોમાં પ્રવાસ અને આંતરરાષ્ટ્રીય પ્રવાસ કરવાનું ટાળો.",
+            "pa": "ਬਿਨਾਂ ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਜ਼ਿਆਦਾ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਨਾ ਕਰੋ। ਘੱਟ ਪ੍ਰਸਾਰ ਵਾਲੇ ਖੇਤਰਾਂ ਦੀ ਯਾਤਰਾ ਅਤੇ ਅੰਤਰਰਾਸ਼ਟਰੀ ਯਾਤਰਾ ਤੋਂ ਪਰਹੇਜ਼ ਕਰੋ।",
+            "pl": "Nie należy podróżować do okolic o większej częstości zachorowań bez uzasadnionego powodu. Należy unikać podróży do okolic o niskiej częstości zachorowań oraz podróży za granicę.",
+            "ro": "Nu călătoriți în zone cu incidență ridicată fără un motiv rezonabil. Evitați călătoriile în zone cu incidență scăzută și călătoriile internaționale.",
+            "so": "Ha u safrin meelaha cudurku ku badan yahay adigoon haysan cudurdaar macquul ah. Ka fogow u safridda meelaha ay ku yar tahay cudurka iyo safarada caalamiga ah.",
+            "tr": "Makul bir mazeretiniz yoksa, virüsün yoğun olarak görüldüğü bölgelere seyahat etmeyiniz. Virüsün yoğun olarak görülmediği yerlere ve başka ülkelere seyahat etmekten de kaçınınız.",
+            "ur": "معقول عذر کے بغیر زیادہ پھیلاؤ والے علاقوں میں سفر مت کریں۔ کم پھیلاؤ والے علاقوں کا سفر کرنے اور بین الاقوامی سفر کرنے سے پرہیز کریں۔",
+            "zh": "如无合理理由，请勿前往病毒高发区。避免前往低发地和进行国际旅行。"
           }
         },
         {
@@ -2788,7 +2757,7 @@
           }
         },
         {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -2816,6 +2785,37 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "أغطية الوجه",
+            "bn": "মুখের আবরণ",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "ફેસમાસ્ક",
+            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
+            "pl": "Osłona twarzy",
+            "ro": "Protecție facială",
+            "so": "Waxyaabaha wajiga lagu daboolo",
+            "tr": "Yüz maskeleri",
+            "ur": "نقاب",
+            "zh": "面罩"
+          },
+          "policyContent": {
+            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
+            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
+            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
+            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
+            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
+            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
+            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
+            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
+            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
           }
         }
       ]
@@ -2969,7 +2969,7 @@
             "zh": "社交距离"
           },
           "policyContent": {
-            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن أفراد أسرتكم المُوسَّعة.",
+            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن مجموعة الدعم الخاصة بكم.",
             "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন না বা যারা আপনার সাপোর্ট বাবলের অংশ নন, তাদের সঙ্গে সামাজিক দূরত্ব বজায় রাখার নিয়ম মেনে চলুন।",
             "cy": "Dilynwch y rheolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch swigen gefnogaeth.",
             "en": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
@@ -2981,37 +2981,6 @@
             "tr": "Birlikte yaşadığınız veya yakın destek balonunuzdaki insanlar haricinde sosyal mesafe kurallarına uyunuz.",
             "ur": "آپ جن لوگوں کے ساتھ نہیں رہتے ہیں یا جو آپ کے امدادی دائرے میں نہیں ہیں ان کے ساتھ سماجی دوری   کے اصولوں پر عمل کریں۔",
             "zh": "与不与您同住或不属于您的“圆顶小屋”的家庭人员保持社交距离。"
-          }
-        },
-        {
-          "policyIcon": "travelling",
-          "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
-            "cy": "Teithio",
-            "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
-          },
-          "policyContent": {
-            "ar": "ُحظر السفر بدون مُبررٍ معقولٍ. يُحظر السفر الدولي بدون مُبررٍ معقولٍ.",
-            "bn": "যুক্তিযুক্ত কারণ ছাড়া ভ্রমন করবেন না। যুক্তিযুক্ত কারণ ছাড়া আন্তর্জাতিক ভ্রমন করবেন না।",
-            "cy": "Peidiwch â theithio heb esgus rhesymol. Peidiwch â theithio i wledydd eraill heb esgus rhesymol.",
-            "en": "Do not travel without reasonable excuse. Do not travel internationally without reasonable excuse.",
-            "gu": "વાજબી કારણ વગર પ્રવાસ કરશો નહીં. વાજબી કારણ વગર ઇન્ટરનેશન્લ ટ્રાવેલ કરશો નહીં.",
-            "pa": "ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਬਿਨਾਂ ਯਾਤਰਾ ਨਾ ਕਰੋ। ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਬਿਨਾਂ ਅੰਤਰਰਾਸ਼ਟਰੀ ਯਾਤਰਾ ਨਾ ਕਰੋ।",
-            "pl": "Nie należy podróżować bez uzasadnionego powodu. Nie należy podróżować za granicę bez uzasadnionego powodu.",
-            "ro": "Nu călătoriți fără un motiv rezonabil. Nu călătoriți internațional fără un motiv rezonabil.",
-            "so": "Ha safrin adigoon haysan cudurdaar macquul ah. Dibidda ha u safrin adigoon haysan cudurdaar macquul ah.",
-            "tr": "Makul bir mazeretiniz yoksa seyahat etmeyiniz. Makul bir mazeretiniz yoksa uluslararası seyahat etmeyiniz.",
-            "ur": "معقول عذر کے بغیر سفر مت کریں۔ معقول عذر کے بغیر بین الاقوامی سفر مت کریں۔",
-            "zh": "如无合理理由，请勿旅行。如无合理理由，请勿进行国际旅行。"
           }
         },
         {
@@ -3046,34 +3015,34 @@
           }
         },
         {
-          "policyIcon": "face-coverings",
+          "policyIcon": "travelling",
           "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
+            "ar": "السفر",
+            "bn": "ভ্রমণ",
+            "cy": "Teithio",
+            "en": "Travelling",
+            "gu": "પ્રવાસ",
+            "pa": "ਸਫਰ",
+            "pl": "Podróże",
+            "ro": "Călătoriile",
+            "so": "Socdaal",
+            "tr": "Seyahat",
+            "ur": "سفر",
+            "zh": "出行"
           },
           "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+            "ar": "ُحظر السفر بدون مُبررٍ معقولٍ. يُحظر السفر الدولي بدون مُبررٍ معقولٍ.",
+            "bn": "যুক্তিযুক্ত কারণ ছাড়া ভ্রমন করবেন না। যুক্তিযুক্ত কারণ ছাড়া আন্তর্জাতিক ভ্রমন করবেন না।",
+            "cy": "Peidiwch â theithio heb esgus rhesymol. Peidiwch â theithio i wledydd eraill heb esgus rhesymol.",
+            "en": "Do not travel without reasonable excuse. Do not travel internationally without reasonable excuse.",
+            "gu": "વાજબી કારણ વગર પ્રવાસ કરશો નહીં. વાજબી કારણ વગર ઇન્ટરનેશન્લ ટ્રાવેલ કરશો નહીં.",
+            "pa": "ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਬਿਨਾਂ ਯਾਤਰਾ ਨਾ ਕਰੋ। ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਬਿਨਾਂ ਅੰਤਰਰਾਸ਼ਟਰੀ ਯਾਤਰਾ ਨਾ ਕਰੋ।",
+            "pl": "Nie należy podróżować bez uzasadnionego powodu. Nie należy podróżować za granicę bez uzasadnionego powodu.",
+            "ro": "Nu călătoriți fără un motiv rezonabil. Nu călătoriți internațional fără un motiv rezonabil.",
+            "so": "Ha safrin adigoon haysan cudurdaar macquul ah. Dibidda ha u safrin adigoon haysan cudurdaar macquul ah.",
+            "tr": "Makul bir mazeretiniz yoksa seyahat etmeyiniz. Makul bir mazeretiniz yoksa uluslararası seyahat etmeyiniz.",
+            "ur": "معقول عذر کے بغیر سفر مت کریں۔ معقول عذر کے بغیر بین الاقوامی سفر مت کریں۔",
+            "zh": "如无合理理由，请勿旅行。如无合理理由，请勿进行国际旅行。"
           }
         },
         {
@@ -3108,7 +3077,7 @@
           }
         },
         {
-          "policyIcon": "work",
+          "policyIcon": "work-and-business",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -3136,6 +3105,37 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
+          }
+        },
+        {
+          "policyIcon": "worship",
+          "policyHeading": {
+            "ar": "أغطية الوجه",
+            "bn": "মুখের আবরণ",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "ફેસમાસ્ક",
+            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
+            "pl": "Osłona twarzy",
+            "ro": "Protecție facială",
+            "so": "Waxyaabaha wajiga lagu daboolo",
+            "tr": "Yüz maskeleri",
+            "ur": "نقاب",
+            "zh": "面罩"
+          },
+          "policyContent": {
+            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
+            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
+            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
+            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
+            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
+            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
+            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
+            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
+            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
           }
         }
       ]
@@ -3474,7 +3474,7 @@
       "cy": "Mae Llywodraeth y Deyrnas Unedig wedi cyflwyno Cyfyngiadau Symud Cenedlaethol i helpu rheoli'r firws. \n\nRhaid i bawb aros gartref gan adael am nifer gyfyngedig o resymau yn unig. \n\nCanfyddwch beth mae’r mesurau hyn yn eu golygu o ran gweithio o gartref a chau busnesau, pam eu bod yn cael eu cyflwyno a’r gefnogaeth ariannol sydd ar gael.",
       "en": "The UK Government has introduced a National Lockdown to help control the virus. \n\nEveryone must stay at home and only leave for a limited set of reasons. \n\nFind out what these measures mean for working from home and business closures, why they are being introduced and the financial support available.",
       "gu": "વાયરસને કાબૂમાં રાખવા માટે યૂકે સરકારે નેશ્નલ લૉકડાઉન શરૂ કર્યું છે. \n\nબધાએ ઘરે જ રહેવું. અમૂક કારણોને લીધે બહાર જવું. \n\nઆની ઘર પર, ધંધા બંધ થયા છે એનાં પર કેવી અસર પડશે અને કઈ ફાયનાન્ચેલ મદદ મળી શકે છે એ વિષે વધું જાણ કરી શકો.",
-      "pa": "ਇੰਗਲੈਂਡ ਦੀ ਸਰਕਾਰ ਨੇ ਵਾਇਰਸ ਨੂੰ ਕਾਬੂ ਕਰਨ ਵਿੱਚ ਮਦਦ ਲਈ ਇੱਕ ਕੌਮੀ ਲੌਕਡਾਊਨ ਪੇਸ਼ ਕੀਤਾ ਹੈ।\n\nਹਰੇਕ ਨੂੰ ਘਰ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਸਿਰਫ ਸੀਮਿਤ ਕਾਰਨਾਂ ਕਰਕੇ ਬਾਹਰ ਨਿਕਲਣਾ ਚਾਹੀਦਾ ਹੈ।\n\nਇਹ ਪਤਾ ਲਗਾਓ ਕਿ ਘਰਾਂ ਤੋਂ ਕੰਮ ਕਰਨ ਅਤੇ ਕਾਰੋਬਾਰ ਦੇ ਬੰਦ ਹੋਣ ਤੋਂ ਇਨ੍ਹਾਂ ਉਪਾਵਾਂ ਲਈ ਇਸ ਦਾ ਕੀ ਅਰਥ ਹੈ, ਉਨ੍ਹਾਂ ਨੂੰ ਕਿਉਂ ਪੇਸ਼ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ਅਤੇ ਕਿਹੜੀ ਵਿੱਤੀ ਸਹਾਇਤਾ ਉਪਲਬਧ ਹੈ।",
+      "pa": "ਇੰਗਲੈਂਡ ਦੀ ਸਰਕਾਰ ਨੇ ਵਾਇਰਸ ਨੂੰ ਕਾਬੂ ਕਰਨ ਵਿੱਚ ਮਦਦ ਲਈ ਇੱਕ ਨੈਸ਼ਨਲ ਲੌਕਡਾਊਨ ਪੇਸ਼ ਕੀਤਾ ਹੈ।\n\nਹਰੇਕ ਨੂੰ ਘਰ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਸਿਰਫ ਸੀਮਿਤ ਕਾਰਨਾਂ ਕਰਕੇ ਬਾਹਰ ਨਿਕਲਣਾ ਚਾਹੀਦਾ ਹੈ।\n\nਇਹ ਪਤਾ ਲਗਾਓ ਕਿ ਘਰਾਂ ਤੋਂ ਕੰਮ ਕਰਨ ਅਤੇ ਕਾਰੋਬਾਰ ਦੇ ਬੰਦ ਹੋਣ ਤੋਂ ਇਨ੍ਹਾਂ ਉਪਾਵਾਂ ਲਈ ਇਸ ਦਾ ਕੀ ਅਰਥ ਹੈ, ਉਨ੍ਹਾਂ ਨੂੰ ਕਿਉਂ ਪੇਸ਼ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ਅਤੇ ਕਿਹੜੀ ਵਿੱਤੀ ਸਹਾਇਤਾ ਉਪਲਬਧ ਹੈ।",
       "pl": "Rząd Zjednoczonego Królestwa wprowadził krajowy lockdown w celu kontroli rozprzestrzeniania się wirusa. \n\nWszyscy muszą pozostać w domu i wychodzić jedynie z pewnych określonych powodów. \n\nDowiedz się, co oznaczają te ograniczenia w kwestii pracy w domu, które instytucje są zamknięte, dlaczego wprowadzono takie środki oraz jakie wsparcie finansowe jest dostępne.",
       "ro": "Guvernul britanic a introdus carantina națională pentru a ajuta la controlul răspândirii virusului.\n\nToată lumea trebuie să rămână acasă și să părăsească domiciliul numai dintr-un număr limitat de motive.\n\nAflați ce înseamnă aceste măsuri pentru lucrul de acasă și pentru închiderea afacerilor, de ce au fost implementate și ce sprijin financiar este disponibil.",
       "so": "Dawlada UK waxay soo rogtay xiritaan qaran si gacan looga geysto xakameynta fayruuska. \n\nQof walba waa inuu ku ekaadaa gurigiisa oo sababo xadidan awgood kaliya ah uga tagaa. \n\nSoo ogow waxa ay talaabadani uga dhigan tahay ku shaqeynta guriga iyo xiritaanka ganacsiyada, sababta loo soo rogay iyo taageerada dhaqaale ee la heli karo.",
@@ -3543,17 +3543,17 @@
       "zh": ""
     },
     "content": {
-      "ar": "إذا كنت تعاني أيًّا من أعراض فيروس كورونا، يُرجى تحديد زرّ \"\"التحقق من الأعراض\"\" في التطبيق وحجز اختبارٍ مجانيٍّ.\n\nإذا لم تكن لديك أي أعراض للإصابة، فإننا بصدد مطالبة أكبر عدد ممكن من الأشخاص (من عمر 16 عامًا فما فوق) بإجراء الاختبار حتى يتسنى لنا تحديد أي حالات مُصابة بالسلالة الجديدة والعمل على منع تفشيها. ولذا، فقد عمدنا إلى نشر وحدات اختبار متنقلة إضافية في منطقتك وتوفير المزيد من مجموعات الاختبار المنزلي على الصعيد المحلي.\n\nللاطلاع على المزيد من المعلومات، يرجى زيارة الموقع الإلكتروني للسلطة المحلية لديك.\n\nعمدت حكومة المملكة المتحدة إلى تطبيق إغلاقٍ وطنيٍّ للحدِّ من انتشار جائحة فيروس كورونا.\n\nيتعين على الجميع البقاء في منزله وعدم مغادرته إلا لمجموعة مُحددة من الأسباب.\n\nتعرّفوا على تبعات هذه التدابير فيما يتعلق بالعمل من المنزل وإغلاق المنشآت والداعي إلى تطبيقها والدعم المالي المتوفر.",
+      "ar": "إذا كنت تعاني أيًّا من أعراض فيروس كورونا، يُرجى تحديد زرّ \"التحقق من الأعراض\" في التطبيق وحجز اختبارٍ مجانيٍّ.\n\nإذا لم تكن لديك أي أعراض للإصابة، فإننا بصدد مطالبة أكبر عدد ممكن من الأشخاص (من عمر 16 عامًا فما فوق) بإجراء الاختبار حتى يتسنى لنا تحديد أي حالات مُصابة بالسلالة الجديدة والعمل على منع تفشيها. ولذا، فقد عمدنا إلى نشر وحدات اختبار متنقلة إضافية في منطقتك وتوفير المزيد من مجموعات الاختبار المنزلي على الصعيد المحلي.\n\nللاطلاع على المزيد من المعلومات، يرجى زيارة الموقع الإلكتروني للسلطة المحلية لديك.\n\nعمدت حكومة المملكة المتحدة إلى تطبيق إغلاقٍ وطنيٍّ للحدِّ من انتشار جائحة فيروس كورونا.\n\nيتعين على الجميع البقاء في منزله وعدم مغادرته إلا لمجموعة مُحددة من الأسباب.\n\nتعرّفوا على تبعات هذه التدابير فيما يتعلق بالعمل من المنزل وإغلاق المنشآت والداعي إلى تطبيقها والدعم المالي المتوفر.",
       "bn": "আপনার করোনাভাইরাসের উপসর্গ থাকলে, অনুগ্রহ করে অ্যাপে “উপসর্গ যাচাই করুন” বোতাম বেছে নিয়ে একটি পরীক্ষা বুক করুন।\n\nআপনার উপসর্গ না থাকলে, আমরা যত বেশি সম্ভব মানুষকে (১৬+ বয়সী) পরীক্ষা করাতে বলছি যাতে আমরা নতুন রকম ভাইরাস থাকা যে কাউকে খুঁজে পেতে পারি এবং তা দমন করতে সাহায্য করতে পারি। আমরা আপনার এলাকায় বাড়তি ভ্রাম্যমান পরীক্ষা ইউনিট রেখেছি এবং স্থানীয়ভাবে আরো বেশি স্বগৃহে পরীক্ষা করার কিট লভ্য করেছি।\n\nআরো তথ্যের জন্য অনুগ্রহ করে আপনার স্থানীয় কর্তৃপক্ষের ওয়েবসাইট দেখুন।\n\nভাইরাস নিয়ন্ত্রণে সহায়তার জন্য যুক্তরাজ্য সরকার জাতীয় লকডাউন চালু করেছে।\n\nসবাইকে বাড়িতে থাকতে হবে, আর কেবলমাত্র গুটিকয়েক কারণে বাড়ির বাইরে বের হওয়া যেতে পারে।\n\nগৃহীত ব্যবস্থাসমূহ বাসা থেকে অফিসের কাজ করা ও ব্যবসায় প্রতিষ্ঠান বন্ধ রাখার ক্ষেত্রে কী অর্থ বহন করে, এসব ব্যবস্থা কেন গ্রহণ করা হয়েছে এবং কী আর্থিক সহায়তা পাওয়া যাবে সেসব বিষয়ে আরো খোঁজ করুন।",
       "cy": "Os oes gennych symptomau coronafeirws, dewiswch y botwm \"Gwirio symptomau\" yn yr ap, ac ewch ati i archebu prawf.\n\nOs nad oes gennych symptomau, rydym yn gofyn i gynifer o bobl â phosibl (16+ oed) i gael prawf er mwyn i ni ddod o hyd i unrhyw achos o'r amrywiolyn newydd a helpu i'w atal. Rydym wrthi'n defnyddio Unedau Profi Symudol yn eich ardal chi ac mae mwy o becynnau profion cartref ar gael yn lleol.\n\nI gael rhagor o wybodaeth, ewch i wefan eich Awdurdod Lleol.\n\nMae Llywodraeth y Deyrnas Unedig wedi cyflwyno Cyfyngiadau Symud Cenedlaethol i helpu rheoli'r firws.\n\nRhaid i bawb aros gartref gan adael am nifer gyfyngedig o resymau yn unig.\n\nCanfyddwch beth mae’r mesurau hyn yn eu golygu o ran gweithio o gartref a chau busnesau, pam eu bod yn cael eu cyflwyno a’r gefnogaeth ariannol sydd ar gael.",
       "en": "If you have coronavirus symptoms, please select the “Check symptoms” button in the app and book a test.\n\nIf you do not have symptoms, we are asking as many people as possible (aged 16+) to get tested so we can find any cases of the new variant and help suppress it. We have deployed additional Mobile Testing Units to your area and made more home test kits available locally.\n\nFor more information please visit your Local Authority website.\n\nThe UK Government has introduced a National Lockdown to help control the virus.\n\nEveryone must stay at home and only leave for a limited set of reasons.\n\nFind out what these measures mean for working from home and business closures, why they are being introduced and the financial support available.",
       "gu": "જો તમને કોરોનાવાયરસના લક્ષણો હોય, તો કૃપા કરીને ઍપમાં “લક્ષણો તપાસો” બટન પસંદ કરો અને પરીક્ષણ બુક કરો.\n\nજો તમને લક્ષણો હોય નહીં તો, અમે શક્ય તેટલા લોકો ઉંમર 16+ ને પરીક્ષણ કરાવવા માટે કહી રહ્યા છીએ જેથી અમે નવા પ્રકારના કોઈ પણ કેસ શોધી શકીએ અને તેને ડામવામાં મદદ કરી શકીએ. અમે તમારા વિસ્તારમાં વધારાના મોબાઇલ ટેસ્ટિંગ એકમો તૈનાત કર્યા છે અને વધુ હોમ ટેસ્ટ કીટ સ્થાનિક રીતે ઉપલબ્ધ બનાવ્યા છે.\n\nવધુ માહિતી માટે, કૃપા કરીને તમારી લોકલ ઓથોરિટી વેબસાઇટ તપાસો.\n\nવાયરસને કાબૂમાં રાખવા માટે યૂકે સરકારે નેશ્નલ લૉકડાઉન શરૂ કર્યું છે. \n\nબધાએ ઘરે જ રહેવું. અમૂક કારણોને લીધે બહાર જવું. \n\nઆની ઘર પર, ધંધા બંધ થયા છે એનાં પર કેવી અસર પડશે અને કઈ ફાયનાન્ચેલ મદદ મળી શકે છે એ વિષે વધું જાણ કરી શકો.",
-      "pa": "ਜੇ ਤੁਹਾਡੇ ਵਿੱਚ ਕੋਰੋਨਾਵਾਇਰਸ ਦੇ ਲੱਛਣ ਹਨ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਵਿਚ “ਲੱਛਣਾਂ ਦੀ ਜਾਂਚ ਕਰੋ” ਬਟਨ ਦੀ ਚੋਣ ਕਰੋ ਅਤੇ ਟੈਸਟ ਬੁੱਕ ਕਰੋ।\n\nਜੇ ਤੁਹਾਡੇ ਅੰਦਰ ਲੱਛਣ ਨਹੀਂ ਹਨ, ਤਾਂ ਅਸੀਂ ਵੱਧ ਤੋਂ ਵੱਧ ਲੋਕਾਂ (16+ ਉਮਰ ਦੇ) ਨੂੰ ਟੈਸਟ ਕਰਵਾਉਣ ਲਈ ਕਹਿ ਰਹੇ ਹਾਂ ਤਾਂ ਜੋ ਅਸੀਂ ਨਵੇਂ ਰੂਪ ਦੇ ਕਿਸੇ ਵੀ ਕੇਸ ਨੂੰ ਲੱਭ ਸਕੀਏ ਅਤੇ ਇਸਨੂੰ ਦਬਾਉਣ ਵਿੱਚ ਮਦਦ ਕਰ ਸਕੀਏ। ਅਸੀਂ ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਵਧੇਰੇ ਮੋਬਾਈਲ ਟੈਸਟਿੰਗ ਯੂਨਿਟਸ ਤੈਨਾਤ ਕੀਤੀਆਂ ਹਨ ਅਤੇ ਸਥਾਨਕ ਤੌਰ 'ਤੇ ਵਧੇਰੇ ਘਰੇਲੂ ਟੈਸਟ ਕਿੱਟਾਂ ਉਪਲਬਧ ਕਰਵਾਈਆਂ ਹਨ।\n\nਵਧੇਰੇ ਜਾਣਕਾਰੀ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਟੀ ਦੀ ਵੈੱਬਸਾਈਟ ਵੇਖੋ।\n\nਇੰਗਲੈਂਡ ਦੀ ਸਰਕਾਰ ਨੇ ਵਾਇਰਸ ਨੂੰ ਕਾਬੂ ਕਰਨ ਵਿੱਚ ਮਦਦ ਲਈ ਇੱਕ ਕੌਮੀ ਲੌਕਡਾਊਨ ਪੇਸ਼ ਕੀਤਾ ਹੈ।\n\nਹਰੇਕ ਨੂੰ ਘਰ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਸਿਰਫ ਸੀਮਿਤ ਕਾਰਨਾਂ ਕਰਕੇ ਬਾਹਰ ਨਿਕਲਣਾ ਚਾਹੀਦਾ ਹੈ।\n\nਇਹ ਪਤਾ ਲਗਾਓ ਕਿ ਘਰਾਂ ਤੋਂ ਕੰਮ ਕਰਨ ਅਤੇ ਕਾਰੋਬਾਰ ਦੇ ਬੰਦ ਹੋਣ ਤੋਂ ਇਨ੍ਹਾਂ ਉਪਾਵਾਂ ਲਈ ਇਸ ਦਾ ਕੀ ਅਰਥ ਹੈ, ਉਨ੍ਹਾਂ ਨੂੰ ਕਿਉਂ ਪੇਸ਼ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ਅਤੇ ਕਿਹੜੀ ਵਿੱਤੀ ਸਹਾਇਤਾ ਉਪਲਬਧ ਹੈ।",
+      "pa": "ਜੇ ਤੁਹਾਡੇ ਵਿੱਚ ਕੋਰੋਨਾਵਾਇਰਸ ਦੇ ਲੱਛਣ ਹਨ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਵਿਚ “ਲੱਛਣਾਂ ਦੀ ਜਾਂਚ ਕਰੋ” ਬਟਨ ਦੀ ਚੋਣ ਕਰੋ ਅਤੇ ਟੈਸਟ ਬੁੱਕ ਕਰੋ।\n\nਜੇ ਤੁਹਾਡੇ ਅੰਦਰ ਲੱਛਣ ਨਹੀਂ ਹਨ, ਤਾਂ ਅਸੀਂ ਵੱਧ ਤੋਂ ਵੱਧ ਲੋਕਾਂ (16+ ਉਮਰ ਦੇ) ਨੂੰ ਟੈਸਟ ਕਰਵਾਉਣ ਲਈ ਕਹਿ ਰਹੇ ਹਾਂ ਤਾਂ ਜੋ ਅਸੀਂ ਨਵੇਂ ਰੂਪ ਦੇ ਕਿਸੇ ਵੀ ਕੇਸ ਨੂੰ ਲੱਭ ਸਕੀਏ ਅਤੇ ਇਸਨੂੰ ਦਬਾਉਣ ਵਿੱਚ ਮਦਦ ਕਰ ਸਕੀਏ। ਅਸੀਂ ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਵਧੇਰੇ ਮੋਬਾਈਲ ਟੈਸਟਿੰਗ ਯੂਨਿਟਸ ਤੈਨਾਤ ਕੀਤੀਆਂ ਹਨ ਅਤੇ ਸਥਾਨਕ ਤੌਰ 'ਤੇ ਵਧੇਰੇ ਘਰੇਲੂ ਟੈਸਟ ਕਿੱਟਾਂ ਉਪਲਬਧ ਕਰਵਾਈਆਂ ਹਨ।\n\nਵਧੇਰੇ ਜਾਣਕਾਰੀ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਟੀ ਦੀ ਵੈੱਬਸਾਈਟ ਵੇਖੋ।\n\nਇੰਗਲੈਂਡ ਦੀ ਸਰਕਾਰ ਨੇ ਵਾਇਰਸ ਨੂੰ ਕਾਬੂ ਕਰਨ ਵਿੱਚ ਮਦਦ ਲਈ ਇੱਕ ਨੈਸ਼ਨਲੀ ਲੌਕਡਾਊਨ ਪੇਸ਼ ਕੀਤਾ ਹੈ।\n\nਹਰੇਕ ਨੂੰ ਘਰ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਸਿਰਫ ਸੀਮਿਤ ਕਾਰਨਾਂ ਕਰਕੇ ਬਾਹਰ ਨਿਕਲਣਾ ਚਾਹੀਦਾ ਹੈ।\n\nਇਹ ਪਤਾ ਲਗਾਓ ਕਿ ਘਰਾਂ ਤੋਂ ਕੰਮ ਕਰਨ ਅਤੇ ਕਾਰੋਬਾਰ ਦੇ ਬੰਦ ਹੋਣ ਤੋਂ ਇਨ੍ਹਾਂ ਉਪਾਵਾਂ ਲਈ ਇਸ ਦਾ ਕੀ ਅਰਥ ਹੈ, ਉਨ੍ਹਾਂ ਨੂੰ ਕਿਉਂ ਪੇਸ਼ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ ਅਤੇ ਕਿਹੜੀ ਵਿੱਤੀ ਸਹਾਇਤਾ ਉਪਲਬਧ ਹੈ।",
       "pl": "Jeżeli masz objawy koronawirusa, proszę wybrać opcję „Sprawdzanie objawów” w aplikacji i zamówić test.\n\nJeżeli nie masz objawów, prosimy aby jak najwięcej osób (powyżej 16 lat) wykonało test, abyśmy mogli wykryć przypadki nowego wariantu i pomóc w zahamowaniu jego rozprzestrzenienia. Uruchomiliśmy dodatkowe mobilne punkty testowania w Twoim rejonie oraz udostępniliśmy lokalnie więcej domowych zestawów testowych.\n\nW celu uzyskania dalszych informacji, prosimy odwiedzić stronę internetową swoich władz lokalnych.\n\nRząd Zjednoczonego Królestwa wprowadził krajowy lockdown w celu kontroli rozprzestrzeniania się wirusa. \n\nWszyscy muszą pozostać w domu i wychodzić jedynie z pewnych określonych powodów. \n\nDowiedz się, co oznaczają te ograniczenia w kwestii pracy w domu, które instytucje są zamknięte, dlaczego wprowadzono takie środki oraz jakie wsparcie finansowe jest dostępne.",
       "ro": "Dacă aveți simptome de coronavirus, selectați butonul „Verificați simptomele” din aplicație și rezervați un test.\n\nDacă nu aveți simptome, solicităm cât mai multor persoane (cu vârsta 16+) să se testeze, astfel încât să putem depista cazurile infectate cu noua tulpină și să o putem eradica. Am trimis unități mobile de testare suplimentare în zona dvs. și am pus la dispoziție mai multe seturi de testare la domiciliu la nivel local.\n\nPentru mai multe informații, vă rugăm să vizitați pagina web a autorității locale.\n\nGuvernul britanic a introdus carantina națională pentru a ajuta la controlul răspândirii virusului.\n\nToată lumea trebuie să rămână acasă și să părăsească domiciliul numai dintr-un număr limitat de motive.\n\nAflați ce înseamnă aceste măsuri pentru lucrul de acasă și pentru închiderea afacerilor, de ce au fost implementate și ce sprijin financiar este disponibil.",
-      "so": "Haddii aad leedahay astaamaha coronavirus, fadlan dooro batoonka ''Hubi astaamaha\"\" ee ku yaal app-ka oo ballanso baaritaan.\n\nHaddii aadan lahayn astaamo, waxaan weydiisaneynaa dad badan intii suurtogal ah (da'da 16+) in la baaro si aan u helno kiis kasta ee nooca cusub si aan gacan uga geysano cabudhintiisa. Waxaan aagaaga geynay Qaybaha Baaritaanka ee Dhaqdhaqaaqa oo dheeraad ah waxaanan degaanka ama xaafadda ka diyaarinnay xirmooyin dheeraad ah oo guriga lagu baaro.\n\nWixii macluumaad dheeraad ah fadlan u booqo barta internetka Maamulka Degaankaaga.\n\nDawlada UK waxay soo rogtay xiritaan qaran si gacan looga geysto xakameynta fayruuska. \n\nQof walba waa inuu ku ekaadaa gurigiisa oo sababo xadidan awgood kaliya ah uga tagaa. \n\nSoo ogow waxa ay talaabadani uga dhigan tahay ku shaqeynta guriga iyo xiritaanka ganacsiyada, sababta loo soo rogay iyo taageerada dhaqaale ee la heli karo.",
-      "tr": "Koronavirüs belirtilerine sahipseniz, lütfen uygulamada \"\"Belirtileri kontrol edin\"\" düğmesini seçin ve bir test için rezervasyon yaptırın.\n\nHerhangi bir belirtiniz yoksa, yeni varyanta ait vakaları bulmak ve kontrol altına alınmasına yardımcı olmak için mümkün olduğu kadar fazla sayıda kişinin (16 yaş üzeri) test yaptırmasını istiyoruz. Bölgenizde ilave Mobil Test Ünitelerini faaliyete geçirdik ve yerel olarak daha fazla sayıda evde test kitinin mevcut olmasını sağladık.\n\nDaha fazla bilgi için lütfen Yerel Yönetiminizin web sitesini ziyaret edin.\n\nBirleşik Krallık Hükümeti, virüsü kontrol altına almaya yardımcı olmak için ulusal sokağa çıkma kısıtlaması uygulamasını başlatmıştır.\n\nHerkes evde kalmalıdır ve sadece sınırlı sayıdaki sebepten dolayı evini terk edebilir. \n\nBu önlemlerin evden çalışma ve işyerlerinin kapanışı için ne anlama geldiğini, neden yürürlüğe konulduklarını ve mevcut finansal yardım hakkında bilgi edinin.",
-      "ur": "اگر آپ کے اندر کرونا وائرس کی علامات پائی جاتی ہیں تو برائے مہربانی اس ایپ میں \"\"علامات کی جانچ کریں\"\" کے   بٹن کا انتخاب کریں اور جانچ کے لیے وقت  حاصل کریں ۔\n\nاگر آپ کے اندر علامات نہیں پائی جاتی ہیں تب بھی ہم زیادہ سے زیادہ لوگوں (عمر 16 +) سے جانچ کرانے کے لیے کہہ رہے ہیں تاکہ ہم نئی قسم کے کوئی بھی کیسیز  کا پتہ لگا سکیں  اور انہیں روکنے میں مدد کر سکیں۔ ہم نے آپ کے علاقہ میں اضافی موبائل ٹیسٹنگ یونٹس تعینات کی ہیں اور مقامی طور پر مزید ہوم ٹیسٹ کٹس دستیاب کرائی ہیں۔\n\nمزید معلومات کے لیے برائے مہربانی اپنی لوکل اتھارٹی  کی ویب سائٹ دیکھیں۔\n\nبرطانیہ کی حکومت نے وائرس پر قابو پانے میں مدد کے لئے ایک قومی لاک ڈاؤن متعارف کرایا ہے۔\n\nہر ایک کو گھر میں ہی رہنا چاہئے اور صرف محدود وجوہات  کی بناء پر باہر جانا  چاہئے۔\n\nمعلوم کریں کہ ان اقدامات کا  گھر سے کام کرنے اور کاروباری بندش  میں کیا  مطلب ہے  ، انہیں کیوں متعارف  کیا جارہا ہے اور دستیاب مالی مدد ۔",
+      "so": "Haddii aad leedahay astaamaha coronavirus, fadlan dooro batoonka ''Hubi astaamaha\" ee ku yaal app-ka oo ballanso baaritaan.\n\nHaddii aadan lahayn astaamo, waxaan weydiisaneynaa dad badan intii suurtogal ah (da'da 16+) in la baaro si aan u helno kiis kasta ee nooca cusub si aan gacan uga geysano cabudhintiisa. Waxaan aagaaga geynay Qaybaha Baaritaanka ee Dhaqdhaqaaqa oo dheeraad ah waxaanan degaanka ama xaafadda ka diyaarinnay xirmooyin dheeraad ah oo guriga lagu baaro.\n\nWixii macluumaad dheeraad ah fadlan booqo barta internetka Maamulka Degaankaaga.\n\nDawlada UK waxay soo rogtay xiritaan qaran si gacan looga geysto xakameynta fayruuska. \n\nQof walba waa inuu ku ekaadaa gurigiisa oo sababo xadidan awgood kaliya ah uga tagaa. \n\nSoo ogow waxa ay talaabadani uga dhigan tahay ku shaqeynta guriga iyo xiritaanka ganacsiyada, sababta loo soo rogay iyo taageerada dhaqaale ee la heli karo.",
+      "tr": "Koronavirüs belirtilerine sahipseniz, lütfen uygulamada \"Belirtileri kontrol edin\" düğmesini seçin ve bir test için rezervasyon yaptırın.\n\nHerhangi bir belirtiniz yoksa, yeni varyanta ait vakaları bulmak ve kontrol altına alınmasına yardımcı olmak için mümkün olduğu kadar fazla sayıda kişinin (16 yaş üzeri) test yaptırmasını istiyoruz. Bölgenizde ilave Mobil Test Ünitelerini faaliyete geçirdik ve yerel olarak daha fazla sayıda evde test kitinin mevcut olmasını sağladık.\n\nDaha fazla bilgi için lütfen Yerel Yönetiminizin web sitesini ziyaret edin.\n\nBirleşik Krallık Hükümeti, virüsü kontrol altına almaya yardımcı olmak için ulusal sokağa çıkma kısıtlaması uygulamasını başlatmıştır.\n\nHerkes evde kalmalıdır ve sadece sınırlı sayıdaki sebepten dolayı evini terk edebilir. \n\nBu önlemlerin evden çalışma ve işyerlerinin kapanışı için ne anlama geldiğini, neden yürürlüğe konulduklarını ve mevcut finansal yardım hakkında bilgi edinin.",
+      "ur": "اگر آپ کے اندر کرونا وائرس کی علامات پائی جاتی ہیں تو برائے مہربانی اس ایپ میں \"علامات کی جانچ کریں\" کے   بٹن کا انتخاب کریں اور جانچ کے لیے وقت  حاصل کریں ۔\n\nاگر آپ کے اندر علامات نہیں پائی جاتی ہیں تب بھی ہم زیادہ سے زیادہ لوگوں (عمر 16 +) سے جانچ کرانے کے لیے کہہ رہے ہیں تاکہ ہم نئی قسم کے کوئی بھی کیسیز  کا پتہ لگا سکیں  اور انہیں روکنے میں مدد کر سکیں۔ ہم نے آپ کے علاقہ میں اضافی موبائل ٹیسٹنگ یونٹس تعینات کی ہیں اور مقامی طور پر مزید ہوم ٹیسٹ کٹس دستیاب کرائی ہیں۔\n\nمزید معلومات کے لیے برائے مہربانی اپنی لوکل اتھارٹی  کی ویب سائٹ دیکھیں۔\n\nبرطانیہ کی حکومت نے وائرس پر قابو پانے میں مدد کے لئے ایک قومی لاک ڈاؤن متعارف کرایا ہے۔\n\nہر ایک کو گھر میں ہی رہنا چاہئے اور صرف محدود وجوہات  کی بناء پر باہر جانا  چاہئے۔\n\nمعلوم کریں کہ ان اقدامات کا  گھر سے کام کرنے اور کاروباری بندش  میں کیا  مطلب ہے  ، انہیں کیوں متعارف  کیا جارہا ہے اور دستیاب مالی مدد ۔",
       "zh": "如果您出现了冠状病毒症状，请点击应用程序中的 Check symptoms（检查症状）按钮并预约检测。\n\n如果您没有出现症状，我们要求尽可能多的人（年龄在16 岁以上）进行检测，以便我们发现任何新变种的病例并帮助对其进行抑制。我们已在您所在的地区部署了额外的移动测试设备，并且向当地提供了更多的家庭检测试剂盒。\n\n如需更多信息，请访问地方当局网站。\n\n英国政府实施了全国封锁措施，帮助控制病毒。\n\n每个人都必须待在家中，只有在有限的理由下才能外出。\n\n了解这些措施对在家工作和企业倒闭意味着什么，为什么要采取这些措施，以及可以获得的财政支持。"
     },
     "linkUrl": {
@@ -3571,18 +3571,18 @@
       "zh": "https://www.gov.uk/guidance/national-lockdown-stay-at-home"
     },
     "linkTitle": {
-      "ar": "Read latest advice",
-      "bn": "Read latest advice",
+      "ar": "قراءة آخر النصائح المتوفرة",
+      "bn": "সর্বশেষ পরামর্শ পড়ুন",
       "cy": "Darllen y cyngor diweddaraf",
       "en": "Read latest advice",
-      "gu": "Read latest advice",
-      "pa": "Read latest advice",
-      "pl": "Read latest advice",
-      "ro": "Read latest advice",
-      "so": "Read latest advice",
-      "tr": "Read latest advice",
-      "ur": "Read latest advice",
-      "zh": "Read latest advice"
+      "gu": "નવીનતમ સલાહ વાંચો",
+      "pa": "ਨਵੀਨਤਮ ਸਲਾਹ ਪੜ੍ਹੋ",
+      "pl": "Zapoznaj się z najnowszymi wytycznymi",
+      "ro": "Citiți ultimele sfaturi",
+      "so": "Akhri talooyinka ugu dambeeya",
+      "tr": "En güncel tavsiyeleri okuyun",
+      "ur": "تازہ ترین مشورہ پڑھیں",
+      "zh": "阅读最新建议"
     }
   }
 }

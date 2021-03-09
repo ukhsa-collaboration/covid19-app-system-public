@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
+import uk.nhs.nhsx.testhelper.data.asInstant
 import java.time.Duration
-import java.time.Instant
 
 class DailyZIPSubmissionPeriodTest {
 
@@ -140,6 +140,4 @@ class DailyZIPSubmissionPeriodTest {
         assertThat(DailyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant()).toString())
             .isEqualTo("1 day: from 2020071900 (inclusive) to 2020072000 (exclusive)")
     }
-
-    private fun String.asInstant() = Instant.parse(this)
 }

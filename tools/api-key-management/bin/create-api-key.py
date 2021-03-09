@@ -151,7 +151,7 @@ if __name__ == "__main__":
     log(f"aws secretsmanager create-secret --name {secret_manager_location} --secret-string '{hashed_value}'")
 
     log(f"(2) Action Required: You need to email to file {zip_path} to the third party")
-    log(f"and follow the trust validation procedure in confluence page: Distribution of API Keys to Third Parties")
+    log(f"and follow the trust validation procedure in tools/api-key-management: README.md")
 
     log(f"(3) Action Required: The key fingerprint you need to verify with them is {distribution_key_name}")
     log(f"                   : must have key fingerprint {gpg_key_fingerprint(distribution_key_name)}")

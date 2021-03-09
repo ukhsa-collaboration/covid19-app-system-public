@@ -7,21 +7,19 @@ import uk.nhs.nhsx.core.Jackson
 abstract class CtaExchangeResult {
     abstract fun toHttpResponse(): APIGatewayProxyResponseEvent
 
-    class Available(val ctaExchangeResponse: CtaExchangeResponse) : CtaExchangeResult() {
-        override fun toHttpResponse(): APIGatewayProxyResponseEvent =
-            HttpResponses.ok(Jackson.toJson(ctaExchangeResponse))
+    class Available(val ctaExchangeResponse: CtaExchangeResponseV1) : CtaExchangeResult() {
+        override fun toHttpResponse() = HttpResponses.ok(Jackson.toJson(ctaExchangeResponse))
     }
 
     class AvailableV2(val ctaExchangeResponse: CtaExchangeResponseV2) : CtaExchangeResult() {
-        override fun toHttpResponse(): APIGatewayProxyResponseEvent =
-            HttpResponses.ok(Jackson.toJson(ctaExchangeResponse))
+        override fun toHttpResponse() = HttpResponses.ok(Jackson.toJson(ctaExchangeResponse))
     }
 
     class Pending : CtaExchangeResult() {
-        override fun toHttpResponse(): APIGatewayProxyResponseEvent = HttpResponses.noContent()
+        override fun toHttpResponse() = HttpResponses.noContent()
     }
 
     class NotFound : CtaExchangeResult() {
-        override fun toHttpResponse(): APIGatewayProxyResponseEvent = HttpResponses.notFound()
+        override fun toHttpResponse() = HttpResponses.notFound()
     }
 }

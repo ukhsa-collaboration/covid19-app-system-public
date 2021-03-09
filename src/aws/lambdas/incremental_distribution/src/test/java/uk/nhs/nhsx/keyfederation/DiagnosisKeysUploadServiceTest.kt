@@ -4,14 +4,13 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.amazonaws.xray.strategy.ContextMissingStrategy
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.type.TypeReference
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.matching.MatchResult
+import com.github.tomakehurst.wiremock.matching.MatchResult.*
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
-import io.mockk.CapturingSlot
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -21,24 +20,27 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.core.SystemObjectMapper
+import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.aws.s3.BucketName
-import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
+import uk.nhs.nhsx.keyfederation.download.ReportType
+import uk.nhs.nhsx.keyfederation.download.TestType
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.JWS
+import uk.nhs.nhsx.keyfederation.upload.PcrExposureUploadFactory
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Clock
 import java.time.Instant
-import java.time.ZoneOffset
-import java.util.Date
+import java.time.ZoneOffset.UTC
+import java.util.*
 
 @ExtendWith(WireMockExtension::class)
 class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
@@ -48,28 +50,28 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         System.setProperty(ContextMissingStrategy.CONTEXT_MISSING_STRATEGY_SYSTEM_PROPERTY_OVERRIDE_KEY, "LOG_ERROR")
     }
 
-    private val events: Events = RecordingEvents()
-    private val clock = Clock.fixed(Instant.parse("2021-02-02T11:13:00.000Z"), ZoneOffset.UTC)
-
+    private val events = RecordingEvents()
+    private val clock = Clock.fixed(Instant.parse("2021-02-02T11:13:00.000Z"), UTC)
     private val now = Instant.now(clock)
 
     @Test
     fun `test update risk level if default enabled`() {
-        val recordingEvents = RecordingEvents()
+        val jws = mockk<JWS>()
+        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
 
         val service = DiagnosisKeysUploadService(
             { now },
-            null,
-            null,
-            null,
-            null,
+            InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
+            FakeSubmissionRepository(listOf(now)),
+            InMemoryBatchTagService(),
+            PcrExposureUploadFactory("GB-EAW"),
             true,
             2,
             14,
             0,
             100,
-            null,
-            recordingEvents
+            TestContext(),
+            events
         )
 
         val transformed = service.updateRiskLevelIfDefaultEnabled(
@@ -78,7 +80,10 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 0,
                 4,
                 144,
-                null
+                emptyList(),
+                TestType.PCR,
+                ReportType.CONFIRMED_TEST,
+                0
             )
         )
 
@@ -87,8 +92,6 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
 
     @Test
     fun `upload diagnosis keys and raises event`() {
-        val recordingEvents = RecordingEvents()
-
         val jws = mockk<JWS>()
         every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
 
@@ -115,17 +118,24 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
             FakeSubmissionRepository(listOf(now)),
             InMemoryBatchTagService(),
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             0,
             100,
-            null,
-            recordingEvents
+            TestContext(),
+            events
         )
 
         service.loadKeysAndUploadToFederatedServer()
 
-        recordingEvents.containsExactly(InfoEvent::class, InfoEvent::class, UploadedDiagnosisKeys::class)
+        events.containsExactly(
+            InfoEvent::class,
+            InfoEvent::class,
+            UploadedDiagnosisKeys::class,
+            DiagnosisKeysUploadIncomplete::class
+        )
     }
 
     @Test
@@ -151,7 +161,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         )
 
         val interopClient = mockk<InteropClient>()
-        val payload = slot<String>()
+        val payload = slot<List<ExposureUpload>>()
 
         every {
             interopClient.uploadKeys(capture(payload))
@@ -170,20 +180,23 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 FakeDiagnosisKeysS3(listOf(s3ObjectSummary("foo"), s3ObjectSummary("bar"))),
                 { true },
                 BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents()
+                RecordingEvents(),
+                SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             0,
             100,
-            null,
+            TestContext(),
             RecordingEvents()
         )
 
         service.loadKeysAndUploadToFederatedServer()
 
-        assertThat(toExposureUpload(payload)).hasSize(2)
+        assertThat(payload.captured).hasSize(2)
     }
 
     @Test
@@ -210,7 +223,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         )
 
         val interopClient = mockk<InteropClient>()
-        val payload = slot<String>()
+        val payload = slot<List<ExposureUpload>>()
 
         every {
             interopClient.uploadKeys(capture(payload))
@@ -229,20 +242,23 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 FakeDiagnosisKeysS3(listOf(s3ObjectSummary("prefix-foo"), s3ObjectSummary("bar"))),
                 { objectKey -> !objectKey.value.startsWith("prefix") },
                 BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents()
+                RecordingEvents(),
+                SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             0,
             100,
-            null,
+            TestContext(),
             RecordingEvents()
         )
 
         service.loadKeysAndUploadToFederatedServer()
 
-        assertThat(toExposureUpload(payload)).hasSize(1)
+        assertThat(payload.captured).hasSize(1)
     }
 
     @Test
@@ -275,11 +291,13 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
             FakeSubmissionRepository(listOf(now)),
             batchTagService,
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             0,
             100,
-            null,
+            TestContext(),
             RecordingEvents()
         )
 
@@ -331,11 +349,14 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 ),
                 { true },
                 BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents()
+                RecordingEvents(),
+                SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             5,
             2,
             context,
@@ -385,11 +406,14 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 ),
                 { true },
                 BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents()
+                RecordingEvents(),
+                SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             5,
             2,
             context,
@@ -409,23 +433,15 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         }
     }
 
-    private fun toExposureUpload(payload: CapturingSlot<String>) =
-        SystemObjectMapper.MAPPER.readValue(payload.captured, object : TypeReference<List<ExposureUpload>>() {})
-
     class UploadPayloadPattern(@JsonProperty matchesPayloadPattern: String = """{ batchTag: [a-f0-9\-]+, payload: "DUMMY_SIGNATURE" }""") :
         StringValuePattern(matchesPayloadPattern) {
-        override fun match(value: String?): MatchResult {
-            return Jackson.readMaybe(value, DiagnosisKeysUploadRequest::class.java) {}
-                .map {
-                    if (it.batchTag.matches(Regex("[a-f0-9\\-]+")) && it.payload == "DUMMY_SIGNATURE") {
-                        MatchResult.exactMatch()
-                    } else {
-                        MatchResult.noMatch()
-                    }
-                }.orElse(
-                    MatchResult.noMatch()
-                )
-        }
+        override fun match(value: String): MatchResult = readOrNull<DiagnosisKeysUploadRequest>(value)
+            ?.let {
+                when {
+                    it.batchTag.matches(Regex("[a-f0-9\\-]+")) && it.payload == "DUMMY_SIGNATURE" -> exactMatch()
+                    else -> noMatch()
+                }
+            } ?: noMatch()
     }
 }
 

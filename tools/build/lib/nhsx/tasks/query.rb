@@ -1,6 +1,10 @@
 require "json"
 namespace :query do
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+  include NHSx::TargetEnvironment
+  include NHSx::Terraform
+  include NHSx::Query
+
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
       desc "Query a ctaToken (defined in TOKEN) from the test results database in #{tgt_env}"
       task :"ctatoken:#{tgt_env}" => [:"login:#{account}"] do
@@ -86,6 +90,30 @@ namespace :query do
         end
         puts "queried at #{Time.now.strftime("%H:%M:%S %d/%m/%Y")}"
         puts "*" * 80
+      end
+    end
+  end
+
+  NHSx::TargetEnvironment::ANALYTICS_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+    tgt_envs.each do |tgt_env|
+      task :"athena:#{tgt_env}" => [:"login:#{account}"] do
+        target_config = analytics_target_environment_configuration(tgt_env, account, $configuration)
+        query_id = target_config["sip_analytics_create_daily_aggregate_table_query_id"]
+        database_name = target_config["sip_analytics_database"]
+        workgroup_name = target_config["analytics_workgroup"]
+
+        raise GaudiError, "Missing value for query in sip_analytics_create_daily_aggregate_table_query_id" unless query_id
+
+        queries = [{
+          "query_id" => query_id,
+          "database" => database_name,
+          "workgroup" => workgroup_name,
+        }]
+
+        queries.each do |q|
+          query = get_athena_named_query(q["query_id"])
+          start_athena_query(q["query_id"], query, q["database"], q["workgroup"])
+        end
       end
     end
   end

@@ -2,7 +2,7 @@ package uk.nhs.nhsx.core.signature;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import uk.nhs.nhsx.core.StandardSigning;
+import uk.nhs.nhsx.core.StandardSigningFactory;
 import uk.nhs.nhsx.core.SystemClock;
 import uk.nhs.nhsx.core.SystemObjectMapper;
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource;
@@ -11,11 +11,15 @@ import uk.nhs.nhsx.core.aws.ssm.ParameterName;
 import uk.nhs.nhsx.core.aws.ssm.Parameters;
 import uk.nhs.nhsx.core.aws.xray.Tracing;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.amazonaws.services.kms.AWSKMSClientBuilder.defaultClient;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
@@ -52,7 +56,7 @@ public class DistributionSignatureMain {
 
         Parameters parameters = new AwsSsmParameters();
 
-        RFC2616DatedSigner signer = StandardSigning.datedSigner(SystemClock.CLOCK, parameters, ParameterName.of(commandLine.ssmKeyId));
+        RFC2616DatedSigner signer = new StandardSigningFactory(SystemClock.CLOCK, parameters, defaultClient()).datedSigner(ParameterName.Companion.of(commandLine.ssmKeyId));
 
         DatedSignature signature = signer.sign(new DistributionSignature(ByteArraySource.fromFile(new File(commandLine.input))));
 

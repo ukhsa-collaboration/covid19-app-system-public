@@ -15,6 +15,6 @@ class CtaTokenTest {
     fun `throw exception when invalid ctaToken`() {
         assertThatThrownBy { CtaToken.of("invalid-token") }
             .isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessage("validation error: Token Failed Validation")
+            .hasMessage("Validation failed for: (invalid-token)")
     }
 }

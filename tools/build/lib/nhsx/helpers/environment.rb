@@ -39,6 +39,26 @@ module Gaudi
         return upload_data_file
       end
 
+      def pubdash_analytics
+        "out/pubdash/analytics"
+      end
+
+      def pubdash_app_store_dir
+        "#{pubdash_analytics}/app_store"
+      end
+
+      def pubdash_qr_posters_dir
+        "#{pubdash_analytics}/qr_posters"
+      end
+
+      def pubdash_postcode_lookup_dir
+        "#{pubdash_analytics}/postcode_lookup"
+      end
+
+      def pubdash_analytics_parquet_dir
+        "#{pubdash_analytics}/analytics_parquet"
+      end
+
       # Retrieve an AWS_ROLE used to determine the actual login credentials to use for AWS
       #
       # This can be one of ["deploy","read"]
@@ -128,6 +148,34 @@ module Gaudi
         raise GaudiError, "Invalid NUMBER_OF_DAYS" unless number_of_days
 
         return number_of_days
+      end
+
+      # Pass the batch number for the subscription (it can be 1, 2 or 3)
+      def batch_number
+        batch_number = mandatory("BATCH_NUMBER")
+        batch_number = batch_number.to_i
+
+        raise GaudiError, "Invalid BATCH_NUMBER" unless [1, 2, 3].include?(batch_number)
+
+        return batch_number
+      end
+
+      # Pass the email id for the subscription 
+      def email
+        email = mandatory("EMAIL")
+        
+        raise GaudiError, "Invalid EMAIL" unless email
+
+        return email
+      end
+
+      # Pass the mobile number for the subscription (it should include the country code)
+      def mobile_number
+        mobile_number = mandatory("MOBILE_NUMBER")
+        
+        raise GaudiError, "Invalid MOBILE_NUMBER" unless mobile_number
+        
+        return mobile_number
       end
 
       def test_kit

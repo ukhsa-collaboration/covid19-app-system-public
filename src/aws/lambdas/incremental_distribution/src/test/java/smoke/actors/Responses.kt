@@ -85,22 +85,11 @@ fun Response.requireBodyText(expectedText: String): Response {
 
 inline fun <reified T> Response.deserializeOrThrow(): T {
     requireJsonContentType()
-    val bodyString = bodyString()
-    return Jackson
-        .readMaybe(
-            bodyString,
-            T::class.java
-        ) { }
-        .orElseThrow { IllegalStateException("Unable to deserialize: $bodyString") }
+    return Jackson.readOrNull<T>(bodyString()) ?: error("Unable to deserialize: ${bodyString()}")
 }
 
 fun InvokeResponse.requireStatusCode(expectedStatus: Status): InvokeResponse {
     assertThat(statusCode(), equalTo(expectedStatus.code))
-    return this
-}
-
-fun InvokeResponse.requireBodyText(expectedBodyText: String): InvokeResponse {
-    assertThat(payload().asUtf8String(), equalTo(expectedBodyText))
     return this
 }
 

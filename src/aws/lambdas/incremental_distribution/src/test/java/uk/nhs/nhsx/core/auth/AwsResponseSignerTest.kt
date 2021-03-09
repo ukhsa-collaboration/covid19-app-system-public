@@ -64,7 +64,7 @@ class AwsResponseSignerTest {
             "POST",
             expectedSignatureDate,
             "/some/path",
-            "{\"foo\":\"bar\"}"
+            """{"foo":"bar"}"""
         )
 
         assert(expectedContentToSign).sign(request, response)

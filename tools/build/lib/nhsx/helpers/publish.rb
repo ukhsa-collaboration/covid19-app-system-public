@@ -39,9 +39,8 @@ module NHSx
     # Publish the public dashboard to the hosting S3
     def publish_pubdash_website(account, build_path, store_name, target_environment, system_config)
       target_config = pubdash_target_environment_configuration(target_environment, account, system_config)
-      content_base_path = File.join(system_config.base, build_path)
-      cmdline = NHSx::AWS::Commandlines.upload_to_s3_recursively(content_base_path, target_config[store_name])
-      puts "Uploading #{content_base_path}\nTarget bucket #{target_config[store_name]}"
+      cmdline = NHSx::AWS::Commandlines.upload_to_s3_recursively(build_path, target_config[store_name])
+      puts "Uploading #{build_path}\nTarget bucket #{target_config[store_name]}"
       run_command("Publish object to hosting bucket", cmdline, system_config)
     end
   end

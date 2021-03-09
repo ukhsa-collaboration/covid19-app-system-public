@@ -11,18 +11,19 @@ import org.junit.jupiter.api.extension.ExtendWith
 import smoke.actors.Analytics
 import smoke.actors.MobileApp
 import smoke.actors.MobileDeviceModel
-import smoke.actors.MobileOS
-import smoke.actors.MobileOS.Android
-import smoke.data.AnalyticsMetricsData.populatedAnalyticsMetrics
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
-import uk.nhs.nhsx.core.DateFormatValidator
+import uk.nhs.nhsx.core.SystemClock.CLOCK
+import uk.nhs.nhsx.core.headers.MobileOS
+import uk.nhs.nhsx.core.headers.MobileOS.Android
 import uk.nhs.nhsx.testhelper.http4k.assertApproved
 import uk.nhs.nhsx.testhelper.junit.assertWithin
 import java.time.Duration
-import java.time.OffsetDateTime
-import java.util.*
+import java.time.Duration.ofDays
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.UUID
 import org.http4k.format.Jackson as Http4kJackson
 
 @ExtendWith(ApprovalTest::class)
@@ -30,9 +31,9 @@ class AnalyticsSubmissionSmokeTest {
 
     private val config = SmokeTests.loadConfig()
     private val client = JavaHttpClient()
-    private val startDate = OffsetDateTime.now().minusDays(1).format(DateFormatValidator.formatter).toString()
-    private val endDate = OffsetDateTime.now().plusDays(1).format(DateFormatValidator.formatter).toString()
-    private val analytics = Analytics(config)
+    private val startDate = Instant.now().minus(ofDays(1)).truncatedTo(ChronoUnit.SECONDS)
+    private val endDate = Instant.now().plus(ofDays(1)).truncatedTo(ChronoUnit.SECONDS)
+    private val analytics = Analytics(config, client, CLOCK)
 
     @Test
     fun `submit ios analytics data`(approver: Approver) {
@@ -56,15 +57,21 @@ class AnalyticsSubmissionSmokeTest {
         approver.assertAthenaQueryReturnsCorrect(deviceModel, metrics)
     }
 
-    private fun Approver.assertAthenaQueryReturnsCorrect(deviceModel: MobileDeviceModel, analyticsMetrics: AnalyticsMetrics) {
-        assertWithin(Duration.ofSeconds(config.analyticsSubmissionIngestionInterval.toLong() * 2)) {
+    private fun Approver.assertAthenaQueryReturnsCorrect(
+        deviceModel: MobileDeviceModel,
+        analyticsMetrics: AnalyticsMetrics
+    ) {
+        assertWithin(Duration.ofSeconds(config.analyticsSubmissionIngestionInterval.toLong() * 4)) {
             val dataFromAthena = analytics.getRecordedAnalyticsFor(deviceModel)
 
-            val fieldsAndValuesWeSent = Http4kJackson.fields(Http4kJackson.asJsonObject(analyticsMetrics)).map { it.first.toLowerCase() to it.second.toString() }
+            val fieldsAndValuesWeSent = Http4kJackson.fields(Http4kJackson.asJsonObject(analyticsMetrics))
+                .map { it.first.toLowerCase() to it.second.toString() }
 
-            val interestingFieldsFromAthena = dataFromAthena.filter { it.first in fieldsAndValuesWeSent.map { it.first } }
+            val interestingFieldsFromAthena =
+                dataFromAthena.filter { it.first in fieldsAndValuesWeSent.map { it.first } }
 
-            val interestingFieldsFromAthenaCsv = interestingFieldsFromAthena.joinToString("\n") { it.first + "," + it.second }
+            val interestingFieldsFromAthenaCsv =
+                interestingFieldsFromAthena.joinToString("\n") { it.first + "," + it.second }
 
             assertApproved(interestingFieldsFromAthenaCsv)
         }
@@ -129,6 +136,17 @@ class AnalyticsSubmissionSmokeTest {
         didHaveSymptomsBeforeReceivedTestResult = counter++.toInt()
         didRememberOnsetSymptomsDateBeforeReceivedTestResult = counter++.toInt()
         didAskForSymptomsOnPositiveTestEntry = counter++.toInt()
-        declaredNegativeResultFromDCT = counter.toInt()
+        declaredNegativeResultFromDCT = counter++.toInt()
+        receivedPositiveSelfRapidTestResultViaPolling = counter++.toInt()
+        receivedNegativeSelfRapidTestResultViaPolling = counter++.toInt()
+        receivedVoidSelfRapidTestResultViaPolling = counter++.toInt()
+        receivedPositiveSelfRapidTestResultEnteredManually = counter++.toInt()
+        receivedNegativeSelfRapidTestResultEnteredManually = counter++.toInt()
+        receivedVoidSelfRapidTestResultEnteredManually = counter++.toInt()
+        isIsolatingForTestedSelfRapidPositiveBackgroundTick = counter++.toInt()
+        hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt()
+        receivedRiskyVenueM1Warning = counter++.toInt()
+        receivedRiskyVenueM2Warning = counter++.toInt()
+        hasReceivedRiskyVenueM2WarningBackgroundTick = counter.toInt()
     }
 }

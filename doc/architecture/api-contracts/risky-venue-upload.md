@@ -29,14 +29,7 @@ After a successful upload the new json file is going to replace the existing one
 # venue_id, start_time, end_time, message_type, optional_parameter
 "8CHARS-Y", "2019-07-04T13:33:03Z", "2019-07-14T23:33:03Z", "M1", ""
 "8CHARS-Y", "2019-07-05T13:33:03Z", "2019-07-15T23:33:03Z", "M2", ""
-"8CHARS-Y", "2019-07-06T13:33:03Z", "2019-07-16T23:33:03Z", "M3", "07911 123456"
 ```
-
-## Backwards Compatibility Mode (can be enabled/disabled via feature flag)
-
-If `message_type` or `optional_parameter` are missing (in header row or data rows)
-- Fallback for `message_type`: "M1"
-- Fallback for `optional_parameter`: "" (empty string)
 
 ## Validation
 
@@ -46,8 +39,8 @@ If `message_type` or `optional_parameter` are missing (in header row or data row
   contain entries with `start_time == 2019-07-04T...`
   - before `end_time`  
 - `end_time` after which this venue is no longer a risk venue, valid UTC date (sample: `2019-07-04T23:33:03Z`), after `start_time`
-- `message_type` valid message type - after applying compatibility mode rules (see "Risky Venue Messages Configuration-Download API") 
-- `optional_parameter` string, 0..32 chars - after applying compatibility mode rules
+- `message_type` valid message type - M1 or M2
+- `optional_parameter` string, 0..32 chars
 
 ## Response Codes
 

@@ -81,10 +81,8 @@ resource "aws_s3_bucket" "destination" {
 
   force_destroy = var.force_destroy_s3_buckets
 
-  tags = {
-    Environment = terraform.workspace
-    Service     = var.service
-  }
+  tags = var.tags
+
   logging {
     target_bucket = var.logs_bucket_id
     target_prefix = "${local.identifier_prefix}/"

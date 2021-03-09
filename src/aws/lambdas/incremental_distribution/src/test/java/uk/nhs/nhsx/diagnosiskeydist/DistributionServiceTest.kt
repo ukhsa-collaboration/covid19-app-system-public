@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.Locator
@@ -29,12 +30,12 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 import uk.nhs.nhsx.testhelper.BatchExport.tekExportFromZipFile
 import uk.nhs.nhsx.testhelper.BatchExport.tekListFromZipFile
 import uk.nhs.nhsx.testhelper.BatchExport.tekSignatureListFromZipFile
+import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
 import java.io.File
 import java.nio.file.Path
+import java.time.Duration
 import java.time.Instant
-import java.util.ArrayList
-import java.util.Date
 
 class DistributionServiceTest {
 
@@ -57,8 +58,9 @@ class DistributionServiceTest {
             "",
             "",
             "",
-            ParameterName.of(""),
-            ParameterName.of("")
+            ParameterName.of("notempty"),
+            ParameterName.of("notempty"),
+            Duration.ofMinutes(-15)
         )
 
         DistributionServiceBuilder(folder)
@@ -244,7 +246,7 @@ class DistributionServiceTest {
     }
 
     private class MockSubmissionRepository(submissionDates: List<Instant>) : SubmissionRepository {
-        private val submissions: MutableList<Submission> = ArrayList()
+        private val submissions = mutableListOf<Submission>()
 
         init {
             submissionDates.forEach { submissions.add(makeKeySet(it)) }
@@ -252,7 +254,7 @@ class DistributionServiceTest {
 
         override fun loadAllSubmissions(
             minimalSubmissionTimeEpocMillisExclusive: Long,
-            maxLimit: Int,
+            limit: Int,
             maxResults: Int
         ): List<Submission> {
             return submissions
@@ -266,15 +268,12 @@ class DistributionServiceTest {
                 .map { makeKey(mostRecentKeyRollingStart - it * 144) }
                 .toList()
 
-            return Submission(Date.from(submissionDate), StoredTemporaryExposureKeyPayload(keys))
+            return Submission(submissionDate, StoredTemporaryExposureKeyPayload(keys))
         }
 
-        private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey {
-            return StoredTemporaryExposureKey("ABC", Math.toIntExact(keyStartTime), 144, 7)
-        }
+        private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey =
+            StoredTemporaryExposureKey("ABC", Math.toIntExact(keyStartTime), 144, 7)
     }
-
-    private fun String.asInstant() = Instant.parse(this)
 
     private val expectedSignatureInfo = Exposure.SignatureInfo.newBuilder()
         .setAndroidPackage("uk.nhs.covid19.internal")
@@ -319,18 +318,17 @@ class DistributionServiceTest {
             return this
         }
 
-        fun build(): DistributionService {
-            return DistributionService(
-                submissionRepository,
-                exposureProtobuf,
-                keyDistributor,
-                signer,
-                cloudFront,
-                awsS3,
-                batchProcessingConfig,
-                RecordingEvents()
-            )
-        }
+        fun build(): DistributionService = DistributionService(
+            submissionRepository,
+            exposureProtobuf,
+            keyDistributor,
+            signer,
+            cloudFront,
+            awsS3,
+            batchProcessingConfig,
+            RecordingEvents(),
+            SystemClock.CLOCK
+        )
     }
 
     private object BatchProcessingConfigs {
@@ -341,7 +339,8 @@ class DistributionServiceTest {
             "dist-pattern-daily",
             "dist-pattern-2hourly",
             ParameterName.of("ssmKeyIdParameterName"),
-            ParameterName.of("ssmContentKeyIdParameterName")
+            ParameterName.of("ssmContentKeyIdParameterName"),
+            Duration.ofMinutes(-15)
         )
     }
 

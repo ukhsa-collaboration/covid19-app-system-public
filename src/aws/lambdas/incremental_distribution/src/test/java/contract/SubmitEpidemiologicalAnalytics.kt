@@ -5,10 +5,10 @@ import contract.infra.RecordingTest
 import contract.infra.ReplayTest
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
-import smoke.actors.MobileOS
 import smoke.data.AnalyticsEventsData
 import smoke.env.SmokeTests
-import java.util.UUID
+import uk.nhs.nhsx.core.headers.MobileOS
+import java.util.*
 
 interface SubmitEpidemiologicalAnalytics : BackendContractScenario {
 

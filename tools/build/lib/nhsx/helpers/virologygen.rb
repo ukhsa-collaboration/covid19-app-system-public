@@ -88,7 +88,7 @@ module NHSx
       puts cmd.output
 
       # get zip filename from response
-      response_json = JSON.parse(File.read(output_log_file).gsub('\\"', '"')[1..-2])
+      response_json = JSON.parse(File.read(output_log_file).gsub('\\"', '"'))
       puts JSON.pretty_generate(response_json)
       zip_filename = response_json["filename"]
 
@@ -164,6 +164,75 @@ module NHSx
 
       # write pwd
       write_file(File.join(virology_out_dir, "pwd.txt"), zip_password)
+    end
+
+    def subscribe_mobile_number_to_topic(mobile_number,batch_number,config_file, system_config)
+      # get the topic arn
+      topic_arn = config_file["virology_tokens_processing_sms_topic_arn"]       
+
+      #subscribe the mobile number   
+      subscription_arn = subscribe_to_topic(topic_arn,"sms",mobile_number,system_config)
+
+      # get the list of subscriptions
+      sns_topic_subscriptions(topic_arn,system_config)
+      
+      # Apply filter policy    
+      apply_filter_policy(subscription_arn,batch_number,mobile_number,system_config)
+
+      # Get subscription attributes to verify the filter policy
+      get_subscription_attributes(subscription_arn,system_config)      
+    end  
+
+    def subscribe_email_to_topic(email,batch_number,config_file, system_config)
+      # get the topic arn
+      topic_arn = config_file["virology_tokens_processing_email_topic_arn"]       
+
+      #subscribe the email     
+      subscription_arn = subscribe_to_topic(topic_arn,"email",email,system_config)
+
+      # get the list of subscriptions
+      sns_topic_subscriptions(topic_arn,system_config)
+      
+      # Apply filter policy     
+      apply_filter_policy(subscription_arn,batch_number,email,system_config)
+
+      # Get subscription attributes to verify the filter policy
+      get_subscription_attributes(subscription_arn,system_config)     
+    end
+
+    def subscribe_to_topic(topic_arn,protocol,endpoint,system_config)
+      cmdline = "aws sns subscribe --topic-arn #{topic_arn} --protocol #{protocol} --return-subscription-arn --notification-endpoint #{endpoint}"
+      cmd = run_command("Subscribing #{endpoint}", cmdline, system_config)      
+      subscription_arn = JSON.parse(cmd.output)["SubscriptionArn"]
+      return subscription_arn
+    end  
+
+    def sns_topic_subscriptions(topic_arn,system_config)
+      cmdline = "aws sns list-subscriptions-by-topic --topic-arn #{topic_arn}"
+      cmd = run_command("Getting the list of Subscriptions", cmdline, system_config)
+      subscriptions = JSON.parse(cmd.output)["Subscriptions"]
+      return subscriptions
+    end       
+
+    def apply_filter_policy(subscription_arn,batch_number,mobile_number,system_config)
+      #build the input parameters      
+      input_parameters = {
+        "SubscriptionArn" => subscription_arn,
+        "AttributeName" => "FilterPolicy",       
+        "AttributeValue" => "{\"batchNumber\":[{\"numeric\": [\"=\",#{batch_number}]}]}",
+      }
+      input_config_file = File.join(system_config.out, "gen/virology", "#{Time.now.strftime("%Y%m%d%H%M%S")}_filter_policy_#{batch_number}.json")
+      write_file(input_config_file,  JSON.pretty_generate(input_parameters))
+      
+      cmdline = "aws sns set-subscription-attributes --cli-input-json file://#{input_config_file}"
+      cmd = run_command("Applying filter policy for #{mobile_number}", cmdline, system_config)
+    end
+
+    def get_subscription_attributes(subscription_arn,system_config)
+      cmdline = "aws sns get-subscription-attributes --subscription-arn #{subscription_arn}"
+      cmd = run_command("Getting the list of attributes to check the filter policy ", cmdline, system_config)      
+      attributes = JSON.parse(cmd.output)["Attributes"]
+      return attributes
     end
   end
 end

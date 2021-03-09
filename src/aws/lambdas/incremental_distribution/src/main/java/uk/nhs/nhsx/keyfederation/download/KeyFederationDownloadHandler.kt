@@ -1,8 +1,13 @@
 package uk.nhs.nhsx.keyfederation.download
 
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
+import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.Context
+import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
 import uk.nhs.nhsx.core.Environment
-import uk.nhs.nhsx.core.StandardSigning
+import uk.nhs.nhsx.core.Handler
+import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.S3Storage
@@ -14,7 +19,6 @@ import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
-import uk.nhs.nhsx.core.scheduled.Scheduling
 import uk.nhs.nhsx.core.scheduled.SchedulingHandler
 import uk.nhs.nhsx.keyfederation.BatchTagDynamoDBService
 import uk.nhs.nhsx.keyfederation.BatchTagService
@@ -30,18 +34,21 @@ import java.util.function.Supplier
  *
  * doc/architecture/api-contracts/diagnosis-key-federation.md
  */
-class KeyFederationDownloadHandler  @JvmOverloads constructor (
+class KeyFederationDownloadHandler @JvmOverloads constructor(
     private val clock: Supplier<Instant> = CLOCK,
     events: Events = PrintingJsonEvents(clock),
     private val config: KeyFederationDownloadConfig = KeyFederationDownloadConfig.fromEnvironment(Environment.fromSystem()),
-    private val batchTagService: BatchTagService = BatchTagDynamoDBService(config.stateTableName),
-    private val secretManager: SecretManager = AwsSecretManager(),
-    private val interopClient: InteropClient = buildInteropClient(config, secretManager, events),
+    private val batchTagService: BatchTagService = BatchTagDynamoDBService(
+        config.stateTableName,
+        AmazonDynamoDBClientBuilder.defaultClient()
+    ),
+    private val secretManager: SecretManager = AwsSecretManager(AWSSecretsManagerClientBuilder.defaultClient()),
+    private val interopClient: InteropClient = buildInteropClient(config, secretManager, events, CLOCK),
     private val awsS3Client: S3Storage = AwsS3Client(events)
 ) : SchedulingHandler(events) {
 
     private fun downloadFromFederatedServerAndStoreKeys(context: Context) =
-        if (config.downloadFeatureFlag.isEnabled) {
+        if (config.downloadFeatureFlag.isEnabled()) {
             try {
                 DiagnosisKeysDownloadService(
                     clock,
@@ -70,7 +77,7 @@ class KeyFederationDownloadHandler  @JvmOverloads constructor (
             0
         }
 
-    override fun handler() = Scheduling.Handler { _, context ->
+    override fun handler() = Handler<ScheduledEvent, Event> { _, context ->
         InteropConnectorDownloadStats(downloadFromFederatedServerAndStoreKeys(context))
     }
 }
@@ -80,13 +87,18 @@ data class InteropConnectorDownloadStats(val processedSubmissions: Int) : Event(
 private fun buildInteropClient(
     config: KeyFederationDownloadConfig,
     secretManager: SecretManager,
-    events: Events
+    events: Events,
+    clock: Supplier<Instant>
 ): InteropClient {
 
     val authTokenSecretValue = secretManager.getSecret(config.interopAuthTokenSecretName)
         .orElseThrow { RuntimeException("Unable to retrieve authorization token from secrets storage") }
 
-    val signer = StandardSigning.signContentWithKeyFromParameter(AwsSsmParameters(), config.signingKeyParameterName)
+    val signer = StandardSigningFactory(
+        clock,
+        AwsSsmParameters(),
+        AWSKMSClientBuilder.defaultClient()
+    ).signContentWithKeyFromParameter(config.signingKeyParameterName)
 
     return InteropClient(
         config.interopBaseUrl,

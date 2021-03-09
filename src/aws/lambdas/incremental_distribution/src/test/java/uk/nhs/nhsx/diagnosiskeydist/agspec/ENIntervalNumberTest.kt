@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import java.time.Instant
+import uk.nhs.nhsx.testhelper.data.asInstant
 
 class ENIntervalNumberTest {
 
@@ -70,6 +70,4 @@ class ENIntervalNumberTest {
         val enIntervalNumber = ENIntervalNumber.enIntervalNumberFromTimestamp(now)
         assertThat(enIntervalNumber.toString()).isEqualTo("ENIntervalNumber(2656614: 2020-07-05 17:00)")
     }
-
-    private fun String.asInstant() = Instant.parse(this)
 }

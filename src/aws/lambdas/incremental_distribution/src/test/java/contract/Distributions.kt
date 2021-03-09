@@ -54,15 +54,6 @@ interface Distributions : BackendContractScenario {
 
     @Test
     @JvmDefault
-    fun `Mobile app polls risky venue messages`() {
-        RiskParties(http(), envConfig).uploadsRiskyPostcodes(RiskPartyData.generateRiskyPostcodes())
-
-        control.addNote("Mobile app polls risky venue messages")
-        MobileApp(mitmHttpClient(), envConfig).pollRiskyVenuesMessages()
-    }
-
-    @Test
-    @JvmDefault
     fun `Mobile app polls for symptom questionnaire`() {
         control.addNote("Mobile app polls for symptom questionnaire")
         MobileApp(mitmHttpClient(), envConfig).pollSymptomaticQuestionnaire()

@@ -44,7 +44,7 @@ namespace :gen do
     write_file(File.join($configuration.out, "version.sha"), current_full_sha)
   end
 
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS.keys.each do |account|
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.keys.each do |account|
     desc "Generate signatures for static content for the #{account} account"
     task :"signatures:#{account}" => [:"login:#{account}", :"build:dependencies"] do
       include Zuehlke::Execution
@@ -101,13 +101,14 @@ namespace :gen do
     end
   end
 
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
-    desc "Generate signatures for static content for the #{tgt_env} env"
-    task :"config:#{tgt_env}" do
-      include Zuehlke::Execution
-      include NHSx::Generate
-      generate_test_config(tgt_env, "dev", $configuration)
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+    tgt_envs.each do |tgt_env|
+      desc "Produce the environment config for the #{tgt_env} env"
+      task :"config:#{tgt_env}" => [:"login:#{account}"] do
+        include Zuehlke::Execution
+        include NHSx::Generate
+        generate_test_config(tgt_env, account, $configuration)
+      end
     end
   end
-
 end

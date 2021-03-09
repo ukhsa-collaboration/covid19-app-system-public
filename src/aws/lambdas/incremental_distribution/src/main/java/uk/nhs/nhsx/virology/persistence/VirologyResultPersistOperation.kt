@@ -7,14 +7,14 @@ abstract class VirologyResultPersistOperation {
     abstract fun toHttpResponse(): APIGatewayProxyResponseEvent
 
     class Success : VirologyResultPersistOperation() {
-        override fun toHttpResponse(): APIGatewayProxyResponseEvent = HttpResponses.accepted("successfully processed")
+        override fun toHttpResponse() = HttpResponses.accepted("successfully processed")
     }
 
     class TransactionFailed : VirologyResultPersistOperation() {
-        override fun toHttpResponse(): APIGatewayProxyResponseEvent = HttpResponses.conflict()
+        override fun toHttpResponse() = HttpResponses.conflict()
     }
 
     class OrderNotFound : VirologyResultPersistOperation() {
-        override fun toHttpResponse(): APIGatewayProxyResponseEvent = HttpResponses.badRequest()
+        override fun toHttpResponse() = HttpResponses.badRequest()
     }
 }

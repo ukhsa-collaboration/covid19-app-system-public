@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import org.apache.http.ssl.SSLContexts;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager;
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName;
+import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue;
 import uk.nhs.nhsx.core.events.Events;
 import uk.nhs.nhsx.core.events.OutgoingHttpRequest;
 
@@ -31,8 +32,8 @@ public class AAEUploader {
         this.config = config;
         this.events = events;
         this.subscription = secretManager
-            .getSecret(SecretName.of(config.subscriptionKeySecretName))
-            .map(it -> it.value)
+            .getSecret(SecretName.Companion.of(config.subscriptionKeySecretName))
+            .map(SecretValue::getValue)
             .orElseThrow(() -> new RuntimeException("subscriptionKey does not exits in secret manager"));
 
         try {
@@ -44,11 +45,11 @@ public class AAEUploader {
 
     private HttpClient createMutualAuthHttpClient(SecretManager secretManager, AAEUploadConfig config) throws Exception {
         var p12Certificate = secretManager
-            .getSecretBinary(SecretName.of(config.p12CertificateSecretName));
+            .getSecretBinary(SecretName.Companion.of(config.p12CertificateSecretName));
 
         var p12CertificatePassword = secretManager
-            .getSecret(SecretName.of(config.p12CertificatePasswordSecretName))
-            .map(it -> it.value.toCharArray())
+            .getSecret(SecretName.Companion.of(config.p12CertificatePasswordSecretName))
+            .map(it -> it.getValue().toCharArray())
             .orElseThrow(() -> new RuntimeException("p12CertificatePassword does not exits in secret manager"));
 
         return createMutualAuthHttpClient(

@@ -1,5 +1,5 @@
 namespace :test do
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
     desc "Runs all smoke tests against the #{tgt_env} target environment"
     task :"smoke:#{tgt_env}" do
       include NHSx::Test
@@ -26,7 +26,7 @@ namespace :test do
   end
 
   # Generate separate tasks per named environment
-  NHSx::TargetEnvironment::TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
     desc "Runs the sanity_check tests against #{tgt_env} "
     task :"sanity_check:#{tgt_env}" => [:"login:dev", :"clean:config"] do
       include NHSx::Test
@@ -34,4 +34,18 @@ namespace :test do
     end
   end
 
+  desc "Run the build system unit tests"
+  task :build_system do
+    test_files = Rake::FileList["#{$configuration.base}/tools/build/test/*.rb"]
+    test_failed = false
+    test_files.each do |tf|
+      begin
+        sh("ruby #{tf}")
+      rescue
+        test_failed = true
+      end
+    end
+
+    raise GaudiError, "Tests failed" if test_failed
+  end
 end

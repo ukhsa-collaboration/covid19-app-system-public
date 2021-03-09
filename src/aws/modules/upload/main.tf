@@ -23,7 +23,6 @@ module "upload_lambda" {
     SSM_KEY_ID_PARAMETER_NAME         = "/app/kms/ContentSigningKeyArn",
     DISTRIBUTION_INVALIDATION_PATTERN = var.distribution_invalidation_pattern
     custom_oai                        = var.custom_oai
-    should_parse_additional_fields    = var.should_parse_additional_fields
   }
   log_retention_in_days     = var.log_retention_in_days
   app_alarms_topic          = var.alarm_topic_arn
@@ -40,3 +39,59 @@ module "upload_gateway" {
   rate_limit           = var.rate_limit
   tags                 = var.tags
 }
+
+resource "aws_cloudwatch_metric_alarm" "Errors_4XX" {
+  alarm_name          = "${module.upload_lambda.lambda_function_name}-4XXErrors"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "4xx"
+  namespace           = "AWS/ApiGateway"
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "Triggers when 4xx errors occur in ${module.upload_lambda.lambda_function_name}"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [var.alarm_topic_arn]
+  tags                = var.tags
+  dimensions = {
+    ApiId = module.upload_gateway.api_gateway_id
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "Errors_5XX" {
+  alarm_name          = "${module.upload_lambda.lambda_function_name}-5XXErrors"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "5xx"
+  namespace           = "AWS/ApiGateway"
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "Triggers when 5xx errors occur in ${module.upload_lambda.lambda_function_name}"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [var.alarm_topic_arn]
+  tags                = var.tags
+  dimensions = {
+    ApiId = module.upload_gateway.api_gateway_id
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "Throttles" {
+  alarm_name          = "${module.upload_lambda.lambda_function_name}-Throttles"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "Throttles"
+  namespace           = "AWS/Lambda"
+  period              = "120"
+  statistic           = "Sum"
+  threshold           = "1"
+  alarm_description   = "Triggers when ${module.upload_lambda.lambda_function_name} is throttled"
+  treat_missing_data  = "notBreaching"
+  alarm_actions       = [var.alarm_topic_arn]
+  tags                = var.tags
+  dimensions = {
+    FunctionName = module.upload_lambda.lambda_function_name
+  }
+}
+
+

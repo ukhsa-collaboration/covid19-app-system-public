@@ -12,6 +12,7 @@ import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
+import uk.nhs.nhsx.keyfederation.upload.PcrExposureUploadFactory
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
 import java.time.Instant
@@ -38,11 +39,14 @@ class SmokeUploadTest {
                 AwsS3Client(recordingEvents),
                 { true },
                 BucketName.of("te-qa-diagnosis-keys-submission"),
-                recordingEvents
+                recordingEvents,
+                SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             0,
             100,
             ContextBuilder.aContext(),
@@ -57,8 +61,10 @@ class SmokeUploadTest {
             InteropClient(interopBaseUrl, authToken, JWS(KmsCompatibleSigner(ecPrime256r1.private)), recordingEvents),
             FakeSubmissionRepository(listOf(Instant.now())),
             InMemoryBatchTagService(),
-            "GB-EAW", false,
-            -1, 14,
+            PcrExposureUploadFactory("GB-EAW"),
+            false,
+            -1,
+            14,
             0,
             100,
             ContextBuilder.aContext(),
