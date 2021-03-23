@@ -12,11 +12,9 @@ import uk.nhs.nhsx.core.aws.ssm.Parameters
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signer
-import java.time.Instant
-import java.util.function.Supplier
 
 class StandardSigningFactory(
-    private val clock: Supplier<Instant>,
+    private val clock: Clock,
     private val parameters: Parameters,
     private val client: AWSKMS
 ) {
@@ -37,6 +35,5 @@ class StandardSigningFactory(
 }
 
 object StandardSigning {
-    @JvmField
     val SSM_KEY_ID_PARAMETER_NAME = EnvironmentKey.value("SSM_KEY_ID_PARAMETER_NAME", ParameterName)
 }

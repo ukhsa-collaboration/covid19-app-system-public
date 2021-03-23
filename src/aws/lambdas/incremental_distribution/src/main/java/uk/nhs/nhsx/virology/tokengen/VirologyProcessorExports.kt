@@ -9,7 +9,7 @@ import uk.nhs.nhsx.virology.result.TestEndDate
 import uk.nhs.nhsx.virology.result.TestResult
 import java.io.File
 
-class VirologyProcessorExports(var tempDirPath: String = System.getProperty("java.io.tmpdir") + File.separator) {
+class VirologyProcessorExports(private var tempDirPath: String = System.getProperty("java.io.tmpdir") + File.separator) {
 
     fun csvFrom(tokens: List<CtaToken>, testResult: TestResult, testEndDate: TestEndDate): String = tokens
         .map { """${it.value}, ${testResult.wireValue}, ${TestEndDate.show(testEndDate)}""" }

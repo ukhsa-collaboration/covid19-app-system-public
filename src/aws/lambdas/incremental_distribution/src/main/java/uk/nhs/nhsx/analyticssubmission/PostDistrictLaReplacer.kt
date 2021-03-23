@@ -25,7 +25,6 @@ object PostDistrictLaReplacer {
         val result = postDistrictLAMapping[key1] ?: postDistrictLAMapping[key2] ?: key3
         if (result == key3) {
             events(
-                PostDistrictLaReplacer::class.java,
                 InfoEvent("Post district LA tuple not found in mapping. Persisting post district and localAuthority as $UNKNOWN")
             )
         }

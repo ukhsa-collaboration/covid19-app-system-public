@@ -16,6 +16,10 @@ object BatchExport {
         val workingDir = ZipFileUtility.extractZipFileToTempLocation(file)
         val binFile = File(workingDir, "export.bin")
         val bytes = Files.readAllBytes(binFile.toPath())
+        return tekExportFromExportBin(bytes)
+    }
+
+    fun tekExportFromExportBin(bytes: ByteArray): TemporaryExposureKeyExport {
         val payloadBytes = ByteArray(bytes.size - BIN_FILE_HEADER.toByteArray().size)
         System.arraycopy(bytes, BIN_FILE_HEADER.toByteArray().size, payloadBytes, 0, payloadBytes.size)
         return TemporaryExposureKeyExport.parseFrom(payloadBytes)
@@ -27,8 +31,10 @@ object BatchExport {
         val workingDir = ZipFileUtility.extractZipFileToTempLocation(file)
         val sigFile = File(workingDir, "export.sig")
         val bytes = Files.readAllBytes(sigFile.toPath())
-        return TEKSignatureList.parseFrom(bytes)
+        return tekSignatureListFromSig(bytes)
     }
+
+    fun tekSignatureListFromSig(bytes: ByteArray): TEKSignatureList = TEKSignatureList.parseFrom(bytes)
 
     fun tekExportFrom(inputStream: InputStream): TemporaryExposureKeyExport {
         val file = Files.createTempFile("tekexportfrom", null).toFile()

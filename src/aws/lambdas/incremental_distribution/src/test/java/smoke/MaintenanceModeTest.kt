@@ -29,64 +29,64 @@ class MaintenanceModeTest {
 
     @AfterEach
     fun tearDown() {
-        AwsLambda.disableMaintenanceMode(config.virologySubmissionLambdaFunctionName)
-        AwsLambda.disableMaintenanceMode(config.virologyUploadLambdaFunctionName)
+        AwsLambda.disableMaintenanceMode(config.virology_submission_lambda_function_name)
+        AwsLambda.disableMaintenanceMode(config.virology_upload_lambda_function_name)
     }
 
     @Test
     fun `order virology test`() {
-        AwsLambda.enableMaintenanceMode(config.virologySubmissionLambdaFunctionName)
+        AwsLambda.enableMaintenanceMode(config.virology_submission_lambda_function_name)
 
         assertInMaintenanceMode(
             postRequest(
-                "${config.virologyKitEndpoint}/home-kit/order",
-                config.authHeaders.mobile
+                "${config.virology_kit_endpoint}/home-kit/order",
+                config.auth_headers.mobile
             )
         )
     }
 
     @Test
     fun `retrieve virology test result`() {
-        AwsLambda.enableMaintenanceMode(config.virologySubmissionLambdaFunctionName)
+        AwsLambda.enableMaintenanceMode(config.virology_submission_lambda_function_name)
 
         assertInMaintenanceMode(
             postRequest(
-                "${config.virologyKitEndpoint}/results",
-                config.authHeaders.mobile
+                "${config.virology_kit_endpoint}/results",
+                config.auth_headers.mobile
             )
         )
     }
 
     @Test
     fun `upload npex test result`() {
-        AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
+        AwsLambda.enableMaintenanceMode(config.virology_upload_lambda_function_name)
 
-        assertInMaintenanceMode(postRequest(config.testResultsNpexUploadEndpoint, config.authHeaders.testResultUpload))
+        assertInMaintenanceMode(postRequest(config.test_results_npex_upload_endpoint, config.auth_headers.testResultUpload))
     }
 
     @Test
     fun `upload fiorano test result`() {
-        AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
+        AwsLambda.enableMaintenanceMode(config.virology_upload_lambda_function_name)
 
         assertInMaintenanceMode(
             postRequest(
-                config.testResultsFioranoUploadEndpoint,
-                config.authHeaders.testResultUpload
+                config.test_results_fiorano_upload_endpoint,
+                config.auth_headers.testResultUpload
             )
         )
     }
 
     @Test
     fun `upload english token-gen test result`() {
-        AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
-        assertInMaintenanceMode(postRequest(config.engTokenGenUploadEndpoint, config.authHeaders.testResultUpload))
+        AwsLambda.enableMaintenanceMode(config.virology_upload_lambda_function_name)
+        assertInMaintenanceMode(postRequest(config.test_results_eng_tokengen_upload_endpoint, config.auth_headers.testResultUpload))
     }
 
     @Test
     fun `upload welsh token-gen test result`() {
-        AwsLambda.enableMaintenanceMode(config.virologyUploadLambdaFunctionName)
+        AwsLambda.enableMaintenanceMode(config.virology_upload_lambda_function_name)
 
-        assertInMaintenanceMode(postRequest(config.wlsTokenGenUploadEndpoint, config.authHeaders.testResultUpload))
+        assertInMaintenanceMode(postRequest(config.test_results_wls_tokengen_upload_endpoint, config.auth_headers.testResultUpload))
     }
 
     private fun assertInMaintenanceMode(request: Request) {

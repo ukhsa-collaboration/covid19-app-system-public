@@ -10,14 +10,14 @@ import uk.nhs.nhsx.core.aws.ssm.ParameterName
 import java.time.Duration
 
 data class BatchProcessingConfig(
-    @JvmField val shouldAbortOutsideTimeWindow: Boolean,
-    @JvmField val zipBucketName: BucketName,
-    @JvmField val cloudFrontDistributionId: String,
-    @JvmField val distributionPatternDaily: String,
-    @JvmField val distributionPattern2Hourly: String,
-    @JvmField val ssmAGSigningKeyParameterName: ParameterName,
-    @JvmField val ssmMetaDataSigningKeyParameterName: ParameterName,
-    @JvmField val zipSubmissionPeriodOffset: Duration
+    val shouldAbortOutsideTimeWindow: Boolean,
+    val zipBucketName: BucketName,
+    val cloudFrontDistributionId: String,
+    val distributionPatternDaily: String,
+    val distributionPattern2Hourly: String,
+    val ssmAGSigningKeyParameterName: ParameterName,
+    val ssmMetaDataSigningKeyParameterName: ParameterName,
+    val zipSubmissionPeriodOffset: Duration
 ) {
     companion object {
         private val ABORT_OUTSIDE_TIME_WINDOW = bool("ABORT_OUTSIDE_TIME_WINDOW")

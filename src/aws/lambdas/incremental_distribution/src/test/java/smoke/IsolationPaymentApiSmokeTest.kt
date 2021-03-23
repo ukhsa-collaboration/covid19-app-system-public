@@ -25,9 +25,9 @@ class IsolationPaymentApiSmokeTest {
 
     @Test
     fun `Consume token successfully via endpoint`() {
-        val ipcToken = createValidToken();
+        val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
-        val isolationConsumeResponse = welshSIPGateway.consumeToken(ipcToken, Status.OK);
+        val isolationConsumeResponse = welshSIPGateway.consumeToken(ipcToken, Status.OK)
         assertThat(isolationConsumeResponse.ipcToken).isEqualTo(ipcToken)
         assertThat(isolationConsumeResponse.state).isEqualTo(TokenStateExternal.EXT_CONSUMED.value)
 
@@ -35,9 +35,9 @@ class IsolationPaymentApiSmokeTest {
 
     @Test
     fun `Verify token successfully via endpoint`() {
-        val ipcToken = createValidToken();
+        val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
-        val isolationVerifyResponse = welshSIPGateway.verifyToken(ipcToken, Status.OK);
+        val isolationVerifyResponse = welshSIPGateway.verifyToken(ipcToken, Status.OK)
         assertThat(isolationVerifyResponse.ipcToken).isEqualTo(ipcToken)
         assertThat(isolationVerifyResponse.state).isEqualTo(TokenStateExternal.EXT_VALID.value)
 
@@ -46,7 +46,7 @@ class IsolationPaymentApiSmokeTest {
     @Test
     fun `Consume token returns 422 when unknown via endpoint`() {
         val ipcToken = IpcTokenId.of("Y".repeat(64))
-        val isolationConsumeResponse = welshSIPGateway.consumeToken(ipcToken, Status.UNPROCESSABLE_ENTITY);
+        val isolationConsumeResponse = welshSIPGateway.consumeToken(ipcToken, Status.UNPROCESSABLE_ENTITY)
         assertThat(isolationConsumeResponse.ipcToken).isEqualTo(ipcToken)
         assertThat(isolationConsumeResponse.state).isEqualTo(TokenStateExternal.EXT_INVALID.value)
     }
@@ -54,16 +54,15 @@ class IsolationPaymentApiSmokeTest {
     @Test
     fun `Verify token returns 422 when unknown via endpoint`() {
         val ipcToken = IpcTokenId.of("Z".repeat(64))
-        val isolationVerifyResponse = welshSIPGateway.verifyToken(ipcToken, Status.UNPROCESSABLE_ENTITY);
+        val isolationVerifyResponse = welshSIPGateway.verifyToken(ipcToken, Status.UNPROCESSABLE_ENTITY)
         assertThat(isolationVerifyResponse.ipcToken).isEqualTo(ipcToken)
         assertThat(isolationVerifyResponse.state).isEqualTo(TokenStateExternal.EXT_INVALID.value)
-
     }
 
     private fun createValidToken(): IpcTokenId {
-        val isolationCreationResponse = mobileApp.createIsolationToken(England)
-        assertThat(isolationCreationResponse.ipcToken.value).isNotEmpty
-        assertThat(isolationCreationResponse.isEnabled).isTrue
-        return isolationCreationResponse.ipcToken
+        val response = mobileApp.createIsolationToken(England)
+        assertThat(response.ipcToken).isNotNull
+        assertThat(response.isEnabled).isTrue
+        return response.ipcToken
     }
 }

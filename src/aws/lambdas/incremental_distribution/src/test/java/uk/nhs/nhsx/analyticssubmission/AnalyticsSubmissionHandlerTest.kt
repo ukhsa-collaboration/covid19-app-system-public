@@ -51,9 +51,9 @@ class AnalyticsSubmissionHandlerTest {
     private val objectKeyNameProvider = mockk<ObjectKeyNameProvider>()
     private val config = AnalyticsConfig(
         "firehoseStreamName",
-        true,
-        false,
-        BUCKET_NAME
+        s3IngestEnabled = true,
+        firehoseIngestEnabled = false,
+        bucketName = BUCKET_NAME
     )
 
     private val events = RecordingEvents()
@@ -140,11 +140,11 @@ class AnalyticsSubmissionHandlerTest {
                     val response = responseFor(json)
                     assertThat(
                         response, not(
-                        anyOf(
-                            hasStatus(INTERNAL_SERVER_ERROR_500),
-                            hasStatus(FORBIDDEN_403)
+                            anyOf(
+                                hasStatus(INTERNAL_SERVER_ERROR_500),
+                                hasStatus(FORBIDDEN_403)
+                            )
                         )
-                    )
                     )
                     assertThat(response, hasBody(equalTo(null)))
                 }
@@ -229,8 +229,8 @@ class AnalyticsSubmissionHandlerTest {
             expectedJson = STORED_ANALYTICS_UNKNOWN_POSTCODE_PAYLOAD_ANDROID
         ),
         WITH_MERGED_DISTRICTS_ANDROID(
-        payload = androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"),
-        expectedJson = STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID
+            payload = androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "AB13"),
+            expectedJson = STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID
         ),
         WITH_ANDROID(
             payload = androidPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"),
@@ -312,7 +312,9 @@ class AnalyticsSubmissionHandlerTest {
                     "hasTestedSelfRapidPositiveBackgroundTick":1,
                     "receivedRiskyVenueM1Warning":1,
                     "receivedRiskyVenueM2Warning":1,
-                    "hasReceivedRiskyVenueM2WarningBackgroundTick":1""".trimIndent()
+                    "hasReceivedRiskyVenueM2WarningBackgroundTick":1,
+                    "totalAlarmManagerBackgroundTasks":1,
+                    "missingPacketsLast7Days":1""".trimIndent()
             return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", metrics)
         }
 

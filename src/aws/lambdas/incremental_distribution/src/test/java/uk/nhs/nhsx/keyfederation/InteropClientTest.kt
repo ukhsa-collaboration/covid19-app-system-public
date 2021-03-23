@@ -32,7 +32,6 @@ class InteropClientTest(private val wireMock: WireMockServer) {
 
     private val localDate = LocalDate.of(2020, 8, 19)
 
-
     @Test
     fun `download diagnosis keys starting from date without batch tag`() {
         wireMock.stubFor(
@@ -68,14 +67,14 @@ class InteropClientTest(private val wireMock: WireMockServer) {
         val service = InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, RecordingEvents())
 
         (service.downloadKeys(localDate) as DiagnosisKeysDownloadResponse).apply {
-            assertThat(this.batchTag).isEqualTo("5a0df0cd-4663-4119-ade4-3a30ab8e164d")
-            assertThat(this.exposures).hasSize(7)
+            assertThat(batchTag).isEqualTo(BatchTag.of("5a0df0cd-4663-4119-ade4-3a30ab8e164d"))
+            assertThat(exposures).hasSize(7)
         }
 
 
         (service.downloadKeys(localDate, BatchTag.of("5a0df0cd-4663-4119-ade4-3a30ab8e164d")) as DiagnosisKeysDownloadResponse).apply {
-            assertThat(this.batchTag).isEqualTo("a25df527-d674-4972-bd62-ce3ff31417d4")
-            assertThat(this.exposures).hasSize(3)
+            assertThat(batchTag).isEqualTo(BatchTag.of("a25df527-d674-4972-bd62-ce3ff31417d4"))
+            assertThat(exposures).hasSize(3)
         }
     }
 
@@ -114,13 +113,13 @@ class InteropClientTest(private val wireMock: WireMockServer) {
         val service = InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, RecordingEvents())
 
         (service.downloadKeys(localDate, BatchTag.of("nansi6f7-ae6f-42f6-9354-00c0a6b79728")) as DiagnosisKeysDownloadResponse).apply {
-            assertThat(this.batchTag).isEqualTo("5a0df0cd-4663-4119-ade4-3a30ab8e164d")
-            assertThat(this.exposures).hasSize(7)
+            assertThat(batchTag).isEqualTo(BatchTag.of("5a0df0cd-4663-4119-ade4-3a30ab8e164d"))
+            assertThat(exposures).hasSize(7)
         }
 
         (service.downloadKeys(localDate, BatchTag.of("5a0df0cd-4663-4119-ade4-3a30ab8e164d")) as DiagnosisKeysDownloadResponse).apply {
-            assertThat(this.batchTag).isEqualTo("a25df527-d674-4972-bd62-ce3ff31417d4")
-            assertThat(this.exposures).hasSize(3)
+            assertThat(batchTag).isEqualTo(BatchTag.of("a25df527-d674-4972-bd62-ce3ff31417d4"))
+            assertThat(exposures).hasSize(3)
         }
     }
 
@@ -210,7 +209,7 @@ class InteropClientTest(private val wireMock: WireMockServer) {
         val response = service.downloadKeys(localDate)
 
         assertThat(response as DiagnosisKeysDownloadResponse).satisfies { key ->
-            assertThat(key.batchTag).isEqualTo("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01")
+            assertThat(key.batchTag).isEqualTo(BatchTag.of("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01"))
             assertThat(key.exposures).first().satisfies {
                 assertThat(it).usingRecursiveComparison().isEqualTo(
                     ExposureDownload(

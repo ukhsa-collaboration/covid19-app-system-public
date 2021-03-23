@@ -21,12 +21,11 @@ import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Wl
 import uk.nhs.nhsx.virology.result.TestEndDate
 import uk.nhs.nhsx.virology.result.TestResult
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
-import java.time.Instant
 
 class TestLab(unauthedHttp: HttpHandler,
               private val envConfig: EnvConfig) {
 
-    private val authedHttp = SetAuthHeader(envConfig.authHeaders.testResultUpload).then(unauthedHttp)
+    private val authedHttp = SetAuthHeader(envConfig.auth_headers.testResultUpload).then(unauthedHttp)
 
     fun generateCtaTokenFor(testResult: TestResult,
                             testEndDate: TestEndDate,
@@ -54,10 +53,10 @@ class TestLab(unauthedHttp: HttpHandler,
                                      payload: String,
                                      version: ApiVersion): CtaToken {
         val uri = mapOf(
-            Pair(Eng, V1) to envConfig.engTokenGenUploadEndpoint,
-            Pair(Wls, V1) to envConfig.wlsTokenGenUploadEndpoint,
-            Pair(Eng, V2) to envConfig.v2EngTokenGenUploadEndpoint,
-            Pair(Wls, V2) to envConfig.v2WlsTokenGenUploadEndpoint
+            Pair(Eng, V1) to envConfig.test_results_eng_tokengen_upload_endpoint,
+            Pair(Wls, V1) to envConfig.test_results_wls_tokengen_upload_endpoint,
+            Pair(Eng, V2) to envConfig.test_results_v2_eng_tokengen_upload_endpoint,
+            Pair(Wls, V2) to envConfig.test_results_v2_wls_tokengen_upload_endpoint
         )
 
         return authedHttp(uri[Pair(source, version)]?.let {
@@ -136,10 +135,10 @@ class TestLab(unauthedHttp: HttpHandler,
                                     source: VirologyResultSource,
                                     version: ApiVersion): Response {
         val uri = mapOf(
-            Pair(Npex, V1) to envConfig.testResultsNpexUploadEndpoint,
-            Pair(Fiorano, V1) to envConfig.testResultsFioranoUploadEndpoint,
-            Pair(Npex, V2) to envConfig.v2NpexUploadEndpoint,
-            Pair(Fiorano, V2) to envConfig.v2FioranoUploadEndpoint,
+            Pair(Npex, V1) to envConfig.test_results_npex_upload_endpoint,
+            Pair(Fiorano, V1) to envConfig.test_results_fiorano_upload_endpoint,
+            Pair(Npex, V2) to envConfig.test_results_v2_npex_upload_endpoint,
+            Pair(Fiorano, V2) to envConfig.test_results_v2_fiorano_upload_endpoint,
         )
 
         return authedHttp(uri[Pair(source, version)]?.let {

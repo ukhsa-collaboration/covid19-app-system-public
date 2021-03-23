@@ -33,7 +33,7 @@ resource "aws_cloudwatch_log_group" "this" {
 
 resource "aws_cloudwatch_log_metric_filter" "this" {
   name           = "ErrorLogCount"
-  pattern        = "[date,thread,awsRequestId,logLevel = ERROR,className, description]"
+  pattern        = "{($.metadata.category = \"ERROR\")}"
   log_group_name = aws_cloudwatch_log_group.this.name
 
   metric_transformation {
@@ -45,7 +45,7 @@ resource "aws_cloudwatch_log_metric_filter" "this" {
 
 resource "aws_cloudwatch_log_metric_filter" "warning_lambda_metric" {
   name           = "WarningLogCount"
-  pattern        = "[date,thread,awsRequestId,logLevel = WARN,className, description]"
+  pattern        = "{($.metadata.category = \"WARNING\")}"
   log_group_name = aws_cloudwatch_log_group.this.name
 
   metric_transformation {

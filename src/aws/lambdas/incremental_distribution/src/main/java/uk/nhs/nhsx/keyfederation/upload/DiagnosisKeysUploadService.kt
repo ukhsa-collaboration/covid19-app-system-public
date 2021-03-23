@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.keyfederation.upload
 
 import com.amazonaws.services.lambda.runtime.Context
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.diagnosiskeydist.Submission
@@ -11,11 +12,10 @@ import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.UploadedDiagnosisKeys
 import java.time.Duration
 import java.time.Instant
-import java.util.function.Supplier
 import kotlin.math.max
 
 class DiagnosisKeysUploadService(
-    private val clock: Supplier<Instant>,
+    private val clock: Clock,
     private val interopClient: InteropClient,
     private val submissionRepository: SubmissionRepository,
     private val batchTagService: BatchTagService,
@@ -30,14 +30,13 @@ class DiagnosisKeysUploadService(
 ) {
     private val maxUploadBatchLimit: Int = maxUploadBatchSize - 4 // mobile submissions/sec
 
-    @Throws(Exception::class)
     fun loadKeysAndUploadToFederatedServer(): Int {
         var submissionCount = 0
         var iterationDuration = 0L
         var lastUploadedSubmissionTime = getLastUploadedTime()
 
         for (i in 1..maxSubsequentBatchUploadCount) {
-            val startTime = clock.get().toEpochMilli()
+            val startTime = clock().toEpochMilli()
             val result = loadKeysAndUploadOneBatchToFederatedServer(lastUploadedSubmissionTime, i)
 
             submissionCount += result.submissionCount
@@ -48,7 +47,7 @@ class DiagnosisKeysUploadService(
             ) break
 
             lastUploadedSubmissionTime = result.lastUploadedSubmissionTime
-            iterationDuration = max(iterationDuration, clock.get().toEpochMilli() - startTime)
+            iterationDuration = max(iterationDuration, clock().toEpochMilli() - startTime)
             val remainingTimeInMillis = context.remainingTimeInMillis
             if (iterationDuration >= remainingTimeInMillis) break
         }
@@ -56,12 +55,11 @@ class DiagnosisKeysUploadService(
         return submissionCount
     }
 
-    @Throws(Exception::class)
     fun loadKeysAndUploadOneBatchToFederatedServer(
         lastUploadedSubmissionTime: Instant,
         batchNumber: Int
     ): BatchUploadResult {
-        events(javaClass, InfoEvent("Begin: Upload diagnosis keys to the Nearform server - batch $batchNumber"))
+        events(InfoEvent("Begin: Upload diagnosis keys to the Nearform server - batch $batchNumber"))
 
         val newSubmissions = submissionRepository.loadAllSubmissions(
             lastUploadedSubmissionTime.toEpochMilli(),
@@ -73,7 +71,6 @@ class DiagnosisKeysUploadService(
             .map { updateRiskLevelIfDefaultEnabled(it) }
 
         events(
-            javaClass,
             InfoEvent("Loading and transforming keys from submissions finished (from ${if (newSubmissions.isEmpty()) null else newSubmissions[0].submissionDate} to ${if (newSubmissions.isEmpty()) null else newSubmissions[newSubmissions.size - 1].submissionDate}), keyCount=${exposures.size} (batch $batchNumber)")
         )
 
@@ -84,7 +81,7 @@ class DiagnosisKeysUploadService(
 
             if (uploadResponse.insertedExposures != exposures.size) {
                 events(
-                    javaClass, DiagnosisKeysUploadIncomplete(
+                    DiagnosisKeysUploadIncomplete(
                         exposures.size,
                         uploadResponse.insertedExposures,
                         lastUploadedSubmissionTime,
@@ -107,7 +104,6 @@ class DiagnosisKeysUploadService(
             )
         } else {
             events(
-                javaClass,
                 InfoEvent("No keys were available for uploading to federation server with submission date greater than $lastUploadedSubmissionTime -batch $batchNumber")
             )
         }
@@ -127,7 +123,6 @@ class DiagnosisKeysUploadService(
             .groupBy(ExposureUpload::testType)
             .forEach { (testType, exposures) ->
                 events(
-                    javaClass,
                     UploadedDiagnosisKeys(
                         testType,
                         exposures.size,
@@ -155,10 +150,10 @@ class DiagnosisKeysUploadService(
 
     private fun getLastUploadedTime(): Instant = batchTagService.lastUploadState()
         .map {
-            events(javaClass, InfoEvent("Last uploaded timestamp from db ${it.lastUploadedTimeStamp}"))
+            events(InfoEvent("Last uploaded timestamp from db ${it.lastUploadedTimeStamp}"))
             Instant.ofEpochSecond(it.lastUploadedTimeStamp)
         }
-        .orElse(clock.get().minus(Duration.ofDays(initialUploadHistoryDays.toLong())))
+        .orElse(clock().minus(Duration.ofDays(initialUploadHistoryDays.toLong())))
 
     companion object {
         private const val NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE = 0

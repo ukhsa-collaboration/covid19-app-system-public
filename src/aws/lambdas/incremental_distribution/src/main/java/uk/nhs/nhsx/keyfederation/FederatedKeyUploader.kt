@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.keyfederation
 
-import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.Clock
+import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Jackson.toJson
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
@@ -9,7 +10,7 @@ import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
-import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber.enIntervalNumberFromTimestamp
+import uk.nhs.nhsx.diagnosiskeydist.agspec.RollingStartNumber.isRollingStartNumberValid
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
@@ -17,23 +18,20 @@ import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.keyfederation.download.ExposureKeysPayload
 import uk.nhs.nhsx.keyfederation.download.ReportType
 import uk.nhs.nhsx.keyfederation.download.TestType
-import java.time.Duration
-import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.function.Supplier
 
 class FederatedKeyUploader(
     private val s3Storage: S3Storage,
     private val bucketName: BucketName,
     private val federatedKeySourcePrefix: String,
-    private val clock: Supplier<Instant>,
+    private val clock: Clock,
     private val validOrigins: List<String>,
     private val events: Events
 ) {
 
-    private val dateStringProvider = { DATE_TIME_FORMATTER.format(clock.get()) }
+    private val dateStringProvider = { DATE_TIME_FORMATTER.format(clock()) }
 
     fun acceptKeysFromFederatedServer(payload: DiagnosisKeysDownloadResponse) =
         groupByOrigin(payload).forEach { (origin, keys) -> handleOriginKeys(payload.batchTag, origin, keys) }
@@ -43,7 +41,7 @@ class FederatedKeyUploader(
             .filter { it.testType === TestType.PCR && it.reportType === ReportType.CONFIRMED_TEST }
             .groupBy(ExposureDownload::origin)
 
-    private fun handleOriginKeys(batchTag: String, origin: String, exposureDownloads: List<ExposureDownload>) {
+    private fun handleOriginKeys(batchTag: BatchTag, origin: String, exposureDownloads: List<ExposureDownload>) {
         emitStatistics(exposureDownloads, origin)
 
         val validKeys = exposureDownloads.filter { isValidExposure(it) }
@@ -58,12 +56,11 @@ class FederatedKeyUploader(
                         )
                     )
                     else -> events(
-                        javaClass,
                         InfoEvent("Skip store to s3 because no valid keys were found or all keys were invalid, origin=$origin, batchTag=${batchTag}")
                     )
                 }
             }
-            else -> events(javaClass, InvalidOriginKeys(origin, batchTag))
+            else -> events(InvalidOriginKeys(origin, batchTag))
         }
     }
 
@@ -74,7 +71,7 @@ class FederatedKeyUploader(
                 val validKeys = exposures.filter { isValidExposure(it) }
                 val invalidKeys = exposures.size - validKeys.size
                 events(
-                    javaClass, DownloadedFederatedDiagnosisKeys(
+                    DownloadedFederatedDiagnosisKeys(
                         testType,
                         validKeys.size,
                         invalidKeys,
@@ -90,15 +87,33 @@ class FederatedKeyUploader(
         ?.takeIf { isRollingPeriodValid(it.rollingPeriod) }
         ?.takeIf { isTransmissionRiskLevelValid(it.transmissionRiskLevel) } != null
 
+    private fun isRollingStartNumberValid(
+        clock: Clock,
+        rollingStartNumber: Long,
+        rollingPeriod: Int,
+        events: Events
+    ): Boolean {
+        val now = clock()
+        val isValid = isRollingStartNumberValid(
+            { now },
+            rollingStartNumber,
+            rollingPeriod
+        )
+        if (!isValid) {
+            events(InvalidRollingStartNumber(now, rollingStartNumber, rollingPeriod))
+        }
+        return isValid
+    }
+
     private fun isKeyValid(key: String?): Boolean {
         val isValid = key != null && isBase64EncodedAndLessThan32Bytes(key)
-        if (!isValid) events.emit(javaClass, InvalidTemporaryExposureKey(key))
+        if (!isValid) events(InvalidTemporaryExposureKey(key))
         return isValid
     }
 
     private fun isRollingPeriodValid(isRollingPeriod: Int): Boolean {
         val isValid = isRollingPeriod in 1..144
-        if (!isValid) events.emit(javaClass, InvalidRollingPeriod(isRollingPeriod))
+        if (!isValid) events(InvalidRollingPeriod(isRollingPeriod))
         return isValid
     }
 
@@ -110,7 +125,7 @@ class FederatedKeyUploader(
 
     private fun isTransmissionRiskLevelValid(transmissionRiskLevel: Int): Boolean {
         val isValid = transmissionRiskLevel in 0..7
-        if (!isValid) events.emit(javaClass, InvalidTransmissionRiskLevel(transmissionRiskLevel))
+        if (!isValid) events(InvalidTransmissionRiskLevel(transmissionRiskLevel))
         return isValid
     }
 
@@ -121,32 +136,13 @@ class FederatedKeyUploader(
 
         s3Storage.upload(
             Locator.of(bucketName, objectKey),
-            ContentType.APPLICATION_JSON,
+            APPLICATION_JSON,
             fromUtf8String(toJson(payload))
         )
     }
 
     companion object {
         private val DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneOffset.UTC)
-
-        fun isRollingStartNumberValid(
-            clock: Supplier<Instant>,
-            rollingStartNumber: Long,
-            rollingPeriod: Int,
-            events: Events
-        ): Boolean {
-            val now = clock.get()
-            val currentInstant = enIntervalNumberFromTimestamp(now).enIntervalNumber
-            val expiryPeriod = enIntervalNumberFromTimestamp(now.minus(Duration.ofDays(14))).enIntervalNumber
-            val isValid = rollingStartNumber + rollingPeriod >= expiryPeriod && rollingStartNumber <= currentInstant
-            if (!isValid) {
-                events(
-                    FederatedKeyUploader::class.java,
-                    InvalidRollingStartNumber(now, rollingStartNumber, rollingPeriod)
-                )
-            }
-            return isValid
-        }
     }
 }
 

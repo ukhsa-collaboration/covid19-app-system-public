@@ -3,17 +3,17 @@ locals {
 
   metric_alarms = [{
     name           = "${terraform.workspace}-P3-DDoSDetected",
-    description    = "DDoS attack detected by AWS Shield Advanced.  Open up AWS Shield console to see which resources are affected and details about the attack. Refer to the runbook RBK002-ddos (https://github.com/nhsx/covid19-app-system-public/blob/master/doc/ops/run_books/RBK002-ddos.adoc).",
+    description    = "DDoS attack detected by AWS Shield Advanced.  Open up AWS Shield console to see which resources are affected and details about the attack. Refer to the runbook RBK002-ddos (https://github.com/nihp-public/COVID19-app-system/blob/master/doc/ops/run_books/RBK002-ddos.adoc).",
     metric_name    = "DDoSDetected"
     metric_queries = [for arn in var.shield_protected_arns : { "arn" = arn, "id" = "m${index(var.shield_protected_arns, arn)}" }]
     }, {
     name           = "${terraform.workspace}-P3-Layer3_4_DDoSDetected",
-    description    = "Layer 3/4 DDoS attack detected by AWS Shield Advanced.  Open up AWS Shield console to see which resources are affected and details about the attack. Refer to the runbook RBK002-ddos (https://github.com/nhsx/covid19-app-system-public/blob/master/doc/ops/run_books/RBK002-ddos.adoc).",
+    description    = "Layer 3/4 DDoS attack detected by AWS Shield Advanced.  Open up AWS Shield console to see which resources are affected and details about the attack. Refer to the runbook RBK002-ddos (https://github.com/nihp-public/COVID19-app-system/blob/master/doc/ops/run_books/RBK002-ddos.adoc).",
     metric_name    = "DDoSAttackPacketsPerSecond"
     metric_queries = [for arn in var.shield_protected_arns : { "arn" = arn, "id" = "m${index(var.shield_protected_arns, arn)}" }]
     }, {
     name           = "${terraform.workspace}-P1-Layer7_DDoSDetected",
-    description    = "Layer 7 DDoS attack detected by AWS Shield Advanced.  Open up AWS Shield console to see which resources are affected and details about the attack. Refer to the runbook RBK002-ddos (https://github.com/nhsx/covid19-app-system-public/blob/master/doc/ops/run_books/RBK002-ddos.adoc)."
+    description    = "Layer 7 DDoS attack detected by AWS Shield Advanced.  Open up AWS Shield console to see which resources are affected and details about the attack. Refer to the runbook RBK002-ddos (https://github.com/nihp-public/COVID19-app-system/blob/master/doc/ops/run_books/RBK002-ddos.adoc)."
     metric_name    = "DDoSAttackRequestsPerSecond"
     metric_queries = [for arn in var.shield_protected_arns : { "arn" = arn, "id" = "m${index(var.shield_protected_arns, arn)}" }]
   }]

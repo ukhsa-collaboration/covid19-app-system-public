@@ -16,11 +16,11 @@ import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.RiskyPostDistrictUpload
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.METHOD_NOT_ALLOWED_405
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.testhelper.TestDatedSigner
 import uk.nhs.nhsx.testhelper.mocks.FakeCsvUploadServiceS3
-import java.nio.charset.StandardCharsets.UTF_8
 
 class RiskyPostCodesHandlerTest {
 
@@ -85,9 +85,9 @@ class RiskyPostCodesHandlerTest {
         assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.ACCEPTED_202.code)
         assertThat(responseEvent.body).isEqualTo("successfully uploaded")
 
-        val contentToStore = """{"postDistricts":{"CODE2":"M","CODE1":"H","CODE3":"L"}}"""
+        val contentToStore = """{"postDistricts":{"CODE1":"H","CODE2":"M","CODE3":"L"}}"""
         assertThat(datedSigner.count).isEqualTo(2)
-        assertThat(datedSigner.content[0]).isEqualTo("date:".toByteArray(UTF_8) + contentToStore.toByteArray(UTF_8))
+        assertThat(datedSigner.content[0]).isEqualTo("date:".toByteArray() + contentToStore.toByteArray())
         assertThat(s3Storage.count).isEqualTo(4)
         assertThat(s3Storage.bucket.value).isEqualTo("my-bucket")
         events.contains(RiskyPostDistrictUpload::class)
@@ -126,7 +126,7 @@ class RiskyPostCodesHandlerTest {
 
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
 
-        assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.METHOD_NOT_ALLOWED_405.code)
+        assertThat(responseEvent.statusCode).isEqualTo(METHOD_NOT_ALLOWED_405.code)
         assertThat(responseEvent.body).isEqualTo(null)
         verifyNoMockInteractions()
     }

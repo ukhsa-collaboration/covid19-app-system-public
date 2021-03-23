@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 import uk.nhs.nhsx.testhelper.data.asInstant
 import java.time.Duration
+import java.time.Instant
 
 class DailyZIPSubmissionPeriodTest {
 
@@ -139,5 +140,27 @@ class DailyZIPSubmissionPeriodTest {
     fun `verify toString`() {
         assertThat(DailyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant()).toString())
             .isEqualTo("1 day: from 2020071900 (inclusive) to 2020072000 (exclusive)")
+    }
+
+
+    @Test
+    fun `can parse`() {
+        assertThat(DailyZIPSubmissionPeriod.parseOrNull("distribution/daily/2020070100.zip"))
+            .isEqualTo(Instant.parse("2020-07-01T00:00:00Z"))
+
+        assertThat(DailyZIPSubmissionPeriod.parseOrNull("distribution/daily/2020070106.zip"))
+            .isNull()
+    }
+
+    @Test
+    fun `round-trips parse`() {
+        val origin = DailyZIPSubmissionPeriod
+            .periodForSubmissionDate(Instant.parse("2020-09-29T10:00:00Z"))
+
+        val zipPath = origin.zipPath()
+        val parsedInstant = DailyZIPSubmissionPeriod.parseOrNull(zipPath) ?: error("should have parsed")
+        val recreated = DailyZIPSubmissionPeriod(parsedInstant)
+
+        assertThat(recreated).isEqualTo(origin)
     }
 }

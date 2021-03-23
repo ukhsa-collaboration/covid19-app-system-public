@@ -3,6 +3,7 @@ package uk.nhs.nhsx.highriskvenuesupload
 import com.amazonaws.services.cloudfront.AmazonCloudFrontClientBuilder
 import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys.BUCKET_NAME
 import uk.nhs.nhsx.core.EnvironmentKeys.DISTRIBUTION_ID
@@ -30,12 +31,10 @@ import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses
 import uk.nhs.nhsx.highriskvenuesupload.VenuesUploadResult.Success
 import uk.nhs.nhsx.highriskvenuesupload.VenuesUploadResult.ValidationError
-import java.time.Instant
-import java.util.function.Supplier
 
 class HighRiskVenuesUploadHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = SystemClock.CLOCK,
+    clock: Clock = SystemClock.CLOCK,
     private val events: Events = PrintingJsonEvents(clock),
     authenticator: Authenticator = awsAuthentication(ApiName.HighRiskVenuesUpload, events),
     service: HighRiskVenuesUploadService = createUploadService(clock, environment, events),
@@ -47,14 +46,14 @@ class HighRiskVenuesUploadHandler @JvmOverloads constructor(
         when (result) {
             is Success -> accepted(result.message)
             is ValidationError -> {
-                events.emit(javaClass, HighRiskVenueUploadFileInvalid)
+                events(HighRiskVenueUploadFileInvalid)
                 HttpResponses.unprocessableEntity(result.message)
             }
         }
 
     companion object {
         private fun createUploadService(
-            clock: Supplier<Instant>,
+            clock: Clock,
             environment: Environment,
             events: Events
         ) = HighRiskVenuesUploadService(
@@ -82,7 +81,7 @@ class HighRiskVenuesUploadHandler @JvmOverloads constructor(
             authorisedBy(
                 authenticator,
                 path(POST, "/upload/identified-risk-venues", ApiGatewayHandler { r, _ ->
-                    events.emit(javaClass, RiskyVenuesUpload())
+                    events(RiskyVenuesUpload())
                     if (r.isTextCsv()) {
                         mapResultToResponse(service.upload(r.body))
                     } else {

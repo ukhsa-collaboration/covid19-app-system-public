@@ -3,6 +3,7 @@ package uk.nhs.nhsx.analyticssubmission
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.EnvironmentKeys
@@ -30,12 +31,10 @@ import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.routing.RoutingHandler
 import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses
-import java.time.Instant
-import java.util.function.Supplier
 
 class AnalyticsSubmissionHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = CLOCK,
+    clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
     healthAuthenticator: Authenticator = awsAuthentication(Health, events),
     mobileAuthenticator: Authenticator = awsAuthentication(Mobile, events),
@@ -61,8 +60,8 @@ class AnalyticsSubmissionHandler @JvmOverloads constructor(
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/submission/mobile-analytics", ApiGatewayHandler { r, _ ->
-                    events.emit(javaClass, MobileAnalyticsSubmission())
-                    readOrNull<ClientAnalyticsSubmissionPayload>(r.body) { events(javaClass, UnprocessableJson(it)) }
+                    events(MobileAnalyticsSubmission())
+                    readOrNull<ClientAnalyticsSubmissionPayload>(r.body) { events(UnprocessableJson(it)) }
                         ?.let {
                             service.accept(it)
                             ok()

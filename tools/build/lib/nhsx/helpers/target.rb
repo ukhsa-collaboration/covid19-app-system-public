@@ -32,6 +32,13 @@ module NHSx
       "isolationPayment" => "isolation_payment",
     }.freeze
 
+    # All the fixed mappings between AWS and the AAE per account: {"account"=>[aae_account]}
+    AAE_TARGET_ACCOUNTS = {
+      "dev" => "test",
+      "staging" => "test",
+      "prod" => "prod"
+    }.freeze
+
     # All the fixed (named) target environments per account: {"account"=>[target_environments]}
     CTA_TARGET_ENVIRONMENTS = {
       "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
@@ -40,7 +47,7 @@ module NHSx
     }.freeze
     # All the fixed (named) Analytics target environments per account: {"account"=>[target_environments]}
     ANALYTICS_TARGET_ENVIRONMENTS = {
-      "dev" => ["load-test", "ci", "fnctnl", "qa", "branch"],
+      "dev" => ["load-test", "ci", "fnctnl", "qa", "branch", "extdev", "test"],
       "staging" => ["staging"],
       "prod" => ["prod"],
       "aa-dev" => ["aa-dev"],

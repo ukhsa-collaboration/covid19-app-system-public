@@ -90,6 +90,8 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer receivedRiskyVenueM1Warning;
     public final Integer receivedRiskyVenueM2Warning;
     public final Integer hasReceivedRiskyVenueM2WarningBackgroundTick;
+    public final Integer totalAlarmManagerBackgroundTasks;
+    public final Integer missingPacketsLast7Days;
 
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
@@ -168,7 +170,9 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer hasTestedSelfRapidPositiveBackgroundTick,
                                              Integer receivedRiskyVenueM1Warning,
                                              Integer receivedRiskyVenueM2Warning,
-                                             Integer hasReceivedRiskyVenueM2WarningBackgroundTick) {
+                                             Integer hasReceivedRiskyVenueM2WarningBackgroundTick,
+                                             Integer totalAlarmManagerBackgroundTasks,
+                                             Integer missingPacketsLast7Days) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -246,6 +250,8 @@ public class StoredAnalyticsSubmissionPayload {
         this.receivedRiskyVenueM1Warning = receivedRiskyVenueM1Warning;
         this.receivedRiskyVenueM2Warning = receivedRiskyVenueM2Warning;
         this.hasReceivedRiskyVenueM2WarningBackgroundTick = hasReceivedRiskyVenueM2WarningBackgroundTick;
+        this.totalAlarmManagerBackgroundTasks = totalAlarmManagerBackgroundTasks;
+        this.missingPacketsLast7Days = missingPacketsLast7Days;
         }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload, Events events) {
@@ -327,6 +333,8 @@ public class StoredAnalyticsSubmissionPayload {
             clientPayload.metrics.hasTestedSelfRapidPositiveBackgroundTick,
             clientPayload.metrics.receivedRiskyVenueM1Warning,
             clientPayload.metrics.receivedRiskyVenueM2Warning,
-            clientPayload.metrics.hasReceivedRiskyVenueM2WarningBackgroundTick);
+            clientPayload.metrics.hasReceivedRiskyVenueM2WarningBackgroundTick,
+            clientPayload.metrics.totalAlarmManagerBackgroundTasks,
+            clientPayload.metrics.missingPacketsLast7Days);
     }
 }

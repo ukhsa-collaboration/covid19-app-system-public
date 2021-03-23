@@ -2,16 +2,17 @@ package uk.nhs.nhsx.core.aws.s3
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.Clock
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.*
+import java.util.UUID
 import java.util.function.Supplier
 
 class UniqueObjectKeyNameProviderTest {
 
     @Test
     fun returnsObjectKey() {
-        val systemClock = Supplier {
+        val systemClock: Clock = {
             LocalDateTime
                 .parse("2020-07-22T16:29:25.687835")
                 .toInstant(ZoneOffset.UTC)

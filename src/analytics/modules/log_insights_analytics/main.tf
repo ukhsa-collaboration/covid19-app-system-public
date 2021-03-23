@@ -93,7 +93,7 @@ resource "aws_glue_catalog_table" "key_federation_upload_analytics" {
       type = "int"
     }
     columns {
-      name = "numberOfKeys"
+      name = "numberOfKeysUploaded"
       type = "int"
     }
   }
@@ -141,7 +141,11 @@ resource "aws_glue_catalog_table" "key_federation_download_analytics" {
       type = "int"
     }
     columns {
-      name = "numberOfKeys"
+      name = "numberOfKeysDownloaded"
+      type = "int"
+    }
+    columns {
+      name = "numberOfKeysImported"
       type = "int"
     }
   }

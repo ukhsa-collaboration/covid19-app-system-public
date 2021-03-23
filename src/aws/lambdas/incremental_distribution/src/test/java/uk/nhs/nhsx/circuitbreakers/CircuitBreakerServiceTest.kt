@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType
-import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.extractPollingToken
+import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.Companion.extractPollingToken
 import uk.nhs.nhsx.core.Jackson
 
 class CircuitBreakerServiceTest {
@@ -15,7 +15,7 @@ class CircuitBreakerServiceTest {
 
     @Test
     fun `test get approval token`() {
-        val result: CircuitBreakerResult = circuitBreakerService.approvalToken
+        val result: CircuitBreakerResult = circuitBreakerService.getApprovalToken()
         assertThat(result.type).isEqualTo(ResultType.Ok)
         val approvalValue = JSONObject(result.responseBody).getString("approval")
         assertThat(approvalValue).isEqualTo(ApprovalStatus.PENDING.statusName)

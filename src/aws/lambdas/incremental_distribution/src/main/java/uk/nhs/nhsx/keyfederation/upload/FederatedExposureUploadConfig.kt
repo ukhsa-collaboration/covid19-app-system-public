@@ -11,7 +11,7 @@ fun interface ExposureUploadFactory {
     fun create(submission: Submission): List<ExposureUpload>
 }
 
-class PcrExposureUploadFactory(val region: String) : ExposureUploadFactory {
+class PcrExposureUploadFactory(private val region: String) : ExposureUploadFactory {
     override fun create(submission: Submission): List<ExposureUpload> = submission.payload.temporaryExposureKeys.map {
         ExposureUpload(
             keyData = it.key,
@@ -24,11 +24,9 @@ class PcrExposureUploadFactory(val region: String) : ExposureUploadFactory {
             daysSinceOnset = it.daysSinceOnsetOfSymptoms ?: 0
         )
     }
-
 }
 
 object FederatedExposureUploadConfig {
-    @JvmStatic
     fun create(region: String, prefixes: List<String>): Pair<Predicate<ObjectKey>, ExposureUploadFactory> = Pair(
         ObjectKeyFilters.federated().withPrefixes(prefixes),
         PcrExposureUploadFactory(region)

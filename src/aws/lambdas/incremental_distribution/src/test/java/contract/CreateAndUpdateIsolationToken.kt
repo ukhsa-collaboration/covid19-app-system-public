@@ -17,10 +17,14 @@ interface CreateAndUpdateIsolationToken : BackendContractScenario {
         val mobileApp = MobileApp(mitmHttpClient(), envConfig)
 
         control.addNote("Mobile App creates isolation token")
-        val ipcToken = mobileApp.createIsolationToken(England).ipcToken
 
+        val x = mobileApp.createIsolationToken(England)
         control.addNote("Mobile App updates isolation token with new dates")
-        mobileApp.updateIsolationToken(ipcToken, Instant.now().minus(Duration.ofDays(4)), Instant.now().minus(Duration.ofDays(4)))
+        mobileApp.updateIsolationToken(
+            x.ipcToken,
+            Instant.now().minus(Duration.ofDays(4)),
+            Instant.now().minus(Duration.ofDays(4))
+        )
     }
 }
 

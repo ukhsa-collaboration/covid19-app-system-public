@@ -4,13 +4,13 @@ import com.amazonaws.services.s3.model.S3ObjectSummary
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
+import uk.nhs.nhsx.diagnosiskeydist.s3.limit
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.testhelper.data.TestData
 import java.io.ByteArrayInputStream
 import java.time.Instant
-import java.util.*
+import java.util.Date
 
 class SubmissionRepositoryTest {
 
@@ -21,7 +21,9 @@ class SubmissionRepositoryTest {
         val inputStream = ByteArrayInputStream(TestData.STORED_KEYS_PAYLOAD.toByteArray())
         val payload = SubmissionRepository.getTemporaryExposureKeys(inputStream)
         assertThat(payload.temporaryExposureKeys).isNotEmpty
-        assertThat(payload.temporaryExposureKeys.stream().allMatch { matchKey(it, TestData.STORED_KEYS_PAYLOAD_DESERIALIZED) }).isTrue
+        assertThat(
+            payload.temporaryExposureKeys.stream()
+                .allMatch { matchKey(it, TestData.STORED_KEYS_PAYLOAD_DESERIALIZED) }).isTrue
     }
 
     @Test
@@ -29,7 +31,9 @@ class SubmissionRepositoryTest {
         val inputStream = ByteArrayInputStream(TestData.STORED_KEYS_PAYLOAD_DAYS_SINCE_ONSET.toByteArray())
         val payload = SubmissionRepository.getTemporaryExposureKeys(inputStream)
         assertThat(payload.temporaryExposureKeys).isNotEmpty
-        assertThat(payload.temporaryExposureKeys.stream().allMatch { matchKey(it, TestData.STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET) }).isTrue
+        assertThat(
+            payload.temporaryExposureKeys.stream()
+                .allMatch { matchKey(it, TestData.STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET) }).isTrue
     }
 
     @Test
@@ -57,7 +61,7 @@ class SubmissionRepositoryTest {
         )
 
         testcases.forEach { (limit, maxResults, expected) ->
-            assertThat(SubmissionFromS3Repository.limit(summaries, limit, maxResults))
+            assertThat(summaries.limit(limit, maxResults))
                 .describedAs("limit: $limit, maxResults: $maxResults")
                 .extracting("key")
                 .containsExactlyElementsOf(expected)
@@ -68,7 +72,7 @@ class SubmissionRepositoryTest {
     fun `throws exception if limit is 0`() {
         val summaries = listOf(summary(2, "e", now))
 
-        assertThatThrownBy { SubmissionFromS3Repository.limit(summaries, 0, 10) }
+        assertThatThrownBy { summaries.limit(0, 10) }
             .hasMessage("limit needs to be greater than 0")
     }
 
@@ -76,7 +80,7 @@ class SubmissionRepositoryTest {
     fun `throws exception if limit is negative`() {
         val summaries = listOf(summary(2, "e", now))
 
-        assertThatThrownBy { SubmissionFromS3Repository.limit(summaries, -1, 10) }
+        assertThatThrownBy { summaries.limit(-1, 10) }
             .hasMessage("limit needs to be greater than 0")
     }
 
@@ -86,7 +90,10 @@ class SubmissionRepositoryTest {
             lastModified = Date.from(now.minusSeconds(ageSeconds))
         }
 
-    private fun matchKey(storedKey: StoredTemporaryExposureKey, deserializedPayload: StoredTemporaryExposureKeyPayload): Boolean =
+    private fun matchKey(
+        storedKey: StoredTemporaryExposureKey,
+        deserializedPayload: StoredTemporaryExposureKeyPayload
+    ): Boolean =
         deserializedPayload.temporaryExposureKeys.stream()
             .anyMatch { k: StoredTemporaryExposureKey ->
                 k.key == storedKey.key

@@ -85,7 +85,10 @@ class LogInsightsAnalyticsServiceTest {
                 .withField("test_type")
                 .withValue("0"),
             ResultField()
-                .withField("number_of_keys")
+                .withField("number_of_keys_downloaded")
+                .withValue("100"),
+            ResultField()
+                .withField("number_of_keys_imported")
                 .withValue("100")
         ),
         listOf(
@@ -99,8 +102,11 @@ class LogInsightsAnalyticsServiceTest {
                 .withField("test_type")
                 .withValue("1"),
             ResultField()
-                .withField("number_of_keys")
-                .withValue("101")
+                .withField("number_of_keys_downloaded")
+                .withValue("101"),
+            ResultField()
+                .withField("number_of_keys_imported")
+                .withValue("99"),
         )
     )
 
@@ -113,7 +119,7 @@ class LogInsightsAnalyticsServiceTest {
                 .withField("test_type")
                 .withValue("0"),
             ResultField()
-                .withField("number_of_keys")
+                .withField("number_of_keys_uploaded")
                 .withValue("100")
         ),
         listOf(
@@ -124,7 +130,7 @@ class LogInsightsAnalyticsServiceTest {
                 .withField("test_type")
                 .withValue("1"),
             ResultField()
-                .withField("number_of_keys")
+                .withField("number_of_keys_uploaded")
                 .withValue("101")
         )
     )
@@ -153,11 +159,11 @@ class LogInsightsAnalyticsServiceTest {
     @Test
     fun `convert interop download logs`() {
         val expectedList = listOf(
-            KeyFederationDownloadStats("2021-01-20 16:00:00.000", "GB-SCO", 0, 100),
-            KeyFederationDownloadStats("2021-01-20 17:00:00.000", "JE", 1, 101)
+            KeyFederationDownloadStats("2021-01-20 16:00:00.000", "GB-SCO", 0, 100,100),
+            KeyFederationDownloadStats("2021-01-20 17:00:00.000", "JE", 1, 101, 99)
         )
-        val expectedFormat = """{"startOfHour":"2021-01-20 16:00:00.000","origin":"GB-SCO","testType":0,"numberOfKeys":100}
-                                |{"startOfHour":"2021-01-20 17:00:00.000","origin":"JE","testType":1,"numberOfKeys":101}""".trimMargin()
+        val expectedFormat = """{"startOfHour":"2021-01-20 16:00:00.000","origin":"GB-SCO","testType":0,"numberOfKeysDownloaded":100,"numberOfKeysImported":100}
+                                |{"startOfHour":"2021-01-20 17:00:00.000","origin":"JE","testType":1,"numberOfKeysDownloaded":101,"numberOfKeysImported":99}""".trimMargin()
         assertThat(KeyFederationDownloadStatsConverter().from(expectedInterOpDownloadStats), equalTo(expectedList))
         assertThat(LogInsightsAnalyticsService.toAnalyticsJson(expectedList), equalTo(expectedFormat))
 
@@ -169,8 +175,8 @@ class LogInsightsAnalyticsServiceTest {
             KeyFederationUploadStats("2021-01-20 16:00:00.000",  0, 100),
             KeyFederationUploadStats("2021-01-20 17:00:00.000",  1, 101)
         )
-        val expectedFormat = """{"startOfHour":"2021-01-20 16:00:00.000","testType":0,"numberOfKeys":100}
-                                |{"startOfHour":"2021-01-20 17:00:00.000","testType":1,"numberOfKeys":101}""".trimMargin()
+        val expectedFormat = """{"startOfHour":"2021-01-20 16:00:00.000","testType":0,"numberOfKeysUploaded":100}
+                                |{"startOfHour":"2021-01-20 17:00:00.000","testType":1,"numberOfKeysUploaded":101}""".trimMargin()
         assertThat(KeyFederationUploadStatsConverter().from(expectedInterOpUploadStats), equalTo(expectedList))
         assertThat(LogInsightsAnalyticsService.toAnalyticsJson(expectedList), equalTo(expectedFormat))
 

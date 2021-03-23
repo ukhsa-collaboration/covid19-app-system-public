@@ -11,23 +11,24 @@ import software.amazon.awssdk.services.athena.model.QueryExecutionState.CANCELLE
 import software.amazon.awssdk.services.athena.model.QueryExecutionState.FAILED
 import software.amazon.awssdk.services.athena.model.QueryExecutionState.SUCCEEDED
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
+import uk.nhs.nhsx.core.Clock
 import java.lang.Thread.sleep
-import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.util.function.Supplier
 
-class Analytics(private val envConfig: EnvConfig, http: HttpHandler, private val clock: Supplier<Instant>) {
+class Analytics(private val envConfig: EnvConfig, http: HttpHandler, private val clock: Clock) {
 
     private val athenaClient = AthenaClient.builder().httpClient(AwsSdkClient(http)).build()
 
     fun getRecordedAnalyticsFor(deviceModel: MobileDeviceModel): List<Pair<String, String>> {
-        val date = clock.get().atOffset(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy/MM/dd/HH"))
+        val now = clock().atOffset(ZoneOffset.UTC)
+        val date = now.format(DateTimeFormatter.ofPattern("yyyy/MM/dd/HH"))
+        val dateNextHour = now.plusHours(1).format(DateTimeFormatter.ofPattern("yyyy/MM/dd/HH"))
 
         val results = athenaClient.queryAndWait(
             """
-                SELECT * FROM "${envConfig.workspaceName}_analytics_db"."${envConfig.workspaceName}_analytics_mobile" 
-                where submitteddatehour = '$date'
+                SELECT * FROM "${envConfig.workspace_name}_analytics_db"."${envConfig.workspace_name}_analytics_mobile" 
+                where submitteddatehour = '$date' OR submitteddatehour = '$dateNextHour' 
                 and devicemodel = '${deviceModel.value}'
                 limit 1;
             """

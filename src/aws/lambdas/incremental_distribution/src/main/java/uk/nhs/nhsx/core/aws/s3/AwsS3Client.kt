@@ -8,28 +8,29 @@ import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.amazonaws.services.s3.model.S3Object
 import com.amazonaws.services.s3.model.S3ObjectSummary
-import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.events.Events
 import java.io.IOException
 import java.net.URL
 import java.util.*
 
-class AwsS3Client(private val events: Events) : AwsS3 {
-
+class AwsS3Client @JvmOverloads constructor(
+    private val events: Events,
     private val client: AmazonS3 = AmazonS3ClientBuilder.defaultClient()
+) : AwsS3 {
 
     override fun upload(
         locator: Locator,
         contentType: ContentType,
         bytes: ByteArraySource,
-        meta: List<MetaHeader>
+        metaHeaders: List<MetaHeader>
     ) {
-        events.emit(javaClass, S3Upload(locator.key, locator.bucket))
+        events(S3Upload(locator.key, locator.bucket))
 
         val metadata = ObjectMetadata().apply {
-            this.contentType = contentType.mimeType
+            this.contentType = contentType.value
             this.contentLength = bytes.size.toLong()
-            meta.forEach { addUserMetadata(it.asS3MetaName(), it.value) }
+            metaHeaders.forEach { addUserMetadata(it.asS3MetaName(), it.value) }
         }
 
         try {
@@ -64,12 +65,11 @@ class AwsS3Client(private val events: Events) : AwsS3 {
             Optional.ofNullable(client.getObject(locator.bucket.value, locator.key.value))
         } catch (e: AmazonS3Exception) {
             if (!e.is404()) {
-                events.emit(javaClass, S3Error(locator, e.statusCode, e.errorCode))
+                events(S3Error(locator, e.statusCode, e.errorCode))
             }
             Optional.empty()
         }
     }
-
 
 
     private fun AmazonS3Exception.is404() = statusCode == 404 && errorCode == "NoSuchKey"
@@ -78,10 +78,10 @@ class AwsS3Client(private val events: Events) : AwsS3 {
 
     override fun getSignedURL(locator: Locator, expiration: Date): Optional<URL> {
         return try {
-            Optional.ofNullable(client.generatePresignedUrl(locator.bucket.value,locator.key.value,expiration))
+            Optional.ofNullable(client.generatePresignedUrl(locator.bucket.value, locator.key.value, expiration))
         } catch (e: AmazonS3Exception) {
             if (!e.is404()) {
-                events.emit(javaClass, S3Error(locator, e.statusCode, e.errorCode))
+                events(S3Error(locator, e.statusCode, e.errorCode))
             }
             Optional.empty()
         }

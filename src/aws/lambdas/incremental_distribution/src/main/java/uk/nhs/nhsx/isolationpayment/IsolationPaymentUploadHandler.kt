@@ -3,6 +3,7 @@ package uk.nhs.nhsx.isolationpayment
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.Companion.fromSystem
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
@@ -25,8 +26,6 @@ import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
-import java.time.Instant
-import java.util.function.Supplier
 
 class IsolationPaymentUploadHandler(
     environment: Environment,
@@ -39,7 +38,7 @@ class IsolationPaymentUploadHandler(
     @JvmOverloads
     constructor(
         environment: Environment = fromSystem(),
-        clock: Supplier<Instant> = SystemClock.CLOCK,
+        clock: Clock = SystemClock.CLOCK,
         events: Events = PrintingJsonEvents(SystemClock.CLOCK)
     ) : this(
         environment,
@@ -51,7 +50,7 @@ class IsolationPaymentUploadHandler(
 
     private fun consumeToken(request: APIGatewayProxyRequestEvent): APIGatewayProxyResponseEvent =
         Jackson.readOrNull<IsolationRequest>(request.body) {
-            events.emit(javaClass, UnprocessableJson(it))
+            events(UnprocessableJson(it))
         }
             ?.let { service.consumeIsolationToken(it.ipcToken) }
             ?.let { mapToResponse(it) }
@@ -59,7 +58,7 @@ class IsolationPaymentUploadHandler(
 
     private fun verifyToken(request: APIGatewayProxyRequestEvent): APIGatewayProxyResponseEvent =
         Jackson.readOrNull<IsolationRequest>(request.body) {
-            events.emit(javaClass, UnprocessableJson(it))
+            events(UnprocessableJson(it))
         }
             ?.let { service.verifyIsolationToken(it.ipcToken) }
             ?.let { mapToResponse(it) }
@@ -78,7 +77,7 @@ class IsolationPaymentUploadHandler(
         private val AUDIT_LOG_PREFIX = EnvironmentKey.string("AUDIT_LOG_PREFIX")
 
         private fun isolationPaymentService(
-            clock: Supplier<Instant>,
+            clock: Clock,
             environment: Environment,
             events: Events
         ) = IsolationPaymentGatewayService(

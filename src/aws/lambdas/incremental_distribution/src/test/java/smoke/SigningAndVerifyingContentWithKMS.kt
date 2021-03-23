@@ -49,8 +49,8 @@ class SigningAndVerifyingContentWithKMS {
             it.compactSerialization = generated
         }
 
-        assertThat(jws.payload, equalTo(payload));
-        assertThat("signature is valid", jws.verifySignature(), equalTo(true));
+        assertThat(jws.payload, equalTo(payload))
+        assertThat("signature is valid", jws.verifySignature(), equalTo(true))
         assertThat(jws.headers.getStringHeaderValue("alg"), equalTo("ES256"))
     }
 }

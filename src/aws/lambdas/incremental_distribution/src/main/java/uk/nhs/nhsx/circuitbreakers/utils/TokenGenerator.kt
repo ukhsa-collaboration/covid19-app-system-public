@@ -6,7 +6,6 @@ object TokenGenerator {// letter 'z'// numeral '0'
     /**
      * Generates alphanumeric token of 50 characters
      */
-    @JvmStatic
     val token: String
         get() {
             val startIndex = 48 // numeral '0'

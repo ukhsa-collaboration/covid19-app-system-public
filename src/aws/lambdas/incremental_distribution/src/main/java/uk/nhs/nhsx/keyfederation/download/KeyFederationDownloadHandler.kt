@@ -5,6 +5,7 @@ import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Handler
 import uk.nhs.nhsx.core.StandardSigningFactory
@@ -25,8 +26,6 @@ import uk.nhs.nhsx.keyfederation.BatchTagService
 import uk.nhs.nhsx.keyfederation.FederatedKeyUploader
 import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.upload.JWS
-import java.time.Instant
-import java.util.function.Supplier
 
 /**
  * Key Federation download lambda
@@ -35,7 +34,7 @@ import java.util.function.Supplier
  * doc/architecture/api-contracts/diagnosis-key-federation.md
  */
 class KeyFederationDownloadHandler @JvmOverloads constructor(
-    private val clock: Supplier<Instant> = CLOCK,
+    private val clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
     private val config: KeyFederationDownloadConfig = KeyFederationDownloadConfig.fromEnvironment(Environment.fromSystem()),
     private val batchTagService: BatchTagService = BatchTagDynamoDBService(
@@ -73,7 +72,7 @@ class KeyFederationDownloadHandler @JvmOverloads constructor(
                 throw RuntimeException("Download keys failed with error", e)
             }
         } else {
-            events(javaClass, InfoEvent("Download to interop has been disabled, skipping this step"))
+            events(InfoEvent("Download to interop has been disabled, skipping this step"))
             0
         }
 
@@ -88,7 +87,7 @@ private fun buildInteropClient(
     config: KeyFederationDownloadConfig,
     secretManager: SecretManager,
     events: Events,
-    clock: Supplier<Instant>
+    clock: Clock
 ): InteropClient {
 
     val authTokenSecretValue = secretManager.getSecret(config.interopAuthTokenSecretName)

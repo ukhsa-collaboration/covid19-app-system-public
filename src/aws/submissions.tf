@@ -437,6 +437,14 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "hasReceivedRiskyVenueM2WarningBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "totalAlarmManagerBackgroundTasks"
+      type = "int"
+    }
+    columns {
+      name = "missingPacketsLast7Days"
+      type = "int"
+    }
   }
 }
 
@@ -487,7 +495,7 @@ resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
     role_arn        = aws_iam_role.firehose_role.arn
     bucket_arn      = module.analytics_submission_store_parquet.bucket_arn
     buffer_interval = local.analytics_submission_ingestion_interval
-    buffer_size     = 64
+    buffer_size     = 128
 
     data_format_conversion_configuration {
       input_format_configuration {
@@ -634,47 +642,6 @@ module "submission_apis" {
   tags                                            = var.tags
 }
 ############################
-module "exposure_notification_circuit_breaker_analytics" {
-  source                   = "./modules/log_insights_analytics"
-  service                  = "exposure-notification-circuit-breaker"
-  alarm_topic_arn          = var.alarm_topic_arn
-  log_group_name           = module.exposure_notification_circuit_breaker.lambda_log_group
-  lambda_handler_class     = "uk.nhs.nhsx.analyticslogs.CircuitBreakerAnalyticsHandler"
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  logs_bucket_id           = var.logs_bucket_id
-  tags                     = var.tags
-  policy_document          = module.circuit_breaker_analytics_store_access.policy_document
-  force_destroy_s3_buckets = var.force_destroy_s3_buckets
-}
-
-module "federation_key_proc_download_analytics" {
-  source                   = "./modules/log_insights_analytics"
-  service                  = "federation-key-proc-download"
-  alarm_topic_arn          = var.alarm_topic_arn
-  log_group_name           = module.federation_keys_processing.download_lambda_log_group
-  lambda_handler_class     = "uk.nhs.nhsx.analyticslogs.KeyFederationDownloadAnalyticsHandler"
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  logs_bucket_id           = var.logs_bucket_id
-  tags                     = var.tags
-  policy_document          = module.federation_key_proc_download_analytics_store_access.policy_document
-  force_destroy_s3_buckets = var.force_destroy_s3_buckets
-}
-
-module "federation_key_proc_upload_analytics" {
-  source                   = "./modules/log_insights_analytics"
-  service                  = "federation-key-proc-upload"
-  alarm_topic_arn          = var.alarm_topic_arn
-  log_group_name           = module.federation_keys_processing.upload_lambda_log_group
-  lambda_handler_class     = "uk.nhs.nhsx.analyticslogs.KeyFederationUploadAnalyticsHandler"
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  logs_bucket_id           = var.logs_bucket_id
-  tags                     = var.tags
-  policy_document          = module.federation_key_proc_upload_analytics_store_access.policy_document
-  force_destroy_s3_buckets = var.force_destroy_s3_buckets
-}
 
 output "analytics_submission_store" {
   value = module.analytics_submission.store
@@ -740,15 +707,7 @@ output "isolation_payment_consume_lambda_function_name" {
 output "isolation_payment_tokens_table" {
   value = module.isolation_payment_submission.ipc_tokens_table
 }
-output "circuit_breaker_analytics_lambda_function_name" {
-  value = module.exposure_notification_circuit_breaker_analytics.lambda_function_name
-}
-output "federation_key_proc_download_analytics_lambda_function_name" {
-  value = module.federation_key_proc_download_analytics.lambda_function_name
-}
-output "federation_key_proc_upload_analytics_lambda_function_name" {
-  value = module.federation_key_proc_upload_analytics.lambda_function_name
-}
+
 # Health endpoints
 output "analytics_submission_health_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/mobile-analytics/health"

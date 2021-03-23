@@ -3,9 +3,10 @@ package uk.nhs.nhsx.aae
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Handler
-import uk.nhs.nhsx.core.Jackson.readJson
+import uk.nhs.nhsx.core.Jackson.readJsonOrThrow
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
@@ -16,15 +17,13 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.ExceptionThrown
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.queued.QueuedHandler
-import java.time.Instant
-import java.util.function.Supplier
 
 /**
  * S3 PutObject -> CloudTrail -> EventBridge rule & transformation -> SQS -> Lambda: Upload of S3 object (e.g. JSON, Parquet) to AAE via HTTPS PUT
  */
 class AAEUploadHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = CLOCK,
+    clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
     s3Client: AwsS3 = AwsS3Client(events),
     aaeUploader: AAEUploader = AAEUploader(
@@ -39,7 +38,7 @@ class AAEUploadHandler @JvmOverloads constructor(
                 val sqsMessage = input.records[0]
                 val event: TransformedS3PutObjectCloudTrailEvent
                 try {
-                    event = readJson(sqsMessage.body, TransformedS3PutObjectCloudTrailEvent::class.java)
+                    event = readJsonOrThrow(sqsMessage.body)
                 } catch (e: Exception) { // -> no retry
                     return ExceptionThrown(
                         RuntimeException(
@@ -70,7 +69,7 @@ class AAEUploadHandler @JvmOverloads constructor(
             } else {
                 val event =
                     ExceptionThrown<RuntimeException>(IllegalStateException(".tf configuration error: batch_size != 1"))
-                events(AAEUploadHandler::class.java, event)
+                events(event)
                 throw event.exception
             }
         }

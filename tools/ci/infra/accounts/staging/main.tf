@@ -15,4 +15,5 @@ module "app-system-ci" {
   github_credentials  = "/ci/github"
   target_environments = var.target_environments
   allow_dev_pipelines = false
+  repository_url      = "https://github.com/nihp-public/covid19-app-system-public.git"
 }

@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeydist.keydistribution
 
-import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_ZIP
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromFile
 import uk.nhs.nhsx.core.aws.s3.Locator
@@ -26,7 +26,7 @@ class UploadToS3KeyDistributor(
 
                 s3Storage.upload(
                     Locator.of(name, key),
-                    ContentType.create("application/zip"),
+                    APPLICATION_ZIP,
                     byteSource,
                     fromDatedSignature(signatureResult)
                 )

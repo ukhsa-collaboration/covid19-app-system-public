@@ -2,8 +2,7 @@ package uk.nhs.nhsx.pubdash
 
 import com.amazonaws.services.athena.AmazonAthenaClient
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
-import org.apache.http.Consts
-import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.ContentType.Companion.TEXT_CSV
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey.Companion.string
 import uk.nhs.nhsx.core.Environment.EnvironmentKey.Companion.value
@@ -17,7 +16,6 @@ import uk.nhs.nhsx.pubdash.Dataset.Agnostic
 import uk.nhs.nhsx.pubdash.Dataset.Country
 import uk.nhs.nhsx.pubdash.Dataset.LocalAuthority
 import uk.nhs.nhsx.pubdash.datasets.AnalyticsSource
-import uk.nhs.nhsx.pubdash.datasets.FakeSource
 import uk.nhs.nhsx.pubdash.persistence.AnalyticsDao
 import uk.nhs.nhsx.pubdash.persistence.AthenaAsyncDbClient
 
@@ -52,16 +50,16 @@ class DataExportService(
     }
 
     private fun onFinished(queueMessage: QueueMessage, dataset: CsvS3Object) {
-        events.emit(this::class.java, QueryFinishedEvent(queueMessage.queryId, queueMessage.dataset))
+        events(QueryFinishedEvent(queueMessage.queryId, queueMessage.dataset))
         uploadToS3(dataset)
     }
 
     private fun onError(queueMessage: QueueMessage, message: String) {
-        events.emit(this::class.java, QueryErrorEvent(queueMessage.queryId, queueMessage.dataset, message))
+        events(QueryErrorEvent(queueMessage.queryId, queueMessage.dataset, message))
     }
 
     private fun onWait(queueMessage: QueueMessage) {
-        events.emit(this::class.java, QueryStillRunning(queueMessage.queryId, queueMessage.dataset))
+        events(QueryStillRunning(queueMessage.queryId, queueMessage.dataset))
         sendToSqs(queueMessage)
     }
 
@@ -72,7 +70,7 @@ class DataExportService(
     private fun uploadToS3(csvS3Object: CsvS3Object) {
         s3Storage.upload(
             Locator.of(bucketName, csvS3Object.objectKey()),
-            ContentType.create("text/csv", Consts.UTF_8),
+            TEXT_CSV,
             ByteArraySource.fromUtf8String(csvS3Object.csv())
         )
     }
@@ -84,13 +82,11 @@ fun dataExportService(
 ) = DataExportService(
     bucketName = environment.access.required(value("export_bucket_name", BucketName)),
     s3Storage = AwsS3Client(events),
-    analyticsSource = FakeSource(
-        source = AnalyticsDao(
-            workspace = environment.access.required(Environment.WORKSPACE),
-            asyncDbClient = AthenaAsyncDbClient(
-                athena = AmazonAthenaClient.builder().build(),
-                workgroup = environment.access.required(string("analytics_workgroup"))
-            )
+    analyticsSource = AnalyticsDao(
+        workspace = environment.access.required(Environment.WORKSPACE),
+        asyncDbClient = AthenaAsyncDbClient(
+            athena = AmazonAthenaClient.builder().build(),
+            workgroup = environment.access.required(string("analytics_workgroup"))
         )
     ),
     queueClient = QueueClient(

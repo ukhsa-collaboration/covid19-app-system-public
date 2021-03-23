@@ -29,36 +29,19 @@ namespace :validate do
     unexpected_tiers = file_content.keys - tiers
     raise GaudiError, "Tier metadata contains unexpected tiers: #{unexpected_tiers.join(",")}" unless unexpected_tiers.empty?
 
-    languages = %w[ar bn cy en gu pa pl ro so tr ur zh]
+    validation_errors = false
     tiers.each do |tier|
-      puts "Validating #{tier}"
-      valid_key?(file_content, tier) & hash?(file_content, tier)
-      metadata = file_content[tier]
+      begin
+        puts "Validating #{tier}"
 
-      contract_colours = ["green", "yellow", "red", "amber", "neutral"]
-      contract_colours_fallback = "neutral"
-      contract_colours_v2 = ["black", "maroon", "green", "yellow", "red", "amber", "neutral"]
-      icons = ["default-icon", "meeting-people", "bars-and-pubs", "worship", "overnight-stays", "education", "travelling", "exercise", "weddings-and-funerals", "businesses", "retail", "entertainment", "personal-care", "large-events", "clinically-extremly-vulnerable", "social-distancing", "face-coverings", "meeting-outdoors", "meeting-indoors", "work", "international-travel"]
-
-      valid_key?(metadata, "colorSchemeV2") & string?(metadata, "colorSchemeV2")
-      raise GaudiError, "Invalid colorSchemeV2 value #{metadata["colorSchemeV2"]}. Valid values are #{contract_colours_v2.join(",")}" unless contract_colours_v2.include?(metadata["colorSchemeV2"])
-
-      valid_key?(metadata, "colorScheme") & string?(metadata, "colorScheme")
-      raise GaudiError, "Invalid colorScheme value #{metadata["colorScheme"]}. Valid values are #{contract_colours.join(",")}" unless contract_colours.include?(metadata["colorScheme"])
-
-      if contract_colours.include?(metadata["colorSchemeV2"]) && metadata["colorScheme"] != metadata["colorSchemeV2"]
-        raise GaudiError, "Inconsistent colorScheme value #{metadata["colorScheme"]}. Needs to be the same value as colorSchemeV2 #{metadata["colorSchemeV2"]}"
+        valid_key?(file_content, tier) & hash?(file_content, tier)
+        metadata = file_content[tier]
+        validate_tier(tier, metadata)
+      rescue GaudiError => e
+        puts e.message
+        validation_errors = true
       end
-
-      if !contract_colours.include?(metadata["colorSchemeV2"]) && metadata["colorScheme"] != contract_colours_fallback
-        raise GaudiError, "Inconsistent colorScheme value #{metadata["colorScheme"]}. For colorSchemeV2 values not supported in colorScheme the fallback #{contract_colours_fallback} should be used."
-      end
-
-      validation_errors = validate_languages(metadata, %w[name content linkTitle linkUrl], languages)
-
-      raise GaudiError, "Validation failed for #{tier}:\n#{validation_errors.join("\n")}" unless validation_errors.empty?
-
-      validate_policy_data(metadata, languages) if %w[EN.Tier1 EN.Tier2 EN.Tier3].include? tier
     end
+    raise GaudiError, "Tier metadata validation failed" if validation_errors
   end
 end

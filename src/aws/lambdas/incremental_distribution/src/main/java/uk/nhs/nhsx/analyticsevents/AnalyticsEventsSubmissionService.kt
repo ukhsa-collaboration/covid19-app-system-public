@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.analyticsevents
 
-import org.apache.http.entity.ContentType
 import uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer.replacePostDistrictLA
+import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Jackson.toJson
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
@@ -45,7 +45,7 @@ class AnalyticsEventsSubmissionService(
     private fun uploadToS3(json: String) {
         s3Storage.upload(
             Locator.of(bucketName, objectKeyNameProvider.generateObjectKeyName().append(".json")),
-            ContentType.APPLICATION_JSON,
+            APPLICATION_JSON,
             fromUtf8String(json)
         )
     }

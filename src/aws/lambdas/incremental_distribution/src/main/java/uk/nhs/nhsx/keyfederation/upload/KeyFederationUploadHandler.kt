@@ -5,6 +5,7 @@ import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys
 import uk.nhs.nhsx.core.Handler
@@ -26,8 +27,6 @@ import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.keyfederation.BatchTagDynamoDBService
 import uk.nhs.nhsx.keyfederation.BatchTagService
 import uk.nhs.nhsx.keyfederation.InteropClient
-import java.time.Instant
-import java.util.function.Supplier
 
 /**
  * Key Federation upload lambda
@@ -37,7 +36,7 @@ import java.util.function.Supplier
  */
 class KeyFederationUploadHandler @JvmOverloads constructor(
     private val environment: Environment = Environment.fromSystem(),
-    private val clock: Supplier<Instant> = CLOCK,
+    private val clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
     private val submissionBucket: BucketName = environment.access.required(EnvironmentKeys.SUBMISSION_BUCKET_NAME),
     private val config: KeyFederationUploadConfig = KeyFederationUploadConfig.fromEnvironment(environment),
@@ -81,7 +80,7 @@ class KeyFederationUploadHandler @JvmOverloads constructor(
             throw RuntimeException("Upload keys failed with error", e)
         }
     } else {
-        events(javaClass, InfoEvent("Upload to interop has been disabled, skipping this step"))
+        events(InfoEvent("Upload to interop has been disabled, skipping this step"))
         0
     }
 }

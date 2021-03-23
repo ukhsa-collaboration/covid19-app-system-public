@@ -1,13 +1,15 @@
 package uk.nhs.nhsx.testhelper.mocks
 
-import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.MetaHeader
 import uk.nhs.nhsx.core.aws.s3.S3Storage
 import java.net.URL
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.Optional
 
 class FakeS3StorageMultipleObjects : S3Storage {
     var count = 0
@@ -18,14 +20,13 @@ class FakeS3StorageMultipleObjects : S3Storage {
         locator: Locator,
         contentType: ContentType,
         bytes: ByteArraySource,
-        meta: List<MetaHeader>
+        metaHeaders: List<MetaHeader>
     ) {
         count++
         bucket = locator.bucket
-        fakeS3Objects.add(FakeS3Object(locator.key, contentType, bytes, meta))
+        fakeS3Objects.add(FakeS3Object(locator.key, contentType, bytes, metaHeaders))
     }
 
-    override fun getSignedURL(locator: Locator?, expiration: Date?): Optional<URL> {
-        return Optional.of(URL("https://example.com"))
-    }
+    override fun getSignedURL(locator: Locator, expiration: Date) =
+        Optional.of(URL("https://example.com"))
 }

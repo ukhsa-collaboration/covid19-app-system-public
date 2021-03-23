@@ -23,13 +23,12 @@ import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import java.time.Duration
 import java.time.Instant
-import java.util.*
-import java.util.function.Supplier
+import java.util.Optional
 
 class VirologyLookupServiceV2Test {
 
     private val now = Instant.EPOCH
-    private val clock = Supplier { now }
+    private val clock = { now }
     private val persistence = mockk<VirologyPersistenceService>()
     private val pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7")
     private val country = England

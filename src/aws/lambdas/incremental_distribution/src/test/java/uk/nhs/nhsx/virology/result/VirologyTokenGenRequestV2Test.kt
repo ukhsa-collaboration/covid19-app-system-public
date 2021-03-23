@@ -1,10 +1,8 @@
 package uk.nhs.nhsx.virology.result
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson.readStrict
 import uk.nhs.nhsx.core.Jackson.readStrictOrNull
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 
@@ -31,48 +29,45 @@ class VirologyTokenGenRequestV2Test {
     }
 
     @Test
-    fun `throws exception if testEndDate is not at midnight`() {
-        assertThatThrownBy {
-            readStrict(
+    fun `does not read json if testEndDate is not at midnight`() {
+        assertNull(
+            readStrictOrNull<VirologyTokenGenRequestV2>(
                 """{
                     "testEndDate": "2020-09-29T20:00:00Z",
                     "testResult": "VOID",
                     "testKit": "LAB_RESULT"
                 }
-                """.trimIndent(),
-                VirologyTokenGenRequestV2::class.java
+                """.trimIndent()
             )
-        }.isInstanceOf(JsonProcessingException::class.java)
+        )
     }
 
     @Test
-    fun `throws exception for LFD negative`() {
-        assertThatThrownBy {
-            readStrict(
+    fun `does not read json for LFD negative`() {
+        assertNull(
+            readStrictOrNull<VirologyTokenGenRequestV2>(
                 """{
                     "testEndDate": "2020-09-29T20:00:00Z",
                     "testResult": "NEGATIVE",
                     "testKit": "RAPID_RESULT"
                 }
                 """.trimIndent(),
-                VirologyTokenGenRequestV2::class.java
             )
-        }.isInstanceOf(JsonProcessingException::class.java)
+        )
     }
 
     @Test
-    fun `throws exception for LFD void`() {
-        assertThatThrownBy {
-            readStrict(
+    fun `does not read json for LFD void`() {
+        assertNull(
+            readStrictOrNull<VirologyTokenGenRequestV2>(
                 """{
                     "testEndDate": "2020-09-29T20:00:00Z",
                     "testResult": "VOID",
                     "testKit": "RAPID_RESULT"
                 }
-                """.trimIndent(),
-                VirologyTokenGenRequestV2::class.java
+                """.trimIndent()
             )
-        }.isInstanceOf(JsonProcessingException::class.java)
+        )
     }
 
     @Test

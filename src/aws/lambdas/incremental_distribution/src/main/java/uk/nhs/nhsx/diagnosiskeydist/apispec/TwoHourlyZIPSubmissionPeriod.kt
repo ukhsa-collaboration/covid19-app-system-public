@@ -12,8 +12,11 @@ import java.time.temporal.ChronoField.SECOND_OF_MINUTE
 import java.time.temporal.ChronoUnit.HOURS
 import java.util.*
 
-class TwoHourlyZIPSubmissionPeriod(dailyPeriodEndDate: Instant) : ZIPSubmissionPeriod {
-    private val periodEndDateExclusive: Instant = requireValid(dailyPeriodEndDate)
+data class TwoHourlyZIPSubmissionPeriod(val periodEndDateExclusive: Instant) : ZIPSubmissionPeriod {
+
+    init {
+        requireValid(periodEndDateExclusive)
+    }
 
     override fun zipPath(): String = "$TWO_HOURLY_PATH_PREFIX${twoHourlyKey()}.zip"
 
@@ -25,7 +28,8 @@ class TwoHourlyZIPSubmissionPeriod(dailyPeriodEndDate: Instant) : ZIPSubmissionP
     override fun isCoveringSubmissionDate(diagnosisKeySubmission: Instant, periodOffset: Duration): Boolean {
         val toExclusive = periodEndDateExclusive.plus(periodOffset)
         val fromInclusive = toExclusive.minus(Duration.ofHours(2))
-        return (diagnosisKeySubmission.isAfter(fromInclusive) || diagnosisKeySubmission == fromInclusive) && diagnosisKeySubmission.isBefore(toExclusive)
+        return (diagnosisKeySubmission.isAfter(fromInclusive) || diagnosisKeySubmission == fromInclusive)
+            && diagnosisKeySubmission.isBefore(toExclusive)
     }
 
     /**
@@ -51,7 +55,7 @@ class TwoHourlyZIPSubmissionPeriod(dailyPeriodEndDate: Instant) : ZIPSubmissionP
         "2 hours: from ${HOURLY_FORMAT.format(startInclusive)} (inclusive) to ${HOURLY_FORMAT.format(endExclusive)} (exclusive)"
 
     companion object {
-        private const val TWO_HOURLY_PATH_PREFIX = "distribution/two-hourly/"
+        const val TWO_HOURLY_PATH_PREFIX = "distribution/two-hourly/"
         private const val TOTAL_TWO_HOURLY_ZIPS = ENIntervalNumber.MAX_DIAGNOSIS_KEY_AGE_DAYS * 12
         private val HOURLY_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHH").withZone(UTC)
 
@@ -68,7 +72,6 @@ class TwoHourlyZIPSubmissionPeriod(dailyPeriodEndDate: Instant) : ZIPSubmissionP
         /**
          * @return end date (exclusive) of the two-hourly period comprising the Diagnosis Keys posted to the Submission Service at `diagnosisKeySubmission`
          */
-        @JvmStatic
         fun periodForSubmissionDate(diagnosisKeySubmission: Instant): TwoHourlyZIPSubmissionPeriod {
             val hour = diagnosisKeySubmission
                 .truncatedTo(HOURS)

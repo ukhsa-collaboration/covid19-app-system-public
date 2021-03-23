@@ -28,12 +28,11 @@ import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
 import uk.nhs.nhsx.virology.IpcTokenId
 import java.time.Instant
 import java.time.Period
-import java.util.*
-import java.util.function.Supplier
+import java.util.ArrayList
 
 class IsolationPersistenceLocalTest {
     private val tableName = "isolation_tokens_payment_table"
-    private val clock = Supplier { Instant.parse("2020-12-01T00:00:00Z") }
+    private val clock = { Instant.parse("2020-12-01T00:00:00Z") }
 
     private lateinit var persistence: IsolationPaymentPersistence
     private lateinit var isolationTokenTable: Table
@@ -129,21 +128,21 @@ class IsolationPersistenceLocalTest {
         val token = getIsolationToken()
         persistence.insertIsolationToken(token)
 
-        token.tokenStatus = TokenStateInternal.INT_UPDATED.value
-        persistence.updateIsolationToken(token, TokenStateInternal.INT_CREATED)
+        val updated = token.copy(tokenStatus = TokenStateInternal.INT_UPDATED.value)
+        persistence.updateIsolationToken(updated, TokenStateInternal.INT_CREATED)
 
         persistence
-            .getIsolationToken(token.tokenId)
+            .getIsolationToken(updated.tokenId)
             .map {
-                assertThat(it.tokenId).isEqualTo(token.tokenId)
+                assertThat(it.tokenId).isEqualTo(updated.tokenId)
                 assertThat(it.tokenStatus).isEqualTo(TokenStateInternal.INT_UPDATED.value)
-                assertThat(it.riskyEncounterDate).isEqualTo(token.riskyEncounterDate)
-                assertThat(it.isolationPeriodEndDate).isEqualTo(token.isolationPeriodEndDate)
-                assertThat(it.createdTimestamp).isEqualTo(token.createdTimestamp)
-                assertThat(it.updatedTimestamp).isEqualTo(token.updatedTimestamp)
-                assertThat(it.validatedTimestamp).isEqualTo(token.validatedTimestamp)
-                assertThat(it.consumedTimestamp).isEqualTo(token.consumedTimestamp)
-                assertThat(it.expireAt).isEqualTo(token.expireAt)
+                assertThat(it.riskyEncounterDate).isEqualTo(updated.riskyEncounterDate)
+                assertThat(it.isolationPeriodEndDate).isEqualTo(updated.isolationPeriodEndDate)
+                assertThat(it.createdTimestamp).isEqualTo(updated.createdTimestamp)
+                assertThat(it.updatedTimestamp).isEqualTo(updated.updatedTimestamp)
+                assertThat(it.validatedTimestamp).isEqualTo(updated.validatedTimestamp)
+                assertThat(it.consumedTimestamp).isEqualTo(updated.consumedTimestamp)
+                assertThat(it.expireAt).isEqualTo(updated.expireAt)
             }
             .orElseThrow { RuntimeException("Token not found") }
     }
@@ -154,11 +153,13 @@ class IsolationPersistenceLocalTest {
             persistence.insertIsolationToken(it)
         }
 
-        token.tokenStatus = TokenStateInternal.INT_UPDATED.value
-        token.tokenId = IpcTokenId.of("2".repeat(64))
+        val updated = token.copy(
+            tokenStatus = TokenStateInternal.INT_UPDATED.value,
+            tokenId = IpcTokenId.of("2".repeat(64))
+        )
 
         assertThatThrownBy {
-            persistence.updateIsolationToken(token, TokenStateInternal.INT_CREATED) // wrong token id
+            persistence.updateIsolationToken(updated, TokenStateInternal.INT_CREATED) // wrong token id
         }.isInstanceOf(ConditionalCheckFailedException::class.java)
     }
 
@@ -167,10 +168,12 @@ class IsolationPersistenceLocalTest {
         val token = getIsolationToken()
         persistence.insertIsolationToken(token)
 
-        token.tokenStatus = TokenStateInternal.INT_UPDATED.value
+        val updated = token.copy(
+            tokenStatus = TokenStateInternal.INT_UPDATED.value,
+        )
 
         assertThatThrownBy {
-            persistence.updateIsolationToken(token, TokenStateInternal.INT_UPDATED) // wrong current status
+            persistence.updateIsolationToken(updated, TokenStateInternal.INT_UPDATED) // wrong current status
         }.isInstanceOf(ConditionalCheckFailedException::class.java)
     }
 
@@ -210,8 +213,8 @@ class IsolationPersistenceLocalTest {
 
     private fun getIsolationToken(): IsolationToken {
         val tokenId = IpcTokenId.of("1".repeat(64))
-        val createdDate = clock.get().epochSecond
-        val ttl = clock.get().plus(Period.ofWeeks(4)).epochSecond
+        val createdDate = clock().epochSecond
+        val ttl = clock().plus(Period.ofWeeks(4)).epochSecond
         return IsolationToken(tokenId, TokenStateInternal.INT_CREATED.value, 0, 0, createdDate, 0, 0, 0, ttl)
     }
 

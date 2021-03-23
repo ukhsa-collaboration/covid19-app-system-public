@@ -5,7 +5,8 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest
-import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemLongValueMaybe
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemLongValueOrNull
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemLongValueOrThrow
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrThrow
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericNullableAttribute
@@ -13,7 +14,6 @@ import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
 import uk.nhs.nhsx.virology.IpcTokenId
-import uk.nhs.nhsx.virology.IpcTokenId.Companion.of
 import java.util.Optional
 
 class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, private val tableName: String) {
@@ -51,7 +51,7 @@ class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, pr
         "expireAt" to numericAttribute(token.expireAt)
     )
 
-    fun getIsolationToken(ipcToken: IpcTokenId?): Optional<IsolationToken> {
+    fun getIsolationToken(ipcToken: IpcTokenId): Optional<IsolationToken> {
         val request = GetItemRequest()
             .withTableName(tableName)
             .withKey(mapOf("tokenId" to stringAttribute(ipcToken)))
@@ -59,20 +59,20 @@ class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, pr
 
         return Optional.ofNullable(itemResult.item?.let {
             IsolationToken(
-                of(itemValueOrThrow(it, "tokenId")),
+                IpcTokenId.of(itemValueOrThrow(it, "tokenId")),
                 itemValueOrThrow(it, "tokenStatus"),
-                itemLongValueMaybe(it, "riskyEncounterDate").orElse(null),
-                itemLongValueMaybe(it, "isolationPeriodEndDate").orElse(null),
-                itemLongValueMaybe(it, "createdTimestamp").orElse(null),
-                itemLongValueMaybe(it, "updatedTimestamp").orElse(null),
-                itemLongValueMaybe(it, "validatedTimestamp").orElse(null),
-                itemLongValueMaybe(it, "consumedTimestamp").orElse(null),
-                itemLongValueMaybe(it, "expireAt").orElse(null)
+                itemLongValueOrNull(it, "riskyEncounterDate"),
+                itemLongValueOrNull(it, "isolationPeriodEndDate"),
+                itemLongValueOrThrow(it, "createdTimestamp"),
+                itemLongValueOrNull(it, "updatedTimestamp"),
+                itemLongValueOrNull(it, "validatedTimestamp"),
+                itemLongValueOrNull(it, "consumedTimestamp"),
+                itemLongValueOrThrow(it, "expireAt")
             )
         })
     }
 
-    fun deleteIsolationToken(ipcToken: IpcTokenId?, currentTokenStatus: TokenStateInternal) {
+    fun deleteIsolationToken(ipcToken: IpcTokenId, currentTokenStatus: TokenStateInternal) {
         dynamoDbClient.deleteItem(
             DeleteItemRequest()
                 .withTableName(tableName)

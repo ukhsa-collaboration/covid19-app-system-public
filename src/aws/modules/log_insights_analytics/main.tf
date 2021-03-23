@@ -1,5 +1,5 @@
 locals {
-  identifier_prefix = "${terraform.workspace}-${var.service}-analytics"
+  identifier_prefix = "${terraform.workspace}-analytics-${var.service}"
 
 }
 

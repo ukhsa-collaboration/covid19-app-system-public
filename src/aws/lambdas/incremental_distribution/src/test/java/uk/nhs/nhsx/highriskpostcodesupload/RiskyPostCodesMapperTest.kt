@@ -4,6 +4,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
+import uk.nhs.nhsx.highriskpostcodesupload.RiskIndicator.HIGH
+import uk.nhs.nhsx.highriskpostcodesupload.RiskIndicator.LOW
+import uk.nhs.nhsx.highriskpostcodesupload.RiskIndicator.MEDIUM
 
 class RiskyPostCodesMapperTest {
 
@@ -12,14 +15,14 @@ class RiskyPostCodesMapperTest {
     @Test
     fun `transforms data correctly both versions`() {
         val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
+            PostDistrict.of("CODE1") to PostDistrictIndicators(HIGH, TierIndicator.of("EN.Tier3")),
+            PostDistrict.of("CODE2") to PostDistrictIndicators(MEDIUM, TierIndicator.of("WA.Tier2")),
+            PostDistrict.of("CODE3") to PostDistrictIndicators(LOW, TierIndicator.of("EN.Tier1"))
         )
         val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
+            LocalAuthority.of("A1") to LocalAuthorityIndicators(TierIndicator.of("EN.Tier3")),
+            LocalAuthority.of("A2") to LocalAuthorityIndicators(TierIndicator.of("WA.Tier2")),
+            LocalAuthority.of("A3") to LocalAuthorityIndicators(TierIndicator.of("EN.Tier1"))
         )
         val request = RiskyPostDistrictsRequest(
             postDistricts, localAuthorities
@@ -28,10 +31,24 @@ class RiskyPostCodesMapperTest {
 
         assertThat(result).isEqualTo(
             RiskyPostCodesResult(
-                RiskyPostCodesV1(mapOf("CODE1" to "H", "CODE2" to "M", "CODE3" to "L")),
+                RiskyPostCodesV1(
+                    mapOf(
+                        PostDistrict.of("CODE1") to HIGH,
+                        PostDistrict.of("CODE2") to MEDIUM,
+                        PostDistrict.of("CODE3") to LOW
+                    )
+                ),
                 RiskyPostCodesV2(
-                    mapOf("CODE1" to "EN.Tier3", "CODE2" to "WA.Tier2", "CODE3" to "EN.Tier1"),
-                    mapOf("A1" to "EN.Tier3", "A2" to "WA.Tier2", "A3" to "EN.Tier1"),
+                    mapOf(
+                        PostDistrict.of("CODE1") to TierIndicator.of("EN.Tier3"),
+                        PostDistrict.of("CODE2") to TierIndicator.of("WA.Tier2"),
+                        PostDistrict.of("CODE3") to TierIndicator.of("EN.Tier1")
+                    ),
+                    mapOf(
+                        LocalAuthority.of("A1") to TierIndicator.of("EN.Tier3"),
+                        LocalAuthority.of("A2") to TierIndicator.of("WA.Tier2"),
+                        LocalAuthority.of("A3") to TierIndicator.of("EN.Tier1")
+                    ),
                     RiskyPostCodeTestData.tierMetadata
                 )
             )
@@ -54,9 +71,9 @@ class RiskyPostCodesMapperTest {
     @Test
     fun `transforms handling post district indicators and no local authorities indicators`() {
         val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
+            PostDistrict.of("CODE1") to PostDistrictIndicators(HIGH, TierIndicator.of("EN.Tier3")),
+            PostDistrict.of("CODE2") to PostDistrictIndicators(MEDIUM, TierIndicator.of("WA.Tier2")),
+            PostDistrict.of("CODE3") to PostDistrictIndicators(LOW, TierIndicator.of("EN.Tier1"))
         )
         val request = RiskyPostDistrictsRequest(postDistricts, emptyMap())
 
@@ -64,9 +81,19 @@ class RiskyPostCodesMapperTest {
 
         assertThat(result).isEqualTo(
             RiskyPostCodesResult(
-                RiskyPostCodesV1(mapOf("CODE1" to "H", "CODE2" to "M", "CODE3" to "L")),
+                RiskyPostCodesV1(
+                    mapOf(
+                        PostDistrict.of("CODE1") to HIGH,
+                        PostDistrict.of("CODE2") to MEDIUM,
+                        PostDistrict.of("CODE3") to LOW
+                    )
+                ),
                 RiskyPostCodesV2(
-                    mapOf("CODE1" to "EN.Tier3", "CODE2" to "WA.Tier2", "CODE3" to "EN.Tier1"),
+                    mapOf(
+                        PostDistrict.of("CODE1") to TierIndicator.of("EN.Tier3"),
+                        PostDistrict.of("CODE2") to TierIndicator.of("WA.Tier2"),
+                        PostDistrict.of("CODE3") to TierIndicator.of("EN.Tier1")
+                    ),
                     emptyMap(),
                     RiskyPostCodeTestData.tierMetadata
                 )
@@ -77,9 +104,9 @@ class RiskyPostCodesMapperTest {
     @Test
     fun `transforms handling empty post district indicators and local authorities indicators`() {
         val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
+            LocalAuthority.of("A1") to LocalAuthorityIndicators(TierIndicator.of("EN.Tier3")),
+            LocalAuthority.of("A2") to LocalAuthorityIndicators(TierIndicator.of("WA.Tier2")),
+            LocalAuthority.of("A3") to LocalAuthorityIndicators(TierIndicator.of("EN.Tier1"))
         )
         val request = RiskyPostDistrictsRequest(emptyMap(), localAuthorities)
 
@@ -90,7 +117,11 @@ class RiskyPostCodesMapperTest {
                 RiskyPostCodesV1(emptyMap()),
                 RiskyPostCodesV2(
                     emptyMap(),
-                    mapOf("A1" to "EN.Tier3", "A2" to "WA.Tier2", "A3" to "EN.Tier1"),
+                    mapOf(
+                        LocalAuthority.of("A1") to TierIndicator.of("EN.Tier3"),
+                        LocalAuthority.of("A2") to TierIndicator.of("WA.Tier2"),
+                        LocalAuthority.of("A3") to TierIndicator.of("EN.Tier1")
+                    ),
                     RiskyPostCodeTestData.tierMetadata
                 )
             )
@@ -98,225 +129,40 @@ class RiskyPostCodesMapperTest {
     }
 
     @Test
-    fun `throws if post districts contains an empty risk`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid risk indicator:  for post district: CODE1")
-    }
-
-    @Test
-    fun `throws if post districts contains null risk`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators(null, "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid risk indicator: null for post district: CODE3")
-    }
-
-    @Test
-    fun `throws if post districts contains an empty tier`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", ""),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid tier indicator:  for post district: CODE2")
-    }
-
-    @Test
-    fun `throws if post districts contains a null tier`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", null)
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid tier indicator: null for post district: CODE3")
-    }
-
-    @Test
-    fun `throws if post districts contains null key`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            null to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid post district - no value")
-    }
-
-    @Test
     fun `throws if post districts contains empty key`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            " " to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid post district - no value")
+        assertThatThrownBy { PostDistrict.of(" ") }
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun `throws if post district larger than 20 characters`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "123456789012345678901" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid post district longer than 20 characters: 123456789012345678901")
+        assertThatThrownBy { PostDistrict.of("123456789012345678901") }
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun `throws if local authorities contains an empty key`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            " " to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid local authority - no value")
-    }
-
-    @Test
-    fun `throws if local authorities contains a null key`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            null to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid local authority - no value")
+        assertThatThrownBy { LocalAuthority.of(" ") }
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun `throws if local authorities contains an empty tier`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators(" ")
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid tier indicator:   for local authority: A3")
-    }
-
-    @Test
-    fun `throws if local authorities contains a null tier`() {
-        val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
-        )
-        val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators(null)
-        )
-        val request = RiskyPostDistrictsRequest(postDistricts, localAuthorities)
-
-        assertThatThrownBy { mapper.mapOrThrow(request) }
-            .isInstanceOf(ApiResponseException::class.java)
-            .hasMessage("validation error: Invalid tier indicator: null for local authority: A3")
+        assertThatThrownBy { TierIndicator.of(" ") }
+            .isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test
     fun `converts v2 post district indicators into raw csv`() {
         val postDistricts = mapOf(
-            "CODE1" to PostDistrictIndicators("H", "EN.Tier3"),
-            "CODE2" to PostDistrictIndicators("M", "WA.Tier2"),
-            "CODE3" to PostDistrictIndicators("L", "EN.Tier1")
+            PostDistrict.of("CODE1") to PostDistrictIndicators(HIGH, TierIndicator.of("EN.Tier3")),
+            PostDistrict.of("CODE2") to PostDistrictIndicators(MEDIUM, TierIndicator.of("WA.Tier2")),
+            PostDistrict.of("CODE3") to PostDistrictIndicators(LOW, TierIndicator.of("EN.Tier1"))
         )
         val localAuthorities = mapOf(
-            "A1" to LocalAuthorityIndicators("EN.Tier3"),
-            "A2" to LocalAuthorityIndicators("WA.Tier2"),
-            "A3" to LocalAuthorityIndicators("EN.Tier1")
+            LocalAuthority.of("A1") to LocalAuthorityIndicators(TierIndicator.of("EN.Tier3")),
+            LocalAuthority.of("A2") to LocalAuthorityIndicators(TierIndicator.of("WA.Tier2")),
+            LocalAuthority.of("A3") to LocalAuthorityIndicators(TierIndicator.of("EN.Tier1"))
         )
         val request = RiskyPostDistrictsRequest(
             postDistricts, localAuthorities
@@ -324,12 +170,14 @@ class RiskyPostCodesMapperTest {
 
         val result = mapper.convertToAnalyticsCsv(request)
 
-        assertThat(result).isEqualTo("""
+        assertThat(result).isEqualTo(
+            """
             # postal_district_code, risk_indicator, tier_indicator
             "CODE1", "H", "EN.Tier3"
             "CODE2", "M", "WA.Tier2"
             "CODE3", "L", "EN.Tier1"
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 
     @Test
@@ -338,7 +186,6 @@ class RiskyPostCodesMapperTest {
 
         val result = mapper.convertToAnalyticsCsv(request)
 
-        assertThat(result).isEqualTo("""# postal_district_code, risk_indicator, tier_indicator""")
+        assertThat(result).isEqualTo("# postal_district_code, risk_indicator, tier_indicator")
     }
-
 }

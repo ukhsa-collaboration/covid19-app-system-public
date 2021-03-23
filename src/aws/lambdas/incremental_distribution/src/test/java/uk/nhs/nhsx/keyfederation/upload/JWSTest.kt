@@ -25,8 +25,8 @@ class JWSTest {
             it.compactSerialization = generated
         }
 
-        assertThat(verified.payload, equalTo(payload));
-        assertThat("signature is valid", verified.verifySignature(), equalTo(true));
+        assertThat(verified.payload, equalTo(payload))
+        assertThat("signature is valid", verified.verifySignature(), equalTo(true))
         assertThat(verified.headers.getStringHeaderValue("alg"), equalTo("ES256"))
     }
 

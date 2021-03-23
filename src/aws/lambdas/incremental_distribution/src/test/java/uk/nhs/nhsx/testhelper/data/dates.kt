@@ -2,4 +2,4 @@ package uk.nhs.nhsx.testhelper.data
 
 import java.time.Instant
 
-fun String.asInstant() = Instant.parse(this)
+fun String.asInstant(): Instant = Instant.parse(this)

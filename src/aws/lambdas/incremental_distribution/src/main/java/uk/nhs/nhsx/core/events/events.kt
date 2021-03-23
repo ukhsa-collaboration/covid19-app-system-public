@@ -11,6 +11,4 @@ enum class EventCategory {
     Error, Warning, Info, Metric, Operational, Audit
 }
 
-interface Events : (Class<*>, Event) -> Unit {
-    fun emit(clazz: Class<*>, event: Event) = this(clazz, event)
-}
+interface Events : (Event) -> Unit

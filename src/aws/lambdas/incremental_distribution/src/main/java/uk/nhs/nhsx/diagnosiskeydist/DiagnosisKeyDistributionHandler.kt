@@ -4,6 +4,7 @@ import com.amazonaws.services.cloudfront.AmazonCloudFrontClientBuilder
 import com.amazonaws.services.kms.AWSKMS
 import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.EnvironmentKeys
@@ -23,8 +24,6 @@ import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.scheduled.SchedulingHandler
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.UploadToS3KeyDistributor
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
-import java.time.Instant
-import java.util.function.Supplier
 
 /**
  * Scheduling strategy:
@@ -43,7 +42,7 @@ import java.util.function.Supplier
 
 @Suppress("unused")
 class DiagnosisKeyDistributionHandler(
-    private val clock: Supplier<Instant>,
+    private val clock: Clock,
     events: Events,
     private val service: DistributionService
 ) : SchedulingHandler(events) {
@@ -51,7 +50,7 @@ class DiagnosisKeyDistributionHandler(
     @JvmOverloads
     constructor(
         environment: Environment = Environment.fromSystem(),
-        clock: Supplier<Instant> = SystemClock.CLOCK,
+        clock: Clock = SystemClock.CLOCK,
         events: Events = PrintingJsonEvents(clock),
         parameters: Parameters = AwsSsmParameters(),
         awsCloudFrontClient: AwsCloudFront = AwsCloudFrontClient(events, AmazonCloudFrontClientBuilder.defaultClient()),
@@ -65,7 +64,7 @@ class DiagnosisKeyDistributionHandler(
 
     override fun handler() = Handler<ScheduledEvent, Event> { _, _ ->
         try {
-            service.distributeKeys(clock.get()).let { KeysDistributed }
+            service.distributeKeys(clock()).let { KeysDistributed }
         } catch (e: Exception) {
             throw RuntimeException("Failed: Key distribution batch", e)
         }
@@ -74,7 +73,7 @@ class DiagnosisKeyDistributionHandler(
 
 fun distributionService(
     environment: Environment,
-    clock: Supplier<Instant>,
+    clock: Clock,
     events: Events,
     parameters: Parameters,
     awsCloudFrontClient: AwsCloudFront,

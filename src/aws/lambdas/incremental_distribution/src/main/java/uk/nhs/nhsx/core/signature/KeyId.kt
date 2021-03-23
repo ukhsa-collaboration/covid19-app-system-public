@@ -4,7 +4,6 @@ import dev.forkhandles.values.StringValue
 
 class KeyId private constructor(value: String) : StringValue(value) {
     companion object {
-        @JvmStatic
         fun of(idOrArn: String) = KeyId(kmsKeyId(idOrArn))
 
         private fun kmsKeyId(kmsKeyArnOrId: String) = if (kmsKeyArnOrId.startsWith("arn:aws:kms:")) {

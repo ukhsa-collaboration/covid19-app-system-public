@@ -2,6 +2,7 @@ package uk.nhs.nhsx.diagnosiskeyssubmission
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.kms.AWSKMSClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys
 import uk.nhs.nhsx.core.HttpResponses.ok
@@ -33,12 +34,10 @@ import uk.nhs.nhsx.core.routing.RoutingHandler
 import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
-import java.time.Instant
-import java.util.function.Supplier
 
 class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = SystemClock.CLOCK,
+    clock: Clock = SystemClock.CLOCK,
     events: Events = PrintingJsonEvents(clock),
     mobileAuthenticator: Authenticator = awsAuthentication(Mobile, events),
     healthAuthenticator: Authenticator = awsAuthentication(Health, events),
@@ -55,7 +54,7 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
     private fun diagnosisKeysSubmissionService(
         environment: Environment,
         events: Events,
-        clock: Supplier<Instant>,
+        clock: Clock,
         s3Storage: S3Storage,
         awsDynamoClient: AwsDynamoClient,
         objectKeyNameProvider: ObjectKeyNameProvider
@@ -101,9 +100,9 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/submission/diagnosis-keys", ApiGatewayHandler { r, _ ->
-                    events.emit(javaClass, DiagnosisKeySubmission())
+                    events(DiagnosisKeySubmission())
                     readOrNull<ClientTemporaryExposureKeysPayload>(r.body) {
-                        events.emit(javaClass, UnprocessableJson(it))
+                        events(UnprocessableJson(it))
                     }?.also(diagnosisKeysSubmissionService::acceptTemporaryExposureKeys)
                     ok()
                 })

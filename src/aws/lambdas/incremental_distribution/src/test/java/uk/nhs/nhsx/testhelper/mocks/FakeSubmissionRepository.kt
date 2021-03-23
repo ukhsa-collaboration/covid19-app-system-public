@@ -13,7 +13,7 @@ class FakeSubmissionRepository(submissionDates: List<Instant>) : SubmissionRepos
 
     private val submissions: List<Submission> = submissionDates.map { makeKeySet(it) }
 
-    override fun loadAllSubmissions(minimalSubmissionTimeEpocMillisExclusive: Long,
+    override fun loadAllSubmissions(minimalSubmissionTimeEpochMillisExclusive: Long,
                                     limit: Int,
                                     maxResults: Int): List<Submission> = submissions
 

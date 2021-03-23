@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Jackson.readJson
+import uk.nhs.nhsx.core.Jackson.readJsonOrThrow
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
@@ -283,7 +283,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
 
         val keys = fakeS3Storage.fakeS3Objects
             .flatMap {
-                readJson(
+                readJsonOrThrow(
                     it.bytes.openStream(),
                     StoredTemporaryExposureKeyPayload::class.java
                 ).temporaryExposureKeys

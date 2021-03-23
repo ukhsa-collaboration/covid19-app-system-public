@@ -13,13 +13,12 @@ class ApiKeyAuthenticator(private val events: Events, private val authorizer: Ap
             ?: false
 
         if (!success) {
-            events.emit(javaClass, ApiKeyAuthenticationFailed(authorizationHeader))
+            events(ApiKeyAuthenticationFailed(authorizationHeader))
         }
 
         return success
     }
     companion object {
-        @JvmStatic
         fun authenticatingWithApiKey(events: Events, authorizer: ApiKeyAuthorizer): ApiKeyAuthenticator =
             ApiKeyAuthenticator(events, authorizer)
     }

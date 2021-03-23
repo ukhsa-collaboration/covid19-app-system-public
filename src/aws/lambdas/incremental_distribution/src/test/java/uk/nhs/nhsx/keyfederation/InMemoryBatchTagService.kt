@@ -3,9 +3,9 @@ package uk.nhs.nhsx.keyfederation
 import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult
 import java.time.Instant
 import java.time.LocalDate
-import java.util.*
+import java.util.Optional
 
-open class InMemoryBatchTagService(
+class InMemoryBatchTagService(
     var batchTag: BatchTag? = null,
     var batchDate: LocalDate? = null
 ) : BatchTagService {
@@ -16,10 +16,9 @@ open class InMemoryBatchTagService(
         // noop
     }
 
-    override fun latestFederationBatch() = if (batchTag != null && batchDate != null) {
-        Optional.of(FederationBatch(batchTag, batchDate))
-    } else {
-        Optional.empty()
+    override fun latestFederationBatch() = when {
+        batchTag != null && batchDate != null -> Optional.of(FederationBatch(batchTag!!, batchDate!!))
+        else -> Optional.empty()
     }
 
     override fun updateLatestFederationBatch(batch: FederationBatch) {

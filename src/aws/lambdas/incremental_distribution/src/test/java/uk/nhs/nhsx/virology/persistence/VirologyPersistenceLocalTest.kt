@@ -66,8 +66,8 @@ class VirologyPersistenceLocalTest {
     private lateinit var persistence: VirologyPersistenceService
 
     private val nowString = "2020-12-01T00:00:00Z"
-    private val clock = Supplier { nowString.asInstant() }
-    private val fourWeeksTtl = clock.get().plus(Period.ofWeeks(4))
+    private val clock = { nowString.asInstant() }
+    private val fourWeeksTtl = clock().plus(Period.ofWeeks(4))
 
     private val testOrder = TestOrder(
         CtaToken.of("cc8f0b6z"),

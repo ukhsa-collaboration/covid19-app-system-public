@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.highriskvenuesupload
 
-import org.apache.http.entity.ContentType.APPLICATION_JSON
+import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.S3Storage

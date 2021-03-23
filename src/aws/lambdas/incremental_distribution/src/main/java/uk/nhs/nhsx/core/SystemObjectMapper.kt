@@ -17,7 +17,12 @@ import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.headers.MobileOSVersion
+import uk.nhs.nhsx.highriskpostcodesupload.LocalAuthority
+import uk.nhs.nhsx.highriskpostcodesupload.PostDistrict
+import uk.nhs.nhsx.highriskpostcodesupload.RiskIndicator
+import uk.nhs.nhsx.highriskpostcodesupload.TierIndicator
 import uk.nhs.nhsx.highriskvenuesupload.model.MessageType
+import uk.nhs.nhsx.highriskvenuesupload.model.OptionalHighRiskVenueParam
 import uk.nhs.nhsx.highriskvenuesupload.model.VenueId
 import uk.nhs.nhsx.keyfederation.BatchTag
 import uk.nhs.nhsx.keyfederation.download.ReportType
@@ -34,16 +39,25 @@ import java.io.StringWriter
 import java.time.Duration
 import java.time.Instant
 import java.util.*
+import kotlin.concurrent.thread
 import uk.nhs.nhsx.core.aws.ssm.ParameterName as NhsParameterName
 
 object SystemObjectMapper {
-    @JvmField
+
+    init {
+        // Kickstart Jackson's ObjectMapper initialisation in a different thread.
+        //
+        // Creating a new ObjectMapper can take up to 2s and by doing the initialisation
+        // in a different thread reduces the cold start times of the lambdas.
+        thread { MAPPER.writeValueAsString(mapOf("hello" to "world")) }
+    }
+
     val MAPPER: ObjectMapper = ObjectMapper()
         .deactivateDefaultTyping()
         .registerModule(ParameterNamesModule(PROPERTIES))
         .registerModule(Jdk8Module())
         .registerModule(JavaTimeModule())
-        .registerModule(KotlinModule())
+        .registerModule(KotlinModule(strictNullChecks = true))
         .registerModule(SimpleModule().apply {
             text(Instant::toString, Instant::parse)
             text(Duration::toString)
@@ -54,6 +68,7 @@ object SystemObjectMapper {
             value(Country)
             value(CtaToken)
             value(EnvironmentName)
+            value(OptionalHighRiskVenueParam)
             value(NhsParameterName)
             value(IpcTokenId)
             value(SecretName)
@@ -63,7 +78,11 @@ object SystemObjectMapper {
             value(TestEndDate)
             value(VenueId)
             value(MessageType)
+            value(PostDistrict)
+            value(LocalAuthority)
+            value(TierIndicator)
             text(TestResult::wireValue, TestResult::from)
+            text(RiskIndicator::wireValue, RiskIndicator::from)
             int(TestType::wireValue, TestType::from)
             int(ReportType::wireValue, ReportType::from)
             text(Class<*>::getSimpleName)
@@ -89,7 +108,6 @@ object SystemObjectMapper {
         .configure(FAIL_ON_NULL_FOR_PRIMITIVES, true)
         .configure(USE_BIG_INTEGER_FOR_INTS, false)
 
-    @JvmField
     val STRICT_MAPPER: ObjectMapper = MAPPER
         .copy()
         .configure(FAIL_ON_UNKNOWN_PROPERTIES, true)

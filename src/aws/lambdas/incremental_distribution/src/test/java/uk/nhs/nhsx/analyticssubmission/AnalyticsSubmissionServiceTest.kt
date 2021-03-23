@@ -9,7 +9,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.Companion.iOSPayloadFrom
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
-import uk.nhs.nhsx.core.Jackson.readJson
+import uk.nhs.nhsx.core.Jackson.readJsonOrThrow
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
@@ -103,12 +103,11 @@ class AnalyticsSubmissionServiceTest {
         events.containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
-    private fun clientPayload() = readJson(
+    private fun clientPayload() = readJsonOrThrow<ClientAnalyticsSubmissionPayload>(
         iOSPayloadFrom(
             "2020-07-27T23:00:00Z",
             "2020-07-28T22:59:00Z",
             "AB13",
-        ),
-        ClientAnalyticsSubmissionPayload::class.java
+        )
     )
 }

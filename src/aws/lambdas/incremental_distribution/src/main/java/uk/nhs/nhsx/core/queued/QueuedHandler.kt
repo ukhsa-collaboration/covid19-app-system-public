@@ -14,12 +14,11 @@ abstract class QueuedHandler(protected val events: Events) : RequestHandler<SQSE
 
     override fun handleRequest(request: SQSEvent, context: Context): String {
         val start = System.currentTimeMillis()
-        events.emit(javaClass, QueuedEventStarted(javaClass.simpleName))
+        events(QueuedEventStarted(javaClass.simpleName))
 
         return logAndRethrowException(events, handler())(request, context).also {
-            events.emit(javaClass, it)
-            events.emit(
-                javaClass,
+            events(it)
+            events(
                 QueuedEventCompleted(javaClass.simpleName, Duration.ofMillis(System.currentTimeMillis() - start))
             )
         }.toString()

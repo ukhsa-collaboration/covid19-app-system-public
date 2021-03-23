@@ -26,6 +26,7 @@ class CircuitBreakerAnalyticsHandler : LogInsightsAnalyticsHandler(
 )
 
 private const val circuitBreakerQueryString = """fields @timestamp, @message
+| filter @message like /^\{/
 | filter @message like /Received http request.*exposure-notification\/request,requestId=.*,apiKeyName=mobile/
 | parse @message /Received http request.*exposure-notification\/request,requestId=(?<requestId>.*),apiKeyName=mobile/
 | parse @message /(?<iOS>=[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12},)/

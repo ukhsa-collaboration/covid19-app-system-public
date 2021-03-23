@@ -177,6 +177,5 @@ variable "isolation_payment" {
 
 variable "zip_submission_period_offset" {
   description = "The distribution window period offset"
-  type        = string
-  default     = "PT-15M"
+  type        = map(string)
 }

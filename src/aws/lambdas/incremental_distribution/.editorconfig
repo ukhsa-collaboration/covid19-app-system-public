@@ -5,6 +5,9 @@ indent_style=space
 indent_size = 4
 insert_final_newline = true
 
+[*.approved]
+insert_final_newline = false
+
 [{*.yml,*.yaml, *.tf}]
 indent_size = 2
 
@@ -18,3 +21,4 @@ ij_kotlin_name_count_to_use_star_import = 9999
 ij_kotlin_name_count_to_use_star_import_for_members = 9999
 ij_java_class_count_to_use_import_on_demand = 9999
 ij_java_names_count_to_use_import_on_demand = 9999
+

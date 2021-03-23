@@ -19,8 +19,7 @@ import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage
 import uk.nhs.nhsx.virology.TestKit
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.*
-import java.util.function.Supplier
+import java.util.UUID
 import java.util.stream.Collectors
 import java.util.stream.IntStream
 
@@ -37,7 +36,7 @@ class DiagnosisKeysSubmissionServiceTest {
     private val objectKeyNameProvider = { objectKey }
     private val tableName = "some-table-name"
     private val hashKey = "diagnosisKeySubmissionToken"
-    private var clock = Supplier { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
+    private var clock = { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
     private var rollingStartNumberLastKey: Long = 2666736 // 2020-09-14 00:00:00 UTC (last key in 14 day history)
     private var rollingStartNumberFirstKey: Long = 2664864 // 2020-09-01 00:00:00 UTC (first key in 14 day history)
     private val service = DiagnosisKeysSubmissionService(
@@ -96,8 +95,8 @@ class DiagnosisKeysSubmissionServiceTest {
     fun `accepts temporary exposure keys with risk level`() {
         val key1 = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumberLastKey.toInt(), 144)
         val key2 = ClientTemporaryExposureKey("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumberFirstKey.toInt(), 144)
-        key1.setTransmissionRiskLevel(5)
-        key2.setTransmissionRiskLevel(4)
+        key1.transmissionRiskLevel = 5
+        key2.transmissionRiskLevel = 4
 
         every { awsDynamoClient.getItem(tableName, hashKey, uuid) } returns dynamoVirologyV1Item()
 
@@ -221,7 +220,7 @@ class DiagnosisKeysSubmissionServiceTest {
     @Test
     fun `rolling start number must not be in future`() {
         val tenMinutesIntervalSeconds = 600L
-        val futureRollingStartNumber = clock.get().plus(10, ChronoUnit.DAYS).epochSecond / tenMinutesIntervalSeconds
+        val futureRollingStartNumber = clock().plus(10, ChronoUnit.DAYS).epochSecond / tenMinutesIntervalSeconds
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(
@@ -259,7 +258,7 @@ class DiagnosisKeysSubmissionServiceTest {
     @Test
     fun `transmission risk level must be between zero to7`() {
         val key = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumberLastKey.toInt(), 142)
-        key.setTransmissionRiskLevel(9)
+        key.transmissionRiskLevel = 9
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(key)
@@ -271,7 +270,7 @@ class DiagnosisKeysSubmissionServiceTest {
     @Test
     fun `transmission risk level must be non negative`() {
         val key = ClientTemporaryExposureKey("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumberLastKey.toInt(), 142)
-        key.setTransmissionRiskLevel(-2)
+        key.transmissionRiskLevel = -2
         val payload = ClientTemporaryExposureKeysPayload(
             UUID.fromString(uuid),
             listOf(key)

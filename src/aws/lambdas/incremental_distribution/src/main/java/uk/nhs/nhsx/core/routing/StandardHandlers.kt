@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.HttpResponses
@@ -21,15 +22,12 @@ import uk.nhs.nhsx.core.exceptions.ApiResponseException
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.headers.UserAgent
 import java.time.Duration
-import java.time.Instant
-import java.util.Optional
-import java.util.function.Supplier
+import java.util.*
 
 object StandardHandlers {
     private val MAINTENANCE_MODE = EnvironmentKey.string("MAINTENANCE_MODE")
     private val CUSTOM_OAI = EnvironmentKey.string("custom_oai")
 
-    @JvmStatic
     fun withoutSignedResponses(
         events: Events,
         environment: Environment,
@@ -37,7 +35,6 @@ object StandardHandlers {
     ): ApiGatewayHandler =
         defaultStack(events, environment, catchExceptions(events, delegate))
 
-    @JvmStatic
     fun withSignedResponses(
         events: Events,
         environment: Environment,
@@ -61,21 +58,20 @@ object StandardHandlers {
     fun loggingIncomingRequests(
         events: Events,
         delegate: ApiGatewayHandler,
-        clock: Supplier<Instant>
+        clock: Clock
     ): ApiGatewayHandler =
         ApiGatewayHandler { r: APIGatewayProxyRequestEvent, context ->
             val keyName = ApiKeyExtractor(r.headers["authorization"])?.keyName ?: "none"
             val requestId = Optional.ofNullable(r.headers["Request-Id"]).orElse("none")
             val userAgent = userAgentFrom(r)
 
-            val start = clock.get()
+            val start = clock()
             var statusCode = 500
             try {
                 delegate.invoke(r, context).also { statusCode = it.statusCode }
             } finally {
-                val latency = Duration.between(start, clock.get())
+                val latency = Duration.between(start, clock())
                 events(
-                    javaClass,
                     IncomingHttpRequest(
                         r.path,
                         r.httpMethod,
@@ -93,7 +89,6 @@ object StandardHandlers {
     private fun userAgentFrom(r: APIGatewayProxyRequestEvent): String =
         Optional.ofNullable(r.headers["User-Agent"]).orElse("none")
 
-    @JvmStatic
     fun mobileAppVersionFrom(r: APIGatewayProxyRequestEvent): MobileAppVersion =
         UserAgent.of(userAgentFrom(r)).appVersion
 
@@ -105,7 +100,7 @@ object StandardHandlers {
         when {
             environment.access.required(MAINTENANCE_MODE).toLowerCase().toBoolean() ->
                 ApiGatewayHandler { _, _ ->
-                    events(StandardHandlers::class.java, RequestRejected("MAINTENANCE_MODE"))
+                    events(RequestRejected("MAINTENANCE_MODE"))
                     HttpResponses.serviceUnavailable()
                 }
             else -> delegate
@@ -128,13 +123,12 @@ object StandardHandlers {
                 if (requiredOai == request.headers["x-custom-oai"]) {
                     delegate.invoke(request, context)
                 } else {
-                    events.emit(javaClass, OAINotSet(request.httpMethod, request.path))
+                    events(OAINotSet(request.httpMethod, request.path))
                     HttpResponses.forbidden()
                 }
             }
         }
 
-    @JvmStatic
     fun authorisedBy(authenticator: Authenticator, routingHandler: Routing.RoutingHandler): Routing.RoutingHandler =
         object : DelegatingRoutingHandler(routingHandler) {
             override fun invoke(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
@@ -171,10 +165,10 @@ object StandardHandlers {
             try {
                 delegate.invoke(r, context)
             } catch (e: ApiResponseException) {
-                events.emit(javaClass, ApiHandleFailed(e.statusCode.code, e.message))
+                events(ApiHandleFailed(e.statusCode.code, e.message))
                 HttpResponses.withStatusCodeAndBody(e.statusCode, e.message)
             } catch (e: Exception) {
-                events.emit(javaClass, ExceptionThrown(e))
+                events(ExceptionThrown(e))
                 HttpResponses.internalServerError()
             }
         }

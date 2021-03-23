@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.isolationpayment
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.Handler
@@ -10,14 +11,12 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
-import java.time.Instant
-import java.util.function.Supplier
 
 @Suppress("unused")
 class IsolationPaymentConsumeHandler(private val service: IsolationPaymentGatewayService,
                                      events: Events) : DirectHandler<IsolationRequest, IsolationResponse>(events, IsolationRequest::class.java) {
     @JvmOverloads
-    constructor(clock: Supplier<Instant> = SystemClock.CLOCK,
+    constructor(clock: Clock = SystemClock.CLOCK,
                 environment: Environment = Environment.fromSystem(),
                 events: Events = PrintingJsonEvents(clock)) : this(
         IsolationPaymentGatewayService(clock,

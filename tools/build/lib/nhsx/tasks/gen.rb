@@ -83,7 +83,7 @@ namespace :gen do
       authorization_headers = {}
       NHSx::TargetEnvironment::API_NAMES.keys.each do |api_name|
         key_name = "used_for_tests_#{Digest::SHA1.hexdigest(Time.now.to_s)[0..6]}"
-        authorization_header = create_and_store_api_key(api_name, key_name)
+        authorization_header = create_and_store_api_key(api_name, key_name, "API key for use in test", $configuration)
         authorization_headers[api_name] = authorization_header
       end
       update_secrets_entry(NHSx::TargetEnvironment::TEST_API_KEY_HEADERS_SECRET, JSON.dump(authorization_headers).gsub("\"", "\\\""), $configuration)
@@ -96,7 +96,7 @@ namespace :gen do
       key_name = "/synthetics/api_secret"
       api_key = "/synthetics/api_key"
 
-      authorization_header = create_and_store_api_key("health", key_name)
+      authorization_header = create_and_store_api_key("health", key_name, "API key for synthetics", $configuration)
       update_secrets_entry(api_key, authorization_header, $configuration)
     end
   end

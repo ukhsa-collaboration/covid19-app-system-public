@@ -43,6 +43,6 @@ fun <T : HttpMessage> T.tidyJsonBody() = when {
 
 @Suppress("UNCHECKED_CAST")
 private fun <T : HttpMessage> T.keepOnlyHeaders(vararg toKeep: String): T {
-    val filteredHeaders = headers.filter { it.first.toLowerCase() in toKeep.map { it.toLowerCase() } }
+    val filteredHeaders = headers.filter { it.first.toLowerCase() in toKeep.map(String::toLowerCase) }
     return headers.fold(this) { acc, next -> acc.removeHeader(next.first) as T }.headers(filteredHeaders) as T
 }

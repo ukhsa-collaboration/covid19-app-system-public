@@ -3,7 +3,6 @@ package uk.nhs.nhsx.aae
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.S3Object
-import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.any
@@ -13,7 +12,6 @@ import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.throws
-import org.apache.http.entity.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.bouncycastle.asn1.ASN1InputStream
 import org.bouncycastle.asn1.x500.X500Name
@@ -24,14 +22,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.AwsS3
-import uk.nhs.nhsx.core.aws.s3.BucketName
-import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
-import uk.nhs.nhsx.core.aws.s3.MetaHeader
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue
@@ -41,11 +35,11 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.queued.QueuedEventCompleted
 import uk.nhs.nhsx.core.queued.QueuedEventStarted
 import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.proxy
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.math.BigInteger
-import java.net.URL
 import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.SecureRandom
@@ -79,7 +73,12 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
 
         assertThat(result).isEqualTo("AAEDataUploadedToS3(sqsMessageId=null, bucketName=TEST_BUCKET, key=TEST_PREFIX/TEST_KEY)")
 
-        events.containsExactly(QueuedEventStarted::class, OutgoingHttpRequest::class, AAEDataUploadedToS3::class, QueuedEventCompleted::class)
+        events.containsExactly(
+            QueuedEventStarted::class,
+            OutgoingHttpRequest::class,
+            AAEDataUploadedToS3::class,
+            QueuedEventCompleted::class
+        )
     }
 
     @Test
@@ -181,7 +180,11 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
         assertThat(result).isEqualTo("S3ToParquetObjectConversionFailure(sqsMessageId=null, bucketName=TEST_BUCKET, key=format-conversion-failed/TEST_KEY_ERROR_FILE)")
         wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
 
-        events.containsExactly(QueuedEventStarted::class, S3ToParquetObjectConversionFailure::class, QueuedEventCompleted::class)
+        events.containsExactly(
+            QueuedEventStarted::class,
+            S3ToParquetObjectConversionFailure::class,
+            QueuedEventCompleted::class
+        )
     }
 
     private val events = RecordingEvents()
@@ -254,7 +257,7 @@ class FakeSecretManager : SecretManager {
     override fun getSecretBinary(secretName: SecretName): ByteArray = pkcs12
 }
 
-class FakeParquetS3 : AwsS3 {
+class FakeParquetS3 : AwsS3 by proxy() {
 
     private val objects = mapOf(
         "TEST_PREFIX/TEST_KEY" to S3Object().apply {
@@ -269,20 +272,5 @@ class FakeParquetS3 : AwsS3 {
         }
     )
 
-    override fun upload(locator: Locator, contentType: ContentType, bytes: ByteArraySource, meta: List<MetaHeader>) {
-        throw UnsupportedOperationException()
-    }
-
-    override fun getObjectSummaries(bucketName: BucketName): MutableList<S3ObjectSummary> {
-        throw UnsupportedOperationException()
-    }
-
     override fun getObject(locator: Locator): Optional<S3Object> = Optional.ofNullable(objects[locator.key.value])
-
-    override fun deleteObject(locator: Locator) {
-        throw UnsupportedOperationException()
-    }
-    override fun getSignedURL(locator: Locator?, expiration: Date?): Optional<URL> {
-        throw UnsupportedOperationException()
-    }
 }

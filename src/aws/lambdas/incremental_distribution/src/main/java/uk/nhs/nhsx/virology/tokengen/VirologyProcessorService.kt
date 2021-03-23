@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.virology.tokengen
 
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.ExceptionThrown
 import uk.nhs.nhsx.virology.CtaToken
@@ -15,17 +16,17 @@ import uk.nhs.nhsx.virology.tokengen.CtaProcessorResult.Success
 import java.time.Duration
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Date
+import java.util.Objects
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
-import java.util.function.Supplier
 import java.util.stream.Collectors
 import java.util.stream.IntStream
 
 class VirologyProcessorService(
     private val virologyService: VirologyService,
     private val virologyProcessorStore: VirologyProcessorStore,
-    private val clock: Supplier<Instant>,
+    private val clock: Clock,
     private val virologyProcessorExports: VirologyProcessorExports,
     private val maxRetryCount: Int,
     private val events: Events
@@ -33,7 +34,7 @@ class VirologyProcessorService(
     private val executor = Executors.newFixedThreadPool(20)
 
     fun generateAndStoreTokens(event: CtaProcessorRequest): CtaProcessorResult {
-        val start = clock.get()
+        val start = clock()
         val tokens = generateTokens(event)
         if (tokens.isEmpty()) {
             return Error("No tokens generated/stored (empty list)")
@@ -47,14 +48,14 @@ class VirologyProcessorService(
     fun generateStoreTokensAndReturnSignedUrl(requests: List<CtaTokenZipFileEntryRequest>, zipFilePassword: String,linkExpirationDate: ZonedDateTime): CtaTokenZipFile {
         val tokenFile = generateAndStoreTokensAsSingleZip(requests, zipFilePassword)
         if (tokenFile !is Success) {
-            events.emit(javaClass, CtaTokensAndUrlGenerationFailed(requests, "Token file generation failed"))
+            events(CtaTokensAndUrlGenerationFailed(requests, "Token file generation failed"))
             throw RuntimeException("Token file generation failed")
         }
         val filename = tokenFile.zipFilename
         val url = virologyProcessorStore.generateSignedURL(filename, Date.from(linkExpirationDate.toInstant()))
 
         if(url == null) {
-            events.emit(javaClass,CtaTokensAndUrlGenerationFailed(requests, "Unable to retrieve signed URL from S3"))
+            events(CtaTokensAndUrlGenerationFailed(requests, "Unable to retrieve signed URL from S3"))
             throw RuntimeException("Unable to retrieve signed URL from S3")
         }
 
@@ -62,7 +63,7 @@ class VirologyProcessorService(
     }
 
     private fun generateAndStoreTokensAsSingleZip(requests: List<CtaTokenZipFileEntryRequest>, zipFilePassword: String): CtaProcessorResult {
-        val start = clock.get()
+        val start = clock()
         val zipFileEntries = requests.stream().map { (testResult, testEndDate, testKit, filename, numberOfTokens) ->
             CtaTokenZipFileEntry(
                 testResult,
@@ -128,7 +129,7 @@ class VirologyProcessorService(
         .mapToObj {
             CompletableFuture.supplyAsync({ generateTokenRetryingOnFailure(request) }, executor)
                 .exceptionally { ex: Throwable ->
-                    events.emit(javaClass, ExceptionThrown(ex, "Exception while generating CTA token"))
+                    events(ExceptionThrown(ex, "Exception while generating CTA token"))
                     null
                 }
         }

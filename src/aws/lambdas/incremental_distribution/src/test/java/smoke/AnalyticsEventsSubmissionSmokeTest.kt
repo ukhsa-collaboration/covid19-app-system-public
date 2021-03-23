@@ -24,9 +24,9 @@ class AnalyticsEventsSubmissionSmokeTest {
     @BeforeEach
     fun clearSubmissionStore() {
         val s3Client = AmazonS3ClientBuilder.defaultClient()
-        val keys = s3Client.listObjects(config.analyticsEventsSubmissionStore).objectSummaries.map { it.key }.toTypedArray()
+        val keys = s3Client.listObjects(config.analytics_events_submission_store).objectSummaries.map { it.key }.toTypedArray()
         if (keys.isNotEmpty()) {
-            s3Client.deleteObjects(DeleteObjectsRequest(config.analyticsEventsSubmissionStore).withKeys(*keys))
+            s3Client.deleteObjects(DeleteObjectsRequest(config.analytics_events_submission_store).withKeys(*keys))
         }
     }
 
@@ -37,15 +37,15 @@ class AnalyticsEventsSubmissionSmokeTest {
         val uploadResponse = mobileApp.submitAnalyticEvents(analyticsEvents(randomUUID).trimIndent())
 
         assertThat(uploadResponse.status).withFailMessage("unexpected http response code").isEqualTo(Status.OK)
-        assertThat(uploadResponse.header("X-Amz-Meta-Signature")).withFailMessage("missing signature header").isNotBlank()
-        assertThat(uploadResponse.header("X-Amz-Meta-Signature-Date")).withFailMessage("missing signature date header").isNotBlank()
+        assertThat(uploadResponse.header("X-Amz-Meta-Signature")).withFailMessage("missing signature header").isNotBlank
+        assertThat(uploadResponse.header("X-Amz-Meta-Signature-Date")).withFailMessage("missing signature date header").isNotBlank
 
         val s3Client = AmazonS3ClientBuilder.defaultClient()
-        val objectSummaries = s3Client.listObjects(config.analyticsEventsSubmissionStore).objectSummaries
+        val objectSummaries = s3Client.listObjects(config.analytics_events_submission_store).objectSummaries
         assertThat(objectSummaries).hasSize(1)
 
-        val s3Object = s3Client.getObject(config.analyticsEventsSubmissionStore, objectSummaries[0].key)
-        val storedPayload: Map<String, *> = Jackson.readJson(s3Object.objectContent, Map::class.java) as Map<String, *>
+        val s3Object = s3Client.getObject(config.analytics_events_submission_store, objectSummaries[0].key)
+        val storedPayload: Map<String, *> = Jackson.readJsonOrThrow(s3Object.objectContent, Map::class.java) as Map<String, *>
 
         assertThat(storedPayload).containsKey("uuid")
         val metadata = storedPayload["metadata"] as Map<String, *>
@@ -57,11 +57,11 @@ class AnalyticsEventsSubmissionSmokeTest {
         val uploadResponse = mobileApp.submitAnalyticEvents("{}")
 
         assertThat(uploadResponse.status).withFailMessage("unexpected http response code").isEqualTo(Status.BAD_REQUEST)
-        assertThat(uploadResponse.header("X-Amz-Meta-Signature")).withFailMessage("missing signature header").isNotBlank()
-        assertThat(uploadResponse.header("X-Amz-Meta-Signature-Date")).withFailMessage("missing signature date header").isNotBlank()
+        assertThat(uploadResponse.header("X-Amz-Meta-Signature")).withFailMessage("missing signature header").isNotBlank
+        assertThat(uploadResponse.header("X-Amz-Meta-Signature-Date")).withFailMessage("missing signature date header").isNotBlank
 
         val s3Client = AmazonS3ClientBuilder.defaultClient()
-        val objectSummaries = s3Client.listObjects(config.analyticsEventsSubmissionStore).objectSummaries
+        val objectSummaries = s3Client.listObjects(config.analytics_events_submission_store).objectSummaries
         assertThat(objectSummaries).isEmpty()
     }
 }

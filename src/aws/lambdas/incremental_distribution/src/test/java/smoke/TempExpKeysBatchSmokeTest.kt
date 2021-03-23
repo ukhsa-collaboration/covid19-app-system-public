@@ -11,7 +11,6 @@ import org.http4k.client.Java8HttpClient
 import org.http4k.core.Status
 import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
@@ -79,7 +78,7 @@ class TempExpKeysBatchSmokeTest {
             val envVarName = "ABORT_OUTSIDE_TIME_WINDOW"
             val envVarValue = "false"
             val result = AwsLambda.updateLambdaEnvVar(
-                config.diagnosisKeysProcessingFunction,
+                config.diagnosis_keys_processing_function,
                 envVarName to envVarValue
             )
             val updatedEnvVar = result.environment().variables()[envVarName]
@@ -392,9 +391,9 @@ class TempExpKeysBatchSmokeTest {
             checkTekExportKeysMatchSubmissionPayloadKeys(submissionPayload.temporaryExposureKeys, receivedEncodedKeys)
         }
 
-        fun checkTekExportKeysMatchSubmissionPayloadKeys(submissionKeys: List<ClientTemporaryExposureKey>, tekExportKeys: List<Exposure.TemporaryExposureKey>) {
+        fun checkTekExportKeysMatchSubmissionPayloadKeys(submissionKeys: List<ClientTemporaryExposureKey?>, tekExportKeys: List<Exposure.TemporaryExposureKey>) {
             val convertedTekKeys = tekExportKeys.map { convertTekKeyToClientKey(it) }
-            submissionKeys.forEach {
+            submissionKeys.filterNotNull().forEach {
                 val tekExportKey: ClientTemporaryExposureKey? = convertedTekKeys.find { k -> it.key == k.key }
                 if (null != it.daysSinceOnsetOfSymptoms) {
                     assertThat(it.daysSinceOnsetOfSymptoms, equalTo(tekExportKey?.daysSinceOnsetOfSymptoms))
@@ -411,7 +410,7 @@ class TempExpKeysBatchSmokeTest {
                 tek.rollingPeriod
             )
             if (tek.hasDaysSinceOnsetOfSymptoms()) {
-                key.setDaysSinceOnsetOfSymptoms(tek.daysSinceOnsetOfSymptoms)
+                key.daysSinceOnsetOfSymptoms = tek.daysSinceOnsetOfSymptoms
             }
             return key
         }

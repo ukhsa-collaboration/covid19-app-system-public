@@ -22,7 +22,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `exposure notification circuit breaker`() {
-        val uri = "${config.exposureNotificationCircuitBreakerEndpoint}/request"
+        val uri = "${config.exposure_notification_circuit_breaker_endpoint}/request"
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -31,7 +31,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `risky venue circuit breaker`() {
-        val uri = "${config.riskyVenuesCircuitBreakerEndpoint}/request"
+        val uri = "${config.risky_venues_circuit_breaker_endpoint}/request"
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -40,7 +40,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `order virology test`() {
-        val uri = "${config.virologyKitEndpoint}/home-kit/order"
+        val uri = "${config.virology_kit_endpoint}/home-kit/order"
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -49,7 +49,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `retrieve virology test result`() {
-        val uri = "${config.virologyKitEndpoint}/results"
+        val uri = "${config.virology_kit_endpoint}/results"
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -58,7 +58,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `upload npex test result`() {
-        val uri = config.testResultsNpexUploadEndpoint
+        val uri = config.test_results_npex_upload_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -67,7 +67,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `upload fiorano test result`() {
-        val uri = config.testResultsFioranoUploadEndpoint
+        val uri = config.test_results_fiorano_upload_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -76,7 +76,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `upload english token-gen test result`() {
-        val uri = config.engTokenGenUploadEndpoint
+        val uri = config.test_results_eng_tokengen_upload_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -85,7 +85,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `upload welsh token-gen test result`() {
-        val uri = config.wlsTokenGenUploadEndpoint
+        val uri = config.test_results_wls_tokengen_upload_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -94,7 +94,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `diagnosis keys submission`() {
-        val uri = config.diagnosisKeysSubmissionEndpoint
+        val uri = config.diagnosis_keys_submission_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -103,7 +103,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `upload risky postal districts`() {
-        val uri = config.riskyPostDistrictsUploadEndpoint
+        val uri = config.risky_post_districts_upload_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -112,7 +112,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `upload risky venues`() {
-        val uri = config.riskyVenuesUploadEndpoint
+        val uri = config.risky_venues_upload_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -121,7 +121,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `submit analytics`() {
-        val uri = config.analyticsSubmissionEndpoint
+        val uri = config.analytics_submission_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
@@ -130,7 +130,7 @@ class UnauthorizedRequestsSmokeTest {
 
     @Test
     fun `empty submission`() {
-        val uri = config.emptySubmissionEndpoint
+        val uri = config.empty_submission_endpoint
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 

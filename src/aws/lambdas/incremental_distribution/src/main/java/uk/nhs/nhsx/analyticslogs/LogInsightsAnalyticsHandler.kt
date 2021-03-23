@@ -2,6 +2,7 @@ package uk.nhs.nhsx.analyticslogs
 
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.logs.AWSLogsClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.Handler
@@ -15,7 +16,6 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.scheduled.SchedulingHandler
 import java.time.Instant
-import java.util.function.Supplier
 
 abstract class LogInsightsAnalyticsHandler(
     private val service: LogInsightsAnalyticsService,
@@ -31,7 +31,7 @@ object AnalyticsUploadedToS3 : Event(EventCategory.Info)
 
 fun logAnalyticsService(
     environment: Environment,
-    clock: Supplier<Instant>,
+    clock: Clock,
     events: Events,
     queryString: String,
     converter: Converter<*>,

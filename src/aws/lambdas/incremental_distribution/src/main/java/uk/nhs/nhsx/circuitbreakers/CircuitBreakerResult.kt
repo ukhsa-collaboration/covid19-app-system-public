@@ -6,10 +6,8 @@ class CircuitBreakerResult private constructor(val type: ResultType, val message
     }
 
     companion object {
-        @JvmStatic
         fun ok(responseBody: String) = CircuitBreakerResult(ResultType.Ok, "", responseBody)
 
-        @JvmStatic
         fun missingPollingTokenError() = CircuitBreakerResult(
             ResultType.MissingPollingTokenError,
             "Circuit Breaker request submitted without approval token",

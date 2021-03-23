@@ -41,7 +41,7 @@ class AnalyticsEventsSubmissionServiceTest {
         assertThat(fakeS3.name.value).isEqualTo("key.json")
 
         val storedObject: Map<String, Any> =
-            Jackson.readJson(fakeS3.bytes.openStream(), Map::class.java) as Map<String, Any>
+            Jackson.readJsonOrThrow(fakeS3.bytes.openStream(), Map::class.java) as Map<String, Any>
         assertThat(storedObject).containsKey("uuid")
         assertThat(storedObject).containsKey("metadata")
         assertThat(storedObject).containsKey("events")
@@ -79,7 +79,7 @@ class AnalyticsEventsSubmissionServiceTest {
         assertThat(fakeS3.name.value).isEqualTo("key.json")
 
         val storedObject: Map<String, Any> =
-            Jackson.readJson(fakeS3.bytes.openStream(), Map::class.java) as Map<String, Any>
+            Jackson.readJsonOrThrow(fakeS3.bytes.openStream(), Map::class.java) as Map<String, Any>
         assertThat(storedObject).containsKey("uuid")
         assertThat(storedObject).containsKey("metadata")
         assertThat(storedObject).containsKey("events")

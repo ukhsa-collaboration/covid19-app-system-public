@@ -4,6 +4,7 @@ import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys
 import uk.nhs.nhsx.core.HttpResponses
@@ -28,12 +29,10 @@ import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.routing.RoutingHandler
 import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
-import java.time.Instant
-import java.util.function.Supplier
 
 class RiskyVenueHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = SystemClock.CLOCK,
+    clock: Clock = SystemClock.CLOCK,
     events: Events = PrintingJsonEvents(clock),
     authenticator: Authenticator = awsAuthentication(ApiName.Mobile, events),
     parameters: Parameters = AwsSsmParameters(),
@@ -87,8 +86,8 @@ class RiskyVenueHandler @JvmOverloads constructor(
                     path(
                         Routing.Method.POST, CircuitBreakerService.startsWith("/circuit-breaker/venue/request"),
                         ApiGatewayHandler { _, _ ->
-                            events.emit(javaClass, CircuitBreakerVenueRequest())
-                            mapResultToResponse(circuitBreakerService.approvalToken)
+                            events(CircuitBreakerVenueRequest())
+                            mapResultToResponse(circuitBreakerService.getApprovalToken())
                         }
                     )
                 ),
@@ -97,7 +96,7 @@ class RiskyVenueHandler @JvmOverloads constructor(
                     path(
                         Routing.Method.GET, CircuitBreakerService.startsWith("/circuit-breaker/venue/resolution"),
                         ApiGatewayHandler { r, _ ->
-                            events.emit(javaClass, CircuitBreakerVenueResolution())
+                            events(CircuitBreakerVenueResolution())
                             mapResultToResponse(circuitBreakerService.getResolution(r.path))
                         }
                     )

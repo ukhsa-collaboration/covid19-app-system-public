@@ -2,7 +2,7 @@ import java.text.DecimalFormat
 
 plugins {
     id "java"
-    id "org.jetbrains.kotlin.jvm" version "1.4.30"
+    id "org.jetbrains.kotlin.jvm" version "1.4.31"
     id "com.adarshr.test-logger" version "2.1.1"
     id "jacoco"
     id "com.github.spotbugs" version "4.6.0"
@@ -22,12 +22,12 @@ repositories {
 }
 
 ext {
-    aws_sdk_version = "1.11.826"
-    aws_sdk2_version = "2.15.77"
+    aws_sdk_version = "1.11.970"
+    aws_sdk2_version = "2.16.14"
     aws_xray_version = "2.4.0"
-    forkhandles_version = "1.8.4.3"
-    http4k_version = "4.3.5.4"
-    jackson_version = "2.12.1"
+    forkhandles_version = "1.8.5.0"
+    http4k_version = "4.4.0.1"
+    jackson_version = "2.12.2"
     junit_version = "5.7.1"
 }
 
@@ -271,10 +271,13 @@ dependencies {
     testImplementation "org.http4k:http4k-aws"
     testImplementation "org.http4k:http4k-core"
     testImplementation "org.http4k:http4k-format-jackson"
+    testImplementation "org.http4k:http4k-format-moshi"
     testImplementation "org.http4k:http4k-testing-hamkrest"
     testImplementation "org.http4k:http4k-testing-approval"
-    testImplementation 'org.http4k:http4k-testing-servirtium'
-    testImplementation 'org.http4k:http4k-resilience4j'
+    testImplementation "org.http4k:http4k-testing-servirtium"
+    testImplementation "org.http4k:http4k-resilience4j"
+
+    testImplementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
 
     testImplementation "org.awaitility:awaitility:4.0.3"
     testImplementation "io.mockk:mockk:1.10.2"

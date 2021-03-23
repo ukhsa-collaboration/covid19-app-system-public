@@ -7,7 +7,6 @@ object IpcTokenIdGenerator {
     /**
      * Generates unique ID from secure random source of 32 bytes with hex representation
      */
-    @JvmStatic
     fun getToken(): IpcTokenId {
         val random = SecureRandom()
         val bytes = ByteArray(32)

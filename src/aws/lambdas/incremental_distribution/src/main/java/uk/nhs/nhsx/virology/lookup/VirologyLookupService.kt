@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.virology.lookup
 
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.exceptions.TransactionException
 import uk.nhs.nhsx.core.headers.MobileAppVersion
@@ -13,12 +14,10 @@ import uk.nhs.nhsx.virology.persistence.TestState.PendingTestResult
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLiveCalculator
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
-import java.time.Instant
-import java.util.function.Supplier
 
 class VirologyLookupService(
     private val persistence: VirologyPersistenceService,
-    private val clock: Supplier<Instant>,
+    private val clock: Clock,
     private val policyConfig: VirologyPolicyConfig,
     private val events: Events
 ) {
@@ -93,8 +92,7 @@ class VirologyLookupService(
         try {
             persistence.markForDeletion(testResult, timeToLive)
         } catch (e: TransactionException) {
-            events.emit(
-                javaClass,
+            events(
                 TestResultMarkForDeletionFailure(
                     testResult.testResultPollingToken,
                     e.message!!

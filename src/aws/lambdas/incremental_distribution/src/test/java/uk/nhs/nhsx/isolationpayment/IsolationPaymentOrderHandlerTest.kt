@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import uk.nhs.nhsx.core.Jackson.readOrNull
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
@@ -18,6 +19,8 @@ import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse
+import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.Disabled
+import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.OK
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
@@ -72,8 +75,7 @@ class IsolationPaymentOrderHandlerTest {
 
     @Test
     fun `token create returns 201 when tokens is created`() {
-        every { service.handleIsolationPaymentOrder(any()) } returns TokenGenerationResponse(
-            true,
+        every { service.handleIsolationPaymentOrder(any()) } returns OK(
             IpcTokenId.of("1".repeat(64))
         )
 
@@ -81,13 +83,7 @@ class IsolationPaymentOrderHandlerTest {
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
-            .withBody(
-                """
-                {
-                    "country": "England"
-                }
-                """.trimIndent()
-            )
+            .withBody("""{ "country": "England" }""")
             .withPath("/isolation-payment/ipc-token/create")
             .withBearerToken("anything")
             .build()
@@ -96,9 +92,13 @@ class IsolationPaymentOrderHandlerTest {
         assertThat(response.statusCode).isEqualTo(201)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenGenerationResponse = readOrNull<TokenGenerationResponse>(response.body) ?: error("")
-        assertThat(tokenGenerationResponse.ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
-        assertThat(tokenGenerationResponse.isEnabled).isEqualTo(true)
+        when (val tokenGenerationResponse = readOrNull<OK>(response.body)) {
+            is OK -> {
+                assertThat(tokenGenerationResponse.ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
+                assertThat(tokenGenerationResponse.isEnabled).isEqualTo(true)
+            }
+            null -> fail { "Could not read JSON" }
+        }
     }
 
     @Test

@@ -10,21 +10,33 @@ repositories {
     mavenCentral()
 }
 
+ext {
+    aws_sdk_version = "1.11.970"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        suppressWarnings = false
+        jvmTarget = "11"
+    }
+}
+
 dependencies {
     implementation project(':')
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
     implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
     implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
-
     implementation "com.amazonaws:aws-lambda-java-log4j2:1.2.0"
-    implementation "com.amazonaws:aws-java-sdk-athena:1.11.948"
-    implementation "com.amazonaws:aws-java-sdk-sqs:1.11.967"
+
+    implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
+    implementation "com.amazonaws:aws-java-sdk-s3"
+    implementation "com.amazonaws:aws-java-sdk-athena"
+    implementation "com.amazonaws:aws-java-sdk-sqs"
 
     implementation platform("dev.forkhandles:forkhandles-bom:$forkhandles_version")
     implementation "dev.forkhandles:values4k:$forkhandles_version"
-
-    // fixme: only used because there's a ContentType dependency in S3Storage
-    implementation "org.apache.httpcomponents:httpclient:4.5.13"
 
     testImplementation platform("org.junit:junit-bom:$junit_version")
     testImplementation "org.junit.jupiter:junit-jupiter-api"

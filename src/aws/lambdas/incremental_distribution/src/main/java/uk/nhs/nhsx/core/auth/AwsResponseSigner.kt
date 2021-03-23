@@ -17,7 +17,7 @@ class AwsResponseSigner(private val contentSigner: DatedSigner, private val even
         val requestId = request.headers["Request-Id"] ?: "not-set"
 
         if (!request.headers.containsKey("Request-Id")) {
-            events.emit(javaClass, NoRequestIdFound(request.path))
+            events(NoRequestIdFound(request.path))
         }
 
         val signature = contentSigner.sign {

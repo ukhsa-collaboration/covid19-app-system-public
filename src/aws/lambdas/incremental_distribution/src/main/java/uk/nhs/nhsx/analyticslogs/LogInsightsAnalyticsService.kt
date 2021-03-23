@@ -5,10 +5,14 @@ import com.amazonaws.services.logs.model.GetQueryResultsRequest
 import com.amazonaws.services.logs.model.GetQueryResultsResult
 import com.amazonaws.services.logs.model.ResultField
 import com.amazonaws.services.logs.model.StartQueryRequest
-import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.core.aws.s3.*
+import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
+import uk.nhs.nhsx.core.aws.s3.Locator
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
+import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
+import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.Events
 import java.time.Instant
 import java.time.LocalTime
@@ -33,7 +37,7 @@ class LogInsightsAnalyticsService(private val client: AWSLogs,
         }
         val logs = executeCloudWatchInsightQuery(window)
         if (logs.isEmpty()) {
-            events.emit(javaClass, EmptyAnalyticsLogs())
+            events(EmptyAnalyticsLogs())
         } else {
             val stats = converter.from(logs)
             val json = toAnalyticsJson(stats)
@@ -59,19 +63,19 @@ class LogInsightsAnalyticsService(private val client: AWSLogs,
                 Thread.sleep(1000L)
                 getQueryResult = client.getQueryResults(queryResultsRequest)
             } catch (e: InterruptedException) {
-                events.emit(javaClass, AnalyticsLogsPollingFailed(e))
+                events(AnalyticsLogsPollingFailed(e))
             }
         }
         return getQueryResult
     }
 
-    fun uploadToS3(json: String?, currentTime: Instant) {
-        val DATE_TIME_FORMATTER_SLASH = DateTimeFormatter.ofPattern("yyyy/MM/dd").withZone(ZoneId.systemDefault())
-        val yesterdayDateSlash = DATE_TIME_FORMATTER_SLASH.format(currentTime.minus(1, ChronoUnit.DAYS))
+    private fun uploadToS3(json: String?, currentTime: Instant) {
+        val dateTimeFormatterSlash = DateTimeFormatter.ofPattern("yyyy/MM/dd").withZone(ZoneId.systemDefault())
+        val yesterdayDateSlash = dateTimeFormatterSlash.format(currentTime.minus(1, ChronoUnit.DAYS))
         val objectKey = ObjectKey.of("$yesterdayDateSlash/").append(objectKeyNameProvider.generateObjectKeyName().toString()).append(".json")
         s3Storage.upload(
             Locator.of(BucketName.of(bucketName), objectKey),
-            ContentType.APPLICATION_JSON,
+            APPLICATION_JSON,
             fromUtf8String(json!!)
         )
     }

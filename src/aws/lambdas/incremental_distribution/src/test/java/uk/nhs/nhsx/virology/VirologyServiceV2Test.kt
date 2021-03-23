@@ -14,7 +14,6 @@ import org.junit.jupiter.params.provider.EnumSource
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.testhelper.data.TestData
-import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.virology.Country.Companion.England
 import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
@@ -36,13 +35,12 @@ import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.time.Instant
 import java.time.Period
-import java.util.*
-import java.util.function.Supplier
+import java.util.Optional
 
 class VirologyServiceV2Test {
 
     private val now = Instant.EPOCH
-    private val clock = Supplier { now }
+    private val clock = { now }
     private val persistence = mockk<VirologyPersistenceService>()
     private val tokensGenerator = TokensGenerator
     private val fourWeeksExpireAt = now.plus(Period.ofWeeks(4))

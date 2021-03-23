@@ -1,9 +1,9 @@
 package uk.nhs.nhsx.highriskpostcodesupload
 
 import com.amazonaws.services.s3.model.S3Object
-import com.fasterxml.jackson.core.type.TypeReference
-import org.apache.http.entity.ContentType
-import uk.nhs.nhsx.core.Jackson.readJson
+import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
+import uk.nhs.nhsx.core.ContentType.Companion.TEXT_PLAIN
+import uk.nhs.nhsx.core.Jackson.readJsonOrThrow
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
@@ -26,7 +26,7 @@ class RiskyPostCodesPersistence(
     fun uploadToBackup(json: String) {
         s3Client.upload(
             Locator.of(bucketName, backupJsonKeyName),
-            ContentType.APPLICATION_JSON,
+            APPLICATION_JSON,
             fromUtf8String(json)
         )
     }
@@ -34,7 +34,7 @@ class RiskyPostCodesPersistence(
     fun uploadToRaw(csv: String) {
         s3Client.upload(
             Locator.of(bucketName, rawCsvKeyName),
-            ContentType.TEXT_PLAIN,
+            TEXT_PLAIN,
             fromUtf8String(csv)
         )
     }
@@ -51,26 +51,19 @@ class RiskyPostCodesPersistence(
         val byteSource = fromUtf8String(riskyPostCodes)
         s3Client.upload(
             Locator.of(bucketName, objectKey),
-            ContentType.APPLICATION_JSON,
+            APPLICATION_JSON,
             byteSource,
             fromDatedSignature(signer.sign(DistributionSignature(byteSource)))
         )
     }
 
-    fun retrievePostDistrictRiskLevels() = s3Client
+    fun retrievePostDistrictRiskLevels(): Map<String, Map<String, Any>> = s3Client
         .getObject(Locator.of(bucketName, metaDataObjKeyName))
-        .map { s3Object: S3Object -> convertS3ObjectToRiskLevels(s3Object) }
+        .map(::convertS3ObjectToRiskLevels)
         .orElseThrow {
-            RuntimeException(
-                "Missing post district metadata. Bucket: " + bucketName.value +
-                    " does not have key: " + metaDataObjKeyName.value
-            )
+            RuntimeException("Missing post district metadata. Bucket: ${bucketName.value} does not have key: ${metaDataObjKeyName.value}")
         }
 
-    private fun convertS3ObjectToRiskLevels(s3Object: S3Object) =
-        s3Object.objectContent.use { s3inputStream ->
-            readJson(
-                s3inputStream,
-                object : TypeReference<Map<String, Map<String, Any?>>>() {})
-        }
+    private fun convertS3ObjectToRiskLevels(s3Object: S3Object): Map<String, Map<String, Any>> =
+        s3Object.objectContent.use { readJsonOrThrow(it.reader().readText()) }
 }

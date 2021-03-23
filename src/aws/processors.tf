@@ -11,7 +11,7 @@ module "diagnosis_keys_processing" {
   log_retention_in_days             = var.log_retention_in_days
   alarm_topic_arn                   = var.alarm_topic_arn
   diagnosis_key_submission_prefixes = "nearform/JE,nearform/GB-SCT,nearform/GB-NIR,nearform/GI"
-  zip_submission_period_offset      = var.zip_submission_period_offset
+  zip_submission_period_offset      = lookup(var.zip_submission_period_offset, terraform.workspace, var.zip_submission_period_offset["default"])
   tags                              = var.tags
 }
 

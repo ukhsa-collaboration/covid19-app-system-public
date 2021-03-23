@@ -10,23 +10,21 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.testhelper.data.asInstant
-import uk.nhs.nhsx.virology.TestKit.*
+import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.VirologyService
 import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult.*
+import uk.nhs.nhsx.virology.result.TestResult.Positive
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.io.File
 import java.net.URL
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.*
-import java.util.function.Supplier
+import java.util.Date
 
 class VirologyProcessorServiceTest {
 
-    private val clock = Supplier { Instant.ofEpochSecond(0) }
+    private val clock = { Instant.ofEpochSecond(0) }
     private val virologyService = mockk<VirologyService>()
     private val store = mockk<VirologyProcessorStore>()
     private val virologyProcessorExportsMock = mockk<VirologyProcessorExports>()

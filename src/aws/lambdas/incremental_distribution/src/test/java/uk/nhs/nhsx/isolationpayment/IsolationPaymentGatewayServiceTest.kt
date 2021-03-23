@@ -14,12 +14,11 @@ import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
 import uk.nhs.nhsx.virology.IpcTokenId
 import java.time.Instant
-import java.util.*
-import java.util.function.Supplier
+import java.util.Optional
 
 class IsolationPaymentGatewayServiceTest {
 
-    private val clock = Supplier { Instant.parse("2020-12-01T00:00:00Z") }
+    private val clock = { Instant.parse("2020-12-01T00:00:00Z") }
     private val createdStateToken = IsolationToken(IpcTokenId.of("1".repeat(64)), TokenStateInternal.INT_CREATED.value, 0, 0, 0, 0, 0, 0, 0)
     private val validStateToken = IsolationToken(IpcTokenId.of("1".repeat(64)), TokenStateInternal.INT_UPDATED.value, 0, 0, 0, 0, 0, 0, 0)
     private val auditLogSuffix = "audit-log-suffix"
@@ -89,7 +88,7 @@ class IsolationPaymentGatewayServiceTest {
 
         assertThat(slot.captured.tokenId).isEqualTo(validStateToken.tokenId)
 
-        val newValidatedTimestamp = clock.get().epochSecond
+        val newValidatedTimestamp = clock().epochSecond
         assertThat(slot.captured.validatedTimestamp).isEqualTo(newValidatedTimestamp)
         assertThat(slot.captured.riskyEncounterDate).isEqualTo(validStateToken.riskyEncounterDate)
         assertThat(slot.captured.isolationPeriodEndDate).isEqualTo(validStateToken.isolationPeriodEndDate)

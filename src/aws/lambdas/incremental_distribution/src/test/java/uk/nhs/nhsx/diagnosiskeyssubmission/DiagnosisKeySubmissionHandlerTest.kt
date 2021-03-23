@@ -1,10 +1,7 @@
 package uk.nhs.nhsx.diagnosiskeyssubmission
 
 import com.amazonaws.HttpMethod
-import com.amazonaws.services.dynamodbv2.document.DeleteItemOutcome
 import com.amazonaws.services.dynamodbv2.document.Item
-import com.amazonaws.services.dynamodbv2.model.DeleteItemResult
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.natpryce.snodge.json.defaultJsonMutagens
 import com.natpryce.snodge.json.forStrings
@@ -34,7 +31,6 @@ import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
 import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage
 import java.time.Instant
 import java.util.function.Consumer
-import java.util.function.Supplier
 import kotlin.random.Random
 
 class DiagnosisKeySubmissionHandlerTest {
@@ -112,7 +108,7 @@ class DiagnosisKeySubmissionHandlerTest {
         every { it.deleteItem(any(), any(), any()) } just runs
     }
     private val objectKeyNameProvider = mockk<ObjectKeyNameProvider>()
-    private val clock = Supplier { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
+    private val clock = { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
     private val events = RecordingEvents()
     private val handler = DiagnosisKeySubmissionHandler(
         environment,

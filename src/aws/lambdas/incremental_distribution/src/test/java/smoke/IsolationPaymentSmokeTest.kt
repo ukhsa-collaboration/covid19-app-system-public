@@ -33,9 +33,8 @@ class IsolationPaymentSmokeTest {
 
     @Test
     fun `isolation payment order creation is not enabled for non whitelisted countries`() {
-        val isolationCreationResponse = mobileApp.createIsolationToken(Country.of("Switzerland"))
-        assertThat(isolationCreationResponse.ipcToken).isNull()
-        assertThat(isolationCreationResponse.isEnabled).isFalse
+        val createIsolationToken = mobileApp.createNonWhiteListedIsolationToken(Country.of("Switzerland"))
+        assertThat(createIsolationToken.isEnabled).isFalse
     }
 
     @Test
@@ -45,7 +44,7 @@ class IsolationPaymentSmokeTest {
 
     @Test
     fun `cannot consume ipcToken more than one time`() {
-        val ipcToken = createValidToken();
+        val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
         consumeValidToken(ipcToken)
@@ -64,21 +63,21 @@ class IsolationPaymentSmokeTest {
 
     @Test
     fun `update has no effect if token is already verified`() {
-        val ipcToken = createValidToken();
+        val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
         verifyValidToken(ipcToken)
 
-        val otherDate = Instant.now();
+        val otherDate = Instant.now()
         mobileApp.updateIsolationToken(ipcToken, otherDate, otherDate)
 
         verifyValidToken(ipcToken)
     }
 
     private fun createValidToken(): IpcTokenId {
-        val isolationCreationResponse = mobileApp.createIsolationToken(England)
-        assertThat(isolationCreationResponse.ipcToken.value).isNotEmpty
-        assertThat(isolationCreationResponse.isEnabled).isTrue
-        return isolationCreationResponse.ipcToken
+        val response = mobileApp.createIsolationToken(England)
+        assertThat(response.ipcToken).isNotNull
+        assertThat(response.isEnabled).isTrue
+        return response.ipcToken
     }
 
     private fun verifyValidToken(ipcToken: IpcTokenId) {

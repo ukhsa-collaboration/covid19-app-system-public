@@ -43,7 +43,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/\n| parse @message /WARN\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'WARNING' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
                 "stacked": true,
                 "title": "Warning Log Count - Key Processing",
@@ -58,7 +58,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message | filter metadata.category = 'WARNING' | sort @timestamp desc",
                 "region": "eu-west-2",
                 "stacked": true,
                 "title": "Warning Log Details - Key Processing",
@@ -73,7 +73,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message | filter metadata.category = 'ERROR' | sort @timestamp desc",
                 "region": "eu-west-2",
                 "stacked": true,
                 "title": "Error Log Details - Key Processing",
@@ -88,7 +88,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/\n| parse @message /ERROR\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'ERROR' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
                 "stacked": false,
                 "title": "Error Log Count - Key Processing",
@@ -157,7 +157,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/\n| parse @message /ERROR\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'ERROR' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
                 "stacked": true,
                 "title": "Error Log Count - Key Submission",
@@ -172,7 +172,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message | filter metadata.category = 'WARNING' | sort @timestamp desc",
                 "region": "eu-west-2",
                 "stacked": true,
                 "title": "Warning Log Details - Key Submission",
@@ -187,7 +187,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @message\n| sort @timestamp desc\n| filter @message like /\\[ERROR\\]/",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message | filter metadata.category = 'ERROR' | sort @timestamp desc",
                 "region": "eu-west-2",
                 "stacked": true,
                 "title": "Error Log Details - Key Submission",
@@ -202,7 +202,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| filter @message like /\\[WARN\\]/\n| parse @message /WARN\\](?<log_message>.*)/\n| stats count(@timestamp) by log_message",
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'WARNING' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
                 "stacked": true,
                 "title": "Warning Log Count - Key Submission",

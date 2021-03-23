@@ -3,15 +3,12 @@ package uk.nhs.nhsx.keyfederation
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber.enIntervalNumberFromTimestamp
+import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber.Companion.enIntervalNumberFromTimestamp
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
-import uk.nhs.nhsx.keyfederation.FederatedKeyUploader.Companion.isRollingStartNumberValid
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.keyfederation.download.ReportType.CONFIRMED_CLINICAL_DIAGNOSIS
@@ -23,13 +20,12 @@ import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
 import java.time.Duration
 import java.time.Instant
-import java.util.function.Supplier
 
 class FederatedKeyUploaderTest {
 
     private val bucketName = BucketName.of("some-bucket-name")
     private val s3Storage = FakeS3StorageMultipleObjects()
-    private val clock = Supplier { Instant.parse("2020-09-15T00:00:00Z") }
+    private val clock = { Instant.parse("2020-09-15T00:00:00Z") }
     private val validOrigins = listOf("NI", "IE")
     private val events = RecordingEvents()
 
@@ -42,7 +38,7 @@ class FederatedKeyUploaderTest {
         events
     )
 
-    private val now = clock.get()
+    private val now = clock()
 
     private val rollingStartNumber1 = enIntervalNumberFromTimestamp(now.minus(Duration.ofDays(1))).enIntervalNumber
     private val rollingStartNumber2 = enIntervalNumberFromTimestamp(now.minus(Duration.ofHours(1))).enIntervalNumber
@@ -85,14 +81,20 @@ class FederatedKeyUploaderTest {
             )
         )
 
-        uploader.acceptKeysFromFederatedServer(DiagnosisKeysDownloadResponse("batchTag", exposures))
+        uploader.acceptKeysFromFederatedServer(DiagnosisKeysDownloadResponse(BatchTag.of("batchTag"), exposures))
 
         val iterator = events.iterator()
         val firstEvent = iterator.next() as DownloadedFederatedDiagnosisKeys
         val secondEvent = iterator.next() as DownloadedFederatedDiagnosisKeys
 
-        assertThat(firstEvent, equalTo(DownloadedFederatedDiagnosisKeys(testType = PCR, validKeys = 2, invalidKeys = 0, origin = "NI")))
-        assertThat(secondEvent, equalTo(DownloadedFederatedDiagnosisKeys(testType = PCR, validKeys = 1, invalidKeys = 0, origin = "IE")))
+        assertThat(
+            firstEvent,
+            equalTo(DownloadedFederatedDiagnosisKeys(testType = PCR, validKeys = 2, invalidKeys = 0, origin = "NI"))
+        )
+        assertThat(
+            secondEvent,
+            equalTo(DownloadedFederatedDiagnosisKeys(testType = PCR, validKeys = 1, invalidKeys = 0, origin = "IE"))
+        )
     }
 
     @Test
@@ -132,7 +134,7 @@ class FederatedKeyUploaderTest {
         )
 
         val federatedKeys: List<ExposureDownload> = listOf(federatedKey1, federatedKey2, federatedKey3)
-        val payload = DiagnosisKeysDownloadResponse("batch-tag", federatedKeys)
+        val payload = DiagnosisKeysDownloadResponse(BatchTag.of("batch-tag"), federatedKeys)
         val niKeys: List<ExposureDownload> = listOf(federatedKey1, federatedKey2)
         val ieKeys: List<ExposureDownload> = listOf(federatedKey3)
         val expectedResponsesMap = HashMap<String, List<ExposureDownload>>()
@@ -214,7 +216,7 @@ class FederatedKeyUploaderTest {
             )
         )
 
-        val payload = DiagnosisKeysDownloadResponse("batchTag", exposures)
+        val payload = DiagnosisKeysDownloadResponse(BatchTag.of("batchTag"), exposures)
         keyUploader.acceptKeysFromFederatedServer(payload)
 
         events.containsExactly(DownloadedFederatedDiagnosisKeys::class, DownloadedFederatedDiagnosisKeys::class)
@@ -232,7 +234,7 @@ class FederatedKeyUploaderTest {
     @Test
     fun `reject key longer than 32 bytes`() {
         val payload = DiagnosisKeysDownloadResponse(
-            "batchTag",
+            BatchTag.of("batchTag"),
             listOf(
                 ExposureDownload(
                     "W2zb3BeMWt6Xr2u0ABG32Q==",
@@ -269,7 +271,7 @@ class FederatedKeyUploaderTest {
         val futureInstant1 = enIntervalNumberFromTimestamp(now.plus(Duration.ofDays(1))).enIntervalNumber
         val futureInstant2 = enIntervalNumberFromTimestamp(now.plus(Duration.ofHours(1))).enIntervalNumber
         val payload = DiagnosisKeysDownloadResponse(
-            "batchTag",
+            BatchTag.of("batchTag"),
             listOf(
                 ExposureDownload(
                     "W2zb3BeMWt6Xr2u0ABG32Q==",
@@ -305,7 +307,7 @@ class FederatedKeyUploaderTest {
         val pastInstant1 = enIntervalNumberFromTimestamp(now.minus(Duration.ofDays(20))).enIntervalNumber
         val pastInstant2 = enIntervalNumberFromTimestamp(now.minus(Duration.ofHours((24 * 15) + 1))).enIntervalNumber
         val payload = DiagnosisKeysDownloadResponse(
-            "batchTag",
+            BatchTag.of("batchTag"),
             listOf(
                 ExposureDownload(
                     "W2zb3BeMWt6Xr2u0ABG32Q==",
@@ -339,7 +341,7 @@ class FederatedKeyUploaderTest {
     @Test
     fun `reject non-PCR exposures`() {
         val payload = DiagnosisKeysDownloadResponse(
-            "batchTag",
+            BatchTag.of("batchTag"),
             listOf(
                 ExposureDownload(
                     "W2zb3BeMWt6Xr2u0ABG32Q==",
@@ -384,7 +386,7 @@ class FederatedKeyUploaderTest {
     @Test
     fun `reject non-CONFIRMED_TEST exposures`() {
         val payload = DiagnosisKeysDownloadResponse(
-            "batchTag",
+            BatchTag.of("batchTag"),
             listOf(
                 ExposureDownload(
                     "W2zb3BeMWt6Xr2u0ABG32Q==",
@@ -424,79 +426,6 @@ class FederatedKeyUploaderTest {
         uploader.acceptKeysFromFederatedServer(payload)
 
         assertThat(s3Storage.count, equalTo(1))
-    }
-
-    @Test
-    fun `test is rolling start number valid apple google v1`() { //ensure keys of the past 14 days are valid when submitted
-        val clock = Supplier { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
-        var rollingStartNumber: Long = 2666736 // 2020-09-14 00:00:00 UTC (last key in 14 day history)
-        assertTrue(
-            isRollingStartNumberValid(
-                clock,
-                rollingStartNumber,
-                144,
-                RecordingEvents()
-            )
-        )
-        rollingStartNumber = 2664864 // 2020-09-01 00:00:00 UTC (first key in 14 day history)
-        assertTrue(
-            isRollingStartNumberValid(
-                clock,
-                rollingStartNumber,
-                144,
-                RecordingEvents()
-            )
-        )
-        rollingStartNumber = 2664720 // 2020-08-31 00:00:00 UTC
-        Assertions.assertFalse(
-            isRollingStartNumberValid(
-                clock,
-                rollingStartNumber,
-                144,
-                RecordingEvents()
-            )
-        )
-    }
-
-    @Test
-    fun `test is rolling start number valid apple google v2`() { //ensure keys of the past 14 days are valid when submitted plus current days key (with rollingPeriod < 144)
-        var clock = Supplier { Instant.ofEpochSecond((2667023 * 600).toLong()) } // 2020-09-15 23:50:00 UTC
-        var rollingStartNumber: Long = 2666880 // 2020-09-15 00:00:00 UTC (current day submission)
-        assertTrue(
-            isRollingStartNumberValid(
-                clock,
-                rollingStartNumber,
-                144,
-                RecordingEvents()
-            )
-        )
-        rollingStartNumber = 2664864 // 2020-09-01 00:00:00 UTC
-        assertTrue(
-            isRollingStartNumberValid(
-                clock,
-                rollingStartNumber,
-                144,
-                RecordingEvents()
-            )
-        )
-        rollingStartNumber = 2664864 // 2020-09-01 00:00:00 UTC
-        Assertions.assertFalse(
-            isRollingStartNumberValid(
-                clock,
-                rollingStartNumber,
-                72,
-                RecordingEvents()
-            )
-        )
-        clock = Supplier { Instant.ofEpochSecond((2666952 * 600).toLong()) } // 2020-09-15 12:00:00 UTC
-        assertTrue(
-            isRollingStartNumberValid(
-                clock,
-                rollingStartNumber,
-                72,
-                RecordingEvents()
-            )
-        )
     }
 }
 

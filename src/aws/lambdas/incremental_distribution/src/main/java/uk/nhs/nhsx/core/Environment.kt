@@ -41,7 +41,7 @@ class Environment private constructor(val name: EnvironmentName, val type: Envir
 
             fun bool(name: String) = define(name, ::parseBoolean)
 
-            fun duration(name: String) = define(name, Duration::parse);
+            fun duration(name: String) = define(name, Duration::parse)
 
             fun integer(name: String) = define(name, String::toInt)
 

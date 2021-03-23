@@ -17,7 +17,6 @@ import uk.nhs.nhsx.virology.tokengen.CtaProcessorRequest
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorExports
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorService
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorStore
-import java.util.stream.Collectors.toList
 
 class VirologyProcessorHandler @JvmOverloads constructor(
     private val virologyProcessorService: VirologyProcessorService = virologyProcessorService(Environment.fromSystem(), PrintingJsonEvents(CLOCK)),
@@ -25,9 +24,9 @@ class VirologyProcessorHandler @JvmOverloads constructor(
 
     override fun handler() =
         Handler<CtaProcessorRequest, Map<String, String>> { event, _ ->
-            events.emit(javaClass, CtaTokensGenerated(event))
+            events(CtaTokensGenerated(event))
             val result = virologyProcessorService.generateAndStoreTokens(event)
-            events.emit(javaClass, CtaTokensGenerationComplete(result))
+            events(CtaTokensGenerationComplete(result))
             result.toResponse()
         }
 

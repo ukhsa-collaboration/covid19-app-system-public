@@ -1,11 +1,11 @@
 package uk.nhs.nhsx.core.aws.s3
 
-import java.time.Instant
+import uk.nhs.nhsx.core.Clock
 import java.util.UUID
 import java.util.function.Supplier
 
-class UniqueObjectKeyNameProvider(private val systemClock: Supplier<Instant>, private val uniqueId: Supplier<UUID>) :
+class UniqueObjectKeyNameProvider(private val systemClock: Clock, private val uniqueId: Supplier<UUID>) :
     ObjectKeyNameProvider {
     override fun generateObjectKeyName() =
-        ObjectKey.of(systemClock.get().toEpochMilli().toString() + "_" + uniqueId.get().toString())
+        ObjectKey.of(systemClock().toEpochMilli().toString() + "_" + uniqueId.get().toString())
 }

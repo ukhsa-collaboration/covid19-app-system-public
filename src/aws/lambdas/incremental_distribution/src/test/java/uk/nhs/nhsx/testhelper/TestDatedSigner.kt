@@ -2,13 +2,12 @@ package uk.nhs.nhsx.testhelper
 
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import uk.nhs.nhsx.core.signature.DatedSignature
-import uk.nhs.nhsx.core.signature.DatedSignature.SignatureDate
 import uk.nhs.nhsx.core.signature.DatedSigner
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.Signature
+import uk.nhs.nhsx.core.signature.SignatureDate
 import java.time.Instant
-import java.util.*
-import java.util.function.Function
+import java.util.ArrayList
 
 class TestDatedSigner(private val date: String) : DatedSigner {
 
@@ -17,10 +16,10 @@ class TestDatedSigner(private val date: String) : DatedSigner {
     var count = 0
     var keyId: KeyId = KeyId.of("some-key")
 
-    override fun sign(content: Function<SignatureDate, ByteArray>): DatedSignature {
+    override fun sign(content: (SignatureDate) -> ByteArray): DatedSignature {
         count++
         val date = SignatureDate(date, Instant.EPOCH)
-        this.content.add(content.apply(date))
+        this.content.add(content(date))
         return DatedSignature(date, Signature(keyId, SigningAlgorithmSpec.ECDSA_SHA_256, signatureBytes))
     }
 }

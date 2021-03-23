@@ -1,7 +1,6 @@
 package smoke.env
 
-import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import org.http4k.format.Moshi
 import uk.nhs.nhsx.core.aws.xray.Tracing
 import java.io.File
 import java.io.FileNotFoundException
@@ -32,10 +31,10 @@ object SmokeTests {
 
     private fun loadFile(filePath: String): File = File(filePath)
 
-    private inline fun <reified T> deserializeOrThrow(value: String) =
-        readOrNull<T>(value) ?: throw IllegalStateException(
-            "Unable to deserialize configuration file, " +
-                "check generated config file against ${EnvConfig::class.simpleName} class"
-        )
+    private inline fun <reified T : Any> deserializeOrThrow(value: String): T = try {
+        Moshi.asA(value)
+    } catch (e: Exception) {
+        throw IllegalStateException("Unable to deserialize configuration file, check generated config file against ${EnvConfig::class.simpleName} class")
+    }
 }
 

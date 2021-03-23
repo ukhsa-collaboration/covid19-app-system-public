@@ -3,6 +3,7 @@ package uk.nhs.nhsx.isolationpayment
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.HttpResponses.badRequest
@@ -31,12 +32,10 @@ import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateRequest
-import java.time.Instant
-import java.util.function.Supplier
 
 class IsolationPaymentOrderHandler @JvmOverloads constructor(
     private val environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = SystemClock.CLOCK,
+    clock: Clock = SystemClock.CLOCK,
     private val events: Events = PrintingJsonEvents(clock),
     authenticator: Authenticator = awsAuthentication(Mobile, events),
     signer: ResponseSigner = StandardSigningFactory(
@@ -52,7 +51,7 @@ class IsolationPaymentOrderHandler @JvmOverloads constructor(
     private fun createToken(request: APIGatewayProxyRequestEvent) =
         if (environment.access.required(TOKEN_CREATION_ENABLED))
             Jackson.readOrNull<TokenGenerationRequest>(request.body) {
-                events.emit(javaClass, UnprocessableJson(it))
+                events(UnprocessableJson(it))
             }
                 ?.let { created(toJson(service.handleIsolationPaymentOrder(it))) }
                 ?: badRequest()
@@ -62,7 +61,7 @@ class IsolationPaymentOrderHandler @JvmOverloads constructor(
         when {
             environment.access.required(TOKEN_CREATION_ENABLED) ->
                 Jackson.readOrNull<TokenUpdateRequest>(request.body) {
-                    events.emit(javaClass, UnprocessableJson(it))
+                    events(UnprocessableJson(it))
                 }
                     ?.let { ok(toJson(service.handleIsolationPaymentUpdate(it))) }
                     ?: badRequest()
@@ -80,7 +79,7 @@ class IsolationPaymentOrderHandler @JvmOverloads constructor(
         private val AUDIT_LOG_PREFIX = EnvironmentKey.string("AUDIT_LOG_PREFIX")
 
         private fun isolationPaymentService(
-            clock: Supplier<Instant>,
+            clock: Clock,
             environment: Environment,
             events: Events
         ) = IsolationPaymentMobileService(

@@ -11,7 +11,7 @@ class ContextBuilder {
 
     fun build(): Context = TestContext()
 
-    class TestContext : Context {
+    class TestContext : Context by proxy() {
         override fun getAwsRequestId() = UUID(0,0).toString()
 
         override fun getLogGroupName(): String = "test-log-group"
@@ -26,23 +26,17 @@ class ContextBuilder {
 
         override fun getIdentity(): CognitoIdentity? = null
 
-        override fun getClientContext(): ClientContext {
-            throw UnsupportedOperationException("james didn't write")
-        }
-
         override fun getRemainingTimeInMillis(): Int = 1000
 
         override fun getMemoryLimitInMB(): Int = 100
 
-        override fun getLogger(): LambdaLogger {
-            return object : LambdaLogger {
-                override fun log(s: String) {
-                    println("s = $s")
-                }
+        override fun getLogger() = object : LambdaLogger {
+            override fun log(s: String) {
+                println("s = $s")
+            }
 
-                override fun log(bytes: ByteArray) {
-                    println("bytes = " + String(bytes, StandardCharsets.UTF_8))
-                }
+            override fun log(bytes: ByteArray) {
+                println("bytes = " + String(bytes, StandardCharsets.UTF_8))
             }
         }
     }

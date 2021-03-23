@@ -7,36 +7,36 @@ package uk.nhs.nhsx.core.random.crockford
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator.checksum
+import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator.Companion.checksum
 import java.security.SecureRandom
 import java.util.*
 import java.util.function.Function
 
 class CrockfordDammRandomStringGeneratorTest {
 
-    private val generator = CrockfordDammRandomStringGenerator(listOf("u+"))
+    private val generator = CrockfordDammRandomStringGenerator(bannedWordsRegexList = listOf("u+"))
 
     @Test
-    fun loadsTheBannedList() {
+    fun `loads the banned list`() {
         assertThat(CrockfordDammRandomStringGenerator().isBannedWord("0mg")).isTrue
     }
 
     @Test
-    fun generateRandomLinkingIdReturnsHumanFriendlyIds() {
+    fun `generate random linking id returns human friendly ids`() {
         val linkingId = generator.generate()
         assertThat(linkingId).matches("^[$ALPHABET]{8}$")
     }
 
     @Test
-    fun generateRandomLinkingIdReturnsDistinctIds() {
+    fun `generate random linking id returns distinct ids`() {
         val linkingId1 = generator.generate()
         val linkingId2 = generator.generate()
         assertThat(linkingId1).isNotEqualTo(linkingId2)
     }
 
     @Test
-    fun linkingIdSpaceShouldBeLargeEnoughForManyValues() {
-        val fasterService = CrockfordDammRandomStringGenerator(listOf())
+    fun `linking id space should be large enough for many values`() {
+        val fasterService = CrockfordDammRandomStringGenerator(bannedWordsRegexList = listOf())
         val totalIds = 100000
         val observedIds: MutableSet<String> = HashSet()
         for (i in 0 until totalIds) {
@@ -47,13 +47,13 @@ class CrockfordDammRandomStringGeneratorTest {
     }
 
     @Test
-    fun linkingIdShouldContainAValidChecksum() {
+    fun `linking id should contain aValid checksum`() {
         val linkingId = generator.generate()
         assertThat(checksum().validate(linkingId)).isTrue
     }
 
     @Test
-    fun linkingIdShouldValidateWordsAgainstRegexAndCreateAnotherIfNotAllowed() {
+    fun `linking id should validate words against regex and create another if not allowed`() {
         val cut = CrockfordDammRandomStringGenerator(MockSecureRandom(14578373L), listOf("z3+z", "7[a-z]+"))
         val linkingId = cut.generate()
         assertThat(linkingId).doesNotMatch(".*z3+z.*")
@@ -62,7 +62,7 @@ class CrockfordDammRandomStringGeneratorTest {
     }
 
     @Test
-    fun fuzz_substitutionErrorsAreCaughtByChecksum() {
+    fun `fuzz substitution errors are caught by checksum`() {
         // Repeat this test 20 times
         repeat(20) {
             val baseId = generator.generate()
@@ -75,7 +75,7 @@ class CrockfordDammRandomStringGeneratorTest {
     }
 
     @Test
-    fun fuzz_transpositionErrorsAreCaughtByChecksum() {
+    fun `fuzz transposition errors are caught by checksum`() {
         // Repeat this test 20 times
         repeat(20) {
             val baseId = generator.generate()
@@ -90,14 +90,14 @@ class CrockfordDammRandomStringGeneratorTest {
     }
 
     @Test
-    fun veryLongStringsOrStringsThatDontMatchPatternAreRejected() {
+    fun `very long strings or strings that dont match pattern are rejected`() {
         assertThat(checksum().validate("000000000000000000000000000000000000000000000000000000000000")).isFalse
         assertThat(checksum().validate("111111111111111111111111111111111111111111111111111111111111")).isFalse
     }
 
     @Test
-    fun isBannedWordReturnsTrueIfLinkingIdMatchesAnythingInTheBannedWordsList() {
-        val cut = CrockfordDammRandomStringGenerator(null, listOf("badges"))
+    fun `is banned word returns true if linking id matches anything in the banned words list`() {
+        val cut = CrockfordDammRandomStringGenerator(bannedWordsRegexList = listOf("badges"))
         assertThat(cut.isBannedWord("hello")).isFalse
         assertThat(cut.isBannedWord("badges")).isTrue
         assertThat(cut.isBannedWord("84badgesrh")).isTrue

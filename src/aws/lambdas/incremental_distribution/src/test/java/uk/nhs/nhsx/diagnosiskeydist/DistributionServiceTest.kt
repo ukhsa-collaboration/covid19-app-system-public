@@ -37,6 +37,7 @@ import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
 
+@Deprecated("superseeded by DistributionServiceS3Test")
 class DistributionServiceTest {
 
     @Test
@@ -253,7 +254,7 @@ class DistributionServiceTest {
         }
 
         override fun loadAllSubmissions(
-            minimalSubmissionTimeEpocMillisExclusive: Long,
+            minimalSubmissionTimeEpochMillisExclusive: Long,
             limit: Int,
             maxResults: Int
         ): List<Submission> {

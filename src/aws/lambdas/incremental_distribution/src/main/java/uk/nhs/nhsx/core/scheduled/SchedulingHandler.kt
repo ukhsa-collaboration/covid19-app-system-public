@@ -15,12 +15,11 @@ abstract class SchedulingHandler(protected val events: Events) : RequestHandler<
 
     override fun handleRequest(request: ScheduledEvent, context: Context): String {
         val start = System.currentTimeMillis()
-        events.emit(javaClass, ScheduledEventStarted(javaClass.simpleName))
+        events(ScheduledEventStarted(javaClass.simpleName))
 
         return logAndRethrowException(events, handler())(request, context).also {
-            events.emit(javaClass, it)
-            events.emit(
-                javaClass,
+            events(it)
+            events(
                 ScheduledEventCompleted(javaClass.simpleName, ofMillis(System.currentTimeMillis() - start))
             )
         }.toString()

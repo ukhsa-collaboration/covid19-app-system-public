@@ -2,7 +2,7 @@ package uk.nhs.nhsx.testhelper.mocks
 
 import com.amazonaws.services.s3.model.S3Object
 import com.amazonaws.services.s3.model.S3ObjectSummary
-import org.apache.http.entity.ContentType
+import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.Jackson
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
@@ -15,14 +15,20 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 import java.io.ByteArrayInputStream
 import java.net.URL
 import java.time.Instant
-import java.util.*
+import java.util.Date
+import java.util.Optional
 
 class FakeDiagnosisKeysS3(
     private val objectSummaries: List<S3ObjectSummary>,
     private val objectsKeysToSkip: List<String> = listOf()
 ) : AwsS3 {
 
-    override fun upload(locator: Locator, contentType: ContentType, bytes: ByteArraySource, meta: List<MetaHeader>) {
+    override fun upload(
+        locator: Locator,
+        contentType: ContentType,
+        bytes: ByteArraySource,
+        metaHeaders: List<MetaHeader>
+    ) {
         // noop
     }
 
@@ -51,11 +57,9 @@ class FakeDiagnosisKeysS3(
         // noop
     }
 
-    override fun getSignedURL(locator: Locator?, expiration: Date?): Optional<URL> {
-        return Optional.of(URL("https://example.com"))
-    }
+    override fun getSignedURL(locator: Locator, expiration: Date) =
+        Optional.of(URL("https://example.com"))
 
-    private fun makeKey(locator: Locator, keyStartTime: Long): StoredTemporaryExposureKey {
-        return StoredTemporaryExposureKey(locator.key.value, Math.toIntExact(keyStartTime), 144, 7)
-    }
+    private fun makeKey(locator: Locator, keyStartTime: Long): StoredTemporaryExposureKey =
+        StoredTemporaryExposureKey(locator.key.value, Math.toIntExact(keyStartTime), 144, 7)
 }

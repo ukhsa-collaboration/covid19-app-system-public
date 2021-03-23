@@ -117,24 +117,24 @@ module "artifact_repository_access" {
   policy_type   = "default"
   s3_bucket_arn = module.artifact_repository.bucket_arn
 }
-module "circuit_breaker_analytics_store_access" {
+module "exposure_notification_circuit_breaker_analytics_store_access" {
   source                 = "./modules/s3_access_policies"
   policy_type            = "cross_account_readonly"
   prefix                 = "analytics"
   principal_aws_accounts = var.analytics_aws_accounts
   s3_bucket_arn          = module.exposure_notification_circuit_breaker_analytics.analytics_bucket_arn
 }
-module "federation_key_proc_download_analytics_store_access" {
+module "federation_keys_download_analytics_store_access" {
   source                 = "./modules/s3_access_policies"
   policy_type            = "cross_account_readonly"
   prefix                 = "analytics"
   principal_aws_accounts = var.analytics_aws_accounts
-  s3_bucket_arn          = module.federation_key_proc_download_analytics.analytics_bucket_arn
+  s3_bucket_arn          = module.federation_keys_download_analytics.analytics_bucket_arn
 }
-module "federation_key_proc_upload_analytics_store_access" {
+module "federation_keys_upload_analytics_store_access" {
   source                 = "./modules/s3_access_policies"
   policy_type            = "cross_account_readonly"
   prefix                 = "analytics"
   principal_aws_accounts = var.analytics_aws_accounts
-  s3_bucket_arn          = module.federation_key_proc_upload_analytics.analytics_bucket_arn
+  s3_bucket_arn          = module.federation_keys_upload_analytics.analytics_bucket_arn
 }

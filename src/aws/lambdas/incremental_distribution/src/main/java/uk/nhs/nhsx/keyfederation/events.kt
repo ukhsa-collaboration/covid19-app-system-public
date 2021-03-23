@@ -22,7 +22,7 @@ data class DiagnosisKeysUploadIncomplete(
 
 data class DownloadedExposures(
     val downloadedExposures: Int,
-    val batchTag: String,
+    val batchTag: BatchTag,
     val batchNumber: Int
 ) : Event(Info)
 
@@ -35,7 +35,7 @@ data class DownloadedFederatedDiagnosisKeys(
 
 data class InvalidOriginKeys(
     val origin: String,
-    val batchTag: String
+    val batchTag: BatchTag
 ) : Event(Warning)
 
 data class InvalidTemporaryExposureKey(val key: String?) : Event(Info)

@@ -11,14 +11,7 @@ import uk.nhs.nhsx.sanity.lambdas.config.Distribution
 
 class DiagnosisKeysDistributionSanityChecks : AwsSanityCheck() {
 
-    //    Check daily diagnosis key distribution - GET objects from bucket <= 15✅
     //    Check two-hourly diagnosis key distribution - GET objects from bucket <= 168✅
-
-    @Test
-    fun `Daily Diagnosis distribution returns a 200 and matches resource`() {
-        val lambda = env.configFor(DiagnosisKeysDistribution, "diagnosis_keys_distribution_daily") as Distribution
-        assertThat(countObjectsIn(lambda, "distribution/daily"), lessThanOrEqualTo(15))
-    }
 
     @Test
     fun `2 hourly Diagnosis distribution returns a 200 and matches resource`() {

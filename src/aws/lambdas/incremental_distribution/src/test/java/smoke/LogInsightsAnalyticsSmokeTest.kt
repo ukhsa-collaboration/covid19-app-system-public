@@ -17,9 +17,9 @@ class LogInsightsAnalyticsSmokeTest {
     fun `invoking lambda returns success within time window`() {
         val instantSetTo1am = Instant.from(ZonedDateTime.of(2021, 1, 2, 1, 0, 0, 0, ZoneOffset.UTC))
         listOf(
-            config.circuitBreakerAnalyticsLambdaFunctionName,
-            config.federationKeyProcDownloadAnalyticsLambdaFunctionName,
-            config.federationKeyProcUploadAnalyticsLambdaFunctionName
+            config.exposure_notification_circuit_breaker_analytics_lambda_function_name,
+            config.federation_keys_download_analytics_lambda_function_name,
+            config.federation_keys_upload_analytics_lambda_function_name
         ).forEach { function ->
             backgroundActivities.invokeAnalyticsLogs(scheduledEventTime = instantSetTo1am, functionName = function)
                 .requireBodyText(containsSubstring("AnalyticsUploadedToS3"))
@@ -30,9 +30,9 @@ class LogInsightsAnalyticsSmokeTest {
     fun `invoking lambda returns error when outside of time window`() {
         val instantSetTo6am = Instant.from(ZonedDateTime.of(2021, 1, 2, 6, 0, 0, 0, ZoneOffset.UTC))
         listOf(
-            config.circuitBreakerAnalyticsLambdaFunctionName,
-            config.federationKeyProcDownloadAnalyticsLambdaFunctionName,
-            config.federationKeyProcUploadAnalyticsLambdaFunctionName
+            config.exposure_notification_circuit_breaker_analytics_lambda_function_name,
+            config.federation_keys_download_analytics_lambda_function_name,
+            config.federation_keys_upload_analytics_lambda_function_name
         ).forEach { function ->
             backgroundActivities.invokeAnalyticsLogs(scheduledEventTime = instantSetTo6am, functionName = function)
                 .requireBodyText(containsSubstring("CloudWatch Event triggered Lambda at wrong time"))

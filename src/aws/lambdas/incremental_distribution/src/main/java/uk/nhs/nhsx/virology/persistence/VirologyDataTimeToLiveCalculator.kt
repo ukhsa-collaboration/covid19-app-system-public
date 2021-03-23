@@ -1,15 +1,14 @@
 package uk.nhs.nhsx.virology.persistence
 
+import uk.nhs.nhsx.core.Clock
 import java.time.Duration
-import java.time.Instant
-import java.util.function.Supplier
 
 class VirologyDataTimeToLiveCalculator(
     private val testDataExpiryDuration: Duration, private val submissionDataExpiryDuration: Duration
-) : (Supplier<Instant>) -> VirologyDataTimeToLive {
+) : (Clock) -> VirologyDataTimeToLive {
 
-    override fun invoke(clock: Supplier<Instant>): VirologyDataTimeToLive {
-        val now = clock.get()
+    override fun invoke(clock: Clock): VirologyDataTimeToLive {
+        val now = clock()
         return VirologyDataTimeToLive(now + testDataExpiryDuration, now + submissionDataExpiryDuration)
     }
 

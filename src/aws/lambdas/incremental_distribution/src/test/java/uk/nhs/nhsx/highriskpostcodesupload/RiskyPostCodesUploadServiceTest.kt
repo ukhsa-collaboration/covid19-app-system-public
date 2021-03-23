@@ -126,7 +126,13 @@ class RiskyPostCodesUploadServiceTest {
         every { uploadPostDistrictsVersion2(capture(postDistrictsV2Slot)) } just Runs
     }
 
-    private val service = RiskyPostCodesUploadService(persistence, awsCloudFront, "cloudfront-dist-id", "cloudfront-invalidation-pattern", RecordingEvents())
+    private val service = RiskyPostCodesUploadService(
+        persistence,
+        awsCloudFront,
+        "cloudfront-dist-id",
+        "cloudfront-invalidation-pattern",
+        RecordingEvents()
+    )
 
     @Test
     fun `uploads json objects`() {
@@ -197,6 +203,7 @@ class RiskyPostCodesUploadServiceTest {
         verifyMocksInvoked(postDistrictsOnlyJson, rawCsv)
 
         val v1Captured = toMap(postDistrictsV1Slot.captured)
+
         assertThat(v1Captured).isEqualTo(
             mapOf(
                 "postDistricts" to mapOf(

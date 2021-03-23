@@ -13,7 +13,7 @@ module "app_system_deployment" {
   name                     = "deploy-cta-${each.key}"
   account                  = var.account
   tags                     = var.tags
-  repository               = "https://github.com/nhsx/covid19-app-system-public.git"
+  repository               = var.repository_url
   container                = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:devenv-latest"
   artifacts_bucket_name    = module.artifacts.bucket_name
   pipeline_definition_file = abspath("${path.root}/../../../pipelines/deploy.buildspec.yml")
@@ -28,7 +28,7 @@ module "tier_metadata" {
   name                     = "deploy-tier-metadata-${each.key}"
   account                  = var.account
   tags                     = var.tags
-  repository               = "https://github.com/nhsx/covid19-app-system-public.git"
+  repository               = var.repository_url
   container                = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:devenv-latest"
   artifacts_bucket_name    = module.artifacts.bucket_name
   pipeline_definition_file = abspath("${path.root}/../../../pipelines/deploy-tier-metadata.buildspec.yml")
@@ -42,7 +42,7 @@ module "analytics_deployment" {
   name                     = "deploy-analytics-${each.key}"
   account                  = var.account
   tags                     = var.tags
-  repository               = "https://github.com/nhsx/covid19-app-system-public.git"
+  repository               = var.repository_url
   container                = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:devenv-latest"
   artifacts_bucket_name    = module.artifacts.bucket_name
   pipeline_definition_file = abspath("${path.root}/../../../pipelines/deploy-analytics.buildspec.yml")
@@ -56,7 +56,7 @@ module "pubdash_deployment" {
   name                     = "deploy-pubdash-${each.key}"
   account                  = var.account
   tags                     = var.tags
-  repository               = "https://github.com/nhsx/covid19-app-system-public.git"
+  repository               = var.repository_url
   container                = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:devenv-latest"
   artifacts_bucket_name    = module.artifacts.bucket_name
   pipeline_definition_file = abspath("${path.root}/../../../pipelines/deploy-pubdash.buildspec.yml")

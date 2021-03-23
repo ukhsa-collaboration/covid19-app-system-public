@@ -18,7 +18,6 @@ class PayloadValidator {
         null
     }
 
-    @Throws(ValidationException::class)
     private fun validateMetadata(payload: Map<String, *>) {
         requireMapAttribute(payload, "metadata")
         val metadataRaw = payload["metadata"] as? Map<*, *>
@@ -29,7 +28,6 @@ class PayloadValidator {
         requireMapAttribute(metadataRaw, "postalDistrict")
     }
 
-    @Throws(ValidationException::class)
     private fun validateEvents(payload: Map<String, *>) {
         requireMapAttribute(payload, "events")
         val eventsRaw = payload["events"] as? List<*>
@@ -41,7 +39,6 @@ class PayloadValidator {
         }
     }
 
-    @Throws(ValidationException::class)
     private fun requireMapAttribute(mapRaw: Any?, key: String) {
         if (mapRaw !is Map<*, *>) throw ValidationException("expected map type but was " + mapRaw?.javaClass?.simpleName)
         if (!mapRaw.containsKey(key)) throw ValidationException("Map did not contain expected key + $key")

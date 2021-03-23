@@ -22,7 +22,7 @@ class SecretManagerKeyAuthorizer(
             .verified
 
         if (!verified) {
-            events.emit(javaClass, BCryptKeyVerificationFailure(apiKey.keyName))
+            events(BCryptKeyVerificationFailure(apiKey.keyName))
         }
 
         return verified

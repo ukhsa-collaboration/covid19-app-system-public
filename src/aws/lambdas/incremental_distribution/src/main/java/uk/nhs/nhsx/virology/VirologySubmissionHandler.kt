@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.HttpResponses
 import uk.nhs.nhsx.core.Jackson
@@ -45,12 +46,10 @@ import uk.nhs.nhsx.virology.order.VirologyRequestType.REGISTER
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import java.time.Duration
-import java.time.Instant
-import java.util.function.Supplier
 
 class VirologySubmissionHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = CLOCK,
+    clock: Clock = CLOCK,
     delayDuration: Duration = Duration.ofSeconds(1),
     private val events: Events = PrintingJsonEvents(clock),
     mobileAuthenticator: Authenticator = awsAuthentication(Mobile, events),
@@ -82,22 +81,21 @@ class VirologySubmissionHandler @JvmOverloads constructor(
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/virology-test/home-kit/order") { _, _ ->
-                    events.emit(javaClass, VirologyOrder())
+                    events(VirologyOrder())
                     handleVirologyOrder(virology, websiteConfig, ORDER)
                 }),
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/virology-test/home-kit/register") { _, _ ->
-                    events.emit(javaClass, VirologyRegister())
+                    events(VirologyRegister())
                     handleVirologyOrder(virology, websiteConfig, REGISTER)
                 }),
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/virology-test/results") { r: APIGatewayProxyRequestEvent, _ ->
-                    events.emit(javaClass, VirologyResults())
+                    events(VirologyResults())
                     readOrNull<VirologyLookupRequestV1>(r.body) { e ->
-                        events.emit(
-                            javaClass,
+                        events(
                             UnprocessableJson(e)
                         )
                     }
@@ -107,11 +105,10 @@ class VirologySubmissionHandler @JvmOverloads constructor(
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/virology-test/cta-exchange") { r: APIGatewayProxyRequestEvent, _ ->
-                    events.emit(javaClass, VirologyCtaExchange())
+                    events(VirologyCtaExchange())
                     throttlingResponse(delayDuration) {
                         readOrNull<CtaExchangeRequestV1>(r.body) {
-                            events.emit(
-                                javaClass,
+                            events(
                                 UnprocessableVirologyCtaExchange(it)
                             )
                         }
@@ -123,15 +120,15 @@ class VirologySubmissionHandler @JvmOverloads constructor(
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/virology-test/v2/order") { _, _ ->
-                    events.emit(javaClass, VirologyOrder())
+                    events(VirologyOrder())
                     handleVirologyOrder(virology, websiteConfig, ORDER)
                 }
             ),
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/virology-test/v2/results") { r: APIGatewayProxyRequestEvent, _ ->
-                    events.emit(javaClass, VirologyResults())
-                    readOrNull<VirologyLookupRequestV2>(r.body) { e -> events.emit(javaClass, UnprocessableJson(e)) }
+                    events(VirologyResults())
+                    readOrNull<VirologyLookupRequestV2>(r.body) { e -> events(UnprocessableJson(e)) }
                         ?.let { virologyLookup.lookup(it, mobileAppVersionFrom(r)).toHttpResponse() }
                         ?: HttpResponses.unprocessableEntity()
                 }
@@ -139,10 +136,10 @@ class VirologySubmissionHandler @JvmOverloads constructor(
             authorisedBy(
                 mobileAuthenticator,
                 path(POST, "/virology-test/v2/cta-exchange") { r: APIGatewayProxyRequestEvent, _ ->
-                    events.emit(javaClass, VirologyCtaExchange())
+                    events(VirologyCtaExchange())
                     throttlingResponse(delayDuration) {
                         readOrNull<CtaExchangeRequestV2>(r.body) { e: Exception ->
-                            events.emit(javaClass, UnprocessableVirologyCtaExchange(e))
+                            events(UnprocessableVirologyCtaExchange(e))
                         }
                             ?.let {
                                 virology.exchangeCtaTokenForV2(
@@ -160,8 +157,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
         order: VirologyRequestType
     ): APIGatewayProxyResponseEvent {
         val response = service.handleTestOrderRequest(websiteConfig, order)
-        events.emit(
-            javaClass,
+        events(
             InfoEvent("Virology order created ctaToken: ${response.tokenParameterValue}, testResultToken: ${response.testResultPollingToken}")
         )
         return HttpResponses.ok(Jackson.toJson(response))
@@ -171,7 +167,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
 
     companion object {
         private fun virologyService(
-            clock: Supplier<Instant>,
+            clock: Clock,
             events: Events,
             persistence: VirologyPersistenceService
         ): VirologyService {
@@ -185,7 +181,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
         }
 
         private fun virologyLookup(
-            clock: Supplier<Instant>,
+            clock: Clock,
             events: Events,
             persistence: VirologyPersistenceService
         ): VirologyLookupService {

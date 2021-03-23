@@ -12,15 +12,15 @@ class BackgroundActivities(private val envConfig: EnvConfig) {
 
     fun invokesBatchProcessing() {
 
-        AwsLambda.invokeFunction(envConfig.diagnosisKeysProcessingFunction)
+        AwsLambda.invokeFunction(envConfig.diagnosis_keys_processing_function)
             .requireStatusCode(OK)
             .requireBodyText(containsSubstring("KeysDistributed"))
 
-        AwsLambda.invokeFunction(envConfig.federationKeysProcessingDownloadFunction)
+        AwsLambda.invokeFunction(envConfig.federation_keys_processing_download_function)
             .requireStatusCode(OK)
             .requireBodyText(containsSubstring("InteropConnectorDownloadStats"))
 
-        AwsLambda.invokeFunction(envConfig.federationKeysProcessingUploadFunction)
+        AwsLambda.invokeFunction(envConfig.federation_keys_processing_upload_function)
             .requireStatusCode(OK)
             .requireBodyText(containsSubstring("InteropConnectorUploadStats"))
     }

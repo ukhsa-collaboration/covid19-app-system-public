@@ -2,8 +2,8 @@ namespace :publish do
   namespace :pubdash do
     NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
       tgt_envs.each do |tgt_env|
-        desc "Publish public dashboard to #{tgt_env}"
-        task :"#{tgt_env}" => [:"login:#{account}"] do
+        desc "Publish public dashboard website to #{tgt_env}"
+        task :"#{tgt_env}" => [:"login:#{account}", "build:pubdash:frontend"] do
           include NHSx::Publish
           project_dir = File.join($configuration.base, "src/pubdash/webapp")
 

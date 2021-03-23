@@ -25,7 +25,7 @@ class PrintingJsonEventsTest {
     fun `prints throwable`() {
         val event = StringBuilder()
         val events = PrintingJsonEvents({ Instant.EPOCH }, { event.append(it) })
-        events(String::class.java, ExceptionThrown(RuntimeException("foo")))
+        events(ExceptionThrown(RuntimeException("foo")))
 
         assertThat(
             event.toString(),
@@ -37,7 +37,15 @@ class PrintingJsonEventsTest {
     fun `prints an event with custom fields as JSON`() {
         val event = StringBuilder()
         val events = PrintingJsonEvents({ Instant.EPOCH }, { event.append(it) })
-        events(String::class.java, MyGreatEvent(123, Instant.EPOCH, UUID(0, 1), DiagnosisKeySubmissionToken.of("hello"), DiagnosisKeySubmissionToken::class.java))
+        events(
+            MyGreatEvent(
+                123,
+                Instant.EPOCH,
+                UUID(0, 1),
+                DiagnosisKeySubmissionToken.of("hello"),
+                DiagnosisKeySubmissionToken::class.java
+            )
+        )
 
         JSONAssert.assertEquals("""
             {
@@ -64,7 +72,15 @@ class PrintingJsonEventsTest {
 
             val event = StringBuilder()
             val events = PrintingJsonEvents({ Instant.EPOCH }, { event.append(it) })
-            events(String::class.java, MyGreatEvent(123, Instant.EPOCH, UUID(0, 1), DiagnosisKeySubmissionToken.of("hello"), DiagnosisKeySubmissionToken::class.java))
+            events(
+                MyGreatEvent(
+                    123,
+                    Instant.EPOCH,
+                    UUID(0, 1),
+                    DiagnosisKeySubmissionToken.of("hello"),
+                    DiagnosisKeySubmissionToken::class.java
+                )
+            )
 
             JSONAssert.assertEquals("""
                 {

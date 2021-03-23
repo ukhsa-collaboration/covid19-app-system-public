@@ -3,23 +3,26 @@ package uk.nhs.nhsx.diagnosiskeydist.apispec
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
 import java.time.temporal.ChronoUnit.DAYS
 import java.util.*
 
-class DailyZIPSubmissionPeriod(periodEndDateExclusive: Instant) : ZIPSubmissionPeriod {
-    private val periodEndDateExclusive: Instant = requireValid(periodEndDateExclusive)
+data class DailyZIPSubmissionPeriod(val periodEndDateExclusive: Instant) : ZIPSubmissionPeriod {
 
-    override fun zipPath(): String = "$DAILY_PATH_PREFIX${dailyKey()}.zip"
+    init {
+        requireValid(periodEndDateExclusive)
+    }
 
-    private fun dailyKey(): String = HOURLY_FORMAT.format(periodEndDateExclusive)
+    override fun zipPath(): String = zipPathFor(periodEndDateExclusive)
 
     override fun isCoveringSubmissionDate(diagnosisKeySubmission: Instant, periodOffset: Duration): Boolean {
         val toExclusive = periodEndDateExclusive.plus(periodOffset)
         val fromInclusive = toExclusive.minus(Duration.ofDays(1))
-        return (diagnosisKeySubmission.isAfter(fromInclusive) || diagnosisKeySubmission == fromInclusive) && diagnosisKeySubmission.isBefore(toExclusive)
+        return (diagnosisKeySubmission.isAfter(fromInclusive) || diagnosisKeySubmission == fromInclusive)
+            && diagnosisKeySubmission.isBefore(toExclusive)
     }
 
     /**
@@ -45,9 +48,25 @@ class DailyZIPSubmissionPeriod(periodEndDateExclusive: Instant) : ZIPSubmissionP
         "1 day: from ${HOURLY_FORMAT.format(startInclusive)} (inclusive) to ${HOURLY_FORMAT.format(endExclusive)} (exclusive)"
 
     companion object {
-        private const val DAILY_PATH_PREFIX = "distribution/daily/"
+        const val DAILY_PATH_PREFIX = "distribution/daily/"
         private const val TOTAL_DAILY_ZIPS = ENIntervalNumber.MAX_DIAGNOSIS_KEY_AGE_DAYS
         private val HOURLY_FORMAT = DateTimeFormatter.ofPattern("yyyyMMdd'00'").withZone(UTC)
+        private val HOURLY_FORMAT_IN = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(UTC)
+
+        fun parseOrNull(key: String) = try {
+            key
+                .substringAfter(DAILY_PATH_PREFIX)
+                .removeSuffix("00.zip")
+                .let { HOURLY_FORMAT_IN.parse(it, LocalDate::from) }
+                .atStartOfDay()
+                .toInstant(UTC)
+        } catch (e: Exception) {
+            null
+        }
+
+        fun zipPathFor(instant: Instant) = "$DAILY_PATH_PREFIX${dailyKey(instant)}.zip"
+
+        private fun dailyKey(instant: Instant): String = HOURLY_FORMAT.format(instant)
 
         private fun requireValid(endDate: Instant): Instant {
             endDate.atZone(UTC).also {
@@ -64,7 +83,8 @@ class DailyZIPSubmissionPeriod(periodEndDateExclusive: Instant) : ZIPSubmissionP
             return DailyZIPSubmissionPeriod(
                 diagnosisKeySubmission
                     .truncatedTo(DAYS)
-                    .plus(Duration.ofDays(1)))
+                    .plus(Duration.ofDays(1))
+            )
         }
     }
 }

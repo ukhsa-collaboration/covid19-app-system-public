@@ -5,6 +5,7 @@ import uk.nhs.nhsx.core.Jackson.toJson
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenue
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 import uk.nhs.nhsx.highriskvenuesupload.model.MessageType
+import uk.nhs.nhsx.highriskvenuesupload.model.OptionalHighRiskVenueParam
 import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow
 import uk.nhs.nhsx.highriskvenuesupload.model.VenueId
 import java.io.StringReader
@@ -53,7 +54,8 @@ class HighRiskVenueCsvParser {
                     val startTime = it.get(Header.StartTime)
                     val endTime = it.get(Header.EndTime)
                     val messageType = it.get(Header.MessageType)
-                    val parameter = it.get(Header.OptionalParameter)
+                    val parameter = it.get(Header.OptionalParameter)?.takeIf(String::isNotBlank)
+                        ?.let(OptionalHighRiskVenueParam.Companion::of)
 
                     HighRiskVenue(
                         VenueId.of(venueId),

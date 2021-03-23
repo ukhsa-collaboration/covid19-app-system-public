@@ -8,7 +8,6 @@ import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 
 object ProxyResponseAssertions {
 
-    @JvmStatic
     fun hasStatus(code: HttpStatusCode): Matcher<APIGatewayProxyResponseEvent> {
         return object : TypeSafeDiagnosingMatcher<APIGatewayProxyResponseEvent>() {
             override fun matchesSafely(event: APIGatewayProxyResponseEvent, description: Description): Boolean {
@@ -23,7 +22,6 @@ object ProxyResponseAssertions {
         }
     }
 
-    @JvmStatic
     fun hasHeader(name: String, value: Matcher<String>): Matcher<APIGatewayProxyResponseEvent> {
         return object : TypeSafeDiagnosingMatcher<APIGatewayProxyResponseEvent>() {
             override fun matchesSafely(event: APIGatewayProxyResponseEvent, mismatch: Description): Boolean {
@@ -43,7 +41,6 @@ object ProxyResponseAssertions {
         }
     }
 
-    @JvmStatic
     fun hasHeader(name: String): Matcher<APIGatewayProxyResponseEvent> {
         return object : TypeSafeDiagnosingMatcher<APIGatewayProxyResponseEvent>() {
             override fun matchesSafely(event: APIGatewayProxyResponseEvent, mismatch: Description): Boolean =
@@ -55,7 +52,6 @@ object ProxyResponseAssertions {
         }
     }
 
-    @JvmStatic
     fun hasBody(body: Matcher<String>): Matcher<APIGatewayProxyResponseEvent> {
         return object : TypeSafeDiagnosingMatcher<APIGatewayProxyResponseEvent>() {
             override fun matchesSafely(event: APIGatewayProxyResponseEvent, mismatch: Description): Boolean {

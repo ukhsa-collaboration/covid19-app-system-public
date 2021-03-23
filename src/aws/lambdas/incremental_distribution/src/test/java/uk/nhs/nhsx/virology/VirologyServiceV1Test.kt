@@ -30,13 +30,12 @@ import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.time.Instant
 import java.time.Period
 import java.util.Optional
-import java.util.function.Supplier
 
 class VirologyServiceV1Test {
 
     private val events = RecordingEvents()
     private val now = Instant.EPOCH
-    private val clock = Supplier { now }
+    private val clock = { now }
     private val persistenceService = mockk<VirologyPersistenceService>()
     private val fourWeeksExpireAt = now.plus(Period.ofWeeks(4))
     private val virologyPolicyConfig = mockk<VirologyPolicyConfig>()

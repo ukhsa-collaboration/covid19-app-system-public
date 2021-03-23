@@ -18,7 +18,7 @@ class RiskyPostCodesUploadService(
 ) {
     fun upload(rawJson: String?): APIGatewayProxyResponseEvent =
         rawJson
-            ?.let { readOrNull<RiskyPostDistrictsRequest>(it) { events.emit(javaClass, UnprocessableJson(it)) } }
+            ?.let { readOrNull<RiskyPostDistrictsRequest>(it) { e -> events(UnprocessableJson(e)) } }
             ?.let {
                 val riskLevels = persistence.retrievePostDistrictRiskLevels()
                 val mapper = RiskyPostCodesMapper(riskLevels)

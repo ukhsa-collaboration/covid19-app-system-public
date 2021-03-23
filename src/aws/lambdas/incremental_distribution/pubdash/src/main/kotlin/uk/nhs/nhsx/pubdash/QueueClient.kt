@@ -12,7 +12,7 @@ class QueueClient(
 ) {
 
     fun sendMessage(queueMessage: QueueMessage) {
-        events.emit(this::class.java, SendSqsMessageEvent(queueMessage.queryId, queueMessage.dataset))
+        events(SendSqsMessageEvent(queueMessage.queryId, queueMessage.dataset))
 
         val sendMessageRequest = SendMessageRequest()
             .withMessageBody(Jackson.toJson(queueMessage))

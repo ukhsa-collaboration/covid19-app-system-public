@@ -8,7 +8,7 @@ object StandardHandlers {
         try {
             fn(request, context)
         } catch (e: Exception) {
-            events.emit(javaClass, ExceptionThrown(e))
+            events(ExceptionThrown(e))
             throw e
         }
     }

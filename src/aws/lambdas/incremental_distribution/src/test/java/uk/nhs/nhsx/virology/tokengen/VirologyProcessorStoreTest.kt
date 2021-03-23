@@ -6,11 +6,10 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import org.apache.http.Consts
-import org.apache.http.entity.ContentType
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
@@ -38,8 +37,7 @@ class VirologyProcessorStoreTest {
         verify(exactly = 1) { s3Storage.upload(any(), any(), any()) }
         assertThat(locatorSlot.captured.bucket).isEqualTo(BucketName.of("bucket"))
         assertThat(locatorSlot.captured.key).isEqualTo(ObjectKey.of("file.csv"))
-        assertThat(contentTypeSlot.captured.charset).isEqualTo(Consts.UTF_8)
-        assertThat(contentTypeSlot.captured.mimeType).isEqualTo("text/csv")
+        assertThat(contentTypeSlot.captured.value).isEqualTo("text/csv")
         assertThat(String(bytesSlot.captured.toArray())).isEqualTo("file-content")
     }
 
@@ -54,7 +52,7 @@ class VirologyProcessorStoreTest {
         verify(exactly = 1) { s3Storage.upload(any(), any(), any()) }
         assertThat(locatorSlot.captured.bucket).isEqualTo(BucketName.of("bucket"))
         assertThat(locatorSlot.captured.key).isEqualTo(ObjectKey.of("file.zip"))
-        assertThat(contentTypeSlot.captured.mimeType).isEqualTo("application/zip")
+        assertThat(contentTypeSlot.captured.value).isEqualTo("application/zip")
         assertThat(bytesSlot.captured.toArray()).isEqualTo(Files.readAllBytes(zipFile.toPath()))
     }
 }

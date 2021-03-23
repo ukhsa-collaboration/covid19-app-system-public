@@ -61,14 +61,14 @@ class AnalyticsSubmissionSmokeTest {
         deviceModel: MobileDeviceModel,
         analyticsMetrics: AnalyticsMetrics
     ) {
-        assertWithin(Duration.ofSeconds(config.analyticsSubmissionIngestionInterval.toLong() * 4)) {
+        assertWithin(Duration.ofSeconds(config.analytics_submission_ingestion_interval.toLong() * 4)) {
             val dataFromAthena = analytics.getRecordedAnalyticsFor(deviceModel)
 
             val fieldsAndValuesWeSent = Http4kJackson.fields(Http4kJackson.asJsonObject(analyticsMetrics))
                 .map { it.first.toLowerCase() to it.second.toString() }
 
             val interestingFieldsFromAthena =
-                dataFromAthena.filter { it.first in fieldsAndValuesWeSent.map { it.first } }
+                dataFromAthena.filter { it.first in fieldsAndValuesWeSent.map(Pair<String, String>::first) }
 
             val interestingFieldsFromAthenaCsv =
                 interestingFieldsFromAthena.joinToString("\n") { it.first + "," + it.second }
@@ -147,6 +147,8 @@ class AnalyticsSubmissionSmokeTest {
         hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt()
         receivedRiskyVenueM1Warning = counter++.toInt()
         receivedRiskyVenueM2Warning = counter++.toInt()
-        hasReceivedRiskyVenueM2WarningBackgroundTick = counter.toInt()
+        hasReceivedRiskyVenueM2WarningBackgroundTick = counter++.toInt()
+        totalAlarmManagerBackgroundTasks = counter++.toInt()
+        missingPacketsLast7Days = counter.toInt()
     }
 }

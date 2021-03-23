@@ -4,11 +4,11 @@ import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 
 data class AAEUploadConfig(
-    @JvmField val aaeUrlPrefix: String,
-    @JvmField val aaeUrlSuffix: String,
-    @JvmField val p12CertificateSecretName: String,
-    @JvmField val p12CertificatePasswordSecretName: String,
-    @JvmField val subscriptionKeySecretName: String
+    val aaeUrlPrefix: String,
+    val aaeUrlSuffix: String,
+    val p12CertificateSecretName: String,
+    val p12CertificatePasswordSecretName: String,
+    val subscriptionKeySecretName: String
 ) {
     companion object {
         private val AAE_URL_PREFIX = EnvironmentKey.string("AAE_URL_PREFIX")

@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.analyticsevents
 
 import com.amazonaws.services.kms.AWSKMSClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys
 import uk.nhs.nhsx.core.HttpResponses.badRequest
@@ -28,12 +29,10 @@ import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.routing.RoutingHandler
 import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
-import java.time.Instant
-import java.util.function.Supplier
 
 class AnalyticsEventsHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = SystemClock.CLOCK,
+    clock: Clock = SystemClock.CLOCK,
     events: Events = PrintingJsonEvents(clock),
     authenticator: Authenticator = awsAuthentication(Mobile, events),
     signer: ResponseSigner = StandardSigningFactory(

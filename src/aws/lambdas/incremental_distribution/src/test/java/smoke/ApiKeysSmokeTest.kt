@@ -107,7 +107,7 @@ class ApiKeysSmokeTest {
     }
 
     private fun sendRequestWith(authHeader: String): Response {
-        val uri = "${config.virologyKitEndpoint}/home-kit/order"
+        val uri = "${config.virology_kit_endpoint}/home-kit/order"
         val request = Request(Method.POST, uri)
             .header("Authorization", authHeader)
 
@@ -119,8 +119,6 @@ class ApiKeysSmokeTest {
 
     private fun assertUnAuthorized(response: Response) {
         assertThat(response, hasStatus(Status.FORBIDDEN))
-//        assertThat(response, !hasHeader("x-amz-meta-signature")) ?? do we need this???
-//        assertThat(response, !hasHeader("x-amz-meta-signature-date"))  ?? do we need this???
         assertThat(response, hasBody(""))
     }
 }

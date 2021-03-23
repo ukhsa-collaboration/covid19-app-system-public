@@ -12,21 +12,16 @@ import java.util.function.Supplier
 
 object Routing {
 
-    @JvmStatic
     fun routes(vararg routes: RoutingHandler): AggregateRoutingHttpHandler = routes(listOf(*routes), listOf())
 
-    @JvmStatic
     fun routes(first: List<RoutingHandler>, second: List<RoutingHandler>) =
         AggregateRoutingHttpHandler(first + second, routeNotFoundHandler, routeMethodNotAllowedHandler)
 
-    @JvmStatic
     fun path(path: String, handler: ApiGatewayHandler): PathRoutingHandler = PathRoutingHandler(path, handler)
 
-    @JvmStatic
     fun path(method: Method, path: String, handler: ApiGatewayHandler): PathRoutingHandler =
         PathRoutingHandler(path, Optional.of(method), handler)
 
-    @JvmStatic
     fun path(method: Method, pathMatcher: Predicate<String>, handler: ApiGatewayHandler): PathRoutingHandler =
         PathRoutingHandler(pathMatcher, Optional.of(method), handler)
 

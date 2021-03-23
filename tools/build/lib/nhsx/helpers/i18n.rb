@@ -22,6 +22,14 @@ module NHS
       "Exercise" => "exercise",
       "WeddingFuneral" => "weddings-and-funerals",
       "WorkAndBusiness" => "work-and-business",
+      "InternationalTravel" => "international-travel",
+      "MeetingIndoors" => "meeting-indoors",
+      "MeetingOutdoors" => "meeting-outdoors",
+      "PersonalCare" => "personal-care",
+      "SocialDistancing" => "social-distancing",
+      "Retail" => "retail",
+      "FaceCoverings" => "face-coverings"
+
     }
     # Number of supported languages ex: en, ar, bn, cy
     SUPPORTED_LANGUAGES = 12

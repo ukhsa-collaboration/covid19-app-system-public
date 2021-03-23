@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.virology
 
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.headers.MobileAppVersion
@@ -26,14 +27,12 @@ import uk.nhs.nhsx.virology.result.TestResult.Void
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
-import java.time.Instant
 import java.time.Period
-import java.util.function.Supplier
 
 class VirologyService(
     private val persistence: VirologyPersistenceService,
     private val tokensGenerator: TokensGenerator,
-    private val clock: Supplier<Instant>,
+    private val clock: Clock,
     private val policyConfig: VirologyPolicyConfig,
     private val events: Events
 ) {
@@ -49,7 +48,7 @@ class VirologyService(
     }
 
     private fun orderTest(): TestOrder {
-        val expireAt = clock.get().plus(Period.ofWeeks(4))
+        val expireAt = clock().plus(Period.ofWeeks(4))
         return persistence.persistTestOrder({ tokensGenerator.generateVirologyTokens() }, expireAt)
     }
 
@@ -64,13 +63,13 @@ class VirologyService(
 
     fun acceptTestResult(testResult: VirologyResultRequestV2): VirologyResultPersistOperation {
         return when (testResult.testResult) {
-            Positive -> persistence.persistPositiveTestResult(testResult, clock.get().plus(Period.ofWeeks(4)))
+            Positive -> persistence.persistPositiveTestResult(testResult, clock().plus(Period.ofWeeks(4)))
             Negative, Void -> persistence.persistNonPositiveTestResult(testResult)
         }
     }
 
     fun acceptTestResultGeneratingTokens(tokenGenRequest: VirologyTokenGenRequestV2): VirologyTokenGenResponse {
-        val expireAt = clock.get().plus(Period.ofWeeks(4))
+        val expireAt = clock().plus(Period.ofWeeks(4))
         val testOrder = persistence.persistTestOrderAndResult(
             { tokensGenerator.generateVirologyTokens() },
             expireAt,
@@ -79,7 +78,7 @@ class VirologyService(
             tokenGenRequest.testKit
         )
 
-        events.emit(javaClass, InfoEvent("Token gen created ctaToken: ${testOrder.ctaToken.value}"))
+        events(InfoEvent("Token gen created ctaToken: ${testOrder.ctaToken.value}"))
         return VirologyTokenGenResponse(testOrder.ctaToken)
     }
 
@@ -122,14 +121,13 @@ class VirologyService(
                     testState.testEndDate,
                     testState.testKit
                 )
-                events.emit(
-                    javaClass,
+                events(
                     InfoEvent("Cta token exchange successful for ctaToken: ${testOrder.ctaToken.value}")
                 )
                 CtaExchangeResult.Available(response)
             }
             else -> {
-                events.emit(javaClass, InfoEvent("Cta token exchange: virology result not available yet"))
+                events(InfoEvent("Cta token exchange: virology result not available yet"))
                 CtaExchangeResult.Pending()
             }
         }
@@ -194,8 +192,7 @@ class VirologyService(
                             policyConfig.isDiagnosisKeysSubmissionSupported(virologyCriteria),
                             policyConfig.isConfirmatoryTestRequired(virologyCriteria)
                         )
-                        events.emit(
-                            javaClass,
+                        events(
                             InfoEvent("Cta token exchange successful for ctaToken: ${testOrder.ctaToken.value}")
                         )
                         CtaExchangeResult.AvailableV2(response)
@@ -210,7 +207,7 @@ class VirologyService(
         testResultPollingToken: TestResultPollingToken? = null,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken? = null
     ): CtaExchangeResult.NotFound {
-        events.emit(javaClass, CtaTokenNotFound(ctaToken, testResultPollingToken, diagnosisKeySubmissionToken))
+        events(CtaTokenNotFound(ctaToken, testResultPollingToken, diagnosisKeySubmissionToken))
         return CtaExchangeResult.NotFound()
     }
 }

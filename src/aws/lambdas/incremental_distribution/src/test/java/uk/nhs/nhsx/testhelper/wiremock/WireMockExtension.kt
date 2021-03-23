@@ -26,9 +26,9 @@ class WireMockExtension : BeforeEachCallback, AfterEachCallback, ParameterResolv
         server.start()
 
         if (server.options.httpDisabled) {
-            WireMock.configureFor("https", "localhost", server.httpsPort());
+            WireMock.configureFor("https", "localhost", server.httpsPort())
         } else {
-            WireMock.configureFor("localhost", server.port());
+            WireMock.configureFor("localhost", server.port())
         }
     }
 

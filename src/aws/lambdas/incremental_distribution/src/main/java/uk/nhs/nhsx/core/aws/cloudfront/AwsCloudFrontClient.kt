@@ -21,7 +21,7 @@ class AwsCloudFrontClient(
         try {
             client.createInvalidation(invalidationRequest)
         } catch (e: AmazonCloudFrontException) {
-            events(javaClass, ExceptionThrown(e, "CloudFront cache invalidation failed"))
+            events(ExceptionThrown(e, "CloudFront cache invalidation failed"))
         }
     }
 }

@@ -8,7 +8,6 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.TypeSafeDiagnosingMatcher
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.s3.MetaHeader
-import uk.nhs.nhsx.core.signature.DatedSignature.SignatureDate
 import java.time.Instant
 
 class SigningHeadersTest {
@@ -30,7 +29,6 @@ class SigningHeadersTest {
     }
 
     companion object {
-        @JvmStatic
         fun matchesMeta(keyId: KeyId, signature: String, date: String): Matcher<List<MetaHeader>> {
             return object : TypeSafeDiagnosingMatcher<List<MetaHeader>>() {
                 override fun matchesSafely(headers: List<MetaHeader>, description: Description): Boolean {

@@ -348,7 +348,7 @@
           }
         },
         {
-          "policyIcon": "work-and-business",
+          "policyIcon": "work",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -761,7 +761,7 @@
           }
         },
         {
-          "policyIcon": "work-and-business",
+          "policyIcon": "work",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -1174,7 +1174,7 @@
           }
         },
         {
-          "policyIcon": "work-and-business",
+          "policyIcon": "work",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -1587,7 +1587,7 @@
           }
         },
         {
-          "policyIcon": "work-and-business",
+          "policyIcon": "work",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -1931,6 +1931,37 @@
       },
       "policies": [
         {
+          "policyIcon": "face-coverings",
+          "policyHeading": {
+            "ar": "أغطية الوجه",
+            "bn": "মুখের আবরণ",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "ફેસમાસ્ક",
+            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
+            "pl": "Osłona twarzy",
+            "ro": "Protecție facială",
+            "so": "Waxyaabaha wajiga lagu daboolo",
+            "tr": "Yüz maskeleri",
+            "ur": "نقاب",
+            "zh": "面罩"
+          },
+          "policyContent": {
+            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
+            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "તમામ ઇન્ડોર જગ્યાઓમાં (જો તમે ઠીક હોવ) ફેસમાસ્ક પહેરો.",
+            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
+            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
+            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
+            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
+            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
+            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
+            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+          }
+        },
+        {
           "policyIcon": "meeting-people",
           "policyHeading": {
             "ar": "التباعد الجسدي",
@@ -2055,7 +2086,7 @@
           }
         },
         {
-          "policyIcon": "work-and-business",
+          "policyIcon": "work",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -2083,37 +2114,6 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
-          }
-        },
-        {
-          "policyIcon": "worship",
-          "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
-          },
-          "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર જગ્યાઓમાં (જો તમે ઠીક હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
           }
         }
       ]
@@ -2282,6 +2282,37 @@
           }
         },
         {
+          "policyIcon": "face-coverings",
+          "policyHeading": {
+            "ar": "أغطية الوجه",
+            "bn": "মুখের আবরণ",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "ફેસમાસ્ક",
+            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
+            "pl": "Osłona twarzy",
+            "ro": "Protecție facială",
+            "so": "Waxyaabaha wajiga lagu daboolo",
+            "tr": "Yüz maskeleri",
+            "ur": "نقاب",
+            "zh": "面罩"
+          },
+          "policyContent": {
+            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
+            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
+            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
+            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
+            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
+            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
+            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
+            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
+            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+          }
+        },
+        {
           "policyIcon": "meeting-people",
           "policyHeading": {
             "ar": "التباعد الجسدي",
@@ -2406,7 +2437,7 @@
           }
         },
         {
-          "policyIcon": "work-and-business",
+          "policyIcon": "work",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -2434,37 +2465,6 @@
             "tr": "Mümkünse evden çalışınız.",
             "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
-          }
-        },
-        {
-          "policyIcon": "worship",
-          "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
-          },
-          "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
           }
         }
       ]
@@ -2633,6 +2633,37 @@
           }
         },
         {
+          "policyIcon": "face-coverings",
+          "policyHeading": {
+            "ar": "أغطية الوجه",
+            "bn": "মুখের আবরণ",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "ફેસમાસ્ક",
+            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
+            "pl": "Osłona twarzy",
+            "ro": "Protecție facială",
+            "so": "Waxyaabaha wajiga lagu daboolo",
+            "tr": "Yüz maskeleri",
+            "ur": "نقاب",
+            "zh": "面罩"
+          },
+          "policyContent": {
+            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
+            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
+            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
+            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
+            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
+            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
+            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
+            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
+            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+          }
+        },
+        {
           "policyIcon": "meeting-people",
           "policyHeading": {
             "ar": "التباعد الجسدي",
@@ -2757,7 +2788,7 @@
           }
         },
         {
-          "policyIcon": "work-and-business",
+          "policyIcon": "work",
           "policyHeading": {
             "ar": "العمل والتجارة",
             "bn": "কাজ ও ব্যবসা",
@@ -2786,37 +2817,6 @@
             "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
             "zh": "如果条件允许，请居家办公。"
           }
-        },
-        {
-          "policyIcon": "worship",
-          "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
-          },
-          "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
-          }
         }
       ]
     }
@@ -2825,18 +2825,18 @@
     "colorScheme": "neutral",
     "colorSchemeV2": "black",
     "name": {
-      "ar": "يقع [postcode] ضمن مستوى التحذير 4 (مخاطرة مرتفعة للغاية)",
-      "bn": "[postcode] সতর্কতা স্তর ৪-এ আছে (খুব উচ্চ ঝুঁকি)",
+      "ar": "[postcode] is in alert level 4 (very high risk)",
+      "bn": "[postcode] is in alert level 4 (very high risk)",
       "cy": "Mae [postcode] yn ardal rhybudd lefel 4 (risg uchel iawn)",
       "en": "[postcode] is in alert level 4 (very high risk)",
-      "gu": "[postcode] એલર્ટ લેવલ  4 પર છે (ખૂબ વધુ જોખમ)",
-      "pa": "[postcode] ਚੇਤਾਵਨੀ ਪੱਧਰ 4 ਵਿੱਚ ਹੈ (ਬਹੁਤ ਜ਼ਿਆਦਾ ਜੋਖਮ)",
-      "pl": "Kod pocztowy [postcode] znajduje się w 4. strefie ryzyka zakażenia (bardzo wysokie)",
-      "ro": "[postcode] se află în nivelul de alertă 4 (risc foarte mare)",
-      "so": "[postcode] wuxuu ku jiraa heerka feejignaanta 4 (halis aad u sareeya)",
-      "tr": "[postcode] uyarı seviyesi 4'te yer alıyor (çok yüksek risk)",
-      "ur": "[postcode] الرٹ لیول 4 (کافی زیادہ خطرہ) میں ہے",
-      "zh": "[postcode] 4 级警报（极高风险）"
+      "gu": "[postcode] is in alert level 4 (very high risk)",
+      "pa": "[postcode] is in alert level 4 (very high risk)",
+      "pl": "[postcode] is in alert level 4 (very high risk)",
+      "ro": "[postcode] is in alert level 4 (very high risk)",
+      "so": "[postcode] is in alert level 4 (very high risk)",
+      "tr": "[postcode] is in alert level 4 (very high risk)",
+      "ur": "[postcode] is in alert level 4 (very high risk)",
+      "zh": "[postcode] is in alert level 4 (very high risk)"
     },
     "heading": {
       "ar": "حالات الإصابة بفيروس كورونا في منطقتكم مرتفعة للغاية.",
@@ -2881,47 +2881,47 @@
       "zh": "https://gov.wales/alert-level-4"
     },
     "linkTitle": {
-      "ar": "تعرّفوا على المزيد من المعلومات",
-      "bn": "আরো জেনে নিন",
+      "ar": "Find out more",
+      "bn": "Find out more",
       "cy": "Rhagor o wybodaeth",
       "en": "Find out more",
-      "gu": "વધારે માહિતી મેળવો",
-      "pa": "ਹੋਰ ਜਾਣਕਾਰੀ ਦੇਖੋ",
-      "pl": "Dowiedz się więcej",
-      "ro": "Aflați mai multe",
-      "so": "Wax badan ka ogow",
-      "tr": "Daha fazla bilgi edinin",
-      "ur": "مزید معلوم کریں",
-      "zh": "了解更多"
+      "gu": "Find out more",
+      "pa": "Find out more",
+      "pl": "Find out more",
+      "ro": "Find out more",
+      "so": "Find out more",
+      "tr": "Find out more",
+      "ur": "Find out more",
+      "zh": "Find out more"
     },
     "policyData": {
       "localAuthorityRiskTitle": {
-        "ar": "يقع [local authority] ([postcode]) ضمن مستوى التحذير 4 (مخاطرة مرتفعة للغاية)",
-        "bn": "[local authority] ([postcode]) সতর্কতা স্তর ৪-এ আছে (খুব উচ্চ ঝুঁকি)",
+        "ar": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "bn": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
         "cy": "Mae [[local authority] ([postcode]) yn ardal rhybudd lefel 4 (risg uchel iawn)",
         "en": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
-        "gu": "[local authority] ([postcode]) એલર્ટ લેવલ  4 પર છે (ખૂબ વધુ જોખમ)",
-        "pa": "[local authority] ([postcode]) ਚੇਤਾਵਨੀ ਪੱਧਰ 4 ਵਿੱਚ ਹੈ (ਬਹੁਤ ਜ਼ਿਆਦਾ ਜੋਖਮ)",
-        "pl": "Kod pocztowy [local authority] ([postcode]) znajduje się w 4. strefie ryzyka zakażenia (bardzo wysokie)",
-        "ro": "[local authority] ([postcode]) se află în nivelul de alertă 4 (risc foarte mare)",
-        "so": "[local authority] ([postcode]) wuxuu ku jiraa heerka feejignaanta 4 (halis aad u sareeya)",
-        "tr": "[local authority] ([postcode]) uyarı seviyesi 4'te yer alıyor (çok yüksek risk)",
-        "ur": "[local authority] ([postcode]) الرٹ لیول 4 (کافی زیادہ خطرہ) میں ہے",
-        "zh": "[local authority] ([postcode]) 4 级警报（极高风险）"
+        "gu": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "pa": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "pl": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "ro": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "so": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "tr": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "ur": "[local authority] ([postcode]) is in alert level 4 (very high risk)",
+        "zh": "[local authority] ([postcode]) is in alert level 4 (very high risk)"
       },
       "heading": {
-        "ar": "نوجز فيما يلي التدابير السارية في مستوى التحذير 4.",
-        "bn": "সতর্কতা স্তর ৪-এর জন্য প্রযোজ্য ব্যবস্থাগুলোর সারসংক্ষেপ নিচে দেওয়া হলো।",
+        "ar": "The measures that apply at alert level 4 are summarised below.",
+        "bn": "The measures that apply at alert level 4 are summarised below.",
         "cy": "Mae’r mesurau sy’n berthnasol ar rybudd lefel 4 wedi’u crynhoi isod.",
         "en": "The measures that apply at alert level 4 are summarised below.",
-        "gu": "એલર્ટ લેવલ  4 પર લાગુ થતાં પગલાંઓનો સારાંશ નીચે આપવામાં આવ્યો છે.",
-        "pa": "ਚੇਤਾਵਨੀ ਪੱਧਰ 4 'ਤੇ ਲਾਗੂ ਹੋਣ ਵਾਲੇ ਉਪਾਵਾਂ ਦਾ ਸਾਰ ਹੇਠਾਂ ਦਿੱਤਾ ਗਿਆ ਹੈ।",
-        "pl": "Poniżej znajduje się podsumowanie ograniczeń obowiązujących w 4. strefie.",
-        "ro": "Măsurile care se aplică la nivelul de alertă 4 sunt rezumate mai jos.",
-        "so": "Tallaabooyinka khuseeya heerka feejignaanta 4 ayaa hoos lagu soo koobay.",
-        "tr": "Uyarı seviyesi 4'te geçerli olan önlemler aşağıda özetlenmiştir.",
-        "ur": "الرٹ لیول 4 میں لاگو ہونے والے اقدامات کا خلاصہ ذیل میں بیان کیا گیا ہے۔",
-        "zh": "适用于 4 级警报的措施概述如下。"
+        "gu": "The measures that apply at alert level 4 are summarised below.",
+        "pa": "The measures that apply at alert level 4 are summarised below.",
+        "pl": "The measures that apply at alert level 4 are summarised below.",
+        "ro": "The measures that apply at alert level 4 are summarised below.",
+        "so": "The measures that apply at alert level 4 are summarised below.",
+        "tr": "The measures that apply at alert level 4 are summarised below.",
+        "ur": "The measures that apply at alert level 4 are summarised below.",
+        "zh": "The measures that apply at alert level 4 are summarised below."
       },
       "content": {
         "ar": "",
@@ -2953,189 +2953,313 @@
       },
       "policies": [
         {
-          "policyIcon": "meeting-people",
+          "policyIcon": "face-coverings",
           "policyHeading": {
-            "ar": "التباعد الجسدي",
-            "bn": "সামাজিক দূরত্ব",
-            "cy": "Cadw pellter cymdeithasol",
-            "en": "Social distancing",
-            "gu": "સોશિયલ ડિસ્ટંસિંગ",
-            "pa": "ਸਮਾਜਕ ਦੂਰੀ",
-            "pl": "Dystansowanie społeczne",
-            "ro": "Distanțarea socială",
-            "so": "Kala fogeynta bulshada",
-            "tr": "Sosyal mesafe",
-            "ur": "سماجی دوری",
-            "zh": "社交距离"
+            "ar": "Face coverings",
+            "bn": "Face coverings",
+            "cy": "Gorchuddion wyneb",
+            "en": "Face coverings",
+            "gu": "Face coverings",
+            "pa": "Face coverings",
+            "pl": "Face coverings",
+            "ro": "Face coverings",
+            "so": "Face coverings",
+            "tr": "Face coverings",
+            "ur": "Face coverings",
+            "zh": "Face coverings"
           },
           "policyContent": {
-            "ar": "يتعين مراعاة قواعد التباعد الجسدي عند التعامل مع أشخاصٍ لا تعيشون معهم أو ليسوا ضمن مجموعة الدعم الخاصة بكم.",
-            "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন না বা যারা আপনার সাপোর্ট বাবলের অংশ নন, তাদের সঙ্গে সামাজিক দূরত্ব বজায় রাখার নিয়ম মেনে চলুন।",
-            "cy": "Dilynwch y rheolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch swigen gefnogaeth.",
-            "en": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
-            "gu": "જે લોકો સાથે તમે રહેતા હોવ નહીં અથવા જે લોકો તમારા સપોર્ટ બબલમાં હોય નહીં તેમની સાથે સોશિયલ ડિસ્ટંસિંગના નિયમોનું પાલન કરો.",
-            "pa": "ਉਹਨਾਂ ਲੋਕਾਂ ਨਾਲ ਸਮਾਜਕ ਦੂਰੀ ਦੇ ਨਿਯਮਾਂ ਦੀ ਪਾਲਣਾ ਕਰੋ ਜੋ ਤੁਹਾਡੇ ਨਾਲ ਨਹੀਂ ਰਹਿੰਦੇ ਹਨ ਜਾਂ ਜਿਹੜੇ ਤੁਹਾਡੇ ਸਹਾਇਤਾ ਦਾਇਰੇ ਵਿੱਚ ਨਹੀਂ ਹਨ।",
-            "pl": "Należy przestrzegać zasad dystansowania społecznego wobec osób, z którymi się nie mieszka, lub osób spoza swojej bańki wsparcia.",
-            "ro": "Urmați regulile de distanțare socială cu persoane cu care nu locuiți sau care nu se află în grupul dvs. de sprijin.",
-            "so": "Raac xeerarka kala fogeynta bulshada ee dadka aadan la nooleyn ama aan ku jirin dadka kugu dhow.",
-            "tr": "Birlikte yaşadığınız veya yakın destek balonunuzdaki insanlar haricinde sosyal mesafe kurallarına uyunuz.",
-            "ur": "آپ جن لوگوں کے ساتھ نہیں رہتے ہیں یا جو آپ کے امدادی دائرے میں نہیں ہیں ان کے ساتھ سماجی دوری   کے اصولوں پر عمل کریں۔",
-            "zh": "与不与您同住或不属于您的“圆顶小屋”的家庭人员保持社交距离。"
+            "ar": "Wear a face covering (if you are able to) in all indoor public places.",
+            "bn": "Wear a face covering (if you are able to) in all indoor public places.",
+            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
+            "en": "Wear a face covering (if you are able to) in all indoor public places.",
+            "gu": "Wear a face covering (if you are able to) in all indoor public places.",
+            "pa": "Wear a face covering (if you are able to) in all indoor public places.",
+            "pl": "Wear a face covering (if you are able to) in all indoor public places.",
+            "ro": "Wear a face covering (if you are able to) in all indoor public places.",
+            "so": "Wear a face covering (if you are able to) in all indoor public places.",
+            "tr": "Wear a face covering (if you are able to) in all indoor public places.",
+            "ur": "Wear a face covering (if you are able to) in all indoor public places.",
+            "zh": "Wear a face covering (if you are able to) in all indoor public places."
           }
         },
         {
-          "policyIcon": "overnight-stays",
+          "policyIcon": "international-travel",
           "policyHeading": {
-            "ar": "مجموعات الدعم",
-            "bn": "সাপোর্ট বাবল",
-            "cy": "Swigod cefnogaeth",
-            "en": "Support bubbles",
-            "gu": "સપોર્ટ બબલ",
-            "pa": "ਸਹਾਇਤਾ ਦਾਇਰੇ",
-            "pl": "Bańki wsparcia",
-            "ro": "Grupuri de sprijin",
-            "so": "Dadka kugu dhow",
-            "tr": "Yakın destek çevresi",
-            "ur": "امدادی دائرے",
-            "zh": "社交泡泡"
+            "ar": "International travel",
+            "bn": "International travel",
+            "cy": "Teithio Rhyngwladol",
+            "en": "International travel",
+            "gu": "International travel",
+            "pa": "International travel",
+            "pl": "International travel",
+            "ro": "International travel",
+            "so": "International travel",
+            "tr": "International travel",
+            "ur": "International travel",
+            "zh": "International travel"
           },
           "policyContent": {
-            "ar": "يتعين البقاء في المنزل وعدم إنشاء أسرة مُوسَّعة. يجوز للأشخاص البالغين أو الآباء والأمهات الذين يعيشون بمفردهم الانضمام إلى بعضهم لتكوين مجموعة دعم حصرية.",
-            "bn": "বাসায় থাকুন এবং বাড়ির বৃহত্তর গণ্ডি গঠন করবেন না। একাকী প্রাপ্তবয়স্ক ব্যক্তি বা একাকী মা-বাবা অপর আরেক হাউজহোল্ড বা বাড়ির সাথে মিলে একটি সাপোর্ট বাবল গঠন করতে পারেন।",
-            "cy": "Arhoswch gartref a pheidiwch â chreu aelwyd estynedig. Gall oedolion sy’n byw ar eu pen eu hunain neu rieni sengl ymuno ag un aelwyd arall i greu swigen gefnogaeth.",
-            "en": "Stay at home and do not create an extended household. Single adults or single parents may join with one other household to form an exclusive support bubble.",
-            "gu": "ઘરે રહો અને ઘરપરિવારના સભ્યો બનાવશો નહીં. પુખ્ત વયની એકલી વ્યક્તિઓ અથવા એકલા માતાપિતા એક બીજા ઘરની સાથે વિશિષ્ટ સપોર્ટ બબલ રચીને જોડાઈ શકે છે.",
-            "pa": "ਘਰ ਵਿੱਚ ਰਹੋ ਅਤੇ ਇੱਕ ਨਜ਼ਦੀਕੀ ਪਰਿਵਾਰ ਨਾ ਬਣਾਓ। ਇਕੱਲੇ ਬਾਲਗ ਜਾਂ ਇਕੱਲੇ ਮਾਪੇ ਇੱਕ ਹੋਰ ਪਰਿਵਾਰ ਨਾਲ ਮਿਲ ਕੇ ਇੱਕ ਵਿਸ਼ੇਸ਼ ਸਹਾਇਤਾ ਦਾਇਰਾ ਬਣਾ ਸਕਦੇ ਹਨ।",
-            "pl": "Należy zostać w domu i nie tworzyć poszerzonego gospodarstwa domowego. Dorośli mieszkający samotnie lub samotni rodzice mogą stworzyć bańkę wsparcia z jednym innym gospodarstwem domowym.",
-            "ro": "Rămâneți acasă și nu formați o familie extinsă. Adulții singuri sau părinții singuri se pot alătura unei alte familii pentru a forma un grup de sprijin exclusiv.",
-            "so": "Guriga joog hana sameynin qoys ballaaran. Dadka waawayn ee aan guursan ama waalidinta aan dib u guursanin waxay kusoo biiri karaan hal qoys oo kale si ay u noqdaan dad isu dhow oo gaar isu ah.",
-            "tr": "Evde kalın ve başka hiçbir ev halkı ile sık görüşmeyin. Tek başına yaşayan bir yetişkin veya çocuklarını tek başına büyüten bir ebeveyn benzer durumdaki bir başkasıyla bir araya gelerek kendi yakın destek balonununu oluşturabilir.",
-            "ur": "گھر پر رہیں اور کوئی توسیعی گھرانہ مت بنائیں۔ تنہا بالغان یا تنہا والدین خصوصی امدادی دائرہ بنانے کے لیے ایک دیگر گھرانے کے ساتھ شامل ہو سکتے ہیں۔",
-            "zh": "待在家里，务必不要组建大家庭。单身成年人或单身父母可以与另一个家庭一起组成一个专有的社交泡泡。"
+            "ar": "Do not travel internationally except for essential reasons.",
+            "bn": "Do not travel internationally except for essential reasons.",
+            "cy": "Peidiwch â theithio'n rhyngwladol ac eithrio at ddibenion hanfodol.",
+            "en": "Do not travel internationally except for essential reasons.",
+            "gu": "Do not travel internationally except for essential reasons.",
+            "pa": "Do not travel internationally except for essential reasons.",
+            "pl": "Do not travel internationally except for essential reasons.",
+            "ro": "Do not travel internationally except for essential reasons.",
+            "so": "Do not travel internationally except for essential reasons.",
+            "tr": "Do not travel internationally except for essential reasons.",
+            "ur": "Do not travel internationally except for essential reasons.",
+            "zh": "Do not travel internationally except for essential reasons."
+          }
+        },
+        {
+          "policyIcon": "meeting-indoors",
+          "policyHeading": {
+            "ar": "Support bubbles",
+            "bn": "Support bubbles",
+            "cy": "Swigod cefnogaeth",
+            "en": "Support bubbles",
+            "gu": "Support bubbles",
+            "pa": "Support bubbles",
+            "pl": "Support bubbles",
+            "ro": "Support bubbles",
+            "so": "Support bubbles",
+            "tr": "Support bubbles",
+            "ur": "Support bubbles",
+            "zh": "Support bubbles"
+          },
+          "policyContent": {
+            "ar": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "bn": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "cy": "Peidiwch â chyfarfod â phobl eraill y tu mewn, neu greu aelwyd estynedig. Gall oedolion sengl, rhieni sengl, aelwydydd â baban dan 1 oed, ac aelwydydd â phobl ifanc 16-17 oed nad ydynt yn byw gydag unrhyw oedolion, ymuno ag 1 aelwyd arall i ffurfio swigen gyfyngol.",
+            "en": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "gu": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "pa": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "pl": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "ro": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "so": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "tr": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "ur": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble.",
+            "zh": "Do not meet others indoors or create an extended household. Single adults, single parents, households with a baby under the age of 1, and households with young people aged 16 or 17 who do not live with any adults, may join with 1 other household to form an exclusive bubble."
+          }
+        },
+        {
+          "policyIcon": "meeting-outdoors",
+          "policyHeading": {
+            "ar": "Meeting others outdoors",
+            "bn": "Meeting others outdoors",
+            "cy": "Cyfarfod ag eraill yn yr awyr agored",
+            "en": "Meeting others outdoors",
+            "gu": "Meeting others outdoors",
+            "pa": "Meeting others outdoors",
+            "pl": "Meeting others outdoors",
+            "ro": "Meeting others outdoors",
+            "so": "Meeting others outdoors",
+            "tr": "Meeting others outdoors",
+            "ur": "Meeting others outdoors",
+            "zh": "Meeting others outdoors"
+          },
+          "policyContent": {
+            "ar": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "bn": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "cy": "Gallwch gyfarfod ag eraill mewn gerddi preifat, cyn belled â'ch bod yn cadw pellter cymdeithasol. Gall uchafswm o 4 o bobl o 2 aelwyd (neu swigen, os yw'n cynnwys mwy na 4 o bobl) gyfarfod yn rhywle arall yn yr awyr agored.",
+            "en": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "gu": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "pa": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "pl": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "ro": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "so": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "tr": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "ur": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
+            "zh": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors."
+          }
+        },
+        {
+          "policyIcon": "meeting-people",
+          "policyHeading": {
+            "ar": "Outdoor sports",
+            "bn": "Outdoor sports",
+            "cy": "Chwaraeon yn yr awyr agored",
+            "en": "Outdoor sports",
+            "gu": "Outdoor sports",
+            "pa": "Outdoor sports",
+            "pl": "Outdoor sports",
+            "ro": "Outdoor sports",
+            "so": "Outdoor sports",
+            "tr": "Outdoor sports",
+            "ur": "Outdoor sports",
+            "zh": "Outdoor sports"
+          },
+          "policyContent": {
+            "ar": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "bn": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "cy": "Gall cyrtiau chwaraeon yn yr awyr agored, gan gynnwys cyrsiau golff a lawntiau bowlio ailagor i uchafswm o 4 bobl o 2 aelwyd.",
+            "en": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "gu": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "pa": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "pl": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "ro": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "so": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "tr": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "ur": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
+            "zh": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households."
+          }
+        },
+        {
+          "policyIcon": "personal-care",
+          "policyHeading": {
+            "ar": "Haircuts",
+            "bn": "Haircuts",
+            "cy": "Torri gwallt",
+            "en": "Haircuts",
+            "gu": "Haircuts",
+            "pa": "Haircuts",
+            "pl": "Haircuts",
+            "ro": "Haircuts",
+            "so": "Haircuts",
+            "tr": "Haircuts",
+            "ur": "Haircuts",
+            "zh": "Haircuts"
+          },
+          "policyContent": {
+            "ar": "Hairdressers and barbers can reopen for appointments.",
+            "bn": "Hairdressers and barbers can reopen for appointments.",
+            "cy": "Gall trinwyr gwallt a barbwyr ailagor ar gyfer apwyntiadau.",
+            "en": "Hairdressers and barbers can reopen for appointments.",
+            "gu": "Hairdressers and barbers can reopen for appointments.",
+            "pa": "Hairdressers and barbers can reopen for appointments.",
+            "pl": "Hairdressers and barbers can reopen for appointments.",
+            "ro": "Hairdressers and barbers can reopen for appointments.",
+            "so": "Hairdressers and barbers can reopen for appointments.",
+            "tr": "Hairdressers and barbers can reopen for appointments.",
+            "ur": "Hairdressers and barbers can reopen for appointments.",
+            "zh": "Hairdressers and barbers can reopen for appointments."
+          }
+        },
+        {
+          "policyIcon": "retail",
+          "policyHeading": {
+            "ar": "Shops",
+            "bn": "Shops",
+            "cy": "Siopau",
+            "en": "Shops",
+            "gu": "Shops",
+            "pa": "Shops",
+            "pl": "Shops",
+            "ro": "Shops",
+            "so": "Shops",
+            "tr": "Shops",
+            "ur": "Shops",
+            "zh": "Shops"
+          },
+          "policyContent": {
+            "ar": "Only essential retailers are open.",
+            "bn": "Only essential retailers are open.",
+            "cy": "Dim ond mân-werthwyr hanfodol fydd ar agor.",
+            "en": "Only essential retailers are open.",
+            "gu": "Only essential retailers are open.",
+            "pa": "Only essential retailers are open.",
+            "pl": "Only essential retailers are open.",
+            "ro": "Only essential retailers are open.",
+            "so": "Only essential retailers are open.",
+            "tr": "Only essential retailers are open.",
+            "ur": "Only essential retailers are open.",
+            "zh": "Only essential retailers are open."
+          }
+        },
+        {
+          "policyIcon": "social-distancing",
+          "policyHeading": {
+            "ar": "Social distancing",
+            "bn": "Social distancing",
+            "cy": "Cadw pellter cymdeithasol",
+            "en": "Social distancing",
+            "gu": "Social distancing",
+            "pa": "Social distancing",
+            "pl": "Social distancing",
+            "ro": "Social distancing",
+            "so": "Social distancing",
+            "tr": "Social distancing",
+            "ur": "Social distancing",
+            "zh": "Social distancing"
+          },
+          "policyContent": {
+            "ar": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "bn": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "cy": "Dilynwch y rheolau cadw pellter cymdeithasol â phobl sydd ddim yn byw gyda chi neu sydd ddim yn rhan o’ch swigen gefnogaeth.",
+            "en": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "gu": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "pa": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "pl": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "ro": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "so": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "tr": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "ur": "Follow social distancing rules with people you do not live with or who are not in your support bubble.",
+            "zh": "Follow social distancing rules with people you do not live with or who are not in your support bubble."
           }
         },
         {
           "policyIcon": "travelling",
           "policyHeading": {
-            "ar": "السفر",
-            "bn": "ভ্রমণ",
+            "ar": "Travelling",
+            "bn": "Travelling",
             "cy": "Teithio",
             "en": "Travelling",
-            "gu": "પ્રવાસ",
-            "pa": "ਸਫਰ",
-            "pl": "Podróże",
-            "ro": "Călătoriile",
-            "so": "Socdaal",
-            "tr": "Seyahat",
-            "ur": "سفر",
-            "zh": "出行"
+            "gu": "Travelling",
+            "pa": "Travelling",
+            "pl": "Travelling",
+            "ro": "Travelling",
+            "so": "Travelling",
+            "tr": "Travelling",
+            "ur": "Travelling",
+            "zh": "Travelling"
           },
           "policyContent": {
-            "ar": "ُحظر السفر بدون مُبررٍ معقولٍ. يُحظر السفر الدولي بدون مُبررٍ معقولٍ.",
-            "bn": "যুক্তিযুক্ত কারণ ছাড়া ভ্রমন করবেন না। যুক্তিযুক্ত কারণ ছাড়া আন্তর্জাতিক ভ্রমন করবেন না।",
-            "cy": "Peidiwch â theithio heb esgus rhesymol. Peidiwch â theithio i wledydd eraill heb esgus rhesymol.",
-            "en": "Do not travel without reasonable excuse. Do not travel internationally without reasonable excuse.",
-            "gu": "વાજબી કારણ વગર પ્રવાસ કરશો નહીં. વાજબી કારણ વગર ઇન્ટરનેશન્લ ટ્રાવેલ કરશો નહીં.",
-            "pa": "ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਬਿਨਾਂ ਯਾਤਰਾ ਨਾ ਕਰੋ। ਕਿਸੇ ਉਚਿਤ ਕਾਰਨ ਦੇ ਬਿਨਾਂ ਅੰਤਰਰਾਸ਼ਟਰੀ ਯਾਤਰਾ ਨਾ ਕਰੋ।",
-            "pl": "Nie należy podróżować bez uzasadnionego powodu. Nie należy podróżować za granicę bez uzasadnionego powodu.",
-            "ro": "Nu călătoriți fără un motiv rezonabil. Nu călătoriți internațional fără un motiv rezonabil.",
-            "so": "Ha safrin adigoon haysan cudurdaar macquul ah. Dibidda ha u safrin adigoon haysan cudurdaar macquul ah.",
-            "tr": "Makul bir mazeretiniz yoksa seyahat etmeyiniz. Makul bir mazeretiniz yoksa uluslararası seyahat etmeyiniz.",
-            "ur": "معقول عذر کے بغیر سفر مت کریں۔ معقول عذر کے بغیر بین الاقوامی سفر مت کریں۔",
-            "zh": "如无合理理由，请勿旅行。如无合理理由，请勿进行国际旅行。"
+            "ar": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "bn": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "cy": "Arhoswch yn lleol. Gallwch deithio oddeutu 5 milltir o'ch cartref, neu ymhellach mewn ardaloedd gwledig.",
+            "en": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "gu": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "pa": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "pl": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "ro": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "so": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "tr": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "ur": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
+            "zh": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas."
           }
         },
         {
-          "policyIcon": "weddings-and-funerals",
+          "policyIcon": "work",
           "policyHeading": {
-            "ar": "مقابلة الآخرين",
-            "bn": "অন্যদের সঙ্গে দেখা করা",
-            "cy": "Cwrdd ag eraill",
-            "en": "Meeting others",
-            "gu": "બીજાઓને મળવું",
-            "pa": "ਦੂਜਿਆਂ ਨੂੰ ਮਿਲਣਾ",
-            "pl": "Spotkania z innymi",
-            "ro": "Întâlnirile cu alte persoane",
-            "so": "La kulanka dadka kale",
-            "tr": "Başkalarıyla görüşme",
-            "ur": "دوسروں سے ملنا",
-            "zh": "与他人会面"
-          },
-          "policyContent": {
-            "ar": "ُحظر مقابلة أي أشخاصٍ في الأماكن المُغلقة بخلاف الأشخاص الذين تعيشون معهم أو أفراد مجموعة الدعم الخاصة بكم. يجب مقابلة أفراد الأسرة أو مجموعة الدعم في الحدائق الخاصة فقط، أو الاقتصار على مقابلتهم في الأماكن المفتوحة.",
-            "bn": "আপনি যেসব লোকের সঙ্গে বসবাস করেন বা যারা আপনার সাপোর্ট বাবলের অংশ, শুধু তাদের সঙ্গেই ইনডোরে দেখা করুন। ব্যক্তিগত বাগানে শুধুমাত্র আপনার বাড়ির বা সাপোর্ট বাবলের সদস্যদের সঙ্গেই দেখা করুন। আউটডোরে শুধুমাত্র আপনার বাড়ির বা সাপোর্ট বাবলের সদস্যদের সঙ্গেই দেখা করুন। সম্ভব হলে বাড়ি থেকে কাজ করুন।",
-            "cy": "Peidiwch â chwrdd dan do â neb ond y bobl rydych chi’n byw gyda nhw neu sydd yn eich swigen gefnogaeth. Peidiwch â chwrdd â neb ond eich aelwyd neu’ch swigen gefnogaeth mewn gardd breifat. Peidiwch â chwrdd â neb ond eich aelwyd neu’ch swigen gefnogaeth yn yr awyr agored.",
-            "en": "Meet only the people you live with or your support bubble indoors. Meet only your household or support bubble in private gardens. Meet only your household or support bubble outdoors.",
-            "gu": "જે લોકો સાથે તમે રહેતા હોવ અથવા તમારા સપોર્ટ બબલમાંના લોકોને ફક્ત ઇન્ડોર પરિસ્થિતિમાં મળો. પ્રાયવેટ બગીચાઓમાં ફક્ત તમારા ઘરના સભ્યો અથવા સપોર્ટ બબલમાંના લોકોને મળો. આઉટડોર પરિસ્થિતિમાં ફક્ત તમારા ઘરના સભ્યો અથવા સપોર્ટ બબલમાંના લોકોને મળો.",
-            "pa": "ਇਮਾਰਤ ਦੇ ਅੰਦਰ ਸਿਰਫ ਉਹਨਾਂ ਲੋਕਾਂ ਨੂੰ ਮਿਲੋ ਜੋ ਤੁਹਾਡੇ ਨਾਲ ਰਹਿੰਦੇ ਹਨ ਜਾਂ ਤੁਹਾਡੇ ਸਹਾਇਤਾ ਦਾਇਰੇ ਵਿੱਚ ਹਨ। ਨਿਜੀ ਬਗੀਚਿਆਂ ਵਿੱਚ ਸਿਰਫ ਆਪਣੇ ਪਰਿਵਾਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਨੂੰ ਮਿਲੋ। ਬਾਹਰ ਸਿਰਫ ਆਪਣੇ ਪਰਿਵਾਰ ਜਾਂ ਸਹਾਇਤਾ ਦਾਇਰੇ ਨੂੰ ਮਿਲੋ।",
-            "pl": "W pomieszczeniach wolno spotykać się jedynie ze swoimi domownikami lub osobami z bańki wsparcia. W prywatnych ogródkach wolno spotykać się jedynie ze swoimi domownikami lub osobami z bańki wsparcia. Na świeżym powietrzu wolno spotykać się jedynie ze swoimi domownikami lub osobami z bańki wsparcia.",
-            "ro": "Vă puteți întâlni doar cu persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin în interior. Vă puteți întâlni doar cu persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin în grădini private. Vă puteți întâlni doar cu persoanele cu care locuiți sau care fac parte din grupul dvs. de sprijin în aer liber.",
-            "so": "Meel gudaha kula kulan kaliya dadka aad la nooshahay ama dadka kugu dhow. Qoyskaaga ama dadka kugu dhow oo kaliya kula kulan jardiinooyinka gaarka loo leeyahay. Qoyskaaga ama dadka kugu dhow oo kaliya kula kulan meelaha banaan ah.",
-            "tr": "Kapalı mekanlarda sadece birlikte yaşadığınız ya da destek balonunuzdaki insanlarla bir araya gelebilirsiniz. Şahsa özel bahçelerde sadece birlikte yaşadığınız ya da yakın destek balonunuzdaki insanlarla bir araya gelebilirsiniz. Açık havada sadece birlikte yaşadığınız ya da yakın destek balonunuzdaki insanlarla bir araya gelebilirsiniz.",
-            "ur": "اندرون میں صرف جن لوگوں کے ساتھ آپ رہتے ہیں یا اپنے امدادی دائرے سے ہی ملیں۔ صرف اپنے گھرانے یا امدادی دائرے کے لوگوں سے ہی نجی باغیچوں میں ملیں۔ صرف اپنے گھرانے یا امدادی دائرے کے لوگوں سے ہی بیرون میں ملیں۔",
-            "zh": "只在室内和与您同住或您的社交泡泡成员会面。只在私人花园中与您的家人或社交泡泡成员会面。只在户外与您的家人或社交泡泡成员会面。"
-          }
-        },
-        {
-          "policyIcon": "work-and-business",
-          "policyHeading": {
-            "ar": "العمل والتجارة",
-            "bn": "কাজ ও ব্যবসা",
+            "ar": "Work and business",
+            "bn": "Work and business",
             "cy": "Gwaith a busnes",
             "en": "Work and business",
-            "gu": "કામ અને વ્યાપાર",
-            "pa": "ਕੰਮ ਅਤੇ ਕਾਰੋਬਾਰ",
-            "pl": "Praca i działalność zawodowa",
-            "ro": "Munca și afacerile",
-            "so": "Shaqo iyo ganacsi",
-            "tr": "Çalışma ve iş",
-            "ur": "کام اور کاروبار",
-            "zh": "工作和商务"
+            "gu": "Work and business",
+            "pa": "Work and business",
+            "pl": "Work and business",
+            "ro": "Work and business",
+            "so": "Work and business",
+            "tr": "Work and business",
+            "ur": "Work and business",
+            "zh": "Work and business"
           },
           "policyContent": {
-            "ar": "يتعين العمل من المنزل إذا كان ذلك ممكنًا.",
-            "bn": "সম্ভব হলে বাড়ি থেকে কাজ করুন।",
+            "ar": "Work from home if you can.",
+            "bn": "Work from home if you can.",
             "cy": "Gweithiwch o gartre os gallwch.",
             "en": "Work from home if you can.",
-            "gu": "જો શક્ય હોય તો ઘરેથી કામ કરો.",
-            "pa": "ਜੇ ਤੁਸੀਂ ਕਰ ਸਕਦੇ ਹੋ ਤਾਂ ਘਰ ਤੋਂ ਕੰਮ ਕਰੋ।",
-            "pl": "Należy pracować w domu, jeśli to możliwe.",
-            "ro": "Munciți de acasă, dacă se poate.",
-            "so": "Ku shaqee guriga haddii aad awoodid.",
-            "tr": "Mümkünse evden çalışınız.",
-            "ur": "اگر ممکن ہو تو گھر سے کام کریں۔",
-            "zh": "如果条件允许，请居家办公。"
-          }
-        },
-        {
-          "policyIcon": "worship",
-          "policyHeading": {
-            "ar": "أغطية الوجه",
-            "bn": "মুখের আবরণ",
-            "cy": "Gorchuddion wyneb",
-            "en": "Face coverings",
-            "gu": "ફેસમાસ્ક",
-            "pa": "ਚਿਹਰੇ ਨੂੰ ਢੱਕਣਾ",
-            "pl": "Osłona twarzy",
-            "ro": "Protecție facială",
-            "so": "Waxyaabaha wajiga lagu daboolo",
-            "tr": "Yüz maskeleri",
-            "ur": "نقاب",
-            "zh": "面罩"
-          },
-          "policyContent": {
-            "ar": "يتعين ارتداء غطاءٍ للوجه (إذا كان بإمكانكم ذلك) في جميع الأماكن العامة المُغلقة.",
-            "bn": "সকল ইনডোর জনপরিসর বা পাবলিক প্লেসে মুখের আবরণ পরুন (আপনি তা করতে পারলে)।",
-            "cy": "Gwisgwch orchudd wyneb (os ydych yn gallu) ymhob lle cyhoeddus dan do.",
-            "en": "Wear a face covering (if you are able to) in all indoor public places.",
-            "gu": "તમામ ઇન્ડોર સાર્વજનિક સ્થળોએ (જો તમે સક્ષમ હોવ) ફેસમાસ્ક પહેરો.",
-            "pa": "ਸਾਰੇ ਅੰਦਰੂਨੀ ਜਨਤਕ ਸਥਾਨਾਂ ਤੇ ਇੱਕ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ (ਜੇ ਤੁਸੀਂ ਪਹਿਨ ਸਕਦੇ ਹੋ)।",
-            "pl": "Należy nosić osłonę twarzy (jeżeli osoba jest w stanie) we wszystkich zamkniętych miejscach publicznych.",
-            "ro": "Purtați protecție facială (dacă puteți) în toate spațiile publice interioare.",
-            "so": "Xiro wax wajiga lagu daboolo (haddii aad awoodid) markaad ku jirto dhammaan goobaha dadweynaha ee gudaha.",
-            "tr": "Halka açık tüm kapalı mekanlarda yüz maskesi takınız (takmamanızı gerektirecek bir sebep olmadıkça).",
-            "ur": "اندرون کی تمام عوامی جگہوں میں نقاب  پہنیں (اگر آپ پہن سکیں)۔",
-            "zh": "在所有室内公共场所佩戴面罩（如果可以）。"
+            "gu": "Work from home if you can.",
+            "pa": "Work from home if you can.",
+            "pl": "Work from home if you can.",
+            "ro": "Work from home if you can.",
+            "so": "Work from home if you can.",
+            "tr": "Work from home if you can.",
+            "ur": "Work from home if you can.",
+            "zh": "Work from home if you can."
           }
         }
       ]

@@ -2,6 +2,7 @@ package uk.nhs.nhsx.highriskpostcodesupload
 
 import com.amazonaws.services.cloudfront.AmazonCloudFrontClientBuilder
 import com.amazonaws.services.kms.AWSKMSClientBuilder
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys.BUCKET_NAME
 import uk.nhs.nhsx.core.EnvironmentKeys.DISTRIBUTION_ID
@@ -30,12 +31,10 @@ import uk.nhs.nhsx.core.routing.RoutingHandler
 import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses
 import uk.nhs.nhsx.core.signature.DatedSigner
-import java.time.Instant
-import java.util.function.Supplier
 
 class HighRiskPostcodesUploadHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
-    clock: Supplier<Instant> = CLOCK,
+    clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
     authenticator: Authenticator = awsAuthentication(HighRiskPostCodeUpload, events),
     signer: DatedSigner = StandardSigningFactory(
@@ -73,7 +72,7 @@ class HighRiskPostcodesUploadHandler @JvmOverloads constructor(
                 authorisedBy(
                     authenticator, path(POST, "/upload/high-risk-postal-districts",
                         ApiGatewayHandler { r, _ ->
-                            events(javaClass, RiskyPostDistrictUpload())
+                            events(RiskyPostDistrictUpload())
                             service.upload(r.body)
                         })
                 ),

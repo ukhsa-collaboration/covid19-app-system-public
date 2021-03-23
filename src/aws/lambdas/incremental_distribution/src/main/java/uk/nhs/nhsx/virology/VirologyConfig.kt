@@ -8,7 +8,7 @@ data class VirologyConfig(val testOrdersTable: String,
                           val testResultsTable: String,
                           val submissionTokensTable: String,
                           val testOrdersIndex: String) {
-    @JvmField
+
     val maxTokenPersistenceRetryCount = 3
 
     companion object {

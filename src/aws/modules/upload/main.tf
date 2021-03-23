@@ -40,24 +40,6 @@ module "upload_gateway" {
   tags                 = var.tags
 }
 
-resource "aws_cloudwatch_metric_alarm" "Errors_4XX" {
-  alarm_name          = "${module.upload_lambda.lambda_function_name}-4XXErrors"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "1"
-  metric_name         = "4xx"
-  namespace           = "AWS/ApiGateway"
-  period              = "120"
-  statistic           = "Sum"
-  threshold           = "1"
-  alarm_description   = "Triggers when 4xx errors occur in ${module.upload_lambda.lambda_function_name}"
-  treat_missing_data  = "notBreaching"
-  alarm_actions       = [var.alarm_topic_arn]
-  tags                = var.tags
-  dimensions = {
-    ApiId = module.upload_gateway.api_gateway_id
-  }
-}
-
 resource "aws_cloudwatch_metric_alarm" "Errors_5XX" {
   alarm_name          = "${module.upload_lambda.lambda_function_name}-5XXErrors"
   comparison_operator = "GreaterThanOrEqualToThreshold"

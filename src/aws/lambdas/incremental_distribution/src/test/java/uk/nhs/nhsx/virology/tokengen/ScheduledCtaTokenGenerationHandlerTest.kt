@@ -32,9 +32,7 @@ class ScheduledCtaTokenGenerationHandlerTest {
     private val passwordGenerator = mockk<CrockfordDammRandomStringGenerator>()
 
     private val events = RecordingEvents()
-    private val CSV_FILENAME_FORMATER = DateTimeFormatter.ofPattern("yyyyMMdd")
-        .withZone(ZoneId.systemDefault())
-
+    private val csvFilenameFormatter = DateTimeFormatter.ofPattern("yyyyMMdd").withZone(ZoneId.systemDefault())
 
     @Test
     fun `cta token files created`() {
@@ -152,7 +150,7 @@ class ScheduledCtaTokenGenerationHandlerTest {
     private fun createListOfCtaZipFileRequest(daysOffset: Long): CtaTokenZipFileEntryRequest {
         val today = LocalDate.now()
         val endDate = today.plus(daysOffset, ChronoUnit.DAYS)
-        return CtaTokenZipFileEntryRequest(TestResult.Positive, TestEndDate.of(endDate), TestKit.LAB_RESULT,  CSV_FILENAME_FORMATER.format(endDate),20)
+        return CtaTokenZipFileEntryRequest(TestResult.Positive, TestEndDate.of(endDate), TestKit.LAB_RESULT,  csvFilenameFormatter.format(endDate),20)
 
     }
 }

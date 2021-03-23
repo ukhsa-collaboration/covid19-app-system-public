@@ -14,7 +14,7 @@ class RecordingEvents : Events, Iterable<Event> {
 
     override fun iterator() = received.iterator()
 
-    override fun invoke(clazz: Class<*>, event: Event) {
+    override fun invoke(event: Event) {
         println("received event: $event")
         received += event
     }

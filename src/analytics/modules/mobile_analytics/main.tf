@@ -354,8 +354,14 @@ resource "aws_glue_catalog_table" "this" {
       name = "hasReceivedRiskyVenueM2WarningBackgroundTick"
       type = "int"
     }
-
-
+    columns {
+      name = "totalAlarmManagerBackgroundTasks"
+      type = "int"
+    }
+    columns {
+      name = "missingPacketsLast7Days"
+      type = "int"
+    }
   }
 }
 

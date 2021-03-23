@@ -25,11 +25,14 @@ variable "allow_dev_pipelines" {
   description = "Flag to control the deployment of pipelines used for development"
 }
 
-
 variable "build_failure_events_sns_arn" {
   description = "SNS topic to publish the build failure notifications"
 }
 
 variable "deploy_events_sns_arn" {
   description = "SNS topic to publish the build status notifications"
+}
+
+variable "repository_url" {
+  description = "The URL to the git repository used in the pipelines"
 }

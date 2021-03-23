@@ -5,7 +5,8 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.circuitbreakers.ApprovalStatus.PENDING
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType.MissingPollingTokenError
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType.ValidationError
-import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.startsWith
+import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.Companion.startsWith
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys.SSM_CIRCUIT_BREAKER_BASE_NAME
 import uk.nhs.nhsx.core.HttpResponses.ok
@@ -35,12 +36,10 @@ import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.routing.RoutingHandler
 import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
 import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
-import java.time.Instant
-import java.util.function.Supplier
 
 class ExposureNotificationHandler @JvmOverloads constructor(
     environment: Environment = Environment.unknown(),
-    clock: Supplier<Instant> = CLOCK,
+    clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
     authenticator: Authenticator = awsAuthentication(Mobile, events),
     parameters: Parameters = AwsSsmParameters(),
@@ -66,12 +65,12 @@ class ExposureNotificationHandler @JvmOverloads constructor(
 
     private fun requestHandler(events: Events, circuitBreakerService: CircuitBreakerService) =
         ApiGatewayHandler { r, _ ->
-            events.emit(javaClass, CircuitBreakerExposureRequest())
+            events(CircuitBreakerExposureRequest())
             mapResultToResponse(
                 readOrNull<ExposureNotificationCircuitBreakerRequest>(r.body) {
-                    events.emit(javaClass, UnprocessableJson(it))
+                    events(UnprocessableJson(it))
                 }
-                    ?.let { circuitBreakerService.approvalToken }
+                    ?.let { circuitBreakerService.getApprovalToken() }
                     ?: CircuitBreakerResult.validationError()
             )
         }
@@ -101,7 +100,7 @@ class ExposureNotificationHandler @JvmOverloads constructor(
                 authenticator,
                 path(GET, startsWith("/circuit-breaker/exposure-notification/resolution"),
                     ApiGatewayHandler { r, _ ->
-                        events.emit(javaClass, CircuitBreakerExposureResolution())
+                        events(CircuitBreakerExposureResolution())
                         val result = circuitBreakerService.getResolution(r.path)
                         mapResultToResponse(result)
                     }

@@ -31,12 +31,12 @@ class AwsSnsClient (val events : Events) : AwsSns{
 
             val publishResult =  awsSnsClient.publish(publishRequest)
 
-            events.emit(javaClass, MessagePublishedToSnsTopic(publishResult.messageId,message))
+            events(MessagePublishedToSnsTopic(publishResult.messageId, message))
 
             return publishResult
 
         } catch (e: Exception) {
-            events.emit(javaClass, ExceptionThrown(e, "Publishing to sns topic $topicArn failed"))
+            events(ExceptionThrown(e, "Publishing to sns topic $topicArn failed"))
             throw e
         }
 

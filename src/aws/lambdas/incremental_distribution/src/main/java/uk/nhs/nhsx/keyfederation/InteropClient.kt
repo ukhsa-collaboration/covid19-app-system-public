@@ -21,7 +21,7 @@ import java.net.http.HttpRequest.BodyPublishers
 import java.net.http.HttpResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.*
+import java.util.UUID
 import java.util.function.Supplier
 
 class InteropClient(
@@ -48,43 +48,37 @@ class InteropClient(
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
         val statusCode = response.statusCode()
 
-        events.emit(javaClass, OutgoingHttpRequest(request.uri().toString(), request.method(), statusCode))
+        events(OutgoingHttpRequest(request.uri().toString(), request.method(), statusCode))
 
         return when (statusCode) {
-            200 -> {
-                readOrNull<DiagnosisKeysDownloadResponse>(response.body()) { e ->
-                    events.emit(javaClass, UnprocessableJson(e))
-                } ?: throw RuntimeException()
-            }
+            200 -> readOrNull<DiagnosisKeysDownloadResponse>(response.body()) { e ->
+                events(UnprocessableJson(e))
+            } ?: throw RuntimeException()
             204 -> NoContent
             else -> throw RuntimeException("""Request to download keys from federated key server with batch tag ${request.uri()} failed with status code $statusCode""")
         }
     }
 
-    fun uploadKeys(keys: List<ExposureUpload>): InteropUploadResponse {
-        return try {
-            val payload = toJson(keys)
-            val requestBody = DiagnosisKeysUploadRequest(uniqueId.get().toString(), jws.sign(payload))
-            val uploadRequest = HttpRequest.newBuilder()
-                .header("Authorization", "Bearer $authToken")
-                .header("Content-Type", "application/json")
-                .uri(URI.create("$interopBaseUrl/diagnosiskeys/upload"))
-                .POST(BodyPublishers.ofString(toJson(requestBody)))
-                .build()
-            val httpResponse = client.send(uploadRequest, HttpResponse.BodyHandlers.ofString())
-            when (val statusCode = httpResponse.statusCode()) {
-                200 -> {
-                    readOrNull<InteropUploadResponse>(httpResponse.body()) { e ->
-                        events.emit(javaClass, UnprocessableJson(e))
-                    } ?: throw RuntimeException()
-                }
-                else -> throw RuntimeException("Request to upload keys to federated key server failed with status code $statusCode")
-            }
-        } catch (e: InterruptedException) {
-            throw RuntimeException("Request to upload keys to federated key server failed", e)
-        } catch (e: IOException) {
-            throw RuntimeException("Request to upload keys to federated key server failed", e)
+    fun uploadKeys(keys: List<ExposureUpload>): InteropUploadResponse = try {
+        val payload = toJson(keys)
+        val requestBody = DiagnosisKeysUploadRequest(BatchTag.of(uniqueId.get().toString()), jws.sign(payload))
+        val uploadRequest = HttpRequest.newBuilder()
+            .header("Authorization", "Bearer $authToken")
+            .header("Content-Type", "application/json")
+            .uri(URI.create("$interopBaseUrl/diagnosiskeys/upload"))
+            .POST(BodyPublishers.ofString(toJson(requestBody)))
+            .build()
+        val httpResponse = client.send(uploadRequest, HttpResponse.BodyHandlers.ofString())
+        when (val statusCode = httpResponse.statusCode()) {
+            200 -> readOrNull<InteropUploadResponse>(httpResponse.body()) { e ->
+                events(UnprocessableJson(e))
+            } ?: throw RuntimeException()
+            else -> throw RuntimeException("Request to upload keys to federated key server failed with status code $statusCode")
         }
+    } catch (e: InterruptedException) {
+        throw RuntimeException("Request to upload keys to federated key server failed", e)
+    } catch (e: IOException) {
+        throw RuntimeException("Request to upload keys to federated key server failed", e)
     }
 
     companion object {

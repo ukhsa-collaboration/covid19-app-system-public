@@ -8,10 +8,9 @@ import com.amazonaws.services.dynamodbv2.model.TransactWriteItem
 import com.amazonaws.services.dynamodbv2.model.TransactWriteItemsRequest
 import com.amazonaws.services.dynamodbv2.model.TransactionCanceledException
 import com.amazonaws.services.dynamodbv2.model.Update
-import dev.forkhandles.values.parseOrNull
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap
-import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemIntegerValueMaybe
-import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueMaybe
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemIntegerValueOrNull
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrNull
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrThrow
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
@@ -41,7 +40,7 @@ import uk.nhs.nhsx.virology.result.TestResult
 import uk.nhs.nhsx.virology.result.TestResult.Positive
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import java.time.Instant
-import java.util.*
+import java.util.Optional
 import java.util.function.Function
 import java.util.function.Supplier
 
@@ -63,19 +62,15 @@ class VirologyPersistenceService(
                 if (AVAILABLE.text == status) {
                     AvailableTestResult(
                         TestResultPollingToken.of(itemValueOrThrow(it, "testResultPollingToken")),
-                        itemValueMaybe(it, "testEndDate")
-                            .flatMap { text -> Optional.ofNullable(TestEndDate.parseOrNull(text)) }
-                            .orElseThrow { IllegalStateException("Required field missing") },
+                        itemValueOrThrow(it, "testEndDate").let(TestEndDate.Companion::parse),
                         TestResult.from(itemValueOrThrow(it, "testResult")),
-                        itemValueMaybe(it, "testKit")
-                            .map { text -> TestKit.valueOf(text) }
-                            .orElse(LAB_RESULT))
+                        itemValueOrNull(it, "testKit")?.let { TestKit.valueOf(it) } ?: LAB_RESULT
+                    )
                 } else {
                     PendingTestResult(
                         TestResultPollingToken.of(itemValueOrThrow(it, "testResultPollingToken")),
-                        itemValueMaybe(it, "testKit")
-                            .map { text -> TestKit.valueOf(text) }
-                            .orElse(LAB_RESULT))
+                        itemValueOrNull(it, "testKit")?.let { TestKit.valueOf(it) } ?: LAB_RESULT
+                    )
                 }
             }
     }
@@ -91,12 +86,10 @@ class VirologyPersistenceService(
         return Optional.ofNullable(itemResult.item)
             .map {
                 TestOrder(
-                    itemValueMaybe(it, "ctaToken").map { obj -> CtaToken.of(obj) }.orElseThrow(),
-                    itemIntegerValueMaybe(it, "downloadCount").orElse(0),
-                    itemValueMaybe(it, "testResultPollingToken").map(TestResultPollingToken.Companion::of)
-                        .orElseThrow(),
-                    itemValueMaybe(it, "diagnosisKeySubmissionToken").map(DiagnosisKeySubmissionToken.Companion::of)
-                        .orElseThrow()
+                    itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
+                    itemIntegerValueOrNull(it, "downloadCount") ?: 0,
+                    itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken.Companion::of),
+                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken.Companion::of)
                 )
             }
     }
@@ -150,7 +143,6 @@ class VirologyPersistenceService(
                 return testOrder
             } catch (e: TransactionCanceledException) {
                 events(
-                    javaClass,
                     InfoEvent(
                         "Persistence of test order was cancelled by remote DB service due to " + reasons(e)
                     )
@@ -166,7 +158,7 @@ class VirologyPersistenceService(
         queryTestOrderFor(testResult)
             .ifPresentOrElse(
                 { testOrder: TestOrder -> markTestResultForDeletion(testResult, virologyTimeToLive, testOrder) }
-            ) { events(javaClass, TestResultMarkForDeletionFailure(testResult.testResultPollingToken, "")) }
+            ) { events(TestResultMarkForDeletionFailure(testResult.testResultPollingToken, "")) }
     }
 
     private fun markTestResultForDeletion(
@@ -207,7 +199,7 @@ class VirologyPersistenceService(
             updateCtaExchangeTimeToLiveAndCounter(testOrder, testResult, virologyTimeToLive)
         } catch (e: TransactionException) {
             events(
-                javaClass, CtaUpdateOnExchangeFailure(
+                CtaUpdateOnExchangeFailure(
                     testOrder.ctaToken,
                     testOrder.testResultPollingToken,
                     testOrder.diagnosisKeySubmissionToken
@@ -264,11 +256,9 @@ class VirologyPersistenceService(
         return dynamoDbClient.query(request).items.stream().findFirst()
             .map {
                 TestOrder(
-                    itemValueMaybe(it, "ctaToken").map(CtaToken.Companion::of).orElseThrow(),
-                    itemValueMaybe(it, "testResultPollingToken").map(TestResultPollingToken.Companion::of)
-                        .orElseThrow(),
-                    itemValueMaybe(it, "diagnosisKeySubmissionToken").map(DiagnosisKeySubmissionToken.Companion::of)
-                        .orElseThrow(),
+                    itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
+                    itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
+                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of)
                 )
             }
     }
@@ -392,12 +382,12 @@ class VirologyPersistenceService(
                 executeTransaction(dynamoDbClient, transactWriteItems.apply(order))
                 VirologyResultPersistOperation.Success()
             } catch (e: TransactionException) {
-                events(javaClass, TestResultPersistenceFailure(order.ctaToken, e))
+                events(TestResultPersistenceFailure(order.ctaToken, e))
                 TransactionFailed()
             }
         }
         .orElseGet {
-            events(javaClass, VirologyOrderNotFound(testResult.ctaToken))
+            events(VirologyOrderNotFound(testResult.ctaToken))
             OrderNotFound()
         }
 
@@ -406,11 +396,9 @@ class VirologyPersistenceService(
         return Optional.ofNullable(itemResult.item)
             .map {
                 TestOrder(
-                    itemValueMaybe(it, "ctaToken").map(CtaToken.Companion::of).orElseThrow(),
-                    itemValueMaybe(it, "testResultPollingToken").map(TestResultPollingToken.Companion::of)
-                        .orElseThrow(),
-                    itemValueMaybe(it, "diagnosisKeySubmissionToken").map(DiagnosisKeySubmissionToken.Companion::of)
-                        .orElseThrow(),
+                    itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
+                    itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
+                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of)
                 )
             }
     }

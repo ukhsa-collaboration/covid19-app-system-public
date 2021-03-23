@@ -6,7 +6,7 @@ import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import java.security.PrivateKey
 
-class KmsCompatibleSigner(val key: PrivateKey, val claimedSignatureAlgo: SigningAlgorithmSpec = SigningAlgorithmSpec.ECDSA_SHA_256) : Signer {
+class KmsCompatibleSigner(val key: PrivateKey, private val claimedSignatureAlgo: SigningAlgorithmSpec = SigningAlgorithmSpec.ECDSA_SHA_256) : Signer {
     override fun sign(bytes: ByteArray): Signature = java.security.Signature.getInstance("SHA256withECDSA").let {
         it.initSign(key)
         it.update(bytes)

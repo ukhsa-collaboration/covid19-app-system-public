@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.core.aws.dynamodb
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.assertj.core.api.Assertions.assertThatThrownBy
@@ -34,22 +35,22 @@ class DynamoAttributesTest {
     @Test
     fun `item string maybe for existing item key`() {
         val item = mapOf("key" to AttributeValue("value"))
-        val value = DynamoAttributes.itemValueMaybe(item, "key")
-        assertThat(value, equalTo(Optional.of("value")))
+        val value = DynamoAttributes.itemValueOrNull(item, "key")
+        assertThat(value, equalTo("value"))
     }
 
     @Test
     fun `item string maybe for non existing item key`() {
         val item = mapOf("key" to AttributeValue("value"))
-        val value = DynamoAttributes.itemValueMaybe(item, "key-123")
-        assertThat(value, equalTo(Optional.empty()))
+        val value = DynamoAttributes.itemValueOrNull(item, "key-123")
+        assertThat(value, absent())
     }
 
     @Test
     fun `item string maybe for existing item key but with different type`() {
         val item = mapOf("key" to AttributeValue().withN("1"))
-        val value = DynamoAttributes.itemValueMaybe(item, "key")
-        assertThat(value, equalTo(Optional.empty()))
+        val value = DynamoAttributes.itemValueOrNull(item, "key")
+        assertThat(value, absent())
     }
 
     @Test
@@ -67,14 +68,14 @@ class DynamoAttributesTest {
     @Test
     fun `item long maybe for existing item key`() {
         val item = mapOf("key" to AttributeValue().withN("1600848379"))
-        val value = DynamoAttributes.itemLongValueMaybe(item, "key")
-        assertThat(value, equalTo(Optional.of(1600848379L)))
+        val value = DynamoAttributes.itemLongValueOrNull(item, "key")
+        assertThat(value, equalTo(1600848379L))
     }
 
     @Test
     fun `item long maybe for non existing item key`() {
         val item = mapOf("key" to AttributeValue())
-        val value = DynamoAttributes.itemLongValueMaybe(item, "key")
-        assertThat(value, equalTo(Optional.empty()))
+        val value = DynamoAttributes.itemLongValueOrNull(item, "key")
+        assertThat(value, absent())
     }
 }

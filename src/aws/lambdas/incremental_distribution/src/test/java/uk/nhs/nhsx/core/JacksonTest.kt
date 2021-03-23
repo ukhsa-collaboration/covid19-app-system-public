@@ -5,6 +5,7 @@ import com.natpryce.hamkrest.absent
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -25,12 +26,12 @@ class JacksonTest {
         val input = MyValueWrapper(DiagnosisKeySubmissionToken.of("hello"))
         val json = toJson(input)
         assertEquals("""{ "value": "hello" }""".trimIndent(), json, STRICT)
-        assertThat(Jackson.readJson(json, MyValueWrapper::class.java), equalTo(input))
+        assertThat(Jackson.readJsonOrThrow<MyValueWrapper>(json), equalTo(input))
     }
 
     @Test
     fun `validates value type as null if invalid`() {
-        assertThat(Jackson.readOrNull<MyValueWrapper>("""{ "value": "" }""") { }, absent())
+        assertThat(Jackson.readOrNull<MyValueWrapper>("""{ "value": "" }"""), absent())
     }
 
     @Test
@@ -48,8 +49,7 @@ class JacksonTest {
     fun `reads json strictly`() {
         val input = """{"value":"1970-01-01T00:00:00Z", "anotherField": "foobar" }"""
 
-        assertThatThrownBy { Jackson.readStrict(input, MyInstantWrapper::class.java) }
-            .isInstanceOf(JsonProcessingException::class.java)
+        assertNull(Jackson.readStrictOrNull<MyInstantWrapper>(input))
 
         assertThat(Jackson.readStrictOrNull<MyInstantWrapper>(input), absent())
     }
@@ -58,7 +58,7 @@ class JacksonTest {
     @ValueSource(strings = ["POSITIVE", "NEGATIVE", "VOID"])
     fun `round-trips TestResult`(value: String) {
         val input = """{ "value":"$value" }"""
-        val wrapper = Jackson.readJson(input, MyTestResultWrapper::class.java)
+        val wrapper = Jackson.readJsonOrThrow<MyTestResultWrapper>(input)
         assertThat(wrapper.value, equalTo(TestResult.from(value)))
         assertEquals(input, toJson(wrapper), STRICT)
     }
@@ -70,20 +70,28 @@ class JacksonTest {
 
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 3])
-    internal fun `round-trips test type`(value: Int) {
+    fun `round-trips test type`(value: Int) {
         val input = """{ "value":$value }"""
-        val wrapper = Jackson.readJson(input, MyTestTypeWrapper::class.java)
+        val wrapper = Jackson.readJsonOrThrow<MyTestTypeWrapper>(input)
         assertThat(wrapper.value, equalTo(TestType.from(value)))
         assertEquals(input, toJson(wrapper), STRICT)
     }
 
     @ParameterizedTest
     @ValueSource(ints = [0, 1, 2, 3, 4, 5])
-    internal fun `round-trips report type`(value: Int) {
+    fun `round-trips report type`(value: Int) {
         val input = """{ "value":$value }"""
-        val wrapper = Jackson.readJson(input, MyReportTypeWrapper::class.java)
+        val wrapper = Jackson.readJsonOrThrow<MyReportTypeWrapper>(input)
         assertThat(wrapper.value, equalTo(ReportType.from(value)))
         assertEquals(input, toJson(wrapper), STRICT)
+    }
+
+    @Test
+    fun `throws exception if list contains null`() {
+        assertThatThrownBy {
+            val input = """{ "value": [null, {"value": "1970-01-01T00:00:00Z"}] }"""
+            Jackson.readJsonOrThrow<MyListWrapper>(input)
+        }.isInstanceOf(JsonProcessingException::class.java)
     }
 }
 
@@ -92,3 +100,4 @@ data class MyInstantWrapper(val value: Instant)
 data class MyTestResultWrapper(val value: TestResult)
 data class MyTestTypeWrapper(val value: TestType)
 data class MyReportTypeWrapper(val value: ReportType)
+data class MyListWrapper(val value: List<MyInstantWrapper>)

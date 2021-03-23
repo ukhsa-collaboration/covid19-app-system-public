@@ -1,14 +1,12 @@
 package uk.nhs.nhsx.virology
 
 import uk.nhs.nhsx.core.events.Event
-import uk.nhs.nhsx.core.events.EventCategory
+import uk.nhs.nhsx.core.events.EventCategory.Error
 import uk.nhs.nhsx.core.events.EventCategory.Info
 import uk.nhs.nhsx.core.events.EventCategory.Warning
-import uk.nhs.nhsx.core.events.EventCategory.Error
 import uk.nhs.nhsx.core.exceptions.TransactionException
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
-import uk.nhs.nhsx.virology.tokengen.CtaProcessorRequest
 import uk.nhs.nhsx.virology.result.TestResult
 import uk.nhs.nhsx.virology.tokengen.CtaProcessorResult
 import uk.nhs.nhsx.virology.tokengen.CtaTokenZipFileEntryRequest

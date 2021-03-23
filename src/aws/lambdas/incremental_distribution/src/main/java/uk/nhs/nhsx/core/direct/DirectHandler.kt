@@ -18,12 +18,11 @@ abstract class DirectHandler<T, R>(
 
     override fun handleRequest(request: Map<String, Any>, context: Context): Map<String, Any> {
         val start = System.currentTimeMillis()
-        events.emit(javaClass, DirectRequestStarted(javaClass.simpleName))
+        events(DirectRequestStarted(javaClass.simpleName))
 
         return logAndRethrowException(events, convertExceptionsToLambdaError(handler(), clazz))(request, context)
             .also {
-                events.emit(
-                    javaClass,
+                events(
                     DirectRequestCompleted(javaClass.simpleName, Duration.ofMillis(System.currentTimeMillis() - start))
                 )
             }

@@ -29,6 +29,6 @@ interface BackendContractScenario {
 
 fun TidyJsonBody() = Filter { next ->
     {
-        next(it.tidyJsonBody()).tidyJsonBody().also { println(it.bodyString()) }
+        next(it.tidyJsonBody()).tidyJsonBody().also { b -> println(b.bodyString()) }
     }
 }

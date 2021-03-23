@@ -26,10 +26,8 @@ data class ByteArraySource(val bytes: ByteArray) {
     override fun hashCode(): Int = bytes.contentHashCode()
 
     companion object {
-        @JvmStatic
         fun fromUtf8String(input: String): ByteArraySource = ByteArraySource(input.toByteArray())
 
-        @JvmStatic
         fun fromFile(input: File): ByteArraySource = try {
             ByteArraySource(Files.readAllBytes(input.toPath()))
         } catch (e: IOException) {

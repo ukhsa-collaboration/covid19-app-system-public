@@ -2,7 +2,7 @@ package smoke.actors
 
 import org.http4k.core.ContentType
 import org.http4k.core.HttpHandler
-import org.http4k.core.Method
+import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Status
 import org.http4k.core.then
@@ -16,11 +16,11 @@ class WelshSIPGateway(
     unauthedClient: HttpHandler,
     private val envConfig: EnvConfig
 ) {
-    private val authedClient = SetAuthHeader(envConfig.authHeaders.isolationPayment).then(unauthedClient)
+    private val authedClient = SetAuthHeader(envConfig.auth_headers.isolationPayment).then(unauthedClient)
 
     fun consumeToken(ipcToken: IpcTokenId, status: Status): IsolationResponse {
         val consumedToken = authedClient(
-            Request(Method.POST, envConfig.isolationPaymentConsumeEndpoint)
+            Request(POST, envConfig.isolation_payment_consume_endpoint)
                 .header("Content-Type", ContentType.APPLICATION_JSON.value)
                 .body(Jackson.toJson(IsolationRequest(ipcToken)))
         )
@@ -31,7 +31,7 @@ class WelshSIPGateway(
 
     fun verifyToken(ipcToken: IpcTokenId, status: Status): IsolationResponse {
         val verifiedToken = authedClient(
-            Request(Method.POST, envConfig.isolationPaymentVerifyEndpoint)
+            Request(POST, envConfig.isolation_payment_verify_endpoint)
                 .header("Content-Type", ContentType.APPLICATION_JSON.value)
                 .body(Jackson.toJson(IsolationRequest(ipcToken)))
         )

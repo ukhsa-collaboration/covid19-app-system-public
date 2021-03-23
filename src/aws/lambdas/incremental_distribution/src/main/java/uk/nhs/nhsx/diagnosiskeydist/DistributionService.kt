@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeydist
 
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
@@ -7,23 +8,22 @@ import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.signature.Signer
-import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.SYSTEM_EXIT_ERROR_HANDLER
+import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.Companion.SYSTEM_EXIT_ERROR_HANDLER
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber
 import uk.nhs.nhsx.diagnosiskeydist.apispec.DailyZIPSubmissionPeriod
+import uk.nhs.nhsx.diagnosiskeydist.apispec.DailyZIPSubmissionPeriod.Companion.DAILY_PATH_PREFIX
 import uk.nhs.nhsx.diagnosiskeydist.apispec.TwoHourlyZIPSubmissionPeriod
 import uk.nhs.nhsx.diagnosiskeydist.apispec.ZIPSubmissionPeriod
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.KeyDistributor
-import uk.nhs.nhsx.diagnosiskeydist.keydistribution.KeyFileUtility
+import uk.nhs.nhsx.diagnosiskeydist.keydistribution.KeyFileUtility.writeToFile
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.IOException
-import java.security.NoSuchAlgorithmException
 import java.time.Duration
 import java.time.Instant
+import java.time.temporal.ChronoUnit.DAYS
 import java.util.*
 import java.util.Collections.synchronizedList
-import java.util.function.Supplier
 
 /**
  * Batch job to generate and upload daily and two-hourly Diagnosis Key Distribution ZIPs every two hours during a 15' window
@@ -37,16 +37,15 @@ class DistributionService(
     private val awsS3: AwsS3,
     private val config: BatchProcessingConfig,
     private val events: Events,
-    private val clock: Supplier<Instant>
+    private val clock: Clock
 ) {
     private val uploadedZipFileNames = synchronizedList(ArrayList<String>())
 
-    @Throws(Exception::class)
     fun distributeKeys(now: Instant) {
         val window = DistributionServiceWindow(now, config.zipSubmissionPeriodOffset)
 
         events(
-            javaClass, DistributionBatchWindow(
+            DistributionBatchWindow(
                 now,
                 window.earliestBatchStartDateWithinHourInclusive(),
                 window.latestBatchStartDateWithinHourExclusive()
@@ -69,22 +68,41 @@ class DistributionService(
                 SYSTEM_EXIT_ERROR_HANDLER
             ).use { pool ->
                 for (zipPeriod in lastZipPeriod.allPeriodsToGenerate()) {
-                    pool.execute { distributeKeys(allSubmissions, window, zipPeriod) }
+                    pool.execute { distributeSubmissions(allSubmissions, window, zipPeriod) }
                 }
             }
         }
 
-        removeUnmodifiedObjectsFromDistributionBucket(config.zipBucketName)
+        deleteOrReplaceZipFiles(config.zipBucketName, window)
         invalidateCloudFrontCaches()
     }
 
-    private fun removeUnmodifiedObjectsFromDistributionBucket(bucketName: BucketName) {
-        val distributionObjectSummaries = awsS3.getObjectSummaries(bucketName)
-        for (s3ObjectSummary in distributionObjectSummaries) {
-            if (!uploadedZipFileNames.contains(s3ObjectSummary.key)) {
-                awsS3.deleteObject(Locator.of(bucketName, ObjectKey.of(s3ObjectSummary.key)))
+    private fun deleteOrReplaceZipFiles(bucketName: BucketName, window: DistributionServiceWindow) {
+        fun generateEmptyZipFor(
+            objectKey: String,
+            threshold: Instant,
+            window: DistributionServiceWindow
+        ) {
+            val dailyInstant = DailyZIPSubmissionPeriod.parseOrNull(objectKey)
+            if (dailyInstant != null && dailyInstant.isAfter(threshold)) {
+                distributeExposureKeys(listOf(), window, DailyZIPSubmissionPeriod(dailyInstant))
+                events(EmptyZipDistributed(objectKey))
             }
         }
+
+        val thirtyDaysAgo = clock()
+            .truncatedTo(DAYS)
+            .minus(Duration.ofDays(30))
+
+        awsS3.getObjectSummaries(bucketName)
+            .map { it.key }
+            .filterNot { uploadedZipFileNames.contains(it) }
+            .forEach {
+                when {
+                    it.startsWith(DAILY_PATH_PREFIX) -> generateEmptyZipFor(it, thirtyDaysAgo, window)
+                    else -> awsS3.deleteObject(Locator.of(bucketName, ObjectKey.of(it)))
+                }
+            }
     }
 
     private fun invalidateCloudFrontCaches() {
@@ -98,30 +116,32 @@ class DistributionService(
         )
     }
 
-    @Throws(IOException::class, NoSuchAlgorithmException::class)
-    private fun distributeKeys(
+    private fun distributeSubmissions(
         submissions: List<Submission>,
         window: DistributionServiceWindow,
         zipPeriod: ZIPSubmissionPeriod
     ) {
-        val temporaryExposureKeys = validKeysFromSubmissions(submissions, window, zipPeriod)
+        distributeExposureKeys(validKeysFromSubmissions(submissions, window, zipPeriod), window, zipPeriod)
+    }
+
+    private fun distributeExposureKeys(
+        temporaryExposureKeys: List<StoredTemporaryExposureKey>,
+        window: DistributionServiceWindow,
+        zipPeriod: ZIPSubmissionPeriod
+    ) {
         val binFile = File.createTempFile("export", ".bin")
         val sigFile = File.createTempFile("export", ".sig")
 
         try {
             val binFileContent = generateExportFileContentFrom(temporaryExposureKeys, window, zipPeriod)
-            KeyFileUtility.writeToFile(binFile, binFileContent)
+            writeToFile(binFile, binFileContent)
 
             val sigFileContent = generateSigFileContentFrom(binFileContent)
-            KeyFileUtility.writeToFile(sigFile, sigFileContent)
+            writeToFile(sigFile, sigFileContent)
 
             val objectName = zipPeriod.zipPath()
-            keyDistributor.distribute(
-                config.zipBucketName,
-                ObjectKey.of(objectName),
-                binFile,
-                sigFile
-            )
+
+            keyDistributor.distribute(config.zipBucketName, ObjectKey.of(objectName), binFile, sigFile)
 
             uploadedZipFileNames.add(objectName)
         } finally {
@@ -138,8 +158,7 @@ class DistributionService(
         for (submission in submissions) {
             if (zipPeriod.isCoveringSubmissionDate(submission.submissionDate, window.zipSubmissionPeriodOffset)) {
                 for (key in submission.payload.temporaryExposureKeys) {
-                    val keyIntervalNumber = ENIntervalNumber(key.rollingStartNumber.toLong())
-                    if (keyIntervalNumber.validUntil(window.zipExpirationExclusive())) {
+                    if (ENIntervalNumber(key.rollingStartNumber.toLong()).validUntil(window.zipExpirationExclusive())) {
                         temporaryExposureKeys.add(key)
                     }
                 }
@@ -151,9 +170,8 @@ class DistributionService(
         return temporaryExposureKeys
     }
 
-    @Throws(IOException::class)
     private fun generateExportFileContentFrom(
-        temporaryExposureKeys: List<StoredTemporaryExposureKey?>,
+        temporaryExposureKeys: List<StoredTemporaryExposureKey>,
         window: DistributionServiceWindow,
         period: ZIPSubmissionPeriod
     ): ByteArray {

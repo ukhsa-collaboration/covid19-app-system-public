@@ -7,7 +7,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter @message like /Failed to persist test result due to duplicate ctaToken: /\n| sort @timestamp desc\n| stats count(*) as exceptionCount by bin(1h)",
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name='TestResultPersistenceFailure' | stats count(*) as exceptionCount by bin(1h)",
                 "region": "eu-west-2",
                 "stacked": false,
                 "view": "table",
@@ -21,7 +21,7 @@
             "width": 24,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter @message like /Failed to persist test result due to duplicate ctaToken: /\n| sort @timestamp desc\n| stats count(*) as exceptionCount by bin(1h)",
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name='TestResultPersistenceFailure' | stats count(*) as exceptionCount by bin(1h)",
                 "region": "eu-west-2",
                 "stacked": false,
                 "view": "timeSeries",
@@ -35,7 +35,7 @@
             "width": 12,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter @message like /Failed to persist test result due to duplicate ctaToken: /\n| sort @timestamp desc\n| stats count(*) as exceptionCount by bin(1d)",
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name='TestResultPersistenceFailure' | stats count(*) as exceptionCount by bin(1d)",
                 "region": "eu-west-2",
                 "stacked": false,
                 "title": "${virology_upload_function} duplicate ctaTokens count per day",
@@ -49,7 +49,7 @@
             "width": 24,
             "height": 6,
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | # fields @timestamp, @message\nparse @message /\\[(?<Date>\\d{4}-\\d\\d-\\d\\d)\\s+(?<Time>\\d\\d:\\d\\d:\\d\\d)\\]\\s+\\[(\\w+)\\]\\s+\\[(?<RequestId>[\\w-]+)\\]\\s+\\[(\\w+)\\]\\s+\\[(?<Class>\\w+)\\]\\s+(?<Message>.+)/\n| filter @message like /Failed to persist test result due to duplicate ctaToken:/\n| parse @message \"Failed to persist test result due to duplicate ctaToken: *\" as ctaToken\n| sort @timestamp desc",
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name='TestResultPersistenceFailure' | sort @timestamp desc",
                 "region": "eu-west-2",
                 "stacked": false,
                 "title": "${virology_upload_function} duplicate ctaTokens",

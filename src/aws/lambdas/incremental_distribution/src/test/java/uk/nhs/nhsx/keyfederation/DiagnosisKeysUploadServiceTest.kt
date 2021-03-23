@@ -438,7 +438,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         override fun match(value: String): MatchResult = readOrNull<DiagnosisKeysUploadRequest>(value)
             ?.let {
                 when {
-                    it.batchTag.matches(Regex("[a-f0-9\\-]+")) && it.payload == "DUMMY_SIGNATURE" -> exactMatch()
+                    it.batchTag.value.matches(Regex("[a-f0-9\\-]+")) && it.payload == "DUMMY_SIGNATURE" -> exactMatch()
                     else -> noMatch()
                 }
             } ?: noMatch()
