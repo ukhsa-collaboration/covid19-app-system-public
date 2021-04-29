@@ -101,7 +101,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "hasTestedSelfRapidPositiveBackgroundTick": 1,
     "receivedRiskyVenueM1Warning": 1,
     "receivedRiskyVenueM2Warning ": 1,
-    "hasReceivedRiskyVenueM2WarningBackgroundTick": 1
+    "hasReceivedRiskyVenueM2WarningBackgroundTick": 1,
+    "consentedToShareVenueHistory": 1,
+    "askedToShareVenueHistory": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -186,7 +188,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "hasTestedSelfRapidPositiveBackgroundTick": 1,
     "receivedRiskyVenueM1Warning": 1,
     "receivedRiskyVenueM2Warning ": 1,
-    "hasReceivedRiskyVenueM2WarningBackgroundTick": 1
+    "hasReceivedRiskyVenueM2WarningBackgroundTick": 1,
+    "consentedToShareVenueHistory": 1,
+    "askedToShareVenueHistory": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -245,6 +249,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `receivedRiskyVenueM1Warning`
   * `receivedRiskyVenueM2Warning`
   * `hasReceivedRiskyVenueM2WarningBackgroundTick`
+  * `consentedToShareVenueHistory`
+  * `askedToShareVenueHistory`
 
 
 ### Responses

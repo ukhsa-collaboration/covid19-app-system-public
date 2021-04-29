@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
 import smoke.actors.SIPGateway
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.virology.Country
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.Country
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS

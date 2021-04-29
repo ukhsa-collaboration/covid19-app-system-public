@@ -3,10 +3,9 @@ package uk.nhs.nhsx.virology.tokengen
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.diagnosiskeydist.ZipFileUtility
-import uk.nhs.nhsx.testhelper.data.asInstant
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult.*
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult.*
 import java.io.File
 
 class VirologyProcessorExportsTest {

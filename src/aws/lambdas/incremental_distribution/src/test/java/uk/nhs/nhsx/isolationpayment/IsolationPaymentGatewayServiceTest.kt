@@ -12,7 +12,7 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.time.Instant
 import java.util.Optional
 

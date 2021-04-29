@@ -21,6 +21,14 @@ module NHSx
       return test_config_file
     end
 
+    def generate_analytics_test_config(environment_name, account_name, system_config)
+      test_config_file = File.join(system_config.out, "gen/config/analytics", "test_config_#{environment_name}.json")
+
+      target_config = analytics_target_environment_configuration(environment_name, account_name, system_config)
+      write_file(test_config_file, JSON.dump(target_config))
+      return test_config_file
+    end
+
     def generate_ssh_keypair(system_config)
       key_file = File.join(system_config.out, "ssh", "ephemeral_deploy_id_rsa")
       file key_file do

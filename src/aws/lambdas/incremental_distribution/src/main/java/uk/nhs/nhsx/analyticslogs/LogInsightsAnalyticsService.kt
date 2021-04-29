@@ -6,7 +6,7 @@ import com.amazonaws.services.logs.model.GetQueryResultsResult
 import com.amazonaws.services.logs.model.ResultField
 import com.amazonaws.services.logs.model.StartQueryRequest
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator
@@ -89,7 +89,7 @@ class LogInsightsAnalyticsService(private val client: AWSLogs,
         }
 
         fun toAnalyticsJson(analyticsRows: List<*>): String {
-            return analyticsRows.joinToString("\n") { Jackson.toJson(it) }
+            return analyticsRows.joinToString("\n") { Json.toJson(it) }
         }
 
     }

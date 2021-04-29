@@ -2,7 +2,7 @@ package uk.nhs.nhsx.keyfederation
 
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator
@@ -13,11 +13,12 @@ import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.diagnosiskeydist.agspec.RollingStartNumber.isRollingStartNumberValid
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.keyfederation.download.ExposureKeysPayload
-import uk.nhs.nhsx.keyfederation.download.ReportType
-import uk.nhs.nhsx.keyfederation.download.TestType
+import uk.nhs.nhsx.domain.ReportType
+import uk.nhs.nhsx.domain.TestType
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -38,7 +39,7 @@ class FederatedKeyUploader(
 
     fun groupByOrigin(payload: DiagnosisKeysDownloadResponse): Map<String, List<ExposureDownload>> =
         payload.exposures
-            .filter { it.testType === TestType.PCR && it.reportType === ReportType.CONFIRMED_TEST }
+            .filter { it.testType === TestType.LAB_RESULT && it.reportType === ReportType.CONFIRMED_TEST }
             .groupBy(ExposureDownload::origin)
 
     private fun handleOriginKeys(batchTag: BatchTag, origin: String, exposureDownloads: List<ExposureDownload>) {

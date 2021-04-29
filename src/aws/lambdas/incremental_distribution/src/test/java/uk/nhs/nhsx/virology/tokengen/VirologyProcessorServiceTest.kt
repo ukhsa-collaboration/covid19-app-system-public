@@ -9,11 +9,11 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.VirologyService
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult.Positive
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.io.File
@@ -163,9 +163,9 @@ class VirologyProcessorServiceTest {
 
         val expirationDate = ZonedDateTime.now()
         val requests = listOf(
-            CtaTokenZipFileEntryRequest(Positive,TestEndDate.of(2020,10,6),LAB_RESULT,"20201006",3),
-            CtaTokenZipFileEntryRequest(Positive,TestEndDate.of(2020,10,7),LAB_RESULT,"20201007",3),
-            CtaTokenZipFileEntryRequest(Positive,TestEndDate.of(2020,10,8),LAB_RESULT,"20201008",3)
+            CtaTokenZipFileEntryRequest(Positive, TestEndDate.of(2020,10,6),LAB_RESULT,"20201006",3),
+            CtaTokenZipFileEntryRequest(Positive, TestEndDate.of(2020,10,7),LAB_RESULT,"20201007",3),
+            CtaTokenZipFileEntryRequest(Positive, TestEndDate.of(2020,10,8),LAB_RESULT,"20201008",3)
         )
 
         val result = processorServiceWithExportMock.generateStoreTokensAndReturnSignedUrl(requests,"password",expirationDate)

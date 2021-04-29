@@ -23,13 +23,13 @@ import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.RiskyPostDistrictUpload
-import uk.nhs.nhsx.core.routing.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
-import uk.nhs.nhsx.core.routing.RoutingHandler
-import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
-import uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.routing.authorisedBy
+import uk.nhs.nhsx.core.routing.withoutSignedResponses
 import uk.nhs.nhsx.core.signature.DatedSigner
 
 class HighRiskPostcodesUploadHandler @JvmOverloads constructor(

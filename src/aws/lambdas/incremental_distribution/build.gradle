@@ -2,7 +2,7 @@ import java.text.DecimalFormat
 
 plugins {
     id "java"
-    id "org.jetbrains.kotlin.jvm" version "1.4.31"
+    id "org.jetbrains.kotlin.jvm" version "1.4.32"
     id "com.adarshr.test-logger" version "2.1.1"
     id "jacoco"
     id "com.github.spotbugs" version "4.6.0"
@@ -13,52 +13,134 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 configurations.testImplementation.canBeResolved = true
 
-repositories {
-    mavenCentral()
-    maven {
-        name "DynamoDB Local Release Repo"
-        url "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+
+    ext {
+        aws_sdk_version = "1.11.993"
+        aws_sdk2_version = "2.16.36"
+        aws_xray_version = "2.4.0"
+        forkhandles_version = "1.8.6.0"
+        http4k_version = "4.5.0.1"
+        jackson_version = "2.12.2"
+        junit_version = "5.7.1"
     }
-}
 
-ext {
-    aws_sdk_version = "1.11.970"
-    aws_sdk2_version = "2.16.14"
-    aws_xray_version = "2.4.0"
-    forkhandles_version = "1.8.5.0"
-    http4k_version = "4.4.0.1"
-    jackson_version = "2.12.2"
-    junit_version = "5.7.1"
-}
+    repositories {
+        mavenCentral()
+        maven {
+            name "DynamoDB Local Release Repo"
+            url "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"
+        }
+    }
 
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        suppressWarnings = false
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+        kotlinOptions {
+            suppressWarnings = false
+            jvmTarget = "11"
+        }
+    }
+
+    compileTestKotlin.kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs += "-Xjvm-default=enable"
     }
-}
 
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "11"
-    freeCompilerArgs += "-Xjvm-default=enable"
-}
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        options.compilerArgs += ["-parameters"]
+    }
 
-tasks.withType(JavaCompile) {
-    options.compilerArgs += ["-parameters"]
-}
+    tasks.withType(Test) {
+        outputs.upToDateWhen { false }
+    }
 
-tasks.withType(Test) {
-    outputs.upToDateWhen { false }
-}
+    testlogger {
+        showExceptions false
+        // log tests that take longer than ...
+        slowThreshold 2000
+    }
 
-testlogger {
-    showExceptions false
-    // log tests that take longer than ...
-    slowThreshold 2000
-}
+    task zipLambdaDistribution(type: Zip) {
+        preserveFileTimestamps = false
+        reproducibleFileOrder = true
+        setDestinationDir(new File(rootDir, "../../../../out/build"))
+        from compileJava
+        from compileKotlin
+        from processResources
+        into("lib") {
+            from configurations.runtimeClasspath
+        }
+    }
 
-jacocoTestReport {
-    dependsOn test
+    task lambdaZip {
+        dependsOn(check, zipLambdaDistribution)
+    }
+
+    test {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+        scanForTestClasses = false
+
+        useJUnitPlatform()
+
+        testlogger {
+            showStandardStreams false
+            showPassed false
+        }
+
+        reports.html.destination = file("$projectDir/../../../../out/reports")
+        reports.junitXml.destination = file("$projectDir/../../../../out/reports")
+    }
+
+    task testJar(type: Jar) {
+        classifier "test"
+        from sourceSets.test.output
+    }
+
+    configurations {
+        testArtifacts.extendsFrom testRuntime
+    }
+
+    artifacts {
+        testArtifacts testJar
+    }
+
+    dependencies {
+        implementation "org.jetbrains.kotlin:kotlin-stdlib"
+        implementation platform("dev.forkhandles:forkhandles-bom:$forkhandles_version")
+        implementation platform("org.http4k:http4k-bom:$http4k_version")
+        implementation "dev.forkhandles:values4k:$forkhandles_version"
+        implementation "org.http4k:http4k-format-jackson"
+
+        implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
+        implementation "com.amazonaws:aws-java-sdk-s3"
+
+        implementation "commons-codec:commons-codec:1.15"
+
+        implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
+        implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
+
+        implementation "com.fasterxml.jackson.module:jackson-module-parameter-names"
+
+        testImplementation platform("org.junit:junit-bom:$junit_version")
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+        testImplementation "org.awaitility:awaitility:4.0.3"
+        testImplementation "org.junit.jupiter:junit-jupiter-api"
+        testImplementation "org.junit.jupiter:junit-jupiter-params"
+        testImplementation "org.http4k:http4k-format-moshi"
+        testImplementation "org.http4k:http4k-testing-hamkrest"
+        testImplementation "org.http4k:http4k-testing-approval"
+        testImplementation "org.assertj:assertj-core:3.18.1"
+        testImplementation "io.mockk:mockk:1.10.2"
+        testImplementation "org.hamcrest:hamcrest:2.2"
+        testImplementation "com.github.npathai:hamcrest-optional:2.0.0"
+        testImplementation "org.assertj:assertj-core:3.19.0"
+        testImplementation "org.skyscreamer:jsonassert:1.5.0"
+        testImplementation "com.natpryce:snodge:3.7.0.0"
+        testRuntimeOnly "org.glassfish:javax.json:1.1"
+    }
 }
 
 spotbugsMain {
@@ -74,8 +156,6 @@ spotbugsMain {
     }
 }
 
-spotbugsTest.enabled = false // do not run spotbugs against the test-suite for now
-
 task copyNativeDependencies(type: Copy) {
     from(configurations.testImplementation) {
         include '*.dll'
@@ -86,11 +166,6 @@ task copyNativeDependencies(type: Copy) {
 }
 
 test {
-    useJUnitPlatform()
-
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-
-    scanForTestClasses = false
 
     filter {
         includeTestsMatching "*Test"
@@ -99,22 +174,20 @@ test {
         excludeTestsMatching "db.*"
     }
 
-    testlogger {
-        showStandardStreams false
-        showPassed false
-    }
-
     dependsOn copyNativeDependencies
 
     test.doFirst {
         systemProperty "java.library.path", 'build/libs'
     }
 
-    reports.html.destination = file("$projectDir/../../../../out/reports")
-    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
-
     finalizedBy jacocoTestReport
 }
+
+jacocoTestReport {
+    dependsOn test
+}
+
+spotbugsTest.enabled = false // do not run spotbugs against the test-suite for now
 
 task testSmokeParallel(type: Test) {
     useJUnitPlatform{
@@ -188,37 +261,21 @@ task exploreExportFile(type: JavaExec) {
     args System.getProperty("explore.args", "").split()
 }
 
-task zipLambdaDistribution(type: Zip) {
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
-
-    from compileJava
-    from compileKotlin
-    from processResources
-    into("lib") {
-        from configurations.runtimeClasspath
-    }
-}
-
-task lambdaZip {
-    dependsOn(check, zipLambdaDistribution)
-}
-
 
 dependencies {
-    implementation "com.amazonaws:aws-lambda-java-log4j2:1.2.0"
-    implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
+    implementation project(':infra')
+    implementation project(':analytics-exporter')
 
-    implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
     implementation "com.amazonaws:aws-java-sdk-kms"
     implementation "com.amazonaws:aws-java-sdk-cloudfront"
     implementation "com.amazonaws:aws-java-sdk-logs"
     implementation "com.amazonaws:aws-java-sdk-secretsmanager"
-    implementation "com.amazonaws:aws-java-sdk-s3"
     implementation "com.amazonaws:aws-java-sdk-ssm"
     implementation "com.amazonaws:aws-java-sdk-sns"
     implementation "com.amazonaws:aws-java-sdk-dynamodb"
     implementation "com.amazonaws:aws-java-sdk-kinesis"
+    implementation "com.amazonaws:aws-java-sdk-athena"
+    implementation "com.amazonaws:aws-java-sdk-sqs"
 
     implementation platform("com.amazonaws:aws-xray-recorder-sdk-bom:$aws_xray_version")
     implementation "com.amazonaws:aws-xray-recorder-sdk-core"
@@ -226,7 +283,6 @@ dependencies {
     implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk"
     implementation "com.amazonaws:aws-xray-recorder-sdk-aws-sdk-instrumentor"
 
-    implementation "commons-codec:commons-codec:1.15"
     implementation "com.github.ben-manes.caffeine:caffeine:2.8.8"
 
     implementation platform("com.google.protobuf:protobuf-bom:3.12.2")
@@ -236,7 +292,6 @@ dependencies {
 
     implementation platform("com.fasterxml.jackson:jackson-bom:$jackson_version")
     implementation "com.fasterxml.jackson.core:jackson-databind"
-    implementation "com.fasterxml.jackson.module:jackson-module-parameter-names"
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
@@ -246,40 +301,18 @@ dependencies {
     implementation "net.lingala.zip4j:zip4j:2.7.0"
     implementation "org.apache.commons:commons-csv:1.8"
 
-    implementation platform("org.http4k:http4k-bom:$http4k_version")
-    implementation platform("dev.forkhandles:forkhandles-bom:$forkhandles_version")
-    implementation "dev.forkhandles:values4k:$forkhandles_version"
-
     testImplementation "com.amazonaws:DynamoDBLocal:1.13.5"
 
     testImplementation platform("software.amazon.awssdk:bom:${aws_sdk2_version}")
     testImplementation "software.amazon.awssdk:lambda"
     testImplementation "software.amazon.awssdk:athena"
 
-    testImplementation platform("org.junit:junit-bom:$junit_version")
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "org.junit.jupiter:junit-jupiter-params"
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-
-    testImplementation "org.hamcrest:hamcrest:2.2"
-    testImplementation "com.github.npathai:hamcrest-optional:2.0.0"
-    testImplementation "org.assertj:assertj-core:3.19.0"
-    testImplementation "org.skyscreamer:jsonassert:1.5.0"
-    testImplementation "com.natpryce:snodge:3.7.0.0"
-    testRuntimeOnly "org.glassfish:javax.json:1.1"
-
     testImplementation "org.http4k:http4k-aws"
-    testImplementation "org.http4k:http4k-core"
-    testImplementation "org.http4k:http4k-format-jackson"
-    testImplementation "org.http4k:http4k-format-moshi"
-    testImplementation "org.http4k:http4k-testing-hamkrest"
-    testImplementation "org.http4k:http4k-testing-approval"
     testImplementation "org.http4k:http4k-testing-servirtium"
     testImplementation "org.http4k:http4k-resilience4j"
 
     testImplementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
 
-    testImplementation "org.awaitility:awaitility:4.0.3"
     testImplementation "io.mockk:mockk:1.10.2"
     testImplementation "org.apache.commons:commons-lang3:3.11"
 
@@ -289,10 +322,8 @@ dependencies {
     testImplementation "org.bouncycastle:bcprov-ext-jdk15on:1.68"
 
     testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
-}
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+    testApi project(path: ":infra", configuration: 'testArtifacts')
 }
 
 tasks.create("weighDependencies") {

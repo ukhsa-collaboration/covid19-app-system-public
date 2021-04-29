@@ -4,34 +4,13 @@ module NHSx
   # Helpers that codify the use of the AWS CLI within the NHSx project
   module AWS
     AWS_CONFIG_PATHS = {
-      "config" => "#{ENV['HOME']}/.aws/config",
-      "credentials" => "#{ENV['HOME']}/.aws/credentials",
+      "config" => "#{ENV["HOME"]}/.aws/config",
+      "credentials" => "#{ENV["HOME"]}/.aws/credentials",
     }.freeze
     # The default region
     AWS_REGION = "eu-west-2".freeze
-    # The AWS profile to use when authenticating with MFA
-    AWS_AUTH_PROFILE = "nhs-auth".freeze
-    # The full AWS role ARNs to use when logging in for deployment
-    AWS_DEPLOYMENT_ROLES = {
-      "staging" => "arn:aws:iam::123456789012:role/staging-ApplicationDeploymentUser",
-      "prod" => "arn:aws:iam::123456789012:role/prod-ApplicationDeploymentUser",
-      "aa-dev" => "arn:aws:iam::181706652550:role/ApplicationDeploymentUser",
-      "aa-staging" => "arn:aws:iam::074634264982:role/ApplicationDeploymentUser",
-      "aa-prod" => "arn:aws:iam::353189165293:role/ApplicationDeploymentUser",
-    }.freeze
-    # The full AWS role ARNs to use when logging in for queries
-    AWS_READ_ROLES = {
-      "staging" => "arn:aws:iam::123456789012:role/staging-ReadOnlyUser",
-      "prod" => "arn:aws:iam::123456789012:role/prod-ReadOnlyUser",
-      "aa-dev" => "arn:aws:iam::181706652550:role/ReadOnlyUser",
-      "aa-staging" => "arn:aws:iam::074634264982:role/ReadOnlyUser",
-      "aa-prod" => "arn:aws:iam::353189165293:role/ReadOnlyUser",
-    }.freeze
-    # The user friendly names for the AWS roles
-    AWS_ROLE_NAMES = ["deploy", "read"].freeze
     # AWS CLI command lines in use by automation scripts
     module Commandlines
-
       # Creates a new output files to be passed into the lambda invoke funtion
       def self.new_lambda_output_file(lambda_function, system_config)
         outdir = File.join(system_config.out, "/logs/lambdas")
@@ -150,7 +129,6 @@ module NHSx
       def self.sts_assume_role(profile, role, account_number, session_name)
         "aws sts assume-role --profile=#{profile} --role-arn arn:aws:iam::#{account_number}:role/#{role} --role-session-name=#{session_name}"
       end
-
 
       def self.get_lambda_layer_versions(layer_name, region)
         "aws lambda list-layer-versions --layer-name #{layer_name} --region #{region}"
@@ -321,18 +299,6 @@ module NHSx
       custom_oai = env_vars["custom_oai"]
       raise GaudiError, "Custom oai not found for #{lambda_function}" unless custom_oai
       custom_oai
-    end
-
-    # Map a user friendly role name we can add as a parameter to the tasks to the full ARN
-    def aws_role_arn(role_name, account)
-      case role_name
-      when "deploy"
-        AWS_DEPLOYMENT_ROLES[account]
-      when "read"
-        AWS_READ_ROLES[account]
-      else
-        raise GaudiError, "No ARN corresponding to #{role_name}"
-      end
     end
 
     # Deletes the contents of any S3 buckets in the Terraform workspace corresponding to the given name

@@ -4,6 +4,7 @@ namespace :deploy do
       desc "Tier metadata content deployment"
       task :"tier_metadata:#{tgt_env}" => [:"login:#{account}"] do
         begin
+          Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["publish:tier_metadata:#{tgt_env}"].invoke
         ensure

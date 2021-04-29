@@ -27,19 +27,19 @@ import smoke.env.EnvConfig
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.virology.TestKit
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.Available
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.AvailableV2
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
-import uk.nhs.nhsx.virology.result.TestResult.Negative
-import uk.nhs.nhsx.virology.result.TestResult.Positive
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult
+import uk.nhs.nhsx.domain.TestResult.Negative
+import uk.nhs.nhsx.domain.TestResult.Positive
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -303,7 +303,8 @@ class TempExpKeysBatchSmokeTest {
 
         fun virologyOrderAndUploadResult(testResult: TestResult,
                                          apiVersion: ApiVersion,
-                                         testKit: TestKit): DiagnosisKeySubmissionToken {
+                                         testKit: TestKit
+        ): DiagnosisKeySubmissionToken {
             val orderResponse = mobileApp.orderTest(apiVersion)
             val ctaToken = orderResponse.tokenParameterValue
             val pollingToken = orderResponse.testResultPollingToken

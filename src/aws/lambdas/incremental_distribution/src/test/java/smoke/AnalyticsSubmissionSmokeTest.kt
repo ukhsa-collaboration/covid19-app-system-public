@@ -23,7 +23,7 @@ import java.time.Duration
 import java.time.Duration.ofDays
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.UUID
+import java.util.*
 import org.http4k.format.Jackson as Http4kJackson
 
 @ExtendWith(ApprovalTest::class)
@@ -149,6 +149,8 @@ class AnalyticsSubmissionSmokeTest {
         receivedRiskyVenueM2Warning = counter++.toInt()
         hasReceivedRiskyVenueM2WarningBackgroundTick = counter++.toInt()
         totalAlarmManagerBackgroundTasks = counter++.toInt()
-        missingPacketsLast7Days = counter.toInt()
+        missingPacketsLast7Days = counter++.toInt()
+        consentedToShareVenueHistory = counter++.toInt()
+        askedToShareVenueHistory = counter.toInt()
     }
 }

@@ -3,7 +3,7 @@ package smoke.data
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
 import java.security.SecureRandom
 import java.time.Clock
 import java.time.Duration

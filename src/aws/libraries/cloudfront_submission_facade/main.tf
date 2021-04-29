@@ -386,7 +386,6 @@ resource "aws_cloudfront_distribution" "this" {
 
     viewer_protocol_policy = "https-only"
   }
-
   origin {
     domain_name = replace(var.empty_submission_endpoint, "/^https?://([^/]*).*/", "$1")
     origin_id   = var.empty_submission_endpoint

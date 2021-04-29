@@ -10,12 +10,13 @@ import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadService
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.keyfederation.download.NoContent
-import uk.nhs.nhsx.keyfederation.download.ReportType
-import uk.nhs.nhsx.keyfederation.download.TestType
+import uk.nhs.nhsx.domain.ReportType
+import uk.nhs.nhsx.domain.TestType
 import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
 import java.time.Instant
 import java.time.LocalDate
@@ -49,9 +50,11 @@ class DiagnosisKeysDownloadServiceTest {
     private val sep14 = LocalDate.of(2020, 9, 14)
     private val sep15 = LocalDate.of(2020, 9, 15)
 
-    private val batch = DiagnosisKeysDownloadResponse(BatchTag.of("abc"),
+    private val batch = DiagnosisKeysDownloadResponse(
+        BatchTag.of("abc"),
         listOf(
-            ExposureDownload("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumber, 0, 144, "GB-EAW", listOf("GB-EAW"), TestType.PCR,ReportType.CONFIRMED_TEST,0)
+            ExposureDownload("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumber, 0, 144, "GB-EAW", listOf("GB-EAW"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0)
         )
     )
 
@@ -79,7 +82,7 @@ class DiagnosisKeysDownloadServiceTest {
             144,
             "origin",
             listOf("GB-EAW"),
-            TestType.PCR,
+            TestType.LAB_RESULT,
             ReportType.CONFIRMED_TEST,
             0))
         assertEquals(7, transformed.transmissionRiskLevel)
@@ -172,10 +175,14 @@ class DiagnosisKeysDownloadServiceTest {
 
     @Test
     fun `download keys and filter one valid region`() {
-        every { interopClient.downloadKeys(any(), any()) } returns DiagnosisKeysDownloadResponse(BatchTag.of("abc"), listOf(
-            ExposureDownload("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumber, 0, 144, "GB-EAW", listOf("GB-EAW"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumber, 1, 144, "some-origin", listOf("UNKNOWN"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("QHtCeDEgfmiPUtJWmyIzrw==", rollingStartNumber, 2, 144, "some-origin", listOf("UNKNOWN"), TestType.PCR,ReportType.CONFIRMED_TEST,0)
+        every { interopClient.downloadKeys(any(), any()) } returns DiagnosisKeysDownloadResponse(
+            BatchTag.of("abc"), listOf(
+            ExposureDownload("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumber, 0, 144, "GB-EAW", listOf("GB-EAW"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumber, 1, 144, "some-origin", listOf("UNKNOWN"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("QHtCeDEgfmiPUtJWmyIzrw==", rollingStartNumber, 2, 144, "some-origin", listOf("UNKNOWN"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0)
         ))
         every { context.remainingTimeInMillis } returns 10000
 
@@ -195,10 +202,14 @@ class DiagnosisKeysDownloadServiceTest {
 
     @Test
     fun `download keys and filter multiple valid regions`() {
-        every { interopClient.downloadKeys(any(), any()) } returns DiagnosisKeysDownloadResponse(BatchTag.of("abc"), listOf(
-            ExposureDownload("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumber, 0, 144, "GB-EAW", listOf("GB-EAW"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumber, 1, 144, "GB-SCO", listOf("GB-SCO"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("QHtCeDEgfmiPUtJWmyIzrw==", rollingStartNumber, 2, 144, "some-origin", listOf("UNKNOWN"), TestType.PCR,ReportType.CONFIRMED_TEST,0)
+        every { interopClient.downloadKeys(any(), any()) } returns DiagnosisKeysDownloadResponse(
+            BatchTag.of("abc"), listOf(
+            ExposureDownload("W2zb3BeMWt6Xr2u0ABG32Q==", rollingStartNumber, 0, 144, "GB-EAW", listOf("GB-EAW"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("kzQt9Lf3xjtAlMtm7jkSqw==", rollingStartNumber, 1, 144, "GB-SCO", listOf("GB-SCO"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("QHtCeDEgfmiPUtJWmyIzrw==", rollingStartNumber, 2, 144, "some-origin", listOf("UNKNOWN"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0)
         ))
         every { context.remainingTimeInMillis } returns 10000
 
@@ -229,15 +240,22 @@ class DiagnosisKeysDownloadServiceTest {
     fun `stop the download loop if the remaining time is not sufficient`() {
         val currentDay = LocalDate.of(2020, 9, 15)
         val fourteenDaysPrior = LocalDate.of(2020, 9, 1)
-        every { interopClient.downloadKeys(fourteenDaysPrior) } returns DiagnosisKeysDownloadResponse(BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3"), listOf(
-            ExposureDownload("ogNW4Ra+Zdds1ShN56yv3w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("EwoHez3CQgdslvdxaf+ztw==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0)
+        every { interopClient.downloadKeys(fourteenDaysPrior) } returns DiagnosisKeysDownloadResponse(
+            BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3"), listOf(
+            ExposureDownload("ogNW4Ra+Zdds1ShN56yv3w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("EwoHez3CQgdslvdxaf+ztw==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0)
         ))
 
-        every { interopClient.downloadKeys(fourteenDaysPrior, BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3")) } returns DiagnosisKeysDownloadResponse(BatchTag.of("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01"), listOf(
-            ExposureDownload("xnGNbiVKd7xarkv9Gbdi5w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("ui0wpyxH4QaeIo9f6A6f7A==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("MLSUh0NsJG/XIExJQJiqkg==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0)
+        every { interopClient.downloadKeys(fourteenDaysPrior, BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3")) } returns DiagnosisKeysDownloadResponse(
+            BatchTag.of("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01"), listOf(
+            ExposureDownload("xnGNbiVKd7xarkv9Gbdi5w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("ui0wpyxH4QaeIo9f6A6f7A==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("MLSUh0NsJG/XIExJQJiqkg==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0)
         ))
         every { interopClient.downloadKeys(fourteenDaysPrior, BatchTag.of("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01")) } returns NoContent
         every { context.remainingTimeInMillis } returns -2
@@ -262,15 +280,22 @@ class DiagnosisKeysDownloadServiceTest {
     fun `continue the download loop if we have time`() {
         val currentDay = LocalDate.of(2020, 9, 15)
         val fourteenDaysPrior = LocalDate.of(2020, 9, 1)
-        every { interopClient.downloadKeys(fourteenDaysPrior) } returns DiagnosisKeysDownloadResponse(BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3"), listOf(
-            ExposureDownload("ogNW4Ra+Zdds1ShN56yv3w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("EwoHez3CQgdslvdxaf+ztw==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0)
+        every { interopClient.downloadKeys(fourteenDaysPrior) } returns DiagnosisKeysDownloadResponse(
+            BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3"), listOf(
+            ExposureDownload("ogNW4Ra+Zdds1ShN56yv3w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("EwoHez3CQgdslvdxaf+ztw==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0)
         ))
 
-        every { interopClient.downloadKeys(fourteenDaysPrior, BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3")) } returns DiagnosisKeysDownloadResponse(BatchTag.of("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01"), listOf(
-            ExposureDownload("xnGNbiVKd7xarkv9Gbdi5w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("ui0wpyxH4QaeIo9f6A6f7A==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0),
-            ExposureDownload("MLSUh0NsJG/XIExJQJiqkg==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.PCR,ReportType.CONFIRMED_TEST,0)
+        every { interopClient.downloadKeys(fourteenDaysPrior, BatchTag.of("75b326f7-ae6f-42f6-9354-00c0a6b797b3")) } returns DiagnosisKeysDownloadResponse(
+            BatchTag.of("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01"), listOf(
+            ExposureDownload("xnGNbiVKd7xarkv9Gbdi5w==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("ui0wpyxH4QaeIo9f6A6f7A==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0),
+            ExposureDownload("MLSUh0NsJG/XIExJQJiqkg==", rollingStartNumber, 0, 144, "GB-EAW", listOf("some-region"), TestType.LAB_RESULT,
+                ReportType.CONFIRMED_TEST,0)
         ))
         every { interopClient.downloadKeys(fourteenDaysPrior, BatchTag.of("80e77dc6-8c27-42fb-8e38-1a0b1f51bf01")) } returns NoContent
         every { context.remainingTimeInMillis } returns 10000

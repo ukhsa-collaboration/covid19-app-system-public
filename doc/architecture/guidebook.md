@@ -32,42 +32,44 @@ The Test and Trace Application is about speed, precision and reach in context of
 * Test: Helps you book a test and get your result quickly.
 * Isolate: Keep track of your self-isolation countdown and access relevant advice.
 
+>App statistics are available online at [https://stats.app.covid19.nhs.uk](https://stats.app.covid19.nhs.uk/)
 ## Functional Architecture
 
-The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journeys, from left to right, clock-wise:
+The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journeys:
 
-![Figure: Domains](diagrams/img/cv19-app-system-domain-model-domain-overview-2021-03-03.png "Figure: Domain Model")
+![Figure: Domains](diagrams/img/cv19-app-system-domain-model-domain-overview-2021-04-19.png "Figure: Domain Model")
 
 ### Domain Model
 
-Our concepts include terminology of the GAEN framework. Please see the [GAEN API](https://static.googleusercontent.com/media/www.google.com/en//covid19/exposurenotifications/pdfs/Android-Exposure-Notification-API-documentation-v1.3.2.pdf) for detailed data models and concept definitions.
+Our concepts include terminology of the [Google and Apple Exposure Notification (GAEN)](https://www.google.com/covid19/exposurenotifications/) framework. Please see the [GAEN API](https://developers.google.com/android/exposure-notifications/exposure-notifications-api) for detailed data models and concept definitions.
 
-* **Encounter detection** provides temporary exposure key histories for index cases
-* **App Settings and Onboarding** for multiple languages and user specified postcode districts
-* **Diagnosis keys** are polled periodically from the backend and then matched on mobile client side using the GAEN API as part of the Apple / Google mobile platforms
-* **Symptoms** trigger Isolation Advice, but **not** a diagnosis key upload
-* **Isolation advice** offers **ordering a test**
-* **Isolation advice** triggered by **Exposure Notification** offers **claiming an isolation payment**
-* Based on a positive **Virology test result**, diagnosis key upload with exposure notification and/or index case advice is (re)triggered
-* Lists of venues identified by public health organisations as risk venues are polled and matched with information from Venue QR codes scanned by the app's **Venue Check-In**.
-* High risk postcodes as an example of certain **Area risk levels** are polled and matched with the user specified postcode district
-* **User Notifications** can be triggered by either risky venues with the visited venues, or area risk level with the user specified postcode district level
-* The important **difference between User and Exposure Notification** is that the latter always and only refers to diagnosis key matches for the contacts of an index case (cascading). User notifications in contrast are triggered only by and for user owned data like postcode districts or QR codes of visited venues.
-* **App and System analytics** is the one and only domain getting anonymised usage or installation related data. Design and implementation addresses in particular all privacy and security concerns of NCSC, the ICO and the GAEN Framework T&Cs.
+* **App Settings and Onboarding** allows the user to accept terms and conditions, make a language selection and set their postcode district
+* **Rate the App** encourages regular collection of user feedback following venue check-in
+* **Encounter Detection** is where anonymous keys are exchanged with contacts and a recent history of exposure keys is maintained for use in **Exposure Notification**
+* **Area Risk Levels** highlight the risk in the users local area.  High risk postcodes are polled periodically and matched with the user's postcode district
+* **Exposure Notification** is triggered when diagnosis keys, shared by those known to have tested positive, are polled periodically and matched, using the GAEN API, against the user's own recent exposure history
+* **Virology Test** booking is offered once the user receives **Isolation Advice**
+* **Isolation Advice**, when triggered by a positive **Virology Test** result or **Exposure Notification**, results in a subsequent **Diagnosis Key Submission**, if the user consents to helping to stop the spread of coronavirus
+* An **Isolation Payment Claim** is offered when **Isolation Advice** is triggered by an **Exposure Notification**
 
-### Domain Dependencies
+User notifications can be triggered by either risky venues matching visited venues, or area risk levels matching the users specified postcode district level.  The important difference between a user notification and an **Exposure Notification** is that the latter always and only refers to diagnosis key matches for the contacts of an index case (cascading). User notifications in contrast are triggered only by and for user owned data like postcode districts or QR codes of visited venues.
+
+Only app and system analytics get anonymised usage or installation related data. Design and implementation addresses in particular all privacy and security concerns of NCSC, the ICO and the GAEN Framework T&Cs.
+
+### External Domain Dependencies
 
 * Encounter detection depends on the Apple / Google mobile platform, user devices with their iOS and Android OS and their implementation of the GAEN Framework.
 * Symptoms, Isolation advice and the Isolation payment claims depend on approved policies and data from UK health authorities and government.
 * Virology testing depends on UK test booking web sites. And testing labs with their specific organisation, processes and technical interfaces, test result notification services and processes for manual token distribution depend on APIs provided by that domain
-* Venue Check-In depends on the QR system with the two components for generating QR Posters and for labelling venues as a risk venue (used by PHE, CTAS)
+* Venue check-in depends on the QR system with the two components for generating QR Posters and for labelling venues as a risk venue (used by PHE, CTAS)
 * Import of area risk levels depends on corresponding CV19 related data sources from PHE, JBC and Local Authorities
+* Isolation payment claims depend on SIP gateway web sites to check eligibility, authenticate and make the payment claim.
 
 ### Data Model
 
 The following data model provides a black box view on the system's data model. It uses the payload specifications of our [API contracts](#system-apis-and-interfaces).
 
-![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2020-12-09.png "Figure: Data Model")
+![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2021-04-19.png "Figure: Data Model")
 
 ### GAEN Framework
 Background and an explanation of the framework's basic functionality can be found [here](https://blog.google/documents/73/Exposure_Notification_-_FAQ_v1.1.pdf)
@@ -223,7 +225,7 @@ It's worth noting that if the app falls back to using version 1 of the GAEN API,
 
 The NHS CV19 App and Cloud Services (CV19 App System)  has five major parts: Mobile apps, Cloud backend with API services, Infrastructure, Exposure Notification (EN) configuration and algorithm, and Dependent systems.
 
-![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2021-02-19.png "Figure: Overview")
+![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2021-04-19.png "Figure: Overview")
 
 It adheres to following principles
 
@@ -245,7 +247,7 @@ The system architecture diagram below specifies the complete system showing the 
 * As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
 * Security and operations is built on AWS cloud-native components.
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2021-02-19.png "Figure: System Architecture")
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2021-04-19.png "Figure: System Architecture")
 
 The port names in the system architecture are usually defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
 
@@ -309,7 +311,7 @@ When the user interacts with the symptoms questionnaire, the App has the latest 
 
 The testing process involves ordering and registering tests through the UK  Virology Testing website, which is external to the App system. Note the flow step for actual Virology Testing is a horribly over-simplified view of a complex process outside of our system.
 
-![System flow: virology testing](diagrams/img/system-flow_virology-testing-2020-09-14.png "Figure: Request virology testing and get result using a temporary token")
+![System flow: virology testing](diagrams/img/system-flow-virology-testing-2021-03-22.png "Figure: Request virology testing and get result using a temporary token")
 
 The app generates a short-lived **token to pass to the Virology Testing website** so that it can match the results that come back a few days later. This token is generated as unique by the Backend Service. The Backend service will store the token so that it can confirm the results that it is sent are valid.  
 
@@ -321,7 +323,7 @@ As per the flow for an Exposure Notification, when an app user is confirmed posi
 
 This is the flow where the App user manually enters a test result code, received via SMS or Mail from the citizen notification service: BSA for England and PHW for Wales. 
 
-![System flow: Enter test result code](diagrams/img/system-flow_enter-test-result-code-2020-09-14.png "Figure:  Enter test result code")
+![System flow: Enter test result code](diagrams/img/system-flow-enter-test-result-code-2021-03-22.png "Figure:  Enter test result code")
 
 The notification service uses an App System API to upload the test result **and** get a test result verification token. The token is then send via SMS/Mail to the citizen together with the result so she can verify the test result with the app and submit diagnosis keys for contact exposure notifications.
 
@@ -410,8 +412,8 @@ Submission APIs are usually used by the app to submit data to the backend.
 Note, the port name in the system architecture is defined by ```API Group\API Name```, e.g. ```Submission\Diagnosis Key```.
 
 | API Name | API Group | API Contract | User/Client impact |
-| - | - | - | - |
-| Diagnosis Key | Submission | [diagnosis-key-submission.md](./api-contracts/diagnosis-key-submission.md) | In event of positive diagnosis the app can upload anonymous exposure keys to the server |
+| --- | --- | --- | --- |
+| Diagnosis Key | Submission | [diagnosis-key-submission.md](./api-contracts/diagnosis-key-submission.md) | In event of positive diagnosis, and user consent to share, the app uploads anonymous exposure keys to the server |
 | Virology Testing | Submission | [virology-testing-api.md ](./api-contracts/virology-testing-api.md) | Allows clients to book a coronavirus test using a CTA Token that is passed into the test booking website. Clients can also periodically poll for test results using the CTA Token. New for v3.3 - clients can request a result for a test that was not booked via the app, they will input a CTA token into the app. To support test types other than PCR tests, we have introduced a non-backward compatible version 2 of the API (V1 is now deprecated). |
 | Mobile Analytics  | Submission | [analytics-submission-mobile.md](./api-contracts/analytics-submission-mobile.md) | Allows clients to submit analytics data daily. Not testable from mobile application. |
 | Mobile Analytics Events | Submission | [mobile-analytics-submission.md](./api-contracts/mobile-analytics-submission.md) | Allows clients to send anonymous epidemiological data to the backend. |
@@ -426,11 +428,11 @@ Note, the port name in the system architecture is defined by ```API Group\API Na
 * Payload content-type: payload specific
 
 | API Name | API Group | API Contract | User/Client impact |
-| - | - | - | - |
+| --- | --- | --- | --- |
 | Diagnosis Key | Distribution | [diagnosis-key-distribution.md](./api-contracts/diagnosis-key-distribution.md) | Clients download exposure keys everyday, valid for 14 days (as per EN API). |
 | Exposure Risk Configuration | Distribution | [exposure-risk-configuration-distribution.md](./api-contracts/exposure-risk-configuration-distribution.md) | N/A not testable. |
 | Postal District Risk Levels | Distribution | [risky-post-district-distribution.md](./api-contracts/risky-post-district-distribution.md) | List of post districts with risk indicators, used by mobiles to match against the user specified postal district. |
-|  |  | [risky-post-district-distribution-v2.md](./api-contracts//risky-post-district-distribution-v2.md) |  Additional app color and content information for risk level indicators. |
+|  |  | [risky-post-district-distribution-v2.md](./api-contracts/risky-post-district-distribution-v2.md) |  Additional app color and content information for risk level indicators. |
 | Identified Risk Venues | Distribution | [risky-venue-distribution.md](./api-contracts/risky-venue-distribution.md) | List of venues marked as risky which mobile clients poll for daily. If the client has been in a risky venue within the risk period (defined in risky venue upload) an isolation message is displayed. |
 | Symptoms Questionnaire | Distribution | [symptoms-questionnaire-distribution.md](./api-contracts/symptoms-questionnaire-distribution.md) | Symptomatic questionnaire used in the mobile clients. This is set by the NHS Medical Policy team. |
 | Self Isolation Configuration | Distribution | [self-isolation-distribution.md](./api-contracts/self-isolation-distribution.md) | Configuration data used by mobile clients to inform users how long to isolate for and how far back they can select symptom onset. |
@@ -449,7 +451,7 @@ Upload APIs are usually used by external systems to submit data (files, json) to
 * Security for external system upload
 
 | API Name | API Group | API Contract | User/Client impact |
-| - | - | - | - |
+| --- | --- | --- | --- |
 | Postal District Risk Levels | Upload | [risky-post-district-upload.md](./api-contracts/risky-post-district-upload.md) | Distribution to mobile. |
 | Identified Risk Venues | Upload | [risky-venue-upload.md](./api-contracts/risky-venue-upload.md) | Data source for Risky Venue distribution API. |
 | Test Lab Results | Upload | [test-lab-api.md](./api-contracts/test-lab-api.md) | Data source for Virology Testing API allowing mobile to poll for test result. To support test types other than PCR tests, we have introduced a non-backward compatible version 2 of the API (V1 is now deprecated). |
@@ -470,21 +472,21 @@ Circuit breaker APIs delegate the decision for a risk-based action (e.g. advice 
 After receiving the token the mobile client polls the backend until it receives a resolution result from the backend.
 
 | API Name | API Group | API Contract | User/Client impact |
-| - | - | - | - |
+| --- | --- | --- | --- |
 | Exposure Notification Circuit Breaker | Submission | [exposure-notification-circuit-breaker.md](./api-contracts/exposure-notification-circuit-breaker.md) | Manual circuit breaker to stop exposure notification alerts in mobile clients on positive diagnosis after client uploads keys. |
 | Risk Venues Circuit Breaker | Submission | [risky-venue-circuit-breaker.md](./api-contracts/exposure-notification-circuit-breaker.md) | Manual circuit breaker to stop exposure notification alerts in mobile clients after a venue is marked as risky from the upload API. |
 
 ### Connectors and Exporters
 
 | API Name | API Group | API Contract | User/Client impact |
-| - | - | - | - |
+| --- | --- | --- | --- |
 | Federated Server Connector | Connector | [diagnosis-key-federation.md](./api-contracts/diagnosis-key-federation.md) | Up/Download federated diagnosis keys. |
 | AAE Exporter (Analytics) | Exporter | [analytics-submission-aae-quicksight.md](./api-contracts/analytics-submission-aae-quicksight.md) | Export analytics data. |
 | AAE Exporter (Epidemiological) | Exporter | [mobile-analytics-events-aae.md](./api-contracts/mobile-analytics-events-aae.md) | Export epidemiological data. |
 
 ## Tech Stacks and Repositories
 
-The [system repository](https://github.com/nihp-public/COVID19-app-system) includes the implementation of all services required to collect data and interact with the mobile devices and external systems
+The [system repository](https://github.com/nihp-public/covid19-app-system-public) includes the implementation of all services required to collect data and interact with the mobile devices and external systems
 and the code to automate build, deployment and test of the services. The **APIs and Cloud Services** are implemented using
 
 * Run: AWS, Java and Kotlin
@@ -497,14 +499,14 @@ Note that our build system and deployment architecture is currently used only in
 
 The **iOS app** only uses standard Apple tooling, all bundled within Xcode.
 
-* [Application source code](https://github.com/nihp-public/COVID-19-app-iOS-AG)
-* [Architecture and module definitions](https://github.com/nihp-public/COVID-19-app-iOS-AG/blob/master/Docs/AppArchitecture.md)
-* [Internal and external dependencies](https://github.com/nihp-public/COVID-19-app-iOS-AG#dependencies)
+* [Application source code](https://github.com/nihp-public/covid-19-app-ios-ag-public)
+* [Architecture and module definitions](https://github.com/nihp-public/covid-19-app-ios-ag-public/blob/master/Docs/AppArchitecture.md)
+* [Internal and external dependencies](https://github.com/nihp-public/covid-19-app-ios-ag-public#dependencies)
 
 The **Android app** uses standard Android tooling, Kotlin and Android SDK. The build uses Gradle with a couple of third party Gradle plugins for publishing and protobuf (only for field test).
 
-* [Application source code](https://github.com/nihp-public/covid-19-app-android-ag)
-* [Internal and external dependencies](https://github.com/nihp-public/covid-19-app-android-ag/blob/master/app/build.gradle)
+* [Application source code](https://github.com/nihp-public/covid-19-app-android-ag-public)
+* [Internal and external dependencies](https://github.com/nihp-public/covid-19-app-android-ag-public/blob/master/app/build.gradle)
 
 The **Web apps** use React SPA hosted on S3, delivered by CDN. However, note that the current system does not provide any public available web client, so we add to this section as soon as there is a web client beyond what we use as internal tools.
 
@@ -518,4 +520,4 @@ The CV19 App System infrastructure and operations uses AWS cloud-native componen
 * Operations
 * CDOC integration
 
-![Figure: Cloud Infrastructure](diagrams/img/cv19-app-system-cloud-infrastructure-2021-02-19.png "Figure: Cloud Infrastructure")
+![Figure: Cloud Infrastructure](diagrams/img/cv19-app-system-cloud-infrastructure-2021-04-19.png "Figure: Cloud Infrastructure")

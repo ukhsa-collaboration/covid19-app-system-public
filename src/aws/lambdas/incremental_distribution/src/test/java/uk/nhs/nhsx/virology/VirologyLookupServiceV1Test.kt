@@ -9,6 +9,7 @@ import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequestV1
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult

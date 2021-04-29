@@ -1,9 +1,9 @@
 package uk.nhs.nhsx.virology.exchange
 
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.virology.TestKit
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestResult
 
 data class CtaExchangeResponseV2(
     val diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,

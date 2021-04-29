@@ -13,26 +13,26 @@ module NHS
     TIERS = "src/static/tier-metadata.json".freeze
     # Policy icons mapping i18n keys to mobile icon keys
     POLICY_ICONS = {
-      "MeetingPeople" => "meeting-people",
       "Bars" => "bars-and-pubs",
-      "Worship" => "worship",
-      "Overnight" => "overnight-stays",
       "Education" => "education",
-      "Travelling" => "travelling",
       "Exercise" => "exercise",
-      "WeddingFuneral" => "weddings-and-funerals",
-      "WorkAndBusiness" => "work-and-business",
+      "FaceCoverings" => "face-coverings",
       "InternationalTravel" => "international-travel",
       "MeetingIndoors" => "meeting-indoors",
       "MeetingOutdoors" => "meeting-outdoors",
+      "MeetingPeople" => "meeting-people",
+      "Overnight" => "overnight-stays",
       "PersonalCare" => "personal-care",
-      "SocialDistancing" => "social-distancing",
       "Retail" => "retail",
-      "FaceCoverings" => "face-coverings"
+      "SocialDistancing" => "social-distancing",
+      "Travelling" => "travelling",
+      "WeddingFuneral" => "weddings-and-funerals",
+      "Work" => "work",
+      "Worship" => "worship"
 
     }
     # Number of supported languages ex: en, ar, bn, cy
-    SUPPORTED_LANGUAGES = 12
+    SUPPORTED_LANGUAGES = ["ar","bn","cy","en","gu","pa","pl","ro","so","tr","ur","zh"]
     # Loads the tranlsation data from an export of Localise
     #
     # Localise exports data in a "locale" directory, one file per language.
@@ -46,7 +46,7 @@ module NHS
 
       translations = {}
       i18n_files.each do |i18n_file|
-        localise_data = JSON.parse(File.read(i18n_file))
+        localise_data = JSON.parse(File.read(i18n_file)).sort_by { |key| key }.to_h
         localise_data.each do |k, v|
           translations[k] ||= {}
           translations[k][i18n_file.pathmap("%n")] = v["translation"]
@@ -105,8 +105,13 @@ module NHS
 
             if v["policyHeading"].empty? || v["policyContent"].empty?
               tier_policies.delete(k)
-            elsif v["policyHeading"].size != SUPPORTED_LANGUAGES || v["policyContent"].size != SUPPORTED_LANGUAGES
-              puts "Error: policy #{k} does have all translations => #{v["policyHeading"]}, include them in Lokalise?"
+            elsif v["policyHeading"].keys != SUPPORTED_LANGUAGES || v["policyContent"].keys != SUPPORTED_LANGUAGES
+              if v["policyHeading"].keys != SUPPORTED_LANGUAGES
+                puts "Error: policy #{k} does not have the translations for the following locales: #{SUPPORTED_LANGUAGES-v["policyHeading"].keys} in policy heading, include them in Lokalise?"
+              end
+              if v["policyContent"].keys != SUPPORTED_LANGUAGES
+                puts "Error: policy #{k} does not have the translations for the following locales:  #{SUPPORTED_LANGUAGES-v["policyContent"].keys} in policy content, include them in Lokalise?"
+              end
             end
 
           end

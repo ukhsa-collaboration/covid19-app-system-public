@@ -1,13 +1,13 @@
 package uk.nhs.nhsx.virology.result
 
-import com.fasterxml.jackson.core.JsonProcessingException
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson.readStrictOrNull
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
+import uk.nhs.nhsx.core.Json.readStrictOrNull
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestResult
 
 class VirologyResultRequestV2Test {
 

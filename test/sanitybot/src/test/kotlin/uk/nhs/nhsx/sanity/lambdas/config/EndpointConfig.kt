@@ -8,6 +8,7 @@ import dev.forkhandles.result4k.mapFailure
 import dev.forkhandles.result4k.resultFrom
 import org.http4k.core.Uri
 import org.http4k.hamkrest.hasBody
+import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AnalyticsSubmission
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AvailabilityAndroidDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AvailabilityIosDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysDistribution
@@ -224,8 +225,8 @@ private val resources = mapOf(
     PostDistrictsDistribution to DynamicContent,
     DiagnosisKeysDistribution to DynamicUrl,
     VirologyKit to DynamicUrl,
-    DiagnosisKeysSubmission to DynamicUrl
-
+    DiagnosisKeysSubmission to DynamicUrl,
+    AnalyticsSubmission to DynamicUrl
 )
 
 fun DeployedLambda.resource() = resources[this] ?: Missing

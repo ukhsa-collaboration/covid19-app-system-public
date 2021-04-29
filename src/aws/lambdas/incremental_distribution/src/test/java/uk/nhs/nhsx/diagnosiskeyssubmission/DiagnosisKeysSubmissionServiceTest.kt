@@ -16,7 +16,7 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayl
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.testhelper.data.TestData.STORED_KEYS_PAYLOAD_SUBMISSION
 import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage
-import uk.nhs.nhsx.virology.TestKit
+import uk.nhs.nhsx.domain.TestKit
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID

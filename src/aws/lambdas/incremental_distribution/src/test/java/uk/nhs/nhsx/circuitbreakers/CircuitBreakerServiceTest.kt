@@ -5,7 +5,7 @@ import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.Companion.extractPollingToken
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 
 class CircuitBreakerServiceTest {
 
@@ -87,6 +87,6 @@ class CircuitBreakerServiceTest {
     }
 
     private fun resolutionFromResponse(responseEvent: CircuitBreakerResult) =
-        Jackson.readOrNull<ResolutionResponse>(responseEvent.responseBody)
+        Json.readJsonOrNull<ResolutionResponse>(responseEvent.responseBody)
             ?: throw IllegalStateException("Could not deserialize: " + responseEvent.responseBody)
 }

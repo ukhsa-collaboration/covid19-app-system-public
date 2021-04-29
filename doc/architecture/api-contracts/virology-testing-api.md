@@ -60,7 +60,7 @@ Response body:
     "websiteUrlWithQuery": "https://self-referral.test-for-coronavirus.service.gov.uk/cta-start?ctaToken=tbdfjaj0",
     "tokenParameterValue": "tbdfjaj0",
     "testResultPollingToken" : "61EEFD4B-E903-4294-B595-B1D491134E3D",
-    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF" 
+    "diagnosisKeySubmissionToken": "6B162698-ADC5-47AF-8790-71ACF770FFAF",
 }
 ```
 Notes: `tokenParameterValue` is only to be displayed in the app. See bellow for more info about the `testResultPollingToken` and `diagnosisKeySubmissionToken` fields. 
@@ -103,7 +103,7 @@ Response body:
     "testResult": "POSITIVE"|"NEGATIVE"|"VOID",
     "testKit": "LAB_RESULT"|"RAPID_RESULT"|"RAPID_SELF_REPORTED",
     "diagnosisKeySubmissionSupported": true|false,
-    "requiresConfirmatoryTest": true|false
+    "requiresConfirmatoryTest": true|false,
 }
 ```
 Notes: 
@@ -156,7 +156,7 @@ Response body:
     "testResult": "POSITIVE"|"NEGATIVE"|"VOID",
     "testKit": "LAB_RESULT"|"RAPID_RESULT"|"RAPID_SELF_REPORTED",
     "diagnosisKeySubmissionSupported": true|false,
-    "requiresConfirmatoryTest": true|false
+    "requiresConfirmatoryTest": true|false,
 }
 ```
 

@@ -2,17 +2,17 @@ package uk.nhs.nhsx.virology.lookup
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.core.HttpResponses
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 
 abstract class VirologyLookupResult {
     abstract fun toHttpResponse(): APIGatewayProxyResponseEvent
 
     class Available(val response: VirologyLookupResponseV1) : VirologyLookupResult() {
-        override fun toHttpResponse() = HttpResponses.ok(Jackson.toJson(response))
+        override fun toHttpResponse() = HttpResponses.ok(Json.toJson(response))
     }
 
     class AvailableV2(val response: VirologyLookupResponseV2) : VirologyLookupResult() {
-        override fun toHttpResponse() = HttpResponses.ok(Jackson.toJson(response))
+        override fun toHttpResponse() = HttpResponses.ok(Json.toJson(response))
     }
 
     class Pending : VirologyLookupResult() {

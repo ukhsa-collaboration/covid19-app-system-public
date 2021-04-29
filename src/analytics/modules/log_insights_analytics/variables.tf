@@ -30,3 +30,8 @@ variable "key_federation_download_stats_bucket_id" {
 variable "key_federation_upload_stats_bucket_id" {
   description = "Bucket storing json files of key federation upload stat"
 }
+
+variable "diagnosis_key_submission_stats_bucket_id" {
+  description = "The diagnosis key submission S3 bucket"
+}
+

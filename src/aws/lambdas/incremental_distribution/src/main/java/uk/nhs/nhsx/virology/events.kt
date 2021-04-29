@@ -5,9 +5,13 @@ import uk.nhs.nhsx.core.events.EventCategory.Error
 import uk.nhs.nhsx.core.events.EventCategory.Info
 import uk.nhs.nhsx.core.events.EventCategory.Warning
 import uk.nhs.nhsx.core.exceptions.TransactionException
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
-import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.virology.tokengen.CtaProcessorResult
 import uk.nhs.nhsx.virology.tokengen.CtaTokenZipFileEntryRequest
 

@@ -11,10 +11,11 @@ namespace :deploy do
       desc "Full CTA system deployment with analytics and sanity checks"
       task :"cta:#{tgt_env}" => prerequisites do
         begin
+          Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["deploy:#{tgt_env}"].invoke
           Rake::Task["deploy:analytics:#{tgt_env}"].invoke if ANALYTICS_TARGET_ENVIRONMENTS[account].include?(tgt_env)
-          Rake::Task["publish:tier_metadata:#{tgt_env}"].invoke unless account  == "dev"
+          Rake::Task["publish:tier_metadata:#{tgt_env}"].invoke
           Rake::Task["test:sanity_check:#{tgt_env}"].invoke
           Rake::Task["report:changes"].invoke
         ensure

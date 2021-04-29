@@ -15,6 +15,7 @@ Bubble Name|Description|
 AppSystem|The main CTA functionality serving the COVID19 app and third party backend integrations|
 Analytics|The analytics subsystem based on QuickSight|
 Synthetics|The monitoring functionality based on AWS synthetic canaries|
+PublicDashboard|The website providing a dashboard view on the CTA system statistics|
 
 ## Functionality vs. Content
 
@@ -22,7 +23,7 @@ The bubbles correspond too the implementation of different parts of the system a
 
 In addition to the bubbles, there is a requirement for updates to the content of the system (i.e. configuration files, content served to the mobile clients etc.) individually and independently of the rest of the system.
 
-Similarly to the bubbles, the build system provides tasks too deploy such content individually and independently.
+Similarly to the bubbles, the build system provides tasks to deploy such content individually and independently.
 
 Currently the following content groups can be deployed individually:
 

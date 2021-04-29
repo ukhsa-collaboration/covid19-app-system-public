@@ -2,7 +2,7 @@ package uk.nhs.nhsx.analyticsevents
 
 import uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer.replacePostDistrictLA
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator

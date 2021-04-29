@@ -6,10 +6,10 @@ import uk.nhs.nhsx.core.Handler
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.BucketName
-import uk.nhs.nhsx.core.direct.DirectHandler
 import uk.nhs.nhsx.core.events.CtaTokensGenerated
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
+import uk.nhs.nhsx.core.handler.DirectHandler
 import uk.nhs.nhsx.virology.VirologyConfig.Companion.fromEnvironment
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
@@ -19,8 +19,12 @@ import uk.nhs.nhsx.virology.tokengen.VirologyProcessorService
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorStore
 
 class VirologyProcessorHandler @JvmOverloads constructor(
-    private val virologyProcessorService: VirologyProcessorService = virologyProcessorService(Environment.fromSystem(), PrintingJsonEvents(CLOCK)),
-    events: Events = PrintingJsonEvents(CLOCK)) : DirectHandler<CtaProcessorRequest, Map<String, String>>(events, CtaProcessorRequest::class.java) {
+    events: Events = PrintingJsonEvents(CLOCK),
+    private val virologyProcessorService: VirologyProcessorService = virologyProcessorService(
+        Environment.fromSystem(),
+        events
+    )
+) : DirectHandler<CtaProcessorRequest, Map<String, String>>(events, CtaProcessorRequest::class) {
 
     override fun handler() =
         Handler<CtaProcessorRequest, Map<String, String>> { event, _ ->

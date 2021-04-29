@@ -3,7 +3,7 @@ package uk.nhs.nhsx.diagnosiskeyssubmission.model
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode.STRICT
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json.toJson
 
 class ClientTemporaryExposureKeyTest {
     @Test

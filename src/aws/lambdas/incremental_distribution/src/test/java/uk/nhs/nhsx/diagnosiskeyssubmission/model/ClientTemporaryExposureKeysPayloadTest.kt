@@ -2,7 +2,7 @@ package uk.nhs.nhsx.diagnosiskeyssubmission.model
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 
 class ClientTemporaryExposureKeysPayloadTest {
 
@@ -23,7 +23,7 @@ class ClientTemporaryExposureKeysPayloadTest {
         }
         """.trimIndent()
 
-        val payload = Jackson.readOrNull<ClientTemporaryExposureKeysPayload>(json)
+        val payload = Json.readJsonOrNull<ClientTemporaryExposureKeysPayload>(json)
         assertThat(payload?.temporaryExposureKeys).hasSize(2)
     }
 }

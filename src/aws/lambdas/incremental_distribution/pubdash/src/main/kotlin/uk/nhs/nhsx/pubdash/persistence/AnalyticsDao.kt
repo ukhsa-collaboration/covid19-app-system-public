@@ -1,478 +1,505 @@
 package uk.nhs.nhsx.pubdash.persistence
 
-import uk.nhs.nhsx.pubdash.CsvS3Object
 import uk.nhs.nhsx.pubdash.QueryId
 import uk.nhs.nhsx.pubdash.QueryResult
-import uk.nhs.nhsx.pubdash.datasets.AgnosticDataset
-import uk.nhs.nhsx.pubdash.datasets.AgnosticDatasetRow
 import uk.nhs.nhsx.pubdash.datasets.AnalyticsSource
-import uk.nhs.nhsx.pubdash.datasets.CountryDataset
-import uk.nhs.nhsx.pubdash.datasets.CountryDatasetRow
-import uk.nhs.nhsx.pubdash.datasets.LocalAuthorityDataset
-import uk.nhs.nhsx.pubdash.datasets.LocalAuthorityDatasetRow
-import java.time.LocalDate
 
 class AnalyticsDao(private val workspace: String, private val asyncDbClient: AsyncDbClient) : AnalyticsSource {
 
     override fun startAgnosticDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
         """
         SELECT
-            DATE_FORMAT(
-                CASE day_of_week(appdate)
-                    WHEN 7 THEN appdate + interval '3' day /* Sun */
-                    WHEN 1 THEN appdate + interval '2' day /* Mon */
-                    WHEN 2 THEN appdate + interval '1' day /* Tue */
-                    WHEN 3 THEN appdate /* Wed */
-                    WHEN 4 THEN appdate + interval '6' day /* Thu */
-                    WHEN 5 THEN appdate + interval '5' day /* Fri */
-                    WHEN 6 THEN appdate + interval '4' day /* Sat */
-                END, '%Y-%m-%d'
-            ) AS lastDayReportingWeek,
-            CAST(CASE WHEN SUM(downloads) < 5 AND sum(downloads) > 0 THEN 5 ELSE SUM(downloads) END as BIGINT) as downloads,
-            CAST(CASE WHEN SUM(risky_venue) < 5 AND SUM(risky_venue) > 0 THEN 5 ELSE SUM(risky_venue) END as BIGINT) as risky_venue,
-            CAST(CASE WHEN SUM(posters) < 5 AND SUM(posters) > 0 THEN 5 ELSE SUM(posters) END as BIGINT) as posters
+            DATE_FORMAT(firstDayReportingWeek, '%Y-%m-%d') AS "Week starting (Wythnos yn dechrau)",
+            DATE_FORMAT(lastDayReportingWeek, '%Y-%m-%d') AS "Week ending (Wythnos yn gorffen)",
+            SUM(downloads) AS "Number of app downloads (Nifer o lawrlwythiadau ap)",
+            SUM(riskyVenues) AS "Number of venues the app has sent alerts about (Nifer o leoliadau mae’r ap wedi anfon hysbysiadau amdanynt)",
+            SUM(posters) AS "Number of NHS QR posters created (Nifer o bosteri cod QR y GIG a grëwyd)",
+            SUM(SUM(downloads)) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of app downloads (Nifer o lawrlwythiadau ap cronnus)",
+            SUM(SUM(riskyVenues)) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of 'at risk' venues triggering venue alerts (Nifer o leoliadau 'dan risg' cronnus)",
+            SUM(SUM(posters)) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of NHS QR posters created (Nifer o bosteri cod QR y GIG a grëwyd cronnus)"
         FROM(
             SELECT
-                appdate,
-                SUM(downloads) AS downloads,
-                SUM(risky_venue) AS risky_venue
+                /* This calculates the date of the first day of the reporting week
+                the row belongs to. Reporting weeks is from Thurs-Wed (inclusive),
+                therefore this finds the date of the preceding Thursday (or leave as Thurs). */
+                CASE day_of_week("date")
+                    WHEN 7 THEN "date" - interval '3' day /* Sun */
+                    WHEN 1 THEN "date" - interval '4' day /* Mon */
+                    WHEN 2 THEN "date" - interval '5' day /* Tue */
+                    WHEN 3 THEN "date" - interval '6' day /* Wed */
+                    WHEN 4 THEN "date" /* Thu */
+                    WHEN 5 THEN "date" - interval '1' day /* Fri */
+                    WHEN 6 THEN "date" - interval '2' day /* Sat */
+                END AS firstDayReportingWeek,
+                /* This calculates the date of the last day of the reporting week
+                the row belongs to. Reporting weeks is from Thurs-Wed (inclusive),
+                therefore this finds the date of the next Wednesday  (or leave as Wed). */
+                CASE day_of_week("date")
+                    WHEN 7 THEN "date" + interval '3' day /* Sun */
+                    WHEN 1 THEN "date" + interval '2' day /* Mon */
+                    WHEN 2 THEN "date" + interval '1' day /* Tue */
+                    WHEN 3 THEN "date" /* Wed */
+                    WHEN 4 THEN "date" + interval '6' day /* Thu */
+                    WHEN 5 THEN "date" + interval '5' day /* Fri */
+                    WHEN 6 THEN "date" + interval '4' day /* Sat */
+                END AS lastDayReportingWeek,
+                CAST(SUM(downloads) AS BIGINT) AS downloads,
+                CAST(SUM(riskyVenues) AS BIGINT) AS riskyVenues,
+                CAST(SUM(posters) AS BIGINT) AS posters
             FROM(
                 SELECT
-                    date_parse(app.date, '%Y-%c-%d') AS appdate,
-                    app.platform AS platform,
-                    CASE
-                        WHEN app.platform = 'Android' OR  app.platform = 'Apple' THEN app.downloads
-                    END AS downloads,
-                    CASE
-                        WHEN app.platform = 'Website' THEN app.opt_in_proportion END AS risky_venue
-                FROM "${workspace}_analytics_db"."${workspace}_analytics_app_store" AS app)
-                GROUP BY appdate)
-            FULL OUTER JOIN(
-                SELECT
-                    psdate,
-                    count(*) AS posters
+                    "date", /* Escape keywords in queries with "" */
+                    SUM(downloads) AS downloads,
+                    SUM(riskyVenues) AS riskyVenues
                 FROM(
                     SELECT
-                        date_parse(substring(ps.created,1,10), '%Y-%c-%d') AS psdate
-                    FROM "${workspace}_analytics_db"."${workspace}_analytics_qr_posters" AS ps)
-                GROUP BY psdate)
-            ON appdate = psdate
-        WHERE appdate >= date('2020-08-13') 
-        AND appdate <=
-            (CASE day_of_week(current_date)
-                WHEN 7 THEN current_date - interval '11' day /* Sun */
-                WHEN 1 THEN current_date - interval '5' day /* Mon */
-                WHEN 2 THEN current_date - interval '6' day /* Tue */
-                WHEN 3 THEN current_date - interval '7' day /* Wed */
-                WHEN 4 THEN current_date - interval '8' day /* Thu */
-                WHEN 5 THEN current_date - interval '9' day /* Fri */
-                WHEN 6 THEN current_date - interval '10' day /* Sat */
-            END)
+                        date_parse(downloadsTable.date, '%Y-%c-%d') AS "date",
+                        downloadsTable.platform AS platform,
+                        CASE
+                            WHEN downloadsTable.platform = 'Android' OR  downloadsTable.platform = 'Apple' THEN downloadsTable.downloads
+                        END AS downloads,
+                        CASE
+                            WHEN downloadsTable.platform = 'Website' THEN downloadsTable.opt_in_proportion END AS riskyVenues
+                    FROM "${workspace}_analytics_db"."${workspace}_analytics_app_store" AS downloadsTable)
+                GROUP BY "date"
+                )
+                FULL OUTER JOIN(
+                    SELECT
+                        posterDate,
+                        count(*) AS posters
+                    FROM(
+                        SELECT
+                            date_parse(substring(posterTable.created,1,10), '%Y-%c-%d') AS posterDate
+                        FROM "${workspace}_analytics_db"."${workspace}_analytics_qr_posters" AS posterTable)
+                    GROUP BY posterDate
+                )
+                ON "date" = posterDate
+            WHERE "date" >= date('2020-08-13')
+            /* This filter ensures that the dataset only contains data up to the 
+            last day of the newest reporting period, which is the Wednesday of the 
+            preceding week */
+            AND "date" <=
+                (CASE day_of_week(current_date)
+                    WHEN 7 THEN current_date - interval '11' day /* Sun --> Wed */
+                    WHEN 1 THEN current_date - interval '5' day /* Mon */
+                    WHEN 2 THEN current_date - interval '6' day /* Tue */
+                    WHEN 3 THEN current_date - interval '7' day /* Wed */
+                    WHEN 4 THEN current_date - interval '8' day /* Thu */
+                    WHEN 5 THEN current_date - interval '9' day /* Fri */
+                    WHEN 6 THEN current_date - interval '10' day /* Sat */
+                END)
+            GROUP BY
+                /* Expression for firstDayReportingWeek */
+                CASE day_of_week("date")
+                    WHEN 7 THEN "date" - interval '3' day /* Sun */
+                    WHEN 1 THEN "date" - interval '4' day /* Mon */
+                    WHEN 2 THEN "date" - interval '5' day /* Tue */
+                    WHEN 3 THEN "date" - interval '6' day /* Wed */
+                    WHEN 4 THEN "date" /* Thu */
+                    WHEN 5 THEN "date" - interval '1' day /* Fri */
+                    WHEN 6 THEN "date" - interval '2' day /* Sat */
+                END,
+                /* Expression for lastDayReportingWeek */
+                CASE day_of_week(date)
+                        WHEN 7 THEN "date" + interval '3' day /* Sun */
+                        WHEN 1 THEN "date" + interval '2' day /* Mon */
+                        WHEN 2 THEN "date" + interval '1' day /* Tue */
+                        WHEN 3 THEN "date" /* Wed */
+                        WHEN 4 THEN "date" + interval '6' day /* Thu */
+                        WHEN 5 THEN "date" + interval '5' day /* Fri */
+                        WHEN 6 THEN "date" + interval '4' day /* Sat */
+                END
+        )
         GROUP BY
-        CASE day_of_week(appdate)
-                WHEN 7 THEN appdate + interval '3' day /* Sun */
-                WHEN 1 THEN appdate + interval '2' day /* Mon */
-                WHEN 2 THEN appdate + interval '1' day /* Tue */
-                WHEN 3 THEN appdate /* Wed */
-                WHEN 4 THEN appdate + interval '6' day /* Thu */
-                WHEN 5 THEN appdate + interval '5' day /* Fri */
-                WHEN 6 THEN appdate + interval '4' day /* Sat */
-            END
+            firstDayReportingWeek,
+            lastDayReportingWeek
+        ORDER BY
+            lastDayReportingWeek
     """
     )
 
     override fun startCountryDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
         """
         SELECT
-            DATE_FORMAT(lastDayReportingWeek, '%Y-%m-%d') as lastDayReportingWeek,
-            country,
-            country_welsh,
-            CASE
-            WHEN sum(checkedin) < 5 AND sum(checkedin) > 0 THEN 5
-            ELSE sum(checkedin) END as checkedin,
-            CASE
-            WHEN sum(receivedriskycontactnotificationind) < 5 AND sum(receivedriskycontactnotificationind) > 0 THEN 5
-            ELSE sum(receivedriskycontactnotificationind) END as receivedriskycontactnotificationind,
-            CASE
-            WHEN sum(receivednegativetestresultind) < 5 AND sum(receivednegativetestresultind) > 0 THEN 5
-            ELSE sum(receivednegativetestresultind) END as receivednegativetestresultind,
-            CASE
-            WHEN sum(receivedpositivetestresultind) < 5 AND sum(receivedpositivetestresultind) > 0 THEN 5
-            ELSE sum(receivedpositivetestresultind) END as receivedpositivetestresultind,
-            CASE
-            WHEN sum(totaluserscompletedquestionnaireandstartedisolationind) < 5 AND sum(totaluserscompletedquestionnaireandstartedisolationind) > 0 THEN 5
-            ELSE sum(totaluserscompletedquestionnaireandstartedisolationind) END as totaluserscompletedquestionnaireandstartedisolationind
-            FROM
-            (SELECT
-                truncatedstartdate,
-                platform,
-                CASE day_of_week(truncatedstartdate)
-                    WHEN 7 THEN truncatedstartdate - interval '3' day /* Sun */
-                    WHEN 1 THEN truncatedstartdate - interval '4' day /* Mon */
-                    WHEN 2 THEN truncatedstartdate - interval '5' day /* Tue */
-                    WHEN 3 THEN truncatedstartdate - interval '6' day /* Wed */
-                    WHEN 4 THEN truncatedstartdate /* Thu */
-                    WHEN 5 THEN truncatedstartdate - interval '1' day /* Fri */
-                    WHEN 6 THEN truncatedstartdate - interval '2' day /* Sat */
+            /* Dimensions */
+            DATE_FORMAT(firstDayReportingWeek, '%Y-%m-%d') AS "Week starting (Wythnos yn dechrau)",
+            DATE_FORMAT(lastDayReportingWeek, '%Y-%m-%d') AS "Week ending (Wythnos yn gorffen)",
+            country AS "Country (Wlad)",
+            
+            /* Measures */
+            SUM(totalCheckIns) AS "Check-ins (Cofrestriadau)",
+            SUM(countUsersCompletedQuestionnaireAndStartedIsolation) AS "Symptoms reported (Symptomau a adroddwyd)",
+            SUM(countUsersReceivedPositiveTestResult) AS "Positive test results linked to app (Canlyniadau prawf positif)",
+            SUM(countUsersReceivedNegativeTestResult) AS "Negative test results linked to app (Canlyniadau prawf negatif)",
+            SUM(countUsersReceivedRiskyContactNotification) AS "Contact tracing alert (Hysbysiadau olrhain cyswllt)",
+            
+            /* Cumulative Measures */
+            SUM(SUM(totalCheckIns)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative check-ins (Cofrestriadau cronnus)",
+            SUM(SUM(countUsersCompletedQuestionnaireAndStartedIsolation)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative symptoms reported (Symptomau a adroddwyd cronnus)",
+            SUM(SUM(countUsersReceivedPositiveTestResult)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative positive test results linked to app (Canlyniadau prawf positif cronnus)",
+            SUM(SUM(countUsersReceivedNegativeTestResult)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative negative test results linked to app (Canlyniadau prawf negatif cronnus)",
+            SUM(SUM(countUsersReceivedRiskyContactNotification)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative contact tracing alert (Hysbysiadau olrhain cyswllt cronnus)"
+            
+        FROM(
+            SELECT
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate - interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate - interval '4' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate - interval '5' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate - interval '6' day /* Wed */
+                    WHEN 4 THEN truncatedStartDate /* Thu */
+                    WHEN 5 THEN truncatedStartDate - interval '1' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate - interval '2' day /* Sat */
                 END AS firstDayReportingWeek,
-                CASE day_of_week(truncatedstartdate)
-                    WHEN 7 THEN truncatedstartdate + interval '3' day /* Sun */
-                    WHEN 1 THEN truncatedstartdate + interval '2' day /* Mon */
-                    WHEN 2 THEN truncatedstartdate + interval '1' day /* Tue */
-                    WHEN 3 THEN truncatedstartdate /* Wed */
-                    WHEN 4 THEN truncatedstartdate + interval '6' day /* Thu */
-                    WHEN 5 THEN truncatedstartdate + interval '5' day /* Fri */
-                    WHEN 6 THEN truncatedstartdate + interval '4' day /* Sat */
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate + interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate + interval '2' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate + interval '1' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate /* Wed */
+                    WHEN 4 THEN truncatedStartDate + interval '6' day /* Thu */
+                    WHEN 5 THEN truncatedStartDate + interval '5' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate + interval '4' day /* Sat */
                 END AS lastDayReportingWeek,
-                CASE day_of_week(current_date)
-                    WHEN 7 THEN current_date - interval '7' day /* Sun */
-                    WHEN 1 THEN current_date - interval '1' day /* Mon */
-                    WHEN 2 THEN current_date - interval '2' day /* Tue */
-                    WHEN 3 THEN current_date - interval '3' day /* Wed */
-                    WHEN 4 THEN current_date - interval '4' day /* Thu */
-                    WHEN 5 THEN current_date - interval '5' day /* Fri */
-                    WHEN 6 THEN current_date - interval '6' day /* Sat */
-                END AS latestSubmittedDate,
-                COALESCE(pdgl.local_authority, pdgl2.local_authority) AS local_authority,
-                COALESCE(pdgl.region, pdgl2.region) AS region,
-                COALESCE(pdgl.country, pdgl2.country) AS country,
+                
+                COALESCE(pdgl.local_authority, pdgl2.local_authority) AS localAuthority,
+                
                 CASE COALESCE(pdgl.country, pdgl2.country)
-                    WHEN 'England' THEN 'Lloegr'
-                    WHEN 'Wales' THEN 'Cymru'
-                END AS country_welsh,
-                NumberofRecords,
-                totaluserscompletedquestionnaireandstartedisolationind,
-                usersusingqrcheckinind,
-                checkedin,
-                canceledcheckin,
-                receivednegativetestresultind,
-                receivedpositivetestresultind,
-                receivedvoidtestresultind,
-                receivedriskycontactnotificationind,
-                receivedriskycontactnotificationusingbgtaskind
+                    WHEN 'England' THEN 'England / Lloegr'
+                    WHEN 'Wales' THEN 'Wales / Cymru'
+                END AS country,
+                
+                SUM(totalCheckIns)  AS totalCheckIns,
+                SUM(countUsersReceivedRiskyContactNotification) AS countUsersReceivedRiskyContactNotification,
+                SUM(countUsersReceivedPositiveTestResult) AS countUsersReceivedPositiveTestResult,
+                SUM(countUsersReceivedNegativeTestResult) AS countUsersReceivedNegativeTestResult,
+                SUM(countUsersCompletedQuestionnaireAndStartedIsolation) AS countUsersCompletedQuestionnaireAndStartedIsolation
+        
             FROM(
                 SELECT
-                    truncatedstartdate,
-                    platform,
-                    postaldistrict,
+                    truncatedStartDate,
+                    postalDistrict,
                     lad20cd,
-                    COUNT(*) AS NumberofRecords,
-                    SUM(totaluserscompletedquestionnaireandstartedisolationind) AS totaluserscompletedquestionnaireandstartedisolationind,
-                    SUM(usersusingqrcheckinind) AS usersusingqrcheckinind,
-                    SUM(checkedin) AS checkedin,
-                    SUM(canceledcheckin) AS canceledcheckin,
-                    SUM(receivednegativetestresultind) AS receivednegativetestresultind,
-                    SUM(receivedpositivetestresultind) AS receivedpositivetestresultind,
-                    SUM(receivedvoidtestresultind) AS receivedvoidtestresultind,
-                    SUM(receivedriskycontactnotificationind) AS receivedriskycontactnotificationind,
-                    SUM(receivedriskycontactnotificationusingbgtaskind) AS receivedriskycontactnotificationusingbgtaskind
+                    SUM(checkedin) AS totalCheckIns,
+                    SUM(completedQuestionnaireAndStartedIsolationInd) AS countUsersCompletedQuestionnaireAndStartedIsolation,
+                    SUM(receivedPositiveTestResultInd) AS countUsersReceivedPositiveTestResult,
+                    SUM(receivedNegativeTestResultInd) AS countUsersReceivedNegativeTestResult,
+                    SUM(receivedRiskyContactNotificationInd) AS countUsersReceivedRiskyContactNotification
                 FROM(
                     SELECT
-                        date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') AS truncatedstartdate,
-                        aad.postaldistrict,
+                        /* Dimensions */
+                        aad.postaldistrict AS postalDistrict,
                         COALESCE(aad.localauthority,'') AS lad20cd,
-                        (aad.checkedin - aad.canceledcheckin) as checkedin,
-                        aad.canceledcheckin,
-                        CASE WHEN aad.completedquestionnaireandstartedisolation > 0 THEN 1 ELSE 0 END AS totaluserscompletedquestionnaireandstartedisolationind,
-                        CASE WHEN Upper(devicemodel) LIKE '%IPHONE%' THEN 'Apple' ELSE 'Android' END AS platform,
-                        CASE WHEN aad.checkedin > 0 THEN 1 ELSE 0 END AS usersusingqrcheckinind,
-                        CASE WHEN aad.receivedpositivetestresult > 0 THEN 1 ELSE 0 END AS receivedpositivetestresultind,
-                        CASE WHEN aad.receivednegativetestresult > 0 THEN 1 ELSE 0 END AS receivednegativetestresultind,
-                        CASE WHEN aad.receivedvoidtestresult > 0 THEN 1 ELSE 0 END AS receivedvoidtestresultind,
+                        date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') AS truncatedStartDate,
+                        
+                        /* Measures*/
+                        (aad.checkedin - aad.canceledcheckin) AS checkedin,
+                        CASE WHEN aad.completedquestionnaireandstartedisolation > 0 THEN 1 ELSE 0 END AS completedQuestionnaireAndStartedIsolationInd,
+                        CASE WHEN aad.receivedpositivetestresult > 0 THEN 1 ELSE 0 END AS receivedPositiveTestResultInd,
+                        CASE WHEN aad.receivednegativetestresult > 0 THEN 1 ELSE 0 END AS receivedNegativeTestResultInd,
                         CASE
                             WHEN
                                 (aad.receivedriskycontactnotification IS NOT NULL
                                 AND aad.receivedriskycontactnotification > 0)
                             OR
                                 (aad.receivedriskycontactnotification IS NULL
-                            AND aad.runningnormallybackgroundtick > 0
-                            AND aad.isisolatingbackgroundtick > 0
-                            AND aad.hashadriskycontactbackgroundtick > 0
-                            AND aad.hashadriskycontactbackgroundtick < aad.runningnormallybackgroundtick )
+                                AND aad.runningnormallybackgroundtick > 0
+                                AND aad.isisolatingbackgroundtick > 0
+                                AND aad.hashadriskycontactbackgroundtick > 0
+                                AND aad.hashadriskycontactbackgroundtick < aad.runningnormallybackgroundtick )
                             THEN 1
                             ELSE 0
-                        END AS receivedriskycontactnotificationind,
-                        CASE
-                            WHEN
-                                (aad.receivedriskycontactnotification IS NOT NULL
-                                AND aad.receivedriskycontactnotification > 0)
-                            OR
-                                (aad.receivedriskycontactnotification IS NULL
-                            AND aad.totalbackgroundtasks > 0
-                            AND aad.isisolatingbackgroundtick > 0
-                            AND aad.hashadriskycontactbackgroundtick > 0
-                            AND aad.hashadriskycontactbackgroundtick < aad.totalbackgroundtasks )
-                            THEN 1
-                            ELSE 0
-                        END AS receivedriskycontactnotificationusingbgtaskind
+                        END AS receivedRiskyContactNotificationInd
                     FROM "${workspace}_analytics_db"."${workspace}_analytics_mobile" aad
                     WHERE date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2020-09-24')
-                    AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') <=
-                        (CASE day_of_week(current_date)
-                            WHEN 7 THEN current_date - interval '11' day /* Sun */
-                            WHEN 1 THEN current_date - interval '5' day /* Mon */
-                            WHEN 2 THEN current_date - interval '6' day /* Tue */
-                            WHEN 3 THEN current_date - interval '7' day /* Wed */
-                            WHEN 4 THEN current_date - interval '8' day /* Thu */
-                            WHEN 5 THEN current_date - interval '9' day /* Fri */
-                            WHEN 6 THEN current_date - interval '10' day /* Sat */
-                        END)
-                    AND date_parse(aad.submitteddatehour,'%Y/%c/%d/%H') <=
-                        (CASE day_of_week(current_date)
-                            WHEN 7 THEN current_date - interval '7' day /* Sun */
-                            WHEN 1 THEN current_date - interval '1' day /* Mon */
-                            WHEN 2 THEN current_date - interval '2' day /* Tue */
-                            WHEN 3 THEN current_date - interval '3' day /* Wed */
-                            WHEN 4 THEN current_date - interval '4' day /* Thu */
-                            WHEN 5 THEN current_date - interval '5' day /* Fri */
-                            WHEN 6 THEN current_date - interval '6' day /* Sat */
-                        END)
-                    AND aad.startdate <> aad.enddate
-                    )
+                        AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') <=
+                            (CASE day_of_week(current_date)
+                                WHEN 7 THEN current_date - interval '11' day /* Sun */
+                                WHEN 1 THEN current_date - interval '5' day /* Mon */
+                                WHEN 2 THEN current_date - interval '6' day /* Tue */
+                                WHEN 3 THEN current_date - interval '7' day /* Wed */
+                                WHEN 4 THEN current_date - interval '8' day /* Thu */
+                                WHEN 5 THEN current_date - interval '9' day /* Fri */
+                                WHEN 6 THEN current_date - interval '10' day /* Sat */
+                            END)
+                        AND date_parse(aad.submitteddatehour,'%Y/%c/%d/%H') <=
+                            (CASE day_of_week(current_date)
+                                WHEN 7 THEN current_date - interval '7' day /* Sun */
+                                WHEN 1 THEN current_date - interval '1' day /* Mon */
+                                WHEN 2 THEN current_date - interval '2' day /* Tue */
+                                WHEN 3 THEN current_date - interval '3' day /* Wed */
+                                WHEN 4 THEN current_date - interval '4' day /* Thu */
+                                WHEN 5 THEN current_date - interval '5' day /* Fri */
+                                WHEN 6 THEN current_date - interval '6' day /* Sat */
+                            END)
+                        AND aad.startdate <> aad.enddate
+                )
                 GROUP BY
-                    truncatedstartdate,
+                    postalDistrict,
                     lad20cd,
-                    postaldistrict,
-                    platform
+                    truncatedStartDate
             ) aad2
-            LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl
-                ON (aad2.lad20cd <> '' AND aad2.postaldistrict = pdgl.postcode AND aad2.lad20cd = pdgl.lad20cd AND (pdgl.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl.country IS NULL))
-            LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl2
-                ON (aad2.lad20cd = '' AND aad2.postaldistrict = pdgl2.postcode AND pdgl2.lad20cd = '' AND (pdgl2.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl2.country IS NULL))
-            )
-            WHERE
-            country  = 'England' OR country = 'Wales'
+                LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl
+                    ON (aad2.lad20cd <> '' AND aad2.postaldistrict = pdgl.postcode AND aad2.lad20cd = pdgl.lad20cd AND (pdgl.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl.country IS NULL))
+                LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl2
+                    ON (aad2.lad20cd = '' AND aad2.postaldistrict = pdgl2.postcode AND pdgl2.lad20cd = '' AND (pdgl2.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl2.country IS NULL))
             GROUP BY
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate - interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate - interval '4' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate - interval '5' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate - interval '6' day /* Wed */
+                    WHEN 4 THEN truncatedStartDate /* Thu */
+                    WHEN 5 THEN truncatedStartDate - interval '1' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate - interval '2' day /* Sat */
+                END,
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate + interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate + interval '2' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate + interval '1' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate /* Wed */
+                    WHEN 4 THEN truncatedStartDate + interval '6' day /* Thu */
+                    WHEN 5 THEN truncatedStartDate + interval '5' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate + interval '4' day /* Sat */
+                END,
+                
+                COALESCE(pdgl.local_authority, pdgl2.local_authority),
+                
+                CASE COALESCE(pdgl.country, pdgl2.country)
+                    WHEN 'England' THEN 'England / Lloegr'
+                    WHEN 'Wales' THEN 'Wales / Cymru'
+                END
+        )
+        WHERE localAuthority NOT IN ('Dumfries and Galloway','Scottish Borders') 
+            AND localAuthority IS NOT NULL
+            AND country NOT IN ('Scotland', 'Northern Ireland') 
+            AND country IS NOT NULL
+        GROUP BY
+            firstDayReportingWeek,
             lastDayReportingWeek,
-            country,
-            country_welsh
+            country
+        ORDER BY
+            lastDayReportingWeek,
+            country
     """
     )
 
     override fun startLocalAuthorityDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
         """
         SELECT
-            DATE_FORMAT(lastDayReportingWeek, '%Y-%m-%d') as lastDayReportingWeek,
-            local_authority,
-            CASE
-            WHEN sum(checkedin) < 5 AND sum(checkedin) > 0 THEN 5
-            ELSE sum(checkedin) END as checkedin,
-            CASE
-            WHEN sum(receivedriskycontactnotificationind) < 5 AND sum(receivedriskycontactnotificationind) > 0 THEN 5
-            ELSE sum(receivedriskycontactnotificationind) END as receivedriskycontactnotificationind,
-            CASE
-            WHEN sum(receivednegativetestresultind) < 5 AND sum(receivednegativetestresultind) > 0 THEN 5
-            ELSE sum(receivednegativetestresultind) END as receivednegativetestresultind,
-            CASE
-            WHEN sum(receivedpositivetestresultind) < 5 AND sum(receivedpositivetestresultind) > 0 THEN 5
-            ELSE sum(receivedpositivetestresultind) END as receivedpositivetestresultind,
-            CASE
-            WHEN sum(totaluserscompletedquestionnaireandstartedisolationind) < 5 AND sum(totaluserscompletedquestionnaireandstartedisolationind) > 0 THEN 5
-            ELSE sum(totaluserscompletedquestionnaireandstartedisolationind) END as totaluserscompletedquestionnaireandstartedisolationind
-            FROM
-            (SELECT
-                truncatedstartdate,
-                platform,
-                CASE day_of_week(truncatedstartdate)
-                    WHEN 7 THEN truncatedstartdate - interval '3' day /* Sun */
-                    WHEN 1 THEN truncatedstartdate - interval '4' day /* Mon */
-                    WHEN 2 THEN truncatedstartdate - interval '5' day /* Tue */
-                    WHEN 3 THEN truncatedstartdate - interval '6' day /* Wed */
-                    WHEN 4 THEN truncatedstartdate /* Thu */
-                    WHEN 5 THEN truncatedstartdate - interval '1' day /* Fri */
-                    WHEN 6 THEN truncatedstartdate - interval '2' day /* Sat */
+            /* Dimensions */
+            DATE_FORMAT(firstDayReportingWeek, '%Y-%m-%d') AS "Week starting (Wythnos yn dechrau)",
+            DATE_FORMAT(lastDayReportingWeek, '%Y-%m-%d') AS "Week ending (Wythnos yn gorffen)",
+            localAuthority AS "Local authority (Awdurdod lleol)",
+            country AS "Country (Wlad)",
+            
+            /* Measures */
+            SUM(totalCheckIns) AS "Check-ins (Cofrestriadau)",
+            SUM(countUsersCompletedQuestionnaireAndStartedIsolation) AS "Symptoms reported (Symptomau a adroddwyd)",
+            SUM(countUsersReceivedPositiveTestResult) AS "Positive test results linked to app (Canlyniadau prawf positif)",
+            SUM(countUsersReceivedNegativeTestResult) AS "Negative test results linked to app (Canlyniadau prawf negatif)",
+            SUM(countUsersReceivedRiskyContactNotification) AS "Contact tracing alert (Hysbysiadau olrhain cyswllt)",
+            
+            /* Cumulative Measures */
+            SUM(SUM(totalCheckIns)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative check-ins (Cofrestriadau cronnus)",
+            SUM(SUM(countUsersCompletedQuestionnaireAndStartedIsolation)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative symptoms reported (Symptomau a adroddwyd cronnus)",
+            SUM(SUM(countUsersReceivedPositiveTestResult)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative positive test results linked to app (Canlyniadau prawf positif cronnus)",
+            SUM(SUM(countUsersReceivedNegativeTestResult)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative negative test results linked to app (Canlyniadau prawf negatif cronnus)",
+            SUM(SUM(countUsersReceivedRiskyContactNotification)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative contact tracing alert (Hysbysiadau olrhain cyswllt cronnus)"
+            
+        FROM(
+            SELECT
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate - interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate - interval '4' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate - interval '5' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate - interval '6' day /* Wed */
+                    WHEN 4 THEN truncatedStartDate /* Thu */
+                    WHEN 5 THEN truncatedStartDate - interval '1' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate - interval '2' day /* Sat */
                 END AS firstDayReportingWeek,
-                CASE day_of_week(truncatedstartdate)
-                    WHEN 7 THEN truncatedstartdate + interval '3' day /* Sun */
-                    WHEN 1 THEN truncatedstartdate + interval '2' day /* Mon */
-                    WHEN 2 THEN truncatedstartdate + interval '1' day /* Tue */
-                    WHEN 3 THEN truncatedstartdate /* Wed */
-                    WHEN 4 THEN truncatedstartdate + interval '6' day /* Thu */
-                    WHEN 5 THEN truncatedstartdate + interval '5' day /* Fri */
-                    WHEN 6 THEN truncatedstartdate + interval '4' day /* Sat */
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate + interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate + interval '2' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate + interval '1' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate /* Wed */
+                    WHEN 4 THEN truncatedStartDate + interval '6' day /* Thu */
+                    WHEN 5 THEN truncatedStartDate + interval '5' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate + interval '4' day /* Sat */
                 END AS lastDayReportingWeek,
-                CASE day_of_week(current_date)
-                    WHEN 7 THEN current_date - interval '7' day /* Sun */
-                    WHEN 1 THEN current_date - interval '1' day /* Mon */
-                    WHEN 2 THEN current_date - interval '2' day /* Tue */
-                    WHEN 3 THEN current_date - interval '3' day /* Wed */
-                    WHEN 4 THEN current_date - interval '4' day /* Thu */
-                    WHEN 5 THEN current_date - interval '5' day /* Fri */
-                    WHEN 6 THEN current_date - interval '6' day /* Sat */
-                END AS latestSubmittedDate,
-                COALESCE(pdgl.local_authority, pdgl2.local_authority) AS local_authority,
-                COALESCE(pdgl.region, pdgl2.region) AS region,
-                COALESCE(pdgl.country, pdgl2.country) AS country,
+                
+                CASE COALESCE(pdgl.local_authority, pdgl2.local_authority)
+                    WHEN 'Isle of Anglesey' THEN 'Isle of Anglesey / Ynys Môn'
+                    WHEN 'Denbighshire' THEN 'Denbighshire / Sir Ddinbych'
+                    WHEN 'Flintshire' THEN 'Flintshire / Sir y Fflint'
+                    WHEN 'Wrexham' THEN 'Wrexham / Wrecsam'
+                    WHEN 'Pembrokeshire' THEN 'Pembrokeshire / Sir Benfro'
+                    WHEN 'Carmarthenshire' THEN 'Carmarthenshire / Sir Gaerfyrddin'
+                    WHEN 'Swansea' THEN 'Swansea / Abertawe'
+                    WHEN 'Neath Port Talbot' THEN 'Neath Port Talbot / Castell-nedd Port Talbot'
+                    WHEN 'Bridgend' THEN 'Bridgend / Pen-y-bont ar Ogwr'
+                    WHEN 'Vale of Glamorgan' THEN 'Vale of Glamorgan / Bro Morgannwg'
+                    WHEN 'Cardiff' THEN 'Cardiff / Caerdydd'
+                    WHEN 'Caerphilly' THEN 'Caerphilly / Caerffili'
+                    WHEN 'Monmouthshire' THEN 'Monmouthshire / Sir Fynwy'
+                    WHEN 'Newport' THEN 'Newport / Casnewydd'
+                    WHEN 'Merthyr Tydfil' THEN 'Merthyr Tydfil / Merthyr Tudful'
+                ELSE COALESCE(pdgl.local_authority, pdgl2.local_authority)
+                END AS localAuthority,
+                
                 CASE COALESCE(pdgl.country, pdgl2.country)
-                    WHEN 'England' THEN 'Lloegr'
-                    WHEN 'Wales' THEN 'Cymru'
-                END AS country_welsh,
-                NumberofRecords,
-                totaluserscompletedquestionnaireandstartedisolationind,
-                usersusingqrcheckinind,
-                checkedin,
-                canceledcheckin,
-                receivednegativetestresultind,
-                receivedpositivetestresultind,
-                receivedvoidtestresultind,
-                receivedriskycontactnotificationind,
-                receivedriskycontactnotificationusingbgtaskind
+                    WHEN 'England' THEN 'England / Lloegr'
+                    WHEN 'Wales' THEN 'Wales / Cymru'
+                END AS country,
+                
+                /* Small number suppression on measures (done at this level to apply to cumulative measures) */
+                CASE WHEN
+                    SUM(totalCheckIns) < 5 AND SUM(totalCheckIns) > 0 THEN 5
+                    ELSE SUM(totalCheckIns) 
+                END AS totalCheckIns,
+                CASE WHEN
+                    SUM(countUsersReceivedRiskyContactNotification) < 5 AND SUM(countUsersReceivedRiskyContactNotification) > 0 THEN 5
+                    ELSE SUM(countUsersReceivedRiskyContactNotification) 
+                END AS countUsersReceivedRiskyContactNotification,
+                CASE WHEN
+                    SUM(countUsersReceivedPositiveTestResult) < 5 AND SUM(countUsersReceivedPositiveTestResult) > 0 THEN 5
+                    ELSE SUM(countUsersReceivedPositiveTestResult) 
+                END AS countUsersReceivedPositiveTestResult,
+                CASE WHEN
+                    SUM(countUsersReceivedNegativeTestResult) < 5 AND SUM(countUsersReceivedNegativeTestResult) > 0 THEN 5
+                    ELSE SUM(countUsersReceivedNegativeTestResult) 
+                END AS countUsersReceivedNegativeTestResult,
+                CASE WHEN
+                    SUM(countUsersCompletedQuestionnaireAndStartedIsolation) < 5 AND SUM(countUsersCompletedQuestionnaireAndStartedIsolation) > 0 THEN 5
+                    ELSE SUM(countUsersCompletedQuestionnaireAndStartedIsolation) 
+                END AS countUsersCompletedQuestionnaireAndStartedIsolation
+        
             FROM(
                 SELECT
-                    truncatedstartdate,
-                    platform,
-                    postaldistrict,
+                    truncatedStartDate,
+                    postalDistrict,
                     lad20cd,
-                    COUNT(*) AS NumberofRecords,
-                    SUM(totaluserscompletedquestionnaireandstartedisolationind) AS totaluserscompletedquestionnaireandstartedisolationind,
-                    SUM(usersusingqrcheckinind) AS usersusingqrcheckinind,
-                    SUM(checkedin) AS checkedin,
-                    SUM(canceledcheckin) AS canceledcheckin,
-                    SUM(receivednegativetestresultind) AS receivednegativetestresultind,
-                    SUM(receivedpositivetestresultind) AS receivedpositivetestresultind,
-                    SUM(receivedvoidtestresultind) AS receivedvoidtestresultind,
-                    SUM(receivedriskycontactnotificationind) AS receivedriskycontactnotificationind,
-                    SUM(receivedriskycontactnotificationusingbgtaskind) AS receivedriskycontactnotificationusingbgtaskind
+                    SUM(checkedin) AS totalCheckIns,
+                    SUM(completedQuestionnaireAndStartedIsolationInd) AS countUsersCompletedQuestionnaireAndStartedIsolation,
+                    SUM(receivedPositiveTestResultInd) AS countUsersReceivedPositiveTestResult,
+                    SUM(receivedNegativeTestResultInd) AS countUsersReceivedNegativeTestResult,
+                    SUM(receivedRiskyContactNotificationInd) AS countUsersReceivedRiskyContactNotification
                 FROM(
                     SELECT
-                        date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') AS truncatedstartdate,
-                        aad.postaldistrict,
+                        /* Dimensions */
+                        aad.postaldistrict AS postalDistrict,
                         COALESCE(aad.localauthority,'') AS lad20cd,
-                        (aad.checkedin - aad.canceledcheckin) as checkedin,
-                        aad.canceledcheckin,
-                        CASE WHEN aad.completedquestionnaireandstartedisolation > 0 THEN 1 ELSE 0 END AS totaluserscompletedquestionnaireandstartedisolationind,
-                        CASE WHEN Upper(devicemodel) LIKE '%IPHONE%' THEN 'Apple' ELSE 'Android' END AS platform,
-                        CASE WHEN aad.checkedin > 0 THEN 1 ELSE 0 END AS usersusingqrcheckinind,
-                        CASE WHEN aad.receivedpositivetestresult > 0 THEN 1 ELSE 0 END AS receivedpositivetestresultind,
-                        CASE WHEN aad.receivednegativetestresult > 0 THEN 1 ELSE 0 END AS receivednegativetestresultind,
-                        CASE WHEN aad.receivedvoidtestresult > 0 THEN 1 ELSE 0 END AS receivedvoidtestresultind,
+                        date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') AS truncatedStartDate,
+                        
+                        /* Measures*/
+                        (aad.checkedin - aad.canceledcheckin) AS checkedin,
+                        CASE WHEN aad.completedquestionnaireandstartedisolation > 0 THEN 1 ELSE 0 END AS completedQuestionnaireAndStartedIsolationInd,
+                        CASE WHEN aad.receivedpositivetestresult > 0 THEN 1 ELSE 0 END AS receivedPositiveTestResultInd,
+                        CASE WHEN aad.receivednegativetestresult > 0 THEN 1 ELSE 0 END AS receivedNegativeTestResultInd,
                         CASE
                             WHEN
                                 (aad.receivedriskycontactnotification IS NOT NULL
-                                    AND aad.receivedriskycontactnotification > 0)
-                            OR
-                                (aad.receivedriskycontactnotification IS NULL
-                            AND aad.runningnormallybackgroundtick > 0
-                            AND aad.isisolatingbackgroundtick > 0
-                            AND aad.hashadriskycontactbackgroundtick > 0
-                            AND aad.hashadriskycontactbackgroundtick < aad.runningnormallybackgroundtick )
-                            THEN 1
-                            ELSE 0
-                        END AS receivedriskycontactnotificationind,
-                        CASE
-                            WHEN
-                            (aad.receivedriskycontactnotification IS NOT NULL
                                 AND aad.receivedriskycontactnotification > 0)
                             OR
-                            (aad.receivedriskycontactnotification IS NULL
-                                AND aad.totalbackgroundtasks > 0
+                                (aad.receivedriskycontactnotification IS NULL
+                                AND aad.runningnormallybackgroundtick > 0
                                 AND aad.isisolatingbackgroundtick > 0
                                 AND aad.hashadriskycontactbackgroundtick > 0
-                                AND aad.hashadriskycontactbackgroundtick < aad.totalbackgroundtasks )
+                                AND aad.hashadriskycontactbackgroundtick < aad.runningnormallybackgroundtick )
                             THEN 1
                             ELSE 0
-                        END AS receivedriskycontactnotificationusingbgtaskind
+                        END AS receivedRiskyContactNotificationInd
                     FROM "${workspace}_analytics_db"."${workspace}_analytics_mobile" aad
                     WHERE date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2020-09-24')
-                    AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') <=
-                        (CASE day_of_week(current_date)
-                            WHEN 7 THEN current_date - interval '11' day /* Sun */
-                            WHEN 1 THEN current_date - interval '5' day /* Mon */
-                            WHEN 2 THEN current_date - interval '6' day /* Tue */
-                            WHEN 3 THEN current_date - interval '7' day /* Wed */
-                            WHEN 4 THEN current_date - interval '8' day /* Thu */
-                            WHEN 5 THEN current_date - interval '9' day /* Fri */
-                            WHEN 6 THEN current_date - interval '10' day /* Sat */
-                        END)
-                    AND date_parse(aad.submitteddatehour,'%Y/%c/%d/%H') <=
-                        (CASE day_of_week(current_date)
-                            WHEN 7 THEN current_date - interval '7' day /* Sun */
-                            WHEN 1 THEN current_date - interval '1' day /* Mon */
-                            WHEN 2 THEN current_date - interval '2' day /* Tue */
-                            WHEN 3 THEN current_date - interval '3' day /* Wed */
-                            WHEN 4 THEN current_date - interval '4' day /* Thu */
-                            WHEN 5 THEN current_date - interval '5' day /* Fri */
-                            WHEN 6 THEN current_date - interval '6' day /* Sat */
-                        END)
-                    AND aad.startdate <> aad.enddate
-                    )
+                        AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') <=
+                            (CASE day_of_week(current_date)
+                                WHEN 7 THEN current_date - interval '11' day /* Sun */
+                                WHEN 1 THEN current_date - interval '5' day /* Mon */
+                                WHEN 2 THEN current_date - interval '6' day /* Tue */
+                                WHEN 3 THEN current_date - interval '7' day /* Wed */
+                                WHEN 4 THEN current_date - interval '8' day /* Thu */
+                                WHEN 5 THEN current_date - interval '9' day /* Fri */
+                                WHEN 6 THEN current_date - interval '10' day /* Sat */
+                            END)
+                        AND date_parse(aad.submitteddatehour,'%Y/%c/%d/%H') <=
+                            (CASE day_of_week(current_date)
+                                WHEN 7 THEN current_date - interval '7' day /* Sun */
+                                WHEN 1 THEN current_date - interval '1' day /* Mon */
+                                WHEN 2 THEN current_date - interval '2' day /* Tue */
+                                WHEN 3 THEN current_date - interval '3' day /* Wed */
+                                WHEN 4 THEN current_date - interval '4' day /* Thu */
+                                WHEN 5 THEN current_date - interval '5' day /* Fri */
+                                WHEN 6 THEN current_date - interval '6' day /* Sat */
+                            END)
+                        AND aad.startdate <> aad.enddate
+                )
                 GROUP BY
-                    truncatedstartdate,
+                    postalDistrict,
                     lad20cd,
-                    postaldistrict,
-                    platform
+                    truncatedStartDate
             ) aad2
-            LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl
-                ON (aad2.lad20cd <> '' AND aad2.postaldistrict = pdgl.postcode AND aad2.lad20cd = pdgl.lad20cd AND (pdgl.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl.country IS NULL))
-            LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl2
-                ON (aad2.lad20cd = '' AND aad2.postaldistrict = pdgl2.postcode AND pdgl2.lad20cd = '' AND (pdgl2.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl2.country IS NULL))
-            )
-            WHERE
-            country  = 'England' OR country = 'Wales'
+                LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl
+                    ON (aad2.lad20cd <> '' AND aad2.postaldistrict = pdgl.postcode AND aad2.lad20cd = pdgl.lad20cd AND (pdgl.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl.country IS NULL))
+                LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl2
+                    ON (aad2.lad20cd = '' AND aad2.postaldistrict = pdgl2.postcode AND pdgl2.lad20cd = '' AND (pdgl2.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl2.country IS NULL))
             GROUP BY
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate - interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate - interval '4' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate - interval '5' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate - interval '6' day /* Wed */
+                    WHEN 4 THEN truncatedStartDate /* Thu */
+                    WHEN 5 THEN truncatedStartDate - interval '1' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate - interval '2' day /* Sat */
+                END,
+                CASE day_of_week(truncatedStartDate)
+                    WHEN 7 THEN truncatedStartDate + interval '3' day /* Sun */
+                    WHEN 1 THEN truncatedStartDate + interval '2' day /* Mon */
+                    WHEN 2 THEN truncatedStartDate + interval '1' day /* Tue */
+                    WHEN 3 THEN truncatedStartDate /* Wed */
+                    WHEN 4 THEN truncatedStartDate + interval '6' day /* Thu */
+                    WHEN 5 THEN truncatedStartDate + interval '5' day /* Fri */
+                    WHEN 6 THEN truncatedStartDate + interval '4' day /* Sat */
+                END,
+                
+                CASE COALESCE(pdgl.local_authority, pdgl2.local_authority)
+                    WHEN 'Isle of Anglesey' THEN 'Isle of Anglesey / Ynys Môn'
+                    WHEN 'Denbighshire' THEN 'Denbighshire / Sir Ddinbych'
+                    WHEN 'Flintshire' THEN 'Flintshire / Sir y Fflint'
+                    WHEN 'Wrexham' THEN 'Wrexham / Wrecsam'
+                    WHEN 'Pembrokeshire' THEN 'Pembrokeshire / Sir Benfro'
+                    WHEN 'Carmarthenshire' THEN 'Carmarthenshire / Sir Gaerfyrddin'
+                    WHEN 'Swansea' THEN 'Swansea / Abertawe'
+                    WHEN 'Neath Port Talbot' THEN 'Neath Port Talbot / Castell-nedd Port Talbot'
+                    WHEN 'Bridgend' THEN 'Bridgend / Pen-y-bont ar Ogwr'
+                    WHEN 'Vale of Glamorgan' THEN 'Vale of Glamorgan / Bro Morgannwg'
+                    WHEN 'Cardiff' THEN 'Cardiff / Caerdydd'
+                    WHEN 'Caerphilly' THEN 'Caerphilly / Caerffili'
+                    WHEN 'Monmouthshire' THEN 'Monmouthshire / Sir Fynwy'
+                    WHEN 'Newport' THEN 'Newport / Casnewydd'
+                    WHEN 'Merthyr Tydfil' THEN 'Merthyr Tydfil / Merthyr Tudful'
+                ELSE COALESCE(pdgl.local_authority, pdgl2.local_authority)
+                END,
+                
+                CASE COALESCE(pdgl.country, pdgl2.country)
+                    WHEN 'England' THEN 'England / Lloegr'
+                    WHEN 'Wales' THEN 'Wales / Cymru'
+                END
+        )
+        WHERE localAuthority NOT IN ('Dumfries and Galloway','Scottish Borders') 
+            AND localAuthority IS NOT NULL
+            AND country NOT IN ('Scotland', 'Northern Ireland') 
+            AND country IS NOT NULL
+        GROUP BY
+            localAuthority,
+            firstDayReportingWeek,
             lastDayReportingWeek,
-            local_authority
+            country
+        ORDER BY
+            lastDayReportingWeek,
+            localAuthority
         """
     )
 
-    override fun agnosticDataset(queryId: QueryId): QueryResult<CsvS3Object> =
-        when (val queryResult = asyncDbClient.queryResults(queryId)) {
-            is QueryResult.Waiting -> QueryResult.Waiting()
-            is QueryResult.Error -> QueryResult.Error(queryResult.message)
-            is QueryResult.Finished -> QueryResult.Finished(
-                AgnosticDataset(
-                    queryResult.results.resultSet.rows.drop(1).map {
-                        AgnosticDatasetRow(
-                            weekEnding = LocalDate.parse(it.data[0].varCharValue),
-                            downloads = it.data[1]?.varCharValue?.toLong() ?: 0,
-                            riskyVenues = it.data[2]?.varCharValue?.toLong() ?: 0,
-                            posters = it.data[3]?.varCharValue?.toLong() ?: 0
-                        )
-                    }
-                )
-            )
-        }
+    override fun checkQueryState(queryId: QueryId): QueryResult<Unit> = asyncDbClient.queryResults(queryId)
 
-    override fun countryDataset(queryId: QueryId): QueryResult<CsvS3Object> =
-        when (val queryResult = asyncDbClient.queryResults(queryId)) {
-            is QueryResult.Waiting -> QueryResult.Waiting()
-            is QueryResult.Error -> QueryResult.Error(queryResult.message)
-            is QueryResult.Finished -> QueryResult.Finished(
-                CountryDataset(
-                    queryResult.results.resultSet.rows.drop(1).map {
-                        CountryDatasetRow(
-                            weekEnding = LocalDate.parse(it.data[0].varCharValue),
-                            countryEnglish = it.data[1].varCharValue,
-                            countryWelsh = it.data[2].varCharValue,
-                            checkIns = it.data[3]?.varCharValue?.toLong() ?: 0,
-                            contactTracingAlerts = it.data[4]?.varCharValue?.toLong() ?: 0,
-                            negativeTestResults = it.data[5]?.varCharValue?.toLong() ?: 0,
-                            positiveTestResults = it.data[6]?.varCharValue?.toLong() ?: 0,
-                            symptomsReported = it.data[7]?.varCharValue?.toLong() ?: 0,
-                        )
-                    }
-                )
-            )
-        }
-
-    override fun localAuthorityDataset(queryId: QueryId): QueryResult<CsvS3Object> =
-        when (val queryResult = asyncDbClient.queryResults(queryId)) {
-            is QueryResult.Waiting -> QueryResult.Waiting()
-            is QueryResult.Error -> QueryResult.Error(queryResult.message)
-            is QueryResult.Finished -> QueryResult.Finished(
-                LocalAuthorityDataset(
-                    queryResult.results.resultSet.rows.drop(1).map {
-                        LocalAuthorityDatasetRow(
-                            weekEnding = LocalDate.parse(it.data[0].varCharValue),
-                            localAuthority = it.data[1].varCharValue,
-                            checkIns = it.data[2]?.varCharValue?.toLong() ?: 0,
-                            contactTracingAlerts = it.data[3]?.varCharValue?.toLong() ?: 0,
-                            negativeTestResults = it.data[4]?.varCharValue?.toLong() ?: 0,
-                            positiveTestResults = it.data[5]?.varCharValue?.toLong() ?: 0,
-                            symptomsReported = it.data[6]?.varCharValue?.toLong() ?: 0,
-                        )
-                    }
-                )
-            )
-        }
 }

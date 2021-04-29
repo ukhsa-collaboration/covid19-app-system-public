@@ -12,7 +12,7 @@ import org.http4k.hamkrest.hasContentType
 import org.http4k.hamkrest.hasHeader
 import org.http4k.hamkrest.hasStatus
 import software.amazon.awssdk.services.lambda.model.InvokeResponse
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
@@ -83,9 +83,9 @@ fun Response.requireBodyText(expectedText: String): Response {
     return this
 }
 
-inline fun <reified T> Response.deserializeOrThrow(): T {
+inline fun <reified T: Any> Response.deserializeOrThrow(): T {
     requireJsonContentType()
-    return Jackson.readOrNull<T>(bodyString()) ?: error("Unable to deserialize: ${bodyString()}")
+    return Json.readJsonOrNull(bodyString()) ?: error("Unable to deserialize: ${bodyString()}")
 }
 
 fun InvokeResponse.requireStatusCode(expectedStatus: Status): InvokeResponse {

@@ -11,7 +11,8 @@ import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys.SSM_CIRCUIT_BREAKER_BASE_NAME
 import uk.nhs.nhsx.core.HttpResponses.ok
 import uk.nhs.nhsx.core.HttpResponses.unprocessableEntity
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.readJsonOrNull
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.auth.ApiName.Health
@@ -28,14 +29,14 @@ import uk.nhs.nhsx.core.events.CircuitBreakerExposureResolution
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.routing.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing.Method.GET
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
-import uk.nhs.nhsx.core.routing.RoutingHandler
-import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
-import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.routing.authorisedBy
+import uk.nhs.nhsx.core.routing.withSignedResponses
 
 class ExposureNotificationHandler @JvmOverloads constructor(
     environment: Environment = Environment.unknown(),
@@ -67,7 +68,7 @@ class ExposureNotificationHandler @JvmOverloads constructor(
         ApiGatewayHandler { r, _ ->
             events(CircuitBreakerExposureRequest())
             mapResultToResponse(
-                readOrNull<ExposureNotificationCircuitBreakerRequest>(r.body) {
+                Json.readJsonOrNull<ExposureNotificationCircuitBreakerRequest>(r.body) {
                     events(UnprocessableJson(it))
                 }
                     ?.let { circuitBreakerService.getApprovalToken() }

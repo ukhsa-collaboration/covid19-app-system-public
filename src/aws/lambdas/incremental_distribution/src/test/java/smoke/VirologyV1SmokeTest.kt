@@ -9,16 +9,16 @@ import smoke.actors.ApiVersion.V1
 import smoke.actors.MobileApp
 import smoke.actors.TestLab
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.Available
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.NotFound
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult.Negative
-import uk.nhs.nhsx.virology.result.TestResult.Positive
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult.Negative
+import uk.nhs.nhsx.domain.TestResult.Positive
 
 class VirologyV1SmokeTest {
 

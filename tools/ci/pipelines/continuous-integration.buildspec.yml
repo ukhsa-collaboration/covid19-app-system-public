@@ -6,6 +6,7 @@ phases:
   build:
     commands:
       - rake config:codebuild BRANCH=master
+      - rake deploy:mocks:dev
       - rake deploy:cta:ci
       - rake test:smoke:ci
       - rake deploy:pubdash:ci

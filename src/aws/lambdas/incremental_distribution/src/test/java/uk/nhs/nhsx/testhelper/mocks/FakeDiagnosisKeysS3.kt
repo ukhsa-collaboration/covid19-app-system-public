@@ -3,7 +3,7 @@ package uk.nhs.nhsx.testhelper.mocks
 import com.amazonaws.services.s3.model.S3Object
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import uk.nhs.nhsx.core.ContentType
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
@@ -42,7 +42,7 @@ class FakeDiagnosisKeysS3(
         val mostRecentKeyRollingStart =
             ENIntervalNumber.enIntervalNumberFromTimestamp(Instant.now()).enIntervalNumber / 144 * 144
 
-        val json = Jackson.toJson(
+        val json = Json.toJson(
             StoredTemporaryExposureKeyPayload(
                 listOf(makeKey(locator, mostRecentKeyRollingStart - 144))
             )
@@ -55,6 +55,10 @@ class FakeDiagnosisKeysS3(
 
     override fun deleteObject(locator: Locator) {
         // noop
+    }
+
+    override fun copyObject(from: Locator, to: Locator) {
+        TODO("Not yet implemented")
     }
 
     override fun getSignedURL(locator: Locator, expiration: Date) =

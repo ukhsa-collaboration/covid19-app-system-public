@@ -73,6 +73,8 @@ public class AnalyticsMetrics {
     public Integer hasReceivedRiskyVenueM2WarningBackgroundTick;
     public Integer totalAlarmManagerBackgroundTasks;
     public Integer missingPacketsLast7Days;
+    public Integer consentedToShareVenueHistory;
+    public Integer askedToShareVenueHistory;
 
     public AnalyticsMetrics() {
     }

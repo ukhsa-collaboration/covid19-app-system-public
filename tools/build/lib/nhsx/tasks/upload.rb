@@ -1,3 +1,5 @@
+require_relative "upload/cta"
+
 namespace :upload do
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
@@ -12,6 +14,19 @@ namespace :upload do
         raise GaudiError, "Failed to upload post district data with #{status}" if status != 202
 
         puts "Post district data succesfully completed"
+      end
+
+      desc "Upload data to mobile analytics #{tgt_env}"
+      task :"analytics:#{tgt_env}" => [:"login:#{account}"] do
+        include NHSx::Generate
+        include NHSx::Upload
+        upload_file = $configuration.upload_data
+        target_config = JSON.parse(File.read(generate_test_config(tgt_env, account, $configuration)))
+        status = upload_mobile_analytics_data(File.read(upload_file), tgt_env, target_config)
+
+        raise GaudiError, "Failed to upload mobile analytics data with #{status}" if status != 200
+
+        puts "Posted"
       end
     end
   end

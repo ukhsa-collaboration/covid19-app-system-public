@@ -5,9 +5,8 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.HttpResponses
-import uk.nhs.nhsx.core.Jackson.readOrNull
-import uk.nhs.nhsx.core.Jackson.readStrictOrNull
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.auth.ApiName.Health
 import uk.nhs.nhsx.core.auth.ApiName.TestResultUpload
@@ -18,12 +17,14 @@ import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.events.VirologyResults
 import uk.nhs.nhsx.core.events.VirologyTokenGen
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.readJsonOrNull
+import uk.nhs.nhsx.core.readStrictOrNull
 import uk.nhs.nhsx.core.routing.Routing
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
-import uk.nhs.nhsx.core.routing.RoutingHandler
-import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
-import uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses
+import uk.nhs.nhsx.core.routing.authorisedBy
+import uk.nhs.nhsx.core.routing.withoutSignedResponses
 import uk.nhs.nhsx.virology.VirologyConfig.Companion.fromEnvironment
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
@@ -159,11 +160,11 @@ class VirologyUploadHandler @JvmOverloads constructor(
         Eng, Wls
     }
 
-    private inline fun <reified T> readJsonOrNull(request: APIGatewayProxyRequestEvent): T? =
-        readOrNull<T>(request.body) { e: Exception -> events(UnprocessableJson(e)) }
+    private inline fun <reified T : Any> readJsonOrNull(request: APIGatewayProxyRequestEvent): T? =
+        Json.readJsonOrNull(request.body) { e: Exception -> events(UnprocessableJson(e)) }
 
-    private inline fun <reified T> readJsonStrictOrNull(request: APIGatewayProxyRequestEvent): T? =
-        readStrictOrNull<T>(request.body) { e: Exception -> events(UnprocessableJson(e)) }
+    private inline fun <reified T : Any> readJsonStrictOrNull(request: APIGatewayProxyRequestEvent): T? =
+        Json.readStrictOrNull(request.body) { e: Exception -> events(UnprocessableJson(e)) }
 
     companion object {
         private fun virologyService(environment: Environment, events: Events): VirologyService = VirologyService(

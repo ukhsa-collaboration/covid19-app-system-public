@@ -17,7 +17,6 @@ data class VirologyConfig(val testOrdersTable: String,
         private val TEST_RESULTS_TABLE = EnvironmentKey.string("test_results_table")
         private val TEST_ORDERS_INDEX = EnvironmentKey.string("test_orders_index")
 
-
         fun fromEnvironment(environment: Environment): VirologyConfig {
             return VirologyConfig(
                 environment.access.required(TEST_ORDERS_TABLE),

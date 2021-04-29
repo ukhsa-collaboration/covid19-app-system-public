@@ -25,8 +25,8 @@ class ObjectKeyFiltersTest {
             // new style keys
             "mobile/LAB_RESULT/abc,true",
             "mobile/LAB_RESULT/xyz,true",
-            "mobile/RAPID_RESULT/abc,false",
-            "mobile/RAPID_SELF_REPORTED/123,false",
+            "mobile/RAPID_RESULT/abc,true",
+            "mobile/RAPID_SELF_REPORTED/123,true",
 
             // misc key
             "///,false",

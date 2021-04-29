@@ -14,7 +14,7 @@ import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal.EXT_CONSUMED
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal.EXT_INVALID
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal.EXT_VALID
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal.INT_UPDATED
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.time.Instant.ofEpochSecond
 import java.util.Optional
 

@@ -3,33 +3,39 @@ package uk.nhs.nhsx.keyfederation.download
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock.*
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.equalTo
+import com.github.tomakehurst.wiremock.client.WireMock.exactly
+import com.github.tomakehurst.wiremock.client.WireMock.get
+import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
+import com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Jackson.readJsonOrThrow
+import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
-import uk.nhs.nhsx.keyfederation.BatchTag
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
 import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
 import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
-import uk.nhs.nhsx.testhelper.proxy
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Instant
 import java.time.LocalDate
-import java.util.*
+import java.util.Date
 
 @ExtendWith(WireMockExtension::class)
 class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
@@ -50,7 +56,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
             ParameterName.of("parameter"),
             "federatedKeyDownloadPrefix",
             "DUMMY_TABLE",
-            listOf("GB-EAW","GB-NIR")
+            listOf("GB-EAW", "GB-NIR")
         )
     }
 
@@ -82,7 +88,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                     lastModified = Date.from(Instant.now())
                 }
             ))
-        ).handleRequest(ScheduledEvent(), proxy())
+        ).handleRequest(ScheduledEvent(), TestContext())
     }
 
     @Test
@@ -120,7 +126,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                 events
             ),
             awsS3Client = FakeDiagnosisKeysS3(emptyList())
-        ).handleRequest(ScheduledEvent(), proxy())
+        ).handleRequest(ScheduledEvent(), TestContext())
 
         wireMock.verify(
             exactly(0),
@@ -160,7 +166,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                 events
             ),
             awsS3Client = fakeS3Storage
-        ).handleRequest(ScheduledEvent(), proxy())
+        ).handleRequest(ScheduledEvent(), TestContext())
 
         assertThat(fakeS3Storage.count).isEqualTo(0)
         assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
@@ -283,15 +289,19 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
 
         val keys = fakeS3Storage.fakeS3Objects
             .flatMap {
-                readJsonOrThrow(
-                    it.bytes.openStream(),
-                    StoredTemporaryExposureKeyPayload::class.java
-                ).temporaryExposureKeys
+                readJsonOrThrow<StoredTemporaryExposureKeyPayload>(it.bytes.openStream())
+                    .temporaryExposureKeys
             }
             .map { it.key }
 
         assertThat(keys).hasSize(3)
-        assertThat(keys).containsAll(listOf("9m008UTn46C32jsWEw1Dnw==", "p05ot/jyF58G/95CkujQYQ==","ViRF6pOEFdVnk73aBrEwcA=="))
+        assertThat(keys).containsAll(
+            listOf(
+                "9m008UTn46C32jsWEw1Dnw==",
+                "p05ot/jyF58G/95CkujQYQ==",
+                "ViRF6pOEFdVnk73aBrEwcA=="
+            )
+        )
         assertThat(batchTagService.batchTag!!.value).isEqualTo("75b326f7-ae6f-42f6-9354-00c0a6b797b3")
     }
 

@@ -21,7 +21,6 @@ locals {
 
   processing_lambdas = [
     var.diagnosis_keys_processing_function,
-    var.advanced_analytics_function
   ]
 
   app_interface_group       = concat(local.submission_lambdas, local.circuit_breaker_lambdas)

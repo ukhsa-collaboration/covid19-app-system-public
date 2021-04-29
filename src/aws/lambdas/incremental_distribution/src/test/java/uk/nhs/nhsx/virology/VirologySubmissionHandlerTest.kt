@@ -3,11 +3,7 @@ package uk.nhs.nhsx.virology
 import com.amazonaws.HttpMethod
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -22,30 +18,22 @@ import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
-import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.events.VirologyCtaExchange
-import uk.nhs.nhsx.core.events.VirologyOrder
-import uk.nhs.nhsx.core.events.VirologyRegister
-import uk.nhs.nhsx.core.events.VirologyResults
+import uk.nhs.nhsx.core.events.*
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
+import uk.nhs.nhsx.domain.*
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.testhelper.data.TestData
-import uk.nhs.nhsx.testhelper.data.asInstant
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V1
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V2
-import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
-import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
-import uk.nhs.nhsx.virology.exchange.CtaExchangeResponseV1
-import uk.nhs.nhsx.virology.exchange.CtaExchangeResponseV2
-import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
+import uk.nhs.nhsx.virology.exchange.*
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
@@ -53,10 +41,8 @@ import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult.Positive
 import java.time.Duration
-import java.util.Optional
+import java.util.*
 
 class VirologySubmissionHandlerTest {
 
@@ -250,7 +236,7 @@ class VirologySubmissionHandlerTest {
     @ValueSource(strings = ["/virology-test/home-kit/order", "/virology-test/v2/order"])
     fun `handle test order request success`(orderUrl: String) {
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"),TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"))
+            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"))
 
         val virology = virologyService()
 
@@ -277,7 +263,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `handle test register request success`() {
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"),TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"))
+            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"))
 
         val virology = virologyService()
 

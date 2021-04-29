@@ -1,9 +1,9 @@
 package uk.nhs.nhsx.virology.order
 
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
-import uk.nhs.nhsx.virology.CtaToken.Companion.of
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.virology.TestResultPollingToken
+import uk.nhs.nhsx.domain.CtaToken.Companion.of
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import java.util.*
 

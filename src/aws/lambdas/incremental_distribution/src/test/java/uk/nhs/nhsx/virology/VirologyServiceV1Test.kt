@@ -1,16 +1,13 @@
 package uk.nhs.nhsx.virology
 
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.verify
-import io.mockk.verifySequence
+import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.domain.*
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestResult.*
 import uk.nhs.nhsx.testhelper.data.TestData
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.order.TokensGenerator
@@ -19,17 +16,12 @@ import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
-import uk.nhs.nhsx.virology.result.TestResult.Negative
-import uk.nhs.nhsx.virology.result.TestResult.Positive
-import uk.nhs.nhsx.virology.result.TestResult.Void
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.time.Instant
 import java.time.Period
-import java.util.Optional
+import java.util.*
 
 class VirologyServiceV1Test {
 
@@ -38,6 +30,7 @@ class VirologyServiceV1Test {
     private val clock = { now }
     private val persistenceService = mockk<VirologyPersistenceService>()
     private val fourWeeksExpireAt = now.plus(Period.ofWeeks(4))
+    private val threeWeeksExpireAt = now.plus(Period.ofWeeks(3))
     private val virologyPolicyConfig = mockk<VirologyPolicyConfig>()
     private val websiteConfig = VirologyWebsiteConfig(
         "https://example.order-a-test.uk",
@@ -75,6 +68,7 @@ class VirologyServiceV1Test {
             TestResultPollingToken.of("polling-token"),
             DiagnosisKeySubmissionToken.of("submission-token")
         )
+
 
         val service = virologyService(tokenGenerator)
 
@@ -264,7 +258,7 @@ class VirologyServiceV1Test {
         val testOrderTokens = TestOrder(
             CtaToken.of("074qbxqq"),
             TestResultPollingToken.of("09657719-fe58-46a3-a3a3-a8db82d48043"),
-            DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0")
+            DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"),
         )
         every {
             persistenceService.persistTestOrderAndResult(
@@ -289,8 +283,7 @@ class VirologyServiceV1Test {
         assertThat(response).isEqualTo(VirologyTokenGenResponse(CtaToken.of("074qbxqq")))
         verify(exactly = 1) {
             persistenceService.persistTestOrderAndResult(
-                any(), fourWeeksExpireAt, Positive, TestEndDate.of(2020, 8, 7), any()
-            )
+                any(), fourWeeksExpireAt, Positive, TestEndDate.of(2020, 8, 7), any())
         }
     }
 
@@ -341,7 +334,8 @@ class VirologyServiceV1Test {
                 any(),
                 any(),
                 any(),
-                any()
+                any(),
+
             )
         } returns testOrderTokens
 

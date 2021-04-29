@@ -1,10 +1,10 @@
 package smoke.data
 
+import uk.nhs.nhsx.domain.MessageType
+import uk.nhs.nhsx.domain.VenueId
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenue
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
-import uk.nhs.nhsx.highriskvenuesupload.model.MessageType
 import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow
-import uk.nhs.nhsx.highriskvenuesupload.model.VenueId
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS

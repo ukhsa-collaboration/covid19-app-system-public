@@ -7,11 +7,12 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.scheduled.ScheduledEventCompleted
-import uk.nhs.nhsx.core.scheduled.ScheduledEventStarted
+import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.handler.ScheduledEventCompleted
+import uk.nhs.nhsx.core.handler.ScheduledEventStarted
 import uk.nhs.nhsx.pubdash.DataExportService
-import uk.nhs.nhsx.pubdash.RecordingEvents
-import uk.nhs.nhsx.pubdash.TestEnvironments
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 
 class TriggerExportHandlerTest {
 
@@ -29,7 +30,7 @@ class TriggerExportHandlerTest {
 
     @Test
     fun `runs export and succeeds`() {
-        val response = handler.handleRequest(mockk(), mockk())
+        val response = handler.handleRequest(mockk(), TestContext())
 
         assertThat(response).isEqualTo(ExportTriggered.toString())
         verify(exactly = 1) { service.triggerAllQueries() }

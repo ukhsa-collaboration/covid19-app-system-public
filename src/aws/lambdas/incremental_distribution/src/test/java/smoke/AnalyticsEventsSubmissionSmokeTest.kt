@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
 import smoke.data.AnalyticsEventsData.analyticsEvents
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import java.util.UUID
 
 @Suppress("UNCHECKED_CAST")
@@ -45,7 +45,7 @@ class AnalyticsEventsSubmissionSmokeTest {
         assertThat(objectSummaries).hasSize(1)
 
         val s3Object = s3Client.getObject(config.analytics_events_submission_store, objectSummaries[0].key)
-        val storedPayload: Map<String, *> = Jackson.readJsonOrThrow(s3Object.objectContent, Map::class.java) as Map<String, *>
+        val storedPayload: Map<String, *> = Json.readJsonOrThrow(s3Object.objectContent) as Map<String, *>
 
         assertThat(storedPayload).containsKey("uuid")
         val metadata = storedPayload["metadata"] as Map<String, *>

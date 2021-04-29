@@ -10,7 +10,7 @@ TestLab <- TestCenter: sends swab test
 TestLab -> "BSA/PHW": informs on test result
 
 "BSA/PHW" -> TokenAPI: [positive result] upload test results
-TokenAPI -> TokenAPI: create and store \n CTA and Submission token
+TokenAPI -> TokenAPI: create and store \n CTA and Submission tokens
 "BSA/PHW" <- TokenAPI: return CTA
 
 ...
@@ -19,11 +19,20 @@ TokenAPI -> TokenAPI: create and store \n CTA and Submission token
 
 User -> App: enter test result code (CTA)
 App -> VirologyTestingAPI: verify code
-App <- VirologyTestingAPI: [code ok] return Submission token
-App -> User: ask for diagnosis key submission
-User -> App : ok
-App -> SubmissionAPI: submit diagnosis keys (w Submission token)
+App <- VirologyTestingAPI: [code ok] return Submission tokens
 App -> User: show/update isolation screen
+group Share diagnosis keys and venue history
+User->App: select to help to stop the spread of the virus
+App -> User: consent to diagnosis key & venue history submission?
+User -> App : consent to both/either/neither
+opt consent given to diagnosis key sharing
+App -> SubmissionAPI: submit diagnosis keys (with Submission token)
+end
+opt consent given to venue history sharing
+App -> SubmissionAPI: submit venue history (with Submission token)
+end
+App -> User: show message on completion
+end
 ...
 TokenAPI -> TokenAPI: clean up unused tokens \n (retention time)
 VirologyTestingAPI -> VirologyTestingAPI: clean up unused tokens \n (retention time)

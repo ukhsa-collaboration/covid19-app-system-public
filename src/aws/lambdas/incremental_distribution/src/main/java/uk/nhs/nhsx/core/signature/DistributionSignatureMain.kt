@@ -3,9 +3,9 @@ package uk.nhs.nhsx.core.signature
 import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.beust.jcommander.JCommander
 import com.beust.jcommander.Parameter
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.SystemObjectMapper
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromFile
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
@@ -61,7 +61,7 @@ object DistributionSignatureMain {
 
         val signed = fromDatedSignature(signature).associateBy({ it.asS3MetaName() }, { it.value })
 
-        output.use { SystemObjectMapper.MAPPER.writeValue(it, signed) }
+        output.use { it.print(Json.toJson(signed)) }
     }
 
     private fun outputFile(output: String?): PrintStream = if (output == null) {

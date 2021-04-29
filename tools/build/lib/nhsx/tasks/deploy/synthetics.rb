@@ -7,12 +7,11 @@ namespace :deploy do
       task :"synthetics:#{tgt_env}" => prerequisites do
         include NHSx::Terraform
         include NHSx::Generate
-        accounts_folder = File.dirname(NHSx::Terraform::SYNTH_DEV_ACCOUNT)
+        accounts_folder = File.dirname(NHSx::TargetEnvironment::SYNTH_DEV_ACCOUNT)
         terraform_configuration = File.join($configuration.base, accounts_folder, account)
         deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
         if tgt_env != "branch"
-          push_git_tag_subsystem(tgt_env, "synth", "Deployed synthetics on #{tgt_env}", $configuration)
-          push_timestamped_tag("synth", tgt_env, "Deployed synthetics on #{tgt_env}", $configuration)
+          tag(pointer_tag_name("synthetics", tgt_env), "Synthetics deployed on #{tgt_env}", $configuration)
         end
       end
     end
@@ -28,9 +27,9 @@ namespace :plan do
       task :"synthetics:#{tgt_env}" => prerequisites do
         include NHSx::Terraform
         include NHSx::Generate
-        accounts_folder = File.dirname(NHSx::Terraform::SYNTH_DEV_ACCOUNT)
+        accounts_folder = File.dirname(NHSx::TargetEnvironment::SYNTH_DEV_ACCOUNT)
         terraform_configuration = File.join($configuration.base, accounts_folder, account)
-        plan_for_workspace(tgt_env, terraform_configuration, $configuration)
+        plan_for_workspace(tgt_env, terraform_configuration, [], $configuration)
       end
     end
   end
@@ -46,7 +45,7 @@ namespace :destroy do
         include NHSx::AWS
         include NHSx::AWS_Synth
         include NHSx::Terraform
-        accounts_folder = File.dirname(NHSx::Terraform::SYNTH_DEV_ACCOUNT)
+        accounts_folder = File.dirname(NHSx::TargetEnvironment::SYNTH_DEV_ACCOUNT)
         terraform_configuration = File.join($configuration.base, accounts_folder, account)
         empty_workspace_buckets(tgt_env, terraform_configuration, $configuration)
         delete_workspace(tgt_env, terraform_configuration, $configuration)

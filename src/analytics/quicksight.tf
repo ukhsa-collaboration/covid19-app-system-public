@@ -1,8 +1,14 @@
 locals {
   service = "quicksight"
-  tags = merge(var.tags, {
-    Component = "Analytics"
-  })
+}
+
+module "archive_store" {
+  source                   = "./libraries/analytics_s3"
+  name                     = "analytics-archive-quicksight"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  tags                     = var.tags
 }
 
 module "output_store" {
@@ -11,14 +17,14 @@ module "output_store" {
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
-  tags                     = local.tags
+  tags                     = var.tags
 }
 
 module "workgroup" {
   source              = "./libraries/athena_workgroup"
   name                = "analytics_quicksight"
   athena_output_store = module.output_store.bucket_name
-  tags                = local.tags
+  tags                = var.tags
 }
 
 resource "aws_glue_catalog_database" "this" {
@@ -26,10 +32,11 @@ resource "aws_glue_catalog_database" "this" {
 }
 
 module "mobile_analytics" {
-  source                                       = "./modules/mobile_analytics"
-  database_name                                = aws_glue_catalog_database.this.name
-  workgroup_name                               = module.workgroup.name
-  analytics_submission_store_parquet_bucket_id = var.analytics_submission_store_parquet_bucket_id
+  source                                                    = "./modules/mobile_analytics"
+  database_name                                             = aws_glue_catalog_database.this.name
+  workgroup_name                                            = module.workgroup.name
+  analytics_submission_store_parquet_bucket_id              = var.analytics_submission_store_parquet_bucket_id
+  analytics_submission_store_consolidated_parquet_bucket_id = var.analytics_submission_store_consolidated_parquet_bucket_id
 }
 
 module "app_store_qr_posters" {
@@ -39,9 +46,7 @@ module "app_store_qr_posters" {
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
   workgroup_name           = module.workgroup.name
-  tags = merge(local.tags, {
-    Feature = "App store and QR posters"
-  })
+  tags                     = var.tags
 }
 
 module "risky_post_districts" {
@@ -58,9 +63,7 @@ module "postcodes_geofence" {
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
   workgroup_name           = module.workgroup.name
-  tags = merge(local.tags, {
-    Feature = "Postcode Areas"
-  })
+  tags                     = var.tags
 }
 
 module "demographics_data" {
@@ -69,9 +72,7 @@ module "demographics_data" {
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
-  tags = merge(local.tags, {
-    Feature = "Local Authorities Demographic Geofence Lookup"
-  })
+  tags                     = var.tags
 }
 
 module "postcode_demographic_geographic_lookup" {
@@ -80,9 +81,16 @@ module "postcode_demographic_geographic_lookup" {
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
   database_name            = aws_glue_catalog_database.this.name
-  tags = merge(local.tags, {
-    Feature = "Postcode Demographic Geographic Lookup"
-  })
+  tags                     = var.tags
+}
+
+module "full_postcode_lookup" {
+  source                   = "./modules/full_postcode_lookup"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
 }
 
 module "sip_analytics" {
@@ -94,15 +102,23 @@ module "sip_analytics" {
 
 module "log_insights_analytics" {
 
-  source                                  = "./modules/log_insights_analytics"
-  circuit_breaker_stats_bucket_id         = var.circuit_breaker_stats_bucket_id
-  key_federation_download_stats_bucket_id = var.key_federation_download_stats_bucket_id
-  key_federation_upload_stats_bucket_id   = var.key_federation_upload_stats_bucket_id
-  database_name                           = aws_glue_catalog_database.this.name
-  logs_bucket_id                          = var.logs_bucket_id
-  service                                 = local.service
-  tags = merge(local.tags, {
-    Feature = "Log Insights Analytics Stats"
-  })
-  workgroup_name = module.workgroup.name
+  source                                   = "./modules/log_insights_analytics"
+  circuit_breaker_stats_bucket_id          = var.circuit_breaker_stats_bucket_id
+  key_federation_download_stats_bucket_id  = var.key_federation_download_stats_bucket_id
+  key_federation_upload_stats_bucket_id    = var.key_federation_upload_stats_bucket_id
+  diagnosis_key_submission_stats_bucket_id = var.diagnosis_key_submission_stats_bucket_id
+  database_name                            = aws_glue_catalog_database.this.name
+  logs_bucket_id                           = var.logs_bucket_id
+  service                                  = local.service
+  tags                                     = var.tags
+  workgroup_name                           = module.workgroup.name
+}
+
+module "postcode_demographic_geographic_lookup_v2" {
+  source                   = "./modules/postcode_demographic_geographic_lookup_v2"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
 }

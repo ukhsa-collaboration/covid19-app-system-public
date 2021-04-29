@@ -8,11 +8,9 @@ import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.Submission
-import uk.nhs.nhsx.diagnosiskeydist.loadAllSubmissions
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
-import java.util.Arrays
-import java.util.Date
+import java.util.*
 import java.util.function.Predicate
 
 class SubmissionFromS3RepositoryTest {
@@ -42,6 +40,27 @@ class SubmissionFromS3RepositoryTest {
         val submissions = submissionRepository.loadAllSubmissions()
 
         assertContainsKeys(submissions, listOf("my-prefix-abc", "abcdef", "my-prefix-def"))
+    }
+
+    @Test
+    fun `submissions from s3 has PCR as testtype`() {
+
+        val fakeS3 = FakeDiagnosisKeysS3(listOf(
+            S3ObjectSummary().apply { key = "mobile/LAB_RESULT/abc.json"; lastModified = Date.from(nowMinus5Sec) },
+            S3ObjectSummary().apply { key = "mobile/RAPID_RESULT/def.json"; lastModified = Date.from(now) },
+            S3ObjectSummary().apply { key = "mobile/RAPID_SELF_REPORTED/ghi.json"; lastModified = Date.from(nowMinus1Sec) }
+        ))
+        val submissionRepository = SubmissionFromS3Repository(
+            fakeS3,
+            { true },
+            BucketName.of("SUBMISSION_BUCKET"),
+            RecordingEvents(),
+            { now }
+        )
+        val submissions = submissionRepository.loadAllSubmissions()
+
+        assertContainsKeys(submissions, listOf("mobile/LAB_RESULT/abc.json", "mobile/RAPID_SELF_REPORTED/ghi.json","mobile/RAPID_RESULT/def.json"))
+
     }
 
     @Test
@@ -158,5 +177,7 @@ class SubmissionFromS3RepositoryTest {
             .flatExtracting({ it.payload.temporaryExposureKeys.map(StoredTemporaryExposureKey::key).first() })
             .isEqualTo(expected)
     }
+
+
 }
 

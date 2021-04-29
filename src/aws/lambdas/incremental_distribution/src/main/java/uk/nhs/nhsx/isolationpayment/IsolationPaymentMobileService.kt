@@ -18,7 +18,7 @@ import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.OK
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.time.Period
 import java.util.Optional
 import java.util.function.Supplier

@@ -4,13 +4,13 @@ import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Handler
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
-import uk.nhs.nhsx.core.queued.QueuedHandler
+import uk.nhs.nhsx.core.handler.QueuedHandler
 import uk.nhs.nhsx.pubdash.DataExportService
 import uk.nhs.nhsx.pubdash.QueueMessage
 import uk.nhs.nhsx.pubdash.dataExportService
@@ -24,7 +24,7 @@ class DataExportHandler(
 
     override fun handler() = Handler<SQSEvent, Event> { event, _ ->
         if (event.records.size != 1) return@Handler DataExportFailed("Expecting only 1 record, got: ${event.records}")
-        val queuedMessage = Jackson.readJsonOrThrow<QueueMessage>(event.records.first().body)
+        val queuedMessage = Json.readJsonOrThrow<QueueMessage>(event.records.first().body)
         service.export(queuedMessage)
         DataExportHandled
     }

@@ -2,7 +2,7 @@ package uk.nhs.nhsx.analyticsevents
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
@@ -41,7 +41,7 @@ class AnalyticsEventsSubmissionServiceTest {
         assertThat(fakeS3.name.value).isEqualTo("key.json")
 
         val storedObject: Map<String, Any> =
-            Jackson.readJsonOrThrow(fakeS3.bytes.openStream(), Map::class.java) as Map<String, Any>
+            Json.readJsonOrThrow(fakeS3.bytes.openStream()) as Map<String, Any>
         assertThat(storedObject).containsKey("uuid")
         assertThat(storedObject).containsKey("metadata")
         assertThat(storedObject).containsKey("events")
@@ -79,7 +79,7 @@ class AnalyticsEventsSubmissionServiceTest {
         assertThat(fakeS3.name.value).isEqualTo("key.json")
 
         val storedObject: Map<String, Any> =
-            Jackson.readJsonOrThrow(fakeS3.bytes.openStream(), Map::class.java) as Map<String, Any>
+            Json.readJsonOrThrow(fakeS3.bytes.openStream()) as Map<String, Any>
         assertThat(storedObject).containsKey("uuid")
         assertThat(storedObject).containsKey("metadata")
         assertThat(storedObject).containsKey("events")

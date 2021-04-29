@@ -16,12 +16,13 @@ import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
-import uk.nhs.nhsx.core.scheduled.SchedulingHandler
+import uk.nhs.nhsx.core.handler.SchedulingHandler
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.virology.VirologyConfig.Companion.fromEnvironment
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.virology.tokengen.CtaTokenZipFileEntryRequest
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorExports
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorService
@@ -106,7 +107,7 @@ class ScheduledCtaTokenGenerationHandler @JvmOverloads constructor(
         private val PASSWORD_NOTIFICATION_SNS_TOPIC_ARN = string("password_notification_sns_topic_arn")
 
         private const val URL_MESSAGE_TEMPLATE =
-            "Please download the ZIP with positive cta tokens here: %s (the link is valid for 2 days). The password will be provided via a different channel (SMS)"
+            "Please download the ZIP with positive cta tokens here: %s (the link is valid for 12 hours). The password will be provided via a different channel (SMS)"
         private const val URL_MESSAGE_SUBJECT = "CTA Tokens"
 
         private const val PASSWORD_MESSAGE_TEMPLATE = "The password of the %s ZIP is: %s"

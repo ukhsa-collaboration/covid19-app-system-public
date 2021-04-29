@@ -1,7 +1,6 @@
 variable "region" {
   description = "Region in which the canaries will be deployed - ideally not the same as the service being monitored"
   type        = string
-  default     = "eu-west-1"
 }
 
 variable "service" {

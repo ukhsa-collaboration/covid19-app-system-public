@@ -5,7 +5,7 @@ import org.http4k.format.Jackson
 import org.http4k.unquoted
 import smoke.clients.AwsLambda
 import smoke.env.EnvConfig
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 
 class SIPGateway(private val envConfig: EnvConfig) {
 

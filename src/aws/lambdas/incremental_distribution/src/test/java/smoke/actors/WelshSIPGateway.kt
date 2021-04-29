@@ -7,10 +7,10 @@ import org.http4k.core.Request
 import org.http4k.core.Status
 import org.http4k.core.then
 import smoke.env.EnvConfig
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 
 class WelshSIPGateway(
     unauthedClient: HttpHandler,
@@ -22,7 +22,7 @@ class WelshSIPGateway(
         val consumedToken = authedClient(
             Request(POST, envConfig.isolation_payment_consume_endpoint)
                 .header("Content-Type", ContentType.APPLICATION_JSON.value)
-                .body(Jackson.toJson(IsolationRequest(ipcToken)))
+                .body(Json.toJson(IsolationRequest(ipcToken)))
         )
             .requireStatusCode(status)
             .deserializeOrThrow<IsolationResponse>()
@@ -33,7 +33,7 @@ class WelshSIPGateway(
         val verifiedToken = authedClient(
             Request(POST, envConfig.isolation_payment_verify_endpoint)
                 .header("Content-Type", ContentType.APPLICATION_JSON.value)
-                .body(Jackson.toJson(IsolationRequest(ipcToken)))
+                .body(Json.toJson(IsolationRequest(ipcToken)))
         )
             .requireStatusCode(status)
             .deserializeOrThrow<IsolationResponse>()

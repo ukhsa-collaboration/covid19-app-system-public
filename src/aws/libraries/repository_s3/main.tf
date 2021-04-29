@@ -6,6 +6,11 @@ locals {
   lambda_key        = "lambda/${var.lambda_project}-${local.lambda_hash}.zip"
 }
 
+resource "aws_s3_bucket_metric" "bucket_request_metrics" {
+  bucket = aws_s3_bucket.this.bucket
+  name   = aws_s3_bucket.this.bucket
+}
+
 resource "aws_s3_bucket" "this" {
   bucket = local.identifier_prefix
   acl    = "private"

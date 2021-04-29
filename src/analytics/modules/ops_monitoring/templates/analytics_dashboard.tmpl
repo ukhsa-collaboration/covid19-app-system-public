@@ -1,0 +1,78 @@
+{
+    "widgets": [
+        {
+            "height": 6,
+            "width": 12,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${advanced_analytics_function}-errors" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Advanced Analytics Error Count",
+                "stacked": false,
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 0,
+            "x": 12,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${advanced_analytics_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Advanced Analytics Errors",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 6,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${advanced_analytics_function}-warnings" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Advanced Analytics Warning Count",
+                "stacked": false,
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 6,
+            "x": 12,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "WarningLogCount", "${advanced_analytics_function}-warnings" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Advanced Analytics Warnings",
+                "stat": "Sum"
+            }
+        }
+    ]
+}

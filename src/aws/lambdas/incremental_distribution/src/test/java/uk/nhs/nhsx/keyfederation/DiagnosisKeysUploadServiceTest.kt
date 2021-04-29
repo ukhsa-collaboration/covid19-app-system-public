@@ -20,19 +20,19 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json.readJsonOrNull
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
-import uk.nhs.nhsx.keyfederation.download.ReportType
-import uk.nhs.nhsx.keyfederation.download.TestType
+import uk.nhs.nhsx.domain.ReportType
+import uk.nhs.nhsx.domain.TestType
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
+import uk.nhs.nhsx.keyfederation.upload.FederatedExposureUploadFactory
 import uk.nhs.nhsx.keyfederation.upload.JWS
-import uk.nhs.nhsx.keyfederation.upload.PcrExposureUploadFactory
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
@@ -64,7 +64,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
             FakeSubmissionRepository(listOf(now)),
             InMemoryBatchTagService(),
-            PcrExposureUploadFactory("GB-EAW"),
+            FederatedExposureUploadFactory("GB-EAW"),
             true,
             2,
             14,
@@ -81,7 +81,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 4,
                 144,
                 emptyList(),
-                TestType.PCR,
+                TestType.LAB_RESULT,
                 ReportType.CONFIRMED_TEST,
                 0
             )
@@ -118,7 +118,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
             FakeSubmissionRepository(listOf(now)),
             InMemoryBatchTagService(),
-            PcrExposureUploadFactory("GB-EAW"),
+            FederatedExposureUploadFactory("GB-EAW"),
             false,
             -1,
             14,
@@ -177,14 +177,14 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             { now },
             interopClient,
             SubmissionFromS3Repository(
-                FakeDiagnosisKeysS3(listOf(s3ObjectSummary("foo"), s3ObjectSummary("bar"))),
+                FakeDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/LAB_RESULT/abc"), s3ObjectSummary("mobile/RAPID_RESULT/def"))),
                 { true },
                 BucketName.of("SUBMISSION_BUCKET"),
                 RecordingEvents(),
                 SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            PcrExposureUploadFactory("GB-EAW"),
+            FederatedExposureUploadFactory("GB-EAW"),
             false,
             -1,
             14,
@@ -239,14 +239,14 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             { now },
             interopClient,
             SubmissionFromS3Repository(
-                FakeDiagnosisKeysS3(listOf(s3ObjectSummary("prefix-foo"), s3ObjectSummary("bar"))),
-                { objectKey -> !objectKey.value.startsWith("prefix") },
+                FakeDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/RAPID_RESULT/abc.json"), s3ObjectSummary("bar"))),
+                { objectKey -> objectKey.value.startsWith("mobile") },
                 BucketName.of("SUBMISSION_BUCKET"),
                 RecordingEvents(),
                 SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            PcrExposureUploadFactory("GB-EAW"),
+            FederatedExposureUploadFactory("GB-EAW"),
             false,
             -1,
             14,
@@ -291,7 +291,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
             FakeSubmissionRepository(listOf(now)),
             batchTagService,
-            PcrExposureUploadFactory("GB-EAW"),
+            FederatedExposureUploadFactory("GB-EAW"),
             false,
             -1,
             14,
@@ -353,7 +353,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            PcrExposureUploadFactory("GB-EAW"),
+            FederatedExposureUploadFactory("GB-EAW"),
             false,
             -1,
             14,
@@ -401,7 +401,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                         s3ObjectSummary("foo", lastModifiedDate),
                         s3ObjectSummary("bar", lastModifiedDate),
                         s3ObjectSummary("abc", lastModifiedDate),
-                        s3ObjectSummary("def", Date.from(now))
+                        s3ObjectSummary("def", lastModifiedDate)
                     )
                 ),
                 { true },
@@ -410,7 +410,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 SystemClock.CLOCK
             ),
             InMemoryBatchTagService(),
-            PcrExposureUploadFactory("GB-EAW"),
+            FederatedExposureUploadFactory("GB-EAW"),
             false,
             -1,
             14,
@@ -435,7 +435,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
 
     class UploadPayloadPattern(@JsonProperty matchesPayloadPattern: String = """{ batchTag: [a-f0-9\-]+, payload: "DUMMY_SIGNATURE" }""") :
         StringValuePattern(matchesPayloadPattern) {
-        override fun match(value: String): MatchResult = readOrNull<DiagnosisKeysUploadRequest>(value)
+        override fun match(value: String): MatchResult = readJsonOrNull<DiagnosisKeysUploadRequest>(value)
             ?.let {
                 when {
                     it.batchTag.value.matches(Regex("[a-f0-9\\-]+")) && it.payload == "DUMMY_SIGNATURE" -> exactMatch()

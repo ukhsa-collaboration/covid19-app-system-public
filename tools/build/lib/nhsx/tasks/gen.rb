@@ -89,25 +89,35 @@ namespace :gen do
       update_secrets_entry(NHSx::TargetEnvironment::TEST_API_KEY_HEADERS_SECRET, JSON.dump(authorization_headers).gsub("\"", "\\\""), $configuration)
     end
 
-    desc "Generates API key for synthetics in #{account} account"
+    desc "Create bearer token and secret password hash for synthetic canaries in the #{account} account"
     task :"secrets:synth:#{account}" => [:"login:#{account}"] do
-      include NHSx::TargetEnvironment
+      include NHSx::Secret
 
-      key_name = "/synthetics/api_secret"
-      api_key = "/synthetics/api_key"
-
-      authorization_header = create_and_store_api_key("health", key_name, "API key for synthetics", $configuration)
-      update_secrets_entry(api_key, authorization_header, $configuration)
+      api_name = "health"
+      hash_key_name = "synthetic_canary"
+      auth_key_name = "#{hash_key_name}_auth"
+      create_linked_secrets(api_name, auth_key_name, hash_key_name, "Synthetic canaries auth header")
     end
   end
 
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
-      desc "Produce the environment config for the #{tgt_env} env"
+      desc "Produce the environment config for the cta #{tgt_env} env"
       task :"config:#{tgt_env}" => [:"login:#{account}"] do
         include Zuehlke::Execution
         include NHSx::Generate
         generate_test_config(tgt_env, account, $configuration)
+      end
+    end
+  end
+
+  NHSx::TargetEnvironment::ANALYTICS_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+    tgt_envs.each do |tgt_env|
+      desc "Produce the environment config for the analytics #{tgt_env} env"
+      task :"config:analytics:#{tgt_env}" => [:"login:#{account}"] do
+        include Zuehlke::Execution
+        include NHSx::Generate
+        generate_analytics_test_config(tgt_env, account, $configuration)
       end
     end
   end

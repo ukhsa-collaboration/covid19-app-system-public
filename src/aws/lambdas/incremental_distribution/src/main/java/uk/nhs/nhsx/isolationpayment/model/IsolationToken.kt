@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.isolationpayment.model
 
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 
 data class IsolationToken(
     val tokenId: IpcTokenId,

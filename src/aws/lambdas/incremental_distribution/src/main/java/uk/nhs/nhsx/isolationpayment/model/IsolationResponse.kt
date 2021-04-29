@@ -2,7 +2,7 @@ package uk.nhs.nhsx.isolationpayment.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.time.Instant
 
 @JsonInclude(NON_NULL)

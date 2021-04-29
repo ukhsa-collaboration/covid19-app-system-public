@@ -2,16 +2,15 @@ namespace :deploy do
   namespace :analytics do
     NHSx::TargetEnvironment::ANALYTICS_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
       tgt_envs.each do |tgt_env|
-        prerequisites = [:"login:#{account}"]
+        prerequisites = [:"login:#{account}", :"build:analytics"]
         desc "Deploy to the #{tgt_env} analytics environment"
         desc "Deploys a temporary analytics environment for the current branch in the dev account" if /branch$/.match(tgt_env)
         task :"#{tgt_env}" => prerequisites do
           include NHSx::Terraform
           terraform_configuration = File.join($configuration.base, "src/analytics/accounts", account)
           deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
-          Rake::Task["query:athena:#{tgt_env}"].invoke
           unless /branch$/.match(tgt_env)
-            push_git_tag_subsystem(tgt_env, "analytics", "Deployed analytics on #{tgt_env}", $configuration)
+            tag(pointer_tag_name("analytics", tgt_env), "Analytics deployed on #{tgt_env}", $configuration)
           end
         end
       end
@@ -23,7 +22,7 @@ namespace :plan do
   namespace :analytics do
     NHSx::TargetEnvironment::ANALYTICS_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
       tgt_envs.each do |tgt_env|
-        prerequisites = [:"login:#{account}"]
+        prerequisites = [:"login:#{account}", :"build:analytics"]
         desc "Run a plan for the #{tgt_env} analytics environment"
         desc "Creates the terraform plan of a temporary analytics environment for the current branch in the dev account" if /branch$/.match(tgt_env)
         task :"#{tgt_env}" => prerequisites do

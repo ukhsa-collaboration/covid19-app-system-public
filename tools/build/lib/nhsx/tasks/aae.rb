@@ -2,7 +2,7 @@ namespace :aae do
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
       %w[json parquet].each do |format|
-        desc "enable aae #{format} upload for #{tgt_env} environment"
+        desc "enable AAE #{format} upload for #{tgt_env} environment"
         task "upload:#{format}:enable:#{tgt_env}" => [:"login:#{account}"] do
           include NHSx::TargetEnvironment
           target_env_config = target_environment_configuration(tgt_env, account, $configuration)
@@ -10,7 +10,7 @@ namespace :aae do
           enable_event_source_mapping(uuid, $configuration)
         end
 
-        desc "disable aae #{format} upload for #{tgt_env} environment"
+        desc "disable AAE #{format} upload for #{tgt_env} environment"
         task "upload:#{format}:disable:#{tgt_env}" => [:"login:#{account}"] do
           include NHSx::TargetEnvironment
           target_env_config = target_environment_configuration(tgt_env, account, $configuration)
@@ -18,7 +18,7 @@ namespace :aae do
           disable_event_source_mapping(uuid, $configuration)
         end
 
-        desc "move one sqs event from aae dlq queue back to original queue for #{tgt_env} environment"
+        desc "move all sqs events from AAE dead-letter queue back to original queue for #{tgt_env} environment"
         task "move:#{format}:sqs:event:#{tgt_env}" => [:"login:#{account}"] do
           include NHSx::SQS
           include NHSx::Terraform

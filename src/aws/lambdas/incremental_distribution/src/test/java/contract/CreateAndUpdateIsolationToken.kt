@@ -6,7 +6,7 @@ import contract.infra.ReplayTest
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.virology.Country.Companion.England
+import uk.nhs.nhsx.domain.Country.Companion.England
 import java.time.Duration
 import java.time.Instant
 

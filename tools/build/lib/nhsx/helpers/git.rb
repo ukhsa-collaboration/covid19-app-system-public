@@ -6,7 +6,7 @@ module NHSx
       repo_tags = {}
       cmd.output.lines.each do |ln|
         tag = ln.split(" ").last.gsub("refs/tags/", "")
-        cmd = run_command("Get tag revision", "git rev-parse #{tag}^{commit} ", system_config)
+        cmd = run_quiet("Get tag revision", "git rev-parse #{tag}^{commit} ", system_config)
         cmd.output.chomp
         repo_tags[tag] = cmd.output.chomp
       end
@@ -20,20 +20,6 @@ module NHSx
       timestamp = Time.now.strftime("%Y%m%d-%s")
       subsystem = "#{subsystem}-" unless subsystem.empty?
       tag("te-#{tgt_env}-#{subsystem}#{timestamp}", message, system_config)
-    end
-
-    # Tag the current git SHA with the environment tag
-    #
-    # Example, te-prod
-    def push_git_tag(tgt_env, message, system_config)
-      tag("te-#{tgt_env}", message, system_config)
-    end
-
-    # Tag the current git SHA with the environment tag
-    # on a sub system of the app system
-    # Example, te-prod
-    def push_git_tag_subsystem(tgt_env, subsystem, message, system_config)
-      tag("te-#{tgt_env}-#{subsystem}", message, system_config)
     end
 
     # Creates and pushes a git tag forcing the tag to be rewritten if it exists.
@@ -78,6 +64,11 @@ module NHSx
       cmd = Patir::ShellCommand.new(:cmd => cmdline)
       cmd.run
       return cmd.output.chop
+    end
+
+    def tag_exists?(tag_name, system_config)
+      all_tags = tags_and_revisions(system_config)
+      return all_tags.keys.include?(tag_name)
     end
   end
 end

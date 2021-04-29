@@ -6,3 +6,6 @@ target
 /out/
 /.idea/
 /pubdash/build/
+/infra/build/
+/analytics/build/
+/analytics-exporter/build/

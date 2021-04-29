@@ -1,10 +1,12 @@
 package uk.nhs.nhsx.testhelper.mocks
 
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.diagnosiskeydist.Submission
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
+import uk.nhs.nhsx.domain.TestType
 import java.security.SecureRandom
 import java.time.Instant
 import java.util.Base64
@@ -20,7 +22,7 @@ class FakeSubmissionRepository(submissionDates: List<Instant>) : SubmissionRepos
     private fun makeKeySet(submissionDate: Instant): Submission {
         val mostRecentKeyRollingStart = ENIntervalNumber.enIntervalNumberFromTimestamp(submissionDate).enIntervalNumber / 144 * 144
         val keys = (0..14).map { makeKey(mostRecentKeyRollingStart - it * 144) }
-        return Submission(submissionDate, StoredTemporaryExposureKeyPayload(keys))
+        return Submission(submissionDate, ObjectKey.of("mobile/LAB_RESULT/abc"), StoredTemporaryExposureKeyPayload(keys))
     }
 
     private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey {

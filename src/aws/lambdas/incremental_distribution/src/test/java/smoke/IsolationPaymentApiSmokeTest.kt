@@ -9,8 +9,8 @@ import smoke.actors.MobileApp
 import smoke.actors.WelshSIPGateway
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS

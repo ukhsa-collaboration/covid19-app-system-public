@@ -2,6 +2,11 @@ package uk.nhs.nhsx.highriskpostcodesupload
 
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422
+import uk.nhs.nhsx.domain.LocalAuthority
+import uk.nhs.nhsx.domain.PostDistrict
+import uk.nhs.nhsx.domain.PostDistrictIndicators
+import uk.nhs.nhsx.domain.RiskIndicator
+import uk.nhs.nhsx.domain.TierIndicator
 
 class RiskyPostCodesMapper(private val tierMetadata: Map<String, Map<String, Any>>) {
     private val validTierIndicators = tierMetadata.keys.map { TierIndicator.of(it) }

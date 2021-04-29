@@ -44,7 +44,6 @@ module "cloudwatch_analytics" {
   isolation_payment_order_function               = module.isolation_payment_submission.order_lambda_function_name
   isolation_payment_verify_function              = module.isolation_payment_submission.verify_lambda_function_name
   isolation_payment_consume_function             = module.isolation_payment_submission.consume_lambda_function_name
-  advanced_analytics_function                    = module.advanced_analytics_export.lambda_function_name
   virology_submission_api_gateway_id             = module.virology_submission.gateway_id
   virology_upload_api_gateway_id                 = module.virology_upload.gateway_id
 

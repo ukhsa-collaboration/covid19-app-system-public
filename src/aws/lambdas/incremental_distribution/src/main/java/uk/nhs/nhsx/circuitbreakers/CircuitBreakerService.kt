@@ -3,7 +3,7 @@ package uk.nhs.nhsx.circuitbreakers
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.Companion.missingPollingTokenError
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.Companion.ok
 import uk.nhs.nhsx.circuitbreakers.utils.TokenGenerator.token
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.ssm.Parameter
 import java.util.Optional
 import java.util.function.Predicate

@@ -6,13 +6,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import uk.nhs.nhsx.core.headers.MobileAppVersion
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.domain.Country
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestKit.*
+import uk.nhs.nhsx.domain.TestResult.*
 import uk.nhs.nhsx.virology.VirologyPolicyConfig.VirologyCriteria
-import uk.nhs.nhsx.virology.result.TestResult
-import uk.nhs.nhsx.virology.result.TestResult.*
 
 class VirologyPolicyConfigTest {
 
@@ -34,13 +33,13 @@ class VirologyPolicyConfigTest {
         VirologyCriteria(wales, RAPID_RESULT, Positive),
         VirologyCriteria(wales, RAPID_RESULT, Negative),
         VirologyCriteria(wales, RAPID_RESULT, Void),
+        VirologyCriteria(wales, RAPID_SELF_REPORTED, Positive),
         VirologyCriteria(wales, RAPID_SELF_REPORTED, Negative),
         VirologyCriteria(wales, RAPID_SELF_REPORTED, Void),
     )
 
     private val requiresConfirmatoryTest = setOf(
-        VirologyCriteria(england, RAPID_SELF_REPORTED, Positive),
-        VirologyCriteria(wales, RAPID_SELF_REPORTED, Positive)
+        VirologyCriteria(england, RAPID_SELF_REPORTED, Positive)
     )
 
     @Test
@@ -64,9 +63,10 @@ class VirologyPolicyConfigTest {
         val config = VirologyPolicyConfig()
         val testCases = listOf(
             VirologyCriteria(england, LAB_RESULT, Positive),
-            VirologyCriteria(england, RAPID_RESULT, Positive),
             VirologyCriteria(wales, LAB_RESULT, Positive),
-            VirologyCriteria(wales, RAPID_RESULT, Positive)
+            VirologyCriteria(wales, RAPID_RESULT, Positive),
+            VirologyCriteria(wales, RAPID_SELF_REPORTED, Positive)
+
         )
 
         testCases.forEach {
@@ -93,9 +93,9 @@ class VirologyPolicyConfigTest {
     @EnumSource(TestKit::class)
     fun `blocks v1 test result queries`(testKit: TestKit) {
         val config = VirologyPolicyConfig(
-            emptySet(),
-            emptySet(),
-            setOf(testKit)
+            requireConfirmatoryTest = emptySet(),
+            diagnosisKeySubmissionSupported = emptySet(),
+            blockedV1TestKitQueries = setOf(testKit)
         )
         assertThat(config.shouldBlockV1TestResultQueries(testKit), equalTo(true))
     }
@@ -104,9 +104,9 @@ class VirologyPolicyConfigTest {
     @EnumSource(TestKit::class)
     fun `blocks none v1 test result queries`(testKit: TestKit) {
         val config = VirologyPolicyConfig(
-            emptySet(),
-            emptySet(),
-            emptySet()
+            requireConfirmatoryTest = emptySet(),
+            diagnosisKeySubmissionSupported = emptySet(),
+            blockedV1TestKitQueries = emptySet()
         )
         assertThat(config.shouldBlockV1TestResultQueries(testKit), equalTo(false))
     }

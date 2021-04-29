@@ -3,7 +3,6 @@ package uk.nhs.nhsx.keyfederation.upload
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.type.TypeReference
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -18,10 +17,9 @@ import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import org.jose4j.jws.JsonWebSignature
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.Json.readJsonOrNull
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.SystemObjectMapper
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
@@ -30,8 +28,8 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
 import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
-import uk.nhs.nhsx.testhelper.proxy
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Instant
 import java.util.Date
@@ -94,7 +92,7 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
                     lastModified = Date.from(now)
                 }
             ))
-        ).handleRequest(ScheduledEvent(), proxy())
+        ).handleRequest(ScheduledEvent(), TestContext())
     }
 
     @Test
@@ -135,7 +133,7 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
                 events
             ),
             awsS3Client = FakeDiagnosisKeysS3(emptyList()),
-        ).handleRequest(ScheduledEvent(), proxy())
+        ).handleRequest(ScheduledEvent(), TestContext())
 
         wireMock.verify(
             exactly(0),
@@ -226,7 +224,7 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
                     lastModified = Date.from(now)
                 }
             ))
-        ).handleRequest(ScheduledEvent(), proxy())
+        ).handleRequest(ScheduledEvent(), TestContext())
     }
 
     class JwsUploadContentPattern(
@@ -234,16 +232,14 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
         private val expectedKeys: List<String>
     ) : StringValuePattern(matchesPayloadPattern) {
 
-        override fun match(value: String): MatchResult = readOrNull<DiagnosisKeysUploadRequest>(value)
+        override fun match(value: String): MatchResult = readJsonOrNull<DiagnosisKeysUploadRequest>(value)
             ?.let {
                 val jws = JsonWebSignature().apply {
                     key = ecPrime256r1.public
                     compactSerialization = it.payload
                 }
 
-                val exposures = SystemObjectMapper.MAPPER.readValue(
-                    jws.payload,
-                    object : TypeReference<List<ExposureUpload>>() {})
+                val exposures = Json.readJsonOrThrow<List<ExposureUpload>>(jws.payload)
 
                 if (exposures.map { it.keyData }.toSet() == expectedKeys.toSet()) exactMatch() else noMatch()
             } ?: noMatch()

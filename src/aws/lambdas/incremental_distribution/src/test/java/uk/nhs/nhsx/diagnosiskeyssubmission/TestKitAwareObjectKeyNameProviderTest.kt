@@ -4,7 +4,7 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
-import uk.nhs.nhsx.virology.TestKit
+import uk.nhs.nhsx.domain.TestKit
 
 class TestKitAwareObjectKeyNameProviderTest {
 

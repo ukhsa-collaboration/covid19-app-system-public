@@ -4,7 +4,7 @@ import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.exceptions.TransactionException
 import uk.nhs.nhsx.core.headers.MobileAppVersion
-import uk.nhs.nhsx.virology.Country
+import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.virology.TestResultMarkForDeletionFailure
 import uk.nhs.nhsx.virology.VirologyPolicyConfig
 import uk.nhs.nhsx.virology.VirologyPolicyConfig.VirologyCriteria

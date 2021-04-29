@@ -2,6 +2,11 @@ locals {
   identifier_prefix = "${terraform.workspace}-${var.name}-${var.service}"
 }
 
+resource "aws_s3_bucket_metric" "bucket_request_metrics" {
+  bucket = aws_s3_bucket.this.bucket
+  name   = aws_s3_bucket.this.bucket
+}
+
 resource "aws_s3_bucket" "this" {
   bucket = local.identifier_prefix
   acl    = "private"

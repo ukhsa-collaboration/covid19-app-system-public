@@ -20,7 +20,7 @@ namespace :publish do
 
         ENV["UPLOAD_DATA"] = local_target
         Rake::Task["upload:post_districts:#{tgt_env}"].invoke
-        tag("te-#{tgt_env}-i18n", "Translations deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
+        tag("te-#{tgt_env}-tiers", "Translations deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
       end
     end
   end

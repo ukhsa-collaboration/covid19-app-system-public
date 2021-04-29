@@ -8,6 +8,7 @@ import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap
 import com.amazonaws.services.dynamodbv2.model.ReturnValue.UPDATED_NEW
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult
 import java.time.Instant
 import java.time.LocalDate

@@ -28,6 +28,8 @@ object ObjectKeyFilters {
     class FederatedObjectKeyFilters {
         fun withPrefixes(allowedPrefixes: List<String>): Predicate<ObjectKey> = isMobileKey
             .or(isMobileLabResultKey)
+            .or(isMobileRapidResultKey)
+            .or(isMobileRapidSelfReportedResultKey)
             .or(isWhitelistedFederatedKey(allowedPrefixes))
     }
 }

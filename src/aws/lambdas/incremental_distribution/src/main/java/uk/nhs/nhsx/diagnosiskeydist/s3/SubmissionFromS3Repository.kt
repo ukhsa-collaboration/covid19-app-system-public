@@ -13,6 +13,7 @@ import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.Companion.SYSTEM_EXIT_ER
 import uk.nhs.nhsx.diagnosiskeydist.Submission
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository.Companion.getTemporaryExposureKeys
+import uk.nhs.nhsx.domain.TestType
 import java.time.Duration
 import java.util.*
 import java.util.Collections.synchronizedList
@@ -70,6 +71,7 @@ class SubmissionFromS3Repository(
                                     submissions.add(
                                         Submission(
                                             objectSummary.lastModified.toInstant(),
+                                            ObjectKey.of(objectSummary.key),
                                             getTemporaryExposureKeys(it)
                                         )
                                     )
@@ -83,6 +85,8 @@ class SubmissionFromS3Repository(
 
         return submissions.sortedBy { it.submissionDate }
     }
+  
+
 }
 
 fun List<S3ObjectSummary>.limit(limit: Int, maxResults: Int): List<S3ObjectSummary> {

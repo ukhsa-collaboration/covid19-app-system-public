@@ -30,14 +30,8 @@ App -> VirologyTestingAPI: poll at x time intervals (token)
 App <- VirologyTestingAPI: test result 
 
 App->App: take test result action
-App->User: on positive result get user permission to upload diagnosis keys
-User->App: ok
-
-App->SubmissionAPI: submit diagnosis keys (exposure key history)
-User<-App: show isolation advice for positive test result
-SubmissionAPI -> SubmissionAPI: batch for distribution
+User<-App: show/update isolation advice
+ref over User, App : Share diagnosis keys and venue history
 ...
-
-
 
 @enduml

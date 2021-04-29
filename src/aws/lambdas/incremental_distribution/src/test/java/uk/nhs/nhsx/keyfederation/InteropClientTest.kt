@@ -14,11 +14,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.signature.Signature
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.keyfederation.download.NoContent
-import uk.nhs.nhsx.keyfederation.download.ReportType
-import uk.nhs.nhsx.keyfederation.download.TestType
+import uk.nhs.nhsx.domain.ReportType
+import uk.nhs.nhsx.domain.TestType
 import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
@@ -219,7 +220,7 @@ class InteropClientTest(private val wireMock: WireMockServer) {
                         rollingPeriod = 144,
                         origin = "JE",
                         regions = listOf("GB"),
-                        testType = TestType.PCR,
+                        testType = TestType.LAB_RESULT,
                         reportType = ReportType.CONFIRMED_TEST,
                         daysSinceOnset = 0
                     )
@@ -257,7 +258,8 @@ class InteropClientTest(private val wireMock: WireMockServer) {
         val client = InteropClient(wireMock.baseUrl(),
             "DUMMY_TOKEN",
             jws,
-            RecordingEvents()) { UUID.fromString("d6826d4b-d30f-47c5-ab21-932a874ad7fb") }
+            RecordingEvents()
+        ) { UUID.fromString("d6826d4b-d30f-47c5-ab21-932a874ad7fb") }
 
         val keys = listOf(ExposureUpload(
             keyData = "key",
@@ -265,7 +267,7 @@ class InteropClientTest(private val wireMock: WireMockServer) {
             transmissionRiskLevel = 4,
             rollingPeriod = 144,
             regions = emptyList(),
-            testType = TestType.PCR,
+            testType = TestType.LAB_RESULT,
             reportType = ReportType.CONFIRMED_TEST,
             daysSinceOnset = 0
         ))

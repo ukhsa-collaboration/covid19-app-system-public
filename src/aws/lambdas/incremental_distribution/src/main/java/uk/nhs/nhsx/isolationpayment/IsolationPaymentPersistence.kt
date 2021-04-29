@@ -13,7 +13,7 @@ import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericNullableAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.util.Optional
 
 class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, private val tableName: String) {

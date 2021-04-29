@@ -8,8 +8,7 @@
           "height": 9,
           "properties": {
             "metrics": [
-              [ "WarningLogCount", "${advanced_analytics_function}-warnings" ],
-              [ ".", "${analytics_submission_function}-warnings" ],
+              [ "WarningLogCount", "${analytics_submission_function}-warnings" ],
 
               [ ".", "${diagnosis_keys_submission_function}-warnings" ],
               [ ".", "${exposure_notification_circuit_breaker_function}-warnings" ],
@@ -42,8 +41,7 @@
               "height": 9,
               "properties": {
                 "metrics": [
-                  [ "WarningLogCount", "${advanced_analytics_function}-warnings" ],
-                  [ ".", "${analytics_submission_function}-warnings" ],
+                  [ "WarningLogCount", "${analytics_submission_function}-warnings" ],
 
                   [ ".", "${diagnosis_keys_submission_function}-warnings" ],
                   [ ".", "${exposure_notification_circuit_breaker_function}-warnings" ],
@@ -232,24 +230,7 @@
                 "stat": "Sum"
               }
             },
-            {
-                "type": "metric",
-                "x": 12,
-                "y": 27,
-                "width": 12,
-                "height": 6,
-                "properties": {
-                    "metrics": [
-                        [ "WarningLogCount", "${advanced_analytics_function}-warnings" ]
-                    ],
-                    "view": "timeSeries",
-                    "stacked": false,
-                    "region": "eu-west-2",
-                    "period": 60,
-                    "title": "Advanced Analytics ",
-                    "stat": "Sum"
-                }
-            },
+
             {
                 "type": "metric",
                 "x": 0,

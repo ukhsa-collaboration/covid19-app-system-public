@@ -1,13 +1,12 @@
 package uk.nhs.nhsx.pubdash.fakes
 
-import com.amazonaws.services.athena.model.GetQueryResultsResult
 import uk.nhs.nhsx.pubdash.QueryId
 import uk.nhs.nhsx.pubdash.QueryResult
 import uk.nhs.nhsx.pubdash.persistence.AsyncDbClient
 
 class FakeDbClient(
     resultQueryIds: List<QueryId>,
-    private val queryResults: Map<QueryId, List<QueryResult<GetQueryResultsResult>>> = emptyMap()
+    private val queryResults: Map<QueryId, List<QueryResult<Unit>>> = emptyMap()
 ) : AsyncDbClient {
 
     private val submittedQueries = mutableListOf<String>()
@@ -20,7 +19,7 @@ class FakeDbClient(
         return queryIds.removeFirst()
     }
 
-    override fun queryResults(queryId: QueryId): QueryResult<GetQueryResultsResult> {
+    override fun queryResults(queryId: QueryId): QueryResult<Unit> {
         val index = queryIdResultIndex[queryId]!!
         queryIdResultIndex[queryId] = index + 1
         return queryResults[queryId]!![index]

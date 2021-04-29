@@ -1,6 +1,8 @@
 require "json"
-require_relative '../../gaudi/helpers/configuration'
-
+require_relative "../../gaudi/helpers/configuration"
+require_relative "../../zuehlke/helpers/git"
+require_relative "../../zuehlke/helpers/execution"
+require_relative "../../zuehlke/helpers/templates"
 # Configuration module for GitVersion
 module Gaudi::Configuration::SystemModules::GitVersion
   #:stopdoc:
@@ -20,39 +22,45 @@ module Gaudi::Configuration::SystemModules::GitVersion
 end
 
 module NHSx
-  # Provides methods to calculate the correct version number.
-  #
-  # Details on the versioning scheme are in VERSIONING.md
+  # Provides methods to calculate the correct version number/scheme for CTA and subsystems
   module Versions
     include Zuehlke::Execution
     include Zuehlke::Templates
-    require_relative '../../zuehlke/helpers/git'
     include Zuehlke::Git
     # A Hash of the subsystems in the following format:
     #
-    # subsystem => TagPrefix
+    # subsystem => TagPrefix,Label
     #
     # TagPrefix is used to differentiate the versioning tags in the repository
+    #
+    # Label is used in composing the pointer tag names tracking the versions installed across target environments
     SUBSYSTEMS = {
-      "backend" => "Backend-",
-      "tiers" => "Tiers-",
-      "analytics" => "Analytics-",
-      "availability" => "Availability-",
-      "pubdash" => "PublicDashboard-",
+      "backend" => { "prefix" => "Backend-", "label" => "" },
+      "cta" => { "prefix" => "Backend-", "label" => "" },
+      "tiers" => { "prefix" => "Tiers-", "label" => "tiers" },
+      "analytics" => { "prefix" => "Analytics-", "label" => "analytics" },
+      "availability" => { "prefix" => "Availability-", "label" => "availability" },
+      "pubdash" => { "prefix" => "PublicDashboard-", "label" => "pubdash" },
+      "pubdash-backend" => { "prefix" => "PublicDashboard-Backend-", "label" => "pubdash-backend" },
+      "doreto" => { "prefix" => "Doreto-", "label" => "doreto" },
+      "synthetics" => { "prefix" => "Synthetics-", "label" => "synthetics" },
     }.freeze
 
-    # Returns the full GitVersion metadata for the given subsystem
-    #
-    # It assumes that the version tag
-    # is prefixed with TagPrefix as specified in Versions::SUBSYSTEMS
-    def subsystem_version_metadata(subsystem, system_config)
-      subsystem_prefix = SUBSYSTEMS.fetch(subsystem, "")
-      raise GaudiError, "Unrecognized subsystem #{subsystem} (cannot set version tag prefix)" if subsystem_prefix.empty?
-
+    # Returns the full GitVersion metadata for the given prefix
+    def gitversion_metadata(subsystem_prefix, system_config)
       gitversion_options = "#{system_config.base} -config #{system_config.gitversion_config_file} -overrideconfig tag-prefix=#{subsystem_prefix}"
       cmdline = "gitversion #{gitversion_options}"
-      cmd = run_command("Get #{subsystem} version information", cmdline, system_config)
-      gitversion_metadata = JSON.parse(cmd.output)
+      cmd = run_command("Get #{subsystem_prefix.gsub("-", "")} version information", cmdline, system_config)
+      return JSON.parse(cmd.output)
+    end
+
+    # Returns the version metadata for the given subsystem
+    #
+    # It assumes that the version tag is prefixed with TagPrefix as specified in Versions::SUBSYSTEMS
+    def subsystem_version_metadata(subsystem, system_config)
+      raise GaudiError, "Unrecognized subsystem #{subsystem} (cannot set version tag prefix)" unless SUBSYSTEMS.keys.include?(subsystem)
+
+      gitversion_metadata = gitversion_metadata(SUBSYSTEMS[subsystem]["prefix"], system_config)
       version_metadata = {
         "Major" => gitversion_metadata["Major"],
         "Minor" => gitversion_metadata["Minor"],
@@ -65,6 +73,7 @@ module NHSx
         "InformationalVersion" => gitversion_metadata["InformationalVersion"],
         "MajorMinorPatch" => gitversion_metadata["MajorMinorPatch"],
         "BranchName" => gitversion_metadata["BranchName"],
+        "SubsystemPrefix" => SUBSYSTEMS[subsystem]["prefix"],
       }
       write_file(File.join(system_config.out, "#{subsystem}.version"), JSON.dump(version_metadata))
       return version_metadata
@@ -78,8 +87,22 @@ module NHSx
       local_target = File.join(system_config.out, "report/#{env}_version")
       run_command("Determine version of #{env} deployment", NHSx::AWS::Commandlines.download_from_s3(object_name, local_target), system_config)
       return File.read(local_target)
-    rescue
+    rescue GaudiError
       return "N/A"
+    end
+
+    def pointer_tag_name(subsystem, tgt_env)
+      raise GaudiError, "Unrecognized subsystem #{subsystem} (cannot set version tag prefix)" unless SUBSYSTEMS.keys.include?(subsystem)
+
+      tag_name = "te-#{tgt_env}"
+      tag_name << "-#{SUBSYSTEMS[subsystem]["label"]}" unless ["backend", "cta"].include?(subsystem)
+      return tag_name
+    end
+
+    def label_tag_name(subsystem, version_number)
+      raise GaudiError, "Unrecognized subsystem #{subsystem} (cannot set version tag prefix)" unless SUBSYSTEMS.keys.include?(subsystem)
+
+      "#{SUBSYSTEMS[subsystem]["prefix"]}#{version_number}"
     end
   end
 end

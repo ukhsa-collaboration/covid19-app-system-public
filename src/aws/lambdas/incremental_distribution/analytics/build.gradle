@@ -1,0 +1,26 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm"
+    id "jacoco"
+}
+
+group 'com.demo'
+version '0.0.1-SNAPSHOT'
+
+dependencies {
+    implementation project(':infra')
+    implementation project(':analytics-exporter')
+
+    implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
+    implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
+
+    implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
+    implementation "com.amazonaws:aws-java-sdk-s3"
+    implementation "com.amazonaws:aws-java-sdk-athena"
+    implementation "com.amazonaws:aws-java-sdk-sqs"
+    implementation "com.amazonaws:aws-java-sdk-secretsmanager"
+
+    testApi project(path: ":infra", configuration: 'testArtifacts')
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
+    testImplementation "org.bouncycastle:bcpkix-jdk15on:1.68"
+    testImplementation "org.bouncycastle:bcprov-ext-jdk15on:1.68"
+}

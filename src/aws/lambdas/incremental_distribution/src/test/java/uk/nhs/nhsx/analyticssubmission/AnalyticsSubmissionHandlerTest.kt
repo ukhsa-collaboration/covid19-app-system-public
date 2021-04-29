@@ -314,7 +314,9 @@ class AnalyticsSubmissionHandlerTest {
                     "receivedRiskyVenueM2Warning":1,
                     "hasReceivedRiskyVenueM2WarningBackgroundTick":1,
                     "totalAlarmManagerBackgroundTasks":1,
-                    "missingPacketsLast7Days":1""".trimIndent()
+                    "missingPacketsLast7Days":1,
+                    "consentedToShareVenueHistory":1,
+                    "askedToShareVenueHistory":1""".trimIndent()
             return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", metrics)
         }
 

@@ -1,25 +1,27 @@
 package uk.nhs.nhsx.virology
 
 import uk.nhs.nhsx.core.headers.MobileAppVersion
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
-import uk.nhs.nhsx.virology.result.TestResult
-import uk.nhs.nhsx.virology.result.TestResult.Positive
+import uk.nhs.nhsx.domain.Country
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.Country.Companion.Wales
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestKit.*
+import uk.nhs.nhsx.domain.TestResult
+import uk.nhs.nhsx.domain.TestResult.Positive
 
 class VirologyPolicyConfig(
     private val requireConfirmatoryTest: Set<VirologyCriteria> =
         setOf(
-            VirologyCriteria(England, RAPID_SELF_REPORTED, Positive),
-            VirologyCriteria(Country.of("Wales"), RAPID_SELF_REPORTED, Positive)
+            VirologyCriteria(England, RAPID_SELF_REPORTED, Positive)
         ),
-    private val supportedCountryTestKitPairs: Set<VirologyCriteria> =
+    private val diagnosisKeySubmissionSupported: Set<VirologyCriteria> =
         setOf(
             VirologyCriteria(England, LAB_RESULT, Positive),
             VirologyCriteria(England, RAPID_RESULT, Positive),
-            VirologyCriteria(Country.of("Wales"), LAB_RESULT, Positive),
-            VirologyCriteria(Country.of("Wales"), RAPID_RESULT, Positive)
+            VirologyCriteria(Wales, LAB_RESULT, Positive),
+            VirologyCriteria(Wales, RAPID_RESULT, Positive),
+            VirologyCriteria(Wales, RAPID_SELF_REPORTED, Positive)
+
         ),
     private val blockedV1TestKitQueries: Set<TestKit> =
         setOf(
@@ -31,7 +33,7 @@ class VirologyPolicyConfig(
         requireConfirmatoryTest.contains(virologyCriteria)
 
     fun isDiagnosisKeysSubmissionSupported(virologyCriteria: VirologyCriteria): Boolean =
-        supportedCountryTestKitPairs.contains(virologyCriteria)
+        diagnosisKeySubmissionSupported.contains(virologyCriteria)
 
     fun shouldBlockV1TestResultQueries(testKit: TestKit): Boolean =
         blockedV1TestKitQueries.contains(testKit)

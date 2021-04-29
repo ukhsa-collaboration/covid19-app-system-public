@@ -1,11 +1,6 @@
 package uk.nhs.nhsx.virology
 
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.verify
-import io.mockk.verifySequence
+import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -13,10 +8,12 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.EnumSource
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.domain.*
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.domain.TestResult.*
 import uk.nhs.nhsx.testhelper.data.TestData
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.order.TokensGenerator
@@ -25,17 +22,12 @@ import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
-import uk.nhs.nhsx.virology.result.TestResult.Negative
-import uk.nhs.nhsx.virology.result.TestResult.Positive
-import uk.nhs.nhsx.virology.result.TestResult.Void
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import java.time.Instant
 import java.time.Period
-import java.util.Optional
+import java.util.*
 
 class VirologyServiceV2Test {
 
@@ -161,7 +153,7 @@ class VirologyServiceV2Test {
     }
 
     @ParameterizedTest
-    @CsvSource("England,true", "Wales,true", "random,false")
+    @CsvSource("England,true", "Wales,false", "random,false")
     fun `exchanges cta token requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testOrder = TestOrder(ctaToken, pollingToken, DiagnosisKeySubmissionToken.of("sub-token"))
         val testResult = TestData.positiveResultFor(testOrder.testResultPollingToken, RAPID_SELF_REPORTED)

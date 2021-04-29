@@ -9,7 +9,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.Companion.iOSPayloadFrom
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
-import uk.nhs.nhsx.core.Jackson.readJsonOrThrow
+import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider

@@ -100,10 +100,9 @@ module Zuehlke
       cmd.run
       logfile = File.join(system_config.out, "logs", "#{Time.now.strftime("%Y%m%d_%H%M%S")}_#{name.gsub("\s", "_")}.log")
       write_file(logfile, "#{cmd.output}\n#{cmd.error}\n")
-      puts "#{name} completed in #{cmd.exec_time.round(2)}"
-      if !cmd.success?
+      unless cmd.success?
         if cmd.output && cmd.output.lines.size > EXCEPTION_LINES
-          message = "#{cmd.output.lines[-EXCEPTION_LINES..-1].join("\n")}"
+          message = cmd.output.lines[-EXCEPTION_LINES..-1].join("\n")
         else
           message = cmd.output
         end

@@ -10,13 +10,15 @@ import smoke.actors.MobileApp
 import smoke.actors.TestLab
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.core.headers.MobileAppVersion
-import uk.nhs.nhsx.virology.Country
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.Country.Companion.Wales
-import uk.nhs.nhsx.virology.TestKit
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.domain.Country
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.Country.Companion.Wales
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestKit.*
+import uk.nhs.nhsx.domain.TestResult
+import uk.nhs.nhsx.domain.TestResult.Negative
+import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.virology.VirologyPolicyConfig.VirologyCriteria
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Fiorano
@@ -26,10 +28,6 @@ import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
-import uk.nhs.nhsx.virology.result.TestResult.Negative
-import uk.nhs.nhsx.virology.result.TestResult.Positive
 
 class VirologyV2SmokeTest {
 
@@ -42,16 +40,17 @@ class VirologyV2SmokeTest {
         val supported = setOf(
             VirologyCriteria(England, LAB_RESULT, Positive),
             VirologyCriteria(England, RAPID_RESULT, Positive),
-            VirologyCriteria(Country.of("Wales"), LAB_RESULT, Positive),
-            VirologyCriteria(Country.of("Wales"), RAPID_RESULT, Positive)
+            VirologyCriteria(Wales, LAB_RESULT, Positive),
+            VirologyCriteria(Wales, RAPID_RESULT, Positive),
+            VirologyCriteria(Wales, RAPID_SELF_REPORTED, Positive)
+
         )
         return supported.contains(VirologyCriteria(country, testKit, testResult))
     }
 
     private fun expectedRequiredFlagFor(country: Country, testKit: TestKit, testResult: TestResult): Boolean {
         val required = setOf(
-            VirologyCriteria(England, RAPID_SELF_REPORTED, Positive),
-            VirologyCriteria(Country.of("Wales"), RAPID_SELF_REPORTED, Positive)
+            VirologyCriteria(England, RAPID_SELF_REPORTED, Positive)
         )
         return required.contains(VirologyCriteria(country, testKit, testResult))
     }
@@ -278,13 +277,13 @@ class VirologyV2SmokeTest {
         val ctaToken = testLab.generateCtaTokenFor(
             testResult = Positive,
             testEndDate = TestEndDate.of(2020, 11, 19),
-            source = VirologyTokenExchangeSource.Wls,
+            source = VirologyTokenExchangeSource.Eng,
             apiVersion = V2,
             testKit = RAPID_SELF_REPORTED
         )
 
         val mobileApp = MobileApp(client, config, appVersion = MobileAppVersion.Version(4, 3))
-        val exchangeResponse = mobileApp.exchange(ctaToken, V2, Wales)
+        val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
         assertThat(exchangeResponse).isInstanceOf(CtaExchangeResult.NotFound::class.java)
     }
 }

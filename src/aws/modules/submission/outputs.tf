@@ -25,3 +25,7 @@ output "endpoint" {
 output "gateway_id" {
   value = module.submission_gateway.api_gateway_id
 }
+
+output "log_group" {
+  value = module.submission_lambda.lambda_log_group
+}

@@ -3,7 +3,7 @@ package uk.nhs.nhsx.highriskpostcodesupload
 import com.amazonaws.services.s3.model.S3Object
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.ContentType.Companion.TEXT_PLAIN
-import uk.nhs.nhsx.core.Jackson.readJsonOrThrow
+import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String

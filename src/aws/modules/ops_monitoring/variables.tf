@@ -76,10 +76,6 @@ variable "isolation_payment_consume_function" {
   description = "name of lambda function"
 }
 
-variable "advanced_analytics_function" {
-  description = "name of lambda function"
-}
-
 variable "virology_submission_api_gateway_id" {
   description = "id of virology submission api gateway"
 }

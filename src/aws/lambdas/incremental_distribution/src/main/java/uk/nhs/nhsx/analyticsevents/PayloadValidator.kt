@@ -1,11 +1,11 @@
 package uk.nhs.nhsx.analyticsevents
 
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json.readJsonOrNull
 import java.io.IOException
 
 class PayloadValidator {
     fun maybeValidPayload(requestBody: String?) = try {
-        readOrNull<Map<String, Any>>(requestBody)
+        readJsonOrNull<Map<String, Any>>(requestBody)
             ?.also {
                 validateMetadata(it)
                 validateEvents(it)

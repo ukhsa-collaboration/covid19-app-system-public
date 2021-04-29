@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.diagnosiskeydist.agspec
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.diagnosiskeydist.agspec.RollingStartNumber.isRollingStartNumberValid
@@ -28,7 +28,7 @@ class RollingStartNumberTest {
             )
         )
         rollingStartNumber = 2664720 // 2020-08-31 00:00:00 UTC
-        Assertions.assertFalse(
+        assertFalse(
             isRollingStartNumberValid(
                 clock,
                 rollingStartNumber,
@@ -57,7 +57,7 @@ class RollingStartNumberTest {
             )
         )
         rollingStartNumber = 2664864 // 2020-09-01 00:00:00 UTC
-        Assertions.assertFalse(
+        assertFalse(
             isRollingStartNumberValid(
                 clock,
                 rollingStartNumber,

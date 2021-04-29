@@ -6,81 +6,16 @@ plugins {
 group 'com.demo'
 version '0.0.1-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-}
-
-ext {
-    aws_sdk_version = "1.11.970"
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        suppressWarnings = false
-        jvmTarget = "11"
-    }
-}
-
 dependencies {
-    implementation project(':')
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation project(':infra')
 
     implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
     implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
-    implementation "com.amazonaws:aws-lambda-java-log4j2:1.2.0"
 
     implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
     implementation "com.amazonaws:aws-java-sdk-s3"
     implementation "com.amazonaws:aws-java-sdk-athena"
     implementation "com.amazonaws:aws-java-sdk-sqs"
 
-    implementation platform("dev.forkhandles:forkhandles-bom:$forkhandles_version")
-    implementation "dev.forkhandles:values4k:$forkhandles_version"
-
-    testImplementation platform("org.junit:junit-bom:$junit_version")
-    testImplementation "org.junit.jupiter:junit-jupiter-api"
-    testImplementation "org.junit.jupiter:junit-jupiter-params"
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation "org.assertj:assertj-core:3.18.1"
-    testImplementation "io.mockk:mockk:1.10.2"
-}
-
-jacocoTestReport {
-    dependsOn test
-}
-
-test {
-    useJUnitPlatform()
-
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-
-    scanForTestClasses = false
-
-    filter {
-        includeTestsMatching "*Test"
-        excludeTestsMatching "smoke.*"
-        excludeTestsMatching "contract.*"
-        excludeTestsMatching "db.*"
-    }
-
-    reports.html.destination = file("$projectDir/../../../../out/reports")
-    reports.junitXml.destination = file("$projectDir/../../../../out/reports")
-
-    finalizedBy jacocoTestReport
-}
-
-task zipLambdaDistribution(type: Zip) {
-    preserveFileTimestamps = false
-    reproducibleFileOrder = true
-
-    from compileKotlin
-    from processResources
-    into("lib") {
-        from configurations.runtimeClasspath
-    }
-}
-
-task lambdaZip {
-    dependsOn(check, zipLambdaDistribution)
+    testApi project(path: ":infra", configuration: 'testArtifacts')
 }

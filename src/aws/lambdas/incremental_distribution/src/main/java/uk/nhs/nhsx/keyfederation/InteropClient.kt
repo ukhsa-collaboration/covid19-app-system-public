@@ -1,11 +1,13 @@
 package uk.nhs.nhsx.keyfederation
 
-import uk.nhs.nhsx.core.Jackson.readOrNull
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.OutgoingHttpRequest
 import uk.nhs.nhsx.core.events.UnprocessableJson
+import uk.nhs.nhsx.core.readJsonOrNull
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.InteropDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.NoContent
@@ -21,7 +23,7 @@ import java.net.http.HttpRequest.BodyPublishers
 import java.net.http.HttpResponse
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.UUID
+import java.util.*
 import java.util.function.Supplier
 
 class InteropClient(
@@ -51,9 +53,8 @@ class InteropClient(
         events(OutgoingHttpRequest(request.uri().toString(), request.method(), statusCode))
 
         return when (statusCode) {
-            200 -> readOrNull<DiagnosisKeysDownloadResponse>(response.body()) { e ->
-                events(UnprocessableJson(e))
-            } ?: throw RuntimeException()
+            200 -> Json.readJsonOrNull<DiagnosisKeysDownloadResponse>(response.body()) { e -> events(UnprocessableJson(e)) }
+                ?: throw RuntimeException()
             204 -> NoContent
             else -> throw RuntimeException("""Request to download keys from federated key server with batch tag ${request.uri()} failed with status code $statusCode""")
         }
@@ -70,9 +71,8 @@ class InteropClient(
             .build()
         val httpResponse = client.send(uploadRequest, HttpResponse.BodyHandlers.ofString())
         when (val statusCode = httpResponse.statusCode()) {
-            200 -> readOrNull<InteropUploadResponse>(httpResponse.body()) { e ->
-                events(UnprocessableJson(e))
-            } ?: throw RuntimeException()
+            200 -> Json.readJsonOrNull(httpResponse.body()) { e -> events(UnprocessableJson(e)) }
+                ?: throw RuntimeException()
             else -> throw RuntimeException("Request to upload keys to federated key server failed with status code $statusCode")
         }
     } catch (e: InterruptedException) {

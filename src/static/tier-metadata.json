@@ -1725,6 +1725,154 @@
       "zh": "https://www.gov.uk/guidance/getting-tested-for-coronavirus-if-you-live-or-work-in-liverpool"
     }
   },
+  "EN.EasingStep1": {
+    "colorScheme": "neutral",
+    "colorSchemeV2": "black",
+    "name": {
+      "ar": "تظل القيود المعمول بها لمكافحة فيروس كوورنا سارية في جميع أنحاء الدولة بما في ذلك [postcode]",
+      "bn": "[postcode] সহ সারা দেশে করোনাভাইরাস বিধিনিষেধ জারি আছে।",
+      "cy": "Mae cyfyngiadau oherwydd coronafeirws yn parhau i fod mewn grym ar draws y wlad gan gynnwys yn [postcode]",
+      "en": "Coronavirus restrictions remain in place across the country, including in [postcode]",
+      "gu": "કોરોનાવાયરનાં રિસ્ટ્રિક્શન આખા દેશમાં છે [postcode] સહિત.",
+      "pa": "ਕੋਰੋਨਾਵਾਇਰਸ ਪਾਬੰਦੀਆਂ [postcode] ਸਮੇਤ ਪੂਰੇ ਦੇਸ਼ ਵਿੱਚ ਲਾਗੂ ਹਨ",
+      "pl": "Ograniczenia związane z koronawirusem nadal obowiązują na terenie całego kraju, w tym  w obrębie kodu pocztowego [postcode]",
+      "ro": "Restricțiile anti-coronavirus rămân în vigoare în toată țara, inclusiv în [postcode]",
+      "so": "Xayiraadaha Coronavirus ayaa wali ka jira dalka oo dhan oo ay ku jirto [postcode]",
+      "tr": "Koronavirüs kısıtlamaları [postcode] bölgesi dahil ülke genelinde devam etmektedir",
+      "ur": "[postcode] سمیت ملک بھر میں کورونا وائرس کی پابندیاں عائد ہیں",
+      "zh": "全国范围的防疫限制措施仍然存在，包括[邮编]地区"
+    },
+    "heading": {
+      "ar": "شهدت بعض القواعد المتعلقة بالأمور المسموح وغير المسموح بها بعض التغييرات في 29 مارس. وعلى الرغم من ذلك، ما زال هناك العديد من القيود السارية.",
+      "bn": "আপনি কী করতে পারবেন এবং পারবেন না, সেই বিষয়ে কিছু নিয়মের পরিবর্তন করা হয়েছে 29 মার্চে। তথাপি, বহু বাধানিষেধ বহাল রয়েছে।",
+      "cy": "Newidiodd rhai o'r rheolau ar 29 Mawrth ynglŷn â beth allwch chi ei wneud a beth na allwch chi ei wneud. Fodd bynnag, mae llawer o gyfyngiadau yn dal i fod mewn grym.",
+      "en": "Some of the rules on what you can and cannot do changed on 29 March. However, many restrictions remain in place.",
+      "gu": "તમે શું કરી શકો અને ન કરી શકો તે અંગેના કેટલાક નિયમોમાં 29 માર્ચના રોજ ફેરફાર થયો હતો. જોકે, ઘણા રિસ્ટ્રિક્શનો હજી અમલમાં છે.",
+      "pa": "ਤੁਸੀਂ ਕੀ ਕਰ ਸਕਦੇ ਹੋ ਅਤੇ ਕੀ ਨਹੀਂ ਕਰ ਸਕਦੇ ਇਸ ਬਾਰੇ ਕੁਝ ਨਿਯਮ 29 ਮਾਰਚ ਨੂੰ ਬਦਲ ਗਏ ਹਨ। ਹਾਲਾਂਕਿ, ਬਹੁਤ ਸਾਰੀਆਂ ਪਾਬੰਦੀਆਂ ਲਾਗੂ ਹਨ।",
+      "pl": "Pewne przepisy dotyczące tego, co można, a czego nie wolno, uległy zmianie 29 marca. Jednakże wiele ograniczeń nadal obowiązuje.",
+      "ro": "Unele recomandări și restricții s-au modificat pe 29 martie. Cu toate acestea, multe restricții rămân în vigoare.",
+      "so": "Qaar ka mid ah xeerarka ku saabsan waxa aad sameyn kartid iyo wixii aadan sameyn karin ayaa isbeddelay 29 Maarso. Hase yeeshee, xayiraado badan ayaa wali jira.",
+      "tr": "Neleri yapıp yapamayacağınıza ilişkin bazı kurallar 29 Mart tarihinde değişti. Bununla birlikte, birçok kısıtlama halen yürürlüktedir.",
+      "ur": "آپ جو کام کر سکتے ہیں اور جو کام نہيں کر سکتے ہیں اس سے متعلق کچھ اصول 29 مارچ کو تبدیل ہو گئے۔ تاہم، بہت ساری پابندیاں بدستور نافذ ہیں۔",
+      "zh": "关于疫情期间的相关规定，已于 3 月 29 日发生调整。然而，许多限制性规定仍然有效。"
+    },
+    "content": {
+      "ar": "ينبغي لك الاستمرار في العمل من المنزل وتقليل عدد الرحلات التي تُجريها قدر الإمكان.",
+      "bn": "আপনার বাসা থেকে কাজ চালিয়ে যাওয়া উচিৎ আর ভ্রমন সংখ্যা কমানো উচিৎ, যেখানে সম্ভব হবে।",
+      "cy": "Dylech barhau i weithio o gartref a pheidio â theithio'n amlach nag sydd raid, lle bo modd.",
+      "en": "You should continue to work from home and minimise the number of journeys you make, where possible.",
+      "gu": "જ્યાં શક્ય હોય ત્યાં તમારે ઘરેથી કામ કરવાનું ચાલુ રાખવું જોઈએ અને તમે કરો એવા પ્રવાસોની સંખ્યા ઓછી કરવી જોઈએ.",
+      "pa": "ਤੁਹਾਨੂੰ ਘਰ ਤੋਂ ਕੰਮ ਕਰਨਾ ਜਾਰੀ ਰੱਖਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਜਿੱਥੇ ਸੰਭਵ ਹੋ ਸਕੇ ਤੁਹਾਡੇ ਦੁਆਰਾ ਕੀਤੇ ਜਾਣ ਵਾਲੇ ਸਫ਼ਰ ਦੀ ਗਿਣਤੀ ਨੂੰ ਘੱਟ ਤੋਂ ਘੱਟ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ।",
+      "pl": "Ciągle należy pracować w domu oraz w miarę możliwości ograniczyć podróżowanie.",
+      "ro": "Trebuie să continuați să lucrați de acasă și să reduceți la minimum numărul de deplasări, acolo unde este posibil.",
+      "so": "Waa inaad ku sii shaqeysaa guriga oo aad yareyso tirada safarrada aad aadeyso, sida ugu macquulsan.",
+      "tr": "Mümkünse evden çalışmaya devam etmeli ve yaptığınız yolculukların sayısını asgari düzeye indirmelisiniz.",
+      "ur": "جہاں ممکن ہو وہاں آپ کو گھر سے کام کرتے رہنا اور آپ جتنا سفر کرتے ہیں اس کی تعداد کم کرتے رہنا چاہیے۔",
+      "zh": "您应继续居家办公，并尽可能减少旅行次数。"
+    },
+    "linkUrl": {
+      "ar": "https://www.gov.uk/covid19app/restrictions",
+      "bn": "https://www.gov.uk/covid19app/restrictions",
+      "cy": "https://www.gov.uk/covid19app/restrictions",
+      "en": "https://www.gov.uk/covid19app/restrictions",
+      "gu": "https://www.gov.uk/covid19app/restrictions",
+      "pa": "https://www.gov.uk/covid19app/restrictions",
+      "pl": "https://www.gov.uk/covid19app/restrictions",
+      "ro": "https://www.gov.uk/covid19app/restrictions",
+      "so": "https://www.gov.uk/covid19app/restrictions",
+      "tr": "https://www.gov.uk/covid19app/restrictions",
+      "ur": "https://www.gov.uk/covid19app/restrictions",
+      "zh": "https://www.gov.uk/covid19app/restrictions"
+    },
+    "linkTitle": {
+      "ar": "تعرّفوا على المزيد من المعلومات",
+      "bn": "আরো জেনে নিন",
+      "cy": "Rhagor o wybodaeth",
+      "en": "Find out more",
+      "gu": "વધારે માહિતી મેળવો",
+      "pa": "ਹੋਰ ਜਾਣਕਾਰੀ ਦੇਖੋ",
+      "pl": "Dowiedz się więcej",
+      "ro": "Aflați mai multe",
+      "so": "Wax badan ka ogow",
+      "tr": "Daha fazla bilgi edinin",
+      "ur": "مزید معلوم کریں",
+      "zh": "了解更多"
+    }
+  },
+  "EN.EasingStep2": {
+    "colorScheme": "neutral",
+    "colorSchemeV2": "black",
+    "name": {
+      "ar": "تظل القيود المعمول بها لمكافحة فيروس كوورنا سارية في جميع أنحاء الدولة بما في ذلك [postcode]",
+      "bn": "[postcode] সহ সারা দেশে করোনাভাইরাস বিধিনিষেধ জারি আছে।",
+      "cy": "Mae cyfyngiadau oherwydd coronafeirws yn parhau i fod mewn grym ar draws y wlad gan gynnwys yn [postcode]",
+      "en": "Coronavirus restrictions remain in place across the country, including in [postcode]",
+      "gu": "કોરોનાવાયરનાં રિસ્ટ્રિક્શન આખા દેશમાં છે [postcode] સહિત.",
+      "pa": "ਕੋਰੋਨਾਵਾਇਰਸ ਪਾਬੰਦੀਆਂ [postcode] ਸਮੇਤ ਪੂਰੇ ਦੇਸ਼ ਵਿੱਚ ਲਾਗੂ ਹਨ",
+      "pl": "Ograniczenia związane z koronawirusem nadal obowiązują na terenie całego kraju, w tym  w obrębie kodu pocztowego [postcode]",
+      "ro": "Restricțiile anti-coronavirus rămân în vigoare în toată țara, inclusiv în [postcode]",
+      "so": "Xayiraadaha Coronavirus ayaa wali ka jira dalka oo dhan oo ay ku jirto [postcode]",
+      "tr": "Koronavirüs kısıtlamaları [postcode] bölgesi dahil ülke genelinde devam etmektedir",
+      "ur": "[postcode] سمیت ملک بھر میں کورونا وائرس کی پابندیاں عائد ہیں",
+      "zh": "全国范围的防疫限制措施仍然存在，包括[邮编]地区"
+    },
+    "heading": {
+      "ar": "ُجريت بعض التغييرات على القواعد المتعلقة بالأمور المسموح وغير المسموح بها في12 إبريل. وعلى الرغم من ذلك، ما زال هناك العديد من القيود السارية.",
+      "bn": "আপনি কী করতে পারবেন এবং পারবেন না, সেই বিষয়ে কিছু নিয়মের পরিবর্তন করা হয়েছে 12 এপ্রিলে। তথাপি, বহু বাধানিষেধ বহাল রয়েছে।",
+      "cy": "Newidiodd rhai o'r rheolau ar 12 Ebrill ynglŷn â beth allwch chi ei wneud a beth na allwch chi ei wneud. Fodd bynnag, mae llawer o gyfyngiadau yn dal i fod mewn grym.",
+      "en": "Some of the rules on what you can and cannot do changed on 12th April. However, many restrictions remain in place.",
+      "gu": "તમે શું કરી શકો અને ન કરી શકો તે અંગેના કેટલાક નિયમોમાં 12મી એપ્રિલના રોજ ફેરફાર થયો હતો. જોકે, ઘણા રિસ્ટ્રિક્શનો હજી છે.",
+      "pa": "ਤੁਸੀਂ ਕੀ ਕਰ ਸਕਦੇ ਹੋ ਅਤੇ ਕੀ ਨਹੀਂ ਕਰ ਸਕਦੇ ਇਸ ਬਾਰੇ ਕੁਝ ਨਿਯਮ 12 ਅਪ੍ਰੈਲ ਨੂੰ ਬਦਲ ਗਏ ਹਨ। ਹਾਲਾਂਕਿ, ਬਹੁਤ ਸਾਰੀਆਂ ਪਾਬੰਦੀਆਂ ਲਾਗੂ ਹਨ।",
+      "pl": "Pewne przepisy dotyczące tego, co można, a czego nie wolno, uległy zmianie 12 kwietnia. Jednakże wiele ograniczeń nadal obowiązuje.",
+      "ro": "Unele recomandări și restricții s-au modificat pe 12 aprilie. Cu toate acestea, multe restricții rămân în vigoare.",
+      "so": "Qaar ka mid ah xeerarka ku saabsan waxa aad sameyn kartid iyo wixii aadan sameyn karin ayaa isbeddelay 12 Abriil. Hase yeeshee, xayiraado badan ayaa wali jira.",
+      "tr": "Neleri yapıp yapamayacağınıza ilişkin bazı kurallar 12 Nisan tarihinde değişti. Bununla birlikte, birçok kısıtlama halen yürürlüktedir.",
+      "ur": "آپ جو کام کر سکتے ہیں اور جو کام نہيں کر سکتے ہیں اس سے متعلق کچھ اصول12 اپریل  کو تبدیل ہو گئے۔ تاہم، بہت ساری پابندیاں بدستور نافذ ہیں۔",
+      "zh": "关于疫情期间的相关规定，已于4 月 12 日发生调整。然而，许多限制性规定仍然有效。"
+    },
+    "content": {
+      "ar": "ينبغي لك الاستمرار في العمل من المنزل وتقليل عدد الرحلات التي تُجريها قدر الإمكان.",
+      "bn": "আপনার বাসা থেকে কাজ চালিয়ে যাওয়া উচিৎ আর ভ্রমন সংখ্যা কমানো উচিৎ, যেখানে সম্ভব হবে।",
+      "cy": "Dylech barhau i weithio o gartref a pheidio â theithio'n amlach nag sydd raid, lle bo modd.",
+      "en": "You should continue to work from home and minimise the number of journeys you make, where possible.",
+      "gu": "જ્યાં શક્ય હોય ત્યાં તમારે ઘરેથી કામ કરવાનું ચાલુ રાખવું જોઈએ અને તમે કરો એવા પ્રવાસોની સંખ્યા ઓછી કરવી જોઈએ.",
+      "pa": "ਤੁਹਾਨੂੰ ਘਰ ਤੋਂ ਕੰਮ ਕਰਨਾ ਜਾਰੀ ਰੱਖਣਾ ਚਾਹੀਦਾ ਹੈ ਅਤੇ ਜਿੱਥੇ ਸੰਭਵ ਹੋ ਸਕੇ ਤੁਹਾਡੇ ਦੁਆਰਾ ਕੀਤੇ ਜਾਣ ਵਾਲੇ ਸਫ਼ਰ ਦੀ ਗਿਣਤੀ ਨੂੰ ਘੱਟ ਤੋਂ ਘੱਟ ਕਰਨਾ ਚਾਹੀਦਾ ਹੈ।",
+      "pl": "Ciągle należy pracować w domu oraz w miarę możliwości ograniczyć podróżowanie.",
+      "ro": "Trebuie să continuați să lucrați de acasă și să reduceți la minimum numărul de deplasări, acolo unde este posibil.",
+      "so": "Waa inaad ku sii shaqeysaa guriga oo aad yareyso tirada safarrada aad aadeyso, sida ugu macquulsan.",
+      "tr": "Mümkünse evden çalışmaya devam etmeli ve yaptığınız yolculukların sayısını asgari düzeye indirmelisiniz.",
+      "ur": "جہاں ممکن ہو وہاں آپ کو گھر سے کام کرتے رہنا اور آپ جتنا سفر کرتے ہیں اس کی تعداد کم کرتے رہنا چاہیے۔",
+      "zh": "您应继续居家办公，并尽可能减少旅行次数。"
+    },
+    "linkUrl": {
+      "ar": "https://www.gov.uk/covid19app/restrictions",
+      "bn": "https://www.gov.uk/covid19app/restrictions",
+      "cy": "https://www.gov.uk/covid19app/restrictions",
+      "en": "https://www.gov.uk/covid19app/restrictions",
+      "gu": "https://www.gov.uk/covid19app/restrictions",
+      "pa": "https://www.gov.uk/covid19app/restrictions",
+      "pl": "https://www.gov.uk/covid19app/restrictions",
+      "ro": "https://www.gov.uk/covid19app/restrictions",
+      "so": "https://www.gov.uk/covid19app/restrictions",
+      "tr": "https://www.gov.uk/covid19app/restrictions",
+      "ur": "https://www.gov.uk/covid19app/restrictions",
+      "zh": "https://www.gov.uk/covid19app/restrictions"
+    },
+    "linkTitle": {
+      "ar": "تعرّفوا على المزيد من المعلومات",
+      "bn": "আরো জেনে নিন",
+      "cy": "Rhagor o wybodaeth",
+      "en": "Find out more",
+      "gu": "વધારે માહિતી મેળવો",
+      "pa": "ਹੋਰ ਜਾਣਕਾਰੀ ਦੇਖੋ",
+      "pl": "Dowiedz się więcej",
+      "ro": "Aflați mai multe",
+      "so": "Wax badan ka ogow",
+      "tr": "Daha fazla bilgi edinin",
+      "ur": "مزید معلوم کریں",
+      "zh": "了解更多"
+    }
+  },
   "EN.Border.Tier1": {
     "colorScheme": "neutral",
     "colorSchemeV2": "neutral",
@@ -1845,18 +1993,18 @@
       "zh": "低—您的地方当局目前被评估为“低风险”，感染水平与全国其他大部分地区相似。"
     },
     "linkUrl": {
-      "ar": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "bn": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "cy": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "en": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "gu": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "pa": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "pl": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "ro": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "so": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "tr": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "ur": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf",
-      "zh": "https://gov.wales/sites/default/files/publications/2020-12/alert-levels-in-wales-simple-guide.pdf"
+      "ar": "https://gov.wales/alert-level-4",
+      "bn": "https://gov.wales/alert-level-4",
+      "cy": "https://llyw.cymru/lefel-rhybudd-4?_ga=2.261775757.1265239476.1617729340-1409654513.1614254038",
+      "en": "https://gov.wales/alert-level-4",
+      "gu": "https://gov.wales/alert-level-4",
+      "pa": "https://gov.wales/alert-level-4",
+      "pl": "https://gov.wales/alert-level-4",
+      "ro": "https://gov.wales/alert-level-4",
+      "so": "https://gov.wales/alert-level-4",
+      "tr": "https://gov.wales/alert-level-4",
+      "ur": "https://gov.wales/alert-level-4",
+      "zh": "https://gov.wales/alert-level-4"
     },
     "linkTitle": {
       "ar": "تعرّفوا على المزيد من المعلومات",
@@ -2267,7 +2415,7 @@
             "zh": "在室内与他人会面"
           },
           "policyContent": {
-            "ar": "ُحظر مقابلة أكثر من 3 أشخاص آخرين في الأماكن المُغلقة في المقاهي أو المطاعم أو في الأماكن المفتوحة الأخرى.",
+            "ar": "يُحظر مقابلة أكثر من 3 أشخاص آخرين في الأماكن المُغلقة في المقاهي أو المطاعم أو في الأماكن المفتوحة الأخرى.",
             "bn": "ক্যাফে, রেস্তোরাঁ বা খোলা থাকা অন্য কোনো জায়গায় ইনডোরে ৩ জনের বেশি লোকের সঙ্গে দেখা করবেন না।",
             "cy": "Peidiwch â chwrdd â mwy na 3 o bobl eraill mewn caffi, bwyty neu le arall agored dan do.",
             "en": "Meet no more than 3 other people indoors in a cafe, restaurant or other open premises.",
@@ -2422,7 +2570,7 @@
             "zh": "在室外与他人会面"
           },
           "policyContent": {
-            "ar": "ُحظر مقابلة أكثر من 3 أشخاص آخرين في الأماكن المفتوحة (إلا إذا كان اللقاء مع الأسرة المُوسَّعة التي يزيد عدد أفرادها عن ذلك).",
+            "ar": "يُحظر مقابلة أكثر من 3 أشخاص آخرين في الأماكن المفتوحة (إلا إذا كان اللقاء مع الأسرة المُوسَّعة التي يزيد عدد أفرادها عن ذلك).",
             "bn": "আউটডোরে ৩ জনের বেশি লোকের সঙ্গে দেখা করবেন না (যদিনা আপনি বাড়ির বৃহত্তর গণ্ডির সঙ্গে থাকেন)।",
             "cy": "Peidiwch â chwrdd â mwy na 3 o bobl eraill yn yr awyr agored (heblaw am eich aelwyd estynedig os yw'n fwy).",
             "en": "Meet no more than 3 other people outdoors (unless with extended household of a larger number).",
@@ -2618,7 +2766,7 @@
             "zh": "在室内与他人会面"
           },
           "policyContent": {
-            "ar": "ُحظر مقابلة أكثر من 3 أشخاص آخرين في الأماكن المُغلقة في المقاهي أو المطاعم أو في الأماكن المفتوحة الأخرى.",
+            "ar": "يُحظر مقابلة أكثر من 3 أشخاص آخرين في الأماكن المُغلقة في المقاهي أو المطاعم أو في الأماكن المفتوحة الأخرى.",
             "bn": "ক্যাফে, রেস্তোরাঁ বা খোলা থাকা অন্য কোনো জায়গায় ইনডোরে ৩ জনের বেশি লোকের সঙ্গে দেখা করবেন না।",
             "cy": "Peidiwch â chwrdd â mwy na 3 o bobl eraill mewn caffi, bwyty neu le arall agored dan do.",
             "en": "Meet no more than 3 other people indoors in a cafe, restaurant or other open premises.",
@@ -2839,32 +2987,32 @@
       "zh": "[postcode] is in alert level 4 (very high risk)"
     },
     "heading": {
-      "ar": "حالات الإصابة بفيروس كورونا في منطقتكم مرتفعة للغاية.",
-      "bn": "আপনার এলাকায় করোনাভাইরাস-আক্রান্ত প্রচুর লোক আছে.",
+      "ar": "Coronavirus cases are very high in your area.",
+      "bn": "Coronavirus cases are very high in your area.",
       "cy": "Mae nifer uchel iawn o achosion coronafeirws yn eich ardal.",
       "en": "Coronavirus cases are very high in your area.",
-      "gu": "તમારા વિસ્તારમાં કોરોનાવાઈરસના કિસ્સાઓ કે કેસીસ ખૂબજ વધારે છે.",
-      "pa": "ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਕੋਰੋਨਾਵਾਇਰਸ ਦੇ ਬਹੁਤ ਜ਼ਿਆਦਾ ਕੇਸ ਹਨ",
-      "pl": "Przypadki zakażenia koronawirusem są na bardzo wysokim poziomie w Twojej okolicy.",
-      "ro": "Cazurile de coronavirus sunt foarte ridicate în zona dvs.",
-      "so": "Kiisaska 'Coronavirus' ayaa aad ugu sarreeya deegaankaaga.",
-      "tr": "Bölgenizde çok yüksek sayıda koronavirüs vakaları var.",
-      "ur": "آپ کے علاقے میں کورونا وائرس کے بہت ہی زیادہ واقعات ہیں.",
-      "zh": "您所在地区的冠状病毒感染个案非常多。"
+      "gu": "Coronavirus cases are very high in your area.",
+      "pa": "Coronavirus cases are very high in your area.",
+      "pl": "Coronavirus cases are very high in your area.",
+      "ro": "Coronavirus cases are very high in your area.",
+      "so": "Coronavirus cases are very high in your area.",
+      "tr": "Coronavirus cases are very high in your area.",
+      "ur": "Coronavirus cases are very high in your area.",
+      "zh": "Coronavirus cases are very high in your area."
     },
     "content": {
-      "ar": "يجب عليك البقاء في المنزل. تعرّف على القواعد والاستثناءات السارية في منطقتك للمساعدة في الحدِّ من تفشي فيرورس كورونا.",
-      "bn": "আপনাকে অবশ্যই বাড়িতে অবস্থান করতে হবে। করোনাভাইরাসের বিস্তার রোধে সহায়তা করতে আপনার এলাকায় কোন কোন নিয়ম ও ব্যতিক্রম প্রযোজ্য তার সন্ধান করুন।",
+      "ar": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "bn": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
       "cy": "Rhaid i chi aros gartref. Edrychwch i weld pa reolau ac eithriadau sydd ar gyfer eich ardal i helpu i leihau lledaeniad coronafeirws.",
       "en": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
-      "gu": "તમારે ઘરે જ રહવું.તમારા વિસ્તારમાં નિયમો અને રાહતો લાગુ પડે છે.",
-      "pa": "ਤੁਹਾਨੂੰ ਘਰੇ ਰਹਿਣਾ ਚਾਹੀਦਾ ਹੈ।  ਇਹ ਪਤਾ ਕਰੋ ਕਿ ਕੋਰੋਨਵਾਇਰਸ ਦੇ ਫੈਲਣ ਨੂੰ ਘਟਾਉਣ ਲਈ ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਕਿਹੜੇ ਨਿਯਮ ਅਤੇ ਛੋਟਾਂ ਲਾਗੂ ਹਨ।",
-      "pl": "Należy pozostać w domu. Dowiedz się, jakie przepisy i wyjątki od nich obowiązują w Twojej okolicy, aby pomóc zmniejszyć rozprzestrzenianie się koronawirusa.",
-      "ro": "Trebuie să stați acasă. Aflați ce reguli și excepții se aplică în zona dvs. pentru a ajuta la reducerea răspândirii coronavirusului.",
-      "so": "Waa inaad guriga joogtaa. Soo ogow sharciyada iyo ka-dhaafitaannada ka jira aaggaaga si loo yareeyo faafitaanka coronavirus.",
-      "tr": "Evde kalmalısınız. Koronavirüsün yayılmasını azaltmaya yardımcı olmak için bölgenizde hangi kuralların ve muafiyetlerin geçerli olduğunu öğrenin.",
-      "ur": "آپ کو گھر میں ہی رہنا چاہئے۔ معلوم کریں کہ آپ کے علاقے میں کون سے  قواعد اور چھوٹ کا اطلاق ہوتا ہے تاکہ کورونا وائرس کے پھیلاؤ کو کم کرنے میں مدد ملے۔",
-      "zh": "您必须留在家中。请了解您所在地区适用的规则与豁免政策，帮助减少新冠病毒传播。"
+      "gu": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "pa": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "pl": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "ro": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "so": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "tr": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "ur": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus.",
+      "zh": "You must stay at home. Find out what rules and exemptions apply in your area to help reduce the spread of coronavirus."
     },
     "linkUrl": {
       "ar": "https://gov.wales/alert-level-4",
@@ -2952,6 +3100,68 @@
         "zh": ""
       },
       "policies": [
+        {
+          "policyIcon": "bars-and-pubs",
+          "policyHeading": {
+            "ar": "Hospitality",
+            "bn": "Hospitality",
+            "cy": "Lletygarwch",
+            "en": "Hospitality",
+            "gu": "Hospitality",
+            "pa": "Hospitality",
+            "pl": "Hospitality",
+            "ro": "Hospitality",
+            "so": "Hospitality",
+            "tr": "Hospitality",
+            "ur": "Hospitality",
+            "zh": "Hospitality"
+          },
+          "policyContent": {
+            "ar": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "bn": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "cy": "Mae mannau Lletygarwch y Tu Allan bellach ar agor. Gall uchafswm o 6 o bobl gyfarfod y tu allan nawr. Dylai pobl barhau i gadw pellter cymdeithasol oddi wrth bobl nad ydynt o'u haelwyd neu eu swigod cefnogaeth eu hunain wrth gyfarfod ag eraill yn yr awyr agored.",
+            "en": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "gu": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "pa": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "pl": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "ro": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "so": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "tr": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "ur": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside.",
+            "zh": "Outdoor Hospitality is now open. A maximum of 6 people can meet together outdoors. People should observe social distancing from people from outside their household or support bubble when meeting others outside."
+          }
+        },
+        {
+          "policyIcon": "education",
+          "policyHeading": {
+            "ar": "Education and Learning",
+            "bn": "Education and Learning",
+            "cy": "Addysg a Dysgu",
+            "en": "Education and Learning",
+            "gu": "Education and Learning",
+            "pa": "Education and Learning",
+            "pl": "Education and Learning",
+            "ro": "Education and Learning",
+            "so": "Education and Learning",
+            "tr": "Education and Learning",
+            "ur": "Education and Learning",
+            "zh": "Education and Learning"
+          },
+          "policyContent": {
+            "ar": "All children and students have returned to face-to-face education. Libraries are open.",
+            "bn": "All children and students have returned to face-to-face education. Libraries are open.",
+            "cy": "Mae pob plentyn a myfyriwr wedi dychwelyd i addysg wyneb-yn-wyneb. Mae llyfrgelloedd ar agor.",
+            "en": "All children and students have returned to face-to-face education. Libraries are open.",
+            "gu": "All children and students have returned to face-to-face education. Libraries are open.",
+            "pa": "All children and students have returned to face-to-face education. Libraries are open.",
+            "pl": "All children and students have returned to face-to-face education. Libraries are open.",
+            "ro": "All children and students have returned to face-to-face education. Libraries are open.",
+            "so": "All children and students have returned to face-to-face education. Libraries are open.",
+            "tr": "All children and students have returned to face-to-face education. Libraries are open.",
+            "ur": "All children and students have returned to face-to-face education. Libraries are open.",
+            "zh": "All children and students have returned to face-to-face education. Libraries are open."
+          }
+        },
         {
           "policyIcon": "face-coverings",
           "policyHeading": {
@@ -3062,18 +3272,18 @@
             "zh": "Meeting others outdoors"
           },
           "policyContent": {
-            "ar": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "bn": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "cy": "Gallwch gyfarfod ag eraill mewn gerddi preifat, cyn belled â'ch bod yn cadw pellter cymdeithasol. Gall uchafswm o 4 o bobl o 2 aelwyd (neu swigen, os yw'n cynnwys mwy na 4 o bobl) gyfarfod yn rhywle arall yn yr awyr agored.",
-            "en": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "gu": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "pa": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "pl": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "ro": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "so": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "tr": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "ur": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors.",
-            "zh": "You can meet others in private gardens providing you maintain social distancing. A maximum of 4 people from 2 households (or bubble if it is more than 4 people) may meet elsewhere outdoors."
+            "ar": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "bn": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "cy": "Gall uchafswm o 6 o bobl, o unrhyw aelwyd, gyfarfod y tu allan nawr. ",
+            "en": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "gu": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "pa": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "pl": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "ro": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "so": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "tr": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "ur": "A maximum of 6 people, from any household, may now meet outdoors. ",
+            "zh": "A maximum of 6 people, from any household, may now meet outdoors. "
           }
         },
         {
@@ -3093,49 +3303,80 @@
             "zh": "Outdoor sports"
           },
           "policyContent": {
-            "ar": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "bn": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "cy": "Gall cyrtiau chwaraeon yn yr awyr agored, gan gynnwys cyrsiau golff a lawntiau bowlio ailagor i uchafswm o 4 bobl o 2 aelwyd.",
-            "en": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "gu": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "pa": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "pl": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "ro": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "so": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "tr": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "ur": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households.",
-            "zh": "Outdoor sports courts, including golf courses and bowling greens, can reopen to a maximum of 4 people from 2 households."
+            "ar": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "bn": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "cy": "Mae cyrtiau chwaraeon y tu allan, gan gynnwys cyrsiau golff a lawntiau bowlio ailagor i uchafswm o 6 o bobl. Mae gweithgareddau awyr agored wedi'u trefnu i blant dan 18 wedi ailddechrau. Caniateir gweithgareddau awyr agored wedi'u trefnu i oedolion ar gyfer hyd at 30 o bobl.",
+            "en": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "gu": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "pa": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "pl": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "ro": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "so": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "tr": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "ur": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted.",
+            "zh": "Outdoor sports courts, including golf courses and bowling greens, are open to a maximum of 6 people. Organised outdoor children’s activities for under 18s have resumed. Organised outdoor activities for adults for up to 30 people are permitted."
+          }
+        },
+        {
+          "policyIcon": "overnight-stays",
+          "policyHeading": {
+            "ar": "Tourism",
+            "bn": "Tourism",
+            "cy": "Twristiaeth",
+            "en": "Tourism",
+            "gu": "Tourism",
+            "pa": "Tourism",
+            "pl": "Tourism",
+            "ro": "Tourism",
+            "so": "Tourism",
+            "tr": "Tourism",
+            "ur": "Tourism",
+            "zh": "Tourism"
+          },
+          "policyContent": {
+            "ar": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "bn": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "cy": "Mae lletyau hunan-gynhwysol ar agor. Gall atyniadau awyr agored ailagor, gan gynnwys ffeiriau a pharciau thema.",
+            "en": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "gu": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "pa": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "pl": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "ro": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "so": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "tr": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "ur": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks.",
+            "zh": "Self-contained accommodation is open. Outdoor attractions can reopen including funfairs and theme parks."
           }
         },
         {
           "policyIcon": "personal-care",
           "policyHeading": {
-            "ar": "Haircuts",
-            "bn": "Haircuts",
-            "cy": "Torri gwallt",
-            "en": "Haircuts",
-            "gu": "Haircuts",
-            "pa": "Haircuts",
-            "pl": "Haircuts",
-            "ro": "Haircuts",
-            "so": "Haircuts",
-            "tr": "Haircuts",
-            "ur": "Haircuts",
-            "zh": "Haircuts"
+            "ar": "Personal Care",
+            "bn": "Personal Care",
+            "cy": "Gofal personol",
+            "en": "Personal Care",
+            "gu": "Personal Care",
+            "pa": "Personal Care",
+            "pl": "Personal Care",
+            "ro": "Personal Care",
+            "so": "Personal Care",
+            "tr": "Personal Care",
+            "ur": "Personal Care",
+            "zh": "Personal Care"
           },
           "policyContent": {
-            "ar": "Hairdressers and barbers can reopen for appointments.",
-            "bn": "Hairdressers and barbers can reopen for appointments.",
-            "cy": "Gall trinwyr gwallt a barbwyr ailagor ar gyfer apwyntiadau.",
-            "en": "Hairdressers and barbers can reopen for appointments.",
-            "gu": "Hairdressers and barbers can reopen for appointments.",
-            "pa": "Hairdressers and barbers can reopen for appointments.",
-            "pl": "Hairdressers and barbers can reopen for appointments.",
-            "ro": "Hairdressers and barbers can reopen for appointments.",
-            "so": "Hairdressers and barbers can reopen for appointments.",
-            "tr": "Hairdressers and barbers can reopen for appointments.",
-            "ur": "Hairdressers and barbers can reopen for appointments.",
-            "zh": "Hairdressers and barbers can reopen for appointments."
+            "ar": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "bn": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "cy": "Mae gwasanaethau trin gwallt, harddwch, ewinedd, tylino, iechyd a llesiant, aciwbigo, tatwio, tyllu'r corff a phob gwasanaeth cysylltiad agos arall ar agor ar gyfer apwyntiadau .",
+            "en": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "gu": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "pa": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "pl": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "ro": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "so": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "tr": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "ur": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments.",
+            "zh": "Hair, beauty, nails, massage, health and wellbeing, acupuncture, tattoo, body piercings and all other close contact services are open for appointments."
           }
         },
         {
@@ -3155,18 +3396,18 @@
             "zh": "Shops"
           },
           "policyContent": {
-            "ar": "Only essential retailers are open.",
-            "bn": "Only essential retailers are open.",
-            "cy": "Dim ond mân-werthwyr hanfodol fydd ar agor.",
-            "en": "Only essential retailers are open.",
-            "gu": "Only essential retailers are open.",
-            "pa": "Only essential retailers are open.",
-            "pl": "Only essential retailers are open.",
-            "ro": "Only essential retailers are open.",
-            "so": "Only essential retailers are open.",
-            "tr": "Only essential retailers are open.",
-            "ur": "Only essential retailers are open.",
-            "zh": "Only essential retailers are open."
+            "ar": "All retail stores in Wales are open.",
+            "bn": "All retail stores in Wales are open.",
+            "cy": "Mae pob siop manwerthu yng Nghymru ar agor.",
+            "en": "All retail stores in Wales are open.",
+            "gu": "All retail stores in Wales are open.",
+            "pa": "All retail stores in Wales are open.",
+            "pl": "All retail stores in Wales are open.",
+            "ro": "All retail stores in Wales are open.",
+            "so": "All retail stores in Wales are open.",
+            "tr": "All retail stores in Wales are open.",
+            "ur": "All retail stores in Wales are open.",
+            "zh": "All retail stores in Wales are open."
           }
         },
         {
@@ -3217,18 +3458,49 @@
             "zh": "Travelling"
           },
           "policyContent": {
-            "ar": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "bn": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "cy": "Arhoswch yn lleol. Gallwch deithio oddeutu 5 milltir o'ch cartref, neu ymhellach mewn ardaloedd gwledig.",
-            "en": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "gu": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "pa": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "pl": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "ro": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "so": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "tr": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "ur": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas.",
-            "zh": "Stay local. You may travel approximately 5 miles from your home, or further in rural areas."
+            "ar": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland",
+            "bn": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland.",
+            "cy": "Gallwch deithio i mewn i Gymru ac allan o Gymru i weddill y DU, Ynysoedd y Sianel, Ynys Manaw ac Iwerddon.",
+            "en": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland.",
+            "gu": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland.",
+            "pa": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland",
+            "pl": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland.",
+            "ro": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland.",
+            "so": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland.",
+            "tr": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland.",
+            "ur": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland",
+            "zh": "You are allowed to travel into and out of Wales to the rest of the UK, the Channel Islands, the Isle of Man and Ireland."
+          }
+        },
+        {
+          "policyIcon": "weddings-and-funerals",
+          "policyHeading": {
+            "ar": "Outdoor weddings",
+            "bn": "Outdoor weddings",
+            "cy": "Priodasau awyr agored",
+            "en": "Outdoor weddings",
+            "gu": "Outdoor weddings",
+            "pa": "Outdoor weddings",
+            "pl": "Outdoor weddings",
+            "ro": "Outdoor weddings",
+            "so": "Outdoor weddings",
+            "tr": "Outdoor weddings",
+            "ur": "Outdoor weddings",
+            "zh": "Outdoor weddings"
+          },
+          "policyContent": {
+            "ar": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "bn": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "cy": "Caniateir gwleddoedd priodas y tu allan i hyd at 30 o bobl nawr.",
+            "en": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "gu": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "pa": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "pl": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "ro": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "so": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "tr": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "ur": "Weddings receptions outdoors for up to 30 people are now permitted.",
+            "zh": "Weddings receptions outdoors for up to 30 people are now permitted."
           }
         },
         {
@@ -3250,7 +3522,7 @@
           "policyContent": {
             "ar": "Work from home if you can.",
             "bn": "Work from home if you can.",
-            "cy": "Gweithiwch o gartre os gallwch.",
+            "cy": "Work from home if you can.",
             "en": "Work from home if you can.",
             "gu": "Work from home if you can.",
             "pa": "Work from home if you can.",
@@ -3707,6 +3979,80 @@
       "tr": "En güncel tavsiyeleri okuyun",
       "ur": "تازہ ترین مشورہ پڑھیں",
       "zh": "阅读最新建议"
+    }
+  },
+  "EN.VariantTier2": {
+    "colorScheme": "neutral",
+    "colorSchemeV2": "neutral",
+    "name": {
+      "ar": "[postcode]: تفشي سلالة جديدة من فيروس كوفيد-19 في منطقتكم",
+      "bn": "[postcode]: আপনার এলাকায় কোভিড-১৯ এর একটি ধরন আছে",
+      "cy": "[postcode]: mae amrywiolyn o COVID-19 yn eich ardal",
+      "en": "[postcode]: a variant of COVID-19 is in your area",
+      "gu": "[postcode]: કોવિડ-19નું વેરિયંટ તમારા એરિયામાં છે",
+      "pa": "[postcode]: COVID-19 ਦੀ ਇੱਕ ਕਿਸਮ ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਹੈ",
+      "pl": "[postcode]: wariant COVID-19 rozprzestrzenił się w Twoim rejonie",
+      "ro": "[postcode]: o nouă tulpină de COVID-19 a fost depistată în zona dvs.",
+      "so": "[postcode]: nooc ka mid ah COVID-19 ayaa laga helay aaggaaga",
+      "tr": "[postcode]: bölgenizde COVID-19'un bir varyantı bulunuyor",
+      "ur": "[postcode]: آپ کے علاقے میں کوویڈ- 19 کی ایک قسم ہے",
+      "zh": "[postcode]：您所在的地区存在新冠病毒新变种"
+    },
+    "heading": {
+      "ar": "",
+      "bn": "",
+      "cy": "",
+      "en": "",
+      "gu": "",
+      "pa": "",
+      "pl": "",
+      "ro": "",
+      "so": "",
+      "tr": "",
+      "ur": "",
+      "zh": ""
+    },
+    "content": {
+      "ar": "إذا ظهرت عليك أعراض الإصابة بفيروس كورونا، يُرجى تحديد زرّ \"التحقق من الأعراض\" الموجود في التطبيق وحجز اختبارٍ.\n\nأمّا إذا لم تظهر عليك أعراض الإصابة، فإننا بصدد مطالبة الكثير من الأشخاص قدر الإمكان (ممن تبلغ أعمارهم 11 عامًا فما فوق) بإجراء اختبار PCR حتى يتسنى لنا تحديد أي حالات مُصابة بالسلالة الجديدة والعمل على منع تفشيها. ولذا، فقد عمدنا إلى توفير المزيد من الاختبارات على الصعيد المحلي.",
+      "bn": "আপনার করোনাভাইরাসের উপসর্গ থাকলে, অনুগ্রহ করে অ্যাপে \"উপসর্গ যাচাই করুন\" বোতাম বেছে নিয়ে একটি পরীক্ষা বুক করুন।\n\nআপনার উপসর্গ না থাকলে, আমরা যত বেশি সম্ভব লোককে (১১+ বয়সী) একটি পিসিআর পরীক্ষা করাতে বলছি যাতে আমরা ভাইরাসের নতুন ধরন থাকার যে কোনো ঘটনা খুঁজে পেতে পারি এবং ভাইরাসটির বিস্তার ঠেকাতে সাহায্য করতে পারি। আমরা আপনার এলাকায় আরো পরীক্ষার ব্যবস্থা সুলভ করছি।",
+      "cy": "Os oes symptomau coronafeirws arnoch, dewiswch botwm \"Gwirio symptomau\" yn yr ap ac archebwch brawf. \n\nOs nad oes symptomau arnoch, rydym yn gofyn i gynifer o bobl ag y gallwn (11+ oed) gael prawf PCR er mwyn i ni ddod o hyd i unrhyw achosion o'r amrywiolyn a helpu i atal lledaeniad y feirws. Rydym wrthi'n trefnu bod rhagor o brofion ar gael yn lleol.",
+      "en": "If you have coronavirus symptoms, please select the “Check symptoms” button in the app and book a test. \n\nIf you do not have symptoms, we are asking as many people as possible (aged 11+) to get a PCR test so we can find any cases of the variant and help suppress the spread of the virus. We are making more testing available in your area.",
+      "gu": "જો તમને કોરોનાવાયરના લક્ષણો હોય તો એપ પર \"લક્ષણો તપાસો\" બટન પર ક્લિક કરીને ટેસ્ટ બૂક કરો.\n\nજો તમને લક્ષણો ન હોય તો અમે જેટલા બને એટલા લોકોને (ઉંમર 11+) PCR ટેસ્ટ કરાવે જેથી વેરિયંટનાં કેસિસ હોય તો ખબર પડે અને એનો ફેલાવો થતા અટકાવી શકીએ. અમે વધારે ટેસ્ટિંગની ગોઠવણ તમારા એરિયામાં કરી છે.",
+      "pa": "ਜੇ ਤੁਹਾਨੂੰ ਕੋਰੋਨਾਵਾਇਰਸ ਦੇ ਲੱਛਣ ਹਨ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਵਿੱਚ “ਲੱਛਣਾਂ ਦੀ ਜਾਂਚ ਕਰੋ” ਬਟਨ ਦੀ ਚੋਣ ਕਰੋ ਅਤੇ ਇੱਕ ਟੈਸਟ ਬੁੱਕ ਕਰੋ।                                                 ਜੇ ਤੁਹਾਨੂੰ ਲੱਛਣ ਨਹੀਂ ਹਨ, ਤਾਂ ਅਸੀਂ ਵੱਧ ਤੋਂ ਵੱਧ ਸੰਭਵ ਲੋਕਾਂ (11+ ਉਮਰ ਦੇ) ਨੂੰ ਪੀਸੀਆਰ (PCR) ਟੈਸਟ ਕਰਵਾਉਣ ਲਈ ਕਹਿ ਰਹੇ ਹਾਂ ਤਾਂ ਜੋ ਅਸੀਂ ਇਸ ਕਿਸਮ ਦੇ ਕਿਸੇ ਵੀ ਮਾਮਲਿਆਂ ਦਾ ਪਤਾ ਲਗਾ ਸਕੀਏ ਅਤੇ ਵਾਇਰਸ ਨੂੰ ਫੈਲਣ ਤੋਂ ਰੋਕਣ ਵਿੱਚ ਸਹਾਇਤਾ ਕਰ ਸਕੀਏ। ਅਸੀਂ ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਵਾਧੂ ਟੈਸਟਿੰਗ ਉਪਲਬਧ ਕਰਵਾ ਰਹੇ ਹਾਂ।.",
+      "pl": "Jeżeli masz objawy koronawirusa, proszę wybrać opcję „Sprawdzanie objawów” w aplikacji i zamówić test.\n\nJeżeli nie masz objawów, prosimy aby jak najwięcej osób (powyżej wieku 11 lat) wykonało test PCR, abyśmy mogli wykryć przypadki nowego wariantu i pomóc w zahamowaniu rozprzestrzeniania się wirusa. Udostępniamy więcej możliwości wykonania testu w Twoim rejonie.",
+      "ro": "Dacă aveți simptome de coronavirus, selectați butonul „Verificați simptomele” din aplicație și rezervați un test. \n\nDacă nu aveți simptome, solicităm cât mai multor persoane (11+) să se testeze cu ajutorul unui test PCR, astfel încât să putem depista cazurile infectate cu noua tulpină și să putem opri răspândirea virusului. Am pus la dispoziție mai multe seturi de testare la nivel local.",
+      "so": "Haddii aad leedahay astaamaha coronavirus, fadlan dooro batoonka ''Eeg astaamaha\" ee ku yaal app-ka oo ballanso baaritaan. \n\nHaddii aadan lahayn astaamo, waxaan weydiisaneynaa dad badan intii suurtogal ah (da'da 11+) inay maraan baaritaanka PCR si aan u helno kiisaska fayraska noocan oo aan gacan ka geysano xakameynta faafitaanka fayraska. Waxaan diyaarinaynaa baaritaan dheeraad ah oo laga heli karo aaggaaga.",
+      "tr": "Koronavirüs belirtilerine sahipseniz, lütfen uygulamada \"Belirtileri kontrol et\" düğmesini seçin ve bir test için rezervasyon yaptırın. \n\nHerhangi bir belirtiniz yoksa, varyanta ait vakaları bulabilmek ve virüsün yayılmasını durdurabilmek için mümkün olduğu kadar fazla sayıda kişinin (11 yaşının üzerinde) PCR testi yaptırmasını istiyoruz. Bölgenizde daha fazla test olanağı sağlıyoruz.",
+      "ur": "اگر آپ میں کورونا وائرس کی علامات ہیں تو ، براہ کرم ایپ میں موجود علامات کی جانچ کے بٹن کو منتخب کریں اور ٹیسٹ کروائیں۔\nاگر آپ میں علامات نہیں ہیں تو ، ہم پی سی آر ٹیسٹ کروانے کے لئے زیادہ سے زیادہ لوگوں (عمر 11+) سے پوچھ رہے ہیں تاکہ ہم مختلف اقسام  کے کیس  تلاش کرسکیں اور وائرس کے پھیلاؤ کو دبانے میں مدد کرسکیں۔ ہم نے آپ کے علاقے میں اضافی موبائل ٹیسٹنگ یونٹ تعینات کردیئے ہیں اور مقامی طور پر مزید جانچ کی فراہمی کر رہے ہیں۔ ہم آپ کے علاقے میں مزید جانچ فراہم کر رہے ہیں۔",
+      "zh": "如果您出现了冠状病毒症状，请点击应用程序中的 Check symptoms（检查症状）按钮并预约检测。 \n\n如果您没有出现症状，我们将要求尽可能多的人（11 岁以上）进行检测，以便发现任何新变种的病例并帮助抑制病毒的传播。我们将在您所在的地区提供更多的检测机会。"
+    },
+    "linkUrl": {
+      "ar": "https://www.gov.uk/find-local-council",
+      "bn": "https://www.gov.uk/find-local-council",
+      "cy": "https://www.gov.uk/find-local-council",
+      "en": "https://www.gov.uk/find-local-council",
+      "gu": "https://www.gov.uk/find-local-council",
+      "pa": "https://www.gov.uk/find-local-council",
+      "pl": "https://www.gov.uk/find-local-council",
+      "ro": "https://www.gov.uk/find-local-council",
+      "so": "https://www.gov.uk/find-local-council",
+      "tr": "https://www.gov.uk/find-local-council",
+      "ur": "https://www.gov.uk/find-local-council",
+      "zh": "https://www.gov.uk/find-local-council"
+    },
+    "linkTitle": {
+      "ar": "للاطلاع على المزيد من المعلومات، يُرجى زيارة الموقع الإلكتروني للسلطة المحلية لديكم.",
+      "bn": "আরো তথ্যের জন্য অনুগ্রহ করে আপনার স্থানীয় কর্তৃপক্ষের ওয়েবসাইট দেখুন",
+      "cy": "I gael rhagor o wybodaeth, ewch i wefan eich Awdurdod Lleol",
+      "en": "For more information please visit your Local Authority website",
+      "gu": "વધું માહિતી માટે પ્લિઝ તમારી લૉકલ ઑથોરિટિની વેબસાઇટ પર જૂઓ",
+      "pa": "ਵਧੇਰੇ ਜਾਣਕਾਰੀ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਿਟੀ ਦੀ ਵੈੱਬਸਾਈਟ ਵੇਖੋ",
+      "pl": "W celu uzyskania dalszych informacji, prosimy odwiedzić stronę swoich władz lokalnych",
+      "ro": "Pentru mai multe informații, vă rugăm să vizitați pagina web a autorității locale",
+      "so": "Wixii macluumaad dheeraad ah fadlan booqo websaydhka Maamulka Deegaankaaga",
+      "tr": "Daha fazla bilgi için lütfen Yerel Yönetiminizin web sitesini ziyaret edin.",
+      "ur": "مزید معلومات کے لئے براہ کرم اپنی لوکل اتھارٹی کی ویب سائٹ دیکھیں",
+      "zh": "如需了解更多信息，请访问地方当局网站"
     }
   }
 }

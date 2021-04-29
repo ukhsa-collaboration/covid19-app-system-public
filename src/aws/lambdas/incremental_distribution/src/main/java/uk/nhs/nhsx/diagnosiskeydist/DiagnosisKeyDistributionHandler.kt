@@ -21,7 +21,7 @@ import uk.nhs.nhsx.core.aws.ssm.Parameters
 import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
-import uk.nhs.nhsx.core.scheduled.SchedulingHandler
+import uk.nhs.nhsx.core.handler.SchedulingHandler
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.UploadToS3KeyDistributor
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 

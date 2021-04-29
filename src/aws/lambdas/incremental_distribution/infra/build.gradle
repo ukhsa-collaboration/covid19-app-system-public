@@ -1,0 +1,8 @@
+dependencies {
+    implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
+    implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
+    implementation "com.amazonaws:aws-java-sdk-secretsmanager"
+
+    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
+}
+

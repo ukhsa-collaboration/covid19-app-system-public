@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.virology.lookup
 
-import uk.nhs.nhsx.virology.TestKit
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestResult
 
 data class VirologyLookupResponseV2(
     val testEndDate: TestEndDate,

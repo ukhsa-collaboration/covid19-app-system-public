@@ -7,7 +7,8 @@ locals {
     "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess",
     "arn:aws:iam::aws:policy/SecretsManagerReadWrite",
     "arn:aws:iam::aws:policy/CloudFrontFullAccess",
-    "arn:aws:iam::aws:policy/AmazonKinesisFirehoseFullAccess"
+    "arn:aws:iam::aws:policy/AmazonKinesisFirehoseFullAccess",
+    "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
   ]
 }
 

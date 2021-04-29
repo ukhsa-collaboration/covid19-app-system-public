@@ -3,12 +3,12 @@ package uk.nhs.nhsx.diagnosiskeydist
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.apache.logging.log4j.ThreadContext
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.handler.RequestContext
 import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.OnErrorHandler
 import java.time.Duration
 import java.util.concurrent.CountDownLatch
@@ -38,27 +38,19 @@ class ConcurrentExecutionTest {
     }
 
     @Test
-    fun `copies MDC context onto new threads`() {
-        assertThat(ThreadContext.containsKey("message")).isFalse
+    fun `copies request context onto new threads`() {
+        RequestContext.assignAwsRequestId("hello")
+        var captured = ""
 
-        try {
-            ThreadContext.put("message", "hello")
-            val context = ThreadContext.getImmutableContext()
-            var capturedContext: Map<String, String> = mapOf()
-
-            val latch = CountDownLatch(1)
-            concurrentExecution().use { pool ->
-                pool.execute {
-                    capturedContext = ThreadContext.getImmutableContext()
-                    latch.countDown()
-                }
+        val latch = CountDownLatch(1)
+        concurrentExecution().use { pool ->
+            pool.execute {
+                captured = RequestContext.awsRequestId()
+                latch.countDown()
             }
-            latch.await(5, TimeUnit.SECONDS)
-            assertThat(context.hashCode()).isNotSameAs(capturedContext.hashCode())
-            assertThat(capturedContext["message"]).isEqualTo("hello")
-        } finally {
-            ThreadContext.remove("counter")
         }
+        latch.await(5, TimeUnit.SECONDS)
+        assertThat(captured).isEqualTo("hello")
     }
 
     @Test

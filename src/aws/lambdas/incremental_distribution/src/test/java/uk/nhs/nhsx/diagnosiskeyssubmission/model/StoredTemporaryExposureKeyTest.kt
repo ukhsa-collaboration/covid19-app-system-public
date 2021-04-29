@@ -3,13 +3,13 @@ package uk.nhs.nhsx.diagnosiskeyssubmission.model
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert.assertEquals
 import org.skyscreamer.jsonassert.JSONCompareMode.STRICT
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 
 class StoredTemporaryExposureKeyTest {
 
     @Test
     fun `converts to JSON with daysSinceOnsetOfSymptoms`() {
-        val json = Jackson.toJson(
+        val json = Json.toJson(
             StoredTemporaryExposureKey(
                 "W2zb3BeMWt6Xr2u0ABG32Q==",
                 5,
@@ -34,7 +34,7 @@ class StoredTemporaryExposureKeyTest {
 
     @Test
     fun `converts to JSON without daysSinceOnsetOfSymptoms`() {
-        val json = Jackson.toJson(
+        val json = Json.toJson(
             StoredTemporaryExposureKey(
                 "W2zb3BeMWt6Xr2u0ABG32Q==",
                 5,

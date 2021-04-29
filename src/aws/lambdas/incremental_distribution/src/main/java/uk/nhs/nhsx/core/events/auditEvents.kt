@@ -2,8 +2,8 @@ package uk.nhs.nhsx.core.events
 
 import uk.nhs.nhsx.core.events.EventCategory.Audit
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
-import uk.nhs.nhsx.virology.Country
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.Country
+import uk.nhs.nhsx.domain.IpcTokenId
 
 data class CreateIPCTokenSucceeded(
     val auditPrefix: String,

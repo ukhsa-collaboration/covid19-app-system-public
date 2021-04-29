@@ -1,10 +1,10 @@
 package uk.nhs.nhsx.diagnosiskeydist
 
-import org.apache.logging.log4j.ThreadContext
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.ExceptionThrown
 import uk.nhs.nhsx.core.events.InfoEvent
+import uk.nhs.nhsx.core.handler.RequestContext
 import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.OnErrorHandler
 import java.time.Duration
 import java.time.Instant
@@ -24,12 +24,12 @@ class ConcurrentExecution(
     private val counter: AtomicInteger = AtomicInteger()
     private val start: Instant = clock()
     private val pool: ExecutorService = Executors.newFixedThreadPool(15)
-    private val currentContext: Map<String, String> = ThreadContext.getImmutableContext()
+    private val existingRequestId: String = RequestContext.awsRequestId()
 
     fun execute(c: Runnable) {
         pool.execute {
             try {
-                ThreadContext.putAll(currentContext)
+                RequestContext.assignAwsRequestId(existingRequestId)
                 c.run()
                 counter.incrementAndGet()
             } catch (e: Exception) {

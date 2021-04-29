@@ -9,13 +9,14 @@ import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber.Companion.enIntervalNumberFromTimestamp
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
-import uk.nhs.nhsx.keyfederation.download.ReportType.CONFIRMED_CLINICAL_DIAGNOSIS
-import uk.nhs.nhsx.keyfederation.download.ReportType.CONFIRMED_TEST
-import uk.nhs.nhsx.keyfederation.download.ReportType.UNKNOWN
-import uk.nhs.nhsx.keyfederation.download.TestType.LFT
-import uk.nhs.nhsx.keyfederation.download.TestType.PCR
+import uk.nhs.nhsx.domain.ReportType.CONFIRMED_CLINICAL_DIAGNOSIS
+import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
+import uk.nhs.nhsx.domain.ReportType.UNKNOWN
+import uk.nhs.nhsx.domain.TestType.LAB_RESULT
+import uk.nhs.nhsx.domain.TestType.RAPID_RESULT
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
 import java.time.Duration
@@ -54,7 +55,7 @@ class FederatedKeyUploaderTest {
                 144,
                 "NI",
                 listOf("NI"),
-                PCR,
+                LAB_RESULT,
                 CONFIRMED_TEST,
                 0
             ), ExposureDownload(
@@ -64,7 +65,7 @@ class FederatedKeyUploaderTest {
                 144,
                 "NI",
                 listOf("NI"),
-                PCR,
+                LAB_RESULT,
                 CONFIRMED_TEST,
                 0
             ),
@@ -75,7 +76,7 @@ class FederatedKeyUploaderTest {
                 144,
                 "IE",
                 listOf("IE"),
-                PCR,
+                LAB_RESULT,
                 CONFIRMED_TEST,
                 0
             )
@@ -89,11 +90,11 @@ class FederatedKeyUploaderTest {
 
         assertThat(
             firstEvent,
-            equalTo(DownloadedFederatedDiagnosisKeys(testType = PCR, validKeys = 2, invalidKeys = 0, origin = "NI"))
+            equalTo(DownloadedFederatedDiagnosisKeys(testType = LAB_RESULT, validKeys = 2, invalidKeys = 0, origin = "NI"))
         )
         assertThat(
             secondEvent,
-            equalTo(DownloadedFederatedDiagnosisKeys(testType = PCR, validKeys = 1, invalidKeys = 0, origin = "IE"))
+            equalTo(DownloadedFederatedDiagnosisKeys(testType = LAB_RESULT, validKeys = 1, invalidKeys = 0, origin = "IE"))
         )
     }
 
@@ -106,7 +107,7 @@ class FederatedKeyUploaderTest {
             2,
             "NI",
             listOf("NI"),
-            PCR,
+            LAB_RESULT,
             CONFIRMED_TEST,
             0
         )
@@ -117,7 +118,7 @@ class FederatedKeyUploaderTest {
             4,
             "NI",
             listOf("NI"),
-            PCR,
+            LAB_RESULT,
             CONFIRMED_TEST,
             0
         )
@@ -128,7 +129,7 @@ class FederatedKeyUploaderTest {
             222,
             "IE",
             listOf("IE"),
-            PCR,
+            LAB_RESULT,
             CONFIRMED_TEST,
             0
         )
@@ -159,7 +160,7 @@ class FederatedKeyUploaderTest {
             2,
             "NI",
             listOf("NI"),
-            PCR,
+            LAB_RESULT,
             CONFIRMED_TEST,
             0
         )
@@ -189,7 +190,7 @@ class FederatedKeyUploaderTest {
                 144,
                 "NI",
                 listOf("NI"),
-                PCR,
+                LAB_RESULT,
                 CONFIRMED_TEST,
                 0
             ), ExposureDownload(
@@ -199,7 +200,7 @@ class FederatedKeyUploaderTest {
                 144,
                 "NI",
                 listOf("NI"),
-                PCR,
+                LAB_RESULT,
                 CONFIRMED_TEST,
                 0
             ),
@@ -210,7 +211,7 @@ class FederatedKeyUploaderTest {
                 144,
                 "IE",
                 listOf("IE"),
-                PCR,
+                LAB_RESULT,
                 CONFIRMED_TEST,
                 0
             )
@@ -243,7 +244,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 ),
@@ -254,7 +255,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 )
@@ -280,7 +281,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 ),
@@ -291,7 +292,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 )
@@ -316,7 +317,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 ),
@@ -327,7 +328,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 )
@@ -350,7 +351,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    LFT,
+                    RAPID_RESULT,
                     CONFIRMED_TEST,
                     0
                 ),
@@ -361,7 +362,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    LFT,
+                    RAPID_RESULT,
                     CONFIRMED_TEST,
                     0
                 ),
@@ -372,7 +373,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "IE",
                     listOf("IE"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 )
@@ -395,7 +396,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     UNKNOWN,
                     0
                 ),
@@ -406,7 +407,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "NI",
                     listOf("NI"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_CLINICAL_DIAGNOSIS,
                     0
                 ),
@@ -417,7 +418,7 @@ class FederatedKeyUploaderTest {
                     144,
                     "IE",
                     listOf("IE"),
-                    PCR,
+                    LAB_RESULT,
                     CONFIRMED_TEST,
                     0
                 )

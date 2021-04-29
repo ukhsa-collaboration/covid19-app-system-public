@@ -6,7 +6,6 @@ import com.amazonaws.services.cloudfront.model.CreateInvalidationRequest
 import com.amazonaws.services.cloudfront.model.InvalidationBatch
 import com.amazonaws.services.cloudfront.model.Paths
 import uk.nhs.nhsx.core.events.Events
-import uk.nhs.nhsx.core.events.ExceptionThrown
 import java.util.*
 
 class AwsCloudFrontClient(
@@ -15,13 +14,15 @@ class AwsCloudFrontClient(
 ) : AwsCloudFront {
 
     override fun invalidateCache(distributionId: String, path: String) {
+        val batchId = UUID.randomUUID()
         val invalidationPaths = Paths().withItems(path).withQuantity(1)
-        val invalidationBatch = InvalidationBatch(invalidationPaths, UUID.randomUUID().toString())
+        val invalidationBatch = InvalidationBatch(invalidationPaths, batchId.toString())
         val invalidationRequest = CreateInvalidationRequest(distributionId, invalidationBatch)
         try {
             client.createInvalidation(invalidationRequest)
+            events(CloudFrontCachesInvalidated(distributionId, path, batchId))
         } catch (e: AmazonCloudFrontException) {
-            events(ExceptionThrown(e, "CloudFront cache invalidation failed"))
+            events(CloudFrontCacheInvalidationFailed(distributionId, path, batchId, e))
         }
     }
 }

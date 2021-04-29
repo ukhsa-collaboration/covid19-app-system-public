@@ -59,20 +59,6 @@ module Gaudi
         "#{pubdash_analytics}/analytics_parquet"
       end
 
-      # Retrieve an AWS_ROLE used to determine the actual login credentials to use for AWS
-      #
-      # This can be one of ["deploy","read"]
-      #
-      # Returns "deploy" by default
-      def aws_role
-        role_name = ENV["AWS_ROLE"]
-        role_name = "deploy" if role_name.nil?
-
-        raise GaudiError, "You can only specify one of the following roles: #{NHSx::AWS::AWS_ROLE_NAMES.join(",")} " unless NHSx::AWS::AWS_ROLE_NAMES.include?(role_name)
-
-        return role_name
-      end
-
       # Pass the value for a TOKEN
       def token
         mandatory("TOKEN")
@@ -160,10 +146,10 @@ module Gaudi
         return batch_number
       end
 
-      # Pass the email id for the subscription 
+      # Pass the email id for the subscription
       def email
         email = mandatory("EMAIL")
-        
+
         raise GaudiError, "Invalid EMAIL" unless email
 
         return email
@@ -172,9 +158,9 @@ module Gaudi
       # Pass the mobile number for the subscription (it should include the country code)
       def mobile_number
         mobile_number = mandatory("MOBILE_NUMBER")
-        
+
         raise GaudiError, "Invalid MOBILE_NUMBER" unless mobile_number
-        
+
         return mobile_number
       end
 
@@ -213,10 +199,9 @@ module Gaudi
       # Pass a version number to be used for a release.
       def release_version(version_metadata)
         version_number = mandatory("RELEASE_VERSION").gsub(",", ".")
-        last_release = "#{version_metadata["Major"]}.#{version_metadata["Minor"]}"
-        raise GaudiError, "Only provide the version number, e.g. 2.3" if version_number.to_f.zero?
 
-        raise GaudiError, "Invalid version #{version_number}. Latest release is #{last_release}." if last_release.to_f >= version_number.to_f
+        raise GaudiError, "The release #{version_number} already exists" if tag_exists?("#{version_metadata["SubsystemPrefix"]}#{version_number}", self)
+        raise GaudiError, "Only provide the version number, e.g. 2.3" if version_number.gsub(".", "").to_f.zero?
 
         return version_number
       end

@@ -3,10 +3,13 @@ package uk.nhs.nhsx.highriskpostcodesupload
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.exceptions.ApiResponseException
-import uk.nhs.nhsx.highriskpostcodesupload.RiskIndicator.HIGH
-import uk.nhs.nhsx.highriskpostcodesupload.RiskIndicator.LOW
-import uk.nhs.nhsx.highriskpostcodesupload.RiskIndicator.MEDIUM
+import uk.nhs.nhsx.domain.LocalAuthority
+import uk.nhs.nhsx.domain.PostDistrict
+import uk.nhs.nhsx.domain.PostDistrictIndicators
+import uk.nhs.nhsx.domain.TierIndicator
+import uk.nhs.nhsx.domain.RiskIndicator.HIGH
+import uk.nhs.nhsx.domain.RiskIndicator.LOW
+import uk.nhs.nhsx.domain.RiskIndicator.MEDIUM
 
 class RiskyPostCodesMapperTest {
 

@@ -9,16 +9,11 @@ import smoke.actors.MobileApp
 import smoke.actors.TestLab
 import smoke.data.DiagnosisKeyData
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.testhelper.data.asInstant
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.TestResultPollingToken
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Wls
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult.Positive
-import java.time.LocalDate
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult.Positive
 
 interface UserGetsVirologyTestAndPollForResult : BackendContractScenario {
     @Test

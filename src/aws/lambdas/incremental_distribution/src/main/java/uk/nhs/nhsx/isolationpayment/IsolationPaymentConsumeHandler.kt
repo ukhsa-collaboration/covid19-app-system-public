@@ -6,15 +6,15 @@ import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.Handler
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.direct.DirectHandler
 import uk.nhs.nhsx.core.events.Events
+import uk.nhs.nhsx.core.handler.DirectHandler
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 
 @Suppress("unused")
 class IsolationPaymentConsumeHandler(private val service: IsolationPaymentGatewayService,
-                                     events: Events) : DirectHandler<IsolationRequest, IsolationResponse>(events, IsolationRequest::class.java) {
+                                     events: Events) : DirectHandler<IsolationRequest, IsolationResponse>(events, IsolationRequest::class) {
     @JvmOverloads
     constructor(clock: Clock = SystemClock.CLOCK,
                 environment: Environment = Environment.fromSystem(),

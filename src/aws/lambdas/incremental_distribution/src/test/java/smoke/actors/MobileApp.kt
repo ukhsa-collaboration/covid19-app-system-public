@@ -1,20 +1,14 @@
 package smoke.actors
 
 import batchZipCreation.Exposure
-import com.fasterxml.jackson.core.type.TypeReference
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.isNullOrEmptyString
 import org.assertj.core.api.Assertions.assertThat
-import org.http4k.core.ContentType
+import org.http4k.core.*
 import org.http4k.core.ContentType.Companion.APPLICATION_JSON
-import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
-import org.http4k.core.Request
-import org.http4k.core.Response
-import org.http4k.core.Status
-import org.http4k.core.then
 import org.http4k.filter.ResilienceFilters
 import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
@@ -27,13 +21,15 @@ import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.circuitbreakers.ResolutionResponse
 import uk.nhs.nhsx.circuitbreakers.TokenResponse
-import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.core.SystemObjectMapper.MAPPER
+import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.headers.MobileOS.Android
 import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
+import uk.nhs.nhsx.domain.*
+import uk.nhs.nhsx.domain.Country.Companion.England
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.Disabled
@@ -42,21 +38,10 @@ import uk.nhs.nhsx.isolationpayment.model.TokenUpdateRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
 import uk.nhs.nhsx.testhelper.BatchExport
 import uk.nhs.nhsx.testhelper.data.TestData.EXPOSURE_NOTIFICATION_CIRCUIT_BREAKER_PAYLOAD
-import uk.nhs.nhsx.virology.Country
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.virology.IpcTokenId
-import uk.nhs.nhsx.virology.TestResultPollingToken
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
-import java.time.Clock
-import java.time.Duration
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
+import java.time.*
 import java.time.format.DateTimeFormatter
 
 class MobileApp(
@@ -82,10 +67,10 @@ class MobileApp(
     private var orderedTest: VirologyOrderResponse? = null
 
     fun pollRiskyPostcodes(version: ApiVersion): Map<String, Any> =
-        MAPPER.readValue(when (version) {
+        readJsonOrThrow(when (version) {
             V1 -> getStaticContent(envConfig.post_districts_distribution_endpoint)
             V2 -> getStaticContent(envConfig.post_districts_distribution_endpoint + "-v2")
-        }, object : TypeReference<Map<String, Any>>() {})
+        })
 
     fun pollRiskyVenues() = deserializeWithOptional(getStaticContent(envConfig.risky_venues_distribution_endpoint))!!
 
@@ -104,13 +89,13 @@ class MobileApp(
             Android -> AnalyticsMetadata("AL1", model?.value ?: "HUAWEI-smoke-test", "29", "3.0", "E07000240")
             iOS -> AnalyticsMetadata(
                 "AL1", model?.value
-                    ?: "iPhone-smoke-test", "iPhone OS 13.5.1 (17F80)", "3.0", "E07000240"
+                ?: "iPhone-smoke-test", "iPhone OS 13.5.1 (17F80)", "3.0", "E07000240"
             )
         }
         return authedClient(
             Request(POST, envConfig.analytics_submission_endpoint)
                 .header("Content-Type", ContentType("text/json").value)
-                .body(Jackson.toJson(ClientAnalyticsSubmissionPayload(window, metadata, metrics, false)))
+                .body(Json.toJson(ClientAnalyticsSubmissionPayload(window, metadata, metrics, false)))
         ).status
     }
 
@@ -118,7 +103,7 @@ class MobileApp(
         orderedTest = authedClient(Request(POST, "${envConfig.virology_kit_endpoint}/home-kit/order"))
             .requireStatusCode(Status.OK)
             .requireSignatureHeaders()
-            .deserializeOrThrow<VirologyOrderResponse>()
+            .deserializeOrThrow()
         return orderedTest!!
     }
 
@@ -126,7 +111,7 @@ class MobileApp(
         orderedTest = authedClient(Request(POST, "${envConfig.virology_kit_endpoint}/home-kit/register"))
             .requireStatusCode(Status.OK)
             .requireSignatureHeaders()
-            .deserializeOrThrow<VirologyOrderResponse>()
+            .deserializeOrThrow()
         return orderedTest!!
     }
 
@@ -166,7 +151,7 @@ class MobileApp(
     fun createIsolationToken(country: Country) = authedClient(
         Request(POST, envConfig.isolation_payment_create_endpoint)
             .header("Content-Type", APPLICATION_JSON.value)
-            .body(Jackson.toJson(TokenGenerationRequest(country)))
+            .body(Json.toJson(TokenGenerationRequest(country)))
     )
         .requireStatusCode(Status.CREATED)
         .requireSignatureHeaders()
@@ -175,7 +160,7 @@ class MobileApp(
     fun createNonWhiteListedIsolationToken(country: Country) = authedClient(
         Request(POST, envConfig.isolation_payment_create_endpoint)
             .header("Content-Type", APPLICATION_JSON.value)
-            .body(Jackson.toJson(TokenGenerationRequest(country)))
+            .body(Json.toJson(TokenGenerationRequest(country)))
     )
         .requireStatusCode(Status.CREATED)
         .requireSignatureHeaders()
@@ -202,14 +187,16 @@ class MobileApp(
     private fun submitIsolationTokenUpdateRequest(updateRequest: TokenUpdateRequest): Request =
         Request(POST, envConfig.isolation_payment_update_endpoint)
             .header("Content-Type", "application/json")
-            .body(Jackson.toJson(updateRequest))
+            .body(Json.toJson(updateRequest))
 
 
     private fun sendTempExposureKeys(payload: ClientTemporaryExposureKeysPayload) {
         authedClient(
             Request(POST, envConfig.diagnosis_keys_submission_endpoint)
                 .header("Content-Type", APPLICATION_JSON.value)
-                .body(Jackson.toJson(payload))
+                .body(Json.toJson(payload))
+                .header("UserAgent", "p=Android,o=29,v=4.7,b=168")
+                .header("User-Agent", "p=Android,o=29,v=4.7,b=168")
         )
             .requireStatusCode(Status.OK)
             .requireSignatureHeaders()
@@ -226,11 +213,16 @@ class MobileApp(
             V2 -> "/v2/order"
         }
 
-        return authedClient(Request(POST, "${envConfig.virology_kit_endpoint}$url"))
+        val response = authedClient(Request(POST, "${envConfig.virology_kit_endpoint}$url"))
             .requireStatusCode(Status.OK)
             .requireSignatureHeaders()
-            .deserializeOrThrow()
+
+        return when (version) {
+            V1 -> response.deserializeOrThrow<VirologyOrderResponse>()
+            V2 -> response.deserializeOrThrow<VirologyOrderResponse>()
+        }
     }
+
 
     fun pollForTestResult(
         pollingToken: TestResultPollingToken,
@@ -383,7 +375,7 @@ class CircuitBreaker(
 }
 
 private fun deserializeWithOptional(staticContentRiskyVenues: String) =
-    Jackson.readStrictOrNull<HighRiskVenues>(staticContentRiskyVenues)
+    Json.readStrictOrNull<HighRiskVenues>(staticContentRiskyVenues)
 
 class DiagnosisKeysDownload(
     private val unauthedClient: HttpHandler,

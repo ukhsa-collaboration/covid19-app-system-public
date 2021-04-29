@@ -36,7 +36,7 @@ module NHSx
     AAE_TARGET_ACCOUNTS = {
       "dev" => "test",
       "staging" => "test",
-      "prod" => "prod"
+      "prod" => "prod",
     }.freeze
 
     # All the fixed (named) target environments per account: {"account"=>[target_environments]}
@@ -47,7 +47,7 @@ module NHSx
     }.freeze
     # All the fixed (named) Analytics target environments per account: {"account"=>[target_environments]}
     ANALYTICS_TARGET_ENVIRONMENTS = {
-      "dev" => ["load-test", "ci", "fnctnl", "qa", "branch", "extdev", "test"],
+      "dev" => ["load-test", "ci", "fnctnl", "qa", "branch", "extdev", "test", "demo"],
       "staging" => ["staging"],
       "prod" => ["prod"],
       "aa-dev" => ["aa-dev"],
@@ -63,23 +63,6 @@ module NHSx
       "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
-    }.freeze
-    # Mapping for AWS_DEPLOYMENT_ROLES and AWS_READ_ROLES to Halo provided roles to switch from
-    DOMAIN_HALO_ROLES = {
-      "ApplicationDeploymentUser" => {
-        "analytics" => {
-          "aa-dev" => "WlAlyticDevApplicationDeployer",
-          "aa-staging" => "WlAlyticStgApplicationDeployer",
-          "aa-prod" => "WlAlyticProdApplicationDeployer",
-        },
-      },
-      "ReadOnlyUser" => {
-        "analytics" => {
-          "aa-dev" => "WlAlyticDevReadOnly",
-          "aa-staging" => "WlAlyticStgReadOnly",
-          "aa-prod" => "WlAlyticProdReadOnly",
-        },
-      },
     }.freeze
     # The parameter name that contains the ARN of the signing key in the SSM paramater store
     SIGNING_KEY_PARAMETER = "/app/kms/SigningKeyArn".freeze

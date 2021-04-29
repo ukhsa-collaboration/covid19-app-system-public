@@ -56,6 +56,7 @@ dependencies {
     testImplementation "software.amazon.awssdk:cloudfront"
     testImplementation "software.amazon.awssdk:kms"
     testImplementation "software.amazon.awssdk:s3"
+    testImplementation "software.amazon.awssdk:sqs"
     testImplementation "software.amazon.awssdk:waf"
 
     testImplementation platform("dev.forkhandles:forkhandles-bom:${forkhandles_version}")

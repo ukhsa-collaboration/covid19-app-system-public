@@ -8,7 +8,7 @@ import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.Companion.fromSystem
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.HttpResponses
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.ApiName
 import uk.nhs.nhsx.core.auth.Authenticator
@@ -16,13 +16,14 @@ import uk.nhs.nhsx.core.auth.StandardAuthentication
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.routing.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.readJsonOrNull
+import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
-import uk.nhs.nhsx.core.routing.RoutingHandler
-import uk.nhs.nhsx.core.routing.StandardHandlers
-import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
+import uk.nhs.nhsx.core.routing.authorisedBy
+import uk.nhs.nhsx.core.routing.withoutSignedResponses
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
@@ -49,7 +50,7 @@ class IsolationPaymentUploadHandler(
     )
 
     private fun consumeToken(request: APIGatewayProxyRequestEvent): APIGatewayProxyResponseEvent =
-        Jackson.readOrNull<IsolationRequest>(request.body) {
+        Json.readJsonOrNull<IsolationRequest>(request.body) {
             events(UnprocessableJson(it))
         }
             ?.let { service.consumeIsolationToken(it.ipcToken) }
@@ -57,7 +58,7 @@ class IsolationPaymentUploadHandler(
             ?: HttpResponses.badRequest()
 
     private fun verifyToken(request: APIGatewayProxyRequestEvent): APIGatewayProxyResponseEvent =
-        Jackson.readOrNull<IsolationRequest>(request.body) {
+        Json.readJsonOrNull<IsolationRequest>(request.body) {
             events(UnprocessableJson(it))
         }
             ?.let { service.verifyIsolationToken(it.ipcToken) }
@@ -66,9 +67,9 @@ class IsolationPaymentUploadHandler(
 
     private fun mapToResponse(tokenResponse: IsolationResponse): APIGatewayProxyResponseEvent =
         if (tokenResponse.state == TokenStateExternal.EXT_INVALID.value) {
-            HttpResponses.unprocessableEntityWithJson(Jackson.toJson(tokenResponse))
+            HttpResponses.unprocessableEntityWithJson(Json.toJson(tokenResponse))
         } else
-            HttpResponses.ok(Jackson.toJson(tokenResponse))
+            HttpResponses.ok(Json.toJson(tokenResponse))
 
     override fun handler(): ApiGatewayHandler = handler
 
@@ -88,7 +89,7 @@ class IsolationPaymentUploadHandler(
         )
     }
 
-    private val handler: ApiGatewayHandler = StandardHandlers.withoutSignedResponses(
+    private val handler: ApiGatewayHandler = withoutSignedResponses(
         events,
         environment,
         Routing.routes(

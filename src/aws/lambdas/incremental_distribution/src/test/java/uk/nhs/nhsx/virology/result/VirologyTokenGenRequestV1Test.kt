@@ -3,7 +3,9 @@ package uk.nhs.nhsx.virology.result
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson.readStrictOrNull
+import uk.nhs.nhsx.core.Json.readStrictOrNull
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult
 
 class VirologyTokenGenRequestV1Test {
 

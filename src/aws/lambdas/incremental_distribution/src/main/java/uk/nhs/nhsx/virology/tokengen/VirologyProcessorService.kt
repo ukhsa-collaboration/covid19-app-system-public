@@ -3,12 +3,12 @@ package uk.nhs.nhsx.virology.tokengen
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.ExceptionThrown
-import uk.nhs.nhsx.virology.CtaToken
+import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.virology.CtaTokensAndUrlGenerationFailed
-import uk.nhs.nhsx.virology.TestKit
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.virology.VirologyService
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import uk.nhs.nhsx.virology.tokengen.CtaProcessorResult.Error
@@ -161,5 +161,5 @@ class VirologyProcessorService(
 }
 
 data class CtaTokenZipFileEntry(val testResult: TestResult, val endDate: TestEndDate, val filename: String, val ctaTokens: List<CtaToken>)
-data class CtaTokenZipFileEntryRequest (val testResult: TestResult, val testEndDate:TestEndDate, val testKit:TestKit, val filename:String, val numberOfTokens:Int)
+data class CtaTokenZipFileEntryRequest (val testResult: TestResult, val testEndDate: TestEndDate, val testKit: TestKit, val filename:String, val numberOfTokens:Int)
 

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AnalyticsSubmission
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysSubmission
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.VirologyKit
 import uk.nhs.nhsx.sanity.lambdas.config.Resource
@@ -21,7 +22,7 @@ import uk.nhs.nhsx.sanity.lambdas.config.Submission
 class MobileSubmissionSanityChecks : LambdaSanityCheck() {
 
 //    Check diagnosis key submission - POST 200✅
-//    Check analytics submission - POST 400✅
+//    Check analytics submission - POST 200✅
 //    Check analytics events submission - POST 400✅
 //    Isolation payment create token - POST 400✅
 //    Isolation payment update token - POST 400✅
@@ -48,6 +49,13 @@ class MobileSubmissionSanityChecks : LambdaSanityCheck() {
     @Test
     fun `diagnosis key submission gets a 200`() {
         val diagnosisKey = env.configFor(DiagnosisKeysSubmission, "diagnosis_keys_submission") as Submission
+        assertThat(diagnosisKey.withSecureClient(Request(POST, diagnosisKey.endpointUri)),
+            hasStatus(OK))
+    }
+
+    @Test
+    fun `analytics submission gets a 200`() {
+        val diagnosisKey = env.configFor(AnalyticsSubmission, "analytics_submission") as Submission
         assertThat(diagnosisKey.withSecureClient(Request(POST, diagnosisKey.endpointUri)),
             hasStatus(OK))
     }

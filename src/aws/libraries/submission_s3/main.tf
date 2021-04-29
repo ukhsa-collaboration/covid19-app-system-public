@@ -3,6 +3,11 @@ locals {
   replicator        = var.replication_enabled ? [true] : []
 }
 
+resource "aws_s3_bucket_metric" "bucket_request_metrics" {
+  bucket = aws_s3_bucket.this.bucket
+  name   = aws_s3_bucket.this.bucket
+}
+
 resource "aws_s3_bucket" "this" {
   bucket = local.identifier_prefix
   acl    = "private"
@@ -72,6 +77,12 @@ resource "aws_s3_bucket_policy" "this" {
   policy     = var.policy_document.json
 }
 
+resource "aws_s3_bucket_metric" "bucket_request_metrics_destination" {
+  count  = var.replication_enabled ? 1 : 0
+  bucket = aws_s3_bucket.destination[0].bucket
+  name   = aws_s3_bucket.destination[0].bucket
+}
+
 # Replication relevant settings. These are activated via var.replication_enabled and are
 # only active on staging and prod
 
@@ -82,7 +93,6 @@ resource "aws_s3_bucket" "destination" {
   force_destroy = var.force_destroy_s3_buckets
 
   tags = var.tags
-
   logging {
     target_bucket = var.logs_bucket_id
     target_prefix = "${local.identifier_prefix}/"

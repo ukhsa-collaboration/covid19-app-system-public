@@ -19,10 +19,12 @@ Mobile clients send anonymous epidemiological data to the backend (without ```uu
 
 The backend generates a ```uuid``` field (random value) to facilitate further upsteam processing.
  
-## Mobile Payload Example (for event type ```exposureWindow``` version 1)
+## Mobile Payload Example (for event type ```exposureWindow```)
 
 - Exposure windows sent to mobile immediately after encounter detection.
 - Important (privacy): only one ```exposureWindowPositiveTest``` or ```exposureWindow``` event per export.
+
+### Version 1
 
 ### Payload Example
 
@@ -40,6 +42,43 @@ The backend generates a ```uuid``` field (random value) to facilitate further up
     "type": "exposureWindow",
     "version": 1,
     "payload": {
+      "date": "2020-08-24T21:59:00Z",
+      "infectiousness": "high|none|standard",
+      "scanInstances": [
+        {
+          "minimumAttenuation": 1,
+          "secondsSinceLastScan": 5,
+          "typicalAttenuation": 2
+        }
+      ],
+      "riskScore": 150,
+      "riskCalculationVersion": 2
+    }
+  }]
+}
+```
+
+### Version 2
+
+Includes additional isConsideredRisky field
+
+### Payload Example
+
+```json
+{
+  "uuid": "0A0F811A-DA1E-4BAE-AB56-611A5DE4BBA3",
+  "metadata" : {
+    "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
+    "latestApplicationVersion" : "3.0",
+    "deviceModel" : "iPhone11,2",
+    "postalDistrict" : "A1",
+    "localAuthority" : "E09000012"
+  },
+  "events": [{
+    "type": "exposureWindow",
+    "version": 2,
+    "payload": {
+      "isConsideredRisky": true,
       "date": "2020-08-24T21:59:00Z",
       "infectiousness": "high|none|standard",
       "scanInstances": [
@@ -116,6 +155,45 @@ Includes additional requiresConfirmatoryTest field
     "version": 2,
     "payload": {
       "testType": "unknown", 
+      "requiresConfirmatoryTest": false,
+      "date": "2020-08-24T21:59:00Z",
+      "infectiousness": "high|none|standard",
+      "scanInstances": [
+        {
+          "minimumAttenuation": 1,
+          "secondsSinceLastScan": 5,
+          "typicalAttenuation": 2
+        }
+      ],
+      "riskScore": 150,
+      "riskCalculationVersion": 2
+    }
+  }]
+}
+```
+
+### Version 3
+
+Includes additional isConsideredRisky field
+
+#### Payload Example 
+
+```json
+{
+  "uuid": "0A0F811A-DA1E-4BAE-AB56-611A5DE4BBA3",
+  "metadata" : {
+    "operatingSystemVersion" : "iPhone OS 13.5.1 (17F80)",
+    "latestApplicationVersion" : "3.0",
+    "deviceModel" : "iPhone11,2",
+    "postalDistrict" : "A1",
+    "localAuthority" : "E09000012"
+  },
+  "events": [{
+    "type": "exposureWindowPositiveTest",
+    "version": 3,
+    "payload": {
+      "testType": "unknown", 
+      "isConsideredRisky": true,
       "requiresConfirmatoryTest": false,
       "date": "2020-08-24T21:59:00Z",
       "infectiousness": "high|none|standard",

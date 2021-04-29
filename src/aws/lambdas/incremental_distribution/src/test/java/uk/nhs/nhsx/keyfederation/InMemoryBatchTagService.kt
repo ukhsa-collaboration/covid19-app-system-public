@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.keyfederation
 
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult
 import java.time.Instant
 import java.time.LocalDate

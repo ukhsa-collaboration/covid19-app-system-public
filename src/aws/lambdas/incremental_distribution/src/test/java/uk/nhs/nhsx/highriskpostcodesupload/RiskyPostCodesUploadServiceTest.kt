@@ -8,7 +8,7 @@ import io.mockk.slot
 import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.SystemObjectMapper
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.events.RecordingEvents
 
@@ -266,5 +266,5 @@ class RiskyPostCodesUploadServiceTest {
         )
     )
 
-    private fun toMap(value: String): Map<*, *> = SystemObjectMapper.MAPPER.readValue(value, Map::class.java)
+    private fun toMap(value: String): Map<Any, Any> = Json.readJsonOrThrow(value)
 }

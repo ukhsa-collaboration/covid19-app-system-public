@@ -13,9 +13,9 @@ module NHSx
       custom_oai = NHSx::AWS::Commandlines.get_lambda_custom_oai(lambda_function, system_config)
 
       headers = {
-          "Content-Type" => "text/csv",
-          "Authorization" => authentication_token,
-          "x-custom-oai" => custom_oai
+        "Content-Type" => "text/csv",
+        "Authorization" => authentication_token,
+        "x-custom-oai" => custom_oai,
       }
 
       if ["prod", "staging"].include?(target_environment)
@@ -29,6 +29,25 @@ module NHSx
         req.body = upload_data
       end
 
+      return resp.status
+    end
+
+    def upload_mobile_analytics_data(upload_data, target_environment, target_config)
+      authentication_token = target_config["auth_headers"]["mobile"]
+
+      headers = {
+        "Content-Type" => "application/json",
+        "Authorization" => authentication_token,
+      }
+
+      raise GaudiError, "We don't do this thing on prod mate" if ["prod", "staging"].include?(target_environment)
+
+      url = target_config["analytics_submission_endpoint"]
+
+      resp = Faraday.post(url) do |req|
+        req.headers = headers
+        req.body = upload_data
+      end
       return resp.status
     end
   end

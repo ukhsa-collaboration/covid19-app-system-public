@@ -77,7 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "Errors_5XX" {
   namespace           = "AWS/ApiGateway"
   period              = "120"
   statistic           = "Sum"
-  threshold           = "1"
+  threshold           = "10"
   alarm_description   = "Triggers when 5xx errors occur in ${module.upload_lambda.lambda_function_name}"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [var.alarm_topic_arn]
@@ -95,7 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "Throttles" {
   namespace           = "AWS/Lambda"
   period              = "120"
   statistic           = "Sum"
-  threshold           = "1"
+  threshold           = "10"
   alarm_description   = "Triggers when ${module.upload_lambda.lambda_function_name} is throttled (returns a 429)"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [var.alarm_topic_arn]

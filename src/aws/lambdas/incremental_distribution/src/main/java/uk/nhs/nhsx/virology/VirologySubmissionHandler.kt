@@ -7,8 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.HttpResponses
-import uk.nhs.nhsx.core.Jackson
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.auth.ApiName.Health
@@ -25,15 +24,16 @@ import uk.nhs.nhsx.core.events.VirologyCtaExchange
 import uk.nhs.nhsx.core.events.VirologyOrder
 import uk.nhs.nhsx.core.events.VirologyRegister
 import uk.nhs.nhsx.core.events.VirologyResults
-import uk.nhs.nhsx.core.routing.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.readJsonOrNull
+import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.routing.Routing.throttlingResponse
-import uk.nhs.nhsx.core.routing.RoutingHandler
-import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
-import uk.nhs.nhsx.core.routing.StandardHandlers.mobileAppVersionFrom
-import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
+import uk.nhs.nhsx.core.routing.authorisedBy
+import uk.nhs.nhsx.core.routing.mobileAppVersionFrom
+import uk.nhs.nhsx.core.routing.withSignedResponses
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequestV1
@@ -94,7 +94,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                 mobileAuthenticator,
                 path(POST, "/virology-test/results") { r: APIGatewayProxyRequestEvent, _ ->
                     events(VirologyResults())
-                    readOrNull<VirologyLookupRequestV1>(r.body) { e ->
+                    Json.readJsonOrNull<VirologyLookupRequestV1>(r.body) { e ->
                         events(
                             UnprocessableJson(e)
                         )
@@ -107,7 +107,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                 path(POST, "/virology-test/cta-exchange") { r: APIGatewayProxyRequestEvent, _ ->
                     events(VirologyCtaExchange())
                     throttlingResponse(delayDuration) {
-                        readOrNull<CtaExchangeRequestV1>(r.body) {
+                        Json.readJsonOrNull<CtaExchangeRequestV1>(r.body) {
                             events(
                                 UnprocessableVirologyCtaExchange(it)
                             )
@@ -128,7 +128,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                 mobileAuthenticator,
                 path(POST, "/virology-test/v2/results") { r: APIGatewayProxyRequestEvent, _ ->
                     events(VirologyResults())
-                    readOrNull<VirologyLookupRequestV2>(r.body) { e -> events(UnprocessableJson(e)) }
+                    Json.readJsonOrNull<VirologyLookupRequestV2>(r.body) { e -> events(UnprocessableJson(e)) }
                         ?.let { virologyLookup.lookup(it, mobileAppVersionFrom(r)).toHttpResponse() }
                         ?: HttpResponses.unprocessableEntity()
                 }
@@ -138,7 +138,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                 path(POST, "/virology-test/v2/cta-exchange") { r: APIGatewayProxyRequestEvent, _ ->
                     events(VirologyCtaExchange())
                     throttlingResponse(delayDuration) {
-                        readOrNull<CtaExchangeRequestV2>(r.body) { e: Exception ->
+                        Json.readJsonOrNull<CtaExchangeRequestV2>(r.body) { e: Exception ->
                             events(UnprocessableVirologyCtaExchange(e))
                         }
                             ?.let {
@@ -160,7 +160,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
         events(
             InfoEvent("Virology order created ctaToken: ${response.tokenParameterValue}, testResultToken: ${response.testResultPollingToken}")
         )
-        return HttpResponses.ok(Jackson.toJson(response))
+        return HttpResponses.ok(Json.toJson(response))
     }
 
     override fun handler(): ApiGatewayHandler = handler

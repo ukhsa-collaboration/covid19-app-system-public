@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.virology.order
 
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.virology.TestResultPollingToken
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.virology.persistence.TestOrder
 
 data class VirologyOrderResponse(
@@ -15,6 +15,6 @@ data class VirologyOrderResponse(
         websiteUrlWithQuery,
         testOrder.ctaToken,
         testOrder.testResultPollingToken,
-        testOrder.diagnosisKeySubmissionToken
+        testOrder.diagnosisKeySubmissionToken,
     )
 }

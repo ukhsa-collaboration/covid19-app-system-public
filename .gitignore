@@ -36,3 +36,9 @@ src/aws/lambdas/incremental_distribution/build/
 
 # Ruby
 Gemfile.lock
+analytics-smoke.rb
+sample.parquet
+analytics-smoke.rb.old
+repartition.sh
+glue-columns.rb
+glue-columns.sh

@@ -6,7 +6,7 @@ import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
@@ -66,7 +66,7 @@ class RiskyVenueHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenResponse = Jackson.readOrNull<TokenResponse>(response.body) ?: error("")
+        val tokenResponse = Json.readJsonOrNull<TokenResponse>(response.body) ?: error("")
         assertThat(tokenResponse.approval).matches("pending")
         assertThat(tokenResponse.approvalToken).matches("[a-zA-Z0-9]+")
         events.contains(CircuitBreakerVenueRequest::class)
@@ -145,7 +145,7 @@ class RiskyVenueHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val resolutionResponse = Jackson.readOrNull<ResolutionResponse>(response.body) ?: error("")
+        val resolutionResponse = Json.readJsonOrNull<ResolutionResponse>(response.body) ?: error("")
         assertThat(resolutionResponse.approval).matches(ApprovalStatus.YES.statusName)
         events.contains(CircuitBreakerVenueResolution::class)
     }

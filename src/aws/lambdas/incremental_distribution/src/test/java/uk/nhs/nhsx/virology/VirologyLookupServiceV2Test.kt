@@ -12,10 +12,13 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.EnumSource
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.domain.Country
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.data.TestData
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequestV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
@@ -110,7 +113,7 @@ class VirologyLookupServiceV2Test {
     }
 
     @ParameterizedTest
-    @CsvSource("England,true", "Wales,true", "random,false")
+    @CsvSource("England,true", "Wales,false", "random,false")
     fun `lookup requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testResult = TestData.positiveResultFor(pollingToken, RAPID_SELF_REPORTED)
 
@@ -122,6 +125,19 @@ class VirologyLookupServiceV2Test {
         val result = service.lookup(request, mobileAppVersion) as VirologyLookupResult.AvailableV2
 
         assertThat(result.response.requiresConfirmatoryTest).isEqualTo(expectedFlag)
+    }
+
+    @ParameterizedTest
+    @CsvSource("England,true", "Wales,true", "random,false")
+    fun `lookup supporting venue history submission for each country`(country: String, expectedFlag: Boolean) {
+        val testResult = TestData.positiveLabResult
+
+        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
+        every { persistence.markForDeletion(any(), any()) } just Runs
+
+        val service = virologyLookup()
+        val request = VirologyLookupRequestV2(pollingToken, Country.of(country))
+        service.lookup(request, mobileAppVersion) as VirologyLookupResult.AvailableV2
     }
 
     @Test

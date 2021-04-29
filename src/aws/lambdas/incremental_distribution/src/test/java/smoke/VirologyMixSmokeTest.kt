@@ -10,16 +10,16 @@ import smoke.actors.ApiVersion.V2
 import smoke.actors.MobileApp
 import smoke.actors.TestLab
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.virology.Country.Companion.England
-import uk.nhs.nhsx.virology.TestKit
-import uk.nhs.nhsx.virology.TestKit.RAPID_RESULT
-import uk.nhs.nhsx.virology.TestKit.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult.Positive
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult.Positive
 
 class VirologyMixSmokeTest {
 

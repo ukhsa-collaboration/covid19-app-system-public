@@ -11,26 +11,8 @@ locals {
   function_name = "${terraform.workspace}-${var.name}"
 }
 
-# This is a temporary workaround.
-# See https://github.com/chanzuckerberg/terraform-provider-snowflake/issues/255
-# When https://github.com/hashicorp/terraform-provider-aws/pull/13140 is merged this should be deleted
-terraform {
-
-  required_providers {
-    synthetics = {
-      source  = "MaksymBilenko/synthetics"
-      version = ">= 0.1"
-    }
-  }
-}
-
-provider "synthetics" {
-  region = var.region
-}
-
-// There appears to be no way to make the archive_file resource realise that
+// There appears to be no other way to make the archive_file resource realise that
 // the templated source code has changed.
-// So we just delete the zip file to force archive_file to re-create it.
 resource "null_resource" "canary_changed" {
   triggers = {
     // The first two triggers don't actually change, they are merely here to let
@@ -39,13 +21,10 @@ resource "null_resource" "canary_changed" {
     lambda_path      = "${path.root}/../../../../out/gen/synthetics/${local.function_name}/canary.zip"
     source_code_hash = base64sha256(local.lambda_source)
   }
-
-  provisioner "local-exec" {
-    command = "rm -f ${null_resource.canary_changed.triggers.lambda_path}"
-  }
 }
 
 data "archive_file" "lambda_exporter" {
+  depends_on  = [null_resource.canary_changed]
   type        = "zip"
   output_path = null_resource.canary_changed.triggers.lambda_path
   source {
@@ -67,14 +46,16 @@ resource "null_resource" "zip_file_changed" {
   }
 }
 
-resource "synthetics_canary" "watchdog" {
+resource "aws_synthetics_canary" "watchdog" {
   count                = var.enabled ? 1 : 0
-  runtime_version      = "syn-nodejs-2.2"
+  provider             = aws.synth
+  runtime_version      = "syn-nodejs-puppeteer-3.1"
   name                 = null_resource.zip_file_changed.triggers.function_name
   execution_role_arn   = var.lambda_exec_role_arn
   artifact_s3_location = "s3://${var.artifact_s3_bucket}/${null_resource.zip_file_changed.triggers.function_name}"
   zip_file             = null_resource.zip_file_changed.triggers.zip_file
   handler              = "canary.handler"
+  start_canary         = true // new "optional" argument added just before aws_synthetics_canary was merged into aws
   vpc_config {
     security_group_ids = var.synthetic_vpc_config.security_group_ids
     subnet_ids         = var.synthetic_vpc_config.subnet_ids
@@ -83,4 +64,5 @@ resource "synthetics_canary" "watchdog" {
     duration_in_seconds = var.synthetic_schedule.duration_in_seconds
     expression          = var.synthetic_schedule.expression
   }
+  tags = var.tags
 }

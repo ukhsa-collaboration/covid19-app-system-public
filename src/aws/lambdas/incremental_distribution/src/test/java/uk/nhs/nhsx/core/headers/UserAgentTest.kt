@@ -4,7 +4,7 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.headers.MobileAppVersion.Unknown
 import uk.nhs.nhsx.core.headers.MobileAppVersion.Version
 import uk.nhs.nhsx.core.headers.MobileOS.Android
@@ -15,7 +15,7 @@ class UserAgentTest {
     @Test
     fun `serializes to JSON correctly`() {
         assertThat(
-            Jackson.toJson(UserAgent(Version(4, 3), Android, MobileOSVersion.of("29"))),
+            Json.toJson(UserAgent(Version(4, 3), Android, MobileOSVersion.of("29"))),
             equalTo("""{"appVersion":{"major":4,"minor":3,"patch":0,"semVer":"4.3.0"},"os":"Android","osVersion":"29"}""")
         )
     }

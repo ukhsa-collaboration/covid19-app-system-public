@@ -14,13 +14,14 @@ import org.assertj.core.api.AbstractAssert
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.ObjectKeyFilters
 import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.UniqueObjectKeyNameProvider
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
 import uk.nhs.nhsx.core.aws.xray.Tracing
@@ -42,7 +43,8 @@ import uk.nhs.nhsx.isolationpayment.IpcTokenIdGenerator
 import uk.nhs.nhsx.testhelper.BatchExport
 import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.testhelper.s3.TinyS3
-import uk.nhs.nhsx.virology.TestKit
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestType
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.security.KeyPair
@@ -667,7 +669,7 @@ class SubmissionBucket(
             val objectKey = namingFn.invoke()
 
             val source = ByteArraySource
-                .fromUtf8String(Jackson.toJson(it.payload))
+                .fromUtf8String(Json.toJson(it.payload))
 
             source.openStream().use { bout ->
                 amazonS3.putObject(
@@ -711,7 +713,7 @@ object Submissions {
                     7
                 )
             }.toList()
-        return Submission(submissionTimestamp, StoredTemporaryExposureKeyPayload(keys))
+        return Submission(submissionTimestamp, ObjectKey.of("mobile/LAB_RESULT/abc"), StoredTemporaryExposureKeyPayload(keys))
     }
 }
 

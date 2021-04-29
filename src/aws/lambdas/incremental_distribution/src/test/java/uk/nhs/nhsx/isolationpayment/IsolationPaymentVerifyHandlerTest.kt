@@ -9,7 +9,7 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 
 internal class IsolationPaymentVerifyHandlerTest {
 

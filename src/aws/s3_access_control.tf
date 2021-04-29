@@ -106,6 +106,14 @@ module "analytics_submission_store_parquet_access" {
   s3_bucket_arn          = module.analytics_submission_store_parquet.bucket_arn
 }
 
+module "analytics_submission_store_parquet_access_consolidated" {
+  source                 = "./modules/s3_access_policies"
+  policy_type            = "cross_account_readonly"
+  prefix                 = "analytics-consolidated"
+  principal_aws_accounts = var.analytics_aws_accounts
+  s3_bucket_arn          = module.analytics_submission_store_parquet_consolidated.bucket_arn
+}
+
 module "virology_tokens_bucket_access" {
   source        = "./modules/s3_access_policies"
   policy_type   = "default"
@@ -117,6 +125,7 @@ module "artifact_repository_access" {
   policy_type   = "default"
   s3_bucket_arn = module.artifact_repository.bucket_arn
 }
+
 module "exposure_notification_circuit_breaker_analytics_store_access" {
   source                 = "./modules/s3_access_policies"
   policy_type            = "cross_account_readonly"
@@ -124,6 +133,7 @@ module "exposure_notification_circuit_breaker_analytics_store_access" {
   principal_aws_accounts = var.analytics_aws_accounts
   s3_bucket_arn          = module.exposure_notification_circuit_breaker_analytics.analytics_bucket_arn
 }
+
 module "federation_keys_download_analytics_store_access" {
   source                 = "./modules/s3_access_policies"
   policy_type            = "cross_account_readonly"
@@ -131,10 +141,19 @@ module "federation_keys_download_analytics_store_access" {
   principal_aws_accounts = var.analytics_aws_accounts
   s3_bucket_arn          = module.federation_keys_download_analytics.analytics_bucket_arn
 }
+
 module "federation_keys_upload_analytics_store_access" {
   source                 = "./modules/s3_access_policies"
   policy_type            = "cross_account_readonly"
   prefix                 = "analytics"
   principal_aws_accounts = var.analytics_aws_accounts
   s3_bucket_arn          = module.federation_keys_upload_analytics.analytics_bucket_arn
+}
+
+module "diagnosis_keys_analytics_store_access" {
+  source                 = "./modules/s3_access_policies"
+  policy_type            = "cross_account_readonly"
+  prefix                 = "analytics"
+  principal_aws_accounts = var.analytics_aws_accounts
+  s3_bucket_arn          = module.diagnosis_keys_submission_analytics.analytics_bucket_arn
 }

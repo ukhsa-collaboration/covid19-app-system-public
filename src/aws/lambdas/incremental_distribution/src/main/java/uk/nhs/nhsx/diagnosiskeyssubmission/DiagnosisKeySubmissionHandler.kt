@@ -6,7 +6,8 @@ import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.EnvironmentKeys
 import uk.nhs.nhsx.core.HttpResponses.ok
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.readJsonOrNull
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.UniqueId.Companion.ID
@@ -26,13 +27,13 @@ import uk.nhs.nhsx.core.events.DiagnosisKeySubmission
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.routing.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
-import uk.nhs.nhsx.core.routing.RoutingHandler
-import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
-import uk.nhs.nhsx.core.routing.StandardHandlers.withSignedResponses
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.routing.authorisedBy
+import uk.nhs.nhsx.core.routing.withSignedResponses
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
 
 class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
@@ -101,7 +102,7 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
                 mobileAuthenticator,
                 path(POST, "/submission/diagnosis-keys", ApiGatewayHandler { r, _ ->
                     events(DiagnosisKeySubmission())
-                    readOrNull<ClientTemporaryExposureKeysPayload>(r.body) {
+                    Json.readJsonOrNull<ClientTemporaryExposureKeysPayload>(r.body) {
                         events(UnprocessableJson(it))
                     }?.also(diagnosisKeysSubmissionService::acceptTemporaryExposureKeys)
                     ok()

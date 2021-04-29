@@ -9,7 +9,7 @@ import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.EnvironmentKeys
 import uk.nhs.nhsx.core.HttpResponses.badRequest
 import uk.nhs.nhsx.core.HttpResponses.ok
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.auth.ApiName.Health
@@ -24,13 +24,14 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.MobileAnalyticsSubmission
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.routing.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.readJsonOrNull
+import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
-import uk.nhs.nhsx.core.routing.RoutingHandler
-import uk.nhs.nhsx.core.routing.StandardHandlers.authorisedBy
-import uk.nhs.nhsx.core.routing.StandardHandlers.withoutSignedResponses
+import uk.nhs.nhsx.core.routing.authorisedBy
+import uk.nhs.nhsx.core.routing.withoutSignedResponses
 
 class AnalyticsSubmissionHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
@@ -61,7 +62,7 @@ class AnalyticsSubmissionHandler @JvmOverloads constructor(
                 mobileAuthenticator,
                 path(POST, "/submission/mobile-analytics", ApiGatewayHandler { r, _ ->
                     events(MobileAnalyticsSubmission())
-                    readOrNull<ClientAnalyticsSubmissionPayload>(r.body) { events(UnprocessableJson(it)) }
+                    Json.readJsonOrNull<ClientAnalyticsSubmissionPayload>(r.body) { events(UnprocessableJson(it)) }
                         ?.let {
                             service.accept(it)
                             ok()

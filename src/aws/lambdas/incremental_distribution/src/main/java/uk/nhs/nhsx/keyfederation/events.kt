@@ -3,7 +3,8 @@ package uk.nhs.nhsx.keyfederation
 import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory.Info
 import uk.nhs.nhsx.core.events.EventCategory.Warning
-import uk.nhs.nhsx.keyfederation.download.TestType
+import uk.nhs.nhsx.domain.BatchTag
+import uk.nhs.nhsx.domain.TestType
 import java.time.Instant
 
 data class UploadedDiagnosisKeys(

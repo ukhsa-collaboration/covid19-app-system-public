@@ -9,7 +9,7 @@ import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
-import uk.nhs.nhsx.core.scheduled.SchedulingHandler
+import uk.nhs.nhsx.core.handler.SchedulingHandler
 import uk.nhs.nhsx.pubdash.DataExportService
 import uk.nhs.nhsx.pubdash.dataExportService
 

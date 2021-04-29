@@ -13,12 +13,11 @@ import uk.nhs.nhsx.core.aws.sns.AwsSns
 import uk.nhs.nhsx.core.aws.sns.NumericAttribute
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
-import uk.nhs.nhsx.testhelper.proxy
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestResult
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 import uk.nhs.nhsx.virology.ScheduledCtaTokenGenerationHandler
-import uk.nhs.nhsx.virology.TestKit
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
-import java.lang.NumberFormatException
 import java.net.URL
 import java.time.LocalDate
 import java.time.ZoneId
@@ -45,50 +44,56 @@ class ScheduledCtaTokenGenerationHandlerTest {
                 "password_notification_sns_topic_arn" to "PASSWORD_TOPIC"
             )
         )
-        val handler = ScheduledCtaTokenGenerationHandler(events,environment,snsClient,passwordGenerator,service)
+        val handler = ScheduledCtaTokenGenerationHandler(events, environment, snsClient, passwordGenerator, service)
 
-        every { service.generateStoreTokensAndReturnSignedUrl(any(),any(),any()) } returns  CtaTokenZipFile(URL("https://example.com"),"file-name","password")
-        every { snsClient.publishMessage("URL_TOPIC", any(),any(),any()) } returns PublishResult()
-        every { snsClient.publishMessage("PASSWORD_TOPIC", any(),any()) } returns PublishResult()
+        every {
+            service.generateStoreTokensAndReturnSignedUrl(
+                any(),
+                any(),
+                any()
+            )
+        } returns CtaTokenZipFile(URL("https://example.com"), "file-name", "password")
+        every { snsClient.publishMessage("URL_TOPIC", any(), any(), any()) } returns PublishResult()
+        every { snsClient.publishMessage("PASSWORD_TOPIC", any(), any()) } returns PublishResult()
         every { passwordGenerator.generate() } returns "password"
 
-        handler.handleRequest(ScheduledEvent(), proxy())
+        handler.handleRequest(ScheduledEvent(), TestContext())
 
         verifySequence {
             // Batch #1
-            service.generateStoreTokensAndReturnSignedUrl(createListOfCtaZipFileRequests(7),any(),any())
+            service.generateStoreTokensAndReturnSignedUrl(createListOfCtaZipFileRequests(7), any(), any())
             // Batch #2
-            service.generateStoreTokensAndReturnSignedUrl(createListOfCtaZipFileRequests(7),any(),any())
+            service.generateStoreTokensAndReturnSignedUrl(createListOfCtaZipFileRequests(7), any(), any())
         }
-        verify (exactly = 1) {
+        verify(exactly = 1) {
             snsClient.publishMessage(
                 "URL_TOPIC",
                 match { it.contains("Please download the ZIP") && it.contains("https://example.com") },
-                match { it.containsKey("batchNumber") && it["batchNumber"]?.value == "1" && it["batchNumber"] is NumericAttribute},
-            "CTA Tokens"
-            )
-        }
-        verify (exactly = 1){
-            snsClient.publishMessage(
-                "PASSWORD_TOPIC",
-                match {it .contains("The password of")  && it.contains("password") && it.contains("file-name")},
-                match {it.containsKey("batchNumber") && it["batchNumber"]?.value == "1" && it["batchNumber"] is NumericAttribute}
-            )
-        }
-
-        verify (exactly = 1) {
-            snsClient.publishMessage(
-                "URL_TOPIC",
-                match { it.contains("Please download the ZIP") && it.contains("https://example.com") },
-                match { it.containsKey("batchNumber") && it["batchNumber"]?.value == "2" && it["batchNumber"] is NumericAttribute},
+                match { it.containsKey("batchNumber") && it["batchNumber"]?.value == "1" && it["batchNumber"] is NumericAttribute },
                 "CTA Tokens"
             )
         }
-        verify (exactly = 1){
+        verify(exactly = 1) {
             snsClient.publishMessage(
                 "PASSWORD_TOPIC",
-                match {it .contains("The password of")  && it.contains("password") && it.contains("file-name")},
-                match {it.containsKey("batchNumber") && it["batchNumber"]?.value == "2" && it["batchNumber"] is NumericAttribute}
+                match { it.contains("The password of") && it.contains("password") && it.contains("file-name") },
+                match { it.containsKey("batchNumber") && it["batchNumber"]?.value == "1" && it["batchNumber"] is NumericAttribute }
+            )
+        }
+
+        verify(exactly = 1) {
+            snsClient.publishMessage(
+                "URL_TOPIC",
+                match { it.contains("Please download the ZIP") && it.contains("https://example.com") },
+                match { it.containsKey("batchNumber") && it["batchNumber"]?.value == "2" && it["batchNumber"] is NumericAttribute },
+                "CTA Tokens"
+            )
+        }
+        verify(exactly = 1) {
+            snsClient.publishMessage(
+                "PASSWORD_TOPIC",
+                match { it.contains("The password of") && it.contains("password") && it.contains("file-name") },
+                match { it.containsKey("batchNumber") && it["batchNumber"]?.value == "2" && it["batchNumber"] is NumericAttribute }
             )
         }
     }
@@ -101,13 +106,19 @@ class ScheduledCtaTokenGenerationHandlerTest {
                 "number_of_days" to "asd",
                 "number_of_tokens" to "20",
                 "number_of_batches" to "2",
-                )
+            )
         )
-        val handler = ScheduledCtaTokenGenerationHandler(events,environment,snsClient,passwordGenerator,service)
+        val handler = ScheduledCtaTokenGenerationHandler(events, environment, snsClient, passwordGenerator, service)
 
-        every { service.generateStoreTokensAndReturnSignedUrl(any(),any(),any()) } returns  CtaTokenZipFile(URL("https://example.com"),"file-name","password")
+        every {
+            service.generateStoreTokensAndReturnSignedUrl(
+                any(),
+                any(),
+                any()
+            )
+        } returns CtaTokenZipFile(URL("https://example.com"), "file-name", "password")
 
-        assertThrows<NumberFormatException> {         handler.handleRequest(ScheduledEvent(), proxy()) }
+        assertThrows<NumberFormatException> { handler.handleRequest(ScheduledEvent(), TestContext()) }
 
     }
 
@@ -118,12 +129,18 @@ class ScheduledCtaTokenGenerationHandlerTest {
                 "number_of_days" to "3",
                 "number_of_tokens" to "asd",
                 "number_of_batches" to "2",
-                )
+            )
         )
-        val handler = ScheduledCtaTokenGenerationHandler(events,environment,snsClient,passwordGenerator,service)
+        val handler = ScheduledCtaTokenGenerationHandler(events, environment, snsClient, passwordGenerator, service)
 
-        every { service.generateStoreTokensAndReturnSignedUrl(any(),any(),any()) } returns  CtaTokenZipFile(URL("https://example.com"),"file-name","password")
-        assertThrows<NumberFormatException> {         handler.handleRequest(ScheduledEvent(), proxy()) }
+        every {
+            service.generateStoreTokensAndReturnSignedUrl(
+                any(),
+                any(),
+                any()
+            )
+        } returns CtaTokenZipFile(URL("https://example.com"), "file-name", "password")
+        assertThrows<NumberFormatException> { handler.handleRequest(ScheduledEvent(), TestContext()) }
 
     }
 
@@ -136,21 +153,33 @@ class ScheduledCtaTokenGenerationHandlerTest {
                 "number_of_batches" to "asd",
             )
         )
-        val handler = ScheduledCtaTokenGenerationHandler(events,environment,snsClient,passwordGenerator,service)
+        val handler = ScheduledCtaTokenGenerationHandler(events, environment, snsClient, passwordGenerator, service)
 
-        every { service.generateStoreTokensAndReturnSignedUrl(any(),any(),any()) } returns  CtaTokenZipFile(URL("https://example.com"),"file-name","password")
-        assertThrows<NumberFormatException> {         handler.handleRequest(ScheduledEvent(), proxy()) }
+        every {
+            service.generateStoreTokensAndReturnSignedUrl(
+                any(),
+                any(),
+                any()
+            )
+        } returns CtaTokenZipFile(URL("https://example.com"), "file-name", "password")
+        assertThrows<NumberFormatException> { handler.handleRequest(ScheduledEvent(), TestContext()) }
 
     }
 
     private fun createListOfCtaZipFileRequests(days: Long): List<CtaTokenZipFileEntryRequest> {
-        return (1 until days+1).map { createListOfCtaZipFileRequest(it) }
+        return (1 until days + 1).map { createListOfCtaZipFileRequest(it) }
     }
 
     private fun createListOfCtaZipFileRequest(daysOffset: Long): CtaTokenZipFileEntryRequest {
         val today = LocalDate.now()
         val endDate = today.plus(daysOffset, ChronoUnit.DAYS)
-        return CtaTokenZipFileEntryRequest(TestResult.Positive, TestEndDate.of(endDate), TestKit.LAB_RESULT,  csvFilenameFormatter.format(endDate),20)
+        return CtaTokenZipFileEntryRequest(
+            TestResult.Positive,
+            TestEndDate.of(endDate),
+            TestKit.LAB_RESULT,
+            csvFilenameFormatter.format(endDate),
+            20
+        )
 
     }
 }

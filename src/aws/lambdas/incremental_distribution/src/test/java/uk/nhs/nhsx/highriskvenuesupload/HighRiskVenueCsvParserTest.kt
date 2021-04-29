@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import org.skyscreamer.jsonassert.JSONAssert.assertEquals
 import org.skyscreamer.jsonassert.JSONCompareMode.STRICT
-import uk.nhs.nhsx.core.SystemObjectMapper
+import uk.nhs.nhsx.core.AppServicesJson
+import uk.nhs.nhsx.domain.MessageType
+import uk.nhs.nhsx.domain.VenueId
 import uk.nhs.nhsx.highriskvenuesupload.VenuesParsingResult.Failure
 import uk.nhs.nhsx.highriskvenuesupload.VenuesParsingResult.Success
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenue
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
-import uk.nhs.nhsx.highriskvenuesupload.model.MessageType
 import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow
-import uk.nhs.nhsx.highriskvenuesupload.model.VenueId
 
 class HighRiskVenueCsvParserTest {
 
@@ -356,7 +356,7 @@ class HighRiskVenueCsvParserTest {
 
     private fun venuesFrom(result: VenuesParsingResult): List<HighRiskVenue> = when (result) {
         is Failure -> fail("Result is a failure")
-        is Success -> SystemObjectMapper.MAPPER.copy()
+        is Success -> AppServicesJson.mapper.copy()
             .configure(FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
             .configure(FAIL_ON_NULL_CREATOR_PROPERTIES, false)
             .readValue(result.json, HighRiskVenues::class.java).venues

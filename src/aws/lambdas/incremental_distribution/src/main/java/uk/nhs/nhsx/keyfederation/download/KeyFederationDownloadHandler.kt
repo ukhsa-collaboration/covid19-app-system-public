@@ -19,8 +19,8 @@ import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
+import uk.nhs.nhsx.core.handler.SchedulingHandler
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
-import uk.nhs.nhsx.core.scheduled.SchedulingHandler
 import uk.nhs.nhsx.keyfederation.BatchTagDynamoDBService
 import uk.nhs.nhsx.keyfederation.BatchTagService
 import uk.nhs.nhsx.keyfederation.FederatedKeyUploader

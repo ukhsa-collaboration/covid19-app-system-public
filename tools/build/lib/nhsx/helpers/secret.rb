@@ -71,6 +71,13 @@ module NHSx
       return authorization_header
     end
 
+    # Simultaneously set up the bearer token used by canaries and the secret the health-check endpoints use to verify it
+    def create_linked_secrets(api_name, auth_key_name, hash_key_name, description)
+      authorization_header = create_and_store_api_key(api_name, hash_key_name, description, $configuration)
+      name = "/#{api_name}/#{auth_key_name}"
+      store_secret_string(name, authorization_header, description, $configuration, "eu-west-1") # cf. src/synthetics/accounts/staging/terraform.tf
+    end
+
     def aae_configuration(system_config)
       certificate_dir = File.join(system_config.out, "/certificates")
 
@@ -91,11 +98,10 @@ module NHSx
       certificate_pkcs12_name = "private-certificate-pkcs12-#{suffix}"
       certificate_pkcs12_path = File.join(certificate_dir, certificate_pkcs12_name + ".p12")
 
-      apim_subscription_name = "apim-subscription-key-#{suffix}"
+      apim_subscription_name = "subscription-key-#{suffix}"
       apim_subscription_path = File.join(certificate_dir, apim_subscription_name + ".txt")
 
-      pass = BCrypt::Password.create(SecureRandom.uuid)
-      escaped_pass = Shellwords.escape(pass)
+      password = BCrypt::Password.create(SecureRandom.uuid)
 
       aae_config = {
         "apim_subscription_name" => apim_subscription_name,
@@ -109,7 +115,7 @@ module NHSx
         "certificate_pkcs12_path" => certificate_pkcs12_path,
         "public_key_name" => public_key_name,
         "public_key_path" => public_key_path,
-        "password" => escaped_pass,
+        "password" => password,
         "password_name" => password_name,
         "password_path" => password_path,
         "suffix" => suffix
@@ -118,18 +124,34 @@ module NHSx
       return aae_config
     end
 
+    def edge_configuration(system_config)
+      sas_token_name = "sas-token"
+
+      edge_config = {
+        "sas_token_name" => sas_token_name,
+      }
+
+      return edge_config
+    end
+
     def create_aae_x509_certificate(aae_config, system_config)
       certificate_dir = aae_config["certificate_dir"]
       certificate_key_path = aae_config["certificate_key_path"]
       certificate_path = aae_config["certificate_path"]
       public_key_path = aae_config["public_key_path"]
       password = aae_config["password"]
+      escaped_password = Shellwords.escape(password)
 
       rm_rf(certificate_dir, :verbose => false)
       mkdir_p(certificate_dir, :verbose => false)
 
       subject = "'/C=GB/ST=London/L=London/O=NHS/OU=Test and Trace/CN=svc-test-trace.nhs.uk/emailAddress=one.email@nhsx.nhs.uk'"
-      cmdline = "openssl req -x509 -newkey rsa:4096 -days 365 -outform PEM -keyout #{certificate_key_path} -out #{certificate_path} -passin pass:#{password} -passout pass:#{password} -subj #{subject}"
+      cmdline = "openssl req -x509 -newkey rsa:4096 -days 365 -outform PEM \
+      -keyout #{certificate_key_path} \
+      -out #{certificate_path} \
+      -passin pass:#{escaped_password} \
+      -passout pass:#{escaped_password} \
+      -subj #{subject}"
       run_quiet("Create the AAE Private certificate (x509)", cmdline, system_config)
 
       cmdline = "openssl x509 -outform der -in #{certificate_path} -out #{public_key_path}"
@@ -192,7 +214,7 @@ module NHSx
       certificate_dir = aae_config["certificate_dir"]
       mkdir_p(certificate_dir, :verbose => false)
 
-      cmdline = "#{secret_value} #{secret_path}/#{certificate_pkcs12_name} --query 'SecretString' --output text > #{certificate_pkcs12_path}"
+      cmdline = "#{secret_value} #{secret_path}/#{certificate_pkcs12_name} --query 'SecretBinary' --output text | base64 -d > #{certificate_pkcs12_path}"
       run_command("Download #{secret_path}/#{certificate_pkcs12_name}", cmdline, system_config)
     end
 
@@ -203,7 +225,7 @@ module NHSx
       certificate_dir = aae_config["certificate_dir"]
       mkdir_p(certificate_dir, :verbose => false)
 
-      cmdline = "#{secret_value} #{secret_path}/#{public_key_name} --query 'SecretString' --output text > #{public_key_path}"
+      cmdline = "#{secret_value} #{secret_path}/#{public_key_name} --query 'SecretBinary' --output text > #{public_key_path}"
       run_command("Download #{secret_path}/#{public_key_name}", cmdline, system_config)
     end
 
@@ -213,7 +235,7 @@ module NHSx
       password_path = aae_config["password_path"]
 
       cmdline = "#{secret_value} #{secret_path}/#{password_name} --query 'SecretString' --output text > #{password_path}"
-      run_command("Download to File #{secret_path}/#{password_name}", cmdline, system_config)
+      run_command("Download #{secret_path}/#{password_name}", cmdline, system_config)
     end
 
     def download_aae_apim_subscription_key(service_name, consumer_name, aae_config, system_config)
@@ -237,6 +259,8 @@ module NHSx
       password = aae_config["password"]
       password_name = aae_config["password_name"]
 
+      puts "Password Value: #{password}"
+
       store_secret_string("#{secret_path}/#{certificate_name}", "file://#{certificate_path}", "AAE Mutual TLS Private Certificate (x509)", system_config)
       store_secret_string("#{secret_path}/#{certificate_key_name}", "file://#{certificate_key_path}", "AAE Mutual TLS Private Encrypted Key", system_config)
       store_secret_string("#{secret_path}/#{password_name}", password, "AAE Private Key encryption password", system_config)
@@ -257,6 +281,14 @@ module NHSx
       apim_subscription_name = aae_config["apim_subscription_name"]
 
       store_secret_string("#{secret_path}/#{apim_subscription_name}", apim_subscription_key, "AAE APIM Subscription Key", system_config)
+    end
+
+    def store_sas_token(service_name, consumer_name, edge_config, system_config)
+      secret_path = "/#{service_name}/#{consumer_name}"
+      sas_token_name = edge_config["sas_token_name"]
+      sas_token = edge_config["sas_token"]
+      
+      store_secret_string("#{secret_path}/#{sas_token_name}", sas_token, "The EDGEs SAS Token", system_config)
     end
 
     def list_aae_advanced_analytics_secrets(service_name, consumer_name, system_config)

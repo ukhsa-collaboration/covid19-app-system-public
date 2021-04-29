@@ -8,7 +8,7 @@ import uk.nhs.nhsx.analyticssubmission.UploadType.S3
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.analyticssubmission.model.StoredAnalyticsSubmissionPayload
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey

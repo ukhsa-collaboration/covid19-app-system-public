@@ -7,7 +7,6 @@ variable "enabled" {
 variable "region" {
   description = "Region in which the canary will be deployed - ideally not the same as the service being monitored"
   type        = string
-  default     = "eu-west-1"
 }
 
 variable "service" {
@@ -110,4 +109,9 @@ variable "dependency_ref" {
   description = "Supply reference from another resource/module if there's a need to build dependency. Replace with depends_on once migrate to Terraform v0.13 or later"
   type        = string
   default     = "_"
+}
+
+variable "tags" {
+  description = "A map of key-value labels used to tag AWS resources"
+  type        = map(string)
 }

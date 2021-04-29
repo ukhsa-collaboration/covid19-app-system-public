@@ -8,7 +8,7 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
-import uk.nhs.nhsx.core.Jackson.readOrNull
+import uk.nhs.nhsx.core.Json.readJsonOrNull
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
@@ -18,13 +18,11 @@ import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
-import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse
-import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.Disabled
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.OK
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.util.Optional
 
 class IsolationPaymentOrderHandlerTest {
@@ -92,7 +90,7 @@ class IsolationPaymentOrderHandlerTest {
         assertThat(response.statusCode).isEqualTo(201)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        when (val tokenGenerationResponse = readOrNull<OK>(response.body)) {
+        when (val tokenGenerationResponse = readJsonOrNull<OK>(response.body)) {
             is OK -> {
                 assertThat(tokenGenerationResponse.ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
                 assertThat(tokenGenerationResponse.isEnabled).isEqualTo(true)
@@ -174,7 +172,7 @@ class IsolationPaymentOrderHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
-        val tokenUpdateResponse = readOrNull<TokenUpdateResponse>(response.body) ?: error("")
+        val tokenUpdateResponse = readJsonOrNull<TokenUpdateResponse>(response.body) ?: error("")
         assertThat(tokenUpdateResponse.websiteUrlWithQuery).isEqualTo("https://test?ipcToken=some-id")
     }
 

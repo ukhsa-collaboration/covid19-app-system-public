@@ -4,9 +4,9 @@ import net.lingala.zip4j.ZipFile
 import net.lingala.zip4j.model.ZipParameters
 import net.lingala.zip4j.model.enums.EncryptionMethod
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.KeyFileUtility
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult
 import java.io.File
 
 class VirologyProcessorExports(private var tempDirPath: String = System.getProperty("java.io.tmpdir") + File.separator) {

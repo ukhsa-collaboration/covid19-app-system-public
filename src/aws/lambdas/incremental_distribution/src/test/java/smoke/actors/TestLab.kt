@@ -10,16 +10,16 @@ import org.http4k.core.then
 import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
 import smoke.env.EnvConfig
-import uk.nhs.nhsx.virology.CtaToken
-import uk.nhs.nhsx.virology.TestKit
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Fiorano
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Wls
-import uk.nhs.nhsx.virology.result.TestEndDate
-import uk.nhs.nhsx.virology.result.TestResult
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 
 class TestLab(unauthedHttp: HttpHandler,
@@ -31,7 +31,8 @@ class TestLab(unauthedHttp: HttpHandler,
                             testEndDate: TestEndDate,
                             source: VirologyTokenExchangeSource,
                             apiVersion: ApiVersion,
-                            testKit: TestKit): CtaToken {
+                            testKit: TestKit
+    ): CtaToken {
         val payload = when (apiVersion) {
             V1 -> """
                     {
@@ -72,7 +73,8 @@ class TestLab(unauthedHttp: HttpHandler,
                          result: TestResult,
                          source: VirologyResultSource,
                          apiVersion: ApiVersion,
-                         testKit: TestKit) {
+                         testKit: TestKit
+    ) {
 
         val payload = virologyUploadPayloadFrom(token, result, apiVersion, testKit)
 
@@ -84,7 +86,8 @@ class TestLab(unauthedHttp: HttpHandler,
     private fun virologyUploadPayloadFrom(token: CtaToken,
                                           result: TestResult,
                                           apiVersion: ApiVersion,
-                                          testKit: TestKit) = when (apiVersion) {
+                                          testKit: TestKit
+    ) = when (apiVersion) {
         V1 -> """
             {
               "ctaToken": "${token.value}",
@@ -106,7 +109,8 @@ class TestLab(unauthedHttp: HttpHandler,
                                           result: TestResult,
                                           source: VirologyResultSource,
                                           apiVersion: ApiVersion,
-                                          testKit: TestKit) {
+                                          testKit: TestKit
+    ) {
         val payload = virologyUploadPayloadFrom(token, result, apiVersion, testKit)
 
         sendVirologyResults(payload, source, apiVersion)

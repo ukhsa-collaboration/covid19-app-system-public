@@ -2,7 +2,7 @@ package uk.nhs.nhsx.pubdash
 
 import com.amazonaws.services.sqs.AmazonSQS
 import com.amazonaws.services.sqs.model.SendMessageRequest
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.events.Events
 
 class QueueClient(
@@ -15,7 +15,7 @@ class QueueClient(
         events(SendSqsMessageEvent(queueMessage.queryId, queueMessage.dataset))
 
         val sendMessageRequest = SendMessageRequest()
-            .withMessageBody(Jackson.toJson(queueMessage))
+            .withMessageBody(Json.toJson(queueMessage))
             .withQueueUrl(queueUrl)
 
         sqsClient.sendMessage(sendMessageRequest)

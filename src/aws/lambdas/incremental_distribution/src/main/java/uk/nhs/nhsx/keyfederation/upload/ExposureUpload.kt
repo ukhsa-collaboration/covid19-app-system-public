@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.keyfederation.upload
 
-import uk.nhs.nhsx.keyfederation.download.ReportType
-import uk.nhs.nhsx.keyfederation.download.TestType
+import uk.nhs.nhsx.domain.ReportType
+import uk.nhs.nhsx.domain.TestType
 
 data class ExposureUpload(val keyData: String?,
                           val rollingStartNumber: Int,

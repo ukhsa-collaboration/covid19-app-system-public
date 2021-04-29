@@ -9,3 +9,7 @@ variable "workgroup_name" {
 variable "analytics_submission_store_parquet_bucket_id" {
   description = "The name of the bucket the stores mobile analytics"
 }
+
+variable "analytics_submission_store_consolidated_parquet_bucket_id" {
+  description = "The name of the bucket the stores mobile analytics"
+}

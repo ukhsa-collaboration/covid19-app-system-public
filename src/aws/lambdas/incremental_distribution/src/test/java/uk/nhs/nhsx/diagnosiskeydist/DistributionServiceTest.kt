@@ -27,6 +27,7 @@ import uk.nhs.nhsx.diagnosiskeydist.keydistribution.KeyDistributor
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.SaveToFileKeyDistributor
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
+import uk.nhs.nhsx.domain.TestType
 import uk.nhs.nhsx.testhelper.BatchExport.tekExportFromZipFile
 import uk.nhs.nhsx.testhelper.BatchExport.tekListFromZipFile
 import uk.nhs.nhsx.testhelper.BatchExport.tekSignatureListFromZipFile
@@ -269,7 +270,7 @@ class DistributionServiceTest {
                 .map { makeKey(mostRecentKeyRollingStart - it * 144) }
                 .toList()
 
-            return Submission(submissionDate, StoredTemporaryExposureKeyPayload(keys))
+            return Submission(submissionDate, ObjectKey.of("mobile/LAB_RESULT/abc"), StoredTemporaryExposureKeyPayload(keys))
         }
 
         private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey =

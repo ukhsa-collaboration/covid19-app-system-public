@@ -41,4 +41,6 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   dimensions = {
     CanaryName = each.value
   }
+
+  tags = var.tags
 }

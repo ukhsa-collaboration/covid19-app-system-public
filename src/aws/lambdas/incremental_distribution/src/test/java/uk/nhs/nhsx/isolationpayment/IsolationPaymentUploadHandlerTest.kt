@@ -6,8 +6,7 @@ import io.mockk.mockk
 import io.mockk.verifySequence
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.circuitbreakers.TokenResponse
-import uk.nhs.nhsx.core.Jackson
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.events.RecordingEvents
@@ -15,7 +14,7 @@ import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 
 class IsolationPaymentUploadHandlerTest {
     private val ipcToken = IpcTokenId.of("1".repeat(64))
@@ -59,7 +58,7 @@ class IsolationPaymentUploadHandlerTest {
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
 
-        val bodyIsolationResponse = Jackson.readOrNull<IsolationResponse>(response.body) ?: error("")
+        val bodyIsolationResponse = Json.readJsonOrNull<IsolationResponse>(response.body) ?: error("")
         assertThat(bodyIsolationResponse.contractVersion).isEqualTo(1)
         assertThat(bodyIsolationResponse.ipcToken).isEqualTo(ipcToken)
         assertThat(bodyIsolationResponse.state).isEqualTo(TokenStateExternal.EXT_CONSUMED.value)
@@ -94,7 +93,7 @@ class IsolationPaymentUploadHandlerTest {
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
 
-        val bodyIsolationResponse = Jackson.readOrNull<IsolationResponse>(response.body) ?: error("")
+        val bodyIsolationResponse = Json.readJsonOrNull<IsolationResponse>(response.body) ?: error("")
         assertThat(bodyIsolationResponse.contractVersion).isEqualTo(1)
         assertThat(bodyIsolationResponse.ipcToken).isEqualTo(ipcToken)
         assertThat(bodyIsolationResponse.state).isEqualTo(TokenStateExternal.EXT_VALID.value)

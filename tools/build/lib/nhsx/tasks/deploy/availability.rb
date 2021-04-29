@@ -4,6 +4,7 @@ namespace :deploy do
       desc "App availability content deployment"
       task :"availability:#{tgt_env}" => [:"login:#{account}"] do
         begin
+          Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["publish:availability:#{tgt_env}"].invoke
         ensure

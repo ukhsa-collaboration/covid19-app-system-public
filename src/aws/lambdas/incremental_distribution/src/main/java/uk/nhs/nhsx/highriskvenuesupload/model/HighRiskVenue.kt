@@ -2,13 +2,10 @@ package uk.nhs.nhsx.highriskvenuesupload.model
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
-import dev.forkhandles.values.NonBlankStringValueFactory
-import dev.forkhandles.values.StringValue
+import uk.nhs.nhsx.domain.MessageType
+import uk.nhs.nhsx.domain.OptionalHighRiskVenueParam
+import uk.nhs.nhsx.domain.VenueId
 
-
-class OptionalHighRiskVenueParam(val type: String): StringValue(type) {
-    companion object : NonBlankStringValueFactory<OptionalHighRiskVenueParam>(::OptionalHighRiskVenueParam)
-}
 
 @JsonInclude(NON_NULL)
 data class HighRiskVenue(

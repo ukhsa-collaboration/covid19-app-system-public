@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.isolationpayment
 
-import uk.nhs.nhsx.virology.IpcTokenId
+import uk.nhs.nhsx.domain.IpcTokenId
 import java.security.SecureRandom
 
 object IpcTokenIdGenerator {

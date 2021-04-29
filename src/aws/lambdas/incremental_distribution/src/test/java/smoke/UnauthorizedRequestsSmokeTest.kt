@@ -125,7 +125,10 @@ class UnauthorizedRequestsSmokeTest {
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
-        assertUnAuthorized(response)
+        assertThat(response, hasStatus(Status.OK)) // analytics submissions are authorized further downstream
+        assertThat(response, !hasHeader("x-amz-meta-signature"))
+        assertThat(response, !hasHeader("x-amz-meta-signature-date"))
+        assertThat(response, hasBody(""))
     }
 
     @Test

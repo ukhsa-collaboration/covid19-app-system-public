@@ -3,7 +3,7 @@ package uk.nhs.nhsx.diagnosiskeyssubmission
 import com.amazonaws.services.dynamodbv2.document.Item
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
-import uk.nhs.nhsx.core.Jackson.toJson
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
@@ -21,8 +21,8 @@ import uk.nhs.nhsx.keyfederation.InvalidRollingPeriod
 import uk.nhs.nhsx.keyfederation.InvalidRollingStartNumber
 import uk.nhs.nhsx.keyfederation.InvalidTemporaryExposureKey
 import uk.nhs.nhsx.keyfederation.InvalidTransmissionRiskLevel
-import uk.nhs.nhsx.virology.TestKit
-import uk.nhs.nhsx.virology.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
 import java.util.*
 
 class DiagnosisKeysSubmissionService(

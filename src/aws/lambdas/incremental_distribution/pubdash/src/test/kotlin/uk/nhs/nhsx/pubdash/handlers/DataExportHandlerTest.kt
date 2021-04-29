@@ -8,8 +8,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import uk.nhs.nhsx.core.TestEnvironments.environmentWith
 import uk.nhs.nhsx.pubdash.DataExportService
-import uk.nhs.nhsx.pubdash.TestEnvironments.environmentWith
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 
 class DataExportHandlerTest {
 
@@ -28,7 +29,7 @@ class DataExportHandlerTest {
         }
 
         val handler = DataExportHandler(environment = environmentWith(), service = service)
-        val response = handler.handleRequest(singleRecordSqsEvent, mockk())
+        val response = handler.handleRequest(singleRecordSqsEvent, TestContext())
 
         assertThat(response).isEqualTo(DataExportHandled.toString())
         verify(exactly = 1) { service.export(any()) }
@@ -43,7 +44,7 @@ class DataExportHandlerTest {
         }
 
         val handler = DataExportHandler(environment = environmentWith(), service = service)
-        val response = handler.handleRequest(singleRecordSqsEvent, mockk())
+        val response = handler.handleRequest(singleRecordSqsEvent, TestContext())
 
         assertThat(response).isEqualTo(DataExportHandled.toString())
         verify(exactly = 1) { service.export(any()) }
@@ -58,7 +59,7 @@ class DataExportHandlerTest {
         }
 
         val handler = DataExportHandler(environment = environmentWith(), service = service)
-        val response = handler.handleRequest(singleRecordSqsEvent, mockk())
+        val response = handler.handleRequest(singleRecordSqsEvent, TestContext())
 
         assertThat(response).isEqualTo(DataExportHandled.toString())
         verify(exactly = 1) { service.export(any()) }
@@ -69,7 +70,7 @@ class DataExportHandlerTest {
         val emptyRecordsSqsEvent = SQSEvent().apply { records = emptyList() }
 
         val handler = DataExportHandler(environment = environmentWith(), service = service)
-        val response = handler.handleRequest(emptyRecordsSqsEvent, mockk())
+        val response = handler.handleRequest(emptyRecordsSqsEvent, TestContext())
 
         assertThat(response).isEqualTo("""DataExportFailed(message=Expecting only 1 record, got: [])""")
         verify(exactly = 0) { service.export(any()) }
@@ -85,7 +86,7 @@ class DataExportHandlerTest {
         }
 
         val handler = DataExportHandler(environment = environmentWith(), service = service)
-        val response = handler.handleRequest(emptyRecordsSqsEvent, mockk())
+        val response = handler.handleRequest(emptyRecordsSqsEvent, TestContext())
 
         assertThat(response).isEqualTo("""DataExportFailed(message=Expecting only 1 record, got: [{body: {"queryId":{"id": "1"},"dataset":"Agnostic"},}, {body: {"queryId":{"id": "1"},"dataset":"LocalAuthority"},}])""")
         verify(exactly = 0) { service.export(any()) }

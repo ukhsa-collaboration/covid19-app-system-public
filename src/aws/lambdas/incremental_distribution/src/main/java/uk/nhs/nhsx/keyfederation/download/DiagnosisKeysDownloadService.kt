@@ -4,7 +4,7 @@ import com.amazonaws.services.lambda.runtime.Context
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
-import uk.nhs.nhsx.keyfederation.BatchTag
+import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.BatchTagService
 import uk.nhs.nhsx.keyfederation.DownloadedExposures
 import uk.nhs.nhsx.keyfederation.FederatedKeyUploader

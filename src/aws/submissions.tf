@@ -7,7 +7,7 @@ module "analytics_submission" {
   lambda_object_key        = module.artifact_repository.lambda_object_key
   lambda_handler_class     = "uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandler"
   lambda_environment_variables = {
-    firehose_stream_name    = "${terraform.workspace}-analytics"
+    firehose_stream_name    = aws_kinesis_firehose_delivery_stream.analytics_stream.name
     s3_ingest_enabled       = "false"
     firehose_ingest_enabled = "true"
     custom_oai              = random_uuid.submission-custom-oai.result
@@ -21,6 +21,25 @@ module "analytics_submission" {
   provisioned_concurrent_executions = var.analytics_submission_scale_down_provisioned_concurrent_executions
   policy_document                   = module.analytics_submission_access.policy_document
   tags                              = var.tags
+}
+
+module "analytics_submission_fast_ingest" {
+  source                   = "./modules/submission_analytics"
+  name                     = "analytics"
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  lambda_environment_variables = {
+    firehose_stream_name    = aws_kinesis_firehose_delivery_stream.analytics_stream.name
+    s3_ingest_enabled       = "false"
+    firehose_ingest_enabled = "true"
+    custom_oai              = random_uuid.submission-custom-oai.result
+    SUBMISSION_STORE        = module.analytics_submission.store
+  }
+  burst_limit                    = var.burst_limit
+  rate_limit                     = var.rate_limit
+  alarm_topic_arn                = var.alarm_topic_arn
+  reserved_concurrent_executions = var.analytics_queue_processor_reserved_concurrent_executions
+  tags                           = var.tags
 }
 
 module "analytics_events_submission" {
@@ -91,12 +110,23 @@ module "analytics_submission_store_parquet" {
   tags                     = var.tags
 }
 
+module "analytics_submission_store_parquet_consolidated" {
+  source                   = "./libraries/submission_s3"
+  name                     = "analytics-consolidated"
+  service                  = "submission-parquet"
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  policy_document          = module.analytics_submission_store_parquet_access_consolidated.policy_document
+  tags                     = var.tags
+}
+
 ############################
 
 resource "aws_glue_catalog_database" "mobile_analytics" {
   name = "${terraform.workspace}-analytics"
 }
 
+# [PARQUET CONSOLIDATION] FIXME: columns need to be kept in sync with glue table below
 resource "aws_glue_catalog_table" "mobile_analytics" {
   name          = "${terraform.workspace}_analytics"
   database_name = aws_glue_catalog_database.mobile_analytics.name
@@ -445,6 +475,374 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "missingPacketsLast7Days"
       type = "int"
     }
+    columns {
+      name = "consentedToShareVenueHistory"
+      type = "int"
+    }
+    columns {
+      name = "askedToShareVenueHistory"
+      type = "int"
+    }
+  }
+}
+
+# [PARQUET CONSOLIDATION] FIXME: columns need to be kept in sync with glue table above
+resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
+  name          = "${terraform.workspace}_analytics_consolidated"
+  database_name = aws_glue_catalog_database.mobile_analytics.name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL              = "TRUE"
+    "parquet.compression" = "SNAPPY"
+  }
+
+  storage_descriptor {
+    location      = "s3://${module.analytics_submission_store_parquet_consolidated.bucket_id}/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    columns {
+      name = "startDate"
+      type = "string"
+    }
+
+    columns {
+      name = "endDate"
+      type = "string"
+    }
+    columns {
+      name = "postalDistrict"
+      type = "string"
+    }
+    columns {
+      name = "localAuthority"
+      type = "string"
+    }
+    columns {
+      name = "deviceModel"
+      type = "string"
+    }
+    columns {
+      name = "latestApplicationVersion"
+      type = "string"
+    }
+    columns {
+      name = "operatingSystemVersion"
+      type = "string"
+    }
+    columns {
+      name = "cumulativeDownloadBytes"
+      type = "int"
+    }
+    columns {
+      name = "cumulativeUploadBytes"
+      type = "int"
+    }
+    columns {
+      name = "cumulativeCellularDownloadBytes"
+      type = "int"
+    }
+    columns {
+      name = "cumulativeCellularUploadBytes"
+      type = "int"
+    }
+    columns {
+      name = "cumulativeWifiDownloadBytes"
+      type = "int"
+    }
+    columns {
+      name = "cumulativeWifiUploadBytes"
+      type = "int"
+    }
+    columns {
+      name = "checkedIn"
+      type = "int"
+    }
+    columns {
+      name = "canceledCheckIn"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidTestResult"
+      type = "int"
+    }
+
+    columns {
+      name = "isIsolatingBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasHadRiskyContactBackgroundTick"
+      type = "int"
+    }
+
+    columns {
+      name = "receivedPositiveTestResult"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeTestResult"
+      type = "int"
+    }
+
+    columns {
+      name = "hasSelfDiagnosedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedQuestionnaireAndStartedIsolation"
+      type = "int"
+    }
+
+    columns {
+      name = "encounterDetectionPausedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedQuestionnaireButDidNotStartIsolation"
+      type = "int"
+    }
+
+    columns {
+      name = "totalBackgroundTasks"
+      type = "int"
+    }
+    columns {
+      name = "runningNormallyBackgroundTick"
+      type = "int"
+    }
+
+    columns {
+      name = "completedOnboarding"
+      type = "int"
+    }
+    columns {
+      name = "includesMultipleApplicationVersions"
+      type = "boolean"
+    }
+    columns {
+      name = "receivedVoidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "hasSelfDiagnosedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForSelfDiagnosedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForHadRiskyContactBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyContactNotification"
+      type = "int"
+    }
+    columns {
+      name = "startedIsolation"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveTestResultWhenIsolatingDueToRiskyContact"
+      type = "int"
+    }
+    columns {
+      name = "receivedActiveIpcToken"
+      type = "int"
+    }
+    columns {
+      name = "haveActiveIpcTokenBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "selectedIsolationPaymentsButton"
+      type = "int"
+    }
+    columns {
+      name = "launchedIsolationPaymentsApplication"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidLFDTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedLFDPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedLFDPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "totalExposureWindowsNotConsideredRisky"
+      type = "int"
+    }
+    columns {
+      name = "totalExposureWindowsConsideredRisky"
+      type = "int"
+    }
+    columns {
+      name = "acknowledgedStartOfIsolationDueToRiskyContact"
+      type = "int"
+    }
+    columns {
+      name = "hasRiskyContactNotificationsEnabledBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "totalRiskyContactReminderNotifications"
+      type = "int"
+    }
+    columns {
+      name = "receivedUnconfirmedPositiveTestResult"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForUnconfirmedTestBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "launchedTestOrdering"
+      type = "int"
+    }
+    columns {
+      name = "didHaveSymptomsBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didAskForSymptomsOnPositiveTestEntry"
+      type = "int"
+    }
+    columns {
+      name = "declaredNegativeResultFromDCT"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidSelfRapidTestResultViaPolling"
+      type = "int"
+    }
+    columns {
+      name = "receivedPositiveSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedNegativeSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "receivedVoidSelfRapidTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForTestedSelfRapidPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasTestedSelfRapidPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyVenueM1Warning"
+      type = "int"
+    }
+    columns {
+      name = "receivedRiskyVenueM2Warning"
+      type = "int"
+    }
+    columns {
+      name = "hasReceivedRiskyVenueM2WarningBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "totalAlarmManagerBackgroundTasks"
+      type = "int"
+    }
+    columns {
+      name = "missingPacketsLast7Days"
+      type = "int"
+    }
+    columns {
+      name = "consentedToShareVenueHistory"
+      type = "int"
+    }
+    columns {
+      name = "askedToShareVenueHistory"
+      type = "int"
+    }
   }
 }
 
@@ -492,8 +890,16 @@ resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
   tags = var.tags
 
   extended_s3_configuration {
-    role_arn        = aws_iam_role.firehose_role.arn
-    bucket_arn      = module.analytics_submission_store_parquet.bucket_arn
+    role_arn = aws_iam_role.firehose_role.arn
+
+    # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be active during the initial migration (parquet consolidation)
+    bucket_arn = module.analytics_submission_store_parquet.bucket_arn
+
+    # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be activated before the delta migration (parquet consolidation) is started
+    # bucket_arn          = module.analytics_submission_store_parquet_consolidated.bucket_arn
+    # prefix              = "submitteddatehour=!{timestamp:yyyy}-!{timestamp:MM}-!{timestamp:dd}-!{timestamp:HH}/"
+    # error_output_prefix = "firehose-failures/!{firehose:error-output-type}/"
+
     buffer_interval = local.analytics_submission_ingestion_interval
     buffer_size     = 128
 
@@ -513,7 +919,12 @@ resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
       schema_configuration {
         database_name = aws_glue_catalog_table.mobile_analytics.database_name
         role_arn      = aws_iam_role.firehose_role.arn
-        table_name    = aws_glue_catalog_table.mobile_analytics.name
+
+        # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be active during the initial migration (parquet consolidation)
+        table_name = aws_glue_catalog_table.mobile_analytics.name
+
+        # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be activated before the delta migration (parquet consolidation) is started
+        # table_name = aws_glue_catalog_table.mobile_analytics_consolidated.name
       }
     }
   }
@@ -614,7 +1025,7 @@ module "submission_apis" {
   domain      = var.base_domain
   web_acl_arn = var.waf_arn
 
-  analytics_submission_endpoint                   = module.analytics_submission.endpoint
+  analytics_submission_endpoint                   = module.analytics_submission_fast_ingest.endpoint
   analytics_submission_path                       = "/submission/mobile-analytics"
   analytics_submission_health_path                = "/submission/mobile-analytics/health"
   analytics_events_submission_endpoint            = module.analytics_events_submission.endpoint
@@ -690,6 +1101,9 @@ output "isolation_payment_create_gateway_endpoint" {
 }
 output "isolation_payment_update_gateway_endpoint" {
   value = "${module.isolation_payment_submission.endpoint}/isolation-payment/ipc-token/update"
+}
+output "risky_venues_history_submission_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/submission/risky-venue-history"
 }
 
 output "virology_submission_lambda_function_name" {

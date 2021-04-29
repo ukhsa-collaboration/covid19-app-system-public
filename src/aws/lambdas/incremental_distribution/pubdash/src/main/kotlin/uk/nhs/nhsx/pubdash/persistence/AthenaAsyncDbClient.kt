@@ -1,12 +1,7 @@
 package uk.nhs.nhsx.pubdash.persistence
 
 import com.amazonaws.services.athena.AmazonAthena
-import com.amazonaws.services.athena.model.GetQueryExecutionRequest
-import com.amazonaws.services.athena.model.GetQueryExecutionResult
-import com.amazonaws.services.athena.model.GetQueryResultsRequest
-import com.amazonaws.services.athena.model.GetQueryResultsResult
-import com.amazonaws.services.athena.model.QueryExecutionState
-import com.amazonaws.services.athena.model.StartQueryExecutionRequest
+import com.amazonaws.services.athena.model.*
 import uk.nhs.nhsx.pubdash.QueryId
 import uk.nhs.nhsx.pubdash.QueryResult
 
@@ -20,24 +15,21 @@ class AthenaAsyncDbClient(private val athena: AmazonAthena, private val workgrou
             .withWorkGroup(workgroup)
             .withQueryString(sqlQuery)
 
-    override fun queryResults(queryId: QueryId): QueryResult<GetQueryResultsResult> = athena.queryResult(queryId)
+    override fun queryResults(queryId: QueryId): QueryResult<Unit> = queryResult(queryId)
 
-    private fun AmazonAthena.queryResult(queryId: QueryId): QueryResult<GetQueryResultsResult> {
-        val queryExecutionResult = getQueryExecutionResult(queryId)
+    private fun queryResult(queryId: QueryId): QueryResult<Unit> {
+        val queryExecutionResult = queryExecutionResult(queryId)
         return when (queryExecutionResult.queryExecution.status.state) {
-            QueryExecutionState.SUCCEEDED.toString() -> QueryResult.Finished(getQueryResults(queryId))
+            QueryExecutionState.SUCCEEDED.toString() -> QueryResult.Finished(Unit)
             QueryExecutionState.FAILED.toString() -> QueryResult.Error(errorMessageFrom(queryExecutionResult))
             QueryExecutionState.CANCELLED.toString() -> QueryResult.Error("The Amazon Athena query was cancelled.")
             else -> QueryResult.Waiting()
         }
     }
 
-    private fun AmazonAthena.getQueryResults(queryId: QueryId) =
-        getQueryResults(GetQueryResultsRequest().withQueryExecutionId(queryId.id))
-
-    private fun AmazonAthena.getQueryExecutionResult(queryId: QueryId): GetQueryExecutionResult {
+    private fun queryExecutionResult(queryId: QueryId): GetQueryExecutionResult {
         val executionId = GetQueryExecutionRequest().withQueryExecutionId(queryId.id)
-        return getQueryExecution(executionId)
+        return athena.getQueryExecution(executionId)
     }
 
     private fun errorMessageFrom(queryExecutionResult: GetQueryExecutionResult) =

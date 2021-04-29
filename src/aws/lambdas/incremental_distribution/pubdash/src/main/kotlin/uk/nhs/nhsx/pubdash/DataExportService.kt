@@ -2,15 +2,14 @@ package uk.nhs.nhsx.pubdash
 
 import com.amazonaws.services.athena.AmazonAthenaClient
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
-import uk.nhs.nhsx.core.ContentType.Companion.TEXT_CSV
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey.Companion.string
 import uk.nhs.nhsx.core.Environment.EnvironmentKey.Companion.value
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.BucketName
-import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
-import uk.nhs.nhsx.core.aws.s3.S3Storage
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.pubdash.Dataset.Agnostic
 import uk.nhs.nhsx.pubdash.Dataset.Country
@@ -20,8 +19,9 @@ import uk.nhs.nhsx.pubdash.persistence.AnalyticsDao
 import uk.nhs.nhsx.pubdash.persistence.AthenaAsyncDbClient
 
 class DataExportService(
-    private val bucketName: BucketName,
-    private val s3Storage: S3Storage,
+    private val exportBucketName: BucketName,
+    private val athenaOutputBucketName: BucketName,
+    private val awsS3: AwsS3,
     private val analyticsSource: AnalyticsSource,
     private val queueClient: QueueClient,
     private val events: Events
@@ -34,25 +34,30 @@ class DataExportService(
     }
 
     fun export(message: QueueMessage) {
-        when (message.dataset) {
-            Agnostic -> processResult(message, analyticsSource.agnosticDataset(message.queryId))
-            Country -> processResult(message, analyticsSource.countryDataset(message.queryId))
-            LocalAuthority -> processResult(message, analyticsSource.localAuthorityDataset(message.queryId))
+        when (val queryResult = analyticsSource.checkQueryState(message.queryId)) {
+            is QueryResult.Finished -> onFinished(message)
+            is QueryResult.Error -> onError(message, queryResult.message)
+            is QueryResult.Waiting -> onWait(message)
         }
     }
 
-    private fun processResult(queueMessage: QueueMessage, queryResult: QueryResult<CsvS3Object>) {
-        when (queryResult) {
-            is QueryResult.Finished -> onFinished(queueMessage, queryResult.results)
-            is QueryResult.Error -> onError(queueMessage, queryResult.message)
-            is QueryResult.Waiting -> onWait(queueMessage)
-        }
-    }
-
-    private fun onFinished(queueMessage: QueueMessage, dataset: CsvS3Object) {
+    private fun onFinished(queueMessage: QueueMessage) {
         events(QueryFinishedEvent(queueMessage.queryId, queueMessage.dataset))
-        uploadToS3(dataset)
+        copyFromAthenaOutputBucketIntoExportBucket(queueMessage)
     }
+
+    private fun copyFromAthenaOutputBucketIntoExportBucket(queueMessage: QueueMessage) {
+        val from = Locator.of(athenaOutputBucketName, ObjectKey.of("${queueMessage.queryId.id}.csv"))
+        val to = Locator.of(exportBucketName, objectKeyFrom(queueMessage.dataset))
+        awsS3.copyObject(from, to)
+    }
+
+    private fun objectKeyFrom(dataset: Dataset): ObjectKey =
+        when (dataset) {
+            Agnostic -> ObjectKey.of("data/covid19_app_country_agnostic_dataset.csv")
+            Country -> ObjectKey.of("data/covid19_app_country_specific_dataset.csv")
+            LocalAuthority -> ObjectKey.of("data/covid19_app_data_by_local_authority.csv")
+        }
 
     private fun onError(queueMessage: QueueMessage, message: String) {
         events(QueryErrorEvent(queueMessage.queryId, queueMessage.dataset, message))
@@ -67,21 +72,15 @@ class DataExportService(
         queueClient.sendMessage(queueMessage)
     }
 
-    private fun uploadToS3(csvS3Object: CsvS3Object) {
-        s3Storage.upload(
-            Locator.of(bucketName, csvS3Object.objectKey()),
-            TEXT_CSV,
-            ByteArraySource.fromUtf8String(csvS3Object.csv())
-        )
-    }
 }
 
 fun dataExportService(
     environment: Environment,
     events: Events
 ) = DataExportService(
-    bucketName = environment.access.required(value("export_bucket_name", BucketName)),
-    s3Storage = AwsS3Client(events),
+    exportBucketName = environment.access.required(value("export_bucket_name", BucketName)),
+    athenaOutputBucketName = environment.access.required(value("athena_output_bucket_name", BucketName)),
+    awsS3 = AwsS3Client(events),
     analyticsSource = AnalyticsDao(
         workspace = environment.access.required(Environment.WORKSPACE),
         asyncDbClient = AthenaAsyncDbClient(
