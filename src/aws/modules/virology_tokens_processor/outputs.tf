@@ -1,5 +1,9 @@
-output "function" {
+output "tokens_processing_function" {
   value = module.virology_tokens_processing_lambda.lambda_function_name
+}
+
+output "scheduled_tokens_processing_function" {
+  value = module.scheduled_virology_tokens_generating_lambda.lambda_function_name
 }
 
 output "output_store" {

@@ -9,9 +9,9 @@ namespace :deploy do
           include NHSx::Terraform
           terraform_configuration = File.join($configuration.base, "src/analytics/accounts", account)
           deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
-          unless /branch$/.match(tgt_env)
-            tag(pointer_tag_name("analytics", tgt_env), "Analytics deployed on #{tgt_env}", $configuration)
-          end
+
+          Rake::Task["test:sanity_check:analytics:#{tgt_env}"].invoke
+          tag(pointer_tag_name("analytics", tgt_env), "Analytics deployed on #{tgt_env}", $configuration) unless /branch$/.match(tgt_env)
         end
       end
     end

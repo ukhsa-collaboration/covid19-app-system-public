@@ -20,7 +20,9 @@ import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.En
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Wls
 import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestResult
+import uk.nhs.nhsx.virology.VirologyUploadHandler
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusResponse
 
 class TestLab(unauthedHttp: HttpHandler,
               private val envConfig: EnvConfig) {
@@ -133,6 +135,26 @@ class TestLab(unauthedHttp: HttpHandler,
         sendVirologyResults(payload, source, V2)
             .requireStatusCode(Status.UNPROCESSABLE_ENTITY)
             .requireNoPayload()
+    }
+    fun checkToken(ctaToken: CtaToken, country: VirologyUploadHandler.VirologyTokenExchangeSource) : VirologyTokenStatusResponse {
+
+        val uri = when (country)
+        {
+            VirologyUploadHandler.VirologyTokenExchangeSource.Eng -> envConfig.test_results_v2_eng_tokenstatus_upload_endpoint
+            VirologyUploadHandler.VirologyTokenExchangeSource.Wls -> envConfig.test_results_v2_wls_tokenstatus_upload_endpoint
+        }
+        print(uri)
+        val payload = """
+                    {
+                      "ctaToken": "${ctaToken.value}"
+                    }
+                """
+        val request = Request(POST, uri)
+            .header("Content-Type", APPLICATION_JSON.value)
+            .body(payload)
+
+        val response = authedHttp(request)
+        return VirologyTokenStatusResponse(response.deserializeOrThrow<VirologyTokenStatusResponse>().tokenStatus)
     }
 
     private fun sendVirologyResults(payload: String,

@@ -77,6 +77,16 @@ class LoginTests < Test::Unit::TestCase
     assert_equal("profile", ENV["AWS_PROFILE"])
   end
 
+  def test_login_to_dev_account_mfa
+    domain = "test"
+    account = "dev"
+    login_to_aws_account(account, domain, true)
+
+    assert_equal(account, ENV["ACCOUNT"], "Account environment variable not correctly set")
+    # For the main CTA dev account we use the default profile, so force it by removing the AWS_PROFILE value
+    assert_nil(ENV["AWS_PROFILE"])
+  end
+
   def test_with_account
     login_to_aws_account("dev", "test", false)
     assert_equal("dev", ENV["ACCOUNT"], "AWS settings not correctly setup")

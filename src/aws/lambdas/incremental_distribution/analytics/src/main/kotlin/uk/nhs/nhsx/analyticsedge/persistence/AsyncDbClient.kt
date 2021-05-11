@@ -1,9 +1,7 @@
 package uk.nhs.nhsx.analyticsedge.persistence
 
-import uk.nhs.nhsx.analyticsedge.QueryId
-import uk.nhs.nhsx.analyticsedge.QueryResult
+import uk.nhs.nhsx.core.aws.s3.BucketName
 
 interface AsyncDbClient {
-    fun submitQuery(sqlQuery: String): QueryId
-    fun queryResults(queryId: QueryId): QueryResult<Unit>
+    fun submitQueryWithOutputLocation(sqlQuery: String, outputBucket: BucketName, prefix: String)
 }

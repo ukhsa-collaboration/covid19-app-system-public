@@ -1,6 +1,6 @@
 FROM ruby:2.7.1-buster AS ruby
 
-ENV TERRAFORM_VERSION=0.13.5
+ENV TERRAFORM_VERSION=0.13.7
 ENV TERRAFORM_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ENV TERRAFORM_ARCHIVE=terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ENV GITVERSION_VERSION=5.3.6

@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
+    }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+apply plugin: 'kotlin'
+
+compileKotlin.kotlinOptions.jvmTarget = "1.8"
+compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
+
+test {
+    useJUnitPlatform()
+}
+
+task testSanity(type: Test) {
+    description = 'Runs Sanity tests.'
+    group = 'verification'
+
+    useJUnitPlatform()
+
+    reports.html.destination = file("$projectDir/../../out/reports")
+    reports.junitXml.destination = file("$projectDir/../../out/reports")
+}
+
+dependencies {
+    testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
+
+    testImplementation platform("org.http4k:http4k-bom:${http4k_version}")
+    testImplementation "org.http4k:http4k-aws"
+    testImplementation "org.http4k:http4k-core"
+    testImplementation "org.http4k:http4k-format-jackson"
+    testImplementation "org.http4k:http4k-testing-hamkrest"
+
+    testImplementation platform("software.amazon.awssdk:bom:${aws_sdk_version}")
+    testImplementation "software.amazon.awssdk:s3"
+
+    testImplementation platform("dev.forkhandles:forkhandles-bom:${forkhandles_version}")
+    testImplementation "dev.forkhandles:result4k"
+
+    testImplementation platform("org.junit:junit-bom:${junit_version}")
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+
+}

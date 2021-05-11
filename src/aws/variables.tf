@@ -18,12 +18,9 @@ variable "logs_bucket_id" {
   description = "The name of the bucket to which all S3 access logs are saved"
 }
 
-variable "virology_test_order_website" {
-  description = "The website to order test kits for virology testing"
-}
-
-variable "virology_test_register_website" {
-  description = "The website to register for test kits for virology testing"
+variable "virology_submission" {
+  description = "The config for virology submission"
+  type        = map(map(string))
 }
 
 variable "interop_base_url" {

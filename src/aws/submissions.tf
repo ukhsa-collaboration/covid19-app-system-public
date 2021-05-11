@@ -881,6 +881,7 @@ resource "aws_iam_role_policy_attachment" "firehose_glue" {
 locals {
   env_analytics_submission                = lookup(var.analytics_submission, terraform.workspace, var.analytics_submission["default"])
   analytics_submission_ingestion_interval = tonumber(local.env_analytics_submission["ingestion_interval"])
+  virology_submission_config              = lookup(var.virology_submission, terraform.workspace, var.virology_submission["default"])
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
@@ -992,8 +993,8 @@ module "virology_submission" {
   lambda_object_key                   = module.artifact_repository.lambda_object_key
   burst_limit                         = var.burst_limit
   rate_limit                          = var.rate_limit
-  test_order_website                  = var.virology_test_order_website
-  test_register_website               = var.virology_test_register_website
+  test_order_website                  = local.virology_submission_config["virology_test_order_website"]
+  test_register_website               = local.virology_submission_config["virology_test_register_website"]
   test_orders_table_id                = module.virology_upload.test_orders_table
   test_results_table_id               = module.virology_upload.results_table
   virology_submission_tokens_table_id = module.virology_upload.submission_tokens_table
@@ -1018,6 +1019,23 @@ module "isolation_payment_submission" {
   tags                            = var.tags
 }
 
+module "crash_reports_submission" {
+  source                   = "./modules/submission_crash_reports"
+  name                     = "crash-reports"
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  lambda_handler_class     = "uk.nhs.nhsx.crashreports.CrashReportsHandler"
+  lambda_environment_variables = {
+    custom_oai         = random_uuid.submission-custom-oai.result,
+    SUBMISSION_ENABLED = true
+  }
+  burst_limit           = var.burst_limit
+  rate_limit            = var.rate_limit
+  log_retention_in_days = 7
+  alarm_topic_arn       = var.alarm_topic_arn
+  tags                  = var.tags
+}
+
 module "submission_apis" {
   source = "./libraries/cloudfront_submission_facade"
 
@@ -1039,6 +1057,8 @@ module "submission_apis" {
   empty_submission_v2_bucket_regional_domain_name = module.empty_submission_v2.store_regional_domain_name
   empty_submission_v2_origin_access_identity_path = module.empty_submission_v2.origin_access_identity_path
   empty_submission_v2_path                        = "/submission/empty-submission-v2"
+  crash_reports_submission_endpoint               = module.crash_reports_submission.endpoint
+  crash_reports_submission_path                   = "/submission/crash-reports"
   exposure_notification_circuit_breaker_endpoint  = module.exposure_notification_circuit_breaker.endpoint
   exposure_notification_circuit_breaker_path      = "/circuit-breaker/exposure-notification/*"
   isolation_payment_endpoint                      = module.isolation_payment_submission.endpoint
@@ -1080,6 +1100,9 @@ output "analytics_events_submission_endpoint" {
 }
 output "diagnosis_keys_submission_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/diagnosis-keys"
+}
+output "crash_reports_submission_endpoint" {
+  value = "https://${module.submission_apis.submission_domain_name}/submission/crash-reports"
 }
 output "empty_submission_endpoint" {
   value = "https://${module.submission_apis.submission_domain_name}/submission/empty-submission"

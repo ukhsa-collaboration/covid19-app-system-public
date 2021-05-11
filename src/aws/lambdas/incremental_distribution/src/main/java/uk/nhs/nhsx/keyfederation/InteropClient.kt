@@ -4,6 +4,7 @@ import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.events.Events
+import uk.nhs.nhsx.core.events.IncomingHttpResponse
 import uk.nhs.nhsx.core.events.OutgoingHttpRequest
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.readJsonOrNull
@@ -70,6 +71,10 @@ class InteropClient(
             .POST(BodyPublishers.ofString(toJson(requestBody)))
             .build()
         val httpResponse = client.send(uploadRequest, HttpResponse.BodyHandlers.ofString())
+        val responseStatusCode = httpResponse.statusCode()
+
+        events(IncomingHttpResponse(responseStatusCode,httpResponse.body()))
+
         when (val statusCode = httpResponse.statusCode()) {
             200 -> Json.readJsonOrNull(httpResponse.body()) { e -> events(UnprocessableJson(e)) }
                 ?: throw RuntimeException()

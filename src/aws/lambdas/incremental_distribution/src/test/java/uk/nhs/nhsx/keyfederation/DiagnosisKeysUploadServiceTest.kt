@@ -9,7 +9,8 @@ import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.matching.MatchResult
-import com.github.tomakehurst.wiremock.matching.MatchResult.*
+import com.github.tomakehurst.wiremock.matching.MatchResult.exactMatch
+import com.github.tomakehurst.wiremock.matching.MatchResult.noMatch
 import com.github.tomakehurst.wiremock.matching.StringValuePattern
 import io.mockk.every
 import io.mockk.mockk
@@ -23,7 +24,9 @@ import org.junit.jupiter.api.extension.ExtendWith
 import uk.nhs.nhsx.core.Json.readJsonOrNull
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.events.IncomingHttpResponse
 import uk.nhs.nhsx.core.events.InfoEvent
+import uk.nhs.nhsx.core.events.OutgoingHttpRequest
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.domain.ReportType
@@ -34,7 +37,7 @@ import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.FederatedExposureUploadFactory
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
-import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.FakeInteropDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Clock
@@ -133,6 +136,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         events.containsExactly(
             InfoEvent::class,
             InfoEvent::class,
+            IncomingHttpResponse::class,
             UploadedDiagnosisKeys::class,
             DiagnosisKeysUploadIncomplete::class
         )
@@ -177,7 +181,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             { now },
             interopClient,
             SubmissionFromS3Repository(
-                FakeDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/LAB_RESULT/abc"), s3ObjectSummary("mobile/RAPID_RESULT/def"))),
+                FakeInteropDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/LAB_RESULT/abc"), s3ObjectSummary("mobile/RAPID_RESULT/def"))),
                 { true },
                 BucketName.of("SUBMISSION_BUCKET"),
                 RecordingEvents(),
@@ -239,7 +243,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             { now },
             interopClient,
             SubmissionFromS3Repository(
-                FakeDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/RAPID_RESULT/abc.json"), s3ObjectSummary("bar"))),
+                FakeInteropDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/RAPID_RESULT/abc.json"), s3ObjectSummary("bar"))),
                 { objectKey -> objectKey.value.startsWith("mobile") },
                 BucketName.of("SUBMISSION_BUCKET"),
                 RecordingEvents(),
@@ -339,7 +343,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             { now },
             InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
             SubmissionFromS3Repository(
-                FakeDiagnosisKeysS3(
+                FakeInteropDiagnosisKeysS3(
                     listOf(
                         s3ObjectSummary("foo", lastModifiedDateBatchOne),
                         s3ObjectSummary("bar", lastModifiedDateBatchOne),
@@ -396,7 +400,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             { now },
             InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
             SubmissionFromS3Repository(
-                FakeDiagnosisKeysS3(
+                FakeInteropDiagnosisKeysS3(
                     listOf(
                         s3ObjectSummary("foo", lastModifiedDate),
                         s3ObjectSummary("bar", lastModifiedDate),
@@ -443,5 +447,6 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 }
             } ?: noMatch()
     }
+
 }
 

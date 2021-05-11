@@ -9,9 +9,11 @@ import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository
 import uk.nhs.nhsx.keyfederation.BatchTagService
 import uk.nhs.nhsx.keyfederation.DiagnosisKeysUploadIncomplete
 import uk.nhs.nhsx.keyfederation.InteropClient
+import uk.nhs.nhsx.keyfederation.InvalidTemporaryExposureKey
 import uk.nhs.nhsx.keyfederation.UploadedDiagnosisKeys
 import java.time.Duration
 import java.time.Instant
+import java.util.*
 import kotlin.math.max
 
 class DiagnosisKeysUploadService(
@@ -68,6 +70,7 @@ class DiagnosisKeysUploadService(
         )
 
         val exposures = getUploadRequestRawPayload(newSubmissions)
+            .filter{ isKeyValid(it.keyData)}
             .map { updateRiskLevelIfDefaultEnabled(it) }
 
         events(
@@ -143,6 +146,19 @@ class DiagnosisKeysUploadService(
         upload.reportType,
         upload.daysSinceOnset
     )
+
+    private fun isKeyValid(key: String?): Boolean {
+        val isValid = key != null && isBase64EncodedAndEqualTo16Bytes(key)
+        if (!isValid) events(InvalidTemporaryExposureKey(key))
+        return isValid
+    }
+
+    private fun isBase64EncodedAndEqualTo16Bytes(value: String): Boolean = try {
+        val decodedKeyData = Base64.getDecoder().decode(value)
+        decodedKeyData.size == 16
+    } catch (e: Exception) {
+        false
+    }
 
     // FIXME filter expired keys (rollingStartNumber & rollingPeriod)
     private fun getUploadRequestRawPayload(submissions: List<Submission>): List<ExposureUpload> = submissions

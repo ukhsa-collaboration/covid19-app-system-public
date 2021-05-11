@@ -4,14 +4,14 @@ import uk.nhs.nhsx.analyticsexporter.AnalyticsFileExporterConfig
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 
-data class AAEUploadConfig (
+data class AAEUploadConfig(
     val aaeUrlPrefix: String,
     val aaeUrlSuffix: String,
     val p12CertificateSecretName: String,
     val p12CertificatePasswordSecretName: String,
     val subscriptionKeySecretName: String,
     override val s3DisallowedPrefixList: String
-) :AnalyticsFileExporterConfig{
+) : AnalyticsFileExporterConfig {
     companion object {
         private val AAE_URL_PREFIX = EnvironmentKey.string("AAE_URL_PREFIX")
         private val AAE_URL_SUFFIX = EnvironmentKey.string("AAE_URL_SUFFIX")

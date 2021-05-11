@@ -15,8 +15,7 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 import java.io.ByteArrayInputStream
 import java.net.URL
 import java.time.Instant
-import java.util.Date
-import java.util.Optional
+import java.util.*
 
 class FakeDiagnosisKeysS3(
     private val objectSummaries: List<S3ObjectSummary>,
@@ -44,7 +43,7 @@ class FakeDiagnosisKeysS3(
 
         val json = Json.toJson(
             StoredTemporaryExposureKeyPayload(
-                listOf(makeKey(locator, mostRecentKeyRollingStart - 144))
+                listOf(makeKey(locator,mostRecentKeyRollingStart - 144))
             )
         )
 
@@ -66,4 +65,5 @@ class FakeDiagnosisKeysS3(
 
     private fun makeKey(locator: Locator, keyStartTime: Long): StoredTemporaryExposureKey =
         StoredTemporaryExposureKey(locator.key.value, Math.toIntExact(keyStartTime), 144, 7)
+
 }

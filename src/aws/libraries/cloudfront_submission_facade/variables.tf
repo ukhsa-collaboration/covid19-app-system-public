@@ -26,6 +26,14 @@ variable "diagnosis_keys_submission_path" {
   description = "The route for the diagnosis keys submission API"
 }
 
+variable "crash_reports_submission_endpoint" {
+  description = "The endpoint for the crash reports submission API"
+}
+
+variable "crash_reports_submission_path" {
+  description = "The route for the crash reports submission API"
+}
+
 variable "exposure_notification_circuit_breaker_endpoint" {
   description = "The endpoint for the exposure notification circuit breaker"
 }

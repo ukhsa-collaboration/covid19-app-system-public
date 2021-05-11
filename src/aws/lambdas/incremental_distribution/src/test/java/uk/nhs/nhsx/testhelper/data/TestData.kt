@@ -108,4 +108,7 @@ object TestData {
     const val testLabResultV1 = """{"ctaToken": "cc8f0b6z","testEndDate": "2020-04-23T00:00:00Z","testResult": "NEGATIVE"}"""
     const val rapidLabResultV2 = """{"ctaToken": "cc8f0b6z","testEndDate": "2020-04-23T00:00:00Z","testResult": "POSITIVE","testKit": "RAPID_RESULT"}"""
     const val rapidSelfReportedResultV2 = """{"ctaToken": "cc8f0b6z","testEndDate": "2020-04-23T00:00:00Z","testResult": "POSITIVE","testKit": "RAPID_SELF_REPORTED"}"""
+
+    const val tokenStatusPayloadV2 = """{"ctaToken":"cc8f0b6z"}"""
+
 }

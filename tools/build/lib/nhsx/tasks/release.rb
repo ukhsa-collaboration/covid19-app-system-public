@@ -9,15 +9,15 @@ namespace :release do
 
   desc "Release of version RELEASE_VERSION of the full CTA system"
   task :cta => [:"login:prod"] do
+    include NHSx::Queue
+
     release_version = configure_release_process("cta", $configuration)
     puts "Initiating CTA release #{release_version}"
 
     Rake::Task["deploy:cta:prod"].invoke
-    Rake::Task["deploy:analytics:aa-prod"].invoke
     Rake::Task["tag:release:cta"].invoke
     Rake::Task["tag:release:tier_metadata"].invoke
     Rake::Task["tag:release:availability"].invoke
-    Rake::Task["tag:release:analytics"].invoke
     with_account("dev", "cta") do
       queue("deploy-cta-sit", "te-staging", "sit", "dev", $configuration)
     end
@@ -44,7 +44,9 @@ namespace :release do
     puts "Initiating CTA analytics release #{release_version}"
 
     Rake::Task["deploy:analytics:prod"].invoke
-    Rake::Task["deploy:analytics:aa-prod"].invoke
+    with_account("aa-prod", "analytics") do
+      Rake::Task["deploy:analytics:aa-prod"].invoke
+    end
     Rake::Task["tag:release:analytics"].invoke
   end
   desc "Release of version RELEASE_VERSION of the public dashboard"

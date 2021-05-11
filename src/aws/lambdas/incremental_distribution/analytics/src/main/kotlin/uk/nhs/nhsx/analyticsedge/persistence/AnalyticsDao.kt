@@ -1,12 +1,15 @@
 package uk.nhs.nhsx.analyticsedge.persistence
 
-import uk.nhs.nhsx.analyticsedge.QueryId
-import uk.nhs.nhsx.analyticsedge.QueryResult
-import uk.nhs.nhsx.analyticsedge.datasets.AnalyticsSource
+import uk.nhs.nhsx.analyticsedge.Dataset
+import uk.nhs.nhsx.core.aws.s3.BucketName
 
-class AnalyticsDao(private val workspace: String, private val asyncDbClient: AsyncDbClient) : AnalyticsSource {
+class AnalyticsDao(
+    private val workspace: String,
+    private val athenaOutputBucket: BucketName,
+    private val asyncDbClient: AsyncDbClient
+) {
 
-    override fun startAdoptionDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
+    fun startAdoptionDatasetQueryAsync() = asyncDbClient.submitQueryWithOutputLocation(
         """
             SELECT
             DATE_FORMAT(truncatedstartdate, '%Y-%m-%d') as date,
@@ -35,10 +38,12 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
                 ON (aad2.lad20cd <> '' AND aad2.postaldistrict = pdgl.postcode AND aad2.lad20cd = pdgl.lad20cd AND (pdgl.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl.country IS NULL))
             LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl2
                 ON (aad2.lad20cd = '' AND aad2.postaldistrict = pdgl2.postcode AND pdgl2.lad20cd = '' AND (pdgl2.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl2.country IS NULL))
-        """.trimIndent()
+        """.trimIndent(),
+        outputBucket = athenaOutputBucket,
+        prefix = Dataset.Adoption.name
     )
 
-    override fun startAggregateDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
+    fun startAggregateDatasetQueryAsync() = asyncDbClient.submitQueryWithOutputLocation(
         """
             SELECT
             DATE_FORMAT(appdate, '%Y-%m-%d') as date,
@@ -77,10 +82,12 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
             WHERE appdate > date('2020-09-23')
             AND appdate < current_date - interval '3' day
             GROUP BY appdate
-        """.trimIndent()
+        """.trimIndent(),
+        outputBucket = athenaOutputBucket,
+        prefix = Dataset.Aggregate.name
     )
 
-    override fun startEnpicDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
+    fun startEnpicDatasetQueryAsync() = asyncDbClient.submitQueryWithOutputLocation(
         """
             SELECT
             DATE_FORMAT(truncatedstartdate, '%Y-%m-%d') as date,
@@ -172,10 +179,12 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
             lagl.longitude,
             lagl.latitude)
             WHERE localAuthority NOT IN ('Dumfries and Galloway','Scottish Borders') OR localAuthority is not null
-        """.trimIndent()
+        """.trimIndent(),
+        outputBucket = athenaOutputBucket,
+        prefix = Dataset.Enpic.name
     )
 
-    override fun startIsolationDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
+    fun startIsolationDatasetQueryAsync() = asyncDbClient.submitQueryWithOutputLocation(
         """
             SELECT
             DATE_FORMAT(date, '%Y-%m-%d') as date,
@@ -307,10 +316,12 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
             region,
             country,
             platform
-        """.trimIndent()
+        """.trimIndent(),
+        outputBucket = athenaOutputBucket,
+        prefix = Dataset.Isolation.name
     )
 
-    override fun startPosterDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
+    fun startPosterDatasetQueryAsync() = asyncDbClient.submitQueryWithOutputLocation(
         """
             SELECT
             substring(posters.created,1,10) AS "date",
@@ -349,8 +360,9 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
             END AS venueTypeName
         FROM "${workspace}_analytics_db"."${workspace}_analytics_qr_posters" posters
         LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_full_postcode_lookup" lookup ON posters.postcode = lookup.postcodenospace
-        """.trimIndent()
+        """.trimIndent(),
+        outputBucket = athenaOutputBucket,
+        prefix = Dataset.Poster.name
     )
 
-    override fun checkQueryState(queryId: QueryId): QueryResult<Unit> = asyncDbClient.queryResults(queryId)
 }

@@ -48,7 +48,7 @@ class AnalyticsFileExporter constructor(
                     when {
                         !s3Object.isEmpty -> {
                             uploader.uploadFile(getFilename(s3Object.get()),getContent(s3Object.get()),s3Object.get().objectMetadata.contentType)
-                            DataUploadedToS3(sqsMessage.messageId, event.bucketName, event.key)
+                            DataUploadedToS3(sqsMessage.messageId, event.bucketName, event.key) //Fixme: rename event
                         }
                         else -> S3ObjectNotFound(sqsMessage.messageId, event.bucketName, event.key)
                     }

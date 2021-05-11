@@ -25,6 +25,13 @@ data class OutgoingHttpRequest(
     Operational
 )
 
+data class IncomingHttpResponse(
+    val status: Int,
+    val body: String
+) : Event(
+    Operational
+)
+
 data class ExceptionThrown<T : Throwable>(
     val exception: T,
     val message: String = exception.localizedMessage ?: "<missing>"

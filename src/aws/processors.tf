@@ -58,7 +58,11 @@ output "federation_keys_processing_download_function" {
 }
 
 output "virology_tokens_processing_function" {
-  value = module.virology_tokens_processing.function
+  value = module.virology_tokens_processing.tokens_processing_function
+}
+
+output "virology_scheduled_tokens_processing_function" {
+  value = module.virology_tokens_processing.scheduled_tokens_processing_function
 }
 
 output "virology_tokens_processing_output_store" {

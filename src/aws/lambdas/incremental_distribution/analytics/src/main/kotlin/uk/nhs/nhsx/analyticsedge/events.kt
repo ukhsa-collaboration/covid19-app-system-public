@@ -1,9 +1,16 @@
-package uk.nhs.nhsx.analyticsedge
-
+import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory
 
-data class SendSqsMessageEvent(val queryId: QueryId, val dataset: Dataset) : Event(EventCategory.Info)
-data class QueryFinishedEvent(val queryId: QueryId, val dataset: Dataset) : Event(EventCategory.Info)
-data class QueryErrorEvent(val queryId: QueryId, val dataset: Dataset, val message: String) : Event(EventCategory.Info)
-data class QueryStillRunning(val queryId: QueryId, val dataset: Dataset) : Event(EventCategory.Info)
+data class DataUploadedToEdge(
+    val sqsMessageId: String?,
+    val bucketName: BucketName,
+    val key: ObjectKey
+) : Event(EventCategory.Info)
+
+data class DataUploadSkipped(
+    val sqsMessageId: String?,
+    val bucketName: BucketName,
+    val key: ObjectKey
+) : Event(EventCategory.Info)

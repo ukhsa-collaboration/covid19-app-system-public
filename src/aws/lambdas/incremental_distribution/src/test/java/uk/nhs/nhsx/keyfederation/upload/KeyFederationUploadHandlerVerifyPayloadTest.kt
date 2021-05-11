@@ -18,11 +18,13 @@ import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.domain.ReportType
+import uk.nhs.nhsx.domain.TestType
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
 import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.FakeInteropDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Instant
 import java.util.*
@@ -53,6 +55,24 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
                 )
         )
 
+        val fakeS3 = FakeInteropDiagnosisKeysS3(listOf(
+            S3ObjectSummary().apply {
+                bucketName = "SUBMISSION_BUCKET"
+                key = "mobile/LAB_RESULT/abc"
+                lastModified = Date.from(submissionDate)
+            },
+            S3ObjectSummary().apply {
+                bucketName = "SUBMISSION_BUCKET"
+                key = "mobile/RAPID_RESULT/def"
+                lastModified = Date.from(submissionDate)
+            },
+            S3ObjectSummary().apply {
+                bucketName = "SUBMISSION_BUCKET"
+                key = "mobile/RAPID_SELF_REPORTED/ghi"
+                lastModified = Date.from(submissionDate)
+            }
+        ))
+
         val handler = KeyFederationUploadHandler(
             TestEnvironments.environmentWith(),
             { now },
@@ -79,23 +99,7 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
                 JWS(KmsCompatibleSigner(TestKeyPairs.ecPrime256r1.private)),
                 events
             ),
-            awsS3Client = FakeDiagnosisKeysS3(listOf(
-                S3ObjectSummary().apply {
-                    bucketName = "SUBMISSION_BUCKET"
-                    key = "mobile/LAB_RESULT/foobar"
-                    lastModified = Date.from(submissionDate)
-                },
-                S3ObjectSummary().apply {
-                    bucketName = "SUBMISSION_BUCKET"
-                    key = "mobile/RAPID_RESULT/foobar"
-                    lastModified = Date.from(submissionDate)
-                },
-                S3ObjectSummary().apply {
-                    bucketName = "SUBMISSION_BUCKET"
-                    key = "mobile/RAPID_SELF_REPORTED/foobar"
-                    lastModified = Date.from(submissionDate)
-                }
-            ))
+            awsS3Client = fakeS3
         )
 
         handler.handleRequest(ScheduledEvent(), ContextBuilder.TestContext())
@@ -110,46 +114,40 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
             compactSerialization = request.payload
         }
 
-        JSONAssert.assertEquals("""
-            [
-              {
-                "keyData": "mobile/LAB_RESULT/foobar",
-                "rollingStartNumber": 2696400,
-                "transmissionRiskLevel": 7,
-                "rollingPeriod": 144,
-                "regions": [
-                  "GB-EAW"
-                ],
-                "testType": 1,
-                "reportType": 1,
-                "daysSinceOnset": 0
-              },
-              {
-                "keyData": "mobile/RAPID_SELF_REPORTED/foobar",
-                "rollingStartNumber": 2696400,
-                "transmissionRiskLevel": 7,
-                "rollingPeriod": 144,
-                "regions": [
-                  "GB-EAW"
-                ],
-                "testType": 3,
-                "reportType": 0,
-                "daysSinceOnset": 0
-              },
-              {
-                "keyData": "mobile/RAPID_RESULT/foobar",
-                "rollingStartNumber": 2696400,
-                "transmissionRiskLevel": 7,
-                "rollingPeriod": 144,
-                "regions": [
-                  "GB-EAW"
-                ],
-                "testType": 2,
-                "reportType": 0,
-                "daysSinceOnset": 0
-              }
-            ]
-        """.trimIndent(), jws.payload, CustomComparator(JSONCompareMode.LENIENT, Customization("[*].rollingStartNumber") { _, _ -> true }))
+        val expectedPayLoad = Json.toJson(
+            listOf(
+                ExposureUpload(
+                    keyData = fakeS3.getEncodedKeyData(),
+                    rollingStartNumber = 2696400,
+                    transmissionRiskLevel = 7,
+                    rollingPeriod = 144,
+                    regions = listOf("GB-EAW"),
+                    testType = TestType.LAB_RESULT,
+                    reportType = ReportType.CONFIRMED_TEST,
+                    daysSinceOnset = 0
+                ), ExposureUpload(
+                    keyData = fakeS3.getEncodedKeyData(),
+                    rollingStartNumber = 2696400,
+                    transmissionRiskLevel = 7,
+                    rollingPeriod = 144,
+                    regions = listOf("GB-EAW"),
+                    testType = TestType.RAPID_RESULT,
+                    reportType = ReportType.UNKNOWN,
+                    daysSinceOnset = 0
+                ), ExposureUpload(
+                    keyData = fakeS3.getEncodedKeyData(),
+                    rollingStartNumber = 2696400,
+                    transmissionRiskLevel = 7,
+                    rollingPeriod = 144,
+                    regions = listOf("GB-EAW"),
+                    testType = TestType.RAPID_SELF_REPORTED,
+                    reportType = ReportType.UNKNOWN,
+                    daysSinceOnset = 0
+                )
+            )
+        )
+
+        JSONAssert.assertEquals(expectedPayLoad, jws.payload, CustomComparator(JSONCompareMode.LENIENT, Customization("[*].rollingStartNumber") { _, _ -> true }))
     }
 
 }

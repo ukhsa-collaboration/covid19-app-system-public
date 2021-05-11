@@ -24,24 +24,7 @@ namespace :validate do
   task :"tier-metadata" do
     include NHSx::Validate
     config_file_location = File.join($configuration.base, "/src/static/tier-metadata.json")
-    file_content = JSON.parse(File.read(config_file_location))
-    tiers = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 EN.Tier4.MassTest EN.Border.Tier1 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4 EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh EN.NationalRestrictions EN.VariantTier EN.EasingStep1 EN.EasingStep2 EN.VariantTier2]
-    unexpected_tiers = file_content.keys - tiers
-    raise GaudiError, "Tier metadata contains unexpected tiers: #{unexpected_tiers.join(",")}" unless unexpected_tiers.empty?
-
-    validation_errors = false
-    tiers.each do |tier|
-      begin
-        puts "Validating #{tier}"
-
-        valid_key?(file_content, tier) & hash?(file_content, tier)
-        metadata = file_content[tier]
-        validate_tier(tier, metadata)
-      rescue GaudiError => e
-        puts e.message
-        validation_errors = true
-      end
-    end
-    raise GaudiError, "Tier metadata validation failed" if validation_errors
+    tier_metadata = JSON.parse(File.read(config_file_location))
+    validate_tiers(tier_metadata)
   end
 end

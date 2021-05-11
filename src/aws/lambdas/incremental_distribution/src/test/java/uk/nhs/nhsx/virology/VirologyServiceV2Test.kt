@@ -25,6 +25,8 @@ import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusRequest
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusResponse
 import java.time.Instant
 import java.time.Period
 import java.util.*
@@ -37,6 +39,7 @@ class VirologyServiceV2Test {
     private val tokensGenerator = TokensGenerator
     private val fourWeeksExpireAt = now.plus(Period.ofWeeks(4))
     private val ctaToken = CtaToken.of("cc8f0b6z")
+    private val ctaTokenAsString = "cc8f0b6z"
     private val pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7")
     private val country = England
     private val virologyPolicyConfig = VirologyPolicyConfig()
@@ -50,7 +53,9 @@ class VirologyServiceV2Test {
     fun `order virology test`() {
         val tokenGenerator = mockk<TokensGenerator>()
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("poll-token"), DiagnosisKeySubmissionToken.of("submission-token")
+            CtaToken.of("cc8f0b6z"),
+            TestResultPollingToken.of("poll-token"),
+            DiagnosisKeySubmissionToken.of("submission-token")
         )
 
         val service = virologyService(tokenGenerator)
@@ -235,7 +240,8 @@ class VirologyServiceV2Test {
     @Test
     fun `when download counter is 2, return not found`() {
         val testResultPollingToken = TestResultPollingToken.of("poll-token")
-        val testTokensCounter = TestOrder(ctaToken, 2, testResultPollingToken, DiagnosisKeySubmissionToken.of("sub-token"))
+        val testTokensCounter =
+            TestOrder(ctaToken, 2, testResultPollingToken, DiagnosisKeySubmissionToken.of("sub-token"))
         val testResult = TestData.positiveResultFor(testTokensCounter.testResultPollingToken)
 
         every { persistence.getTestOrder(ctaToken) }.returns(Optional.of(testTokensCounter))
@@ -298,7 +304,7 @@ class VirologyServiceV2Test {
     fun `accepts test lab virology positive result`() {
         val testOrderTokens = TestOrder(
             CtaToken.of("074qbxqq"),
-            TestResultPollingToken.of( "09657719-fe58-46a3-a3a3-a8db82d48043"),
+            TestResultPollingToken.of("09657719-fe58-46a3-a3a3-a8db82d48043"),
             DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0")
         )
         every { persistence.persistTestOrderAndResult(any(), any(), any(), any(), any()) } returns testOrderTokens
@@ -325,7 +331,7 @@ class VirologyServiceV2Test {
     fun `accepts test lab virology negative result`() {
         val testOrderTokens = TestOrder(
             CtaToken.of("1e19z5zt"),
-            TestResultPollingToken.of( "09657719-fe58-46a3-a3a3-a8db82d48043"),
+            TestResultPollingToken.of("09657719-fe58-46a3-a3a3-a8db82d48043"),
             DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0")
         )
         every { persistence.persistTestOrderAndResult(any(), any(), any(), any(), any()) } returns testOrderTokens
@@ -351,7 +357,7 @@ class VirologyServiceV2Test {
     fun `accepts test lab virology void result`() {
         val testOrderTokens = TestOrder(
             CtaToken.of("1e19z5zt"),
-            TestResultPollingToken.of( "09657719-fe58-46a3-a3a3-a8db82d48043"),
+            TestResultPollingToken.of("09657719-fe58-46a3-a3a3-a8db82d48043"),
             DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0")
         )
         every { persistence.persistTestOrderAndResult(any(), any(), any(), any(), any()) } returns testOrderTokens
@@ -370,6 +376,76 @@ class VirologyServiceV2Test {
             persistence.persistTestOrderAndResult(
                 any(), fourWeeksExpireAt, Void, TestEndDate.of(2020, 8, 7), any()
             )
+        }
+    }
+
+    @Test
+    fun `check token returns consumable when ctaToken is in the database and has not been consumed`() {
+        val testResultPollingToken = TestResultPollingToken.of("poll-token")
+        val testOrder = TestOrder(ctaToken, testResultPollingToken, DiagnosisKeySubmissionToken.of("sub-token"))
+
+        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
+
+
+        val service = virologyService(TokensGenerator)
+        val request = VirologyTokenStatusRequest(ctaTokenAsString)
+        val result = service.checkStatusOfToken(request)
+
+        assertThat(result.tokenStatus).isEqualTo("consumable")
+
+
+        verifySequence {
+            persistence.getTestOrder(ctaToken)
+        }
+    }
+    @Test
+    fun `check token returns other when ctaToken is in the database and has been consumed`() {
+        val testResultPollingToken = TestResultPollingToken.of("poll-token")
+        val testOrder = TestOrder(ctaToken, 1, testResultPollingToken, DiagnosisKeySubmissionToken.of("sub-token"))
+
+        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
+
+
+        val service = virologyService(TokensGenerator)
+        val request = VirologyTokenStatusRequest(ctaTokenAsString)
+        val result = service.checkStatusOfToken(request)
+
+        assertThat(result.tokenStatus).isEqualTo("other")
+
+
+        verifySequence {
+            persistence.getTestOrder(ctaToken)
+        }
+    }
+
+    @Test
+    fun `check token returns other when ctaToken is not in the database`() {
+        every { persistence.getTestOrder(ctaToken) } returns Optional.empty()
+
+
+        val service = virologyService(TokensGenerator)
+        val request = VirologyTokenStatusRequest(ctaTokenAsString)
+        val result = service.checkStatusOfToken(request)
+
+        assertThat(result.tokenStatus).isEqualTo("other")
+
+
+        verifySequence {
+            persistence.getTestOrder(ctaToken)
+        }
+    }
+
+    @Test
+    fun `check token returns other when ctaToken is not valid`() {
+
+        val service = virologyService(TokensGenerator)
+        val request = VirologyTokenStatusRequest("invalidCtaToken")
+        val result = service.checkStatusOfToken(request)
+
+        assertThat(result.tokenStatus).isEqualTo("other")
+
+        verify(exactly = 0) {
+            persistence.getTestOrder(ctaToken)
         }
     }
 

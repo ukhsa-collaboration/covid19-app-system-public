@@ -2,7 +2,6 @@ package uk.nhs.nhsx.analyticsedge.upload
 
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
-import uk.nhs.nhsx.analyticsexporter.AnalyticsFileExporter
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Handler
@@ -26,16 +25,11 @@ class EdgeDataUploadHandler @JvmOverloads constructor(
         AwsSecretManager(AWSSecretsManagerClientBuilder.defaultClient()),
         events
     ),
-    analyticsFileExporter: AnalyticsFileExporter = AnalyticsFileExporter(
-        events,
-        s3Client,
-        edgeUploader,
-        config)
+    private val edgeFileExporter: EdgeFileExporter = EdgeFileExporter(s3Client, edgeUploader)
 ) : QueuedHandler(events) {
 
-    private val handler =
-        Handler<SQSEvent, Event> { input, _ -> analyticsFileExporter.export(input) }
-
-    override fun handler() = handler
+    override fun handler() = Handler<SQSEvent, Event> { input, _ ->
+        edgeFileExporter.export(input)
+    }
 
 }

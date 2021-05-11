@@ -20,6 +20,7 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.events.VirologyResults
 import uk.nhs.nhsx.core.events.VirologyTokenGen
+import uk.nhs.nhsx.core.events.VirologyTokenStatus
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.ACCEPTED_202
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422
@@ -40,8 +41,11 @@ import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestResult.*
+import uk.nhs.nhsx.testhelper.data.TestData.tokenStatusPayloadV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusRequest
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusResponse
 import kotlin.random.Random
 
 class VirologyUploadHandlerTest {
@@ -54,6 +58,8 @@ class VirologyUploadHandlerTest {
     private val fioranoPathV2 = "/upload/virology-test/v2/fiorano-result"
     private val tokenGenEngPathV2 = "/upload/virology-test/v2/eng-result-tokengen"
     private val tokenGenWlsPathV2 = "/upload/virology-test/v2/wls-result-tokengen"
+    private val tokenStatusEngPathV2 = "/upload/virology-test/v2/eng-result-tokenstatus"
+    private val tokenStatusWlsPathV2 = "/upload/virology-test/v2/wls-result-tokenstatus"
     private val events = RecordingEvents()
     private val service = mockk<VirologyService>()
 
@@ -276,6 +282,46 @@ class VirologyUploadHandlerTest {
         assertThat(response, hasStatus(HttpStatusCode.OK_200))
         assertThat(response, hasBody(equalTo("""{"ctaToken":"cc8f0b6z"}""")))
         events.contains(VirologyTokenGen::class, CtaTokenGen::class)
+    }
+    @Test
+    fun `accepts v2 english token status request`() {
+        every { service.checkStatusOfToken(any()) } returns VirologyTokenStatusResponse(
+            "consumable"
+        )
+
+        val response = sendAndReceive(path = tokenStatusEngPathV2, payload = tokenStatusPayloadV2)
+
+        verify(exactly = 1) {
+            service.checkStatusOfToken(
+                VirologyTokenStatusRequest(
+                    "cc8f0b6z"
+                )
+            )
+        }
+
+        assertThat(response, hasStatus(HttpStatusCode.OK_200))
+        assertThat(response, hasBody(equalTo("""{"tokenStatus":"consumable"}""")))
+        events.contains(TokenStatusCheck::class, VirologyTokenStatus::class)
+    }
+    @Test
+    fun `accepts v2 wales token status request`() {
+        every { service.checkStatusOfToken(any()) } returns VirologyTokenStatusResponse(
+            "consumable"
+        )
+
+        val response = sendAndReceive(path = tokenStatusWlsPathV2, payload = tokenStatusPayloadV2)
+
+        verify(exactly = 1) {
+            service.checkStatusOfToken(
+                VirologyTokenStatusRequest(
+                    "cc8f0b6z"
+                )
+            )
+        }
+
+        assertThat(response, hasStatus(HttpStatusCode.OK_200))
+        assertThat(response, hasBody(equalTo("""{"tokenStatus":"consumable"}""")))
+        events.contains(TokenStatusCheck::class, VirologyTokenStatus::class)
     }
 
     @Test

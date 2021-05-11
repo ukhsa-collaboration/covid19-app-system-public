@@ -3,11 +3,11 @@ package uk.nhs.nhsx.analyticsedge.upload
 import uk.nhs.nhsx.analyticsexporter.AnalyticsFileExporterConfig
 import uk.nhs.nhsx.core.Environment
 
-data class EdgeUploaderConfig (
+data class EdgeUploaderConfig(
     val targetUrl: String,
-    val sasTokenSecretName:String,
+    val sasTokenSecretName: String,
     override val s3DisallowedPrefixList: String
-) :AnalyticsFileExporterConfig{
+) : AnalyticsFileExporterConfig {
     companion object {
         private val TARGET_URL = Environment.EnvironmentKey.string("TARGET_URL")
         private val SAS_TOKEN_SECRET_NAME = Environment.EnvironmentKey.string("SAS_TOKEN_SECRET_NAME")

@@ -11,5 +11,6 @@ data class CtaExchangeResponseV2(
     val testEndDate: TestEndDate,
     val testKit: TestKit,
     val diagnosisKeySubmissionSupported: Boolean,
-    val requiresConfirmatoryTest: Boolean
+    val requiresConfirmatoryTest: Boolean,
+    val venueHistorySharingSupported: Boolean = false
 )

@@ -66,7 +66,9 @@ data class EnvConfig(
     val test_results_v2_npex_upload_endpoint: String,
     val test_results_v2_fiorano_upload_endpoint: String,
     val test_results_v2_eng_tokengen_upload_endpoint: String,
+    val test_results_v2_eng_tokenstatus_upload_endpoint: String,
     val test_results_v2_wls_tokengen_upload_endpoint: String,
+    val test_results_v2_wls_tokenstatus_upload_endpoint: String,
     val virology_kit_endpoint: String,
     val virology_kit_health_endpoint: String,
     val virology_table_results: String,
@@ -77,10 +79,12 @@ data class EnvConfig(
     val virology_tokens_processing_output_store: String,
     val virology_tokens_processing_sms_topic_arn: String,
     val virology_tokens_processing_email_topic_arn: String,
+    val virology_scheduled_tokens_processing_function: String,
     val virology_upload_lambda_function_name: String,
     val auth_headers: AuthHeaders,
     val empty_submission_endpoint: String,
-    val empty_submission_v2_endpoint: String
+    val empty_submission_v2_endpoint: String,
+    val crash_reports_submission_endpoint: String,
 )
 
 data class AuthHeaders(

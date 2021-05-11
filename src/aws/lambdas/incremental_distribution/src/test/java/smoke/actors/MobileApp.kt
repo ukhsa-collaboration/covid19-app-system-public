@@ -27,6 +27,7 @@ import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.headers.MobileOS.Android
 import uk.nhs.nhsx.core.headers.MobileOS.iOS
+import uk.nhs.nhsx.crashreports.CrashReportRequest
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
 import uk.nhs.nhsx.domain.*
 import uk.nhs.nhsx.domain.Country.Companion.England
@@ -218,8 +219,8 @@ class MobileApp(
             .requireSignatureHeaders()
 
         return when (version) {
-            V1 -> response.deserializeOrThrow<VirologyOrderResponse>()
-            V2 -> response.deserializeOrThrow<VirologyOrderResponse>()
+            V1 -> response.deserializeOrThrow()
+            V2 -> response.deserializeOrThrow()
         }
     }
 
@@ -337,6 +338,14 @@ class MobileApp(
     private fun userAgent() = when (os) {
         iOS -> "p=iOS,o=14.2,v=${appVersion.major}.${appVersion.minor}.${appVersion.patch},b=349"
         Android -> "p=Android,o=29,v=${appVersion.major}.${appVersion.minor}.${appVersion.patch},b=138"
+    }
+
+    fun submitCrashReport(crashReportRequest: CrashReportRequest) {
+        authedClient(Request(POST, envConfig.crash_reports_submission_endpoint)
+            .header("Content-Type", "application/json")
+            .body(Json.toJson(crashReportRequest)))
+            .requireStatusCode(Status.OK)
+            .requireNoPayload()
     }
 }
 

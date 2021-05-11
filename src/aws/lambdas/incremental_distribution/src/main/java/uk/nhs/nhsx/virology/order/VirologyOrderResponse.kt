@@ -9,7 +9,8 @@ data class VirologyOrderResponse(
     val websiteUrlWithQuery: String,
     val tokenParameterValue: CtaToken,
     val testResultPollingToken: TestResultPollingToken,
-    val diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken
+    val diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
+    val venueHistorySubmissionToken: String = ""
 ) {
     constructor(websiteUrlWithQuery: String, testOrder: TestOrder) : this(
         websiteUrlWithQuery,

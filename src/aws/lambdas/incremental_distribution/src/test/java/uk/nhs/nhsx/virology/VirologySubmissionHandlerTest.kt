@@ -465,7 +465,8 @@ class VirologySubmissionHandlerTest {
                 |"testResult":"POSITIVE",
                 |"testKit":"${testKit.name}",
                 |"diagnosisKeySubmissionSupported": true,
-                |"requiresConfirmatoryTest": false
+                |"requiresConfirmatoryTest": false,
+                |"venueHistorySharingSupported": false
             |} """.trimMargin()
 
         assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
@@ -543,7 +544,8 @@ class VirologySubmissionHandlerTest {
                 |"diagnosisKeySubmissionToken":"sub-token",
                 |"testKit":${testKit.name},
                 |"diagnosisKeySubmissionSupported": false,
-                |"requiresConfirmatoryTest": true
+                |"requiresConfirmatoryTest": true,
+                |"venueHistorySharingSupported": false
             |} """.trimMargin()
 
         assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)

@@ -122,3 +122,23 @@ module "postcode_demographic_geographic_lookup_v2" {
   database_name            = aws_glue_catalog_database.this.name
   tags                     = var.tags
 }
+
+module "coronavirus_gov_public_data_lookup_england" {
+  source                   = "./modules/coronavirus_gov_public_data_lookup"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+  country                  = "england"
+}
+
+module "coronavirus_gov_public_data_lookup_wales" {
+  source                   = "./modules/coronavirus_gov_public_data_lookup"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+  country                  = "wales"
+}

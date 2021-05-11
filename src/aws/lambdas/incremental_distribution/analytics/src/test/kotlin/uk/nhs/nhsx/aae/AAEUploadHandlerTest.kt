@@ -48,8 +48,7 @@ import java.security.KeyStore
 import java.security.SecureRandom
 import java.time.Duration
 import java.time.Instant
-import java.util.Date
-import java.util.Optional
+import java.util.*
 
 @ExtendWith(WireMockExtension::class)
 class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
@@ -149,7 +148,10 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
         val sqsEvent = SQSEvent().apply {
             records = listOf(
                 SQSEvent.SQSMessage()
-                    .apply { body = """{ "bucketName": "TEST_BUCKET", "key": "submitteddatehour=__HIVE_DEFAULT_PARTITION__/TEST_KEY_NOT_FOUND" }""" }
+                    .apply {
+                        body =
+                            """{ "bucketName": "TEST_BUCKET", "key": "submitteddatehour=__HIVE_DEFAULT_PARTITION__/TEST_KEY_NOT_FOUND" }"""
+                    }
             )
         }
 
@@ -236,7 +238,7 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
         )
     )
 
-    private fun getAAEUploadConfig (server: WireMockServer) :AAEUploadConfig = AAEUploadConfig(
+    private fun getAAEUploadConfig(server: WireMockServer): AAEUploadConfig = AAEUploadConfig(
         "${server.baseUrl()}/",
         "",
         "p12Cert",

@@ -83,23 +83,19 @@ module NHSx
     # Retrieves the target environment configuration for the Document Reporting Tool subsystem
     def doreto_target_environment_configuration(environment_name, account_name, system_config)
       terraform_configuration = File.join(system_config.base, DORETO_ACCOUNTS, account_name)
-      target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
-
-      return target_config
+      parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
     end
 
     # Retrieves the target environment configuration for public dashboard
     def pubdash_target_environment_configuration(environment_name, account_name, system_config)
       terraform_configuration = File.join(system_config.base, PUBDASH_ACCOUNTS, account_name)
-      target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
-      target_config
+      parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
     end
 
     # Retrieves the target environment configuration
     def analytics_target_environment_configuration(environment_name, account_name, system_config)
       terraform_configuration = File.join(system_config.base, ANALYTICS_ACCOUNTS, account_name)
-      target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
-      return target_config
+      parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
     end
 
     def signing_key_id(system_config)
@@ -148,7 +144,8 @@ module NHSx
       function_name = target_env_config["aae#{identifier}_export_function_name"]
       uuid = get_event_source_mapping_uuid(function_name, event_source_arn, lambda_arn, $configuration)
       raise GaudiError, "Could not find event source mapping uuid for #{function_name}" if uuid.nil?
-      uuid
+
+      return uuid
     end
   end
 end

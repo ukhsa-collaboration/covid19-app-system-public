@@ -125,10 +125,13 @@ module NHSx
     end
 
     def edge_configuration(system_config)
-      sas_token_name = "sas-token"
+      token_dir = File.join(system_config.out, "secrets")
+      token_name = "sas-token"
+      token_path = File.join(token_dir, "edge-sas-token.txt")
 
       edge_config = {
-        "sas_token_name" => sas_token_name,
+        "sas_token_name" => token_name,
+        "sas_token" => token_path
       }
 
       return edge_config
@@ -247,6 +250,12 @@ module NHSx
       run_command("Download #{secret_path}/#{apim_subscription_name}", cmdline, system_config)
     end
 
+    def download_edge_sas_token(system_config, edge_config)
+      edge_sas_token_path = edge_config["sas_token"]
+      cmdline = "#{secret_value} /edge/azure_storage_container/sas-token --query 'SecretString' --output text > #{edge_sas_token_path}"
+      run_command("Download /edge/azure_storage_container/sas-token", cmdline, system_config)
+    end
+
     def store_aae_x509_certificates(service_name, consumer_name, aae_config, system_config)
       secret_path = "/#{service_name}/#{consumer_name}"
 
@@ -286,8 +295,7 @@ module NHSx
     def store_sas_token(service_name, consumer_name, edge_config, system_config)
       secret_path = "/#{service_name}/#{consumer_name}"
       sas_token_name = edge_config["sas_token_name"]
-      sas_token = edge_config["sas_token"]
-      
+      sas_token = File.read(edge_config["sas_token"]).strip()
       store_secret_string("#{secret_path}/#{sas_token_name}", sas_token, "The EDGEs SAS Token", system_config)
     end
 

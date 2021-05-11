@@ -452,6 +452,44 @@ resource "aws_cloudfront_distribution" "this" {
     viewer_protocol_policy = "https-only"
   }
 
+  origin {
+    domain_name = replace(var.crash_reports_submission_endpoint, "/^https?://([^/]*).*/", "$1")
+    origin_id   = var.crash_reports_submission_endpoint
+
+    custom_header {
+      name  = "x-custom-oai"
+      value = var.custom_oai
+    }
+
+    custom_origin_config {
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = var.crash_reports_submission_path
+    allowed_methods  = ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"]
+    cached_methods   = ["HEAD", "GET", "OPTIONS"]
+    target_origin_id = var.crash_reports_submission_endpoint
+
+    default_ttl = 0
+    min_ttl     = 0
+    max_ttl     = 0
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+
+      headers = ["User-Agent"]
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+
   #retain_on_delete = # not a good idead: "true" causes "Error: CloudFrontOriginAccessIdentityInUse: The CloudFront origin access identity is still being used" in other places
 
   restrictions {

@@ -171,7 +171,7 @@ class VirologyV2SmokeTest {
 
         assertThat(testResponse.testResult).isEqualTo(Negative)
         assertThat(testResponse.testKit).isEqualTo(LAB_RESULT)
-        assertThat(testResponse.testEndDate).isEqualTo(TestEndDate.of(2020,4,23))
+        assertThat(testResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
         assertThat(testResponse.diagnosisKeySubmissionSupported).isEqualTo(
             expectedSupportedFlagFor(
                 England,
@@ -285,5 +285,70 @@ class VirologyV2SmokeTest {
         val mobileApp = MobileApp(client, config, appVersion = MobileAppVersion.Version(4, 3))
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
         assertThat(exchangeResponse).isInstanceOf(CtaExchangeResult.NotFound::class.java)
+    }
+
+    @ParameterizedTest
+    @EnumSource(TestKit::class)
+    fun `check for token status returns consumable when token has been generated and not consumed for all Eng test kits`(
+        testKit: TestKit
+    ) {
+        val ctaToken = testLab.generateCtaTokenFor(
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
+            source = VirologyTokenExchangeSource.Eng,
+            apiVersion = V2,
+            testKit = testKit
+        )
+        val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Eng)
+        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(TestKit::class)
+    fun `check for token status returns consumable when token has been generated and not consumed for all Wls test kits`(
+        testKit: TestKit
+    ) {
+        val ctaToken = testLab.generateCtaTokenFor(
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
+            source = VirologyTokenExchangeSource.Wls,
+            apiVersion = V2,
+            testKit = testKit
+        )
+        val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Wls)
+        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
+
+    }
+
+    @ParameterizedTest
+    @EnumSource(TestKit::class)
+    fun `check for token status returns other when token has been generated and consumed for all Eng test kits`(testKit: TestKit) {
+        val ctaToken = testLab.generateCtaTokenFor(
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
+            source = VirologyTokenExchangeSource.Eng,
+            apiVersion = V2,
+            testKit = testKit
+        )
+        mobileApp.exchange(ctaToken, V2, England)
+        val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Eng)
+        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
+
+    }
+    @ParameterizedTest
+    @EnumSource(TestKit::class)
+    fun `check for token status returns other when token has been generated and consumed for all Wls test kits`(testKit: TestKit) {
+        val ctaToken = testLab.generateCtaTokenFor(
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 11, 19),
+            source = VirologyTokenExchangeSource.Wls,
+            apiVersion = V2,
+            testKit = testKit
+        )
+        mobileApp.exchange(ctaToken, V2, Wales)
+        val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Wls)
+        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
+
     }
 }

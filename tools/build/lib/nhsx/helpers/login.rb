@@ -177,6 +177,7 @@ module NHSx
       else
         raise GaudiError, "Unauthorized account #{account}" unless account == "dev"
 
+        ENV.delete("AWS_PROFILE")
         ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
         ENV["ACCOUNT"] = account
       end

@@ -59,3 +59,9 @@ data class CtaTokenGen(
     val testResult: TestResult,
     val testKit: TestKit
 ) : Event(Info)
+
+data class TokenStatusCheck(
+    val version: Int,
+    val source: VirologyTokenExchangeSource,
+    val ctaToken: String,
+) : Event(Info)

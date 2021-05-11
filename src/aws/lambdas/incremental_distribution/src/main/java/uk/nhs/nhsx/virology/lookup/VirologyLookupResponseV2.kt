@@ -9,5 +9,6 @@ data class VirologyLookupResponseV2(
     val testResult: TestResult,
     val testKit: TestKit,
     val diagnosisKeySubmissionSupported: Boolean,
-    val requiresConfirmatoryTest: Boolean
+    val requiresConfirmatoryTest: Boolean,
+    val venueHistorySharingSupported: Boolean = false
 )

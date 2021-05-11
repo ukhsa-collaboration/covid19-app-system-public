@@ -7,6 +7,7 @@ phases:
     commands:
       - rake config:codebuild
       - rake deploy:analytics:$TARGET_ENVIRONMENT
+      - rake test:sanity_check:analytics:$TARGET_ENVIRONMENT
 artifacts:
   name: $(date +%Y%m%d%H%M%S)-deploy-analytics-$TARGET_ENVIRONMENT.zip
   files:

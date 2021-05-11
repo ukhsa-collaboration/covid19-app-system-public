@@ -1,8 +1,10 @@
 require "json"
+require_relative "validate"
 
 module NHS
   # Methods to facilitate working with i18n data and tools
   module I18N
+    include NHSx::Validate
     # Path to the symptomatic questionaire configuration file
     QUESTIONAIRE = "src/static/symptomatic-questionnaire.json".freeze
     # Path to the android availability configuration file
@@ -28,11 +30,11 @@ module NHS
       "Travelling" => "travelling",
       "WeddingFuneral" => "weddings-and-funerals",
       "Work" => "work",
-      "Worship" => "worship"
+      "Worship" => "worship",
 
     }
     # Number of supported languages ex: en, ar, bn, cy
-    SUPPORTED_LANGUAGES = ["ar","bn","cy","en","gu","pa","pl","ro","so","tr","ur","zh"]
+    SUPPORTED_LANGUAGES = ["ar", "bn", "cy", "en", "gu", "pa", "pl", "ro", "so", "tr", "ur", "zh"]
     # Loads the tranlsation data from an export of Localise
     #
     # Localise exports data in a "locale" directory, one file per language.
@@ -72,7 +74,7 @@ module NHS
 
       tier_metadata = JSON.parse(File.read(tier_metadata_file))
 
-      tier_metadata.keys.each do |tier_label|
+      tier_metadata.each_key do |tier_label|
         tier_metadata[tier_label]["name"] = translations["#{tier_label}.Name"]
         tier_metadata[tier_label]["heading"] = translations["#{tier_label}.Heading"]
         tier_metadata[tier_label]["content"] = translations["#{tier_label}.Content"]
@@ -80,42 +82,22 @@ module NHS
         tier_metadata[tier_label]["linkTitle"] = translations["#{tier_label}.LinkTitle"]
 
         tier_policies = {}
-        translations.keys.select { |v| v.start_with?("#{tier_label}.PolicyData.Policies.") }
-          .map { |v| v.gsub("#{tier_label}.PolicyData.Policies.", "").split(".").first }.each do |policy_icon|
-          raise GaudiError, "I18n key #{policy_icon} does not map to an icon" unless POLICY_ICONS.keys.include?(policy_icon)
+        tier_policy_data = translations.keys.select { |v| v.start_with?("#{tier_label}.PolicyData.Policies.") }
+          .map { |v| v.gsub("#{tier_label}.PolicyData.Policies.", "").split(".").first }
 
-          tier_policies[policy_icon] = {
-            "policyIcon" => POLICY_ICONS[policy_icon],
-            "policyHeading" => translations["#{tier_label}.PolicyData.Policies.#{policy_icon}.Heading"],
-            "policyContent" => translations["#{tier_label}.PolicyData.Policies.#{policy_icon}.Content"],
+        tier_policy_data.each do |policy|
+          raise GaudiError, "I18n key #{policy} does not map to an icon" unless POLICY_ICONS.keys.include?(policy)
+
+          tier_policies[policy] = {
+            "policyIcon" => POLICY_ICONS[policy],
+            "policyHeading" => translations["#{tier_label}.PolicyData.Policies.#{policy}.Heading"],
+            "policyContent" => translations["#{tier_label}.PolicyData.Policies.#{policy}.Content"],
           }
         end
 
         if tier_policies.empty?
-          puts "Warning: #{tier_label} has no policy data"
+          puts "No policies for #{tier_label}"
         else
-          tier_policies.each do |k, v|
-            v.each do |k1, v1|
-              if v1.class == Hash
-                v1.transform_values! { |entry| entry.empty? ? nil : entry }
-                puts "Warning: missing translations for #{tier_label}.PolicyData.Policies.#{k} => #{k1}" if v1.compact.size != v1.size
-                v1 = v1.compact!
-              end
-            end
-
-            if v["policyHeading"].empty? || v["policyContent"].empty?
-              tier_policies.delete(k)
-            elsif v["policyHeading"].keys != SUPPORTED_LANGUAGES || v["policyContent"].keys != SUPPORTED_LANGUAGES
-              if v["policyHeading"].keys != SUPPORTED_LANGUAGES
-                puts "Error: policy #{k} does not have the translations for the following locales: #{SUPPORTED_LANGUAGES-v["policyHeading"].keys} in policy heading, include them in Lokalise?"
-              end
-              if v["policyContent"].keys != SUPPORTED_LANGUAGES
-                puts "Error: policy #{k} does not have the translations for the following locales:  #{SUPPORTED_LANGUAGES-v["policyContent"].keys} in policy content, include them in Lokalise?"
-              end
-            end
-
-          end
-
           tier_metadata[tier_label]["policyData"] = {
             "localAuthorityRiskTitle" => translations["#{tier_label}.PolicyData.localAuthorityRiskTitle"],
             "heading" => translations["#{tier_label}.PolicyData.Heading"],
@@ -124,10 +106,9 @@ module NHS
             "policies" => tier_policies.map { |_, v| v },
           }
         end
-
-        puts "Warning: #{tier_label} has no translations" unless translations["#{tier_label}.Name"]
       end
 
+      validate_tiers(tier_metadata)
       write_file(tier_metadata_file, JSON.pretty_generate(tier_metadata))
     end
 

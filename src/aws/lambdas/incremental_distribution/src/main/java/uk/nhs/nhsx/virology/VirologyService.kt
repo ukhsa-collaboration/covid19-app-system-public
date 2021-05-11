@@ -4,6 +4,8 @@ import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
+import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator.Companion.checksum
 import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
@@ -22,9 +24,11 @@ import uk.nhs.nhsx.virology.persistence.TestState.PendingTestResult
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLiveCalculator.Companion.DEFAULT_TTL
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusRequest
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusResponse
 import java.time.Period
 
 class VirologyService(
@@ -78,6 +82,18 @@ class VirologyService(
 
         events(InfoEvent("Token gen created ctaToken: ${testOrder.ctaToken.value}"))
         return VirologyTokenGenResponse(testOrder.ctaToken)
+    }
+
+    fun checkStatusOfToken(tokenStatusRequest: VirologyTokenStatusRequest): VirologyTokenStatusResponse {
+        if (!(checksum().validate(tokenStatusRequest.ctaToken))) {
+            return VirologyTokenStatusResponse("other")
+        }
+        val testOrder = persistence.getTestOrder(CtaToken.of(tokenStatusRequest.ctaToken))
+        return testOrder.filter { it.downloadCounter == 0 }
+            .map {
+                VirologyTokenStatusResponse("consumable")
+            }.orElse(VirologyTokenStatusResponse("other"))
+
     }
 
     fun exchangeCtaTokenForV1(request: CtaExchangeRequestV1): CtaExchangeResult {

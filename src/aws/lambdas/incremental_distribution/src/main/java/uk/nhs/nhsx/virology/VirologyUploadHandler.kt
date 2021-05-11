@@ -17,6 +17,7 @@ import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.events.VirologyResults
 import uk.nhs.nhsx.core.events.VirologyTokenGen
+import uk.nhs.nhsx.core.events.VirologyTokenStatus
 import uk.nhs.nhsx.core.handler.RoutingHandler
 import uk.nhs.nhsx.core.readJsonOrNull
 import uk.nhs.nhsx.core.readStrictOrNull
@@ -32,6 +33,7 @@ import uk.nhs.nhsx.virology.result.VirologyResultRequestV1
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV1
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusRequest
 import uk.nhs.nhsx.virology.result.convertToV2
 
 class VirologyUploadHandler @JvmOverloads constructor(
@@ -97,8 +99,19 @@ class VirologyUploadHandler @JvmOverloads constructor(
                 path(POST, "/upload/virology-test/v2/wls-result-tokengen") { r, _ ->
                     events(VirologyTokenGen())
                     handleV2TokenGen(VirologyTokenExchangeSource.Wls, virologyService, r)
-                }
-            )
+                }),
+            authorisedBy(
+                authenticator,
+                path(POST, "/upload/virology-test/v2/eng-result-tokenstatus") { r, _ ->
+                    events(VirologyTokenStatus())
+                    handleV2TokenStatus(VirologyTokenExchangeSource.Eng, virologyService, r)
+                }),
+            authorisedBy(
+                authenticator,
+                path(POST, "/upload/virology-test/v2/wls-result-tokenstatus") { r, _ ->
+                    events(VirologyTokenStatus())
+                    handleV2TokenStatus(VirologyTokenExchangeSource.Wls, virologyService, r)
+                })
         )
     )
 
@@ -135,6 +148,18 @@ class VirologyUploadHandler @JvmOverloads constructor(
             ?.let {
                 events(CtaTokenGen(2, source, it.testResult, it.testKit))
                 HttpResponses.ok(toJson(virologyService.acceptTestResultGeneratingTokens(it)))
+            }
+            ?: HttpResponses.unprocessableEntity()
+
+    private fun handleV2TokenStatus(
+        source: VirologyTokenExchangeSource,
+        virologyService: VirologyService,
+        request: APIGatewayProxyRequestEvent
+    ): APIGatewayProxyResponseEvent =
+        readJsonOrNull<VirologyTokenStatusRequest>(request)
+            ?.let {
+                events(TokenStatusCheck(2, source, it.ctaToken))
+                HttpResponses.ok(toJson(virologyService.checkStatusOfToken(it)))
             }
             ?: HttpResponses.unprocessableEntity()
 

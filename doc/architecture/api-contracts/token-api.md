@@ -9,7 +9,9 @@ API group: [Upload](../guidebook.md#system-apis-and-interfaces)
   - Can only be used to upload PCR test results (or LFD-like test results to be treated as PCR test results - depending on the current policy)
 - Test result upload (V2)
   - ```POST https://<FQDN>/upload/virology-test/v2/<SOURCE>-result-tokengen```
-  - Can be used to upload LFD-like and PCR-like test results  
+  - Can be used to upload LFD-like and PCR-like test results
+- Test token status (V2)
+  - ```POST https://<FQDN>/upload/virology-test/v2/<SOURCE>-result-tokenstatus```
 - Valid SOURCE values: 
   - `eng`: BSA
   - `wls`: PHW
@@ -69,6 +71,23 @@ Response body:
 }
 ```
 
+### Example (V2 API): Checking the status of a token
+
+```POST https://<FQDN>/upload/virology-test/v2/wls-result-tokenstatus```
+
+Request body:
+```json
+{
+    "ctaToken": "1234abcd"
+}
+```
+
+Response body:
+```json
+{
+    "tokenStatus": "consumable|other"
+}
+```
 ## Validation
 
 V1 and V2 APIs
@@ -94,6 +113,7 @@ V2 API
   - `LAB_RESULT`  
   - `RAPID_RESULT` (**only positive test results are supported**)
   - `RAPID_SELF_REPORTED` (**only positive test results are supported**)
+    
 
 ### Response Codes
 

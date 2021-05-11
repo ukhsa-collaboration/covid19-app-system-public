@@ -1,20 +1,22 @@
 locals {
-  risky_venues_upload_pattern                 = "upload/identified-risk-venues"
-  risky_post_districts_upload_pattern         = "upload/high-risk-postal-districts"
-  test_results_upload_pattern                 = "upload/virology-test/*"
-  test_results_npex_upload_pattern            = "upload/virology-test/npex-result"
-  test_results_fiorano_upload_pattern         = "upload/virology-test/fiorano-result"
-  test_results_eng_tokengen_upload_pattern    = "upload/virology-test/eng-result-tokengen"
-  test_results_wls_tokengen_upload_pattern    = "upload/virology-test/wls-result-tokengen"
-  test_results_v2_npex_upload_pattern         = "upload/virology-test/v2/npex-result"
-  test_results_v2_fiorano_upload_pattern      = "upload/virology-test/v2/fiorano-result"
-  test_results_v2_eng_tokengen_upload_pattern = "upload/virology-test/v2/eng-result-tokengen"
-  test_results_v2_wls_tokengen_upload_pattern = "upload/virology-test/v2/wls-result-tokengen"
-  test_results_health_pattern                 = "upload/virology-test/health"
-  risky_venues_health_pattern                 = "upload/identified-risk-venues/health"
-  risky_post_districts_health_pattern         = "upload/high-risk-postal-districts/health"
-  isolation_payment_pattern                   = "/isolation-payment/ipc-token/*"
-  isolation_payment_health_pattern            = "/isolation-payment/health"
+  risky_venues_upload_pattern                    = "upload/identified-risk-venues"
+  risky_post_districts_upload_pattern            = "upload/high-risk-postal-districts"
+  test_results_upload_pattern                    = "upload/virology-test/*"
+  test_results_npex_upload_pattern               = "upload/virology-test/npex-result"
+  test_results_fiorano_upload_pattern            = "upload/virology-test/fiorano-result"
+  test_results_eng_tokengen_upload_pattern       = "upload/virology-test/eng-result-tokengen"
+  test_results_wls_tokengen_upload_pattern       = "upload/virology-test/wls-result-tokengen"
+  test_results_v2_npex_upload_pattern            = "upload/virology-test/v2/npex-result"
+  test_results_v2_fiorano_upload_pattern         = "upload/virology-test/v2/fiorano-result"
+  test_results_v2_eng_tokengen_upload_pattern    = "upload/virology-test/v2/eng-result-tokengen"
+  test_results_v2_wls_tokengen_upload_pattern    = "upload/virology-test/v2/wls-result-tokengen"
+  test_results_v2_eng_tokenstatus_upload_pattern = "upload/virology-test/v2/eng-result-tokenstatus"
+  test_results_v2_wls_tokenstatus_upload_pattern = "upload/virology-test/v2/wls-result-tokenstatus"
+  test_results_health_pattern                    = "upload/virology-test/health"
+  risky_venues_health_pattern                    = "upload/identified-risk-venues/health"
+  risky_post_districts_health_pattern            = "upload/high-risk-postal-districts/health"
+  isolation_payment_pattern                      = "/isolation-payment/ipc-token/*"
+  isolation_payment_health_pattern               = "/isolation-payment/health"
 
   # String patterns passed to lambdas for invalidating cloudfront specific cache objects only
   risky_venues_cache_invalidation_pattern         = "/distribution/risky-venues"
@@ -148,6 +150,12 @@ output "test_results_v2_eng_tokengen_upload_endpoint" {
 }
 output "test_results_v2_wls_tokengen_upload_endpoint" {
   value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_v2_wls_tokengen_upload_pattern}"
+}
+output "test_results_v2_eng_tokenstatus_upload_endpoint" {
+  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_v2_eng_tokenstatus_upload_pattern}"
+}
+output "test_results_v2_wls_tokenstatus_upload_endpoint" {
+  value = "https://${module.upload_apis.upload_domain_name}/${local.test_results_v2_wls_tokenstatus_upload_pattern}"
 }
 output "external_facing_isolation_payment_consume_endpoint" {
   value = "https://${module.upload_apis.upload_domain_name}/isolation-payment/ipc-token/consume-token"

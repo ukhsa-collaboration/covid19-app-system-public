@@ -13,20 +13,25 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 import java.time.Duration
 
-class EdgeUploader (config: EdgeUploaderConfig, secretManager: SecretManager, private val events: Events) :ExportDestinationUploader{
+class EdgeUploader(
+    config: EdgeUploaderConfig,
+    secretManager: SecretManager,
+    private val events: Events
+) : ExportDestinationUploader {
+
     private val targetUrl = config.targetUrl
-        .let { if(it.endsWith("/"))  it else "$it/" }
+        .let { if (it.endsWith("/")) it else "$it/" }
 
     private val sasToken = secretManager
         .getSecret(SecretName.of(config.sasTokenSecretName))
         .map(SecretValue::value)
         .orElseThrow { RuntimeException("sas token does not exits in secret manager") }
 
-    private val httpClient =  HttpClient.newBuilder()
+    private val httpClient = HttpClient.newBuilder()
         .connectTimeout(HTTP_PUT_TIME_OUT)
         .build()
 
-    override fun uploadFile(filename:String, content:ByteArray, contentType:String) {
+    override fun uploadFile(filename: String, content: ByteArray, contentType: String) {
         val uploadRequest = HttpRequest.newBuilder()
             .header("Content-Type", contentType)
             .header("x-ms-version", "2018-03-28")
@@ -37,9 +42,10 @@ class EdgeUploader (config: EdgeUploaderConfig, secretManager: SecretManager, pr
         val httpResponse = httpClient.send(uploadRequest, HttpResponse.BodyHandlers.ofString())
         events(
             OutgoingHttpRequest(
-                uploadRequest.uri().let {uri ->  URIBuilder(uri).removeQuery().build()}.toString(),
+                uploadRequest.uri().let { uri -> URIBuilder(uri).removeQuery().build() }.toString(),
                 uploadRequest.method(),
-                httpResponse.statusCode())
+                httpResponse.statusCode()
+            )
         )
         if (httpResponse.statusCode() != EDGE_UPLOAD_SUCCESS_HTTP_RESPONSE_CODE) {
             throw RuntimeException("Unexpected HTTP response code " + httpResponse.statusCode())
