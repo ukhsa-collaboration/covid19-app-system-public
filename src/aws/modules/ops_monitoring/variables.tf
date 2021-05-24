@@ -20,7 +20,11 @@ variable "gateways" {
   type = list(string)
 }
 
-variable "analytics_submission_function" {
+variable "analytics_ingest_submission_function" {
+  description = "name of lambda function"
+}
+
+variable "analytics_ingest_processing_function" {
   description = "name of lambda function"
 }
 

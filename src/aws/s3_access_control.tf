@@ -157,3 +157,11 @@ module "diagnosis_keys_analytics_store_access" {
   principal_aws_accounts = var.analytics_aws_accounts
   s3_bucket_arn          = module.diagnosis_keys_submission_analytics.analytics_bucket_arn
 }
+
+module "virology_test_analytics_store_access" {
+  source                 = "./modules/s3_access_policies"
+  policy_type            = "cross_account_readonly"
+  prefix                 = "analytics"
+  principal_aws_accounts = var.analytics_aws_accounts
+  s3_bucket_arn          = module.log_insights_analytics_store.bucket_arn
+}

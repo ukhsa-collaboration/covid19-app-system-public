@@ -3,7 +3,11 @@ package uk.nhs.nhsx.virology
 import com.amazonaws.HttpMethod
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -18,22 +22,37 @@ import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
-import uk.nhs.nhsx.core.events.*
+import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.events.UnprocessableJson
+import uk.nhs.nhsx.core.events.VirologyCtaExchange
+import uk.nhs.nhsx.core.events.VirologyOrder
+import uk.nhs.nhsx.core.events.VirologyRegister
+import uk.nhs.nhsx.core.events.VirologyResults
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
-import uk.nhs.nhsx.domain.*
 import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.domain.TestResult.Positive
+import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V1
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V2
-import uk.nhs.nhsx.virology.exchange.*
+import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
+import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
+import uk.nhs.nhsx.virology.exchange.CtaExchangeResponseV1
+import uk.nhs.nhsx.virology.exchange.CtaExchangeResponseV2
+import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
@@ -41,7 +60,9 @@ import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import java.time.Duration
+import java.time.LocalDateTime
 import java.util.*
 
 class VirologySubmissionHandlerTest {
@@ -236,7 +257,7 @@ class VirologySubmissionHandlerTest {
     @ValueSource(strings = ["/virology-test/home-kit/order", "/virology-test/v2/order"])
     fun `handle test order request success`(orderUrl: String) {
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"))
+            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"), LocalDateTime.now().plusWeeks(4))
 
         val virology = virologyService()
 
@@ -263,7 +284,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `handle test register request success`() {
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"))
+            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"), LocalDateTime.now().plusWeeks(4))
 
         val virology = virologyService()
 
@@ -328,7 +349,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token for available test result`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any()) } returns
+            every { exchangeCtaTokenForV1(any(), any()) } returns
                 CtaExchangeResult.Available(
                     CtaExchangeResponseV1(DiagnosisKeySubmissionToken.of("sub-token"), Positive, TestEndDate.of(2020, 4, 23), LAB_RESULT)
                 )
@@ -358,7 +379,7 @@ class VirologySubmissionHandlerTest {
         assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
 
         verify(exactly = 1) {
-            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")))
+            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any())
         }
         events.contains(VirologyCtaExchange::class)
     }
@@ -366,7 +387,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token handling test result not available yet`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any()) } returns CtaExchangeResult.Pending()
+            every { exchangeCtaTokenForV1(any(), any()) } returns CtaExchangeResult.Pending()
         }
 
         val requestEvent = ProxyRequestBuilder.request()
@@ -385,7 +406,7 @@ class VirologySubmissionHandlerTest {
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
         verify(exactly = 1) {
-            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")))
+            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any())
         }
         events.contains(VirologyCtaExchange::class)
     }
@@ -393,7 +414,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token handling cta token not found`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any()) } returns CtaExchangeResult.NotFound()
+            every { exchangeCtaTokenForV1(any(), any()) } returns CtaExchangeResult.NotFound()
         }
 
         val requestEvent = ProxyRequestBuilder.request()
@@ -412,7 +433,7 @@ class VirologySubmissionHandlerTest {
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
         verify(exactly = 1) {
-            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")))
+            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any())
         }
         events.contains(VirologyCtaExchange::class)
     }
@@ -466,6 +487,44 @@ class VirologySubmissionHandlerTest {
                 |"testKit":"${testKit.name}",
                 |"diagnosisKeySubmissionSupported": true,
                 |"requiresConfirmatoryTest": false,
+                |"confirmatoryDayLimit": null,
+                |"venueHistorySharingSupported": false
+            |} """.trimMargin()
+
+        assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
+    }
+
+    @Test
+    fun `lookup v2 maps test kits to json correctly with confirmatory day limit`() {
+        val lookup = mockk<VirologyLookupService> {
+            every { lookup(any(), any()) } returns lookupAvailableResultV2(
+                testKit = RAPID_RESULT,
+                confirmatoryDayLimit = 2
+            )
+        }
+
+        val requestEvent = ProxyRequestBuilder.request()
+            .withMethod(HttpMethod.POST)
+            .withCustomOai("OAI")
+            .withRequestId()
+            .withPath("/virology-test/v2/results")
+            .withBearerToken("anything")
+            .withJson(lookupPayload(V2))
+            .build()
+
+        val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
+
+        assertThat(response.statusCode).isEqualTo(200)
+        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+
+        val expectedResponse =
+            """ { 
+                |"testEndDate":"2020-04-23T00:00:00Z", 
+                |"testResult":"POSITIVE",
+                |"testKit":"${RAPID_RESULT.name}",
+                |"diagnosisKeySubmissionSupported": true,
+                |"requiresConfirmatoryTest": false,
+                |"confirmatoryDayLimit": 2,
                 |"venueHistorySharingSupported": false
             |} """.trimMargin()
 
@@ -520,8 +579,12 @@ class VirologySubmissionHandlerTest {
     @EnumSource(TestKit::class)
     fun `exchange v2 cta token for available rapid test result`(testKit: TestKit) {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV2(any(), any()) } returns
-                ctaExchangeAvailableResultV2(testKit, submissionSupported = false, confirmatoryTest = true)
+            every { exchangeCtaTokenForV2(any(), any(), any()) } returns
+                ctaExchangeAvailableResultV2(
+                    testKit = testKit,
+                    submissionSupported = false,
+                    confirmatoryTest = true
+                )
         }
 
         val requestEvent = ProxyRequestBuilder.request()
@@ -545,13 +608,57 @@ class VirologySubmissionHandlerTest {
                 |"testKit":${testKit.name},
                 |"diagnosisKeySubmissionSupported": false,
                 |"requiresConfirmatoryTest": true,
+                |"confirmatoryDayLimit": null,
                 |"venueHistorySharingSupported": false
             |} """.trimMargin()
 
         assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
 
         verify(exactly = 1) {
-            virology.exchangeCtaTokenForV2(CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any())
+            virology.exchangeCtaTokenForV2(CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any(), any())
+        }
+        events.contains(VirologyCtaExchange::class)
+    }
+
+    @Test
+    fun `exchange v2 cta token for available rapid test result with confirmatory day limit`() {
+        val virology = mockk<VirologyService> {
+            every { exchangeCtaTokenForV2(any(), any(), any()) } returns
+                ctaExchangeAvailableResultV2(
+                    testKit = RAPID_RESULT,
+                    confirmatoryDayLimit = 1
+                )
+        }
+
+        val requestEvent = ProxyRequestBuilder.request()
+            .withMethod(HttpMethod.POST)
+            .withCustomOai("OAI")
+            .withRequestId()
+            .withPath("/virology-test/v2/cta-exchange")
+            .withBearerToken("anything")
+            .withJson(ctaExchangePayload(V2))
+            .build()
+
+        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+
+        assertThat(response.statusCode).isEqualTo(200)
+        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val expectedResponse =
+            """ { 
+                |"testEndDate":"2020-04-23T00:00:00Z", 
+                |"testResult":"POSITIVE", 
+                |"diagnosisKeySubmissionToken":"sub-token",
+                |"testKit":${RAPID_RESULT.name},
+                |"diagnosisKeySubmissionSupported": true,
+                |"requiresConfirmatoryTest": false,
+                |"confirmatoryDayLimit": 1,
+                |"venueHistorySharingSupported": false
+            |} """.trimMargin()
+
+        assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
+
+        verify(exactly = 1) {
+            virology.exchangeCtaTokenForV2(CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any(), any())
         }
         events.contains(VirologyCtaExchange::class)
     }
@@ -559,7 +666,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange v2 parses mobile version header`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV2(any(), any()) } returns ctaExchangeAvailableResultV2()
+            every { exchangeCtaTokenForV2(any(), any(), any()) } returns ctaExchangeAvailableResultV2()
         }
 
         val requestEvent = ProxyRequestBuilder.request()
@@ -577,7 +684,9 @@ class VirologySubmissionHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV2(
-                CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any()
+                CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country),
+                MobileAppVersion.Version(4, 3, 5),
+                MobileOS.Android
             )
         }
     }
@@ -585,7 +694,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange v2 parses mobile version header handling unknown user agent`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV2(any(), any()) } returns ctaExchangeAvailableResultV2()
+            every { exchangeCtaTokenForV2(any(), any(), any()) } returns ctaExchangeAvailableResultV2()
         }
 
         val requestEvent = ProxyRequestBuilder.request()
@@ -603,7 +712,7 @@ class VirologySubmissionHandlerTest {
         assertThat(response.statusCode).isEqualTo(200)
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV2(
-                CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any()
+                CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any(), any()
             )
         }
     }
@@ -661,21 +770,24 @@ class VirologySubmissionHandlerTest {
     private fun lookupAvailableResultV2(
         testKit: TestKit = LAB_RESULT,
         submissionSupported: Boolean = true,
-        confirmatoryTest: Boolean = false
+        confirmatoryTest: Boolean = false,
+        confirmatoryDayLimit: Int? = null
     ) = VirologyLookupResult.AvailableV2(
         VirologyLookupResponseV2(
             TestEndDate.of(2020, 4, 23),
             Positive,
             testKit,
             submissionSupported,
-            confirmatoryTest
+            confirmatoryTest,
+            confirmatoryDayLimit
         )
     )
 
     private fun ctaExchangeAvailableResultV2(
         testKit: TestKit = LAB_RESULT,
         submissionSupported: Boolean = true,
-        confirmatoryTest: Boolean = false
+        confirmatoryTest: Boolean = false,
+        confirmatoryDayLimit: Int? = null
     ) = CtaExchangeResult.AvailableV2(
         CtaExchangeResponseV2(
             DiagnosisKeySubmissionToken.of("sub-token"),
@@ -683,7 +795,8 @@ class VirologySubmissionHandlerTest {
             TestEndDate.of(2020, 4, 23),
             testKit,
             submissionSupported,
-            confirmatoryTest
+            confirmatoryTest,
+            confirmatoryDayLimit
         )
     )
 

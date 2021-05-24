@@ -80,7 +80,7 @@ resource "aws_glue_catalog_table" "posters_table" {
   database_name = var.database_name
 
   storage_descriptor {
-    location      = "s3://${module.analytics_app_store_qr_posters_s3.bucket_name}/qr-posters/"
+    location      = var.qr_posters_bucket_location
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
@@ -142,11 +142,6 @@ resource "aws_glue_catalog_table" "posters_table" {
     columns {
       name = "Locale"
       type = "string"
-    }
-
-    columns {
-      name = "Udprn"
-      type = "bigint"
     }
 
   }

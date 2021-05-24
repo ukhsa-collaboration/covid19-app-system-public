@@ -20,9 +20,9 @@ resource "aws_cloudfront_distribution" "this" {
   default_cache_behavior {
     target_origin_id       = var.exposure_configuration_bucket_regional_domain_name
     viewer_protocol_policy = "https-only"
-    min_ttl                = 0
-    max_ttl                = 0
-    default_ttl            = 0
+    min_ttl                = var.distribution_cache_ttl
+    max_ttl                = var.distribution_cache_ttl
+    default_ttl            = var.distribution_cache_ttl
     compress               = true
     allowed_methods = [
       "DELETE",
@@ -59,9 +59,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.exposure_configuration_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -87,9 +87,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.risky_post_district_distribution_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -115,9 +115,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.risky_post_district_distribution_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -143,9 +143,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.risky_venues_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -171,9 +171,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.self_isolation_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -199,9 +199,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.symptomatic_questionnaire_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -227,9 +227,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.diagnosis_keys_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -246,9 +246,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.diagnosis_keys_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -274,9 +274,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.availability_android_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -302,9 +302,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.availability_ios_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true
@@ -330,9 +330,9 @@ resource "aws_cloudfront_distribution" "this" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.risky_venue_configuration_bucket_regional_domain_name
     compress         = true
-    default_ttl      = 0
-    min_ttl          = 0
-    max_ttl          = 0
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
 
     forwarded_values {
       query_string = true

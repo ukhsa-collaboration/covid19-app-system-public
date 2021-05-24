@@ -10,21 +10,18 @@ import com.natpryce.snodge.mutants
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.CoreMatchers.nullValue
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.TestEnvironments
-import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.events.VirologyResults
-import uk.nhs.nhsx.core.events.VirologyTokenGen
-import uk.nhs.nhsx.core.events.VirologyTokenStatus
+import uk.nhs.nhsx.core.events.*
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.ACCEPTED_202
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422
 import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit.*
+import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
 import uk.nhs.nhsx.testhelper.data.TestData.rapidLabResultV2
@@ -33,15 +30,10 @@ import uk.nhs.nhsx.testhelper.data.TestData.testLabResultV1
 import uk.nhs.nhsx.testhelper.data.TestData.tokenGenPayloadV1
 import uk.nhs.nhsx.testhelper.data.TestData.tokenGenPayloadV2
 import uk.nhs.nhsx.testhelper.data.TestData.tokenGenSelfReportedPayloadV2
+import uk.nhs.nhsx.testhelper.data.TestData.tokenStatusPayloadV2
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
-import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
-import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
-import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
-import uk.nhs.nhsx.domain.TestEndDate
-import uk.nhs.nhsx.domain.TestResult.*
-import uk.nhs.nhsx.testhelper.data.TestData.tokenStatusPayloadV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import uk.nhs.nhsx.virology.result.VirologyTokenStatusRequest
@@ -217,6 +209,96 @@ class VirologyUploadHandlerTest {
     }
 
     @Test
+    fun `v2 returns 422 when receiving NEGATIVE for RAPID_RESULT testKit`() {
+        val payload = """{
+            "ctaToken": "cc8f0b6z",
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "NEGATIVE",
+            "testKit": "RAPID_RESULT"
+        }"""
+
+        val response = sendAndReceive(path = npexV2Path, payload = payload)
+
+        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
+        events.contains(VirologyResults::class)
+    }
+
+    @Test
+    fun `v2 returns 422 when receiving VOID for RAPID_RESULT testKit`() {
+        val payload = """{
+            "ctaToken": "cc8f0b6z",
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "VOID",
+            "testKit": "RAPID_RESULT"
+        }"""
+
+        val response = sendAndReceive(path = npexV2Path, payload = payload)
+
+        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
+        events.contains(VirologyResults::class)
+    }
+
+    @Test
+    fun `v2 returns 422 when receiving NEGATIVE for RAPID_SELF_REPORTED testKit`() {
+        val payload = """{
+            "ctaToken": "cc8f0b6z",
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "NEGATIVE",
+            "testKit": "RAPID_SELF_REPORTED"
+        }"""
+
+        val response = sendAndReceive(path = npexV2Path, payload = payload)
+
+        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
+        events.contains(VirologyResults::class)
+    }
+
+    @Test
+    fun `v2 returns 422 when receiving VOID for RAPID_SELF_REPORTED testKit`() {
+        val payload = """{
+            "ctaToken": "cc8f0b6z",
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "VOID",
+            "testKit": "RAPID_SELF_REPORTED"
+        }"""
+
+        val response = sendAndReceive(path = npexV2Path, payload = payload)
+
+        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
+        events.contains(VirologyResults::class)
+    }
+
+    @Test
+    fun `v2 returns 422 when receiving PLOD for RAPID_RESULT testKit`() {
+        val payload = """{
+            "ctaToken": "cc8f0b6z",
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "PLOD",
+            "testKit": "RAPID_RESULT"
+        }"""
+
+        val response = sendAndReceive(path = npexV2Path, payload = payload)
+
+        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
+        events.contains(VirologyResults::class)
+    }
+
+    @Test
+    fun `v2 returns 422 when receiving PLOD for RAPID_SELF_REPORTED testKit`() {
+        val payload = """{
+            "ctaToken": "cc8f0b6z",
+            "testEndDate": "2020-04-23T00:00:00Z",
+            "testResult": "PLOD",
+            "testKit": "RAPID_SELF_REPORTED"
+        }"""
+
+        val response = sendAndReceive(path = npexV2Path, payload = payload)
+
+        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
+        events.contains(VirologyResults::class)
+    }
+
+    @Test
     fun `accepts fiorano test result v1 returns 202`() {
         every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
 
@@ -283,9 +365,10 @@ class VirologyUploadHandlerTest {
         assertThat(response, hasBody(equalTo("""{"ctaToken":"cc8f0b6z"}""")))
         events.contains(VirologyTokenGen::class, CtaTokenGen::class)
     }
+
     @Test
     fun `accepts v2 english token status request`() {
-        every { service.checkStatusOfToken(any()) } returns VirologyTokenStatusResponse(
+        every { service.checkStatusOfToken(any(), any()) } returns VirologyTokenStatusResponse(
             "consumable"
         )
 
@@ -295,7 +378,8 @@ class VirologyUploadHandlerTest {
             service.checkStatusOfToken(
                 VirologyTokenStatusRequest(
                     "cc8f0b6z"
-                )
+                ),
+                VirologyUploadHandler.VirologyTokenExchangeSource.Eng
             )
         }
 
@@ -303,9 +387,10 @@ class VirologyUploadHandlerTest {
         assertThat(response, hasBody(equalTo("""{"tokenStatus":"consumable"}""")))
         events.contains(TokenStatusCheck::class, VirologyTokenStatus::class)
     }
+
     @Test
     fun `accepts v2 wales token status request`() {
-        every { service.checkStatusOfToken(any()) } returns VirologyTokenStatusResponse(
+        every { service.checkStatusOfToken(any(),any()) } returns VirologyTokenStatusResponse(
             "consumable"
         )
 
@@ -315,7 +400,8 @@ class VirologyUploadHandlerTest {
             service.checkStatusOfToken(
                 VirologyTokenStatusRequest(
                     "cc8f0b6z"
-                )
+                ),
+                VirologyUploadHandler.VirologyTokenExchangeSource.Wls
             )
         }
 

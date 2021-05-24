@@ -25,3 +25,7 @@ output "gateway_id" {
 output "test_orders_index_name" {
   value = "${local.identifier_prefix}-ordertokens-index"
 }
+
+output "log_group" {
+  value = module.upload_lambda.lambda_log_group
+}

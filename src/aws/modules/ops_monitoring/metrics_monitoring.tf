@@ -1,6 +1,6 @@
 locals {
   submission_lambdas = [
-    var.analytics_submission_function,
+    var.analytics_ingest_submission_function,
     var.diagnosis_keys_submission_function,
     var.virology_submission_function,
     var.isolation_payment_order_function,
@@ -21,6 +21,7 @@ locals {
 
   processing_lambdas = [
     var.diagnosis_keys_processing_function,
+    var.analytics_ingest_processing_function
   ]
 
   app_interface_group       = concat(local.submission_lambdas, local.circuit_breaker_lambdas)

@@ -113,3 +113,7 @@ variable "aae_mobile_analytics_events_p12_cert_password_secret_name" {
 variable "aae_mobile_analytics_events_subscription_secret_name" {
   description = "Name of the SecretsManager secret containing the Ocp-Apim-Subscription-Key HTTP header value (string secret)"
 }
+
+variable "qr_posters_bucket_location" {
+  description = "QR posters bucket location for quicksight usage"
+}

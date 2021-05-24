@@ -25,9 +25,8 @@ import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.headers.MobileOS
-import uk.nhs.nhsx.core.headers.MobileOS.Android
-import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import uk.nhs.nhsx.crashreports.CrashReportRequest
+import uk.nhs.nhsx.core.headers.MobileOS.*
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
 import uk.nhs.nhsx.domain.*
 import uk.nhs.nhsx.domain.Country.Companion.England
@@ -76,7 +75,7 @@ class MobileApp(
     fun pollRiskyVenues() = deserializeWithOptional(getStaticContent(envConfig.risky_venues_distribution_endpoint))!!
 
     fun pollAvailability() = when (os) {
-        iOS -> getStaticContent(envConfig.availability_ios_distribution_endpoint)
+        iOS, Unknown -> getStaticContent(envConfig.availability_ios_distribution_endpoint)
         Android -> getStaticContent(envConfig.availability_android_distribution_endpoint)
     }
 
@@ -88,7 +87,7 @@ class MobileApp(
     fun submitAnalyticsKeys(window: AnalyticsWindow, metrics: AnalyticsMetrics): Status {
         val metadata = when (os) {
             Android -> AnalyticsMetadata("AL1", model?.value ?: "HUAWEI-smoke-test", "29", "3.0", "E07000240")
-            iOS -> AnalyticsMetadata(
+            iOS, Unknown -> AnalyticsMetadata(
                 "AL1", model?.value
                 ?: "iPhone-smoke-test", "iPhone OS 13.5.1 (17F80)", "3.0", "E07000240"
             )
@@ -235,7 +234,7 @@ class MobileApp(
         return when (response.status.code) {
             200 -> when (version) {
                 V1 -> VirologyLookupResult.Available(response.requireSignatureHeaders().deserializeOrThrow())
-                V2 -> VirologyLookupResult.AvailableV2(response.requireSignatureHeaders().deserializeOrThrow())
+                V2 -> VirologyLookupResult.AvailableV2(response.requireSignatureHeaders().deserializeWithNullCreatorsOrThrow())
             }
             204 -> VirologyLookupResult.Pending()
             404 -> VirologyLookupResult.NotFound()
@@ -281,7 +280,7 @@ class MobileApp(
         return when (response.status.code) {
             200 -> when (version) {
                 V1 -> CtaExchangeResult.Available(response.deserializeOrThrow())
-                V2 -> CtaExchangeResult.AvailableV2(response.deserializeOrThrow())
+                V2 -> CtaExchangeResult.AvailableV2(response.deserializeWithNullCreatorsOrThrow())
             }
             404 -> CtaExchangeResult.NotFound()
             else -> throw RuntimeException("Unhandled response")
@@ -336,7 +335,7 @@ class MobileApp(
     }
 
     private fun userAgent() = when (os) {
-        iOS -> "p=iOS,o=14.2,v=${appVersion.major}.${appVersion.minor}.${appVersion.patch},b=349"
+        iOS, Unknown -> "p=iOS,o=14.2,v=${appVersion.major}.${appVersion.minor}.${appVersion.patch},b=349"
         Android -> "p=Android,o=29,v=${appVersion.major}.${appVersion.minor}.${appVersion.patch},b=138"
     }
 

@@ -16,6 +16,7 @@ import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional

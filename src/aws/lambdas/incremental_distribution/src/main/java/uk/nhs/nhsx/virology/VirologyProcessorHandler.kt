@@ -13,6 +13,7 @@ import uk.nhs.nhsx.core.handler.DirectHandler
 import uk.nhs.nhsx.virology.VirologyConfig.Companion.fromEnvironment
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import uk.nhs.nhsx.virology.tokengen.CtaProcessorRequest
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorExports
 import uk.nhs.nhsx.virology.tokengen.VirologyProcessorService

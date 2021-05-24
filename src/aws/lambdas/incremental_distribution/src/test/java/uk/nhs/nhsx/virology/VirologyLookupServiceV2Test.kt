@@ -24,6 +24,7 @@ import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional
@@ -113,7 +114,7 @@ class VirologyLookupServiceV2Test {
     }
 
     @ParameterizedTest
-    @CsvSource("England,true", "Wales,false", "random,false")
+    @CsvSource("England,false", "Wales,false", "random,false")
     fun `lookup requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testResult = TestData.positiveResultFor(pollingToken, RAPID_SELF_REPORTED)
 
@@ -149,20 +150,6 @@ class VirologyLookupServiceV2Test {
         val lookupResult = service.lookup(request, mobileAppVersion)
 
         assertThat(lookupResult).isInstanceOf(VirologyLookupResult.Pending::class.java)
-    }
-
-    @Test
-    fun `lookup pending when mobile version is considered old and confirmatory test required`() {
-        val testResult = TestData.positiveResultFor(pollingToken, RAPID_SELF_REPORTED)
-
-        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
-        every { persistence.markForDeletion(any(), any()) } just Runs
-
-        val service = virologyLookup()
-        val request = VirologyLookupRequestV2(pollingToken, country)
-        val result = service.lookup(request, MobileAppVersion.Version(4, 3))
-
-        assertThat(result).isInstanceOf(VirologyLookupResult.Pending::class.java)
     }
 
     @Test

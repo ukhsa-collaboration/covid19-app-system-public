@@ -175,6 +175,7 @@ module "distribution_apis" {
   domain                   = var.base_domain
   web_acl_arn              = var.waf_arn
   enable_shield_protection = var.enable_shield_protection
+  distribution_cache_ttl   = var.distribution_cache_ttl
 
   tags = var.tags
 }

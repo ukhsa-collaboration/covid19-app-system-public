@@ -39,6 +39,7 @@ fun logAnalyticsService(
 
     val logGroupName = environment.access.required(EnvironmentKey.string("LOG_GROUP_NAME"))
     val bucketName = environment.access.required(EnvironmentKey.string("ANALYTICS_BUCKET_NAME"))
+    val bucketPrefix = environment.access.required(EnvironmentKey.string("ANALYTICS_BUCKET_PREFIX"))
     val shouldAbortIfOutsideWindow = environment.access.required(EnvironmentKey.bool("ABORT_OUTSIDE_TIME_WINDOW"))
 
     return LogInsightsAnalyticsService(
@@ -50,6 +51,7 @@ fun logAnalyticsService(
         shouldAbortIfOutsideWindow,
         events,
         queryString,
-        converter
+        converter,
+        bucketPrefix
     )
 }

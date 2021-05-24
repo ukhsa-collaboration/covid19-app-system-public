@@ -12,13 +12,6 @@ module "coronavirus_gov_public_data_lookup" {
   tags                     = var.tags
 }
 
-resource "aws_s3_bucket_object" "payload" {
-  bucket = module.coronavirus_gov_public_data_lookup.bucket_name
-  key    = "areaType=nation;areaName=${var.country}.csv"
-  source = local.full_postcode_lookup_path
-  etag   = filemd5(local.full_postcode_lookup_path)
-}
-
 resource "aws_glue_catalog_table" "this" {
   name          = local.table_name
   database_name = var.database_name

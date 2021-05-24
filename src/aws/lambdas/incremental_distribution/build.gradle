@@ -4,7 +4,6 @@ plugins {
     id "java"
     id "org.jetbrains.kotlin.jvm" version "1.4.32"
     id "com.adarshr.test-logger" version "2.1.1"
-    id "jacoco"
     id "com.github.spotbugs" version "4.6.0"
 }
 
@@ -180,12 +179,8 @@ test {
         systemProperty "java.library.path", 'build/libs'
     }
 
-    finalizedBy jacocoTestReport
 }
 
-jacocoTestReport {
-    dependsOn test
-}
 
 spotbugsTest.enabled = false // do not run spotbugs against the test-suite for now
 

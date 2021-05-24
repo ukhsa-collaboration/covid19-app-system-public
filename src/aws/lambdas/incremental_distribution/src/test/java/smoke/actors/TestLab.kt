@@ -136,14 +136,12 @@ class TestLab(unauthedHttp: HttpHandler,
             .requireStatusCode(Status.UNPROCESSABLE_ENTITY)
             .requireNoPayload()
     }
-    fun checkToken(ctaToken: CtaToken, country: VirologyUploadHandler.VirologyTokenExchangeSource) : VirologyTokenStatusResponse {
 
-        val uri = when (country)
-        {
-            VirologyUploadHandler.VirologyTokenExchangeSource.Eng -> envConfig.test_results_v2_eng_tokenstatus_upload_endpoint
-            VirologyUploadHandler.VirologyTokenExchangeSource.Wls -> envConfig.test_results_v2_wls_tokenstatus_upload_endpoint
+    fun checkToken(ctaToken: CtaToken, country: VirologyTokenExchangeSource) : VirologyTokenStatusResponse {
+        val uri = when (country) {
+            Eng -> envConfig.test_results_v2_eng_tokenstatus_upload_endpoint
+            Wls -> envConfig.test_results_v2_wls_tokenstatus_upload_endpoint
         }
-        print(uri)
         val payload = """
                     {
                       "ctaToken": "${ctaToken.value}"

@@ -36,7 +36,7 @@ should be communicated to user devices.
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
-| Identified Risk Venues | [Upload](./guidebook.md#upload) | [risky-venue-upload.md](./api-contracts/risky-venue-upload.md) | Data source for Risky Venue distribution API. |
+| Identified Risk Venues | [Upload](./guidebook.md#upload) | [risky-venue-upload.md](api-contracts/gateway-facing/risky-venue-upload.md) | Data source for Risky Venue distribution API. |
 
 In this regard, the Covid-19 app system acts only as a distributor of this information.
 
@@ -56,7 +56,7 @@ This comparison is performed on the device, so no information regarding the chec
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
-| Identified Risk Venues | [Distribution](./guidebook.md#distribution) | [risky-venue-distribution.md](./api-contracts/risky-venue-distribution.md) | List of venues marked as risky which mobile clients poll for periodically. If the client has been in a risky venue within the risk period (defined in risky venue upload) a warning message is displayed. |
+| Identified Risk Venues | [Distribution](./guidebook.md#distribution) | [risky-venue-distribution.md](api-contracts/mobile-facing/distribution/risky-venue-distribution.md) | List of venues marked as risky which mobile clients poll for periodically. If the client has been in a risky venue within the risk period (defined in risky venue upload) a warning message is displayed. |
 
 ## Determining whether to notify a user
 
@@ -69,7 +69,7 @@ configuration information relating to Circuit Breaker
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
-| Risk Venues Circuit Breaker | [Circuit Breaker](./guidebook.md#circuit-breaker) | [risky-venue-circuit-breaker.md](./api-contracts/risky-venue-circuit-breaker.md) | Manual circuit breaker to stop exposure notification alerts in mobile clients after a venue is marked as risky from the upload API. |
+| Risk Venues Circuit Breaker | [Circuit Breaker](./guidebook.md#circuit-breaker) | [risky-venue-circuit-breaker.md](api-contracts/mobile-facing/circuit-breaker/risky-venue-circuit-breaker.md) | Manual circuit breaker to stop exposure notification alerts in mobile clients after a venue is marked as risky from the upload API. |
 
 #### Interactions for Check-In and Notifications
 

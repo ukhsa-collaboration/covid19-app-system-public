@@ -5,36 +5,21 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Table
 import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded
 import com.amazonaws.services.dynamodbv2.local.shared.access.AmazonDynamoDBLocal
-import com.amazonaws.services.dynamodbv2.model.AttributeDefinition
-import com.amazonaws.services.dynamodbv2.model.CreateTableRequest
-import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest
-import com.amazonaws.services.dynamodbv2.model.GlobalSecondaryIndex
-import com.amazonaws.services.dynamodbv2.model.KeySchemaElement
-import com.amazonaws.services.dynamodbv2.model.KeyType
-import com.amazonaws.services.dynamodbv2.model.Projection
-import com.amazonaws.services.dynamodbv2.model.ProjectionType
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
-import com.amazonaws.services.dynamodbv2.model.PutItemRequest
+import com.amazonaws.services.dynamodbv2.model.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.exceptions.TransactionException
-import uk.nhs.nhsx.testhelper.data.asInstant
-import uk.nhs.nhsx.domain.CtaToken
-import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.*
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
-import uk.nhs.nhsx.domain.TestResultPollingToken
+import uk.nhs.nhsx.domain.TestResult.*
+import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.virology.VirologyConfig
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.TestResultAvailability.AVAILABLE
@@ -42,12 +27,9 @@ import uk.nhs.nhsx.virology.persistence.TestState.AvailableTestResult
 import uk.nhs.nhsx.virology.persistence.TestState.PendingTestResult
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.OrderNotFound
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.TransactionFailed
-import uk.nhs.nhsx.domain.TestEndDate
-import uk.nhs.nhsx.domain.TestResult.Negative
-import uk.nhs.nhsx.domain.TestResult.Positive
-import uk.nhs.nhsx.domain.TestResult.Void
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.Period
 import java.util.function.Supplier
 
@@ -72,7 +54,8 @@ class VirologyPersistenceLocalTest {
     private val testOrder = TestOrder(
         CtaToken.of("cc8f0b6z"),
         TestResultPollingToken.of("09657719-fe58-46a3-a3a3-a8db82d48043"),
-        DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0")
+        DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"),
+        LocalDateTime.now().plusWeeks(4)
     )
 
     private fun positiveTestResult(testKit: TestKit = LAB_RESULT) =
@@ -296,12 +279,14 @@ class VirologyPersistenceLocalTest {
         val tokensWithCollision = TestOrder(
             tokens.ctaToken,
             TestResultPollingToken.of("testResultPollingToken-collision"),
-            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-collision")
+            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-collision"),
+            LocalDateTime.now().plusWeeks(4)
         )
         val tokensNoCollision = TestOrder(
             TokensGenerator.generateVirologyTokens().ctaToken,
             TestResultPollingToken.of("testResultPollingToken-no-collision"),
-            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-no-collision")
+            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-no-collision"),
+            LocalDateTime.now().plusWeeks(4)
         )
 
         val tokensSupplier = mockk<Supplier<TestOrder>>()
@@ -322,7 +307,8 @@ class VirologyPersistenceLocalTest {
         val tokensWithCollision = TestOrder(
             tokens.ctaToken,
             TestResultPollingToken.of("testResultPollingToken-collision"),
-            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-collision")
+            DiagnosisKeySubmissionToken.of("diagnosisKeySubmissionToken-collision"),
+            LocalDateTime.now().plusWeeks(4)
         )
         persistence.persistTestOrder({ tokens }, fourWeeksTtl)
         assertOrderIsPresent(tokens)
@@ -426,7 +412,7 @@ class VirologyPersistenceLocalTest {
             testResult.testResult,
             testResult.testKit
         )
-        persistence.persistPositiveTestResult(
+        persistence.persistTestResultWithKeySubmission(
             positiveResult,
             fourWeeksTtl
         )
@@ -474,7 +460,7 @@ class VirologyPersistenceLocalTest {
                 testResult.testResult,
                 it
             )
-            val result = persistence.persistPositiveTestResult(
+            val result = persistence.persistTestResultWithKeySubmission(
                 virologyResultRequest,
                 fourWeeksTtl
             )
@@ -498,7 +484,7 @@ class VirologyPersistenceLocalTest {
             testResult.testResult,
             testResult.testKit
         )
-        persistence.persistPositiveTestResult(
+        persistence.persistTestResultWithKeySubmission(
             virologyResultRequest,
             fourWeeksTtl
         )
@@ -532,7 +518,7 @@ class VirologyPersistenceLocalTest {
             testResult.testKit
         )
 
-        val result = persistence.persistNonPositiveTestResult(
+        val result = persistence.persistTestResultWithoutKeySubmission(
             virologyResultRequest
         )
 
@@ -553,7 +539,7 @@ class VirologyPersistenceLocalTest {
             positiveTestResult.testResult,
             positiveTestResult.testKit
         )
-        persistence.persistPositiveTestResult(
+        persistence.persistTestResultWithKeySubmission(
             positiveResult,
             fourWeeksTtl
         )
@@ -565,7 +551,7 @@ class VirologyPersistenceLocalTest {
             negativeTestResult.testResult,
             negativeTestResult.testKit
         )
-        val result = persistence.persistNonPositiveTestResult(
+        val result = persistence.persistTestResultWithoutKeySubmission(
             negativeResult
         )
 
@@ -582,7 +568,7 @@ class VirologyPersistenceLocalTest {
             positiveTestResult.testResult,
             positiveTestResult.testKit
         )
-        persistence.persistPositiveTestResult(
+        persistence.persistTestResultWithKeySubmission(
             positiveResult,
             fourWeeksTtl
         )
@@ -594,7 +580,7 @@ class VirologyPersistenceLocalTest {
             negativeTestResult.testResult,
             negativeTestResult.testKit
         )
-        val result = persistence.persistNonPositiveTestResult(
+        val result = persistence.persistTestResultWithoutKeySubmission(
             negativeResult
         )
 

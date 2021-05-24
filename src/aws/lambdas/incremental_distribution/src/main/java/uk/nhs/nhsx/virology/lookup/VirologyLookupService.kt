@@ -5,9 +5,10 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.exceptions.TransactionException
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.domain.Country
+import uk.nhs.nhsx.domain.TestJourney.Lookup
 import uk.nhs.nhsx.virology.TestResultMarkForDeletionFailure
-import uk.nhs.nhsx.virology.VirologyPolicyConfig
-import uk.nhs.nhsx.virology.VirologyPolicyConfig.VirologyCriteria
+import uk.nhs.nhsx.virology.policy.VirologyCriteria
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import uk.nhs.nhsx.virology.persistence.TestState
 import uk.nhs.nhsx.virology.persistence.TestState.AvailableTestResult
 import uk.nhs.nhsx.virology.persistence.TestState.PendingTestResult
@@ -63,7 +64,7 @@ class VirologyLookupService(
     ) = when (testState) {
         is PendingTestResult -> VirologyLookupResult.Pending()
         is AvailableTestResult -> {
-            val virologyCriteria = VirologyCriteria(country, testState.testKit, testState.testResult)
+            val virologyCriteria = VirologyCriteria(Lookup, country, testState.testKit, testState.testResult)
             when {
                 policyConfig.shouldBlockV2TestResultQueries(
                     virologyCriteria,
@@ -80,7 +81,8 @@ class VirologyLookupService(
                             testState.testResult,
                             testState.testKit,
                             policyConfig.isDiagnosisKeysSubmissionSupported(virologyCriteria),
-                            policyConfig.isConfirmatoryTestRequired(virologyCriteria)
+                            policyConfig.isConfirmatoryTestRequired(virologyCriteria, mobileAppVersion),
+                            policyConfig.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)
                         )
                     )
                 }

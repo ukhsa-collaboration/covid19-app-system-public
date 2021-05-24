@@ -7,12 +7,8 @@ import com.amazonaws.services.logs.model.ResultField
 import com.amazonaws.services.logs.model.StartQueryRequest
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Json
-import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.aws.s3.*
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
-import uk.nhs.nhsx.core.aws.s3.Locator
-import uk.nhs.nhsx.core.aws.s3.ObjectKey
-import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.Events
 import java.time.Instant
 import java.time.LocalTime
@@ -29,8 +25,9 @@ class LogInsightsAnalyticsService(private val client: AWSLogs,
                                   private val shouldAbortIfOutsideWindow: Boolean,
                                   private val events: Events,
                                   private val logInsightsQuery: String,
-                                  private val converter: Converter<*>) {
-    fun generateStatisticsAndUploadToS3(currentTime : Instant) {
+                                  private val converter: Converter<*>,
+                                  private val bucketPrefix: String) {
+    fun generateStatisticsAndUploadToS3(currentTime: Instant) {
         val window = ServiceWindow(currentTime)
         if (!isInWindow(currentTime)) {
             check(!shouldAbortIfOutsideWindow) { "CloudWatch Event triggered Lambda at wrong time." }
@@ -41,11 +38,12 @@ class LogInsightsAnalyticsService(private val client: AWSLogs,
         } else {
             val stats = converter.from(logs)
             val json = toAnalyticsJson(stats)
-            uploadToS3(json,currentTime)
+            uploadToS3(json, currentTime)
         }
     }
 
     fun executeCloudWatchInsightQuery(window: ServiceWindow): List<List<ResultField>> {
+        events(QueryRequest(window.queryStart(),window.queryEnd(),logGroup,logInsightsQuery))
         val startQueryRequest = StartQueryRequest()
             .withQueryString(logInsightsQuery)
             .withLogGroupName(logGroup)
@@ -61,6 +59,7 @@ class LogInsightsAnalyticsService(private val client: AWSLogs,
         while (getQueryResult.status == "Running") {
             try {
                 Thread.sleep(1000L)
+                events(AnalyticsLogsPolling())
                 getQueryResult = client.getQueryResults(queryResultsRequest)
             } catch (e: InterruptedException) {
                 events(AnalyticsLogsPollingFailed(e))
@@ -72,7 +71,11 @@ class LogInsightsAnalyticsService(private val client: AWSLogs,
     private fun uploadToS3(json: String?, currentTime: Instant) {
         val dateTimeFormatterSlash = DateTimeFormatter.ofPattern("yyyy/MM/dd").withZone(ZoneId.systemDefault())
         val yesterdayDateSlash = dateTimeFormatterSlash.format(currentTime.minus(1, ChronoUnit.DAYS))
-        val objectKey = ObjectKey.of("$yesterdayDateSlash/").append(objectKeyNameProvider.generateObjectKeyName().toString()).append(".json")
+        val objectKey = if (bucketPrefix.isNotEmpty()) {
+            ObjectKey.of("$bucketPrefix/$yesterdayDateSlash/")
+        } else {
+            ObjectKey.of("$yesterdayDateSlash/")
+        }.append(objectKeyNameProvider.generateObjectKeyName().toString()).append(".json")
         s3Storage.upload(
             Locator.of(BucketName.of(bucketName), objectKey),
             APPLICATION_JSON,

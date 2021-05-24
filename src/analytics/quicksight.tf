@@ -40,13 +40,14 @@ module "mobile_analytics" {
 }
 
 module "app_store_qr_posters" {
-  source                   = "./modules/app_store_qr_posters"
-  service                  = local.service
-  force_destroy_s3_buckets = var.force_destroy_s3_buckets
-  logs_bucket_id           = var.logs_bucket_id
-  database_name            = aws_glue_catalog_database.this.name
-  workgroup_name           = module.workgroup.name
-  tags                     = var.tags
+  source                     = "./modules/app_store_qr_posters"
+  service                    = local.service
+  force_destroy_s3_buckets   = var.force_destroy_s3_buckets
+  logs_bucket_id             = var.logs_bucket_id
+  database_name              = aws_glue_catalog_database.this.name
+  workgroup_name             = module.workgroup.name
+  tags                       = var.tags
+  qr_posters_bucket_location = var.qr_posters_bucket_location
 }
 
 module "risky_post_districts" {
@@ -141,4 +142,13 @@ module "coronavirus_gov_public_data_lookup_wales" {
   database_name            = aws_glue_catalog_database.this.name
   tags                     = var.tags
   country                  = "wales"
+}
+
+module "app_store_data_lookup" {
+  source                   = "./modules/app_store_data_lookup"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
 }

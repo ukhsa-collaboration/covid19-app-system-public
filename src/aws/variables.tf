@@ -131,3 +131,7 @@ variable "zip_submission_period_offset" {
   description = "The distribution window period offset"
   type        = map(string)
 }
+
+variable "distribution_cache_ttl" {
+  description = "Time to live for the cloudfront distribution cache"
+}

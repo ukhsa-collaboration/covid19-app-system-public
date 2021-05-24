@@ -94,6 +94,11 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer missingPacketsLast7Days;
     public final Integer consentedToShareVenueHistory;
     public final Integer askedToShareVenueHistory;
+    public final Integer askedToShareExposureKeysInTheInitialFlow;
+    public final Integer consentedToShareExposureKeysInTheInitialFlow;
+    public final Integer totalShareExposureKeysReminderNotifications;
+    public final Integer consentedToShareExposureKeysInReminderScreen;
+    public final Integer successfullySharedExposureKeys;
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
@@ -175,7 +180,12 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer totalAlarmManagerBackgroundTasks,
                                              Integer missingPacketsLast7Days,
                                              Integer consentedToShareVenueHistory,
-                                             Integer askedToShareVenueHistory ) {
+                                             Integer askedToShareVenueHistory,
+                                             Integer askedToShareExposureKeysInTheInitialFlow,
+                                             Integer consentedToShareExposureKeysInTheInitialFlow,
+                                             Integer totalShareExposureKeysReminderNotifications,
+                                             Integer consentedToShareExposureKeysInReminderScreen,
+                                             Integer successfullySharedExposureKeys) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -257,7 +267,12 @@ public class StoredAnalyticsSubmissionPayload {
         this.missingPacketsLast7Days = missingPacketsLast7Days;
         this.consentedToShareVenueHistory = consentedToShareVenueHistory;
         this.askedToShareVenueHistory = askedToShareVenueHistory;
-        }
+        this.askedToShareExposureKeysInTheInitialFlow = askedToShareExposureKeysInTheInitialFlow;
+        this.consentedToShareExposureKeysInTheInitialFlow = consentedToShareExposureKeysInTheInitialFlow;
+        this.totalShareExposureKeysReminderNotifications = totalShareExposureKeysReminderNotifications;
+        this.consentedToShareExposureKeysInReminderScreen = consentedToShareExposureKeysInReminderScreen;
+        this.successfullySharedExposureKeys = successfullySharedExposureKeys;
+    }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload, Events events) {
         PostDistrictPair postalDistrictLADTuple = replacePostDistrictLA(clientPayload.metadata.postalDistrict, clientPayload.metadata.localAuthority, events);
@@ -342,6 +357,11 @@ public class StoredAnalyticsSubmissionPayload {
             clientPayload.metrics.totalAlarmManagerBackgroundTasks,
             clientPayload.metrics.missingPacketsLast7Days,
             clientPayload.metrics.consentedToShareVenueHistory,
-            clientPayload.metrics.askedToShareVenueHistory);
+            clientPayload.metrics.askedToShareVenueHistory,
+            clientPayload.metrics.askedToShareExposureKeysInTheInitialFlow,
+            clientPayload.metrics.consentedToShareExposureKeysInTheInitialFlow,
+            clientPayload.metrics.totalShareExposureKeysReminderNotifications,
+            clientPayload.metrics.consentedToShareExposureKeysInReminderScreen,
+            clientPayload.metrics.successfullySharedExposureKeys);
     }
 }

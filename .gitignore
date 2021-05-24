@@ -40,5 +40,6 @@ analytics-smoke.rb
 sample.parquet
 analytics-smoke.rb.old
 repartition.sh
-glue-columns.rb
-glue-columns.sh
+virology-testing-flows-v2.rb
+stats.rb
+*-cols.txt

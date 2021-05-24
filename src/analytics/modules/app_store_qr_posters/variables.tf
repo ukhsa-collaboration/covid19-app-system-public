@@ -22,3 +22,8 @@ variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
 }
+
+variable "qr_posters_bucket_location" {
+  description = "The location of the qr posters bucket for quicksight usage"
+  type        = string
+}

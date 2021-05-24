@@ -68,5 +68,20 @@ resource "aws_glue_catalog_table" "this" {
       name = "longitude"
       type = "float"
     }
+
+    columns {
+      name = "lad20cd"
+      type = "string"
+    }
+
+    columns {
+      name = "gor10cd"
+      type = "string"
+    }
+
+    columns {
+      name = "ctry12cd"
+      type = "string"
+    }
   }
 }

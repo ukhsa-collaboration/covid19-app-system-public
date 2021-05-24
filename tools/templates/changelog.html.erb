@@ -7,14 +7,14 @@
 <h3>Significant Changes</h3>
 <table>
  <% significant_changes.each do |sha, object| %>
-<tr><td><a target="_blank" href="https://github.com/nihp-public/covid19-app-system-public/pull/<%= object["pr"] %>"><%= object["pr"] %></a></td><td><% object["tickets"].each do |ticket| %><a target="_blank" href="https://confluence/browse/<%= ticket %>"><%= ticket %></a><br/><% end %></td><td><%= object["message"] %></td></tr>
+<tr><td><a target="_blank" href="https://github.com/nihp-public/covid19-app-system-public/pull/<%= object["pr"] %>"><%= object["pr"] %></a></td><td><% object["tickets"].each do |ticket| %><a target="_blank" href="https://jira.collab.test-and-trace.nhs.uk/browse/<%= ticket %>"><%= ticket %></a><br/><% end %></td><td><%= object["message"] %></td></tr>
  <% end %>
 </table>
 
 <h3>Additional Changes</h3>
 <table>
  <% additional_changes.each do |sha, object| %>
-<tr><td><a target="_blank" href="https://github.com/nihp-public/covid19-app-system-public/pull/<%= object["pr"] %>"><%= object["pr"] %></a></td><td><% object["tickets"].each do |ticket| %><a target="_blank" href="https://confluence/browse/<%= ticket %>"><%= ticket %></a><br/><% end %></td><td><%= object["message"] %></td></tr>
+<tr><td><a target="_blank" href="https://github.com/nihp-public/covid19-app-system-public/pull/<%= object["pr"] %>"><%= object["pr"] %></a></td><td><% object["tickets"].each do |ticket| %><a target="_blank" href="https://jira.collab.test-and-trace.nhs.uk/browse/<%= ticket %>"><%= ticket %></a><br/><% end %></td><td><%= object["message"] %></td></tr>
  <% end %>
 </table>
 

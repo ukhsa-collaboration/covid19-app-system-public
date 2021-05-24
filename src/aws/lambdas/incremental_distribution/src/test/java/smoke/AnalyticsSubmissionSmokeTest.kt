@@ -151,6 +151,11 @@ class AnalyticsSubmissionSmokeTest {
         totalAlarmManagerBackgroundTasks = counter++.toInt()
         missingPacketsLast7Days = counter++.toInt()
         consentedToShareVenueHistory = counter++.toInt()
-        askedToShareVenueHistory = counter.toInt()
+        askedToShareVenueHistory = counter++.toInt()
+        askedToShareExposureKeysInTheInitialFlow = counter++.toInt()
+        consentedToShareExposureKeysInTheInitialFlow = counter++.toInt()
+        totalShareExposureKeysReminderNotifications = counter++.toInt()
+        consentedToShareExposureKeysInReminderScreen = counter++.toInt()
+        successfullySharedExposureKeys = counter.toInt()
     }
 }

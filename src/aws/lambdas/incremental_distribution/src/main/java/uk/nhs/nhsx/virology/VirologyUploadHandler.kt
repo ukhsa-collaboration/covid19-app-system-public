@@ -3,24 +3,15 @@ package uk.nhs.nhsx.virology
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import uk.nhs.nhsx.core.Environment
-import uk.nhs.nhsx.core.HttpResponses
-import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.*
 import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.auth.ApiName.Health
 import uk.nhs.nhsx.core.auth.ApiName.TestResultUpload
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication
-import uk.nhs.nhsx.core.events.Events
-import uk.nhs.nhsx.core.events.PrintingJsonEvents
-import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.events.VirologyResults
-import uk.nhs.nhsx.core.events.VirologyTokenGen
-import uk.nhs.nhsx.core.events.VirologyTokenStatus
+import uk.nhs.nhsx.core.events.*
 import uk.nhs.nhsx.core.handler.RoutingHandler
-import uk.nhs.nhsx.core.readJsonOrNull
-import uk.nhs.nhsx.core.readStrictOrNull
 import uk.nhs.nhsx.core.routing.Routing
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
@@ -29,12 +20,8 @@ import uk.nhs.nhsx.core.routing.withoutSignedResponses
 import uk.nhs.nhsx.virology.VirologyConfig.Companion.fromEnvironment
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
-import uk.nhs.nhsx.virology.result.VirologyResultRequestV1
-import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
-import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV1
-import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
-import uk.nhs.nhsx.virology.result.VirologyTokenStatusRequest
-import uk.nhs.nhsx.virology.result.convertToV2
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
+import uk.nhs.nhsx.virology.result.*
 
 class VirologyUploadHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
@@ -159,7 +146,7 @@ class VirologyUploadHandler @JvmOverloads constructor(
         readJsonOrNull<VirologyTokenStatusRequest>(request)
             ?.let {
                 events(TokenStatusCheck(2, source, it.ctaToken))
-                HttpResponses.ok(toJson(virologyService.checkStatusOfToken(it)))
+                HttpResponses.ok(toJson(virologyService.checkStatusOfToken(it, source)))
             }
             ?: HttpResponses.unprocessableEntity()
 

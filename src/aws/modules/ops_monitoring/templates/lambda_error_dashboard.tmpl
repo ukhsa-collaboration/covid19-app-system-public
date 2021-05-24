@@ -1,500 +1,484 @@
 {
-  "widgets": [
-    {
-      "type": "metric",
-      "x": 15,
-      "y": 15,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${diagnosis_keys_submission_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Diagnosis Keys Submission",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 6,
-      "y": 15,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${diagnosis_keys_processing_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Key Processor",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 15,
-      "y": 9,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${virology_submission_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Virology Test Orders",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 6,
-      "y": 9,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${virology_upload_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Virology Test Results Upload",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 0,
-      "y": 9,
-      "width": 6,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${virology_submission_function}-errors",
-            {
-              "yAxis": "left"
+    "widgets": [
+        {
+            "height": 6,
+            "width": 9,
+            "y": 15,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${diagnosis_keys_submission_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Diagnosis Keys Submission",
+                "stat": "Sum"
             }
-          ],
-          [
-            ".",
-            "${virology_upload_function}-errors"
-          ]
-        ],
-        "view": "singleValue",
-        "region": "eu-west-2",
-        "stat": "Sum",
-        "period": 300,
-        "title": "Virology Error Count",
-        "stacked": false,
-        "setPeriodToTimeRange": true
-      }
-    },
-    {
-      "type": "metric",
-      "x": 0,
-      "y": 15,
-      "width": 6,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${diagnosis_keys_processing_function}-errors"
-          ],
-          [
-            ".",
-            "${diagnosis_keys_submission_function}-errors"
-          ]
-        ],
-        "view": "singleValue",
-        "region": "eu-west-2",
-        "stat": "Sum",
-        "period": 300,
-        "title": "Diagnosis Keys Error Count",
-        "stacked": false,
-        "setPeriodToTimeRange": true
-      }
-    },
-    {
-      "type": "metric",
-      "x": 6,
-      "y": 21,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${risky_post_districts_upload_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Post Districts Upload",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 0,
-      "y": 0,
-      "width": 12,
-      "height": 9,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${analytics_submission_function}-errors"
-          ],
-          [
-            ".",
-            "${diagnosis_keys_submission_function}-errors"
-          ],
-          [
-            ".",
-            "${exposure_notification_circuit_breaker_function}-errors"
-          ],
-          [
-            ".",
-            "${diagnosis_keys_processing_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_post_districts_upload_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_venues_circuit_breaker_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_venues_upload_function}-errors"
-          ],
-          [
-            ".",
-            "${virology_submission_function}-errors"
-          ],
-          [
-            ".",
-            "${virology_upload_function}-errors"
-          ],
-          [
-            ".",
-            "${isolation_payment_order_function}-errors"
-          ],
-          [
-            ".",
-            "${isolation_payment_verify_function}-errors"
-          ],
-          [
-            ".",
-            "${isolation_payment_consume_function}-errors"
-          ]
-        ],
-        "view": "pie",
-        "region": "eu-west-2",
-        "setPeriodToTimeRange": true,
-        "stat": "Sum",
-        "period": 300,
-        "title": "Error Breakdown",
-        "legend": {
-          "position": "right"
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 15,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${diagnosis_keys_processing_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Key Processor",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 9,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${virology_submission_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Virology Test Orders",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 9,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${virology_upload_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Virology Test Results Upload",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 9,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${virology_submission_function}-errors", { "yAxis": "left" } ],
+                    [ ".", "${virology_upload_function}-errors" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Virology Error Count",
+                "stacked": false,
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 15,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${diagnosis_keys_processing_function}-errors" ],
+                    [ ".", "${diagnosis_keys_submission_function}-errors" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Diagnosis Keys Error Count",
+                "stacked": false,
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 21,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${risky_post_districts_upload_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Post Districts Upload",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 9,
+            "width": 12,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                  [
+                    "ErrorLogCount",
+                    "${analytics_ingest_submission_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${analytics_ingest_processing_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${diagnosis_keys_submission_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${exposure_notification_circuit_breaker_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${diagnosis_keys_processing_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${risky_post_districts_upload_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${risky_venues_circuit_breaker_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${risky_venues_upload_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${virology_submission_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${virology_upload_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${isolation_payment_order_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${isolation_payment_verify_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${isolation_payment_consume_function}-errors"
+                  ]
+                ],
+                "view": "pie",
+                "region": "eu-west-2",
+                "setPeriodToTimeRange": true,
+                "stat": "Sum",
+                "period": 300,
+                "title": "Error Breakdown",
+                "legend": {
+                    "position": "right"
+                }
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 21,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${risky_venues_upload_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Venues Upload",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 21,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${risky_venues_upload_function}-errors" ],
+                    [ ".", "${risky_post_districts_upload_function}-errors" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Risky Locations Upload Error Count",
+                "stacked": false,
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 33,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${analytics_ingest_submission_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Analytics Ingest Submission",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 33,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${analytics_ingest_processing_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Analytics Ingest Processing",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 33,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${analytics_ingest_submission_function}-errors" ],
+                    [ ".", "${analytics_ingest_processing_function}-errors" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Analytics Ingest Error Count",
+                "stacked": false,
+                "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 27,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${exposure_notification_circuit_breaker_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Exposure Notification Circuit Breaker",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 27,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${risky_venues_circuit_breaker_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Risky Venues Circuit Breaker",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 39,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${isolation_payment_order_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Isolation Payment Order",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 39,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${isolation_payment_verify_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Isolation Payment Verify",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 39,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${isolation_payment_consume_function}-errors" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "period": 60,
+                "title": "Isolation Payment Consume",
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 9,
+            "width": 12,
+            "y": 0,
+            "x": 12,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+
+                  [
+                    "ErrorLogCount",
+                    "${analytics_ingest_submission_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${analytics_ingest_processing_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${diagnosis_keys_submission_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${exposure_notification_circuit_breaker_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${diagnosis_keys_processing_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${risky_post_districts_upload_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${risky_venues_circuit_breaker_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${risky_venues_upload_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${virology_submission_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${virology_upload_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${isolation_payment_order_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${isolation_payment_verify_function}-errors"
+                  ],
+                  [
+                    ".",
+                    "${isolation_payment_consume_function}-errors"
+                  ]
+                ],
+                "view": "timeSeries",
+                "stacked": true,
+                "region": "eu-west-2",
+                "setPeriodToTimeRange": true,
+                "stat": "Sum",
+                "period": 60,
+                "title": "Errors Over Time",
+                "legend": {
+                    "position": "bottom"
+                }
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 27,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ErrorLogCount", "${exposure_notification_circuit_breaker_function}-errors" ],
+                    [ ".", "${risky_venues_circuit_breaker_function}-errors" ]
+                ],
+                "view": "singleValue",
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Circuit Breakers Error Count",
+                "stacked": false,
+                "setPeriodToTimeRange": true
+            }
         }
-      }
-    },
-    {
-      "type": "metric",
-      "x": 15,
-      "y": 21,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${risky_venues_upload_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Venues Upload",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 0,
-      "y": 21,
-      "width": 6,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${risky_venues_upload_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_post_districts_upload_function}-errors"
-          ]
-        ],
-        "view": "singleValue",
-        "region": "eu-west-2",
-        "stat": "Sum",
-        "period": 300,
-        "title": "Risky Locations Upload Error Count",
-        "stacked": false,
-        "setPeriodToTimeRange": true
-      }
-    },
-    {
-      "type": "metric",
-      "x": 15,
-      "y": 33,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${analytics_submission_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Analytics Submission",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 0,
-      "y": 27,
-      "width": 6,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${exposure_notification_circuit_breaker_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_venues_circuit_breaker_function}-errors"
-          ]
-        ],
-        "view": "singleValue",
-        "region": "eu-west-2",
-        "stat": "Sum",
-        "period": 300,
-        "title": "Circuit Breakers Error Count",
-        "stacked": false,
-        "setPeriodToTimeRange": true
-      }
-    },
-    {
-      "type": "metric",
-      "x": 6,
-      "y": 27,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${exposure_notification_circuit_breaker_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Exposure Notification Circuit Breaker",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 15,
-      "y": 27,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${risky_venues_circuit_breaker_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Risky Venues Circuit Breaker",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 0,
-      "y": 39,
-      "width": 6,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${isolation_payment_order_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Isolation Payment Order",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 6,
-      "y": 39,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${isolation_payment_verify_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Isolation Payment Verify",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 15,
-      "y": 39,
-      "width": 9,
-      "height": 6,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${isolation_payment_consume_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": false,
-        "region": "eu-west-2",
-        "period": 60,
-        "title": "Isolation Payment Consume",
-        "stat": "Sum"
-      }
-    },
-    {
-      "type": "metric",
-      "x": 12,
-      "y": 0,
-      "width": 12,
-      "height": 9,
-      "properties": {
-        "metrics": [
-          [
-            "ErrorLogCount",
-            "${analytics_submission_function}-errors"
-          ],
-          [
-            ".",
-            "${diagnosis_keys_submission_function}-errors"
-          ],
-          [
-            ".",
-            "${exposure_notification_circuit_breaker_function}-errors"
-          ],
-          [
-            ".",
-            "${diagnosis_keys_processing_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_post_districts_upload_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_venues_circuit_breaker_function}-errors"
-          ],
-          [
-            ".",
-            "${risky_venues_upload_function}-errors"
-          ],
-          [
-            ".",
-            "${virology_submission_function}-errors"
-          ],
-          [
-            ".",
-            "${virology_upload_function}-errors"
-          ],
-          [
-            ".",
-            "${isolation_payment_order_function}-errors"
-          ],
-          [
-            ".",
-            "${isolation_payment_verify_function}-errors"
-          ],
-          [
-            ".",
-            "${isolation_payment_consume_function}-errors"
-          ]
-        ],
-        "view": "timeSeries",
-        "stacked": true,
-        "region": "eu-west-2",
-        "setPeriodToTimeRange": true,
-        "stat": "Sum",
-        "period": 60,
-        "title": "Errors Over Time",
-        "legend": {
-          "position": "bottom"
-        }
-      }
-    }
-  ]
+    ]
 }

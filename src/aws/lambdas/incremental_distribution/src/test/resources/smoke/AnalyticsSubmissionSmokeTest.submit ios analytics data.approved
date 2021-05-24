@@ -71,3 +71,8 @@ totalalarmmanagerbackgroundtasks,69
 missingpacketslast7days,70
 consentedtosharevenuehistory,71
 askedtosharevenuehistory,72
+askedtoshareexposurekeysintheinitialflow,73
+consentedtoshareexposurekeysintheinitialflow,74
+totalshareexposurekeysremindernotifications,75
+consentedtoshareexposurekeysinreminderscreen,76
+successfullysharedexposurekeys,77

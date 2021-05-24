@@ -156,7 +156,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "startDate"
       type = "string"
     }
-
     columns {
       name = "endDate"
       type = "string"
@@ -217,7 +216,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "receivedVoidTestResult"
       type = "int"
     }
-
     columns {
       name = "isIsolatingBackgroundTick"
       type = "int"
@@ -226,7 +224,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "hasHadRiskyContactBackgroundTick"
       type = "int"
     }
-
     columns {
       name = "receivedPositiveTestResult"
       type = "int"
@@ -235,7 +232,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "receivedNegativeTestResult"
       type = "int"
     }
-
     columns {
       name = "hasSelfDiagnosedPositiveBackgroundTick"
       type = "int"
@@ -244,7 +240,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "completedQuestionnaireAndStartedIsolation"
       type = "int"
     }
-
     columns {
       name = "encounterDetectionPausedBackgroundTick"
       type = "int"
@@ -253,7 +248,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
-
     columns {
       name = "totalBackgroundTasks"
       type = "int"
@@ -262,7 +256,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "runningNormallyBackgroundTick"
       type = "int"
     }
-
     columns {
       name = "completedOnboarding"
       type = "int"
@@ -481,6 +474,26 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
     }
     columns {
       name = "askedToShareVenueHistory"
+      type = "int"
+    }
+    columns {
+      name = "askedToShareExposureKeysInTheInitialFlow"
+      type = "int"
+    }
+    columns {
+      name = "consentedToShareExposureKeysInTheInitialFlow"
+      type = "int"
+    }
+    columns {
+      name = "totalShareExposureKeysReminderNotifications"
+      type = "int"
+    }
+    columns {
+      name = "consentedToShareExposureKeysInReminderScreen"
+      type = "int"
+    }
+    columns {
+      name = "successfullySharedExposureKeys"
       type = "int"
     }
   }
@@ -516,7 +529,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "startDate"
       type = "string"
     }
-
     columns {
       name = "endDate"
       type = "string"
@@ -577,7 +589,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "receivedVoidTestResult"
       type = "int"
     }
-
     columns {
       name = "isIsolatingBackgroundTick"
       type = "int"
@@ -586,7 +597,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "hasHadRiskyContactBackgroundTick"
       type = "int"
     }
-
     columns {
       name = "receivedPositiveTestResult"
       type = "int"
@@ -595,7 +605,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "receivedNegativeTestResult"
       type = "int"
     }
-
     columns {
       name = "hasSelfDiagnosedPositiveBackgroundTick"
       type = "int"
@@ -604,7 +613,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "completedQuestionnaireAndStartedIsolation"
       type = "int"
     }
-
     columns {
       name = "encounterDetectionPausedBackgroundTick"
       type = "int"
@@ -613,7 +621,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
-
     columns {
       name = "totalBackgroundTasks"
       type = "int"
@@ -622,7 +629,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "runningNormallyBackgroundTick"
       type = "int"
     }
-
     columns {
       name = "completedOnboarding"
       type = "int"
@@ -841,6 +847,26 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "askedToShareVenueHistory"
+      type = "int"
+    }
+    columns {
+      name = "askedToShareExposureKeysInTheInitialFlow"
+      type = "int"
+    }
+    columns {
+      name = "consentedToShareExposureKeysInTheInitialFlow"
+      type = "int"
+    }
+    columns {
+      name = "totalShareExposureKeysReminderNotifications"
+      type = "int"
+    }
+    columns {
+      name = "consentedToShareExposureKeysInReminderScreen"
+      type = "int"
+    }
+    columns {
+      name = "successfullySharedExposureKeys"
       type = "int"
     }
   }

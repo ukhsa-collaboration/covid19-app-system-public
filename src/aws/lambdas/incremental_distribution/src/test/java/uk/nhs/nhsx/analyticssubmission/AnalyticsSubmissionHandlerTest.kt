@@ -140,11 +140,11 @@ class AnalyticsSubmissionHandlerTest {
                     val response = responseFor(json)
                     assertThat(
                         response, not(
-                            anyOf(
-                                hasStatus(INTERNAL_SERVER_ERROR_500),
-                                hasStatus(FORBIDDEN_403)
-                            )
+                        anyOf(
+                            hasStatus(INTERNAL_SERVER_ERROR_500),
+                            hasStatus(FORBIDDEN_403)
                         )
+                    )
                     )
                     assertThat(response, hasBody(equalTo(null)))
                 }
@@ -316,7 +316,12 @@ class AnalyticsSubmissionHandlerTest {
                     "totalAlarmManagerBackgroundTasks":1,
                     "missingPacketsLast7Days":1,
                     "consentedToShareVenueHistory":1,
-                    "askedToShareVenueHistory":1""".trimIndent()
+                    "askedToShareVenueHistory":1,
+                    "askedToShareExposureKeysInTheInitialFlow":1,
+                    "consentedToShareExposureKeysInTheInitialFlow":1,
+                    "totalShareExposureKeysReminderNotifications":1,
+                    "consentedToShareExposureKeysInReminderScreen":1,
+                    "successfullySharedExposureKeys":1""".trimIndent()
             return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", metrics)
         }
 

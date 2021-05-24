@@ -6,11 +6,11 @@
 
 ## HTTP API
 
-Mobile-facing submission: see [HTTP API contract](../architecture/api-contracts/isolation-payment-mobile.md)
+Mobile-facing submission: see [HTTP API contract](../architecture/api-contracts/mobile-facing/submission/isolation-payment-submission.md)
 
 ## Lambda API 
 
-Lambda functions directly exposed to the SIP Gateway external system in a different AWS account (synchronous invocation): see [Lambda API contract](../architecture/api-contracts/isolation-payment-gateway.md)
+Lambda functions directly exposed to the SIP Gateway external system in a different AWS account (synchronous invocation): see [Lambda API contract](../architecture/api-contracts/gateway-facing/isolation-payment-gateway.md)
 
 ### Authentication/Authorization
 
@@ -18,7 +18,7 @@ AWS IAM (Cross account):
 * Exposing account: AWS account of the "NHS COVIS-19 App" (dev, prod, staging)
 * External account: AWS account of the "SIP - Isolation Payment Gateway" (dev, prod, staging)
 * Exposing account offers IAM Role to be assumed (via STS) by external account (dev to dev, staging to staging, prod to prod)
-    * IAM policy: allow ```lambda:InvokeFunction``` for exposed API Lambda functions in [Lambda API contract](../architecture/api-contracts/isolation-payment-gateway.md)
+    * IAM policy: allow ```lambda:InvokeFunction``` for exposed API Lambda functions in [Lambda API contract](../architecture/api-contracts/gateway-facing/isolation-payment-gateway.md)
     * Trust policy: allow ```sts:AssumeRole``` to external account
     * IAM Role managed on account level
 * Both systems must agree on naming conventions (to decouple IAM Role & Policy creation with IaC)

@@ -1,5 +1,5 @@
 package uk.nhs.nhsx.core.headers
 
 enum class MobileOS {
-    iOS, Android
+    iOS, Android, Unknown
 }

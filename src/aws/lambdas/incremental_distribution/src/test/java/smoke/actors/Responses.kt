@@ -1,5 +1,7 @@
 package smoke.actors
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.DeserializationFeature.*
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
@@ -7,11 +9,13 @@ import com.natpryce.hamkrest.isNullOrEmptyString
 import org.http4k.core.ContentType
 import org.http4k.core.Response
 import org.http4k.core.Status
+import org.http4k.format.ConfigurableJackson
 import org.http4k.hamkrest.hasBody
 import org.http4k.hamkrest.hasContentType
 import org.http4k.hamkrest.hasHeader
 import org.http4k.hamkrest.hasStatus
 import software.amazon.awssdk.services.lambda.model.InvokeResponse
+import uk.nhs.nhsx.core.AppServicesJson
 import uk.nhs.nhsx.core.Json
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -86,6 +90,14 @@ fun Response.requireBodyText(expectedText: String): Response {
 inline fun <reified T: Any> Response.deserializeOrThrow(): T {
     requireJsonContentType()
     return Json.readJsonOrNull(bodyString()) ?: error("Unable to deserialize: ${bodyString()}")
+}
+
+object JsonAllowingNullCreators :
+    ConfigurableJackson(AppServicesJson.mapper.copy().configure(FAIL_ON_NULL_CREATOR_PROPERTIES, false))
+
+inline fun <reified T: Any> Response.deserializeWithNullCreatorsOrThrow(): T {
+    requireJsonContentType()
+    return JsonAllowingNullCreators.asA(bodyString(), T::class)
 }
 
 fun InvokeResponse.requireStatusCode(expectedStatus: Status): InvokeResponse {

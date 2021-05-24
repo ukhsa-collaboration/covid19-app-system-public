@@ -33,6 +33,7 @@ import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.routing.Routing.throttlingResponse
 import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.mobileAppVersionFrom
+import uk.nhs.nhsx.core.routing.mobileOSFrom
 import uk.nhs.nhsx.core.routing.withSignedResponses
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
@@ -45,6 +46,7 @@ import uk.nhs.nhsx.virology.order.VirologyRequestType.ORDER
 import uk.nhs.nhsx.virology.order.VirologyRequestType.REGISTER
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import java.time.Duration
 
 class VirologySubmissionHandler @JvmOverloads constructor(
@@ -112,7 +114,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                                 UnprocessableVirologyCtaExchange(it)
                             )
                         }
-                            ?.let { virology.exchangeCtaTokenForV1(it).toHttpResponse() }
+                            ?.let { virology.exchangeCtaTokenForV1(it, mobileOSFrom(r)).toHttpResponse() }
                             ?: HttpResponses.badRequest()
                     }
                 }
@@ -143,7 +145,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                         }
                             ?.let {
                                 virology.exchangeCtaTokenForV2(
-                                    it, mobileAppVersionFrom(r)
+                                    it, mobileAppVersionFrom(r), mobileOSFrom(r)
                                 ).toHttpResponse()
                             } ?: HttpResponses.badRequest()
                     }

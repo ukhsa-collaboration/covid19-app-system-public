@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
 import com.amazonaws.services.dynamodbv2.model.*
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemIntegerValueOrNull
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemLongValueOrThrow
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrNull
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrThrow
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
@@ -25,6 +26,8 @@ import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.OrderNotF
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.TransactionFailed
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
@@ -74,7 +77,8 @@ class VirologyPersistenceService(
                     itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
                     itemIntegerValueOrNull(it, "downloadCount") ?: 0,
                     itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken.Companion::of),
-                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken.Companion::of)
+                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken.Companion::of),
+                    itemLongValueOrThrow(it, "expireAt").let{LocalDateTime.ofEpochSecond(it,0,ZoneOffset.UTC)}
                 )
             }
     }
@@ -243,7 +247,8 @@ class VirologyPersistenceService(
                 TestOrder(
                     itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
                     itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
-                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of)
+                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of),
+                    LocalDateTime.now() // placeholder, index does not include expireAt
                 )
             }
     }
@@ -343,20 +348,23 @@ class VirologyPersistenceService(
             .withExpressionAttributeValues(attributeMap(":expireAt", submissionDataExpireAt.epochSecond))
     )
 
-    fun persistPositiveTestResult(
+    fun persistTestResultWithKeySubmission(
         testResult: VirologyResultRequestV2,
         expireAt: Instant
-    ): VirologyResultPersistOperation = persistTestResult(
-        testResult
-    ) { order: TestOrder ->
-        listOf(
-            resultPollingTokenUpdateOp(order, testResult),
-            submissionTokenCreateOp(order, expireAt, testResult.testKit)
-        )
-    }
+    ): VirologyResultPersistOperation =
+        persistTestResult(testResult) { order: TestOrder ->
+            listOf(
+                resultPollingTokenUpdateOp(order, testResult),
+                submissionTokenCreateOp(order, expireAt, testResult.testKit)
+            )
+        }
 
-    fun persistNonPositiveTestResult(testResult: VirologyResultRequestV2): VirologyResultPersistOperation =
-        persistTestResult(testResult) { order: TestOrder -> listOf(resultPollingTokenUpdateOp(order, testResult)) }
+    fun persistTestResultWithoutKeySubmission(testResult: VirologyResultRequestV2): VirologyResultPersistOperation =
+        persistTestResult(testResult) { order: TestOrder ->
+            listOf(
+                resultPollingTokenUpdateOp(order, testResult)
+            )
+        }
 
     private fun persistTestResult(
         testResult: VirologyResultRequestV2,
@@ -383,7 +391,8 @@ class VirologyPersistenceService(
                 TestOrder(
                     itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
                     itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
-                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of)
+                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of),
+                    itemLongValueOrThrow(it, "expireAt").let{LocalDateTime.ofEpochSecond(it,0,ZoneOffset.UTC)}
                 )
             }
     }

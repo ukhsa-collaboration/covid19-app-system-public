@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.domain
 
 enum class TestResult(val wireValue: String) {
-    Positive("POSITIVE"), Negative("NEGATIVE"), Void("VOID");
+    Positive("POSITIVE"), Negative("NEGATIVE"), Void("VOID"), Plod("PLOD");
 
     override fun toString() = wireValue
 

@@ -11,18 +11,14 @@ import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.ApiKeyExtractor
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.ResponseSigner
-import uk.nhs.nhsx.core.events.ApiHandleFailed
-import uk.nhs.nhsx.core.events.Events
-import uk.nhs.nhsx.core.events.ExceptionThrown
-import uk.nhs.nhsx.core.events.IncomingHttpRequest
-import uk.nhs.nhsx.core.events.OAINotSet
-import uk.nhs.nhsx.core.events.RequestRejected
+import uk.nhs.nhsx.core.events.*
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
 import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.headers.UserAgent
 import java.time.Duration
-import java.util.Optional
+import java.util.*
 
 val MAINTENANCE_MODE = EnvironmentKey.string("MAINTENANCE_MODE")
 val CUSTOM_OAI = EnvironmentKey.string("custom_oai")
@@ -90,6 +86,9 @@ private fun userAgentFrom(r: APIGatewayProxyRequestEvent): String =
 
 fun mobileAppVersionFrom(r: APIGatewayProxyRequestEvent): MobileAppVersion =
     UserAgent.of(userAgentFrom(r)).appVersion
+
+fun mobileOSFrom(r: APIGatewayProxyRequestEvent): MobileOS =
+    UserAgent.of(userAgentFrom(r)).os ?: MobileOS.Unknown
 
 fun filteringWhileMaintenanceModeEnabled(
     events: Events,

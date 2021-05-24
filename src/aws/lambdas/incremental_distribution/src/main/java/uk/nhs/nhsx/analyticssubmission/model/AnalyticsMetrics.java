@@ -75,6 +75,11 @@ public class AnalyticsMetrics {
     public Integer missingPacketsLast7Days;
     public Integer consentedToShareVenueHistory;
     public Integer askedToShareVenueHistory;
+    public Integer askedToShareExposureKeysInTheInitialFlow;
+    public Integer consentedToShareExposureKeysInTheInitialFlow;
+    public Integer totalShareExposureKeysReminderNotifications;
+    public Integer consentedToShareExposureKeysInReminderScreen;
+    public Integer successfullySharedExposureKeys;
 
     public AnalyticsMetrics() {
     }

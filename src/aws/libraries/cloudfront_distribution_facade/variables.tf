@@ -135,3 +135,7 @@ variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
 }
+
+variable "distribution_cache_ttl" {
+  description = "Time to live for the cloudfront distribution cache"
+}

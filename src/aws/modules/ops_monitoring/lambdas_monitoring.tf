@@ -1,7 +1,8 @@
 resource "aws_cloudwatch_dashboard" "lambda_error_dashboard" {
   dashboard_name = "${var.env}-lambda-error-summary"
   dashboard_body = templatefile("${path.module}/templates/lambda_error_dashboard.tmpl", {
-    analytics_submission_function                  = var.analytics_submission_function,
+    analytics_ingest_submission_function           = var.analytics_ingest_submission_function,
+    analytics_ingest_processing_function           = var.analytics_ingest_processing_function,
     diagnosis_keys_submission_function             = var.diagnosis_keys_submission_function,
     exposure_notification_circuit_breaker_function = var.exposure_notification_circuit_breaker_function,
     diagnosis_keys_processing_function             = var.diagnosis_keys_processing_function,
@@ -19,7 +20,8 @@ resource "aws_cloudwatch_dashboard" "lambda_error_dashboard" {
 resource "aws_cloudwatch_dashboard" "lambda_warning_dashboard" {
   dashboard_name = "${var.env}-lambda-warning-summary"
   dashboard_body = templatefile("${path.module}/templates/lambda_warning_dashboard.tmpl", {
-    analytics_submission_function                  = var.analytics_submission_function,
+    analytics_ingest_submission_function           = var.analytics_ingest_submission_function,
+    analytics_ingest_processing_function           = var.analytics_ingest_processing_function,
     diagnosis_keys_submission_function             = var.diagnosis_keys_submission_function,
     exposure_notification_circuit_breaker_function = var.exposure_notification_circuit_breaker_function,
     diagnosis_keys_processing_function             = var.diagnosis_keys_processing_function,

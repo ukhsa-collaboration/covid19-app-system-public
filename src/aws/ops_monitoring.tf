@@ -16,21 +16,22 @@ module "cloudwatch_analytics" {
     module.diagnosis_keys_submission.function,
     module.risky_venues_circuit_breaker.function,
     module.exposure_notification_circuit_breaker.function,
-    module.analytics_submission.function,
+    module.analytics_submission_fast_ingest.submission_lambda_function_name,
     module.virology_upload.lambda_function_name
   ]
   gateways = [
     module.diagnosis_keys_submission.gateway_id,
     module.risky_post_districts_upload.gateway_id,
     module.virology_upload.gateway_id,
-    module.analytics_submission.gateway_id,
+    module.analytics_submission_fast_ingest.gateway_id,
     module.risky_venues_upload.gateway_id,
     module.virology_submission.gateway_id,
     module.risky_venues_circuit_breaker.gateway_id,
     module.exposure_notification_circuit_breaker.gateway_id
   ]
 
-  analytics_submission_function                  = module.analytics_submission.function
+  analytics_ingest_submission_function           = module.analytics_submission_fast_ingest.submission_lambda_function_name
+  analytics_ingest_processing_function           = module.analytics_submission_fast_ingest.processing_lambda_function_name
   diagnosis_keys_submission_function             = module.diagnosis_keys_submission.function
   federation_keys_processing_upload_function     = module.federation_keys_processing.upload_lambda_function
   federation_keys_processing_download_function   = module.federation_keys_processing.download_lambda_function

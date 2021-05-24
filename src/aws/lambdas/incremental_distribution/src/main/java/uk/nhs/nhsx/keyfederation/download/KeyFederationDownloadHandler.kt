@@ -31,7 +31,7 @@ import uk.nhs.nhsx.keyfederation.upload.JWS
  * Key Federation download lambda
  *
  *
- * doc/architecture/api-contracts/diagnosis-key-federation.md
+ * doc/architecture/api-contracts/key-federation/diagnosis-key-federation.md
  */
 class KeyFederationDownloadHandler @JvmOverloads constructor(
     private val clock: Clock = CLOCK,
