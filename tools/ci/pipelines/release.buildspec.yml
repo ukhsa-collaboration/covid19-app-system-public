@@ -1,0 +1,19 @@
+version: 0.2
+env:
+  shell: bash
+  git-credential-helper: yes
+phases:
+  build:
+    commands:
+      - rake config:codebuild
+      - rake release:cta:$TARGET_ENVIRONMENT RELEASE_VERSION=$RELEASE_VERSION
+reports:
+  sanity:
+    files:
+      - "out/reports/*.xml"
+    file-format: "JUNITXML"
+artifacts:
+  name: $(date +%Y%m%d%H%M%S)-release-cta-$TARGET_ENVIRONMENT.zip
+  files:
+    - "out/**/*"
+  discard-paths: no

@@ -384,6 +384,22 @@ resource "aws_glue_catalog_table" "this" {
       name = "successfullySharedExposureKeys"
       type = "int"
     }
+    columns {
+      name = "didSendLocalInfoNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaBanner"
+      type = "int"
+    }
+    columns {
+      name = "isDisplayingLocalInfoBackgroundTick"
+      type = "int"
+    }
   }
 }
 
@@ -767,6 +783,22 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "successfullySharedExposureKeys"
+      type = "int"
+    }
+    columns {
+      name = "didSendLocalInfoNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaBanner"
+      type = "int"
+    }
+    columns {
+      name = "isDisplayingLocalInfoBackgroundTick"
       type = "int"
     }
   }

@@ -39,5 +39,14 @@ module NHSx
       Rake::Task[key_file].invoke
       return key_file
     end
+
+    def generate_local_messages(mapping_filepath, metadata_filepath, system_config)
+      mapping = JSON.parse(File.read(mapping_filepath))
+      metadata = JSON.parse(File.read(metadata_filepath))
+      metadata["messages"].each { |msg_id, msg| msg["updated"] = Time.now.utc.iso8601 }
+      mapping_metadata = { "las" => mapping["las"], "messages" => metadata["messages"] }
+      output_file = "#{system_config.out}/local-messages/local-messages.json"
+      write_file(output_file, JSON.pretty_generate(mapping_metadata))
+    end
   end
 end

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="message" type="messageType"/>
+    <xs:complexType name="linkType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="url"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="paraType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="text"/>
+            <xs:element type="linkType" name="link" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="contentType">
+        <xs:sequence>
+            <xs:element type="paraType" name="para" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="messageType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="head"/>
+            <xs:element type="xs:string" name="body"/>
+            <xs:element type="contentType" name="content"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

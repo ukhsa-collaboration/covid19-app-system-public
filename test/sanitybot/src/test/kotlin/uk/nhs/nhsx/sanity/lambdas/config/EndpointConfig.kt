@@ -18,6 +18,7 @@ import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.PostDistrictsDistributio
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenueConfigurationDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.SelfIsolationDistribution
+import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.LocalMessagesDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.SymptomaticQuestionnaireDistribution
 import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.VirologyKit
 import uk.nhs.nhsx.sanity.lambdas.config.Resource.DynamicContent
@@ -218,6 +219,7 @@ private val resources = mapOf(
     AvailabilityAndroidDistribution to Static("src/static/availability-android.json"),
     AvailabilityIosDistribution to Static("src/static/availability-ios.json"),
     ExposureNotificationDistribution to Static("src/static/exposure-configuration.json"),
+    LocalMessagesDistribution to Static("out/local-messages/local-messages.json"),
     SymptomaticQuestionnaireDistribution to Static("src/static/symptomatic-questionnaire.json"),
     SelfIsolationDistribution to Static("src/static/self-isolation.json"),
     RiskyVenueConfigurationDistribution to Static("src/static/risky-venue-configuration.json"),

@@ -5,6 +5,7 @@ module NHS
   # Methods to facilitate working with i18n data and tools
   module I18N
     include NHSx::Validate
+
     # Path to the symptomatic questionaire configuration file
     QUESTIONAIRE = "src/static/symptomatic-questionnaire.json".freeze
     # Path to the android availability configuration file

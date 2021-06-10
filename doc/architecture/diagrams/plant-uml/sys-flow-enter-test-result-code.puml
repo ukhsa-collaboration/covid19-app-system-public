@@ -21,15 +21,12 @@ User -> App: enter test result code (CTA)
 App -> VirologyTestingAPI: verify code
 App <- VirologyTestingAPI: [code ok] return Submission tokens
 App -> User: show/update isolation screen
-group Share diagnosis keys and venue history
+group Help to stop the spread of the virus
 User->App: select to help to stop the spread of the virus
-App -> User: consent to diagnosis key & venue history submission?
-User -> App : consent to both/either/neither
+App -> User: consent to diagnosis key submission?
+User -> App : consent
 opt consent given to diagnosis key sharing
 App -> SubmissionAPI: submit diagnosis keys (with Submission token)
-end
-opt consent given to venue history sharing
-App -> SubmissionAPI: submit venue history (with Submission token)
 end
 App -> User: show message on completion
 end

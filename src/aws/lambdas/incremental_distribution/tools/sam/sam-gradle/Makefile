@@ -8,7 +8,7 @@ SRCS=$(shell find $(TOPDIR)/src)
 
 POM=$(TOPDIR)/build.gradle
 
-ZIPFILE=$(TOPDIR)/build/distributions/javalambda-0.0.1-SNAPSHOT.zip
+ZIPFILE=$(TOPDIR)/cta/build/distributions/cta-0.0.1-SNAPSHOT.zip
 
 $(ZIPFILE): $(POM) $(SRCS)
 	(cd $(TOPDIR) && $(TOPDIR)/gradlew zipLambdaDistribution)

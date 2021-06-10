@@ -35,3 +35,6 @@ variable "diagnosis_key_submission_stats_bucket_id" {
   description = "The diagnosis key submission S3 bucket"
 }
 
+variable "virology_test_stats_bucket_id" {
+  description = "The S3 bucket containing statistics for virology test stats"
+}

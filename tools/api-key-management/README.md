@@ -23,7 +23,7 @@ gpg --import --import-options show-only {3rd party system}-{env}-public-key.txt
 ## App System Admin uses script to generate ephemeral key and encrypted API key
 
 1. Copy third party public key to `/tools/api-key-management/public-keys/{env}`
-1. Use `/tools/api-key-management/bin/create-api-key.py --api {api-type-name} --party {3rd party system} --environment {env}`, where `api-type-name = <API type name in system architecture>`, e.g. "testResultUpload" (names are in [ApiName.java](../../src/aws/lambdas/incremental_distribution/src/main/java/uk/nhs/nhsx/core/auth/ApiName.kt)), this
+1. Use `/tools/api-key-management/bin/create-api-key.py --api {api-type-name} --party {3rd party system} --environment {env}`, where `api-type-name = <API type name in system architecture>`, e.g. "testResultUpload" (names are in [ApiName.kt](../../src/aws/lambdas/incremental_distribution/infra/src/main/kotlin/uk/nhs/nhsx/core/auth/ApiName.kt)), this
    1. generates ephemeral Zuhlke admin PK pair, 
    1. generates API Key and encrypts using the third-parties public key, 
    1. signs it using ephemeral admin private key and

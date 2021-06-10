@@ -27,7 +27,7 @@ namespace :gen do
   task :"proto:java" do
     include Zuehlke::Execution
 
-    protobuf_output = File.join($configuration.base, "src/aws/lambdas/incremental_distribution/src/main/java")
+    protobuf_output = File.join($configuration.base, "src/aws/lambdas/incremental_distribution/cta/src/main/java")
     protobuf_lib = File.join(protobuf_output, "batchZipCreation")
 
     file protobuf_lib => [GA_PROTO] do
@@ -46,7 +46,7 @@ namespace :gen do
 
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.keys.each do |account|
     desc "Generate signatures for static content for the #{account} account"
-    task :"signatures:#{account}" => [:"login:#{account}", :"build:dependencies"] do
+    task :"signatures:#{account}" => [:"login:#{account}", :"gen:local_messages", :"build:dependencies"] do
       include Zuehlke::Execution
       include NHSx::TargetEnvironment
       include NHSx::AWS
@@ -54,7 +54,7 @@ namespace :gen do
       java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
       mkdir_p(File.join($configuration.out, "signatures"), :verbose => false)
 
-      Rake::FileList["#{$configuration.base}/src/static/*.json"].each do |static_file|
+      Rake::FileList["#{$configuration.base}/src/static/*.json", "#{$configuration.out}/local-messages/local-messages.json"].each do |static_file|
         sig_file = File.join($configuration.out, "signatures", "#{File.basename(static_file)}.sig")
         date_file = File.join($configuration.out, "signatures", "#{File.basename(static_file)}.date")
 
@@ -120,5 +120,14 @@ namespace :gen do
         generate_analytics_test_config(tgt_env, account, $configuration)
       end
     end
+  end
+
+  desc "Generate the local messages payload. LA to message mapping can be overriden with MESSAGE_MAPPING"
+  task :local_messages do
+    include Zuehlke::Execution
+    include NHSx::Generate
+
+    mapping_file = $configuration.message_mapping($configuration)
+    generate_local_messages(mapping_file, "#{$configuration.base}/src/static/local-messages-metadata.json", $configuration)
   end
 end

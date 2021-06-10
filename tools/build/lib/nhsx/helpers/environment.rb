@@ -164,6 +164,18 @@ module Gaudi
         return mobile_number
       end
 
+      def cta_token
+        token = mandatory("TOKEN")
+        raise GaudiError, "Invalid TOKEN" unless token
+        return token
+      end
+
+      def polling_token
+        token = mandatory("POLLING_TOKEN")
+        raise GaudiError, "Invalid POLLING_TOKEN" unless token
+        return token
+      end
+
       def test_kit
         test_kit = ENV.fetch("TEST_KIT", "LAB_RESULT")
         valid_values = ["LAB_RESULT", "RAPID_RESULT", "RAPID_SELF_REPORTED"]
@@ -216,6 +228,14 @@ module Gaudi
       # Returns the value of TO_VERSION or HEAD
       def to_version
         ENV.fetch("TO_VERSION", current_sha)
+      end
+
+      # Path to a file containing static content. This is a parameter for most publish tasks and the format of the STATIC_CONTENT file depends on the corresponding task.
+      def message_mapping(system_config)
+        static_content_file = File.expand_path(ENV.fetch("MESSAGE_MAPPING", "#{system_config.base}/src/static/local-authority-message-mapping.json"))
+        raise GaudiError, "Static content file #{static_content_file} not found" unless File.exist?(static_content_file)
+
+        return static_content_file
       end
     end
   end

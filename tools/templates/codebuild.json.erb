@@ -11,6 +11,11 @@
       "name": "ACCOUNT",
       "value": "<%= account %>",
       "type": "PLAINTEXT"
-    }
+    }<%if !release_version.empty?%>,
+    {
+      "name": "RELEASE_VERSION",
+      "value": "<%= release_version %>",
+      "type": "PLAINTEXT"
+    }<% end %>
   ]
 }

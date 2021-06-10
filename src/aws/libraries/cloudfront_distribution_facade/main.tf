@@ -342,6 +342,33 @@ resource "aws_cloudfront_distribution" "this" {
     }
     viewer_protocol_policy = "https-only"
   }
+  origin {
+    domain_name = var.local_messages_bucket_regional_domain_name
+    origin_id   = var.local_messages_bucket_regional_domain_name
+
+    s3_origin_config {
+      origin_access_identity = var.local_messages_origin_access_identity_path
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = "/${var.name}/${var.local_messages_payload}"
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = var.local_messages_bucket_regional_domain_name
+    compress         = true
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
 
   restrictions {
     geo_restriction {

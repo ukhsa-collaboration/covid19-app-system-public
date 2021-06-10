@@ -1,6 +1,6 @@
 rootProject.name = 'javalambda'
 include 'infra'
+include 'cta'
 include 'pubdash'
 include 'analytics'
 include 'analytics-exporter'
-

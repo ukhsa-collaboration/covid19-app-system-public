@@ -30,6 +30,13 @@ namespace :tag do
       release_version = $configuration.release_version(version_metadata)
       tag(label_tag_name("availability", release_version), "CTA Availability Configuration release #{release_version}", $configuration)
     end
+    desc "Tag the current SHA as a release of availability configuration with RELEASE_VERSION"
+    task :local_messages do
+      include NHSx::Versions
+      version_metadata = subsystem_version_metadata("local-messages", $configuration)
+      release_version = $configuration.release_version(version_metadata)
+      tag(label_tag_name("local-messages", release_version), "CTA Local Messages Configuration release #{release_version}", $configuration)
+    end
     desc "Tag the current SHA as a release of public dashboard with RELEASE_VERSION"
     task :pubdash do
       include NHSx::Versions

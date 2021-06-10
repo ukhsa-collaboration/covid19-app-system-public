@@ -1,0 +1,3133 @@
+﻿local_authority,lad20cd,local_authority_pre_2015,religion,population
+Darlington,E06000005,Darlington,Christian,71122
+Darlington,E06000005,Darlington,Buddhist,307
+Darlington,E06000005,Darlington,Hindu,317
+Darlington,E06000005,Darlington,Jewish,45
+Darlington,E06000005,Darlington,Muslim,971
+Darlington,E06000005,Darlington,Sikh,361
+Darlington,E06000005,Darlington,Other religion,310
+Darlington,E06000005,Darlington,No religion,25415
+Darlington,E06000005,Darlington,Religion not stated,6716
+Hartlepool,E06000001,Hartlepool,Christian,64349
+Hartlepool,E06000001,Hartlepool,Buddhist,152
+Hartlepool,E06000001,Hartlepool,Hindu,168
+Hartlepool,E06000001,Hartlepool,Jewish,9
+Hartlepool,E06000001,Hartlepool,Muslim,689
+Hartlepool,E06000001,Hartlepool,Sikh,97
+Hartlepool,E06000001,Hartlepool,Other religion,178
+Hartlepool,E06000001,Hartlepool,No religion,20507
+Hartlepool,E06000001,Hartlepool,Religion not stated,5879
+Middlesbrough,E06000002,Middlesbrough,Christian,87511
+Middlesbrough,E06000002,Middlesbrough,Buddhist,370
+Middlesbrough,E06000002,Middlesbrough,Hindu,591
+Middlesbrough,E06000002,Middlesbrough,Jewish,45
+Middlesbrough,E06000002,Middlesbrough,Muslim,9757
+Middlesbrough,E06000002,Middlesbrough,Sikh,564
+Middlesbrough,E06000002,Middlesbrough,Other religion,246
+Middlesbrough,E06000002,Middlesbrough,No religion,30797
+Middlesbrough,E06000002,Middlesbrough,Religion not stated,8531
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Christian,95111
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Buddhist,187
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Hindu,64
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Jewish,33
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Muslim,598
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Sikh,43
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Other religion,362
+Redcar and Cleveland,E06000003,Redcar and Cleveland,No religion,30054
+Redcar and Cleveland,E06000003,Redcar and Cleveland,Religion not stated,8725
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Christian,130723
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Buddhist,388
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Hindu,675
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Jewish,94
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Muslim,4143
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Sikh,625
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Other religion,382
+Stockton-on-Tees,E06000004,Stockton-on-Tees,No religion,42910
+Stockton-on-Tees,E06000004,Stockton-on-Tees,Religion not stated,11670
+Halton,E06000006,Halton,Christian,94314
+Halton,E06000006,Halton,Buddhist,216
+Halton,E06000006,Halton,Hindu,194
+Halton,E06000006,Halton,Jewish,44
+Halton,E06000006,Halton,Muslim,267
+Halton,E06000006,Halton,Sikh,55
+Halton,E06000006,Halton,Other religion,303
+Halton,E06000006,Halton,No religion,23543
+Halton,E06000006,Halton,Religion not stated,6810
+Warrington,E06000007,Warrington,Christian,144405
+Warrington,E06000007,Warrington,Buddhist,457
+Warrington,E06000007,Warrington,Hindu,1118
+Warrington,E06000007,Warrington,Jewish,147
+Warrington,E06000007,Warrington,Muslim,2097
+Warrington,E06000007,Warrington,Sikh,361
+Warrington,E06000007,Warrington,Other religion,513
+Warrington,E06000007,Warrington,No religion,41293
+Warrington,E06000007,Warrington,Religion not stated,11837
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Christian,77599
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Buddhist,306
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Hindu,574
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Jewish,54
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Muslim,39817
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Sikh,161
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Other religion,295
+Blackburn with Darwen,E06000008,Blackburn with Darwen,No religion,20374
+Blackburn with Darwen,E06000008,Blackburn with Darwen,Religion not stated,8309
+Blackpool,E06000009,Blackpool,Christian,95426
+Blackpool,E06000009,Blackpool,Buddhist,450
+Blackpool,E06000009,Blackpool,Hindu,337
+Blackpool,E06000009,Blackpool,Jewish,252
+Blackpool,E06000009,Blackpool,Muslim,1061
+Blackpool,E06000009,Blackpool,Sikh,61
+Blackpool,E06000009,Blackpool,Other religion,571
+Blackpool,E06000009,Blackpool,No religion,34815
+Blackpool,E06000009,Blackpool,Religion not stated,9092
+County Durham,E06000047,County Durham,Christian,369715
+County Durham,E06000047,County Durham,Buddhist,1001
+County Durham,E06000047,County Durham,Hindu,607
+County Durham,E06000047,County Durham,Jewish,208
+County Durham,E06000047,County Durham,Muslim,1934
+County Durham,E06000047,County Durham,Sikh,609
+County Durham,E06000047,County Durham,Other religion,1525
+County Durham,E06000047,County Durham,No religion,107281
+County Durham,E06000047,County Durham,Religion not stated,30362
+Northumberland,E06000057,Northumberland,Christian,216673
+Northumberland,E06000057,Northumberland,Buddhist,578
+Northumberland,E06000057,Northumberland,Hindu,335
+Northumberland,E06000057,Northumberland,Jewish,169
+Northumberland,E06000057,Northumberland,Muslim,1018
+Northumberland,E06000057,Northumberland,Sikh,494
+Northumberland,E06000057,Northumberland,Other religion,980
+Northumberland,E06000057,Northumberland,No religion,75620
+Northumberland,E06000057,Northumberland,Religion not stated,20161
+Cheshire East,E06000049,Cheshire East,Christian,254940
+Cheshire East,E06000049,Cheshire East,Buddhist,882
+Cheshire East,E06000049,Cheshire East,Hindu,1328
+Cheshire East,E06000049,Cheshire East,Jewish,581
+Cheshire East,E06000049,Cheshire East,Muslim,2438
+Cheshire East,E06000049,Cheshire East,Sikh,279
+Cheshire East,E06000049,Cheshire East,Other religion,1065
+Cheshire East,E06000049,Cheshire East,No religion,83973
+Cheshire East,E06000049,Cheshire East,Religion not stated,24641
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Christian,231126
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Buddhist,776
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Hindu,653
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Jewish,250
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Muslim,1686
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Sikh,195
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Other religion,854
+Cheshire West and Chester,E06000050,Cheshire West and Chester,No religion,72649
+Cheshire West and Chester,E06000050,Cheshire West and Chester,Religion not stated,21419
+Allerdale,E07000026,Allerdale,Christian,72716
+Allerdale,E07000026,Allerdale,Buddhist,183
+Allerdale,E07000026,Allerdale,Hindu,39
+Allerdale,E07000026,Allerdale,Jewish,19
+Allerdale,E07000026,Allerdale,Muslim,192
+Allerdale,E07000026,Allerdale,Sikh,9
+Allerdale,E07000026,Allerdale,Other religion,228
+Allerdale,E07000026,Allerdale,No religion,16677
+Allerdale,E07000026,Allerdale,Religion not stated,6359
+Gateshead,E08000037,Gateshead,Christian,134075
+Gateshead,E08000037,Gateshead,Buddhist,423
+Gateshead,E08000037,Gateshead,Hindu,497
+Gateshead,E08000037,Gateshead,Jewish,3004
+Gateshead,E08000037,Gateshead,Muslim,2096
+Gateshead,E08000037,Gateshead,Sikh,356
+Gateshead,E08000037,Gateshead,Other religion,529
+Gateshead,E08000037,Gateshead,No religion,47758
+Gateshead,E08000037,Gateshead,Religion not stated,11476
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Christian,48830
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Buddhist,150
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Hindu,101
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Jewish,15
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Muslim,172
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Sikh,7
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Other religion,167
+Barrow-in-Furness,E07000027,Barrow-in-Furness,No religion,15252
+Barrow-in-Furness,E07000027,Barrow-in-Furness,Religion not stated,4393
+Carlisle,E07000028,Carlisle,Christian,74296
+Carlisle,E07000028,Carlisle,Buddhist,277
+Carlisle,E07000028,Carlisle,Hindu,241
+Carlisle,E07000028,Carlisle,Jewish,17
+Carlisle,E07000028,Carlisle,Muslim,455
+Carlisle,E07000028,Carlisle,Sikh,27
+Carlisle,E07000028,Carlisle,Other religion,279
+Carlisle,E07000028,Carlisle,No religion,24626
+Carlisle,E07000028,Carlisle,Religion not stated,7306
+Copeland,E07000029,Copeland,Christian,55687
+Copeland,E07000029,Copeland,Buddhist,148
+Copeland,E07000029,Copeland,Hindu,81
+Copeland,E07000029,Copeland,Jewish,17
+Copeland,E07000029,Copeland,Muslim,227
+Copeland,E07000029,Copeland,Sikh,8
+Copeland,E07000029,Copeland,Other religion,146
+Copeland,E07000029,Copeland,No religion,10147
+Copeland,E07000029,Copeland,Religion not stated,4142
+Eden,E07000030,Eden,Christian,37165
+Eden,E07000030,Eden,Buddhist,130
+Eden,E07000030,Eden,Hindu,42
+Eden,E07000030,Eden,Jewish,31
+Eden,E07000030,Eden,Muslim,115
+Eden,E07000030,Eden,Sikh,6
+Eden,E07000030,Eden,Other religion,156
+Eden,E07000030,Eden,No religion,10882
+Eden,E07000030,Eden,Religion not stated,4037
+South Lakeland,E07000031,South Lakeland,Christian,70541
+South Lakeland,E07000031,South Lakeland,Buddhist,465
+South Lakeland,E07000031,South Lakeland,Hindu,55
+South Lakeland,E07000031,South Lakeland,Jewish,104
+South Lakeland,E07000031,South Lakeland,Muslim,175
+South Lakeland,E07000031,South Lakeland,Sikh,7
+South Lakeland,E07000031,South Lakeland,Other religion,388
+South Lakeland,E07000031,South Lakeland,No religion,23912
+South Lakeland,E07000031,South Lakeland,Religion not stated,8011
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Christian,158138
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Buddhist,1701
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Hindu,3144
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Jewish,671
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Muslim,17561
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Sikh,1223
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Other religion,755
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,No religion,79345
+Newcastle upon Tyne,E08000021,Newcastle upon Tyne,Religion not stated,17639
+North Tyneside,E08000022,North Tyneside,Christian,128185
+North Tyneside,E08000022,North Tyneside,Buddhist,436
+North Tyneside,E08000022,North Tyneside,Hindu,513
+North Tyneside,E08000022,North Tyneside,Jewish,92
+North Tyneside,E08000022,North Tyneside,Muslim,1493
+North Tyneside,E08000022,North Tyneside,Sikh,354
+North Tyneside,E08000022,North Tyneside,Other religion,528
+North Tyneside,E08000022,North Tyneside,No religion,56408
+North Tyneside,E08000022,North Tyneside,Religion not stated,12792
+South Tyneside,E08000023,South Tyneside,Christian,104090
+South Tyneside,E08000023,South Tyneside,Buddhist,223
+South Tyneside,E08000023,South Tyneside,Hindu,254
+South Tyneside,E08000023,South Tyneside,Jewish,57
+South Tyneside,E08000023,South Tyneside,Muslim,2854
+South Tyneside,E08000023,South Tyneside,Sikh,424
+South Tyneside,E08000023,South Tyneside,Other religion,362
+South Tyneside,E08000023,South Tyneside,No religion,31247
+South Tyneside,E08000023,South Tyneside,Religion not stated,8616
+Sunderland,E08000024,Sunderland,Christian,193642
+Sunderland,E08000024,Sunderland,Buddhist,550
+Sunderland,E08000024,Sunderland,Hindu,607
+Sunderland,E08000024,Sunderland,Jewish,76
+Sunderland,E08000024,Sunderland,Muslim,3650
+Sunderland,E08000024,Sunderland,Sikh,814
+Sunderland,E08000024,Sunderland,Other religion,511
+Sunderland,E08000024,Sunderland,No religion,60358
+Sunderland,E08000024,Sunderland,Religion not stated,15298
+Burnley,E07000117,Burnley,Christian,55399
+Burnley,E07000117,Burnley,Buddhist,192
+Burnley,E07000117,Burnley,Hindu,175
+Burnley,E07000117,Burnley,Jewish,14
+Burnley,E07000117,Burnley,Muslim,8580
+Burnley,E07000117,Burnley,Sikh,33
+Burnley,E07000117,Burnley,Other religion,236
+Burnley,E07000117,Burnley,No religion,17178
+Burnley,E07000117,Burnley,Religion not stated,5252
+Chorley,E07000118,Chorley,Christian,80732
+Chorley,E07000118,Chorley,Buddhist,275
+Chorley,E07000118,Chorley,Hindu,196
+Chorley,E07000118,Chorley,Jewish,45
+Chorley,E07000118,Chorley,Muslim,1130
+Chorley,E07000118,Chorley,Sikh,18
+Chorley,E07000118,Chorley,Other religion,337
+Chorley,E07000118,Chorley,No religion,18418
+Chorley,E07000118,Chorley,Religion not stated,6004
+Fylde,E07000119,Fylde,Christian,55843
+Fylde,E07000119,Fylde,Buddhist,196
+Fylde,E07000119,Fylde,Hindu,175
+Fylde,E07000119,Fylde,Jewish,322
+Fylde,E07000119,Fylde,Muslim,350
+Fylde,E07000119,Fylde,Sikh,39
+Fylde,E07000119,Fylde,Other religion,228
+Fylde,E07000119,Fylde,No religion,13870
+Fylde,E07000119,Fylde,Religion not stated,4734
+Hyndburn,E07000120,Hyndburn,Christian,53602
+Hyndburn,E07000120,Hyndburn,Buddhist,162
+Hyndburn,E07000120,Hyndburn,Hindu,70
+Hyndburn,E07000120,Hyndburn,Jewish,7
+Hyndburn,E07000120,Hyndburn,Muslim,8336
+Hyndburn,E07000120,Hyndburn,Sikh,38
+Hyndburn,E07000120,Hyndburn,Other religion,249
+Hyndburn,E07000120,Hyndburn,No religion,13700
+Hyndburn,E07000120,Hyndburn,Religion not stated,4570
+Lancaster,E07000121,Lancaster,Christian,91124
+Lancaster,E07000121,Lancaster,Buddhist,540
+Lancaster,E07000121,Lancaster,Hindu,446
+Lancaster,E07000121,Lancaster,Jewish,119
+Lancaster,E07000121,Lancaster,Muslim,1767
+Lancaster,E07000121,Lancaster,Sikh,100
+Lancaster,E07000121,Lancaster,Other religion,658
+Lancaster,E07000121,Lancaster,No religion,33833
+Lancaster,E07000121,Lancaster,Religion not stated,9788
+Pendle,E07000122,Pendle,Christian,48043
+Pendle,E07000122,Pendle,Buddhist,224
+Pendle,E07000122,Pendle,Hindu,91
+Pendle,E07000122,Pendle,Jewish,36
+Pendle,E07000122,Pendle,Muslim,15579
+Pendle,E07000122,Pendle,Sikh,9
+Pendle,E07000122,Pendle,Other religion,334
+Pendle,E07000122,Pendle,No religion,19573
+Pendle,E07000122,Pendle,Religion not stated,5563
+Preston,E07000123,Preston,Christian,85518
+Preston,E07000123,Preston,Buddhist,385
+Preston,E07000123,Preston,Hindu,3338
+Preston,E07000123,Preston,Jewish,60
+Preston,E07000123,Preston,Muslim,15769
+Preston,E07000123,Preston,Sikh,930
+Preston,E07000123,Preston,Other religion,428
+Preston,E07000123,Preston,No religion,25754
+Preston,E07000123,Preston,Religion not stated,8020
+Ribble Valley,E07000124,Ribble Valley,Christian,44627
+Ribble Valley,E07000124,Ribble Valley,Buddhist,88
+Ribble Valley,E07000124,Ribble Valley,Hindu,99
+Ribble Valley,E07000124,Ribble Valley,Jewish,10
+Ribble Valley,E07000124,Ribble Valley,Muslim,425
+Ribble Valley,E07000124,Ribble Valley,Sikh,41
+Ribble Valley,E07000124,Ribble Valley,Other religion,139
+Ribble Valley,E07000124,Ribble Valley,No religion,8299
+Ribble Valley,E07000124,Ribble Valley,Religion not stated,3404
+Rossendale,E07000125,Rossendale,Christian,43392
+Rossendale,E07000125,Rossendale,Buddhist,163
+Bolton,E08000001,Bolton,Christian,173608
+Bolton,E08000001,Bolton,Buddhist,574
+Bolton,E08000001,Bolton,Hindu,5988
+Bolton,E08000001,Bolton,Jewish,174
+Bolton,E08000001,Bolton,Muslim,32385
+Bolton,E08000001,Bolton,Sikh,118
+Bolton,E08000001,Bolton,Other religion,721
+Bolton,E08000001,Bolton,No religion,47567
+Bolton,E08000001,Bolton,Religion not stated,15651
+Bury,E08000002,Bury,Christian,116036
+Bury,E08000002,Bury,Buddhist,453
+Bury,E08000002,Bury,Hindu,817
+Bury,E08000002,Bury,Jewish,10302
+Bury,E08000002,Bury,Muslim,11279
+Bury,E08000002,Bury,Sikh,301
+Bury,E08000002,Bury,Other religion,422
+Bury,E08000002,Bury,No religion,34381
+Bury,E08000002,Bury,Religion not stated,11069
+Manchester,E08000003,Manchester,Christian,245247
+Manchester,E08000003,Manchester,Buddhist,3879
+Manchester,E08000003,Manchester,Hindu,5452
+Manchester,E08000003,Manchester,Jewish,2613
+Manchester,E08000003,Manchester,Muslim,79496
+Manchester,E08000003,Manchester,Sikh,2292
+Manchester,E08000003,Manchester,Other religion,1889
+Manchester,E08000003,Manchester,No religion,127485
+Manchester,E08000003,Manchester,Religion not stated,34774
+Oldham,E08000004,Oldham,Christian,134167
+Oldham,E08000004,Oldham,Buddhist,371
+Oldham,E08000004,Oldham,Hindu,1233
+Oldham,E08000004,Oldham,Jewish,108
+Oldham,E08000004,Oldham,Muslim,39879
+Oldham,E08000004,Oldham,Sikh,70
+Oldham,E08000004,Oldham,Other religion,406
+Oldham,E08000004,Oldham,No religion,36169
+Oldham,E08000004,Oldham,Religion not stated,12494
+Rochdale,E08000005,Rochdale,Christian,128186
+Rochdale,E08000005,Rochdale,Buddhist,403
+Rochdale,E08000005,Rochdale,Hindu,642
+Rochdale,E08000005,Rochdale,Jewish,216
+Rochdale,E08000005,Rochdale,Muslim,29426
+Rochdale,E08000005,Rochdale,Sikh,71
+Rochdale,E08000005,Rochdale,Other religion,430
+Rochdale,E08000005,Rochdale,No religion,40014
+Rochdale,E08000005,Rochdale,Religion not stated,12311
+Salford,E08000006,Salford,Christian,150111
+Salford,E08000006,Salford,Buddhist,1040
+Salford,E08000006,Salford,Hindu,1504
+Salford,E08000006,Salford,Jewish,7687
+Salford,E08000006,Salford,Muslim,6030
+Salford,E08000006,Salford,Sikh,324
+Salford,E08000006,Salford,Other religion,691
+Salford,E08000006,Salford,No religion,52105
+Salford,E08000006,Salford,Religion not stated,14441
+Stockport,E08000007,Stockport,Christian,179055
+Stockport,E08000007,Stockport,Buddhist,853
+Stockport,E08000007,Stockport,Hindu,1666
+Stockport,E08000007,Stockport,Jewish,1340
+Stockport,E08000007,Stockport,Muslim,9431
+Stockport,E08000007,Stockport,Sikh,330
+Stockport,E08000007,Stockport,Other religion,964
+Stockport,E08000007,Stockport,No religion,71126
+Stockport,E08000007,Stockport,Religion not stated,18510
+Tameside,E08000008,Tameside,Christian,140322
+Tameside,E08000008,Tameside,Buddhist,511
+Tameside,E08000008,Tameside,Hindu,3223
+Tameside,E08000008,Tameside,Jewish,89
+Tameside,E08000008,Tameside,Muslim,9705
+Tameside,E08000008,Tameside,Sikh,102
+Tameside,E08000008,Tameside,Other religion,651
+Tameside,E08000008,Tameside,No religion,51674
+Tameside,E08000008,Tameside,Religion not stated,13047
+Trafford,E08000009,Trafford,Christian,143639
+Trafford,E08000009,Trafford,Buddhist,768
+Trafford,E08000009,Trafford,Hindu,2271
+Trafford,E08000009,Trafford,Jewish,2413
+Trafford,E08000009,Trafford,Muslim,12994
+Trafford,E08000009,Trafford,Sikh,1652
+Trafford,E08000009,Trafford,Other religion,566
+Trafford,E08000009,Trafford,No religion,47968
+Trafford,E08000009,Trafford,Religion not stated,14307
+Wigan,E08000010,Wigan,Christian,247223
+Wigan,E08000010,Wigan,Buddhist,703
+Wigan,E08000010,Wigan,Hindu,682
+Wigan,E08000010,Wigan,Jewish,71
+Wigan,E08000010,Wigan,Muslim,2162
+Wigan,E08000010,Wigan,Sikh,62
+Wigan,E08000010,Wigan,Other religion,689
+Wigan,E08000010,Wigan,No religion,48640
+Wigan,E08000010,Wigan,Religion not stated,17617
+Rossendale,E07000125,Rossendale,Hindu,96
+Rossendale,E07000125,Rossendale,Jewish,67
+Rossendale,E07000125,Rossendale,Muslim,2613
+Rossendale,E07000125,Rossendale,Sikh,9
+Rossendale,E07000125,Rossendale,Other religion,231
+Rossendale,E07000125,Rossendale,No religion,17095
+Rossendale,E07000125,Rossendale,Religion not stated,4316
+South Ribble,E07000126,South Ribble,Christian,82547
+South Ribble,E07000126,South Ribble,Buddhist,206
+South Ribble,E07000126,South Ribble,Hindu,556
+South Ribble,E07000126,South Ribble,Jewish,48
+South Ribble,E07000126,South Ribble,Muslim,592
+South Ribble,E07000126,South Ribble,Sikh,75
+South Ribble,E07000126,South Ribble,Other religion,284
+South Ribble,E07000126,South Ribble,No religion,18487
+South Ribble,E07000126,South Ribble,Religion not stated,6262
+West Lancashire,E07000127,West Lancashire,Christian,84337
+West Lancashire,E07000127,West Lancashire,Buddhist,141
+West Lancashire,E07000127,West Lancashire,Hindu,229
+West Lancashire,E07000127,West Lancashire,Jewish,62
+West Lancashire,E07000127,West Lancashire,Muslim,276
+West Lancashire,E07000127,West Lancashire,Sikh,87
+West Lancashire,E07000127,West Lancashire,Other religion,216
+West Lancashire,E07000127,West Lancashire,No religion,19029
+West Lancashire,E07000127,West Lancashire,Religion not stated,6308
+Wyre,E07000128,Wyre,Christian,80346
+Wyre,E07000128,Wyre,Buddhist,220
+Wyre,E07000128,Wyre,Hindu,161
+Wyre,E07000128,Wyre,Jewish,69
+Wyre,E07000128,Wyre,Muslim,305
+Wyre,E07000128,Wyre,Sikh,25
+Wyre,E07000128,Wyre,Other religion,342
+Wyre,E07000128,Wyre,No religion,19210
+Wyre,E07000128,Wyre,Religion not stated,7071
+Knowsley,E08000011,Knowsley,Christian,117991
+Knowsley,E08000011,Knowsley,Buddhist,165
+Knowsley,E08000011,Knowsley,Hindu,266
+Knowsley,E08000011,Knowsley,Jewish,58
+Knowsley,E08000011,Knowsley,Muslim,435
+Knowsley,E08000011,Knowsley,Sikh,37
+Knowsley,E08000011,Knowsley,Other religion,167
+Knowsley,E08000011,Knowsley,No religion,18439
+Knowsley,E08000011,Knowsley,Religion not stated,8335
+Liverpool,E08000012,Liverpool,Christian,331217
+Liverpool,E08000012,Liverpool,Buddhist,2017
+Liverpool,E08000012,Liverpool,Hindu,2437
+Liverpool,E08000012,Liverpool,Jewish,2157
+Liverpool,E08000012,Liverpool,Muslim,15209
+Liverpool,E08000012,Liverpool,Sikh,531
+Liverpool,E08000012,Liverpool,Other religion,1122
+Liverpool,E08000012,Liverpool,No religion,82701
+Liverpool,E08000012,Liverpool,Religion not stated,29024
+Sefton,E08000014,Sefton,Christian,210184
+Sefton,E08000014,Sefton,Buddhist,504
+Sefton,E08000014,Sefton,Hindu,525
+Sefton,E08000014,Sefton,Jewish,486
+Sefton,E08000014,Sefton,Muslim,1189
+Sefton,E08000014,Sefton,Sikh,105
+Sefton,E08000014,Sefton,Other religion,568
+Sefton,E08000014,Sefton,No religion,43196
+Sefton,E08000014,Sefton,Religion not stated,17033
+St. Helens,E08000013,St. Helens,Christian,138172
+St. Helens,E08000013,St. Helens,Buddhist,317
+St. Helens,E08000013,St. Helens,Hindu,416
+St. Helens,E08000013,St. Helens,Jewish,48
+St. Helens,E08000013,St. Helens,Muslim,605
+St. Helens,E08000013,St. Helens,Sikh,46
+St. Helens,E08000013,St. Helens,Other religion,403
+St. Helens,E08000013,St. Helens,No religion,25653
+St. Helens,E08000013,St. Helens,Religion not stated,9648
+Wirral,E08000015,Wirral,Christian,225147
+Wirral,E08000015,Wirral,Buddhist,905
+Wirral,E08000015,Wirral,Hindu,742
+Wirral,E08000015,Wirral,Jewish,265
+Wirral,E08000015,Wirral,Muslim,1809
+Wirral,E08000015,Wirral,Sikh,236
+Wirral,E08000015,Wirral,Other religion,830
+Wirral,E08000015,Wirral,No religion,68209
+Wirral,E08000015,Wirral,Religion not stated,21640
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Christian,227343
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Buddhist,702
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Hindu,607
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Jewish,337
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Muslim,1309
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Sikh,174
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Other religion,863
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,No religion,78296
+East Riding of Yorkshire,E06000011,East Riding of Yorkshire,Religion not stated,24548
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Christian,140753
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Buddhist,771
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Hindu,439
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Jewish,172
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Muslim,5447
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Sikh,289
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Other religion,794
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",No religion,89336
+"Kingston upon Hull, City of",E06000010,"Kingston upon Hull, City of",Religion not stated,18405
+North East Lincolnshire,E06000012,North East Lincolnshire,Christian,96836
+North East Lincolnshire,E06000012,North East Lincolnshire,Buddhist,347
+North East Lincolnshire,E06000012,North East Lincolnshire,Hindu,386
+North East Lincolnshire,E06000012,North East Lincolnshire,Jewish,64
+North East Lincolnshire,E06000012,North East Lincolnshire,Muslim,1332
+North East Lincolnshire,E06000012,North East Lincolnshire,Sikh,158
+North East Lincolnshire,E06000012,North East Lincolnshire,Other religion,533
+North East Lincolnshire,E06000012,North East Lincolnshire,No religion,48476
+North East Lincolnshire,E06000012,North East Lincolnshire,Religion not stated,11484
+North Lincolnshire,E06000013,North Lincolnshire,Christian,110554
+North Lincolnshire,E06000013,North Lincolnshire,Buddhist,381
+North Lincolnshire,E06000013,North Lincolnshire,Hindu,445
+North Lincolnshire,E06000013,North Lincolnshire,Jewish,48
+North Lincolnshire,E06000013,North Lincolnshire,Muslim,3024
+North Lincolnshire,E06000013,North Lincolnshire,Sikh,538
+North Lincolnshire,E06000013,North Lincolnshire,Other religion,417
+North Lincolnshire,E06000013,North Lincolnshire,No religion,40176
+North Lincolnshire,E06000013,North Lincolnshire,Religion not stated,11863
+York,E06000014,York,Christian,117856
+York,E06000014,York,Buddhist,1016
+York,E06000014,York,Hindu,983
+York,E06000014,York,Jewish,202
+York,E06000014,York,Muslim,2072
+York,E06000014,York,Sikh,133
+York,E06000014,York,Other religion,747
+York,E06000014,York,No religion,59646
+York,E06000014,York,Religion not stated,15396
+Craven,E07000163,Craven,Christian,37301
+Craven,E07000163,Craven,Buddhist,134
+Craven,E07000163,Craven,Hindu,65
+Craven,E07000163,Craven,Jewish,16
+Craven,E07000163,Craven,Muslim,506
+Craven,E07000163,Craven,Sikh,34
+Craven,E07000163,Craven,Other religion,187
+Craven,E07000163,Craven,No religion,12935
+Craven,E07000163,Craven,Religion not stated,4231
+Hambleton,E07000164,Hambleton,Christian,64692
+Hambleton,E07000164,Hambleton,Buddhist,135
+Hambleton,E07000164,Hambleton,Hindu,93
+Hambleton,E07000164,Hambleton,Jewish,45
+Hambleton,E07000164,Hambleton,Muslim,234
+Hambleton,E07000164,Hambleton,Sikh,5
+Hambleton,E07000164,Hambleton,Other religion,223
+Hambleton,E07000164,Hambleton,No religion,17652
+Hambleton,E07000164,Hambleton,Religion not stated,6061
+Harrogate,E07000165,Harrogate,Christian,108289
+Harrogate,E07000165,Harrogate,Buddhist,414
+Harrogate,E07000165,Harrogate,Hindu,236
+Harrogate,E07000165,Harrogate,Jewish,334
+Harrogate,E07000165,Harrogate,Muslim,573
+Harrogate,E07000165,Harrogate,Sikh,82
+Harrogate,E07000165,Harrogate,Other religion,533
+Harrogate,E07000165,Harrogate,No religion,36227
+Harrogate,E07000165,Harrogate,Religion not stated,11181
+Richmondshire,E07000166,Richmondshire,Christian,36057
+Richmondshire,E07000166,Richmondshire,Buddhist,373
+Richmondshire,E07000166,Richmondshire,Hindu,513
+Richmondshire,E07000166,Richmondshire,Jewish,26
+Richmondshire,E07000166,Richmondshire,Muslim,130
+Richmondshire,E07000166,Richmondshire,Sikh,7
+Richmondshire,E07000166,Richmondshire,Other religion,158
+Richmondshire,E07000166,Richmondshire,No religion,11120
+Richmondshire,E07000166,Richmondshire,Religion not stated,3581
+Ryedale,E07000167,Ryedale,Christian,37172
+Ryedale,E07000167,Ryedale,Buddhist,125
+Ryedale,E07000167,Ryedale,Hindu,20
+Ryedale,E07000167,Ryedale,Jewish,15
+Ryedale,E07000167,Ryedale,Muslim,57
+Ryedale,E07000167,Ryedale,Sikh,5
+Ryedale,E07000167,Ryedale,Other religion,180
+Ryedale,E07000167,Ryedale,No religion,10354
+Ryedale,E07000167,Ryedale,Religion not stated,3823
+Scarborough,E07000168,Scarborough,Christian,72544
+Scarborough,E07000168,Scarborough,Buddhist,295
+Scarborough,E07000168,Scarborough,Hindu,167
+Scarborough,E07000168,Scarborough,Jewish,67
+Scarborough,E07000168,Scarborough,Muslim,551
+Scarborough,E07000168,Scarborough,Sikh,8
+Scarborough,E07000168,Scarborough,Other religion,402
+Scarborough,E07000168,Scarborough,No religion,26665
+Scarborough,E07000168,Scarborough,Religion not stated,8094
+Selby,E07000169,Selby,Christian,59182
+Selby,E07000169,Selby,Buddhist,133
+Selby,E07000169,Selby,Hindu,87
+Selby,E07000169,Selby,Jewish,60
+Selby,E07000169,Selby,Muslim,95
+Selby,E07000169,Selby,Sikh,51
+Selby,E07000169,Selby,Other religion,206
+Selby,E07000169,Selby,No religion,18070
+Selby,E07000169,Selby,Religion not stated,5565
+Barnsley,E08000016,Barnsley,Christian,158287
+Barnsley,E08000016,Barnsley,Buddhist,344
+Barnsley,E08000016,Barnsley,Hindu,232
+Barnsley,E08000016,Barnsley,Jewish,49
+Barnsley,E08000016,Barnsley,Muslim,945
+Barnsley,E08000016,Barnsley,Sikh,197
+Barnsley,E08000016,Barnsley,Other religion,623
+Barnsley,E08000016,Barnsley,No religion,55536
+Barnsley,E08000016,Barnsley,Religion not stated,15008
+Doncaster,E08000017,Doncaster,Christian,199320
+Doncaster,E08000017,Doncaster,Buddhist,683
+Doncaster,E08000017,Doncaster,Hindu,881
+Doncaster,E08000017,Doncaster,Jewish,79
+Doncaster,E08000017,Doncaster,Muslim,4990
+Doncaster,E08000017,Doncaster,Sikh,1140
+Doncaster,E08000017,Doncaster,Other religion,932
+Doncaster,E08000017,Doncaster,No religion,73656
+Doncaster,E08000017,Doncaster,Religion not stated,20721
+Rotherham,E08000018,Rotherham,Christian,171068
+Rotherham,E08000018,Rotherham,Buddhist,401
+Rotherham,E08000018,Rotherham,Hindu,433
+Rotherham,E08000018,Rotherham,Jewish,63
+Rotherham,E08000018,Rotherham,Muslim,9614
+Rotherham,E08000018,Rotherham,Sikh,293
+Rotherham,E08000018,Rotherham,Other religion,595
+Rotherham,E08000018,Rotherham,No religion,57783
+Rotherham,E08000018,Rotherham,Religion not stated,17030
+Sheffield,E08000019,Sheffield,Christian,290299
+Sheffield,E08000019,Sheffield,Buddhist,2282
+Sheffield,E08000019,Sheffield,Hindu,3566
+Sheffield,E08000019,Sheffield,Jewish,747
+Sheffield,E08000019,Sheffield,Muslim,42801
+Sheffield,E08000019,Sheffield,Sikh,942
+Sheffield,E08000019,Sheffield,Other religion,1961
+Sheffield,E08000019,Sheffield,No religion,172516
+Sheffield,E08000019,Sheffield,Religion not stated,37584
+Bradford,E08000032,Bradford,Christian,239843
+Bradford,E08000032,Bradford,Buddhist,1000
+Bradford,E08000032,Bradford,Hindu,4882
+Bradford,E08000032,Bradford,Jewish,299
+Bradford,E08000032,Bradford,Muslim,129041
+Bradford,E08000032,Bradford,Sikh,5125
+Bradford,E08000032,Bradford,Other religion,1686
+Bradford,E08000032,Bradford,No religion,108027
+Bradford,E08000032,Bradford,Religion not stated,32549
+Calderdale,E08000033,Calderdale,Christian,114667
+Calderdale,E08000033,Calderdale,Buddhist,593
+Calderdale,E08000033,Calderdale,Hindu,616
+Calderdale,E08000033,Calderdale,Jewish,153
+Calderdale,E08000033,Calderdale,Muslim,14802
+Calderdale,E08000033,Calderdale,Sikh,355
+Calderdale,E08000033,Calderdale,Other religion,808
+Calderdale,E08000033,Calderdale,No religion,57193
+Calderdale,E08000033,Calderdale,Religion not stated,14639
+Kirklees,E08000034,Kirklees,Christian,225751
+Kirklees,E08000034,Kirklees,Buddhist,845
+Kirklees,E08000034,Kirklees,Hindu,1544
+Kirklees,E08000034,Kirklees,Jewish,189
+Kirklees,E08000034,Kirklees,Muslim,61280
+Kirklees,E08000034,Kirklees,Sikh,3330
+Kirklees,E08000034,Kirklees,Other religion,1300
+Kirklees,E08000034,Kirklees,No religion,100829
+Kirklees,E08000034,Kirklees,Religion not stated,27390
+Leeds,E08000035,Leeds,Christian,419790
+Leeds,E08000035,Leeds,Buddhist,2772
+Leeds,E08000035,Leeds,Hindu,7048
+Leeds,E08000035,Leeds,Jewish,6847
+Leeds,E08000035,Leeds,Muslim,40772
+Leeds,E08000035,Leeds,Sikh,8914
+Leeds,E08000035,Leeds,Other religion,2396
+Leeds,E08000035,Leeds,No religion,212229
+Leeds,E08000035,Leeds,Religion not stated,50717
+Wakefield,E08000036,Wakefield,Christian,216215
+Wakefield,E08000036,Wakefield,Buddhist,573
+Wakefield,E08000036,Wakefield,Hindu,831
+Wakefield,E08000036,Wakefield,Jewish,117
+Wakefield,E08000036,Wakefield,Muslim,6475
+Wakefield,E08000036,Wakefield,Sikh,399
+Wakefield,E08000036,Wakefield,Other religion,973
+Wakefield,E08000036,Wakefield,No religion,79497
+Wakefield,E08000036,Wakefield,Religion not stated,20757
+Derby,E06000015,Derby,Christian,131129
+Derby,E06000015,Derby,Buddhist,822
+Derby,E06000015,Derby,Hindu,2198
+Derby,E06000015,Derby,Jewish,110
+Derby,E06000015,Derby,Muslim,19006
+Derby,E06000015,Derby,Sikh,8891
+Derby,E06000015,Derby,Other religion,985
+Derby,E06000015,Derby,No religion,68668
+Derby,E06000015,Derby,Religion not stated,16943
+Leicester,E06000016,Leicester,Christian,106872
+Leicester,E06000016,Leicester,Buddhist,1224
+Leicester,E06000016,Leicester,Hindu,50087
+Leicester,E06000016,Leicester,Jewish,295
+Leicester,E06000016,Leicester,Muslim,61440
+Leicester,E06000016,Leicester,Sikh,14457
+Leicester,E06000016,Leicester,Other religion,1839
+Leicester,E06000016,Leicester,No religion,75280
+Leicester,E06000016,Leicester,Religion not stated,18345
+Nottingham,E06000018,Nottingham,Christian,135216
+Nottingham,E06000018,Nottingham,Buddhist,2051
+Nottingham,E06000018,Nottingham,Hindu,4498
+Nottingham,E06000018,Nottingham,Jewish,1069
+Nottingham,E06000018,Nottingham,Muslim,26919
+Nottingham,E06000018,Nottingham,Sikh,4312
+Nottingham,E06000018,Nottingham,Other religion,1483
+Nottingham,E06000018,Nottingham,No religion,106954
+Nottingham,E06000018,Nottingham,Religion not stated,23178
+Rutland,E06000017,Rutland,Christian,25481
+Rutland,E06000017,Rutland,Buddhist,100
+Rutland,E06000017,Rutland,Hindu,75
+Rutland,E06000017,Rutland,Jewish,54
+Rutland,E06000017,Rutland,Muslim,131
+Rutland,E06000017,Rutland,Sikh,31
+Rutland,E06000017,Rutland,Other religion,149
+Rutland,E06000017,Rutland,No religion,8728
+Rutland,E06000017,Rutland,Religion not stated,2620
+Amber Valley,E07000032,Amber Valley,Christian,74834
+Amber Valley,E07000032,Amber Valley,Buddhist,253
+Amber Valley,E07000032,Amber Valley,Hindu,155
+Amber Valley,E07000032,Amber Valley,Jewish,79
+Amber Valley,E07000032,Amber Valley,Muslim,188
+Amber Valley,E07000032,Amber Valley,Sikh,172
+Amber Valley,E07000032,Amber Valley,Other religion,583
+Amber Valley,E07000032,Amber Valley,No religion,37085
+Amber Valley,E07000032,Amber Valley,Religion not stated,8960
+Bolsover,E07000033,Bolsover,Christian,49447
+Bolsover,E07000033,Bolsover,Buddhist,115
+Bolsover,E07000033,Bolsover,Hindu,81
+Bolsover,E07000033,Bolsover,Jewish,29
+Bolsover,E07000033,Bolsover,Muslim,146
+Bolsover,E07000033,Bolsover,Sikh,104
+Bolsover,E07000033,Bolsover,Other religion,261
+Bolsover,E07000033,Bolsover,No religion,20507
+Bolsover,E07000033,Bolsover,Religion not stated,5176
+Chesterfield,E07000034,Chesterfield,Christian,66175
+Chesterfield,E07000034,Chesterfield,Buddhist,213
+Chesterfield,E07000034,Chesterfield,Hindu,257
+Chesterfield,E07000034,Chesterfield,Jewish,31
+Chesterfield,E07000034,Chesterfield,Muslim,699
+Chesterfield,E07000034,Chesterfield,Sikh,158
+Chesterfield,E07000034,Chesterfield,Other religion,375
+Chesterfield,E07000034,Chesterfield,No religion,28238
+Chesterfield,E07000034,Chesterfield,Religion not stated,7642
+Derbyshire Dales,E07000035,Derbyshire Dales,Christian,48869
+Derbyshire Dales,E07000035,Derbyshire Dales,Buddhist,164
+Derbyshire Dales,E07000035,Derbyshire Dales,Hindu,39
+Derbyshire Dales,E07000035,Derbyshire Dales,Jewish,56
+Derbyshire Dales,E07000035,Derbyshire Dales,Muslim,142
+Derbyshire Dales,E07000035,Derbyshire Dales,Sikh,34
+Derbyshire Dales,E07000035,Derbyshire Dales,Other religion,241
+Derbyshire Dales,E07000035,Derbyshire Dales,No religion,16477
+Derbyshire Dales,E07000035,Derbyshire Dales,Religion not stated,5094
+Erewash,E07000036,Erewash,Christian,64784
+Erewash,E07000036,Erewash,Buddhist,213
+Erewash,E07000036,Erewash,Hindu,412
+Erewash,E07000036,Erewash,Jewish,42
+Erewash,E07000036,Erewash,Muslim,258
+Erewash,E07000036,Erewash,Sikh,284
+Erewash,E07000036,Erewash,Other religion,412
+Erewash,E07000036,Erewash,No religion,37995
+Erewash,E07000036,Erewash,Religion not stated,7681
+High Peak,E07000037,High Peak,Christian,58264
+High Peak,E07000037,High Peak,Buddhist,296
+High Peak,E07000037,High Peak,Hindu,77
+High Peak,E07000037,High Peak,Jewish,35
+High Peak,E07000037,High Peak,Muslim,178
+High Peak,E07000037,High Peak,Sikh,33
+High Peak,E07000037,High Peak,Other religion,389
+High Peak,E07000037,High Peak,No religion,25057
+High Peak,E07000037,High Peak,Religion not stated,6563
+North East Derbyshire,E07000038,North East Derbyshire,Christian,66773
+North East Derbyshire,E07000038,North East Derbyshire,Buddhist,115
+North East Derbyshire,E07000038,North East Derbyshire,Hindu,92
+North East Derbyshire,E07000038,North East Derbyshire,Jewish,48
+North East Derbyshire,E07000038,North East Derbyshire,Muslim,268
+North East Derbyshire,E07000038,North East Derbyshire,Sikh,131
+North East Derbyshire,E07000038,North East Derbyshire,Other religion,309
+North East Derbyshire,E07000038,North East Derbyshire,No religion,24465
+North East Derbyshire,E07000038,North East Derbyshire,Religion not stated,6822
+South Derbyshire,E07000039,South Derbyshire,Christian,60522
+South Derbyshire,E07000039,South Derbyshire,Buddhist,161
+South Derbyshire,E07000039,South Derbyshire,Hindu,264
+South Derbyshire,E07000039,South Derbyshire,Jewish,43
+South Derbyshire,E07000039,South Derbyshire,Muslim,331
+South Derbyshire,E07000039,South Derbyshire,Sikh,1400
+South Derbyshire,E07000039,South Derbyshire,Other religion,335
+South Derbyshire,E07000039,South Derbyshire,No religion,25334
+South Derbyshire,E07000039,South Derbyshire,Religion not stated,6221
+Blaby,E07000129,Blaby,Christian,54594
+Blaby,E07000129,Blaby,Buddhist,177
+Blaby,E07000129,Blaby,Hindu,2550
+Blaby,E07000129,Blaby,Jewish,61
+Blaby,E07000129,Blaby,Muslim,728
+Blaby,E07000129,Blaby,Sikh,1849
+Blaby,E07000129,Blaby,Other religion,337
+Blaby,E07000129,Blaby,No religion,27367
+Blaby,E07000129,Blaby,Religion not stated,6252
+Charnwood,E07000130,Charnwood,Christian,92233
+Charnwood,E07000130,Charnwood,Buddhist,559
+Charnwood,E07000130,Charnwood,Hindu,8344
+Charnwood,E07000130,Charnwood,Jewish,125
+Charnwood,E07000130,Charnwood,Muslim,3925
+Charnwood,E07000130,Charnwood,Sikh,1241
+Charnwood,E07000130,Charnwood,Other religion,620
+Charnwood,E07000130,Charnwood,No religion,48525
+Charnwood,E07000130,Charnwood,Religion not stated,10528
+Harborough,E07000131,Harborough,Christian,55899
+Harborough,E07000131,Harborough,Buddhist,171
+Harborough,E07000131,Harborough,Hindu,1088
+Harborough,E07000131,Harborough,Jewish,112
+Harborough,E07000131,Harborough,Muslim,423
+Harborough,E07000131,Harborough,Sikh,630
+Harborough,E07000131,Harborough,Other religion,199
+Harborough,E07000131,Harborough,No religion,20995
+Harborough,E07000131,Harborough,Religion not stated,5865
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Christian,67559
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Buddhist,215
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Hindu,871
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Jewish,46
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Muslim,517
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Sikh,427
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Other religion,381
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,No religion,28247
+Hinckley and Bosworth,E07000132,Hinckley and Bosworth,Religion not stated,6815
+Melton,E07000133,Melton,Christian,34239
+Melton,E07000133,Melton,Buddhist,110
+Melton,E07000133,Melton,Hindu,211
+Melton,E07000133,Melton,Jewish,11
+Melton,E07000133,Melton,Muslim,41
+Melton,E07000133,Melton,Sikh,46
+Melton,E07000133,Melton,Other religion,171
+Melton,E07000133,Melton,No religion,12269
+Melton,E07000133,Melton,Religion not stated,3278
+North West Leicestershire,E07000134,North West Leicestershire,Christian,60641
+North West Leicestershire,E07000134,North West Leicestershire,Buddhist,182
+North West Leicestershire,E07000134,North West Leicestershire,Hindu,332
+North West Leicestershire,E07000134,North West Leicestershire,Jewish,37
+North West Leicestershire,E07000134,North West Leicestershire,Muslim,206
+North West Leicestershire,E07000134,North West Leicestershire,Sikh,121
+North West Leicestershire,E07000134,North West Leicestershire,Other religion,395
+North West Leicestershire,E07000134,North West Leicestershire,No religion,25713
+North West Leicestershire,E07000134,North West Leicestershire,Religion not stated,5841
+Oadby and Wigston,E07000135,Oadby and Wigston,Christian,27198
+Oadby and Wigston,E07000135,Oadby and Wigston,Buddhist,132
+Oadby and Wigston,E07000135,Oadby and Wigston,Hindu,5112
+Oadby and Wigston,E07000135,Oadby and Wigston,Jewish,136
+Oadby and Wigston,E07000135,Oadby and Wigston,Muslim,3256
+Oadby and Wigston,E07000135,Oadby and Wigston,Sikh,3664
+Oadby and Wigston,E07000135,Oadby and Wigston,Other religion,278
+Oadby and Wigston,E07000135,Oadby and Wigston,No religion,13007
+Oadby and Wigston,E07000135,Oadby and Wigston,Religion not stated,3387
+Boston,E07000136,Boston,Christian,45941
+Boston,E07000136,Boston,Buddhist,126
+Boston,E07000136,Boston,Hindu,191
+Boston,E07000136,Boston,Jewish,30
+Boston,E07000136,Boston,Muslim,434
+Boston,E07000136,Boston,Sikh,47
+Boston,E07000136,Boston,Other religion,197
+Boston,E07000136,Boston,No religion,13143
+Boston,E07000136,Boston,Religion not stated,4528
+East Lindsey,E07000137,East Lindsey,Christian,93691
+East Lindsey,E07000137,East Lindsey,Buddhist,226
+East Lindsey,E07000137,East Lindsey,Hindu,126
+East Lindsey,E07000137,East Lindsey,Jewish,84
+East Lindsey,E07000137,East Lindsey,Muslim,366
+East Lindsey,E07000137,East Lindsey,Sikh,49
+East Lindsey,E07000137,East Lindsey,Other religion,565
+East Lindsey,E07000137,East Lindsey,No religion,31196
+East Lindsey,E07000137,East Lindsey,Religion not stated,10098
+Lincoln,E07000138,Lincoln,Christian,54265
+Lincoln,E07000138,Lincoln,Buddhist,303
+Lincoln,E07000138,Lincoln,Hindu,335
+Lincoln,E07000138,Lincoln,Jewish,63
+Lincoln,E07000138,Lincoln,Muslim,902
+Lincoln,E07000138,Lincoln,Sikh,73
+Lincoln,E07000138,Lincoln,Other religion,478
+Lincoln,E07000138,Lincoln,No religion,30456
+Lincoln,E07000138,Lincoln,Religion not stated,6666
+North Kesteven,E07000139,North Kesteven,Christian,75495
+North Kesteven,E07000139,North Kesteven,Buddhist,153
+North Kesteven,E07000139,North Kesteven,Hindu,168
+North Kesteven,E07000139,North Kesteven,Jewish,61
+North Kesteven,E07000139,North Kesteven,Muslim,250
+North Kesteven,E07000139,North Kesteven,Sikh,53
+North Kesteven,E07000139,North Kesteven,Other religion,368
+North Kesteven,E07000139,North Kesteven,No religion,23583
+North Kesteven,E07000139,North Kesteven,Religion not stated,7635
+South Holland,E07000140,South Holland,Christian,63861
+South Holland,E07000140,South Holland,Buddhist,119
+South Holland,E07000140,South Holland,Hindu,100
+South Holland,E07000140,South Holland,Jewish,69
+South Holland,E07000140,South Holland,Muslim,258
+South Holland,E07000140,South Holland,Sikh,69
+South Holland,E07000140,South Holland,Other religion,260
+South Holland,E07000140,South Holland,No religion,17146
+South Holland,E07000140,South Holland,Religion not stated,6388
+South Kesteven,E07000141,South Kesteven,Christian,93192
+South Kesteven,E07000141,South Kesteven,Buddhist,277
+South Kesteven,E07000141,South Kesteven,Hindu,394
+South Kesteven,E07000141,South Kesteven,Jewish,101
+South Kesteven,E07000141,South Kesteven,Muslim,358
+South Kesteven,E07000141,South Kesteven,Sikh,74
+South Kesteven,E07000141,South Kesteven,Other religion,434
+South Kesteven,E07000141,South Kesteven,No religion,29665
+South Kesteven,E07000141,South Kesteven,Religion not stated,9293
+West Lindsey,E07000142,West Lindsey,Christian,62739
+West Lindsey,E07000142,West Lindsey,Buddhist,141
+West Lindsey,E07000142,West Lindsey,Hindu,172
+West Lindsey,E07000142,West Lindsey,Jewish,31
+West Lindsey,E07000142,West Lindsey,Muslim,212
+West Lindsey,E07000142,West Lindsey,Sikh,88
+West Lindsey,E07000142,West Lindsey,Other religion,303
+West Lindsey,E07000142,West Lindsey,No religion,19439
+West Lindsey,E07000142,West Lindsey,Religion not stated,6125
+Corby,E07000150,Corby,Christian,36111
+Corby,E07000150,Corby,Buddhist,126
+Corby,E07000150,Corby,Hindu,190
+Corby,E07000150,Corby,Jewish,44
+Corby,E07000150,Corby,Muslim,382
+Corby,E07000150,Corby,Sikh,125
+Corby,E07000150,Corby,Other religion,150
+Corby,E07000150,Corby,No religion,20376
+Corby,E07000150,Corby,Religion not stated,3751
+Daventry,E07000151,Daventry,Christian,50346
+Daventry,E07000151,Daventry,Buddhist,291
+Daventry,E07000151,Daventry,Hindu,293
+Daventry,E07000151,Daventry,Jewish,71
+Daventry,E07000151,Daventry,Muslim,439
+Daventry,E07000151,Daventry,Sikh,153
+Daventry,E07000151,Daventry,Other religion,271
+Daventry,E07000151,Daventry,No religion,20701
+Daventry,E07000151,Daventry,Religion not stated,5278
+East Northamptonshire,E07000152,East Northamptonshire,Christian,53187
+East Northamptonshire,E07000152,East Northamptonshire,Buddhist,186
+East Northamptonshire,E07000152,East Northamptonshire,Hindu,277
+East Northamptonshire,E07000152,East Northamptonshire,Jewish,83
+East Northamptonshire,E07000152,East Northamptonshire,Muslim,232
+East Northamptonshire,E07000152,East Northamptonshire,Sikh,114
+East Northamptonshire,E07000152,East Northamptonshire,Other religion,361
+East Northamptonshire,E07000152,East Northamptonshire,No religion,26354
+East Northamptonshire,E07000152,East Northamptonshire,Religion not stated,5971
+Kettering,E07000153,Kettering,Christian,55196
+Kettering,E07000153,Kettering,Buddhist,263
+Kettering,E07000153,Kettering,Hindu,759
+Kettering,E07000153,Kettering,Jewish,66
+Kettering,E07000153,Kettering,Muslim,723
+Kettering,E07000153,Kettering,Sikh,977
+Kettering,E07000153,Kettering,Other religion,417
+Kettering,E07000153,Kettering,No religion,28768
+Kettering,E07000153,Kettering,Religion not stated,6306
+Northampton,E07000154,Northampton,Christian,119937
+Northampton,E07000154,Northampton,Buddhist,924
+Northampton,E07000154,Northampton,Hindu,3393
+Northampton,E07000154,Northampton,Jewish,273
+Northampton,E07000154,Northampton,Muslim,8806
+Northampton,E07000154,Northampton,Sikh,1063
+Northampton,E07000154,Northampton,Other religion,1037
+Northampton,E07000154,Northampton,No religion,62404
+Northampton,E07000154,Northampton,Religion not stated,14232
+South Northamptonshire,E07000155,South Northamptonshire,Christian,56017
+South Northamptonshire,E07000155,South Northamptonshire,Buddhist,183
+South Northamptonshire,E07000155,South Northamptonshire,Hindu,357
+South Northamptonshire,E07000155,South Northamptonshire,Jewish,100
+South Northamptonshire,E07000155,South Northamptonshire,Muslim,290
+South Northamptonshire,E07000155,South Northamptonshire,Sikh,175
+South Northamptonshire,E07000155,South Northamptonshire,Other religion,245
+South Northamptonshire,E07000155,South Northamptonshire,No religion,21758
+South Northamptonshire,E07000155,South Northamptonshire,Religion not stated,6064
+Wellingborough,E07000156,Wellingborough,Christian,43471
+Wellingborough,E07000156,Wellingborough,Buddhist,221
+Wellingborough,E07000156,Wellingborough,Hindu,2745
+Wellingborough,E07000156,Wellingborough,Jewish,42
+Wellingborough,E07000156,Wellingborough,Muslim,1232
+Wellingborough,E07000156,Wellingborough,Sikh,158
+Wellingborough,E07000156,Wellingborough,Other religion,401
+Wellingborough,E07000156,Wellingborough,No religion,22018
+Wellingborough,E07000156,Wellingborough,Religion not stated,5068
+Ashfield,E07000170,Ashfield,Christian,69496
+Ashfield,E07000170,Ashfield,Buddhist,211
+Ashfield,E07000170,Ashfield,Hindu,218
+Ashfield,E07000170,Ashfield,Jewish,16
+Ashfield,E07000170,Ashfield,Muslim,375
+Ashfield,E07000170,Ashfield,Sikh,178
+Ashfield,E07000170,Ashfield,Other religion,430
+Ashfield,E07000170,Ashfield,No religion,40414
+Ashfield,E07000170,Ashfield,Religion not stated,8159
+Bassetlaw,E07000171,Bassetlaw,Christian,79935
+Bassetlaw,E07000171,Bassetlaw,Buddhist,189
+Bassetlaw,E07000171,Bassetlaw,Hindu,248
+Bassetlaw,E07000171,Bassetlaw,Jewish,48
+Bassetlaw,E07000171,Bassetlaw,Muslim,701
+Bassetlaw,E07000171,Bassetlaw,Sikh,119
+Bassetlaw,E07000171,Bassetlaw,Other religion,361
+Bassetlaw,E07000171,Bassetlaw,No religion,23558
+Bassetlaw,E07000171,Bassetlaw,Religion not stated,7704
+Broxtowe,E07000172,Broxtowe,Christian,61975
+Broxtowe,E07000172,Broxtowe,Buddhist,413
+Broxtowe,E07000172,Broxtowe,Hindu,842
+Broxtowe,E07000172,Broxtowe,Jewish,143
+Broxtowe,E07000172,Broxtowe,Muslim,1636
+Broxtowe,E07000172,Broxtowe,Sikh,921
+Broxtowe,E07000172,Broxtowe,Other religion,416
+Broxtowe,E07000172,Broxtowe,No religion,35217
+Broxtowe,E07000172,Broxtowe,Religion not stated,7924
+Gedling,E07000173,Gedling,Christian,64830
+Gedling,E07000173,Gedling,Buddhist,308
+Gedling,E07000173,Gedling,Hindu,531
+Gedling,E07000173,Gedling,Jewish,92
+Gedling,E07000173,Gedling,Muslim,1535
+Gedling,E07000173,Gedling,Sikh,724
+Gedling,E07000173,Gedling,Other religion,381
+Gedling,E07000173,Gedling,No religion,37123
+Gedling,E07000173,Gedling,Religion not stated,8019
+Mansfield,E07000174,Mansfield,Christian,64399
+Mansfield,E07000174,Mansfield,Buddhist,193
+Mansfield,E07000174,Mansfield,Hindu,271
+Mansfield,E07000174,Mansfield,Jewish,34
+Mansfield,E07000174,Mansfield,Muslim,563
+Mansfield,E07000174,Mansfield,Sikh,165
+Mansfield,E07000174,Mansfield,Other religion,333
+Mansfield,E07000174,Mansfield,No religion,31472
+Mansfield,E07000174,Mansfield,Religion not stated,7036
+Newark and Sherwood,E07000175,Newark and Sherwood,Christian,75869
+Newark and Sherwood,E07000175,Newark and Sherwood,Buddhist,226
+Newark and Sherwood,E07000175,Newark and Sherwood,Hindu,194
+Newark and Sherwood,E07000175,Newark and Sherwood,Jewish,62
+Newark and Sherwood,E07000175,Newark and Sherwood,Muslim,456
+Newark and Sherwood,E07000175,Newark and Sherwood,Sikh,123
+Newark and Sherwood,E07000175,Newark and Sherwood,Other religion,369
+Newark and Sherwood,E07000175,Newark and Sherwood,No religion,29435
+Newark and Sherwood,E07000175,Newark and Sherwood,Religion not stated,8083
+Rushcliffe,E07000176,Rushcliffe,Christian,65490
+Rushcliffe,E07000176,Rushcliffe,Buddhist,320
+Rushcliffe,E07000176,Rushcliffe,Hindu,1176
+Rushcliffe,E07000176,Rushcliffe,Jewish,322
+Rushcliffe,E07000176,Rushcliffe,Muslim,1697
+Rushcliffe,E07000176,Rushcliffe,Sikh,902
+Rushcliffe,E07000176,Rushcliffe,Other religion,399
+Rushcliffe,E07000176,Rushcliffe,No religion,32919
+Rushcliffe,E07000176,Rushcliffe,Religion not stated,7904
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Christian,124403
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Buddhist,562
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Hindu,228
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Jewish,131
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Muslim,364
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Sikh,80
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Other religion,893
+"Herefordshire, County of",E06000019,"Herefordshire, County of",No religion,41766
+"Herefordshire, County of",E06000019,"Herefordshire, County of",Religion not stated,15050
+Shropshire,E06000051,Shropshire,Christian,210268
+Shropshire,E06000051,Shropshire,Buddhist,792
+Shropshire,E06000051,Shropshire,Hindu,378
+Shropshire,E06000051,Shropshire,Jewish,127
+Shropshire,E06000051,Shropshire,Muslim,989
+Shropshire,E06000051,Shropshire,Sikh,256
+Shropshire,E06000051,Shropshire,Other religion,1113
+Shropshire,E06000051,Shropshire,No religion,69725
+Shropshire,E06000051,Shropshire,Religion not stated,22481
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Christian,151624
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Buddhist,760
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Hindu,1384
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Jewish,66
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Muslim,14993
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Sikh,579
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Other religion,923
+Stoke-on-Trent,E06000021,Stoke-on-Trent,No religion,62737
+Stoke-on-Trent,E06000021,Stoke-on-Trent,Religion not stated,15942
+Telford and Wrekin,E06000020,Telford and Wrekin,Christian,102892
+Telford and Wrekin,E06000020,Telford and Wrekin,Buddhist,398
+Telford and Wrekin,E06000020,Telford and Wrekin,Hindu,872
+Telford and Wrekin,E06000020,Telford and Wrekin,Jewish,78
+Telford and Wrekin,E06000020,Telford and Wrekin,Muslim,3019
+Telford and Wrekin,E06000020,Telford and Wrekin,Sikh,2118
+Telford and Wrekin,E06000020,Telford and Wrekin,Other religion,692
+Telford and Wrekin,E06000020,Telford and Wrekin,No religion,45599
+Telford and Wrekin,E06000020,Telford and Wrekin,Religion not stated,10973
+Cannock Chase,E07000192,Cannock Chase,Christian,67392
+Cannock Chase,E07000192,Cannock Chase,Buddhist,166
+Cannock Chase,E07000192,Cannock Chase,Hindu,128
+Cannock Chase,E07000192,Cannock Chase,Jewish,9
+Cannock Chase,E07000192,Cannock Chase,Muslim,219
+Cannock Chase,E07000192,Cannock Chase,Sikh,274
+Cannock Chase,E07000192,Cannock Chase,Other religion,283
+Cannock Chase,E07000192,Cannock Chase,No religion,23066
+Cannock Chase,E07000192,Cannock Chase,Religion not stated,5925
+East Staffordshire,E07000193,East Staffordshire,Christian,72890
+East Staffordshire,E07000193,East Staffordshire,Buddhist,284
+East Staffordshire,E07000193,East Staffordshire,Hindu,318
+East Staffordshire,E07000193,East Staffordshire,Jewish,42
+East Staffordshire,E07000193,East Staffordshire,Muslim,6815
+East Staffordshire,E07000193,East Staffordshire,Sikh,336
+East Staffordshire,E07000193,East Staffordshire,Other religion,368
+East Staffordshire,E07000193,East Staffordshire,No religion,25037
+East Staffordshire,E07000193,East Staffordshire,Religion not stated,7493
+Lichfield,E07000194,Lichfield,Christian,69276
+Lichfield,E07000194,Lichfield,Buddhist,196
+Lichfield,E07000194,Lichfield,Hindu,303
+Lichfield,E07000194,Lichfield,Jewish,69
+Lichfield,E07000194,Lichfield,Muslim,448
+Lichfield,E07000194,Lichfield,Sikh,540
+Lichfield,E07000194,Lichfield,Other religion,307
+Lichfield,E07000194,Lichfield,No religion,23113
+Lichfield,E07000194,Lichfield,Religion not stated,6402
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Christian,81353
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Buddhist,455
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Hindu,519
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Jewish,71
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Muslim,1393
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Sikh,215
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Other religion,410
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,No religion,31124
+Newcastle-under-Lyme,E07000195,Newcastle-under-Lyme,Religion not stated,8331
+South Staffordshire,E07000196,South Staffordshire,Christian,79301
+South Staffordshire,E07000196,South Staffordshire,Buddhist,182
+South Staffordshire,E07000196,South Staffordshire,Hindu,416
+South Staffordshire,E07000196,South Staffordshire,Jewish,15
+South Staffordshire,E07000196,South Staffordshire,Muslim,364
+South Staffordshire,E07000196,South Staffordshire,Sikh,1027
+South Staffordshire,E07000196,South Staffordshire,Other religion,297
+South Staffordshire,E07000196,South Staffordshire,No religion,19896
+South Staffordshire,E07000196,South Staffordshire,Religion not stated,6633
+Stafford,E07000197,Stafford,Christian,88799
+Stafford,E07000197,Stafford,Buddhist,457
+Stafford,E07000197,Stafford,Hindu,850
+Stafford,E07000197,Stafford,Jewish,64
+Stafford,E07000197,Stafford,Muslim,1151
+Stafford,E07000197,Stafford,Sikh,495
+Stafford,E07000197,Stafford,Other religion,531
+Stafford,E07000197,Stafford,No religion,29868
+Stafford,E07000197,Stafford,Religion not stated,8654
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Christian,70709
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Buddhist,149
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Hindu,72
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Jewish,20
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Muslim,192
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Sikh,47
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Other religion,324
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,No religion,19018
+Staffordshire Moorlands,E07000198,Staffordshire Moorlands,Religion not stated,6575
+Tamworth,E07000199,Tamworth,Christian,48632
+Tamworth,E07000199,Tamworth,Buddhist,128
+Tamworth,E07000199,Tamworth,Hindu,167
+Tamworth,E07000199,Tamworth,Jewish,9
+Tamworth,E07000199,Tamworth,Muslim,235
+Tamworth,E07000199,Tamworth,Sikh,152
+Tamworth,E07000199,Tamworth,Other religion,263
+Tamworth,E07000199,Tamworth,No religion,22540
+Tamworth,E07000199,Tamworth,Religion not stated,4687
+North Warwickshire,E07000218,North Warwickshire,Christian,43591
+North Warwickshire,E07000218,North Warwickshire,Buddhist,93
+North Warwickshire,E07000218,North Warwickshire,Hindu,151
+North Warwickshire,E07000218,North Warwickshire,Jewish,12
+North Warwickshire,E07000218,North Warwickshire,Muslim,110
+North Warwickshire,E07000218,North Warwickshire,Sikh,239
+North Warwickshire,E07000218,North Warwickshire,Other religion,230
+North Warwickshire,E07000218,North Warwickshire,No religion,13589
+North Warwickshire,E07000218,North Warwickshire,Religion not stated,3999
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Christian,79627
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Buddhist,425
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Hindu,1374
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Jewish,12
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Muslim,2895
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Sikh,2739
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Other religion,476
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,No religion,30123
+Nuneaton and Bedworth,E07000219,Nuneaton and Bedworth,Religion not stated,7581
+Rugby,E07000220,Rugby,Christian,63791
+Rugby,E07000220,Rugby,Buddhist,369
+Rugby,E07000220,Rugby,Hindu,2291
+Rugby,E07000220,Rugby,Jewish,63
+Rugby,E07000220,Rugby,Muslim,1236
+Rugby,E07000220,Rugby,Sikh,840
+Rugby,E07000220,Rugby,Other religion,351
+Rugby,E07000220,Rugby,No religion,24281
+Rugby,E07000220,Rugby,Religion not stated,6853
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Christian,84697
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Buddhist,325
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Hindu,250
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Jewish,150
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Muslim,280
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Sikh,243
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Other religion,420
+Stratford-on-Avon,E07000221,Stratford-on-Avon,No religion,25556
+Stratford-on-Avon,E07000221,Stratford-on-Avon,Religion not stated,8564
+Warwick,E07000222,Warwick,Christian,80185
+Warwick,E07000222,Warwick,Buddhist,521
+Warwick,E07000222,Warwick,Hindu,1633
+Warwick,E07000222,Warwick,Jewish,268
+Warwick,E07000222,Warwick,Muslim,1299
+Warwick,E07000222,Warwick,Sikh,5373
+Warwick,E07000222,Warwick,Other religion,531
+Warwick,E07000222,Warwick,No religion,37859
+Warwick,E07000222,Warwick,Religion not stated,9979
+Birmingham,E08000025,Birmingham,Christian,494358
+Birmingham,E08000025,Birmingham,Buddhist,4780
+Birmingham,E08000025,Birmingham,Hindu,22362
+Birmingham,E08000025,Birmingham,Jewish,2205
+Birmingham,E08000025,Birmingham,Muslim,234411
+Birmingham,E08000025,Birmingham,Sikh,32376
+Birmingham,E08000025,Birmingham,Other religion,5646
+Birmingham,E08000025,Birmingham,No religion,206821
+Birmingham,E08000025,Birmingham,Religion not stated,70086
+Coventry,E08000026,Coventry,Christian,170090
+Coventry,E08000026,Coventry,Buddhist,1067
+Coventry,E08000026,Coventry,Hindu,11152
+Coventry,E08000026,Coventry,Jewish,210
+Coventry,E08000026,Coventry,Muslim,23665
+Coventry,E08000026,Coventry,Sikh,15912
+Coventry,E08000026,Coventry,Other religion,1641
+Coventry,E08000026,Coventry,No religion,72896
+Coventry,E08000026,Coventry,Religion not stated,20327
+Dudley,E08000027,Dudley,Christian,204320
+Dudley,E08000027,Dudley,Buddhist,657
+Dudley,E08000027,Dudley,Hindu,1908
+Dudley,E08000027,Dudley,Jewish,77
+Dudley,E08000027,Dudley,Muslim,12902
+Dudley,E08000027,Dudley,Sikh,3694
+Dudley,E08000027,Dudley,Other religion,1032
+Dudley,E08000027,Dudley,No religion,68835
+Dudley,E08000027,Dudley,Religion not stated,19500
+Sandwell,E08000028,Sandwell,Christian,170075
+Sandwell,E08000028,Sandwell,Buddhist,654
+Sandwell,E08000028,Sandwell,Hindu,6810
+Sandwell,E08000028,Sandwell,Jewish,73
+Sandwell,E08000028,Sandwell,Muslim,25251
+Sandwell,E08000028,Sandwell,Sikh,26934
+Sandwell,E08000028,Sandwell,Other religion,1816
+Sandwell,E08000028,Sandwell,No religion,57716
+Sandwell,E08000028,Sandwell,Religion not stated,18734
+Solihull,E08000029,Solihull,Christian,135572
+Solihull,E08000029,Solihull,Buddhist,430
+Solihull,E08000029,Solihull,Hindu,3684
+Solihull,E08000029,Solihull,Jewish,353
+Solihull,E08000029,Solihull,Muslim,5247
+Solihull,E08000029,Solihull,Sikh,3504
+Solihull,E08000029,Solihull,Other religion,569
+Solihull,E08000029,Solihull,No religion,44187
+Solihull,E08000029,Solihull,Religion not stated,13128
+Walsall,E08000030,Walsall,Christian,158971
+Walsall,E08000030,Walsall,Buddhist,516
+Walsall,E08000030,Walsall,Hindu,4560
+Walsall,E08000030,Walsall,Jewish,54
+Walsall,E08000030,Walsall,Muslim,22146
+Walsall,E08000030,Walsall,Sikh,11606
+Walsall,E08000030,Walsall,Other religion,1420
+Walsall,E08000030,Walsall,No religion,53876
+Walsall,E08000030,Walsall,Religion not stated,16174
+Wolverhampton,E08000031,Wolverhampton,Christian,138394
+Wolverhampton,E08000031,Wolverhampton,Buddhist,1015
+Wolverhampton,E08000031,Wolverhampton,Hindu,9292
+Wolverhampton,E08000031,Wolverhampton,Jewish,88
+Wolverhampton,E08000031,Wolverhampton,Muslim,9062
+Wolverhampton,E08000031,Wolverhampton,Sikh,22689
+Wolverhampton,E08000031,Wolverhampton,Other religion,3057
+Wolverhampton,E08000031,Wolverhampton,No religion,49821
+Wolverhampton,E08000031,Wolverhampton,Religion not stated,16052
+Bromsgrove,E07000234,Bromsgrove,Christian,64508
+Bromsgrove,E07000234,Bromsgrove,Buddhist,191
+Bromsgrove,E07000234,Bromsgrove,Hindu,323
+Bromsgrove,E07000234,Bromsgrove,Jewish,91
+Bromsgrove,E07000234,Bromsgrove,Muslim,502
+Bromsgrove,E07000234,Bromsgrove,Sikh,609
+Bromsgrove,E07000234,Bromsgrove,Other religion,282
+Bromsgrove,E07000234,Bromsgrove,No religion,20645
+Bromsgrove,E07000234,Bromsgrove,Religion not stated,6486
+Malvern Hills,E07000235,Malvern Hills,Christian,50399
+Malvern Hills,E07000235,Malvern Hills,Buddhist,189
+Malvern Hills,E07000235,Malvern Hills,Hindu,111
+Malvern Hills,E07000235,Malvern Hills,Jewish,59
+Malvern Hills,E07000235,Malvern Hills,Muslim,197
+Malvern Hills,E07000235,Malvern Hills,Sikh,75
+Malvern Hills,E07000235,Malvern Hills,Other religion,381
+Malvern Hills,E07000235,Malvern Hills,No religion,17805
+Malvern Hills,E07000235,Malvern Hills,Religion not stated,5415
+Redditch,E07000236,Redditch,Christian,53434
+Redditch,E07000236,Redditch,Buddhist,154
+Redditch,E07000236,Redditch,Hindu,206
+Redditch,E07000236,Redditch,Jewish,52
+Redditch,E07000236,Redditch,Muslim,2870
+Redditch,E07000236,Redditch,Sikh,228
+Redditch,E07000236,Redditch,Other religion,284
+Redditch,E07000236,Redditch,No religion,21712
+Redditch,E07000236,Redditch,Religion not stated,5274
+Worcester,E07000237,Worcester,Christian,62911
+Worcester,E07000237,Worcester,Buddhist,307
+Worcester,E07000237,Worcester,Hindu,249
+Worcester,E07000237,Worcester,Jewish,32
+Worcester,E07000237,Worcester,Muslim,2847
+Worcester,E07000237,Worcester,Sikh,139
+Worcester,E07000237,Worcester,Other religion,345
+Worcester,E07000237,Worcester,No religion,25419
+Worcester,E07000237,Worcester,Religion not stated,6519
+Wychavon,E07000238,Wychavon,Christian,83728
+Wychavon,E07000238,Wychavon,Buddhist,230
+Wychavon,E07000238,Wychavon,Hindu,145
+Wychavon,E07000238,Wychavon,Jewish,83
+Wychavon,E07000238,Wychavon,Muslim,369
+Wychavon,E07000238,Wychavon,Sikh,226
+Wychavon,E07000238,Wychavon,Other religion,428
+Wychavon,E07000238,Wychavon,No religion,23678
+Wychavon,E07000238,Wychavon,Religion not stated,8057
+Wyre Forest,E07000239,Wyre Forest,Christian,67260
+Wyre Forest,E07000239,Wyre Forest,Buddhist,197
+Wyre Forest,E07000239,Wyre Forest,Hindu,111
+Wyre Forest,E07000239,Wyre Forest,Jewish,38
+Wyre Forest,E07000239,Wyre Forest,Muslim,681
+Wyre Forest,E07000239,Wyre Forest,Sikh,136
+Wyre Forest,E07000239,Wyre Forest,Other religion,341
+Wyre Forest,E07000239,Wyre Forest,No religion,22602
+Wyre Forest,E07000239,Wyre Forest,Religion not stated,6609
+Bedford,E06000055,Bedford,Christian,93346
+Bedford,E06000055,Bedford,Buddhist,509
+Bedford,E06000055,Bedford,Hindu,2420
+Bedford,E06000055,Bedford,Jewish,171
+Bedford,E06000055,Bedford,Muslim,8610
+Bedford,E06000055,Bedford,Sikh,3336
+Bedford,E06000055,Bedford,Other religion,1506
+Bedford,E06000055,Bedford,No religion,37229
+Bedford,E06000055,Bedford,Religion not stated,10352
+Central Bedfordshire,E06000056,Central Bedfordshire,Christian,158236
+Central Bedfordshire,E06000056,Central Bedfordshire,Buddhist,779
+Central Bedfordshire,E06000056,Central Bedfordshire,Hindu,1668
+Central Bedfordshire,E06000056,Central Bedfordshire,Jewish,499
+Central Bedfordshire,E06000056,Central Bedfordshire,Muslim,1931
+Central Bedfordshire,E06000056,Central Bedfordshire,Sikh,746
+Central Bedfordshire,E06000056,Central Bedfordshire,Other religion,882
+Central Bedfordshire,E06000056,Central Bedfordshire,No religion,72355
+Central Bedfordshire,E06000056,Central Bedfordshire,Religion not stated,17285
+Luton,E06000032,Luton,Christian,96271
+Luton,E06000032,Luton,Buddhist,652
+Luton,E06000032,Luton,Hindu,6749
+Luton,E06000032,Luton,Jewish,326
+Luton,E06000032,Luton,Muslim,49991
+Luton,E06000032,Luton,Sikh,2347
+Luton,E06000032,Luton,Other religion,898
+Luton,E06000032,Luton,No religion,33594
+Luton,E06000032,Luton,Religion not stated,12373
+Peterborough,E06000031,Peterborough,Christian,104202
+Peterborough,E06000031,Peterborough,Buddhist,463
+Peterborough,E06000031,Peterborough,Hindu,2320
+Peterborough,E06000031,Peterborough,Jewish,144
+Peterborough,E06000031,Peterborough,Muslim,17251
+Peterborough,E06000031,Peterborough,Sikh,1184
+Peterborough,E06000031,Peterborough,Other religion,591
+Peterborough,E06000031,Peterborough,No religion,45183
+Peterborough,E06000031,Peterborough,Religion not stated,12293
+Southend-on-Sea,E06000033,Southend-on-Sea,Christian,96755
+Southend-on-Sea,E06000033,Southend-on-Sea,Buddhist,801
+Southend-on-Sea,E06000033,Southend-on-Sea,Hindu,1161
+Southend-on-Sea,E06000033,Southend-on-Sea,Jewish,2150
+Southend-on-Sea,E06000033,Southend-on-Sea,Muslim,3309
+Southend-on-Sea,E06000033,Southend-on-Sea,Sikh,149
+Southend-on-Sea,E06000033,Southend-on-Sea,Other religion,908
+Southend-on-Sea,E06000033,Southend-on-Sea,No religion,54880
+Southend-on-Sea,E06000033,Southend-on-Sea,Religion not stated,13545
+Thurrock,E06000034,Thurrock,Christian,99891
+Thurrock,E06000034,Thurrock,Buddhist,615
+Thurrock,E06000034,Thurrock,Hindu,1178
+Thurrock,E06000034,Thurrock,Jewish,221
+Thurrock,E06000034,Thurrock,Muslim,3164
+Thurrock,E06000034,Thurrock,Sikh,1224
+Thurrock,E06000034,Thurrock,Other religion,456
+Thurrock,E06000034,Thurrock,No religion,41061
+Thurrock,E06000034,Thurrock,Religion not stated,9895
+Cambridge,E07000008,Cambridge,Christian,55514
+Cambridge,E07000008,Cambridge,Buddhist,1573
+Cambridge,E07000008,Cambridge,Hindu,2058
+Cambridge,E07000008,Cambridge,Jewish,870
+Cambridge,E07000008,Cambridge,Muslim,4897
+Cambridge,E07000008,Cambridge,Sikh,213
+Cambridge,E07000008,Cambridge,Other religion,703
+Cambridge,E07000008,Cambridge,No religion,46839
+Cambridge,E07000008,Cambridge,Religion not stated,11200
+East Cambridgeshire,E07000009,East Cambridgeshire,Christian,52243
+East Cambridgeshire,E07000009,East Cambridgeshire,Buddhist,285
+East Cambridgeshire,E07000009,East Cambridgeshire,Hindu,149
+East Cambridgeshire,E07000009,East Cambridgeshire,Jewish,122
+East Cambridgeshire,E07000009,East Cambridgeshire,Muslim,369
+East Cambridgeshire,E07000009,East Cambridgeshire,Sikh,117
+East Cambridgeshire,E07000009,East Cambridgeshire,Other religion,337
+East Cambridgeshire,E07000009,East Cambridgeshire,No religion,23565
+East Cambridgeshire,E07000009,East Cambridgeshire,Religion not stated,6631
+Fenland,E07000010,Fenland,Christian,63242
+Fenland,E07000010,Fenland,Buddhist,182
+Fenland,E07000010,Fenland,Hindu,193
+Fenland,E07000010,Fenland,Jewish,108
+Fenland,E07000010,Fenland,Muslim,395
+Fenland,E07000010,Fenland,Sikh,113
+Fenland,E07000010,Fenland,Other religion,345
+Fenland,E07000010,Fenland,No religion,23846
+Fenland,E07000010,Fenland,Religion not stated,6838
+Huntingdonshire,E07000011,Huntingdonshire,Christian,103070
+Huntingdonshire,E07000011,Huntingdonshire,Buddhist,524
+Huntingdonshire,E07000011,Huntingdonshire,Hindu,619
+Huntingdonshire,E07000011,Huntingdonshire,Jewish,190
+Huntingdonshire,E07000011,Huntingdonshire,Muslim,1865
+Huntingdonshire,E07000011,Huntingdonshire,Sikh,266
+Huntingdonshire,E07000011,Huntingdonshire,Other religion,683
+Huntingdonshire,E07000011,Huntingdonshire,No religion,50025
+Huntingdonshire,E07000011,Huntingdonshire,Religion not stated,12266
+South Cambridgeshire,E07000012,South Cambridgeshire,Christian,87463
+South Cambridgeshire,E07000012,South Cambridgeshire,Buddhist,700
+South Cambridgeshire,E07000012,South Cambridgeshire,Hindu,1123
+South Cambridgeshire,E07000012,South Cambridgeshire,Jewish,362
+South Cambridgeshire,E07000012,South Cambridgeshire,Muslim,1464
+South Cambridgeshire,E07000012,South Cambridgeshire,Sikh,186
+South Cambridgeshire,E07000012,South Cambridgeshire,Other religion,568
+South Cambridgeshire,E07000012,South Cambridgeshire,No religion,44741
+South Cambridgeshire,E07000012,South Cambridgeshire,Religion not stated,12148
+Basildon,E07000066,Basildon,Christian,105158
+Basildon,E07000066,Basildon,Buddhist,526
+Basildon,E07000066,Basildon,Hindu,1238
+Basildon,E07000066,Basildon,Jewish,424
+Basildon,E07000066,Basildon,Muslim,1622
+Basildon,E07000066,Basildon,Sikh,148
+Basildon,E07000066,Basildon,Other religion,583
+Basildon,E07000066,Basildon,No religion,52923
+Basildon,E07000066,Basildon,Religion not stated,11875
+Braintree,E07000067,Braintree,Christian,90114
+Braintree,E07000067,Braintree,Buddhist,355
+Braintree,E07000067,Braintree,Hindu,445
+Braintree,E07000067,Braintree,Jewish,199
+Braintree,E07000067,Braintree,Muslim,685
+Braintree,E07000067,Braintree,Sikh,93
+Braintree,E07000067,Braintree,Other religion,583
+Braintree,E07000067,Braintree,No religion,44111
+Braintree,E07000067,Braintree,Religion not stated,10499
+Brentwood,E07000068,Brentwood,Christian,50502
+Brentwood,E07000068,Brentwood,Buddhist,300
+Brentwood,E07000068,Brentwood,Hindu,776
+Brentwood,E07000068,Brentwood,Jewish,272
+Brentwood,E07000068,Brentwood,Muslim,649
+Brentwood,E07000068,Brentwood,Sikh,111
+Brentwood,E07000068,Brentwood,Other religion,219
+Brentwood,E07000068,Brentwood,No religion,15556
+Brentwood,E07000068,Brentwood,Religion not stated,5216
+Castle Point,E07000069,Castle Point,Christian,56372
+Castle Point,E07000069,Castle Point,Buddhist,214
+Castle Point,E07000069,Castle Point,Hindu,269
+Castle Point,E07000069,Castle Point,Jewish,183
+Castle Point,E07000069,Castle Point,Muslim,378
+Castle Point,E07000069,Castle Point,Sikh,38
+Castle Point,E07000069,Castle Point,Other religion,310
+Castle Point,E07000069,Castle Point,No religion,23967
+Castle Point,E07000069,Castle Point,Religion not stated,6280
+Chelmsford,E07000070,Chelmsford,Christian,104256
+Chelmsford,E07000070,Chelmsford,Buddhist,550
+Chelmsford,E07000070,Chelmsford,Hindu,1213
+Chelmsford,E07000070,Chelmsford,Jewish,330
+Chelmsford,E07000070,Chelmsford,Muslim,2012
+Chelmsford,E07000070,Chelmsford,Sikh,160
+Chelmsford,E07000070,Chelmsford,Other religion,571
+Chelmsford,E07000070,Chelmsford,No religion,47403
+Chelmsford,E07000070,Chelmsford,Religion not stated,11815
+Colchester,E07000071,Colchester,Christian,99879
+Colchester,E07000071,Colchester,Buddhist,982
+Colchester,E07000071,Colchester,Hindu,1274
+Colchester,E07000071,Colchester,Jewish,264
+Colchester,E07000071,Colchester,Muslim,2762
+Colchester,E07000071,Colchester,Sikh,182
+Colchester,E07000071,Colchester,Other religion,789
+Colchester,E07000071,Colchester,No religion,54354
+Colchester,E07000071,Colchester,Religion not stated,12588
+Epping Forest,E07000072,Epping Forest,Christian,77053
+Epping Forest,E07000072,Epping Forest,Buddhist,416
+Epping Forest,E07000072,Epping Forest,Hindu,1745
+Epping Forest,E07000072,Epping Forest,Jewish,3972
+Epping Forest,E07000072,Epping Forest,Muslim,2377
+Epping Forest,E07000072,Epping Forest,Sikh,1253
+Epping Forest,E07000072,Epping Forest,Other religion,432
+Epping Forest,E07000072,Epping Forest,No religion,28061
+Epping Forest,E07000072,Epping Forest,Religion not stated,9350
+Harlow,E07000073,Harlow,Christian,45365
+Harlow,E07000073,Harlow,Buddhist,333
+Harlow,E07000073,Harlow,Hindu,635
+Harlow,E07000073,Harlow,Jewish,237
+Harlow,E07000073,Harlow,Muslim,1745
+Harlow,E07000073,Harlow,Sikh,79
+Harlow,E07000073,Harlow,Other religion,339
+Harlow,E07000073,Harlow,No religion,27789
+Harlow,E07000073,Harlow,Religion not stated,5422
+Maldon,E07000074,Maldon,Christian,40046
+Maldon,E07000074,Maldon,Buddhist,152
+Maldon,E07000074,Maldon,Hindu,60
+Maldon,E07000074,Maldon,Jewish,99
+Maldon,E07000074,Maldon,Muslim,171
+Maldon,E07000074,Maldon,Sikh,28
+Maldon,E07000074,Maldon,Other religion,199
+Maldon,E07000074,Maldon,No religion,16365
+Maldon,E07000074,Maldon,Religion not stated,4509
+Rochford,E07000075,Rochford,Christian,52787
+Rochford,E07000075,Rochford,Buddhist,165
+Rochford,E07000075,Rochford,Hindu,226
+Rochford,E07000075,Rochford,Jewish,255
+Rochford,E07000075,Rochford,Muslim,296
+Rochford,E07000075,Rochford,Sikh,12
+Rochford,E07000075,Rochford,Other religion,280
+Rochford,E07000075,Rochford,No religion,23228
+Rochford,E07000075,Rochford,Religion not stated,6038
+Tendring,E07000076,Tendring,Christian,88216
+Tendring,E07000076,Tendring,Buddhist,319
+Tendring,E07000076,Tendring,Hindu,223
+Tendring,E07000076,Tendring,Jewish,200
+Tendring,E07000076,Tendring,Muslim,400
+Tendring,E07000076,Tendring,Sikh,44
+Tendring,E07000076,Tendring,Other religion,576
+Tendring,E07000076,Tendring,No religion,37477
+Tendring,E07000076,Tendring,Religion not stated,10593
+Uttlesford,E07000077,Uttlesford,Christian,51158
+Uttlesford,E07000077,Uttlesford,Buddhist,381
+Uttlesford,E07000077,Uttlesford,Hindu,191
+Uttlesford,E07000077,Uttlesford,Jewish,227
+Uttlesford,E07000077,Uttlesford,Muslim,429
+Uttlesford,E07000077,Uttlesford,Sikh,49
+Uttlesford,E07000077,Uttlesford,Other religion,284
+Uttlesford,E07000077,Uttlesford,No religion,20813
+Uttlesford,E07000077,Uttlesford,Religion not stated,5911
+Broxbourne,E07000095,Broxbourne,Christian,60856
+Broxbourne,E07000095,Broxbourne,Buddhist,277
+Broxbourne,E07000095,Broxbourne,Hindu,710
+Broxbourne,E07000095,Broxbourne,Jewish,316
+Broxbourne,E07000095,Broxbourne,Muslim,2287
+Broxbourne,E07000095,Broxbourne,Sikh,90
+Broxbourne,E07000095,Broxbourne,Other religion,272
+Broxbourne,E07000095,Broxbourne,No religion,22293
+Broxbourne,E07000095,Broxbourne,Religion not stated,6508
+Dacorum,E07000096,Dacorum,Christian,84228
+Dacorum,E07000096,Dacorum,Buddhist,622
+Dacorum,E07000096,Dacorum,Hindu,1905
+Dacorum,E07000096,Dacorum,Jewish,678
+Dacorum,E07000096,Dacorum,Muslim,3116
+Dacorum,E07000096,Dacorum,Sikh,174
+Dacorum,E07000096,Dacorum,Other religion,572
+Dacorum,E07000096,Dacorum,No religion,42758
+Dacorum,E07000096,Dacorum,Religion not stated,10794
+East Hertfordshire,E07000242,East Hertfordshire,Christian,86393
+East Hertfordshire,E07000242,East Hertfordshire,Buddhist,435
+East Hertfordshire,E07000242,East Hertfordshire,Hindu,616
+East Hertfordshire,E07000242,East Hertfordshire,Jewish,454
+East Hertfordshire,E07000242,East Hertfordshire,Muslim,989
+East Hertfordshire,E07000242,East Hertfordshire,Sikh,161
+East Hertfordshire,E07000242,East Hertfordshire,Other religion,440
+East Hertfordshire,E07000242,East Hertfordshire,No religion,38205
+East Hertfordshire,E07000242,East Hertfordshire,Religion not stated,9994
+Hertsmere,E07000098,Hertsmere,Christian,51724
+Hertsmere,E07000098,Hertsmere,Buddhist,591
+Hertsmere,E07000098,Hertsmere,Hindu,3172
+Hertsmere,E07000098,Hertsmere,Jewish,14293
+Hertsmere,E07000098,Hertsmere,Muslim,2402
+Hertsmere,E07000098,Hertsmere,Sikh,164
+Hertsmere,E07000098,Hertsmere,Other religion,692
+Hertsmere,E07000098,Hertsmere,No religion,19176
+Hertsmere,E07000098,Hertsmere,Religion not stated,7817
+North Hertfordshire,E07000099,North Hertfordshire,Christian,72415
+North Hertfordshire,E07000099,North Hertfordshire,Buddhist,617
+North Hertfordshire,E07000099,North Hertfordshire,Hindu,1246
+North Hertfordshire,E07000099,North Hertfordshire,Jewish,270
+North Hertfordshire,E07000099,North Hertfordshire,Muslim,1453
+North Hertfordshire,E07000099,North Hertfordshire,Sikh,2447
+North Hertfordshire,E07000099,North Hertfordshire,Other religion,599
+North Hertfordshire,E07000099,North Hertfordshire,No religion,38661
+North Hertfordshire,E07000099,North Hertfordshire,Religion not stated,9406
+St Albans,E07000240,St Albans,Christian,83988
+St Albans,E07000240,St Albans,Buddhist,615
+St Albans,E07000240,St Albans,Hindu,1777
+St Albans,E07000240,St Albans,Jewish,1664
+St Albans,E07000240,St Albans,Muslim,5167
+St Albans,E07000240,St Albans,Sikh,303
+St Albans,E07000240,St Albans,Other religion,435
+St Albans,E07000240,St Albans,No religion,36278
+St Albans,E07000240,St Albans,Religion not stated,10437
+Stevenage,E07000243,Stevenage,Christian,45705
+Stevenage,E07000243,Stevenage,Buddhist,442
+Stevenage,E07000243,Stevenage,Hindu,996
+Stevenage,E07000243,Stevenage,Jewish,147
+Stevenage,E07000243,Stevenage,Muslim,1654
+Stevenage,E07000243,Stevenage,Sikh,303
+Stevenage,E07000243,Stevenage,Other religion,460
+Stevenage,E07000243,Stevenage,No religion,28606
+Stevenage,E07000243,Stevenage,Religion not stated,5644
+Three Rivers,E07000102,Three Rivers,Christian,52330
+Three Rivers,E07000102,Three Rivers,Buddhist,345
+Three Rivers,E07000102,Three Rivers,Hindu,3963
+Three Rivers,E07000102,Three Rivers,Jewish,1611
+Three Rivers,E07000102,Three Rivers,Muslim,1947
+Three Rivers,E07000102,Three Rivers,Sikh,464
+Three Rivers,E07000102,Three Rivers,Other religion,590
+Three Rivers,E07000102,Three Rivers,No religion,19933
+Three Rivers,E07000102,Three Rivers,Religion not stated,6134
+Watford,E07000103,Watford,Christian,48891
+Watford,E07000103,Watford,Buddhist,659
+Watford,E07000103,Watford,Hindu,4348
+Watford,E07000103,Watford,Jewish,1023
+Watford,E07000103,Watford,Muslim,8905
+Watford,E07000103,Watford,Sikh,566
+Watford,E07000103,Watford,Other religion,489
+Watford,E07000103,Watford,No religion,19330
+Watford,E07000103,Watford,Religion not stated,6090
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Christian,63599
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Buddhist,899
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Hindu,2775
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Jewish,889
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Muslim,2810
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Sikh,376
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Other religion,523
+Welwyn Hatfield,E07000241,Welwyn Hatfield,No religion,30806
+Welwyn Hatfield,E07000241,Welwyn Hatfield,Religion not stated,7858
+Breckland,E07000143,Breckland,Christian,83252
+Breckland,E07000143,Breckland,Buddhist,277
+Breckland,E07000143,Breckland,Hindu,139
+Breckland,E07000143,Breckland,Jewish,141
+Breckland,E07000143,Breckland,Muslim,409
+Breckland,E07000143,Breckland,Sikh,63
+Breckland,E07000143,Breckland,Other religion,603
+Breckland,E07000143,Breckland,No religion,35977
+Breckland,E07000143,Breckland,Religion not stated,9630
+Broadland,E07000144,Broadland,Christian,78938
+Broadland,E07000144,Broadland,Buddhist,342
+Broadland,E07000144,Broadland,Hindu,252
+Broadland,E07000144,Broadland,Jewish,117
+Broadland,E07000144,Broadland,Muslim,377
+Broadland,E07000144,Broadland,Sikh,72
+Broadland,E07000144,Broadland,Other religion,508
+Broadland,E07000144,Broadland,No religion,34845
+Broadland,E07000144,Broadland,Religion not stated,9195
+Great Yarmouth,E07000145,Great Yarmouth,Christian,59383
+Great Yarmouth,E07000145,Great Yarmouth,Buddhist,237
+Great Yarmouth,E07000145,Great Yarmouth,Hindu,255
+Great Yarmouth,E07000145,Great Yarmouth,Jewish,108
+Great Yarmouth,E07000145,Great Yarmouth,Muslim,518
+Great Yarmouth,E07000145,Great Yarmouth,Sikh,6
+Great Yarmouth,E07000145,Great Yarmouth,Other religion,328
+Great Yarmouth,E07000145,Great Yarmouth,No religion,29430
+Great Yarmouth,E07000145,Great Yarmouth,Religion not stated,7012
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Christian,97868
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Buddhist,417
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Hindu,346
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Jewish,127
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Muslim,544
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Sikh,82
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Other religion,565
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,No religion,36533
+King's Lynn and West Norfolk,E07000146,King's Lynn and West Norfolk,Religion not stated,10969
+North Norfolk,E07000147,North Norfolk,Christian,66973
+North Norfolk,E07000147,North Norfolk,Buddhist,286
+North Norfolk,E07000147,North Norfolk,Hindu,51
+North Norfolk,E07000147,North Norfolk,Jewish,123
+North Norfolk,E07000147,North Norfolk,Muslim,158
+North Norfolk,E07000147,North Norfolk,Sikh,21
+North Norfolk,E07000147,North Norfolk,Other religion,550
+North Norfolk,E07000147,North Norfolk,No religion,25586
+North Norfolk,E07000147,North Norfolk,Religion not stated,7751
+Norwich,E07000148,Norwich,Christian,59515
+Norwich,E07000148,Norwich,Buddhist,978
+Norwich,E07000148,Norwich,Hindu,1017
+Norwich,E07000148,Norwich,Jewish,241
+Norwich,E07000148,Norwich,Muslim,2612
+Norwich,E07000148,Norwich,Sikh,168
+Norwich,E07000148,Norwich,Other religion,886
+Norwich,E07000148,Norwich,No religion,56268
+Norwich,E07000148,Norwich,Religion not stated,10827
+South Norfolk,E07000149,South Norfolk,Christian,77234
+South Norfolk,E07000149,South Norfolk,Buddhist,364
+South Norfolk,E07000149,South Norfolk,Hindu,235
+South Norfolk,E07000149,South Norfolk,Jewish,126
+South Norfolk,E07000149,South Norfolk,Muslim,403
+South Norfolk,E07000149,South Norfolk,Sikh,49
+South Norfolk,E07000149,South Norfolk,Other religion,493
+South Norfolk,E07000149,South Norfolk,No religion,35601
+South Norfolk,E07000149,South Norfolk,Religion not stated,9507
+Babergh,E07000200,Babergh,Christian,55465
+Babergh,E07000200,Babergh,Buddhist,214
+Babergh,E07000200,Babergh,Hindu,85
+Babergh,E07000200,Babergh,Jewish,116
+Babergh,E07000200,Babergh,Muslim,196
+Babergh,E07000200,Babergh,Sikh,11
+Babergh,E07000200,Babergh,Other religion,311
+Babergh,E07000200,Babergh,No religion,24914
+Babergh,E07000200,Babergh,Religion not stated,6428
+West Suffolk,E07000245,Forest Heath,Christian,38228
+West Suffolk,E07000245,Forest Heath,Buddhist,190
+West Suffolk,E07000245,Forest Heath,Hindu,157
+West Suffolk,E07000245,Forest Heath,Jewish,81
+West Suffolk,E07000245,Forest Heath,Muslim,364
+West Suffolk,E07000245,Forest Heath,Sikh,40
+West Suffolk,E07000245,Forest Heath,Other religion,274
+West Suffolk,E07000245,Forest Heath,No religion,15897
+West Suffolk,E07000245,Forest Heath,Religion not stated,4517
+Ipswich,E07000202,Ipswich,Christian,70797
+Ipswich,E07000202,Ipswich,Buddhist,495
+Ipswich,E07000202,Ipswich,Hindu,1102
+Ipswich,E07000202,Ipswich,Jewish,83
+Ipswich,E07000202,Ipswich,Muslim,3577
+Ipswich,E07000202,Ipswich,Sikh,343
+Ipswich,E07000202,Ipswich,Other religion,651
+Ipswich,E07000202,Ipswich,No religion,46687
+Ipswich,E07000202,Ipswich,Religion not stated,9649
+Mid Suffolk,E07000203,Mid Suffolk,Christian,61670
+Mid Suffolk,E07000203,Mid Suffolk,Buddhist,209
+Mid Suffolk,E07000203,Mid Suffolk,Hindu,105
+Mid Suffolk,E07000203,Mid Suffolk,Jewish,78
+Mid Suffolk,E07000203,Mid Suffolk,Muslim,152
+Mid Suffolk,E07000203,Mid Suffolk,Sikh,17
+Mid Suffolk,E07000203,Mid Suffolk,Other religion,333
+Mid Suffolk,E07000203,Mid Suffolk,No religion,26652
+Mid Suffolk,E07000203,Mid Suffolk,Religion not stated,7515
+West Suffolk,E07000245,St Edmundsbury,Christian,69136
+West Suffolk,E07000245,St Edmundsbury,Buddhist,313
+West Suffolk,E07000245,St Edmundsbury,Hindu,259
+West Suffolk,E07000245,St Edmundsbury,Jewish,118
+West Suffolk,E07000245,St Edmundsbury,Muslim,602
+West Suffolk,E07000245,St Edmundsbury,Sikh,61
+West Suffolk,E07000245,St Edmundsbury,Other religion,350
+West Suffolk,E07000245,St Edmundsbury,No religion,32111
+West Suffolk,E07000245,St Edmundsbury,Religion not stated,8058
+East Suffolk,E07000244,Suffolk Coastal,Christian,78400
+East Suffolk,E07000244,Suffolk Coastal,Buddhist,367
+East Suffolk,E07000244,Suffolk Coastal,Hindu,437
+East Suffolk,E07000244,Suffolk Coastal,Jewish,138
+East Suffolk,E07000244,Suffolk Coastal,Muslim,539
+East Suffolk,E07000244,Suffolk Coastal,Sikh,121
+East Suffolk,E07000244,Suffolk Coastal,Other religion,500
+East Suffolk,E07000244,Suffolk Coastal,No religion,34348
+East Suffolk,E07000244,Suffolk Coastal,Religion not stated,9448
+East Suffolk,E07000244,Waveney,Christian,69936
+East Suffolk,E07000244,Waveney,Buddhist,306
+East Suffolk,E07000244,Waveney,Hindu,129
+East Suffolk,E07000244,Waveney,Jewish,63
+East Suffolk,E07000244,Waveney,Muslim,388
+East Suffolk,E07000244,Waveney,Sikh,33
+East Suffolk,E07000244,Waveney,Other religion,515
+East Suffolk,E07000244,Waveney,No religion,35312
+East Suffolk,E07000244,Waveney,Religion not stated,8572
+Camden,E09000007,Camden,Christian,74821
+Camden,E09000007,Camden,Buddhist,2789
+Camden,E09000007,Camden,Hindu,3141
+Camden,E09000007,Camden,Jewish,9823
+Camden,E09000007,Camden,Muslim,26643
+Camden,E09000007,Camden,Sikh,465
+Camden,E09000007,Camden,Other religion,1267
+Camden,E09000007,Camden,No religion,56113
+Camden,E09000007,Camden,Religion not stated,45276
+City of London,E09000001,City of London,Christian,3344
+City of London,E09000001,City of London,Buddhist,92
+City of London,E09000001,City of London,Hindu,145
+City of London,E09000001,City of London,Jewish,166
+City of London,E09000001,City of London,Muslim,409
+City of London,E09000001,City of London,Sikh,18
+City of London,E09000001,City of London,Other religion,28
+City of London,E09000001,City of London,No religion,2522
+City of London,E09000001,City of London,Religion not stated,651
+Hackney,E09000012,Hackney,Christian,95131
+Hackney,E09000012,Hackney,Buddhist,3075
+Hackney,E09000012,Hackney,Hindu,1577
+Hackney,E09000012,Hackney,Jewish,15477
+Hackney,E09000012,Hackney,Muslim,34727
+Hackney,E09000012,Hackney,Sikh,1872
+Hackney,E09000012,Hackney,Other religion,1311
+Hackney,E09000012,Hackney,No religion,69454
+Hackney,E09000012,Hackney,Religion not stated,23646
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Christian,98808
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Buddhist,2060
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Hindu,2097
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Jewish,1161
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Muslim,18242
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Sikh,442
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Other religion,857
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,No religion,43487
+Hammersmith and Fulham,E09000013,Hammersmith and Fulham,Religion not stated,15339
+Haringey,E09000014,Haringey,Christian,114659
+Haringey,E09000014,Haringey,Buddhist,2829
+Haringey,E09000014,Haringey,Hindu,4539
+Haringey,E09000014,Haringey,Jewish,7643
+Haringey,E09000014,Haringey,Muslim,36130
+Haringey,E09000014,Haringey,Sikh,808
+Haringey,E09000014,Haringey,Other religion,1303
+Haringey,E09000014,Haringey,No religion,64202
+Haringey,E09000014,Haringey,Religion not stated,22813
+Islington,E09000019,Islington,Christian,82879
+Islington,E09000019,Islington,Buddhist,2117
+Islington,E09000019,Islington,Hindu,2108
+Islington,E09000019,Islington,Jewish,1915
+Islington,E09000019,Islington,Muslim,19521
+Islington,E09000019,Islington,Sikh,569
+Islington,E09000019,Islington,Other religion,967
+Islington,E09000019,Islington,No religion,61911
+Islington,E09000019,Islington,Religion not stated,34138
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Christian,86005
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Buddhist,2447
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Hindu,1386
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Jewish,3320
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Muslim,15812
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Sikh,263
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Other religion,778
+Kensington and Chelsea,E09000020,Kensington and Chelsea,No religion,32669
+Kensington and Chelsea,E09000020,Kensington and Chelsea,Religion not stated,15969
+Lambeth,E09000022,Lambeth,Christian,160944
+Lambeth,E09000022,Lambeth,Buddhist,2963
+Lambeth,E09000022,Lambeth,Hindu,3119
+Lambeth,E09000022,Lambeth,Jewish,1134
+Lambeth,E09000022,Lambeth,Muslim,21500
+Lambeth,E09000022,Lambeth,Sikh,440
+Lambeth,E09000022,Lambeth,Other religion,1682
+Lambeth,E09000022,Lambeth,No religion,84803
+Lambeth,E09000022,Lambeth,Religion not stated,26501
+Lewisham,E09000023,Lewisham,Christian,145588
+Lewisham,E09000023,Lewisham,Buddhist,3664
+Lewisham,E09000023,Lewisham,Hindu,6562
+Lewisham,E09000023,Lewisham,Jewish,643
+Lewisham,E09000023,Lewisham,Muslim,17759
+Lewisham,E09000023,Lewisham,Sikh,531
+Lewisham,E09000023,Lewisham,Other religion,1478
+Lewisham,E09000023,Lewisham,No religion,75155
+Lewisham,E09000023,Lewisham,Religion not stated,24505
+Newham,E09000025,Newham,Christian,123119
+Newham,E09000025,Newham,Buddhist,2446
+Newham,E09000025,Newham,Hindu,26962
+Newham,E09000025,Newham,Jewish,342
+Newham,E09000025,Newham,Muslim,98456
+Newham,E09000025,Newham,Sikh,6421
+Newham,E09000025,Newham,Other religion,1090
+Newham,E09000025,Newham,No religion,29373
+Newham,E09000025,Newham,Religion not stated,19775
+Southwark,E09000028,Southwark,Christian,151462
+Southwark,E09000028,Southwark,Buddhist,3884
+Southwark,E09000028,Southwark,Hindu,3668
+Southwark,E09000028,Southwark,Jewish,1006
+Southwark,E09000028,Southwark,Muslim,24551
+Southwark,E09000028,Southwark,Sikh,653
+Southwark,E09000028,Southwark,Other religion,1350
+Southwark,E09000028,Southwark,No religion,77098
+Southwark,E09000028,Southwark,Religion not stated,24611
+Tower Hamlets,E09000030,Tower Hamlets,Christian,68808
+Tower Hamlets,E09000030,Tower Hamlets,Buddhist,2726
+Tower Hamlets,E09000030,Tower Hamlets,Hindu,4200
+Tower Hamlets,E09000030,Tower Hamlets,Jewish,1283
+Tower Hamlets,E09000030,Tower Hamlets,Muslim,87696
+Tower Hamlets,E09000030,Tower Hamlets,Sikh,821
+Tower Hamlets,E09000030,Tower Hamlets,Other religion,825
+Tower Hamlets,E09000030,Tower Hamlets,No religion,48648
+Tower Hamlets,E09000030,Tower Hamlets,Religion not stated,39089
+Wandsworth,E09000032,Wandsworth,Christian,162590
+Wandsworth,E09000032,Wandsworth,Buddhist,2574
+Wandsworth,E09000032,Wandsworth,Hindu,6496
+Wandsworth,E09000032,Wandsworth,Jewish,1617
+Wandsworth,E09000032,Wandsworth,Muslim,24746
+Wandsworth,E09000032,Wandsworth,Sikh,832
+Wandsworth,E09000032,Wandsworth,Other religion,1283
+Wandsworth,E09000032,Wandsworth,No religion,82740
+Wandsworth,E09000032,Wandsworth,Religion not stated,24117
+Westminster,E09000033,Westminster,Christian,97877
+Westminster,E09000033,Westminster,Buddhist,3194
+Westminster,E09000033,Westminster,Hindu,4178
+Westminster,E09000033,Westminster,Jewish,7237
+Westminster,E09000033,Westminster,Muslim,40073
+Westminster,E09000033,Westminster,Sikh,496
+Westminster,E09000033,Westminster,Other religion,1280
+Westminster,E09000033,Westminster,No religion,44542
+Westminster,E09000033,Westminster,Religion not stated,20519
+Barking and Dagenham,E09000002,Barking and Dagenham,Christian,104101
+Barking and Dagenham,E09000002,Barking and Dagenham,Buddhist,842
+Barking and Dagenham,E09000002,Barking and Dagenham,Hindu,4464
+Barking and Dagenham,E09000002,Barking and Dagenham,Jewish,425
+Barking and Dagenham,E09000002,Barking and Dagenham,Muslim,25520
+Barking and Dagenham,E09000002,Barking and Dagenham,Sikh,2952
+Barking and Dagenham,E09000002,Barking and Dagenham,Other religion,533
+Barking and Dagenham,E09000002,Barking and Dagenham,No religion,35106
+Barking and Dagenham,E09000002,Barking and Dagenham,Religion not stated,11968
+Barnet,E09000003,Barnet,Christian,146866
+Barnet,E09000003,Barnet,Buddhist,4521
+Barnet,E09000003,Barnet,Hindu,21924
+Barnet,E09000003,Barnet,Jewish,54084
+Barnet,E09000003,Barnet,Muslim,36744
+Barnet,E09000003,Barnet,Sikh,1269
+Barnet,E09000003,Barnet,Other religion,3764
+Barnet,E09000003,Barnet,No religion,57297
+Barnet,E09000003,Barnet,Religion not stated,29917
+Bexley,E09000004,Bexley,Christian,144093
+Bexley,E09000004,Bexley,Buddhist,1377
+Bexley,E09000004,Bexley,Hindu,3547
+Bexley,E09000004,Bexley,Jewish,234
+Bexley,E09000004,Bexley,Muslim,5645
+Bexley,E09000004,Bexley,Sikh,4156
+Bexley,E09000004,Bexley,Other religion,724
+Bexley,E09000004,Bexley,No religion,55995
+Bexley,E09000004,Bexley,Religion not stated,16226
+Brent,E09000005,Brent,Christian,129080
+Brent,E09000005,Brent,Buddhist,4300
+Brent,E09000005,Brent,Hindu,55449
+Brent,E09000005,Brent,Jewish,4357
+Brent,E09000005,Brent,Muslim,58036
+Brent,E09000005,Brent,Sikh,1709
+Brent,E09000005,Brent,Other religion,3768
+Brent,E09000005,Brent,No religion,33054
+Brent,E09000005,Brent,Religion not stated,21462
+Bromley,E09000006,Bromley,Christian,187656
+Bromley,E09000006,Bromley,Buddhist,1580
+Bromley,E09000006,Bromley,Hindu,4987
+Bromley,E09000006,Bromley,Jewish,957
+Bromley,E09000006,Bromley,Muslim,7841
+Bromley,E09000006,Bromley,Sikh,736
+Bromley,E09000006,Bromley,Other religion,1138
+Bromley,E09000006,Bromley,No religion,80303
+Bromley,E09000006,Bromley,Religion not stated,24194
+Croydon,E09000008,Croydon,Christian,205022
+Croydon,E09000008,Croydon,Buddhist,2381
+Croydon,E09000008,Croydon,Hindu,21739
+Croydon,E09000008,Croydon,Jewish,709
+Croydon,E09000008,Croydon,Muslim,29513
+Croydon,E09000008,Croydon,Sikh,1450
+Croydon,E09000008,Croydon,Other religion,2153
+Croydon,E09000008,Croydon,No religion,72654
+Croydon,E09000008,Croydon,Religion not stated,27757
+Ealing,E09000009,Ealing,Christian,148055
+Ealing,E09000009,Ealing,Buddhist,4228
+Ealing,E09000009,Ealing,Hindu,28915
+Ealing,E09000009,Ealing,Jewish,1131
+Ealing,E09000009,Ealing,Muslim,53198
+Ealing,E09000009,Ealing,Sikh,26778
+Ealing,E09000009,Ealing,Other religion,1987
+Ealing,E09000009,Ealing,No religion,50848
+Ealing,E09000009,Ealing,Religion not stated,23309
+Enfield,E09000010,Enfield,Christian,167417
+Enfield,E09000010,Enfield,Buddhist,1824
+Enfield,E09000010,Enfield,Hindu,10927
+Enfield,E09000010,Enfield,Jewish,4412
+Enfield,E09000010,Enfield,Muslim,52141
+Enfield,E09000010,Enfield,Sikh,1078
+Enfield,E09000010,Enfield,Other religion,1950
+Enfield,E09000010,Enfield,No religion,48522
+Enfield,E09000010,Enfield,Religion not stated,24195
+Greenwich,E09000011,Greenwich,Christian,134632
+Greenwich,E09000011,Greenwich,Buddhist,4223
+Greenwich,E09000011,Greenwich,Hindu,9087
+Greenwich,E09000011,Greenwich,Jewish,492
+Greenwich,E09000011,Greenwich,Muslim,17349
+Greenwich,E09000011,Greenwich,Sikh,3490
+Greenwich,E09000011,Greenwich,Other religion,1013
+Greenwich,E09000011,Greenwich,No religion,65034
+Greenwich,E09000011,Greenwich,Religion not stated,19237
+Harrow,E09000015,Harrow,Christian,89181
+Harrow,E09000015,Harrow,Buddhist,2700
+Harrow,E09000015,Harrow,Hindu,60407
+Harrow,E09000015,Harrow,Jewish,10538
+Harrow,E09000015,Harrow,Muslim,29881
+Harrow,E09000015,Harrow,Sikh,2752
+Harrow,E09000015,Harrow,Other religion,5945
+Harrow,E09000015,Harrow,No religion,22871
+Harrow,E09000015,Harrow,Religion not stated,14781
+Havering,E09000016,Havering,Christian,155597
+Havering,E09000016,Havering,Buddhist,760
+Havering,E09000016,Havering,Hindu,2963
+Havering,E09000016,Havering,Jewish,1159
+Havering,E09000016,Havering,Muslim,4829
+Havering,E09000016,Havering,Sikh,1928
+Havering,E09000016,Havering,Other religion,648
+Havering,E09000016,Havering,No religion,53549
+Havering,E09000016,Havering,Religion not stated,15799
+Hillingdon,E09000017,Hillingdon,Christian,134813
+Hillingdon,E09000017,Hillingdon,Buddhist,2386
+Hillingdon,E09000017,Hillingdon,Hindu,22033
+Hillingdon,E09000017,Hillingdon,Jewish,1753
+Hillingdon,E09000017,Hillingdon,Muslim,29065
+Hillingdon,E09000017,Hillingdon,Sikh,18230
+Hillingdon,E09000017,Hillingdon,Other religion,1669
+Hillingdon,E09000017,Hillingdon,No religion,46492
+Hillingdon,E09000017,Hillingdon,Religion not stated,17495
+Hounslow,E09000018,Hounslow,Christian,106660
+Hounslow,E09000018,Hounslow,Buddhist,3617
+Hounslow,E09000018,Hounslow,Hindu,26261
+Hounslow,E09000018,Hounslow,Jewish,651
+Hounslow,E09000018,Hounslow,Muslim,35666
+Hounslow,E09000018,Hounslow,Sikh,22749
+Hounslow,E09000018,Hounslow,Other religion,1540
+Hounslow,E09000018,Hounslow,No religion,40351
+Hounslow,E09000018,Hounslow,Religion not stated,16462
+Kingston upon Thames,E09000021,Kingston upon Thames,Christian,84684
+Kingston upon Thames,E09000021,Kingston upon Thames,Buddhist,1771
+Kingston upon Thames,E09000021,Kingston upon Thames,Hindu,7502
+Kingston upon Thames,E09000021,Kingston upon Thames,Jewish,775
+Kingston upon Thames,E09000021,Kingston upon Thames,Muslim,9474
+Kingston upon Thames,E09000021,Kingston upon Thames,Sikh,1236
+Kingston upon Thames,E09000021,Kingston upon Thames,Other religion,802
+Kingston upon Thames,E09000021,Kingston upon Thames,No religion,41183
+Kingston upon Thames,E09000021,Kingston upon Thames,Religion not stated,12633
+Merton,E09000024,Merton,Christian,111993
+Merton,E09000024,Merton,Buddhist,1884
+Merton,E09000024,Merton,Hindu,12203
+Merton,E09000024,Merton,Jewish,791
+Merton,E09000024,Merton,Muslim,16262
+Merton,E09000024,Merton,Sikh,498
+Merton,E09000024,Merton,Other religion,810
+Merton,E09000024,Merton,No religion,41231
+Merton,E09000024,Merton,Religion not stated,14021
+Redbridge,E09000026,Redbridge,Christian,102755
+Redbridge,E09000026,Redbridge,Buddhist,1840
+Redbridge,E09000026,Redbridge,Hindu,31699
+Redbridge,E09000026,Redbridge,Jewish,10213
+Redbridge,E09000026,Redbridge,Muslim,64999
+Redbridge,E09000026,Redbridge,Sikh,17377
+Redbridge,E09000026,Redbridge,Other religion,1348
+Redbridge,E09000026,Redbridge,No religion,30691
+Redbridge,E09000026,Redbridge,Religion not stated,18048
+Richmond upon Thames,E09000027,Richmond upon Thames,Christian,103319
+Richmond upon Thames,E09000027,Richmond upon Thames,Buddhist,1577
+Richmond upon Thames,E09000027,Richmond upon Thames,Hindu,3051
+Richmond upon Thames,E09000027,Richmond upon Thames,Jewish,1409
+Richmond upon Thames,E09000027,Richmond upon Thames,Muslim,6128
+Richmond upon Thames,E09000027,Richmond upon Thames,Sikh,1581
+Richmond upon Thames,E09000027,Richmond upon Thames,Other religion,890
+Richmond upon Thames,E09000027,Richmond upon Thames,No religion,53195
+Richmond upon Thames,E09000027,Richmond upon Thames,Religion not stated,15840
+Sutton,E09000029,Sutton,Christian,111086
+Sutton,E09000029,Sutton,Buddhist,1368
+Sutton,E09000029,Sutton,Hindu,8038
+Sutton,E09000029,Sutton,Jewish,486
+Sutton,E09000029,Sutton,Muslim,7726
+Sutton,E09000029,Sutton,Sikh,325
+Sutton,E09000029,Sutton,Other religion,796
+Sutton,E09000029,Sutton,No religion,46817
+Sutton,E09000029,Sutton,Religion not stated,13504
+Waltham Forest,E09000031,Waltham Forest,Christian,124939
+Waltham Forest,E09000031,Waltham Forest,Buddhist,1987
+Waltham Forest,E09000031,Waltham Forest,Hindu,5917
+Waltham Forest,E09000031,Waltham Forest,Jewish,1259
+Waltham Forest,E09000031,Waltham Forest,Muslim,56541
+Waltham Forest,E09000031,Waltham Forest,Sikh,1209
+Waltham Forest,E09000031,Waltham Forest,Other religion,993
+Waltham Forest,E09000031,Waltham Forest,No religion,46462
+Waltham Forest,E09000031,Waltham Forest,Religion not stated,18942
+Bracknell Forest,E06000036,Bracknell Forest,Christian,68524
+Bracknell Forest,E06000036,Bracknell Forest,Buddhist,825
+Bracknell Forest,E06000036,Bracknell Forest,Hindu,1824
+Bracknell Forest,E06000036,Bracknell Forest,Jewish,176
+Bracknell Forest,E06000036,Bracknell Forest,Muslim,1276
+Bracknell Forest,E06000036,Bracknell Forest,Sikh,455
+Bracknell Forest,E06000036,Bracknell Forest,Other religion,490
+Bracknell Forest,E06000036,Bracknell Forest,No religion,32184
+Bracknell Forest,E06000036,Bracknell Forest,Religion not stated,7451
+Brighton and Hove,E06000043,Brighton and Hove,Christian,117276
+Brighton and Hove,E06000043,Brighton and Hove,Buddhist,2742
+Brighton and Hove,E06000043,Brighton and Hove,Hindu,1792
+Brighton and Hove,E06000043,Brighton and Hove,Jewish,2670
+Brighton and Hove,E06000043,Brighton and Hove,Muslim,6095
+Brighton and Hove,E06000043,Brighton and Hove,Sikh,342
+Brighton and Hove,E06000043,Brighton and Hove,Other religion,2409
+Brighton and Hove,E06000043,Brighton and Hove,No religion,115954
+Brighton and Hove,E06000043,Brighton and Hove,Religion not stated,24089
+Isle of Wight,E06000046,Isle of Wight,Christian,83671
+Isle of Wight,E06000046,Isle of Wight,Buddhist,459
+Isle of Wight,E06000046,Isle of Wight,Hindu,312
+Isle of Wight,E06000046,Isle of Wight,Jewish,124
+Isle of Wight,E06000046,Isle of Wight,Muslim,524
+Isle of Wight,E06000046,Isle of Wight,Sikh,45
+Isle of Wight,E06000046,Isle of Wight,Other religion,905
+Isle of Wight,E06000046,Isle of Wight,No religion,40950
+Isle of Wight,E06000046,Isle of Wight,Religion not stated,11275
+Medway,E06000035,Medway,Christian,152637
+Medway,E06000035,Medway,Buddhist,937
+Medway,E06000035,Medway,Hindu,2756
+Medway,E06000035,Medway,Jewish,208
+Medway,E06000035,Medway,Muslim,5169
+Medway,E06000035,Medway,Sikh,3846
+Medway,E06000035,Medway,Other religion,1392
+Medway,E06000035,Medway,No religion,78995
+Medway,E06000035,Medway,Religion not stated,17985
+Milton Keynes,E06000042,Milton Keynes,Christian,131352
+Milton Keynes,E06000042,Milton Keynes,Buddhist,1246
+Milton Keynes,E06000042,Milton Keynes,Hindu,6918
+Milton Keynes,E06000042,Milton Keynes,Jewish,427
+Milton Keynes,E06000042,Milton Keynes,Muslim,11913
+Milton Keynes,E06000042,Milton Keynes,Sikh,1372
+Milton Keynes,E06000042,Milton Keynes,Other religion,1216
+Milton Keynes,E06000042,Milton Keynes,No religion,77939
+Milton Keynes,E06000042,Milton Keynes,Religion not stated,16438
+Portsmouth,E06000044,Portsmouth,Christian,106999
+Portsmouth,E06000044,Portsmouth,Buddhist,1162
+Portsmouth,E06000044,Portsmouth,Hindu,1282
+Portsmouth,E06000044,Portsmouth,Jewish,235
+Portsmouth,E06000044,Portsmouth,Muslim,7162
+Portsmouth,E06000044,Portsmouth,Sikh,468
+Portsmouth,E06000044,Portsmouth,Other religion,1050
+Portsmouth,E06000044,Portsmouth,No religion,71826
+Portsmouth,E06000044,Portsmouth,Religion not stated,14872
+Reading,E06000038,Reading,Christian,77848
+Reading,E06000038,Reading,Buddhist,1876
+Reading,E06000038,Reading,Hindu,5661
+Reading,E06000038,Reading,Jewish,355
+Reading,E06000038,Reading,Muslim,11007
+Reading,E06000038,Reading,Sikh,947
+Reading,E06000038,Reading,Other religion,701
+Reading,E06000038,Reading,No religion,45931
+Reading,E06000038,Reading,Religion not stated,11372
+Slough,E06000039,Slough,Christian,57726
+Slough,E06000039,Slough,Buddhist,743
+Slough,E06000039,Slough,Hindu,8643
+Slough,E06000039,Slough,Jewish,87
+Slough,E06000039,Slough,Muslim,32655
+Slough,E06000039,Slough,Sikh,14889
+Slough,E06000039,Slough,Other religion,482
+Slough,E06000039,Slough,No religion,17024
+Slough,E06000039,Slough,Religion not stated,7956
+Southampton,E06000045,Southampton,Christian,122018
+Southampton,E06000045,Southampton,Buddhist,1331
+Southampton,E06000045,Southampton,Hindu,2482
+Southampton,E06000045,Southampton,Jewish,254
+Southampton,E06000045,Southampton,Muslim,9903
+Southampton,E06000045,Southampton,Sikh,3476
+Southampton,E06000045,Southampton,Other religion,1329
+Southampton,E06000045,Southampton,No religion,79379
+Southampton,E06000045,Southampton,Religion not stated,16710
+West Berkshire,E06000037,West Berkshire,Christian,97896
+West Berkshire,E06000037,West Berkshire,Buddhist,495
+West Berkshire,E06000037,West Berkshire,Hindu,1106
+West Berkshire,E06000037,West Berkshire,Jewish,212
+West Berkshire,E06000037,West Berkshire,Muslim,1218
+West Berkshire,E06000037,West Berkshire,Sikh,236
+West Berkshire,E06000037,West Berkshire,Other religion,607
+West Berkshire,E06000037,West Berkshire,No religion,41042
+West Berkshire,E06000037,West Berkshire,Religion not stated,11010
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Christian,90051
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Buddhist,780
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Hindu,2660
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Jewish,475
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Muslim,5684
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Sikh,2941
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Other religion,513
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,No religion,31353
+Windsor and Maidenhead,E06000040,Windsor and Maidenhead,Religion not stated,10103
+Wokingham,E06000041,Wokingham,Christian,91905
+Wokingham,E06000041,Wokingham,Buddhist,572
+Wokingham,E06000041,Wokingham,Hindu,3183
+Wokingham,E06000041,Wokingham,Jewish,508
+Wokingham,E06000041,Wokingham,Muslim,4352
+Wokingham,E06000041,Wokingham,Sikh,2043
+Wokingham,E06000041,Wokingham,Other religion,454
+Wokingham,E06000041,Wokingham,No religion,40143
+Wokingham,E06000041,Wokingham,Religion not stated,11220
+Buckinghamshire,E06000060,Aylesbury Vale,Christian,107432
+Buckinghamshire,E06000060,Aylesbury Vale,Buddhist,657
+Buckinghamshire,E06000060,Aylesbury Vale,Hindu,1350
+Buckinghamshire,E06000060,Aylesbury Vale,Jewish,321
+Buckinghamshire,E06000060,Aylesbury Vale,Muslim,6783
+Buckinghamshire,E06000060,Aylesbury Vale,Sikh,238
+Buckinghamshire,E06000060,Aylesbury Vale,Other religion,588
+Buckinghamshire,E06000060,Aylesbury Vale,No religion,44520
+Buckinghamshire,E06000060,Aylesbury Vale,Religion not stated,12248
+Buckinghamshire,E06000060,Chiltern,Christian,58553
+Buckinghamshire,E06000060,Chiltern,Buddhist,327
+Buckinghamshire,E06000060,Chiltern,Hindu,1206
+Buckinghamshire,E06000060,Chiltern,Jewish,507
+Buckinghamshire,E06000060,Chiltern,Muslim,2311
+Buckinghamshire,E06000060,Chiltern,Sikh,489
+Buckinghamshire,E06000060,Chiltern,Other religion,343
+Buckinghamshire,E06000060,Chiltern,No religion,21818
+Buckinghamshire,E06000060,Chiltern,Religion not stated,7081
+Buckinghamshire,E06000060,South Bucks,Christian,41637
+Buckinghamshire,E06000060,South Bucks,Buddhist,310
+Buckinghamshire,E06000060,South Bucks,Hindu,1685
+Buckinghamshire,E06000060,South Bucks,Jewish,289
+Buckinghamshire,E06000060,South Bucks,Muslim,1665
+Buckinghamshire,E06000060,South Bucks,Sikh,3163
+Buckinghamshire,E06000060,South Bucks,Other religion,228
+Buckinghamshire,E06000060,South Bucks,No religion,13270
+Buckinghamshire,E06000060,South Bucks,Religion not stated,4620
+Buckinghamshire,E06000060,Wycombe,Christian,98182
+Buckinghamshire,E06000060,Wycombe,Buddhist,913
+Buckinghamshire,E06000060,Wycombe,Hindu,2003
+Buckinghamshire,E06000060,Wycombe,Jewish,394
+Buckinghamshire,E06000060,Wycombe,Muslim,15022
+Buckinghamshire,E06000060,Wycombe,Sikh,767
+Buckinghamshire,E06000060,Wycombe,Other religion,644
+Buckinghamshire,E06000060,Wycombe,No religion,41582
+Buckinghamshire,E06000060,Wycombe,Religion not stated,12137
+Eastbourne,E07000061,Eastbourne,Christian,59232
+Eastbourne,E07000061,Eastbourne,Buddhist,482
+Eastbourne,E07000061,Eastbourne,Hindu,429
+Eastbourne,E07000061,Eastbourne,Jewish,211
+Eastbourne,E07000061,Eastbourne,Muslim,1458
+Eastbourne,E07000061,Eastbourne,Sikh,53
+Eastbourne,E07000061,Eastbourne,Other religion,586
+Eastbourne,E07000061,Eastbourne,No religion,28995
+Eastbourne,E07000061,Eastbourne,Religion not stated,7966
+Hastings,E07000062,Hastings,Christian,46832
+Hastings,E07000062,Hastings,Buddhist,475
+Hastings,E07000062,Hastings,Hindu,423
+Hastings,E07000062,Hastings,Jewish,142
+Hastings,E07000062,Hastings,Muslim,1159
+Hastings,E07000062,Hastings,Sikh,38
+Hastings,E07000062,Hastings,Other religion,668
+Hastings,E07000062,Hastings,No religion,33066
+Hastings,E07000062,Hastings,Religion not stated,7451
+Lewes,E07000063,Lewes,Christian,55572
+Lewes,E07000063,Lewes,Buddhist,489
+Lewes,E07000063,Lewes,Hindu,257
+Lewes,E07000063,Lewes,Jewish,320
+Lewes,E07000063,Lewes,Muslim,558
+Lewes,E07000063,Lewes,Sikh,42
+Lewes,E07000063,Lewes,Other religion,603
+Lewes,E07000063,Lewes,No religion,31641
+Lewes,E07000063,Lewes,Religion not stated,8020
+Rother,E07000064,Rother,Christian,58706
+Rother,E07000064,Rother,Buddhist,290
+Rother,E07000064,Rother,Hindu,171
+Rother,E07000064,Rother,Jewish,170
+Rother,E07000064,Rother,Muslim,460
+Rother,E07000064,Rother,Sikh,12
+Rother,E07000064,Rother,Other religion,525
+Rother,E07000064,Rother,No religion,22864
+Rother,E07000064,Rother,Religion not stated,7390
+Wealden,E07000065,Wealden,Christian,95317
+Wealden,E07000065,Wealden,Buddhist,454
+Wealden,E07000065,Wealden,Hindu,221
+Wealden,E07000065,Wealden,Jewish,231
+Wealden,E07000065,Wealden,Muslim,566
+Wealden,E07000065,Wealden,Sikh,33
+Wealden,E07000065,Wealden,Other religion,1126
+Wealden,E07000065,Wealden,No religion,39157
+Wealden,E07000065,Wealden,Religion not stated,11810
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Christian,100482
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Buddhist,872
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Hindu,1994
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Jewish,172
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Muslim,1464
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Sikh,329
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Other religion,638
+Basingstoke and Deane,E07000084,Basingstoke and Deane,No religion,49770
+Basingstoke and Deane,E07000084,Basingstoke and Deane,Religion not stated,12078
+East Hampshire,E07000085,East Hampshire,Christian,74744
+East Hampshire,E07000085,East Hampshire,Buddhist,393
+East Hampshire,E07000085,East Hampshire,Hindu,278
+East Hampshire,E07000085,East Hampshire,Jewish,166
+East Hampshire,E07000085,East Hampshire,Muslim,421
+East Hampshire,E07000085,East Hampshire,Sikh,50
+East Hampshire,E07000085,East Hampshire,Other religion,506
+East Hampshire,E07000085,East Hampshire,No religion,30380
+East Hampshire,E07000085,East Hampshire,Religion not stated,8670
+Eastleigh,E07000086,Eastleigh,Christian,77485
+Eastleigh,E07000086,Eastleigh,Buddhist,356
+Eastleigh,E07000086,Eastleigh,Hindu,820
+Eastleigh,E07000086,Eastleigh,Jewish,92
+Eastleigh,E07000086,Eastleigh,Muslim,975
+Eastleigh,E07000086,Eastleigh,Sikh,854
+Eastleigh,E07000086,Eastleigh,Other religion,498
+Eastleigh,E07000086,Eastleigh,No religion,35639
+Eastleigh,E07000086,Eastleigh,Religion not stated,8480
+Fareham,E07000087,Fareham,Christian,71158
+Fareham,E07000087,Fareham,Buddhist,274
+Fareham,E07000087,Fareham,Hindu,299
+Fareham,E07000087,Fareham,Jewish,63
+Fareham,E07000087,Fareham,Muslim,538
+Fareham,E07000087,Fareham,Sikh,79
+Fareham,E07000087,Fareham,Other religion,508
+Fareham,E07000087,Fareham,No religion,30578
+Fareham,E07000087,Fareham,Religion not stated,8084
+Gosport,E07000088,Gosport,Christian,48616
+Gosport,E07000088,Gosport,Buddhist,198
+Gosport,E07000088,Gosport,Hindu,189
+Gosport,E07000088,Gosport,Jewish,37
+Gosport,E07000088,Gosport,Muslim,452
+Gosport,E07000088,Gosport,Sikh,38
+Gosport,E07000088,Gosport,Other religion,427
+Gosport,E07000088,Gosport,No religion,27114
+Gosport,E07000088,Gosport,Religion not stated,5551
+Hart,E07000089,Hart,Christian,58817
+Hart,E07000089,Hart,Buddhist,466
+Hart,E07000089,Hart,Hindu,720
+Hart,E07000089,Hart,Jewish,101
+Hart,E07000089,Hart,Muslim,509
+Hart,E07000089,Hart,Sikh,199
+Hart,E07000089,Hart,Other religion,292
+Hart,E07000089,Hart,No religion,23504
+Hart,E07000089,Hart,Religion not stated,6425
+Havant,E07000090,Havant,Christian,71475
+Havant,E07000090,Havant,Buddhist,267
+Havant,E07000090,Havant,Hindu,233
+Havant,E07000090,Havant,Jewish,81
+Havant,E07000090,Havant,Muslim,570
+Havant,E07000090,Havant,Sikh,60
+Havant,E07000090,Havant,Other religion,563
+Havant,E07000090,Havant,No religion,38925
+Havant,E07000090,Havant,Religion not stated,8510
+New Forest,E07000091,New Forest,Christian,115021
+New Forest,E07000091,New Forest,Buddhist,429
+New Forest,E07000091,New Forest,Hindu,217
+New Forest,E07000091,New Forest,Jewish,220
+New Forest,E07000091,New Forest,Muslim,485
+New Forest,E07000091,New Forest,Sikh,79
+New Forest,E07000091,New Forest,Other religion,911
+New Forest,E07000091,New Forest,No religion,45374
+New Forest,E07000091,New Forest,Religion not stated,13726
+Rushmoor,E07000092,Rushmoor,Christian,54206
+Rushmoor,E07000092,Rushmoor,Buddhist,3092
+Rushmoor,E07000092,Rushmoor,Hindu,3222
+Rushmoor,E07000092,Rushmoor,Jewish,65
+Rushmoor,E07000092,Rushmoor,Muslim,1356
+Rushmoor,E07000092,Rushmoor,Sikh,183
+Rushmoor,E07000092,Rushmoor,Other religion,367
+Rushmoor,E07000092,Rushmoor,No religion,24773
+Rushmoor,E07000092,Rushmoor,Religion not stated,6543
+Test Valley,E07000093,Test Valley,Christian,76446
+Test Valley,E07000093,Test Valley,Buddhist,333
+Test Valley,E07000093,Test Valley,Hindu,496
+Test Valley,E07000093,Test Valley,Jewish,114
+Test Valley,E07000093,Test Valley,Muslim,671
+Test Valley,E07000093,Test Valley,Sikh,395
+Test Valley,E07000093,Test Valley,Other religion,496
+Test Valley,E07000093,Test Valley,No religion,29195
+Test Valley,E07000093,Test Valley,Religion not stated,8252
+Winchester,E07000094,Winchester,Christian,73729
+Winchester,E07000094,Winchester,Buddhist,566
+Winchester,E07000094,Winchester,Hindu,460
+Winchester,E07000094,Winchester,Jewish,175
+Winchester,E07000094,Winchester,Muslim,558
+Winchester,E07000094,Winchester,Sikh,123
+Winchester,E07000094,Winchester,Other religion,488
+Winchester,E07000094,Winchester,No religion,31808
+Winchester,E07000094,Winchester,Religion not stated,8688
+Ashford,E07000105,Ashford,Christian,74253
+Ashford,E07000105,Ashford,Buddhist,803
+Ashford,E07000105,Ashford,Hindu,1282
+Ashford,E07000105,Ashford,Jewish,116
+Ashford,E07000105,Ashford,Muslim,1019
+Ashford,E07000105,Ashford,Sikh,95
+Ashford,E07000105,Ashford,Other religion,432
+Ashford,E07000105,Ashford,No religion,30984
+Ashford,E07000105,Ashford,Religion not stated,8972
+Canterbury,E07000106,Canterbury,Christian,91122
+Canterbury,E07000106,Canterbury,Buddhist,880
+Canterbury,E07000106,Canterbury,Hindu,1055
+Canterbury,E07000106,Canterbury,Jewish,267
+Canterbury,E07000106,Canterbury,Muslim,1838
+Canterbury,E07000106,Canterbury,Sikh,245
+Canterbury,E07000106,Canterbury,Other religion,760
+Canterbury,E07000106,Canterbury,No religion,43117
+Canterbury,E07000106,Canterbury,Religion not stated,11861
+Dartford,E07000107,Dartford,Christian,59045
+Dartford,E07000107,Dartford,Buddhist,382
+Dartford,E07000107,Dartford,Hindu,1547
+Dartford,E07000107,Dartford,Jewish,86
+Dartford,E07000107,Dartford,Muslim,1566
+Dartford,E07000107,Dartford,Sikh,1543
+Dartford,E07000107,Dartford,Other religion,319
+Dartford,E07000107,Dartford,No religion,26486
+Dartford,E07000107,Dartford,Religion not stated,6391
+Dover,E07000108,Dover,Christian,71541
+Dover,E07000108,Dover,Buddhist,523
+Dover,E07000108,Dover,Hindu,682
+Dover,E07000108,Dover,Jewish,97
+Dover,E07000108,Dover,Muslim,521
+Dover,E07000108,Dover,Sikh,50
+Dover,E07000108,Dover,Other religion,525
+Dover,E07000108,Dover,No religion,29047
+Dover,E07000108,Dover,Religion not stated,8688
+Gravesham,E07000109,Gravesham,Christian,61891
+Gravesham,E07000109,Gravesham,Buddhist,333
+Gravesham,E07000109,Gravesham,Hindu,942
+Gravesham,E07000109,Gravesham,Jewish,54
+Gravesham,E07000109,Gravesham,Muslim,1894
+Gravesham,E07000109,Gravesham,Sikh,7743
+Gravesham,E07000109,Gravesham,Other religion,606
+Gravesham,E07000109,Gravesham,No religion,21862
+Gravesham,E07000109,Gravesham,Religion not stated,6395
+Maidstone,E07000110,Maidstone,Christian,97578
+Maidstone,E07000110,Maidstone,Buddhist,901
+Maidstone,E07000110,Maidstone,Hindu,1492
+Maidstone,E07000110,Maidstone,Jewish,163
+Maidstone,E07000110,Maidstone,Muslim,1685
+Maidstone,E07000110,Maidstone,Sikh,176
+Maidstone,E07000110,Maidstone,Other religion,612
+Maidstone,E07000110,Maidstone,No religion,41493
+Maidstone,E07000110,Maidstone,Religion not stated,11043
+Sevenoaks,E07000111,Sevenoaks,Christian,75169
+Sevenoaks,E07000111,Sevenoaks,Buddhist,367
+Sevenoaks,E07000111,Sevenoaks,Hindu,385
+Sevenoaks,E07000111,Sevenoaks,Jewish,196
+Sevenoaks,E07000111,Sevenoaks,Muslim,600
+Sevenoaks,E07000111,Sevenoaks,Sikh,180
+Sevenoaks,E07000111,Sevenoaks,Other religion,348
+Sevenoaks,E07000111,Sevenoaks,No religion,28939
+Sevenoaks,E07000111,Sevenoaks,Religion not stated,8709
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Christian,67296
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Buddhist,962
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Hindu,1551
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Jewish,78
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Muslim,796
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Sikh,34
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Other religion,506
+Folkestone and Hythe,E07000112,Folkestone and Hythe,No religion,28575
+Folkestone and Hythe,E07000112,Folkestone and Hythe,Religion not stated,8171
+Swale,E07000113,Swale,Christian,85535
+Swale,E07000113,Swale,Buddhist,275
+Swale,E07000113,Swale,Hindu,368
+Swale,E07000113,Swale,Jewish,93
+Swale,E07000113,Swale,Muslim,792
+Swale,E07000113,Swale,Sikh,158
+Swale,E07000113,Swale,Other religion,499
+Swale,E07000113,Swale,No religion,39087
+Swale,E07000113,Swale,Religion not stated,9028
+Thanet,E07000114,Thanet,Christian,82447
+Thanet,E07000114,Thanet,Buddhist,491
+Thanet,E07000114,Thanet,Hindu,639
+Thanet,E07000114,Thanet,Jewish,273
+Thanet,E07000114,Thanet,Muslim,1230
+Thanet,E07000114,Thanet,Sikh,94
+Thanet,E07000114,Thanet,Other religion,690
+Thanet,E07000114,Thanet,No religion,38383
+Thanet,E07000114,Thanet,Religion not stated,9939
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Christian,76920
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Buddhist,441
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Hindu,539
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Jewish,122
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Muslim,750
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Sikh,169
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Other religion,412
+Tonbridge and Malling,E07000115,Tonbridge and Malling,No religion,32996
+Tonbridge and Malling,E07000115,Tonbridge and Malling,Religion not stated,8456
+Tunbridge Wells,E07000116,Tunbridge Wells,Christian,72403
+Tunbridge Wells,E07000116,Tunbridge Wells,Buddhist,444
+Tunbridge Wells,E07000116,Tunbridge Wells,Hindu,461
+Tunbridge Wells,E07000116,Tunbridge Wells,Jewish,232
+Tunbridge Wells,E07000116,Tunbridge Wells,Muslim,1241
+Tunbridge Wells,E07000116,Tunbridge Wells,Sikh,58
+Tunbridge Wells,E07000116,Tunbridge Wells,Other religion,436
+Tunbridge Wells,E07000116,Tunbridge Wells,No religion,30622
+Tunbridge Wells,E07000116,Tunbridge Wells,Religion not stated,9152
+Cherwell,E07000177,Cherwell,Christian,90564
+Cherwell,E07000177,Cherwell,Buddhist,563
+Cherwell,E07000177,Cherwell,Hindu,575
+Cherwell,E07000177,Cherwell,Jewish,164
+Cherwell,E07000177,Cherwell,Muslim,3196
+Cherwell,E07000177,Cherwell,Sikh,438
+Cherwell,E07000177,Cherwell,Other religion,563
+Cherwell,E07000177,Cherwell,No religion,36066
+Cherwell,E07000177,Cherwell,Religion not stated,9739
+Oxford,E07000178,Oxford,Christian,72924
+Oxford,E07000178,Oxford,Buddhist,1431
+Oxford,E07000178,Oxford,Hindu,2044
+Oxford,E07000178,Oxford,Jewish,1072
+Oxford,E07000178,Oxford,Muslim,10320
+Oxford,E07000178,Oxford,Sikh,434
+Oxford,E07000178,Oxford,Other religion,796
+Oxford,E07000178,Oxford,No religion,50274
+Oxford,E07000178,Oxford,Religion not stated,12611
+South Oxfordshire,E07000179,South Oxfordshire,Christian,85292
+South Oxfordshire,E07000179,South Oxfordshire,Buddhist,467
+South Oxfordshire,E07000179,South Oxfordshire,Hindu,472
+South Oxfordshire,E07000179,South Oxfordshire,Jewish,281
+South Oxfordshire,E07000179,South Oxfordshire,Muslim,710
+South Oxfordshire,E07000179,South Oxfordshire,Sikh,106
+South Oxfordshire,E07000179,South Oxfordshire,Other religion,505
+South Oxfordshire,E07000179,South Oxfordshire,No religion,36398
+South Oxfordshire,E07000179,South Oxfordshire,Religion not stated,10026
+Vale of White Horse,E07000180,Vale of White Horse,Christian,76589
+Vale of White Horse,E07000180,Vale of White Horse,Buddhist,462
+Vale of White Horse,E07000180,Vale of White Horse,Hindu,566
+Vale of White Horse,E07000180,Vale of White Horse,Jewish,196
+Vale of White Horse,E07000180,Vale of White Horse,Muslim,1073
+Vale of White Horse,E07000180,Vale of White Horse,Sikh,177
+Vale of White Horse,E07000180,Vale of White Horse,Other religion,433
+Vale of White Horse,E07000180,Vale of White Horse,No religion,32505
+Vale of White Horse,E07000180,Vale of White Horse,Religion not stated,8987
+West Oxfordshire,E07000181,West Oxfordshire,Christian,68537
+West Oxfordshire,E07000181,West Oxfordshire,Buddhist,334
+West Oxfordshire,E07000181,West Oxfordshire,Hindu,221
+West Oxfordshire,E07000181,West Oxfordshire,Jewish,180
+West Oxfordshire,E07000181,West Oxfordshire,Muslim,435
+West Oxfordshire,E07000181,West Oxfordshire,Sikh,37
+West Oxfordshire,E07000181,West Oxfordshire,Other religion,419
+West Oxfordshire,E07000181,West Oxfordshire,No religion,27101
+West Oxfordshire,E07000181,West Oxfordshire,Religion not stated,7515
+Elmbridge,E07000207,Elmbridge,Christian,83973
+Elmbridge,E07000207,Elmbridge,Buddhist,685
+Elmbridge,E07000207,Elmbridge,Hindu,1593
+Elmbridge,E07000207,Elmbridge,Jewish,795
+Elmbridge,E07000207,Elmbridge,Muslim,2406
+Elmbridge,E07000207,Elmbridge,Sikh,523
+Elmbridge,E07000207,Elmbridge,Other religion,444
+Elmbridge,E07000207,Elmbridge,No religion,30606
+Elmbridge,E07000207,Elmbridge,Religion not stated,9850
+Epsom and Ewell,E07000208,Epsom and Ewell,Christian,46222
+Epsom and Ewell,E07000208,Epsom and Ewell,Buddhist,480
+Epsom and Ewell,E07000208,Epsom and Ewell,Hindu,1913
+Epsom and Ewell,E07000208,Epsom and Ewell,Jewish,239
+Epsom and Ewell,E07000208,Epsom and Ewell,Muslim,2277
+Epsom and Ewell,E07000208,Epsom and Ewell,Sikh,125
+Epsom and Ewell,E07000208,Epsom and Ewell,Other religion,265
+Epsom and Ewell,E07000208,Epsom and Ewell,No religion,18254
+Epsom and Ewell,E07000208,Epsom and Ewell,Religion not stated,5327
+Guildford,E07000209,Guildford,Christian,82621
+Guildford,E07000209,Guildford,Buddhist,842
+Guildford,E07000209,Guildford,Hindu,1301
+Guildford,E07000209,Guildford,Jewish,322
+Guildford,E07000209,Guildford,Muslim,2713
+Guildford,E07000209,Guildford,Sikh,206
+Guildford,E07000209,Guildford,Other religion,469
+Guildford,E07000209,Guildford,No religion,38108
+Guildford,E07000209,Guildford,Religion not stated,10601
+Mole Valley,E07000210,Mole Valley,Christian,54926
+Mole Valley,E07000210,Mole Valley,Buddhist,330
+Mole Valley,E07000210,Mole Valley,Hindu,564
+Mole Valley,E07000210,Mole Valley,Jewish,212
+Mole Valley,E07000210,Mole Valley,Muslim,669
+Mole Valley,E07000210,Mole Valley,Sikh,85
+Mole Valley,E07000210,Mole Valley,Other religion,333
+Mole Valley,E07000210,Mole Valley,No religion,21514
+Mole Valley,E07000210,Mole Valley,Religion not stated,6742
+Reigate and Banstead,E07000211,Reigate and Banstead,Christian,85325
+Reigate and Banstead,E07000211,Reigate and Banstead,Buddhist,618
+Reigate and Banstead,E07000211,Reigate and Banstead,Hindu,1880
+Reigate and Banstead,E07000211,Reigate and Banstead,Jewish,294
+Reigate and Banstead,E07000211,Reigate and Banstead,Muslim,2637
+Reigate and Banstead,E07000211,Reigate and Banstead,Sikh,205
+Reigate and Banstead,E07000211,Reigate and Banstead,Other religion,480
+Reigate and Banstead,E07000211,Reigate and Banstead,No religion,36262
+Reigate and Banstead,E07000211,Reigate and Banstead,Religion not stated,10134
+Runnymede,E07000212,Runnymede,Christian,51037
+Runnymede,E07000212,Runnymede,Buddhist,505
+Runnymede,E07000212,Runnymede,Hindu,1181
+Runnymede,E07000212,Runnymede,Jewish,251
+Runnymede,E07000212,Runnymede,Muslim,1556
+Runnymede,E07000212,Runnymede,Sikh,551
+Runnymede,E07000212,Runnymede,Other religion,321
+Runnymede,E07000212,Runnymede,No religion,19297
+Runnymede,E07000212,Runnymede,Religion not stated,5811
+Spelthorne,E07000213,Spelthorne,Christian,60954
+Spelthorne,E07000213,Spelthorne,Buddhist,420
+Spelthorne,E07000213,Spelthorne,Hindu,2332
+Spelthorne,E07000213,Spelthorne,Jewish,206
+Spelthorne,E07000213,Spelthorne,Muslim,1808
+Spelthorne,E07000213,Spelthorne,Sikh,1325
+Spelthorne,E07000213,Spelthorne,Other religion,347
+Spelthorne,E07000213,Spelthorne,No religion,21511
+Spelthorne,E07000213,Spelthorne,Religion not stated,6695
+Surrey Heath,E07000214,Surrey Heath,Christian,54646
+Surrey Heath,E07000214,Surrey Heath,Buddhist,736
+Surrey Heath,E07000214,Surrey Heath,Hindu,1369
+Surrey Heath,E07000214,Surrey Heath,Jewish,162
+Surrey Heath,E07000214,Surrey Heath,Muslim,1607
+Surrey Heath,E07000214,Surrey Heath,Sikh,483
+Surrey Heath,E07000214,Surrey Heath,Other religion,352
+Surrey Heath,E07000214,Surrey Heath,No religion,20610
+Surrey Heath,E07000214,Surrey Heath,Religion not stated,6179
+Tandridge,E07000215,Tandridge,Christian,53841
+Tandridge,E07000215,Tandridge,Buddhist,295
+Tandridge,E07000215,Tandridge,Hindu,612
+Tandridge,E07000215,Tandridge,Jewish,132
+Tandridge,E07000215,Tandridge,Muslim,596
+Tandridge,E07000215,Tandridge,Sikh,60
+Tandridge,E07000215,Tandridge,Other religion,263
+Tandridge,E07000215,Tandridge,No religion,20976
+Tandridge,E07000215,Tandridge,Religion not stated,6223
+Waverley,E07000216,Waverley,Christian,79220
+Waverley,E07000216,Waverley,Buddhist,432
+Waverley,E07000216,Waverley,Hindu,321
+Waverley,E07000216,Waverley,Jewish,228
+Waverley,E07000216,Waverley,Muslim,786
+Waverley,E07000216,Waverley,Sikh,69
+Waverley,E07000216,Waverley,Other religion,525
+Waverley,E07000216,Waverley,No religion,30745
+Waverley,E07000216,Waverley,Religion not stated,9246
+Woking,E07000217,Woking,Christian,58345
+Woking,E07000217,Woking,Buddhist,676
+Woking,E07000217,Woking,Hindu,1952
+Woking,E07000217,Woking,Jewish,214
+Woking,E07000217,Woking,Muslim,7323
+Woking,E07000217,Woking,Sikh,151
+Woking,E07000217,Woking,Other religion,338
+Woking,E07000217,Woking,No religion,22931
+Woking,E07000217,Woking,Religion not stated,7268
+Adur,E07000223,Adur,Christian,35829
+Adur,E07000223,Adur,Buddhist,211
+Adur,E07000223,Adur,Hindu,138
+Adur,E07000223,Adur,Jewish,221
+Adur,E07000223,Adur,Muslim,611
+Adur,E07000223,Adur,Sikh,30
+Adur,E07000223,Adur,Other religion,346
+Adur,E07000223,Adur,No religion,19162
+Adur,E07000223,Adur,Religion not stated,4634
+Arun,E07000224,Arun,Christian,97618
+Arun,E07000224,Arun,Buddhist,425
+Arun,E07000224,Arun,Hindu,306
+Arun,E07000224,Arun,Jewish,243
+Arun,E07000224,Arun,Muslim,806
+Arun,E07000224,Arun,Sikh,45
+Arun,E07000224,Arun,Other religion,689
+Arun,E07000224,Arun,No religion,37829
+Arun,E07000224,Arun,Religion not stated,11557
+Chichester,E07000225,Chichester,Christian,75248
+Chichester,E07000225,Chichester,Buddhist,492
+Chichester,E07000225,Chichester,Hindu,276
+Chichester,E07000225,Chichester,Jewish,163
+Chichester,E07000225,Chichester,Muslim,419
+Chichester,E07000225,Chichester,Sikh,31
+Chichester,E07000225,Chichester,Other religion,516
+Chichester,E07000225,Chichester,No religion,27947
+Chichester,E07000225,Chichester,Religion not stated,8702
+Crawley,E07000226,Crawley,Christian,57782
+Crawley,E07000226,Crawley,Buddhist,401
+Crawley,E07000226,Crawley,Hindu,4892
+Crawley,E07000226,Crawley,Jewish,98
+Crawley,E07000226,Crawley,Muslim,7681
+Crawley,E07000226,Crawley,Sikh,729
+Crawley,E07000226,Crawley,Other religion,448
+Crawley,E07000226,Crawley,No religion,27756
+Crawley,E07000226,Crawley,Religion not stated,6810
+Horsham,E07000227,Horsham,Christian,83316
+Horsham,E07000227,Horsham,Buddhist,420
+Horsham,E07000227,Horsham,Hindu,355
+Horsham,E07000227,Horsham,Jewish,199
+Horsham,E07000227,Horsham,Muslim,673
+Horsham,E07000227,Horsham,Sikh,92
+Horsham,E07000227,Horsham,Other religion,532
+Horsham,E07000227,Horsham,No religion,35355
+Horsham,E07000227,Horsham,Religion not stated,10359
+Mid Sussex,E07000228,Mid Sussex,Christian,87757
+Mid Sussex,E07000228,Mid Sussex,Buddhist,508
+Mid Sussex,E07000228,Mid Sussex,Hindu,855
+Mid Sussex,E07000228,Mid Sussex,Jewish,283
+Mid Sussex,E07000228,Mid Sussex,Muslim,1130
+Mid Sussex,E07000228,Mid Sussex,Sikh,88
+Mid Sussex,E07000228,Mid Sussex,Other religion,924
+Mid Sussex,E07000228,Mid Sussex,No religion,37218
+Mid Sussex,E07000228,Mid Sussex,Religion not stated,11097
+Worthing,E07000229,Worthing,Christian,60817
+Worthing,E07000229,Worthing,Buddhist,600
+Worthing,E07000229,Worthing,Hindu,546
+Worthing,E07000229,Worthing,Jewish,227
+Worthing,E07000229,Worthing,Muslim,1348
+Worthing,E07000229,Worthing,Sikh,122
+Worthing,E07000229,Worthing,Other religion,666
+Worthing,E07000229,Worthing,No religion,31577
+Worthing,E07000229,Worthing,Religion not stated,8737
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Christian,99468
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Buddhist,941
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Hindu,535
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Jewish,254
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Muslim,1179
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Sikh,140
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Other religion,935
+Bath and North East Somerset,E06000022,Bath and North East Somerset,No religion,57626
+Bath and North East Somerset,E06000022,Bath and North East Somerset,Religion not stated,14938
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Christian,104828
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Buddhist,1215
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Hindu,1292
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Jewish,1343
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Muslim,3264
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Sikh,156
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Other religion,1216
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,No religion,55911
+"Bournemouth, Christchurch and Poole",E06000058,Bournemouth,Religion not stated,14266
+"Bristol, City of",E06000023,"Bristol, City of",Christian,200254
+"Bristol, City of",E06000023,"Bristol, City of",Buddhist,2549
+"Bristol, City of",E06000023,"Bristol, City of",Hindu,2712
+"Bristol, City of",E06000023,"Bristol, City of",Jewish,777
+"Bristol, City of",E06000023,"Bristol, City of",Muslim,22016
+"Bristol, City of",E06000023,"Bristol, City of",Sikh,2133
+"Bristol, City of",E06000023,"Bristol, City of",Other religion,2793
+"Bristol, City of",E06000023,"Bristol, City of",No religion,160218
+"Bristol, City of",E06000023,"Bristol, City of",Religion not stated,34782
+Cornwall,E06000052,Cornwall,Christian,318357
+Cornwall,E06000052,Cornwall,Buddhist,1726
+Cornwall,E06000052,Cornwall,Hindu,556
+Cornwall,E06000052,Cornwall,Jewish,389
+Cornwall,E06000052,Cornwall,Muslim,855
+Cornwall,E06000052,Cornwall,Sikh,105
+Cornwall,E06000052,Cornwall,Other religion,3609
+Cornwall,E06000052,Cornwall,No religion,161320
+Cornwall,E06000052,Cornwall,Religion not stated,45356
+Isles of Scilly,E06000053,Isles of Scilly,Christian,1218
+Isles of Scilly,E06000053,Isles of Scilly,Buddhist,9
+Isles of Scilly,E06000053,Isles of Scilly,Hindu,1
+Isles of Scilly,E06000053,Isles of Scilly,Jewish,4
+Isles of Scilly,E06000053,Isles of Scilly,Muslim,3
+Isles of Scilly,E06000053,Isles of Scilly,Sikh,0
+Isles of Scilly,E06000053,Isles of Scilly,Other religion,12
+Isles of Scilly,E06000053,Isles of Scilly,No religion,742
+Isles of Scilly,E06000053,Isles of Scilly,Religion not stated,214
+North Somerset,E06000024,North Somerset,Christian,123545
+North Somerset,E06000024,North Somerset,Buddhist,554
+North Somerset,E06000024,North Somerset,Hindu,340
+North Somerset,E06000024,North Somerset,Jewish,157
+North Somerset,E06000024,North Somerset,Muslim,869
+North Somerset,E06000024,North Somerset,Sikh,95
+North Somerset,E06000024,North Somerset,Other religion,939
+North Somerset,E06000024,North Somerset,No religion,60867
+North Somerset,E06000024,North Somerset,Religion not stated,15200
+Plymouth,E06000026,Plymouth,Christian,148917
+Plymouth,E06000026,Plymouth,Buddhist,881
+Plymouth,E06000026,Plymouth,Hindu,567
+Plymouth,E06000026,Plymouth,Jewish,168
+Plymouth,E06000026,Plymouth,Muslim,2078
+Plymouth,E06000026,Plymouth,Sikh,89
+Plymouth,E06000026,Plymouth,Other religion,1198
+Plymouth,E06000026,Plymouth,No religion,84295
+Plymouth,E06000026,Plymouth,Religion not stated,18191
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Christian,89243
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Buddhist,538
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Hindu,511
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Jewish,404
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Muslim,1035
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Sikh,79
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Other religion,717
+"Bournemouth, Christchurch and Poole",E06000058,Poole,No religion,43922
+"Bournemouth, Christchurch and Poole",E06000058,Poole,Religion not stated,11196
+South Gloucestershire,E06000025,South Gloucestershire,Christian,156504
+South Gloucestershire,E06000025,South Gloucestershire,Buddhist,708
+South Gloucestershire,E06000025,South Gloucestershire,Hindu,1681
+South Gloucestershire,E06000025,South Gloucestershire,Jewish,145
+South Gloucestershire,E06000025,South Gloucestershire,Muslim,2176
+South Gloucestershire,E06000025,South Gloucestershire,Sikh,623
+South Gloucestershire,E06000025,South Gloucestershire,Other religion,888
+South Gloucestershire,E06000025,South Gloucestershire,No religion,80607
+South Gloucestershire,E06000025,South Gloucestershire,Religion not stated,19435
+Swindon,E06000030,Swindon,Christian,120287
+Swindon,E06000030,Swindon,Buddhist,1209
+Swindon,E06000030,Swindon,Hindu,2597
+Swindon,E06000030,Swindon,Jewish,151
+Swindon,E06000030,Swindon,Muslim,3538
+Swindon,E06000030,Swindon,Sikh,1228
+Swindon,E06000030,Swindon,Other religion,1061
+Swindon,E06000030,Swindon,No religion,64780
+Swindon,E06000030,Swindon,Religion not stated,14305
+Torbay,E06000027,Torbay,Christian,82924
+Torbay,E06000027,Torbay,Buddhist,389
+Torbay,E06000027,Torbay,Hindu,128
+Torbay,E06000027,Torbay,Jewish,109
+Torbay,E06000027,Torbay,Muslim,521
+Torbay,E06000027,Torbay,Sikh,41
+Torbay,E06000027,Torbay,Other religion,702
+Torbay,E06000027,Torbay,No religion,36035
+Torbay,E06000027,Torbay,Religion not stated,10110
+Wiltshire,E06000054,Wiltshire,Christian,301651
+Wiltshire,E06000054,Wiltshire,Buddhist,1621
+Wiltshire,E06000054,Wiltshire,Hindu,1308
+Wiltshire,E06000054,Wiltshire,Jewish,384
+Wiltshire,E06000054,Wiltshire,Muslim,2074
+Wiltshire,E06000054,Wiltshire,Sikh,303
+Wiltshire,E06000054,Wiltshire,Other religion,2417
+Wiltshire,E06000054,Wiltshire,No religion,125045
+Wiltshire,E06000054,Wiltshire,Religion not stated,36178
+East Devon,E07000040,East Devon,Christian,86934
+East Devon,E07000040,East Devon,Buddhist,351
+East Devon,E07000040,East Devon,Hindu,55
+East Devon,E07000040,East Devon,Jewish,142
+East Devon,E07000040,East Devon,Muslim,229
+East Devon,E07000040,East Devon,Sikh,13
+East Devon,E07000040,East Devon,Other religion,657
+East Devon,E07000040,East Devon,No religion,33280
+East Devon,E07000040,East Devon,Religion not stated,10796
+Exeter,E07000041,Exeter,Christian,63486
+Exeter,E07000041,Exeter,Buddhist,683
+Exeter,E07000041,Exeter,Hindu,372
+Exeter,E07000041,Exeter,Jewish,155
+Exeter,E07000041,Exeter,Muslim,1855
+Exeter,E07000041,Exeter,Sikh,160
+Exeter,E07000041,Exeter,Other religion,671
+Exeter,E07000041,Exeter,No religion,40862
+Exeter,E07000041,Exeter,Religion not stated,9529
+Mid Devon,E07000042,Mid Devon,Christian,48273
+Mid Devon,E07000042,Mid Devon,Buddhist,224
+Mid Devon,E07000042,Mid Devon,Hindu,96
+Mid Devon,E07000042,Mid Devon,Jewish,46
+Mid Devon,E07000042,Mid Devon,Muslim,112
+Mid Devon,E07000042,Mid Devon,Sikh,5
+Mid Devon,E07000042,Mid Devon,Other religion,366
+Mid Devon,E07000042,Mid Devon,No religion,22122
+Mid Devon,E07000042,Mid Devon,Religion not stated,6506
+North Devon,E07000043,North Devon,Christian,57426
+North Devon,E07000043,North Devon,Buddhist,283
+North Devon,E07000043,North Devon,Hindu,101
+North Devon,E07000043,North Devon,Jewish,52
+North Devon,E07000043,North Devon,Muslim,281
+North Devon,E07000043,North Devon,Sikh,57
+North Devon,E07000043,North Devon,Other religion,473
+North Devon,E07000043,North Devon,No religion,26983
+North Devon,E07000043,North Devon,Religion not stated,8011
+South Hams,E07000044,South Hams,Christian,51181
+South Hams,E07000044,South Hams,Buddhist,468
+South Hams,E07000044,South Hams,Hindu,56
+South Hams,E07000044,South Hams,Jewish,109
+South Hams,E07000044,South Hams,Muslim,201
+South Hams,E07000044,South Hams,Sikh,5
+South Hams,E07000044,South Hams,Other religion,634
+South Hams,E07000044,South Hams,No religion,23068
+South Hams,E07000044,South Hams,Religion not stated,7418
+Teignbridge,E07000045,Teignbridge,Christian,77289
+Teignbridge,E07000045,Teignbridge,Buddhist,414
+Teignbridge,E07000045,Teignbridge,Hindu,74
+Teignbridge,E07000045,Teignbridge,Jewish,95
+Teignbridge,E07000045,Teignbridge,Muslim,231
+Teignbridge,E07000045,Teignbridge,Sikh,11
+Teignbridge,E07000045,Teignbridge,Other religion,727
+Teignbridge,E07000045,Teignbridge,No religion,34939
+Teignbridge,E07000045,Teignbridge,Religion not stated,10440
+Torridge,E07000046,Torridge,Christian,40110
+Torridge,E07000046,Torridge,Buddhist,151
+Torridge,E07000046,Torridge,Hindu,30
+Torridge,E07000046,Torridge,Jewish,37
+Torridge,E07000046,Torridge,Muslim,92
+Torridge,E07000046,Torridge,Sikh,5
+Torridge,E07000046,Torridge,Other religion,420
+Torridge,E07000046,Torridge,No religion,17537
+Torridge,E07000046,Torridge,Religion not stated,5457
+West Devon,E07000047,West Devon,Christian,34079
+West Devon,E07000047,West Devon,Buddhist,152
+West Devon,E07000047,West Devon,Hindu,34
+West Devon,E07000047,West Devon,Jewish,49
+West Devon,E07000047,West Devon,Muslim,90
+West Devon,E07000047,West Devon,Sikh,7
+West Devon,E07000047,West Devon,Other religion,313
+West Devon,E07000047,West Devon,No religion,14254
+West Devon,E07000047,West Devon,Religion not stated,4575
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Christian,32057
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Buddhist,157
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Hindu,51
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Jewish,96
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Muslim,146
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Sikh,5
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Other religion,264
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,No religion,11291
+"Bournemouth, Christchurch and Poole",E06000058,Christchurch,Religion not stated,3685
+Dorset,E06000059,East Dorset,Christian,58251
+Dorset,E06000059,East Dorset,Buddhist,156
+Dorset,E06000059,East Dorset,Hindu,103
+Dorset,E06000059,East Dorset,Jewish,148
+Dorset,E06000059,East Dorset,Muslim,352
+Dorset,E06000059,East Dorset,Sikh,12
+Dorset,E06000059,East Dorset,Other religion,359
+Dorset,E06000059,East Dorset,No religion,21103
+Dorset,E06000059,East Dorset,Religion not stated,6682
+Dorset,E06000059,North Dorset,Christian,45631
+Dorset,E06000059,North Dorset,Buddhist,262
+Dorset,E06000059,North Dorset,Hindu,221
+Dorset,E06000059,North Dorset,Jewish,92
+Dorset,E06000059,North Dorset,Muslim,186
+Dorset,E06000059,North Dorset,Sikh,10
+Dorset,E06000059,North Dorset,Other religion,341
+Dorset,E06000059,North Dorset,No religion,16323
+Dorset,E06000059,North Dorset,Religion not stated,5517
+Dorset,E06000059,Purbeck,Christian,29239
+Dorset,E06000059,Purbeck,Buddhist,111
+Dorset,E06000059,Purbeck,Hindu,5
+Dorset,E06000059,Purbeck,Jewish,36
+Dorset,E06000059,Purbeck,Muslim,69
+Dorset,E06000059,Purbeck,Sikh,2
+Dorset,E06000059,Purbeck,Other religion,217
+Dorset,E06000059,Purbeck,No religion,11642
+Dorset,E06000059,Purbeck,Religion not stated,3652
+Dorset,E06000059,West Dorset,Christian,64793
+Dorset,E06000059,West Dorset,Buddhist,334
+Dorset,E06000059,West Dorset,Hindu,121
+Dorset,E06000059,West Dorset,Jewish,86
+Dorset,E06000059,West Dorset,Muslim,257
+Dorset,E06000059,West Dorset,Sikh,13
+Dorset,E06000059,West Dorset,Other religion,594
+Dorset,E06000059,West Dorset,No religion,24783
+Dorset,E06000059,West Dorset,Religion not stated,8283
+Dorset,E06000059,Weymouth and Portland,Christian,39766
+Dorset,E06000059,Weymouth and Portland,Buddhist,260
+Dorset,E06000059,Weymouth and Portland,Hindu,49
+Dorset,E06000059,Weymouth and Portland,Jewish,61
+Dorset,E06000059,Weymouth and Portland,Muslim,308
+Dorset,E06000059,Weymouth and Portland,Sikh,46
+Dorset,E06000059,Weymouth and Portland,Other religion,455
+Dorset,E06000059,Weymouth and Portland,No religion,19079
+Dorset,E06000059,Weymouth and Portland,Religion not stated,5143
+Cheltenham,E07000078,Cheltenham,Christian,67955
+Cheltenham,E07000078,Cheltenham,Buddhist,505
+Cheltenham,E07000078,Cheltenham,Hindu,938
+Cheltenham,E07000078,Cheltenham,Jewish,160
+Cheltenham,E07000078,Cheltenham,Muslim,1087
+Cheltenham,E07000078,Cheltenham,Sikh,147
+Cheltenham,E07000078,Cheltenham,Other religion,514
+Cheltenham,E07000078,Cheltenham,No religion,35593
+Cheltenham,E07000078,Cheltenham,Religion not stated,8833
+Cotswold,E07000079,Cotswold,Christian,56923
+Cotswold,E07000079,Cotswold,Buddhist,217
+Cotswold,E07000079,Cotswold,Hindu,114
+Cotswold,E07000079,Cotswold,Jewish,123
+Cotswold,E07000079,Cotswold,Muslim,164
+Cotswold,E07000079,Cotswold,Sikh,7
+Cotswold,E07000079,Cotswold,Other religion,314
+Cotswold,E07000079,Cotswold,No religion,18979
+Cotswold,E07000079,Cotswold,Religion not stated,6040
+Forest of Dean,E07000080,Forest of Dean,Christian,53912
+Forest of Dean,E07000080,Forest of Dean,Buddhist,200
+Forest of Dean,E07000080,Forest of Dean,Hindu,57
+Forest of Dean,E07000080,Forest of Dean,Jewish,46
+Forest of Dean,E07000080,Forest of Dean,Muslim,94
+Forest of Dean,E07000080,Forest of Dean,Sikh,57
+Forest of Dean,E07000080,Forest of Dean,Other religion,441
+Forest of Dean,E07000080,Forest of Dean,No religion,20646
+Forest of Dean,E07000080,Forest of Dean,Religion not stated,6508
+Gloucester,E07000081,Gloucester,Christian,75881
+Gloucester,E07000081,Gloucester,Buddhist,311
+Gloucester,E07000081,Gloucester,Hindu,728
+Gloucester,E07000081,Gloucester,Jewish,50
+Gloucester,E07000081,Gloucester,Muslim,3885
+Gloucester,E07000081,Gloucester,Sikh,134
+Gloucester,E07000081,Gloucester,Other religion,499
+Gloucester,E07000081,Gloucester,No religion,31851
+Gloucester,E07000081,Gloucester,Religion not stated,8349
+Stroud,E07000082,Stroud,Christian,69921
+Stroud,E07000082,Stroud,Buddhist,366
+Stroud,E07000082,Stroud,Hindu,122
+Stroud,E07000082,Stroud,Jewish,107
+Stroud,E07000082,Stroud,Muslim,238
+Stroud,E07000082,Stroud,Sikh,40
+Stroud,E07000082,Stroud,Other religion,888
+Stroud,E07000082,Stroud,No religion,31968
+Stroud,E07000082,Stroud,Religion not stated,9129
+Tewkesbury,E07000083,Tewkesbury,Christian,54552
+Tewkesbury,E07000083,Tewkesbury,Buddhist,173
+Tewkesbury,E07000083,Tewkesbury,Hindu,263
+Tewkesbury,E07000083,Tewkesbury,Jewish,53
+Tewkesbury,E07000083,Tewkesbury,Muslim,273
+Tewkesbury,E07000083,Tewkesbury,Sikh,64
+Tewkesbury,E07000083,Tewkesbury,Other religion,284
+Tewkesbury,E07000083,Tewkesbury,No religion,20459
+Tewkesbury,E07000083,Tewkesbury,Religion not stated,5822
+Mendip,E07000187,Mendip,Christian,67683
+Mendip,E07000187,Mendip,Buddhist,510
+Mendip,E07000187,Mendip,Hindu,113
+Mendip,E07000187,Mendip,Jewish,81
+Mendip,E07000187,Mendip,Muslim,270
+Mendip,E07000187,Mendip,Sikh,14
+Mendip,E07000187,Mendip,Other religion,1224
+Mendip,E07000187,Mendip,No religion,29913
+Mendip,E07000187,Mendip,Religion not stated,9471
+Sedgemoor,E07000188,Sedgemoor,Christian,74069
+Sedgemoor,E07000188,Sedgemoor,Buddhist,256
+Sedgemoor,E07000188,Sedgemoor,Hindu,74
+Sedgemoor,E07000188,Sedgemoor,Jewish,45
+Sedgemoor,E07000188,Sedgemoor,Muslim,341
+Sedgemoor,E07000188,Sedgemoor,Sikh,48
+Sedgemoor,E07000188,Sedgemoor,Other religion,577
+Sedgemoor,E07000188,Sedgemoor,No religion,30399
+Sedgemoor,E07000188,Sedgemoor,Religion not stated,8779
+South Somerset,E07000189,South Somerset,Christian,106336
+South Somerset,E07000189,South Somerset,Buddhist,376
+South Somerset,E07000189,South Somerset,Hindu,135
+South Somerset,E07000189,South Somerset,Jewish,124
+South Somerset,E07000189,South Somerset,Muslim,417
+South Somerset,E07000189,South Somerset,Sikh,15
+South Somerset,E07000189,South Somerset,Other religion,808
+South Somerset,E07000189,South Somerset,No religion,40637
+South Somerset,E07000189,South Somerset,Religion not stated,12395
+Somerset West and Taunton,E07000246,Taunton Deane,Christian,68419
+Somerset West and Taunton,E07000246,Taunton Deane,Buddhist,357
+Somerset West and Taunton,E07000246,Taunton Deane,Hindu,179
+Somerset West and Taunton,E07000246,Taunton Deane,Jewish,69
+Somerset West and Taunton,E07000246,Taunton Deane,Muslim,399
+Somerset West and Taunton,E07000246,Taunton Deane,Sikh,14
+Somerset West and Taunton,E07000246,Taunton Deane,Other religion,557
+Somerset West and Taunton,E07000246,Taunton Deane,No religion,31436
+Somerset West and Taunton,E07000246,Taunton Deane,Religion not stated,8757
+Somerset West and Taunton,E07000246,West Somerset,Christian,22704
+Somerset West and Taunton,E07000246,West Somerset,Buddhist,113
+Somerset West and Taunton,E07000246,West Somerset,Hindu,5
+Somerset West and Taunton,E07000246,West Somerset,Jewish,18
+Somerset West and Taunton,E07000246,West Somerset,Muslim,43
+Somerset West and Taunton,E07000246,West Somerset,Sikh,9
+Somerset West and Taunton,E07000246,West Somerset,Other religion,195
+Somerset West and Taunton,E07000246,West Somerset,No religion,8686
+Somerset West and Taunton,E07000246,West Somerset,Religion not stated,2902
+Isle of Anglesey,W06000001,Isle of Anglesey,Christian,45400
+Isle of Anglesey,W06000001,Isle of Anglesey,Buddhist,165
+Isle of Anglesey,W06000001,Isle of Anglesey,Hindu,45
+Isle of Anglesey,W06000001,Isle of Anglesey,Jewish,40
+Isle of Anglesey,W06000001,Isle of Anglesey,Muslim,250
+Isle of Anglesey,W06000001,Isle of Anglesey,Sikh,43
+Isle of Anglesey,W06000001,Isle of Anglesey,Other religion,257
+Isle of Anglesey,W06000001,Isle of Anglesey,No religion,17797
+Isle of Anglesey,W06000001,Isle of Anglesey,Religion not stated,5754
+Gwynedd,W06000002,Gwynedd,Christian,72503
+Gwynedd,W06000002,Gwynedd,Buddhist,426
+Gwynedd,W06000002,Gwynedd,Hindu,238
+Gwynedd,W06000002,Gwynedd,Jewish,55
+Gwynedd,W06000002,Gwynedd,Muslim,1378
+Gwynedd,W06000002,Gwynedd,Sikh,39
+Gwynedd,W06000002,Gwynedd,Other religion,637
+Gwynedd,W06000002,Gwynedd,No religion,36163
+Gwynedd,W06000002,Gwynedd,Religion not stated,10435
+Conwy,W06000003,Conwy,Christian,74506
+Conwy,W06000003,Conwy,Buddhist,347
+Conwy,W06000003,Conwy,Hindu,206
+Conwy,W06000003,Conwy,Jewish,62
+Conwy,W06000003,Conwy,Muslim,583
+Conwy,W06000003,Conwy,Sikh,17
+Conwy,W06000003,Conwy,Other religion,478
+Conwy,W06000003,Conwy,No religion,30017
+Conwy,W06000003,Conwy,Religion not stated,9012
+Denbighshire,W06000004,Denbighshire,Christian,60129
+Denbighshire,W06000004,Denbighshire,Buddhist,266
+Denbighshire,W06000004,Denbighshire,Hindu,167
+Denbighshire,W06000004,Denbighshire,Jewish,32
+Denbighshire,W06000004,Denbighshire,Muslim,469
+Denbighshire,W06000004,Denbighshire,Sikh,8
+Denbighshire,W06000004,Denbighshire,Other religion,345
+Denbighshire,W06000004,Denbighshire,No religion,25132
+Denbighshire,W06000004,Denbighshire,Religion not stated,7186
+Flintshire,W06000005,Flintshire,Christian,101298
+Flintshire,W06000005,Flintshire,Buddhist,344
+Flintshire,W06000005,Flintshire,Hindu,158
+Flintshire,W06000005,Flintshire,Jewish,70
+Flintshire,W06000005,Flintshire,Muslim,482
+Flintshire,W06000005,Flintshire,Sikh,29
+Flintshire,W06000005,Flintshire,Other religion,362
+Flintshire,W06000005,Flintshire,No religion,38726
+Flintshire,W06000005,Flintshire,Religion not stated,11037
+Wrexham,W06000006,Wrexham,Christian,85576
+Wrexham,W06000006,Wrexham,Buddhist,351
+Wrexham,W06000006,Wrexham,Hindu,504
+Wrexham,W06000006,Wrexham,Jewish,58
+Wrexham,W06000006,Wrexham,Muslim,860
+Wrexham,W06000006,Wrexham,Sikh,87
+Wrexham,W06000006,Wrexham,Other religion,310
+Wrexham,W06000006,Wrexham,No religion,36927
+Wrexham,W06000006,Wrexham,Religion not stated,10171
+Powys,W06000023,Powys,Christian,82120
+Powys,W06000023,Powys,Buddhist,567
+Powys,W06000023,Powys,Hindu,324
+Powys,W06000023,Powys,Jewish,80
+Powys,W06000023,Powys,Muslim,235
+Powys,W06000023,Powys,Sikh,49
+Powys,W06000023,Powys,Other religion,798
+Powys,W06000023,Powys,No religion,37050
+Powys,W06000023,Powys,Religion not stated,11753
+Ceredigion,W06000008,Ceredigion,Christian,43981
+Ceredigion,W06000008,Ceredigion,Buddhist,355
+Ceredigion,W06000008,Ceredigion,Hindu,197
+Ceredigion,W06000008,Ceredigion,Jewish,64
+Ceredigion,W06000008,Ceredigion,Muslim,521
+Ceredigion,W06000008,Ceredigion,Sikh,30
+Ceredigion,W06000008,Ceredigion,Other religion,742
+Ceredigion,W06000008,Ceredigion,No religion,23329
+Ceredigion,W06000008,Ceredigion,Religion not stated,6703
+Pembrokeshire,W06000009,Pembrokeshire,Christian,77162
+Pembrokeshire,W06000009,Pembrokeshire,Buddhist,422
+Pembrokeshire,W06000009,Pembrokeshire,Hindu,230
+Pembrokeshire,W06000009,Pembrokeshire,Jewish,50
+Pembrokeshire,W06000009,Pembrokeshire,Muslim,425
+Pembrokeshire,W06000009,Pembrokeshire,Sikh,36
+Pembrokeshire,W06000009,Pembrokeshire,Other religion,648
+Pembrokeshire,W06000009,Pembrokeshire,No religion,33442
+Pembrokeshire,W06000009,Pembrokeshire,Religion not stated,10024
+Carmarthenshire,W06000010,Carmarthenshire,Christian,113534
+Carmarthenshire,W06000010,Carmarthenshire,Buddhist,420
+Carmarthenshire,W06000010,Carmarthenshire,Hindu,351
+Carmarthenshire,W06000010,Carmarthenshire,Jewish,82
+Carmarthenshire,W06000010,Carmarthenshire,Muslim,625
+Carmarthenshire,W06000010,Carmarthenshire,Sikh,125
+Carmarthenshire,W06000010,Carmarthenshire,Other religion,945
+Carmarthenshire,W06000010,Carmarthenshire,No religion,53036
+Carmarthenshire,W06000010,Carmarthenshire,Religion not stated,14659
+Swansea,W06000011,Swansea,Christian,131451
+Swansea,W06000011,Swansea,Buddhist,856
+Swansea,W06000011,Swansea,Hindu,780
+Swansea,W06000011,Swansea,Jewish,159
+Swansea,W06000011,Swansea,Muslim,5415
+Swansea,W06000011,Swansea,Sikh,278
+Swansea,W06000011,Swansea,Other religion,1042
+Swansea,W06000011,Swansea,No religion,81219
+Swansea,W06000011,Swansea,Religion not stated,17823
+Neath Port Talbot,W06000012,Neath Port Talbot,Christian,80646
+Neath Port Talbot,W06000012,Neath Port Talbot,Buddhist,312
+Neath Port Talbot,W06000012,Neath Port Talbot,Hindu,144
+Neath Port Talbot,W06000012,Neath Port Talbot,Jewish,39
+Neath Port Talbot,W06000012,Neath Port Talbot,Muslim,573
+Neath Port Talbot,W06000012,Neath Port Talbot,Sikh,113
+Neath Port Talbot,W06000012,Neath Port Talbot,Other religion,533
+Neath Port Talbot,W06000012,Neath Port Talbot,No religion,47265
+Neath Port Talbot,W06000012,Neath Port Talbot,Religion not stated,10187
+Bridgend,W06000013,Bridgend,Christian,76625
+Bridgend,W06000013,Bridgend,Buddhist,357
+Bridgend,W06000013,Bridgend,Hindu,270
+Bridgend,W06000013,Bridgend,Jewish,33
+Bridgend,W06000013,Bridgend,Muslim,529
+Bridgend,W06000013,Bridgend,Sikh,46
+Bridgend,W06000013,Bridgend,Other religion,495
+Bridgend,W06000013,Bridgend,No religion,51062
+Bridgend,W06000013,Bridgend,Religion not stated,9761
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Christian,73384
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Buddhist,356
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Hindu,269
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Jewish,90
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Muslim,785
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Sikh,75
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Other religion,528
+Vale of Glamorgan,W06000014,Vale of Glamorgan,No religion,41556
+Vale of Glamorgan,W06000014,Vale of Glamorgan,Religion not stated,9293
+Cardiff,W06000015,Cardiff,Christian,177743
+Cardiff,W06000015,Cardiff,Buddhist,1690
+Cardiff,W06000015,Cardiff,Hindu,4736
+Cardiff,W06000015,Cardiff,Jewish,802
+Cardiff,W06000015,Cardiff,Muslim,23656
+Cardiff,W06000015,Cardiff,Sikh,1317
+Cardiff,W06000015,Cardiff,Other religion,1406
+Cardiff,W06000015,Cardiff,No religion,109960
+Cardiff,W06000015,Cardiff,Religion not stated,24780
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Christian,118388
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Buddhist,518
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Hindu,401
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Jewish,87
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Muslim,1061
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Sikh,183
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Other religion,870
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,No religion,95549
+Rhondda Cynon Taf,W06000016,Rhondda Cynon Taff,Religion not stated,17353
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Christian,32948
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Buddhist,124
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Hindu,80
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Jewish,4
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Muslim,197
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Sikh,52
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Other religion,221
+Merthyr Tydfil,W06000024,Merthyr Tydfil,No religion,21048
+Merthyr Tydfil,W06000024,Merthyr Tydfil,Religion not stated,4128
+Caerphilly,W06000018,Caerphilly,Christian,90669
+Caerphilly,W06000018,Caerphilly,Buddhist,278
+Caerphilly,W06000018,Caerphilly,Hindu,174
+Caerphilly,W06000018,Caerphilly,Jewish,69
+Caerphilly,W06000018,Caerphilly,Muslim,391
+Caerphilly,W06000018,Caerphilly,Sikh,152
+Caerphilly,W06000018,Caerphilly,Other religion,665
+Caerphilly,W06000018,Caerphilly,No religion,73084
+Caerphilly,W06000018,Caerphilly,Religion not stated,13324
+Blaenau Gwent,W06000019,Blaenau Gwent,Christian,34805
+Blaenau Gwent,W06000019,Blaenau Gwent,Buddhist,112
+Blaenau Gwent,W06000019,Blaenau Gwent,Hindu,72
+Blaenau Gwent,W06000019,Blaenau Gwent,Jewish,8
+Blaenau Gwent,W06000019,Blaenau Gwent,Muslim,179
+Blaenau Gwent,W06000019,Blaenau Gwent,Sikh,39
+Blaenau Gwent,W06000019,Blaenau Gwent,Other religion,253
+Blaenau Gwent,W06000019,Blaenau Gwent,No religion,28676
+Blaenau Gwent,W06000019,Blaenau Gwent,Religion not stated,5670
+Torfaen,W06000020,Torfaen,Christian,50472
+Torfaen,W06000020,Torfaen,Buddhist,222
+Torfaen,W06000020,Torfaen,Hindu,241
+Torfaen,W06000020,Torfaen,Jewish,16
+Torfaen,W06000020,Torfaen,Muslim,238
+Torfaen,W06000020,Torfaen,Sikh,56
+Torfaen,W06000020,Torfaen,Other religion,316
+Torfaen,W06000020,Torfaen,No religion,32605
+Torfaen,W06000020,Torfaen,Religion not stated,6909
+Monmouthshire,W06000021,Monmouthshire,Christian,57101
+Monmouthshire,W06000021,Monmouthshire,Buddhist,269
+Monmouthshire,W06000021,Monmouthshire,Hindu,162
+Monmouthshire,W06000021,Monmouthshire,Jewish,65
+Monmouthshire,W06000021,Monmouthshire,Muslim,239
+Monmouthshire,W06000021,Monmouthshire,Sikh,47
+Monmouthshire,W06000021,Monmouthshire,Other religion,391
+Monmouthshire,W06000021,Monmouthshire,No religion,26018
+Monmouthshire,W06000021,Monmouthshire,Religion not stated,7031
+Newport,W06000022,Newport,Christian,82858
+Newport,W06000022,Newport,Buddhist,360
+Newport,W06000022,Newport,Hindu,685
+Newport,W06000022,Newport,Jewish,99
+Newport,W06000022,Newport,Muslim,6859
+Newport,W06000022,Newport,Sikh,141
+Newport,W06000022,Newport,Other religion,463
+Newport,W06000022,Newport,No religion,43336
+Newport,W06000022,Newport,Religion not stated,10935

@@ -12,8 +12,9 @@ module "app-system-ci" {
   deploy_events_sns_arn        = data.terraform_remote_state.app_services_core_infra.outputs.cicd_deploy_events_sns_arn
   account                      = "dev"
   # Secrets manager entry containing the GitHub API token
-  github_credentials  = "/ci/github"
-  target_environments = var.target_environments
-  allow_dev_pipelines = true
-  repository_url      = "https://github.com/nihp-public/covid19-app-system-public.git"
+  github_credentials   = "/ci/github"
+  target_environments  = var.target_environments
+  allow_dev_pipelines  = true
+  allow_prod_pipelines = false
+  repository_url       = "https://github.com/nihp-public/covid19-app-system-public.git"
 }

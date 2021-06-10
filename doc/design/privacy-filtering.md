@@ -6,7 +6,7 @@ The combination of the two fields can lead under certain circumstances to the id
 
 To preserve user privacy the CTA backend system filters analytics submissions _before_ persisting and forwarding the analytics data.
 
-This filtering is done using a list provided by ONS. The list used at any point in time is [versioned with the system](../../src/aws/lambdas/incremental_distribution/src/main/resources/analyticssubmission/PD_LA_to_MergedPD_LA.csv).
+This filtering is done using a list provided by ONS. The list used at any point in time is [versioned with the system](../../src/aws/lambdas/incremental_distribution/cta/src/main/resources/analyticssubmission/PD_LA_to_MergedPD_LA.csv).
 
 The list contains a key (Postcode_District_LAD_ID) - this is the concatenation of the post district with the local authority code - that maps to the local authority and post district values to enter when matched.
 

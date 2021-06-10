@@ -114,6 +114,10 @@ variable "aae_mobile_analytics_events_subscription_secret_name" {
   description = "Name of the SecretsManager secret containing the Ocp-Apim-Subscription-Key HTTP header value (string secret)"
 }
 
+variable "virology_test_stats_bucket_id" {
+  description = "The S3 bucket containing statistics for virology test stats"
+}
+
 variable "qr_posters_bucket_location" {
   description = "QR posters bucket location for quicksight usage"
 }

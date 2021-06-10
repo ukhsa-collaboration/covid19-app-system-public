@@ -42,6 +42,31 @@ module NHSx
       raise GaudiError, "Expecting status code to be 202 but was #{resp.status}" unless resp.status == 202
     end
 
+    def result(url, payload, target_env_config, system_config)
+      authentication_token = target_env_config["auth_headers"]["mobile"]
+      lambda_function = target_env_config["virology_submission_lambda_function_name"]
+      custom_oai = NHSx::AWS::Commandlines.get_lambda_custom_oai(lambda_function, system_config)
+
+      headers = {
+        "Content-Type" => "application/json",
+        "Authorization" => authentication_token,
+        "x-custom-oai" => custom_oai
+      }
+
+      resp = Faraday.post(url) do |req|
+        req.headers = headers
+        req.body = JSON.dump(payload)
+      end
+
+      if resp.status == 204
+        return { "status" => "pending" }
+      elsif resp.status == 200
+        return JSON.parse(resp.body)
+      else
+        raise GaudiError, "Expecting status code to be 200 or 204 but was #{resp.status}"
+      end
+    end
+
     def token_gen(url, payload, target_env_config, system_config)
       authentication_token = target_env_config["auth_headers"]["testResultUpload"]
       lambda_function = target_env_config["virology_upload_lambda_function_name"]

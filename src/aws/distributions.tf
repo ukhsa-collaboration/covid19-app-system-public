@@ -128,6 +128,16 @@ module "diagnosis_keys_distribution_store" {
   tags                        = var.tags
 }
 
+module "local_messages_distribution" {
+  source                   = "./modules/distribution"
+  name                     = "local-messages"
+  default_payload          = null
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = var.s3_versioning
+  policy_document          = module.local_messages_distribution_access.policy_document
+  tags                     = var.tags
+}
 
 module "distribution_apis" {
   source = "./libraries/cloudfront_distribution_facade"
@@ -172,6 +182,10 @@ module "distribution_apis" {
   risky_venue_configuration_payload                     = module.risky_venue_configuration_distribution.name
   risky_venue_configuration_origin_access_identity_path = module.risky_venue_configuration_distribution.origin_access_identity_path
 
+  local_messages_bucket_regional_domain_name = module.local_messages_distribution.store.bucket_regional_domain_name
+  local_messages_payload                     = module.local_messages_distribution.name
+  local_messages_origin_access_identity_path = module.local_messages_distribution.origin_access_identity_path
+
   domain                   = var.base_domain
   web_acl_arn              = var.waf_arn
   enable_shield_protection = var.enable_shield_protection
@@ -213,6 +227,9 @@ output "availability_ios_distribution_endpoint" {
 output "risky_venue_configuration_distribution_endpoint" {
   value = "https://${module.distribution_apis.distribution_domain_name}/distribution/${module.risky_venue_configuration_distribution.name}"
 }
+output "local_messages_distribution_endpoint" {
+  value = "https://${module.distribution_apis.distribution_domain_name}/distribution/${module.local_messages_distribution.name}"
+}
 
 output "exposure_configuration_distribution_store" {
   value = module.exposure_configuration_distribution.store.bucket
@@ -240,4 +257,7 @@ output "availability_ios_distribution_store" {
 }
 output "risky_venue_configuration_distribution_store" {
   value = module.risky_venue_configuration_distribution.store.bucket
+}
+output "local_messages_distribution_store" {
+  value = module.local_messages_distribution.store.bucket
 }

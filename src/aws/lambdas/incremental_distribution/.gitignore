@@ -9,3 +9,4 @@ target
 /infra/build/
 /analytics/build/
 /analytics-exporter/build/
+/cta/build/

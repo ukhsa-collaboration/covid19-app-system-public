@@ -15,6 +15,7 @@ namespace :deploy do
           Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["deploy:#{tgt_env}"].invoke
           Rake::Task["publish:tier_metadata:#{tgt_env}"].invoke unless account == "dev" and tgt_env == "branch"
+          Rake::Task["publish:local_messages:#{tgt_env}"].invoke
           Rake::Task["test:sanity_check:#{tgt_env}"].invoke
           Rake::Task["report:changes"].invoke
         ensure

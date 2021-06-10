@@ -1,0 +1,14 @@
+version: 0.2
+env:
+  shell: bash
+  git-credential-helper: yes
+phases:
+  build:
+    commands:
+      - rake config:codebuild
+      - rake release:pubdash:$TARGET_ENVIRONMENT RELEASE_VERSION=$RELEASE_VERSION
+artifacts:
+  name: $(date +%Y%m%d%H%M%S)-release-pubdash-$TARGET_ENVIRONMENT.zip
+  files:
+    - "out/**/*"
+  discard-paths: no

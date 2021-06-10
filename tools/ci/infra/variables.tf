@@ -25,6 +25,10 @@ variable "allow_dev_pipelines" {
   description = "Flag to control the deployment of pipelines used for development"
 }
 
+variable "allow_prod_pipelines" {
+  description = "Flag to control the deployment of pipelines used for production"
+}
+
 variable "build_failure_events_sns_arn" {
   description = "SNS topic to publish the build failure notifications"
 }

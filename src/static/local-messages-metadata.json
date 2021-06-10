@@ -1,0 +1,298 @@
+{
+  "messages": {
+    "Notification.Voc.Generic": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "zh": {
+          "head": "[postcode]：您所在的地区存在 COVID-19 变种",
+          "body": "[postcode]：地区报告有冠状病毒新变种。",
+          "content": [
+            {
+              "type": "para",
+              "text": "[postcode]：地区报告有冠状病毒新变种。"
+            },
+            {
+              "type": "para",
+              "text": "如果您出现了冠状病毒 (COVID-19) 的相关症状，请点击应用程序中的“Check symptoms”（检查症状）按钮并预约检测。"
+            },
+            {
+              "type": "para",
+              "text": "如果您没有出现症状，我们将要求尽可能多的人进行 PCR 检测，以便发现任何新变种的病例并帮助抑制病毒的传播。我们将在您所在的地区提供更多的检测机会。"
+            },
+            {
+              "type": "para",
+              "text": "如需了解更多信息，请访问地方当局网站:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "查找地方当局网站"
+            }
+          ]
+        },
+        "en": {
+          "head": "[postcode]: a variant of COVID-19 is in your area",
+          "body": "There have been reported cases of a new variant in [postcode].",
+          "content": [
+            {
+              "type": "para",
+              "text": "There have been reported cases of a new variant in [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "If you have coronavirus (COVID-19) symptoms, please select the 'Check symptoms' button in the app and book a test."
+            },
+            {
+              "type": "para",
+              "text": "If you do not have symptoms, we are asking as many people as possible to get a PCR test so we can find any cases of the variant and help suppress the spread of the virus. We are making more testing available in your area."
+            },
+            {
+              "type": "para",
+              "text": "For more information please visit your Local Authority website:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Find your local authority website"
+            }
+          ]
+        },
+        "ar": {
+          "head": "[postcode]: تفشي سلالة جديدة من فيروس كوفيد-19 في منطقتكم",
+          "body": "تم الإبلاغ عن ظهور حالاتٍ من سلالة جديدة في [postcode].",
+          "content": [
+            {
+              "type": "para",
+              "text": "تم الإبلاغ عن ظهور حالاتٍ من سلالة جديدة في [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "إذا كنت تعاني من أعراض الإصابة بفيروس كورونا (كوفيد-19)، يُرجى تحديد زرِّ \"التحقق من الأعراض\" الموجود في التطبيق وحجز موعدٍ لإجراء الاختبار."
+            },
+            {
+              "type": "para",
+              "text": "إذا كنت لا تعاني من أيّ أعراضٍ، فإننا بصدد مطالبة أكبر عددٍ ممكنٍ من الأشخاص بإجراء اختبار PCR حتى يتسنى لنا اكتشاف أي حالاتٍ مصابة بالسلالة والمساعدة في إيقاف تفشي الفيروس؛ علمًا بأننا نوفر المزيد من الاختبارات في منطقتك."
+            },
+            {
+              "type": "para",
+              "text": "للاطلاع على المزيد من المعلومات، يُرجى زيارة الموقع الإلكتروني للسلطة المحلية لديكم:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "البحث عن الموقع الإلكتروني للسلطة المحلية لديك"
+            }
+          ]
+        },
+        "tr": {
+          "head": "[postcode]: bölgenizde COVID-19'un bir varyantı bulunuyor",
+          "body": "[postcode] bölgesinde yeni bir varyanta ait vakaların olduğu bildirilmiştir.",
+          "content": [
+            {
+              "type": "para",
+              "text": "[postcode] bölgesinde yeni bir varyanta ait vakaların olduğu bildirilmiştir."
+            },
+            {
+              "type": "para",
+              "text": "Koronavirüs (COVID-19) belirtilerine sahipseniz, lütfen uygulamada \"Belirtileri kontrol et\" düğmesini seçin ve bir test için rezervasyon yaptırın."
+            },
+            {
+              "type": "para",
+              "text": "Herhangi bir belirtiniz yoksa, varyanta ait vakaları bulmaya ve virüsün yayılmasını baskılamaya yardımcı olması için mümkün olduğu kadar fazla sayıda kişinin bir PCR test yaptırmasını istiyoruz. Bölgenizde daha fazla test olanağı sağlıyoruz."
+            },
+            {
+              "type": "para",
+              "text": "Daha fazla bilgi için lütfen Yerel Yönetiminizin web sitesini ziyaret edin:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Yerel yönetiminizin web sitesini bulun"
+            }
+          ]
+        },
+        "pl": {
+          "head": "[postcode]: wariant COVID-19 rozprzestrzenił się w Twoim rejonie",
+          "body": "W rejonie kodu pocztowego [postcode] wystąpiły przypadki nowego wariantu.",
+          "content": [
+            {
+              "type": "para",
+              "text": "W rejonie kodu pocztowego [postcode] wystąpiły przypadki nowego wariantu."
+            },
+            {
+              "type": "para",
+              "text": "Jeżeli masz objawy zakażenia koronawirusem (COVID-19), proszę wybrać opcję „Sprawdzanie objawów” w aplikacji i zamówić test."
+            },
+            {
+              "type": "para",
+              "text": "Nawet jeśli nie masz objawów, ważne jest, aby jak najwięcej osób wykonało test PCR, abyśmy mogli wykryć przypadki nowego wariantu wirusa i pomóc w zahamowaniu jego rozprzestrzeniania się. W Twoim rejonie udostępnionych zostało więcej możliwości wykonania testu."
+            },
+            {
+              "type": "para",
+              "text": "W celu uzyskania dalszych informacji, prosimy odwiedzić stronę swoich władz lokalnych:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Strona, na której dowiesz się, jakie są Twoje władze lokalne"
+            }
+          ]
+        },
+        "ro": {
+          "head": "[postcode]: o nouă tulpină de COVID-19 a fost depistată în zona dvs.",
+          "body": "Au fost raportate cazuri infectate cu o nouă tulpină în [postcode].",
+          "content": [
+            {
+              "type": "para",
+              "text": "Au fost raportate cazuri infectate cu o nouă tulpină în [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "Dacă aveți simptome de COVID-19, selectați butonul „Verificați simptomele” din aplicație și rezervați un test."
+            },
+            {
+              "type": "para",
+              "text": "Dacă nu aveți simptome, solicităm cât mai multor persoane să se testeze cu ajutorul unui test PCR, astfel încât să putem depista cazurile infectate cu noua tulpină și să putem opri răspândirea virusului. S-a suplimentat numărul testelor disponibile în zona dvs."
+            },
+            {
+              "type": "para",
+              "text": "Pentru mai multe informații, vă rugăm să vizitați pagina web a autorității locale:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Găsiți pagina web a autorității locale"
+            }
+          ]
+        },
+        "pa": {
+          "head": "[postcode]: ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ COVID-19 ਦਾ ਇੱਕ ਵੇਰੀਏਂਟ ਹੈ",
+          "body": "[postcode] ਵਿੱਚ ਇੱਕ ਨਵੇਂ ਵੇਰੀਏਂਟ ਦੇ ਮਾਮਲਿਆਂ ਦੀ ਰਿਪੋਰਟ ਕੀਤੀ ਗਈ ਹੈ।",
+          "content": [
+            {
+              "type": "para",
+              "text": "[postcode] ਵਿੱਚ ਇੱਕ ਨਵੇਂ ਵੇਰੀਏਂਟ ਦੇ ਮਾਮਲਿਆਂ ਦੀ ਰਿਪੋਰਟ ਕੀਤੀ ਗਈ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਜੇ ਤੁਹਾਡੇ ਵਿੱਚ ਕੋਰੋਨਾਵਾਇਰਸ (COVID-19) ਦੇ ਲੱਛਣ ਹਨ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਐਪ ਵਿੱਚ 'ਲੱਛਣਾਂ ਦੀ ਜਾਂਚ ਕਰੋ' ਬਟਨ ਦੀ ਚੋਣ ਕਰੋ ਅਤੇ ਇੱਕ ਟੈਸਟ ਬੁੱਕ ਕਰੋ।"
+            },
+            {
+              "type": "para",
+              "text": "ਜੇ ਤੁਹਾਡੇ ਵਿੱਚ ਕੋਈ ਲੱਛਣ ਨਹੀਂ ਹਨ, ਤਾਂ ਅਸੀਂ ਜਿੰਨੇ ਜ਼ਿਆਦਾ ਸੰਭਵ ਹੋ ਸਕੇ ਲੋਕਾਂ ਨੂੰ PCR ਟੈਸਟ ਕਰਵਾਉਣ ਲਈ ਕਹਿ ਰਹੇ ਹਾਂ ਤਾਂ ਜੋ ਅਸੀਂ ਵੇਰੀਏਂਟ ਦੇ ਕਿਸੇ ਵੀ ਮਾਮਲੇ ਨੂੰ ਲੱਭ ਸਕੀਏ ਅਤੇ ਵਾਇਰਸ ਦੇ ਫੈਲਣ ਨੂੰ ਦਬਾਉਣ ਵਿੱਚ ਮਦਦ ਕਰ ਸਕੀਏ। ਅਸੀਂ ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਵਧੇਰੇ ਜਾਂਚ ਉਪਲਬਧ ਕਰਾ ਰਹੇ ਹਾਂ।"
+            },
+            {
+              "type": "para",
+              "text": "ਵਧੇਰੇ ਜਾਣਕਾਰੀ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਿਟੀ ਦੀ ਵੈੱਬਸਾਈਟ ਵੇਖੋ:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਿਟੀ ਦੀ ਵੈੱਬਸਾਈਟ ਲੱਭੋ"
+            }
+          ]
+        },
+        "bn": {
+          "head": "[postcode]: আপনার এলাকায় কোভিড-১৯–এর একটি ধরণের সংক্রমণ পাওয়া গেছে",
+          "body": "[postcode] এ ভাইরাসের একটি নতুন ধরণ সংক্রমিত হওয়ার ঘটনা রিপোর্ট করা হয়েছে।",
+          "content": [
+            {
+              "type": "para",
+              "text": "[postcode] এ ভাইরাসের একটি নতুন ধরণ সংক্রমিত হওয়ার ঘটনা রিপোর্ট করা হয়েছে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার করোনাভাইরাস (কোভিড-১৯) উপসর্গ থাকলে, দয়া করে অ্যাপে 'উপসর্গ যাচাই করুন' বোতাম বেছে নিয়ে একটি পরীক্ষা বুক করুন।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার উপসর্গ না থাকলে, আমরা যত বেশি সম্ভব মানুষকে একটি পিসিআর পরীক্ষা করাতে বলছি, যাতে ভাইরাসের এই ধরণে কেউ আক্রান্ত হয়েছে কিনা তা জানা যায় এবং ভাইরাসটির বিস্তার রোধ করা যায়। আমরা আপনার এলাকায় আরো পরীক্ষা করানোর ব্যবস্থা করছি।"
+            },
+            {
+              "type": "para",
+              "text": "আরো তথ্যের জন্য অনুগ্রহ করে আপনার স্থানীয় কর্তৃপক্ষের ওয়েবসাইট দেখুন:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "আপনার স্থানীয় কর্তৃপক্ষের ওয়েবসাইট হলো:"
+            }
+          ]
+        },
+        "gu": {
+          "head": "[postcode]: તમારા વિસ્તારમાં કોવિડ-19 ના/નો વેરિએન્ટ છે",
+          "body": "[postcode] માં નવા વેરિએન્ટના કેસ નોંધાયા છે.",
+          "content": [
+            {
+              "type": "para",
+              "text": "[postcode] માં નવા વેરિએન્ટના કેસ નોંધાયા છે."
+            },
+            {
+              "type": "para",
+              "text": "જો તમને કોરોનાવાયરસના (કોવિડ-19) લક્ષણો છે, તો કૃપા કરીને એપમાં 'લક્ષણો તપાસો' બટન પસંદ કરો અને ટેસ્ટ બુક કરો."
+            },
+            {
+              "type": "para",
+              "text": "જો તમને લક્ષણો નથી, અમે શક્ય તેટલા લોકોને PCR ટેસ્ટ કરાવવા માટે કહી રહ્યા છીએ જેથી અમે કોઈ પણ વેરિએન્ટનાં કેસ શોધી શકીએ અને વાયરસના ફેલાવાને રોકવામાં મદદ કરી શકીએ. અમે તમારા વિસ્તારમાં વધુ ટેસ્ટ ઉપલબ્ધ કરી રહ્યા છીએ."
+            },
+            {
+              "type": "para",
+              "text": "વધું માહિતી માટે પ્લિઝ તમારી લૉકલ ઑથોરિટિની વેબસાઇટ પર જૂઓ:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "તમારી સ્થાનિક ઓથોરિટી વેબસાઇટ શોધો"
+            }
+          ]
+        },
+        "cy": {
+          "head": "[postcode]: mae amrywiolyn o COVID-19 yn eich ardal",
+          "body": "Rhoddwyd gwybod bod achosion o amrywiolyn newydd yn [postcode].",
+          "content": [
+            {
+              "type": "para",
+              "text": "Rhoddwyd gwybod bod achosion o amrywiolyn newydd yn [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "Os oes symptomau coronafeirws (COVID-19) arnoch chi, dewiswch y botwm 'Gwirio symptomau’ yn yr ap ac archebu prawf."
+            },
+            {
+              "type": "para",
+              "text": "Os nad oes symptomau arnoch, rydym yn gofyn i gynifer o bobl â phosibl i gael prawf PCR er mwyn i ni ddarganfod unrhyw achosion o’r amrywiolyn a helpu i atal lledaeniad y feirws. Rydym yn darparu rhagor o brofion yn eich ardal chi."
+            },
+            {
+              "type": "para",
+              "text": "I gael rhagor o wybodaeth, ewch i wefan eich Awdurdod Lleol:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Dod o hyd i wefan eich awdurdod lleol"
+            }
+          ]
+        },
+        "so": {
+          "head": "[postcode]: nooc ka mid ah COVID-19 ayaa ka jira aaggaaga",
+          "body": "Waxaa jira kiisas nooca cusub oo laga soo sheegay [postcode].",
+          "content": [
+            {
+              "type": "para",
+              "text": "Waxaa jira kiisas nooca cusub oo laga soo sheegay [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "Haddii aad leedahay astaamaha coronavirus (COVID-19), fadlan dooro batoonka 'Xulo astaamaha' ee ku yaal app-ka oo ballanso baaritaan."
+            },
+            {
+              "type": "para",
+              "text": "Haddii aadan lahayn astaamo, waxaannu weydiisaneynaa dad badan intii suurtogal ah in lagaa qaado baaritaanka PCR si aan u helno wax kiisas oo noocaas si aan uga hortagno faafitaanka fayraska. Waxaan diyaarinaynaa baaritaanno dheeraad ah oo laga heli karo aaggaaga."
+            },
+            {
+              "type": "para",
+              "text": "Wixii macluumaad dheeraad ah fadlan booqo websaydhka Maamulka Deegaankaaga:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Raadi degelka maamulka golaha deegaankaaga"
+            }
+          ]
+        },
+        "ur": {
+          "head": "[postcode]: آپ کے علاقے میں COVID-19 کی ایک قسم ہے.",
+          "body": "[postcode] میں ایک نئی قسم کے کیسسز کی اطلاع ملی ہے۔",
+          "content": [
+            {
+              "type": "para",
+              "text": "[postcode] میں ایک نئی قسم کے کیسسز کی اطلاع ملی ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "اگر آپ میں کورونا وائرس (COVID-19) کی علامات ہیں تو، براہ کرم ایپ میں 'علامات چیک کریں' بٹن کو منتخب کریں اور جانچ بُک کرائیں۔"
+            },
+            {
+              "type": "para",
+              "text": "اگر آپ میں علامات نہیں ہیں تو، ہم ممکن حد تک زیادہ سے زیادہ لوگوں سے PCR ٹیسٹ کرانے کی گزارش کر رہے ہیں، تاکہ ہم اس ویریئنٹ  ( دوسری قسم )  کے کسی کیس کا پتہ لگا سکیں اور وائرس کے پھیلاؤ کو دبانے میں مدد کر سکیں۔ ہم آپ کے علاقے میں مزید ٹیسٹنگ دستیاب کرا رہے ہیں۔"
+            },
+            {
+              "type": "para",
+              "text": "مزید معلومات کے لئے براہ کرم اپنی لوکل اتھارٹی کی ویب سائٹ دیکھیں:",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "اپنی لوکل اتھارٹی کی ویب سائٹ تلاش کریں"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

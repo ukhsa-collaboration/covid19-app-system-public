@@ -30,12 +30,12 @@ namespace :build do
     java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
     build_gradle_path = File.join(java_project_path, "build.gradle")
     java_output_path = File.join($configuration.out, "build")
-    jar_file = File.join(java_output_path, "javalambda-0.0.1-SNAPSHOT.zip")
+    jar_file = File.join(java_output_path, "cta-0.0.1-SNAPSHOT.zip")
     java_src_pattern = "#{$configuration.base}/src/aws/lambdas/incremental_distribution/src/**/*"
     gradlew = File.join(java_project_path, "gradlew")
 
     file jar_file => Rake::FileList[java_src_pattern, build_gradle_path] do
-      cmdline = "#{gradlew} --console plain -p #{java_project_path} clean lambdaZip"
+      cmdline = "#{gradlew} --console plain -p #{java_project_path} :cta:clean cta:lambdaZip"
       run_tee("Build incremental distribution lambda", cmdline, $configuration)
     end
     Rake::Task[jar_file].invoke

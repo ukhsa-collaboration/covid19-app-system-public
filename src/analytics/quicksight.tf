@@ -113,6 +113,7 @@ module "log_insights_analytics" {
   service                                  = local.service
   tags                                     = var.tags
   workgroup_name                           = module.workgroup.name
+  virology_test_stats_bucket_id            = var.virology_test_stats_bucket_id
 }
 
 module "postcode_demographic_geographic_lookup_v2" {
@@ -144,8 +145,44 @@ module "coronavirus_gov_public_data_lookup_wales" {
   country                  = "wales"
 }
 
-module "app_store_data_lookup" {
-  source                   = "./modules/app_store_data_lookup"
+module "analytics_app_store_extended" {
+  source                   = "./modules/analytics_app_store_extended"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "analytics_vaccinations_england" {
+  source                   = "./modules/analytics_vaccinations_england"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "local_authorities_religion_lookup" {
+  source                   = "./modules/local_authorities_religion_lookup"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "local_authorities_ethnicity_lookup" {
+  source                   = "./modules/local_authorities_ethnicity_lookup"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "england_deprivation_lookup" {
+  source                   = "./modules/england_deprivation_lookup_table"
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id

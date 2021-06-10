@@ -2279,7 +2279,7 @@
       "pa": "[postcode] ਚੇਤਾਵਨੀ ਪੱਧਰ 2 ਵਿੱਚ ਹੈ (ਦਰਮਿਆਨਾ ਜੋਖਮ)",
       "pl": "Kod pocztowy [postcode] znajduje się w 2. strefie ryzyka zakażenia (średnie)",
       "ro": "[postcode] se află în nivelul de alertă 2 (risc mediu)",
-      "so": "[postcode] wuxuu ku jiraa heerka feejignaanta 2 (halis dhexdhexaad)",
+      "so": "[postcode] wuxuu ku jiraa heerka feejignaanta 2aad (halis dhexdhexaad)",
       "tr": "[postcode] uyarı seviyesi 2'de yer alıyor (orta risk)",
       "ur": "[postcode] الرٹ لیول 2 (درمیانے خطرے ) میں ہے",
       "zh": "[postcode] 2 级警报（中度风险）"
@@ -2350,7 +2350,7 @@
         "pa": "[local authority] ([postcode]) ਚੇਤਾਵਨੀ ਪੱਧਰ 2 ਵਿੱਚ ਹੈ (ਦਰਮਿਆਨਾ ਜੋਖਮ)",
         "pl": "Kod pocztowy [local authority] ([postcode]) znajduje się w 2. strefie ryzyka zakażenia (średnie)",
         "ro": "[local authority] ([postcode]) se află în nivelul de alertă 2 (risc mediu)",
-        "so": "[local authority] ([postcode]) wuxuu ku jiraa heerka feejignaanta 2 (halis dhexdhexaad)",
+        "so": "[local authority] ([postcode]) wuxuu ku jiraa heerka feejignaanta 2aad (halis dhexdhexaad)",
         "tr": "[local authority] ([postcode]) uyarı seviyesi 2'de yer alıyor (orta risk)",
         "ur": "[local authority] ([postcode]) الرٹ لیول 2 (درمیانے خطرے ) میں ہے",
         "zh": "[local authority] ([postcode]) 2 级警报（中度风险）"
@@ -2364,7 +2364,7 @@
         "pa": "ਚੇਤਾਵਨੀ ਪੱਧਰ 2 'ਤੇ ਲਾਗੂ ਹੋਣ ਵਾਲੇ ਉਪਾਵਾਂ ਦਾ ਸਾਰ ਹੇਠਾਂ ਦਿੱਤਾ ਗਿਆ ਹੈ।",
         "pl": "Poniżej znajduje się podsumowanie ograniczeń obowiązujących w 2. strefie.",
         "ro": "Măsurile care se aplică la nivelul de alertă 2 sunt rezumate mai jos.",
-        "so": "Tallaabooyinka khuseeya heerka feejignaanta 2 ayaa hoos lagu soo koobay.",
+        "so": "Tallaabooyinka khuseeya heerka feejignaanta 2aad ayaa hoos lagu soo koobay.",
         "tr": "Uyarı seviyesi 2'de geçerli olan önlemler aşağıda özetlenmiştir.",
         "ur": "الرٹ لیول 2 میں لاگو ہونے والے اقدامات کا خلاصہ ذیل میں بیان کیا گیا ہے۔",
         "zh": "适用于 2 级警报的措施概述如下。"
@@ -4482,7 +4482,7 @@
     "colorSchemeV2": "neutral",
     "name": {
       "ar": "[postcode]: تفشي سلالة جديدة من فيروس كوفيد-19 في منطقتكم",
-      "bn": "[postcode]: আপনার এলাকায় কোভিড-১৯ এর একটি ধরন আছে",
+      "bn": "[postcode]: আপনার এলাকায় কোভিড-১৯–এর একটি ধরণের সংক্রমণ পাওয়া গেছে",
       "cy": "[postcode]: mae amrywiolyn o COVID-19 yn eich ardal",
       "en": "[postcode]: a variant of COVID-19 is in your area",
       "gu": "[postcode]: કોવિડ-19નું વેરિયંટ તમારા એરિયામાં છે",
@@ -4623,6 +4623,80 @@
       "tr": "Daha fazla bilgi edinin",
       "ur": "مزید معلوم کریں",
       "zh": "了解更多"
+    }
+  },
+  "WA.Easing1": {
+    "colorScheme": "green",
+    "colorSchemeV2": "green",
+    "name": {
+      "ar": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "bn": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "cy": "Mae cyfyngiadau coronafeirws yn dal mewn grym ledled Cymru, gan gynnwys yn [postcode]",
+      "en": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "gu": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "pa": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "pl": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "ro": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "so": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "tr": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "ur": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]",
+      "zh": "Coronavirus (COVID-19) restrictions remain in place across Wales, including in [postcode]"
+    },
+    "heading": {
+      "ar": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "bn": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "cy": "Cafodd rhai o'r rheolau ar yr hyn y gallwch ac na allwch ei wneud eu newid ar 7 Mehefin. Ond mae llawer o gyfyngiadau'n parhau.",
+      "en": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "gu": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "pa": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "pl": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "ro": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "so": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "tr": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "ur": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place.",
+      "zh": "Some of the rules on what you can and cannot do changed on 7 June. However, many restrictions remain in place."
+    },
+    "content": {
+      "ar": "You should continue to work from home if you can, and advice is to only travel internationally for essential reasons.",
+      "bn": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "cy": "Dylech barhau i weithio gartref os gallwch, a’r cyngor yw i deithio'n rhyngwladol am resymau hanfodol yn unig.",
+      "en": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "gu": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "pa": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "pl": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "ro": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "so": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "tr": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "ur": "You should continue to work from home if you can and only travel internationally for essential reasons.",
+      "zh": "You should continue to work from home if you can and only travel internationally for essential reasons."
+    },
+    "linkUrl": {
+      "ar": "https://gov.wales/coronavirus",
+      "bn": "https://gov.wales/coronavirus",
+      "cy": "https://llyw.cymru.coronafeirws",
+      "en": "https://gov.wales/coronavirus",
+      "gu": "https://gov.wales/coronavirus",
+      "pa": "https://gov.wales/coronavirus",
+      "pl": "https://gov.wales/coronavirus",
+      "ro": "https://gov.wales/coronavirus",
+      "so": "https://gov.wales/coronavirus",
+      "tr": "https://gov.wales/coronavirus",
+      "ur": "https://gov.wales/coronavirus",
+      "zh": "https://gov.wales/coronavirus"
+    },
+    "linkTitle": {
+      "ar": "Find out more",
+      "bn": "Find out more",
+      "cy": "Mwy o wybodaeth",
+      "en": "Find out more",
+      "gu": "Find out more",
+      "pa": "Find out more",
+      "pl": "Find out more",
+      "ro": "Find out more",
+      "so": "Find out more",
+      "tr": "Find out more",
+      "ur": "Find out more",
+      "zh": "Find out more"
     }
   }
 }

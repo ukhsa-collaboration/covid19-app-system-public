@@ -108,7 +108,11 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "consentedToShareExposureKeysInTheInitialFlow": 1,
     "totalShareExposureKeysReminderNotifications": 1,
     "consentedToShareExposureKeysInReminderScreen": 1,
-    "successfullySharedExposureKeys": 1
+    "successfullySharedExposureKeys": 1,
+    "didSendLocalInfoNotification": 1,
+    "didAccessLocalInfoScreenViaNotification": 1,
+    "didAccessLocalInfoScreenViaBanner": 1,
+    "isDisplayingLocalInfoBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -200,7 +204,11 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "consentedToShareExposureKeysInTheInitialFlow": 1,
     "totalShareExposureKeysReminderNotifications": 1,
     "consentedToShareExposureKeysInReminderScreen": 1,
-    "successfullySharedExposureKeys": 1
+    "successfullySharedExposureKeys": 1, 
+    "didSendLocalInfoNotification": 1,
+    "didAccessLocalInfoScreenViaNotification": 1,
+    "didAccessLocalInfoScreenViaBanner": 1, 
+    "isDisplayingLocalInfoBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -270,6 +278,10 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `totalShareExposureKeysReminderNotifications`
   * `consentedToShareExposureKeysInReminderScreen`
   * `successfullySharedExposureKeys`
+  * `didSendLocalInfoNotification`
+  * `didAccessLocalInfoScreenViaNotification`
+  * `didAccessLocalInfoScreenViaBanner`
+  * `isDisplayingLocalInfoBackgroundTick`
 
 
 ### Responses

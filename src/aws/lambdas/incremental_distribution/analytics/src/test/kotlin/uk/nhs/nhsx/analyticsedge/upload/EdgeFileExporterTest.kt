@@ -1,7 +1,7 @@
 package uk.nhs.nhsx.analyticsedge.upload
 
-import DataUploadSkipped
-import DataUploadedToEdge
+import uk.nhs.nhsx.analyticsedge.DataUploadSkipped
+import uk.nhs.nhsx.analyticsedge.DataUploadedToEdge
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import io.mockk.Runs
 import io.mockk.every
@@ -14,13 +14,15 @@ import org.junit.jupiter.api.Test
 
 class EdgeFileExporterTest {
 
+    private val workspace = "te-some-env"
+
     @Test
     fun `upload file is successful`() {
         val uploader = mockk<EdgeUploader> {
             every { uploadFile(any(), any(), any()) } just Runs
         }
 
-        val exporter = EdgeFileExporter(FakeS3().withObject("Poster/TEST.csv"), uploader)
+        val exporter = EdgeFileExporter(workspace, FakeS3().withObject("Poster/TEST.csv"), uploader)
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
@@ -31,13 +33,13 @@ class EdgeFileExporterTest {
 
         val result = exporter.export(sqsEvent)
 
-        verify { uploader.uploadFile("app_posters.csv", any(), any()) }
+        verify { uploader.uploadFile("te-some-env-app-posters.csv", any(), any()) }
         assertThat(result).isInstanceOf(DataUploadedToEdge::class.java)
     }
 
     @Test
     fun `ignores unknown files`() {
-        val exporter = EdgeFileExporter(FakeS3().withObject("unknown_prefix/TEST.csv"), mockk())
+        val exporter = EdgeFileExporter(workspace, FakeS3().withObject("unknown_prefix/TEST.csv"), mockk())
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
@@ -52,7 +54,7 @@ class EdgeFileExporterTest {
 
     @Test
     fun `ignores metadata file`() {
-        val exporter = EdgeFileExporter(FakeS3(), mockk())
+        val exporter = EdgeFileExporter(workspace, FakeS3(), mockk())
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
@@ -68,7 +70,7 @@ class EdgeFileExporterTest {
 
     @Test
     fun `throws when more than 1 record in sqs event`() {
-        val exporter = EdgeFileExporter(FakeS3(), mockk())
+        val exporter = EdgeFileExporter(workspace, FakeS3(), mockk())
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(
@@ -83,7 +85,7 @@ class EdgeFileExporterTest {
 
     @Test
     fun `throws if event body is not deserializable`() {
-        val exporter = EdgeFileExporter(FakeS3(), mockk())
+        val exporter = EdgeFileExporter(workspace, FakeS3(), mockk())
 
         val sqsEvent = SQSEvent().apply {
             records = listOf(

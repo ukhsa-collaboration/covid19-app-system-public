@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.analyticsedge.upload
 
-import DataUploadedToEdge
+import uk.nhs.nhsx.analyticsedge.DataUploadedToEdge
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.S3Object
@@ -40,12 +40,13 @@ import java.util.*
 @ExtendWith(WireMockExtension::class)
 class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
 
+    private val workspace = "te-extdev"
     private val fakeS3 = FakeS3().withObject("Poster/TEST.csv")
 
     @Test
     fun `handle sqs event successfully uploads to edge`() {
         wireMock.stubFor(
-            put("/app_posters.csv?SAS_TOKEN")
+            put("/$workspace-app-posters.csv?SAS_TOKEN")
                 .willReturn(
                     aResponse()
                         .withStatus(201)
@@ -78,7 +79,7 @@ class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
     @Test
     fun `handle sqs event error upload to edge`() {
         wireMock.stubFor(
-            put("/app_posters.csv?SAS_TOKEN")
+            put("/$workspace-app-posters.csv?SAS_TOKEN")
                 .willReturn(
                     aResponse()
                         .withStatus(500)
@@ -156,6 +157,7 @@ class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
     private fun newHandler(server: WireMockServer) = EdgeDataUploadHandler(
         TestEnvironments.TEST.apply(
             mapOf(
+                "WORKSPACE" to workspace,
                 "MAINTENANCE_MODE" to "false",
                 "custom_oai" to "OAI"
             )

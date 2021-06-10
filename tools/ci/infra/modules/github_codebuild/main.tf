@@ -42,6 +42,10 @@ resource "aws_codebuild_project" "this" {
       name  = "TARGET_ENVIRONMENT"
       value = "demo"
     }
+    environment_variable {
+      name  = "RELEASE_VERSION"
+      value = ""
+    }
   }
 
   logs_config {

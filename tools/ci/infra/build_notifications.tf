@@ -21,7 +21,12 @@ resource "aws_cloudwatch_event_rule" "build_state_change" {
       "deploy-cta-${each.key}",
       "deploy-tier-metadata-${each.key}",
       "deploy-analytics-${each.key}",
-      "deploy-pubdash-${each.key}"
+      "deploy-pubdash-${each.key}",
+      "release-cta-${each.key}",
+      "release-tier-metadata-${each.key}",
+      "release-analytics-${each.key}",
+      "release-pubdash-${each.key}",
+      "release-availability-${each.key}"
     ]
   }  
 }  

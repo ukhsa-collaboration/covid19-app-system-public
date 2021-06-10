@@ -27,4 +27,14 @@ namespace :validate do
     tier_metadata = JSON.parse(File.read(config_file_location))
     validate_tiers(tier_metadata)
   end
+  desc "Validate local messages"
+  task :local_messages do
+    include NHSx::Validate
+    metadata_file = File.join($configuration.base, "src/static/local-messages-metadata.json")
+    mapping_file = $configuration.message_mapping($configuration)
+    local_messages_metadata = JSON.parse(File.read(metadata_file))
+    la_message_mapping = JSON.parse(File.read(mapping_file))
+    puts "Validating \n Mapping file #{mapping_file}\n Message metadata: #{metadata_file}"
+    validate_local_messages(la_message_mapping["las"], local_messages_metadata["messages"])
+  end
 end

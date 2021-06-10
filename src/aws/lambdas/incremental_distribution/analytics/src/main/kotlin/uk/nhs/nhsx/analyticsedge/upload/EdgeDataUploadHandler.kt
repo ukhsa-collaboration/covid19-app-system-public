@@ -4,6 +4,7 @@ import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
+import uk.nhs.nhsx.core.Environment.Companion.WORKSPACE
 import uk.nhs.nhsx.core.Handler
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.aws.s3.AwsS3
@@ -25,7 +26,11 @@ class EdgeDataUploadHandler @JvmOverloads constructor(
         AwsSecretManager(AWSSecretsManagerClientBuilder.defaultClient()),
         events
     ),
-    private val edgeFileExporter: EdgeFileExporter = EdgeFileExporter(s3Client, edgeUploader)
+    private val edgeFileExporter: EdgeFileExporter = EdgeFileExporter(
+        environment.access.required(WORKSPACE),
+        s3Client,
+        edgeUploader
+    )
 ) : QueuedHandler(events) {
 
     override fun handler() = Handler<SQSEvent, Event> { input, _ ->

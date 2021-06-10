@@ -104,4 +104,43 @@ namespace :export do
     end
     puts "Bundle signature verification FAILED" unless verification_succeeded
   end
+
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+    tgt_envs.each do |tgt_env|
+      desc "Export exposure notification counts to S3 for #{tgt_env}"
+      task :"en_count:#{tgt_env}" => [:"login:#{account}"] do
+        include NHSx::AWS
+
+        objects = list_objects("te-#{tgt_env}-analytics-en-circuit-breaker", "", $configuration)
+        dates = objects.map { |obj| Date.parse(File.dirname(obj["Key"])) }
+        # This is the first date for which the logs are structured - query will fail on previous dates
+        start_date = Date.parse("2021/03/09")
+        end_date = Date.today - 1
+        valid_range = (start_date..end_date).to_a
+
+        missing_dates = (valid_range - dates)
+
+        target_config = target_environment_configuration(tgt_env, account, $configuration)
+        export_lambda = target_config["exposure_notification_circuit_breaker_analytics_lambda_function_name"]
+        puts "Missing #{missing_dates.size} entries in the export logs"
+
+        cli = HighLine.new
+        answer = cli.ask "This task will trigger the export for the following dates:\n#{missing_dates.map(&:iso8601).join("\n")}\nType 'continue' to confirm"
+        raise GaudiError, "Aborted export operation" unless ["continue"].include?(answer.downcase)
+
+        begin
+          update_lambda_env_vars(export_lambda, { "ABORT_OUTSIDE_TIME_WINDOW" => "false" }, $configuration)
+          missing_dates.each do |missing_date|
+            puts "Exporting data for #{missing_date.iso8601}"
+            # The lambda triggers the day after the one we want the data for
+            run_for_date = missing_date + 1
+            payload = { "time" => run_for_date.iso8601 }
+            invoke_lambda(export_lambda, JSON.dump(payload), $configuration)
+          end
+        ensure
+          update_lambda_env_vars(export_lambda, { "ABORT_OUTSIDE_TIME_WINDOW" => "true" }, $configuration)
+        end
+      end
+    end
+  end
 end

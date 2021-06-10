@@ -1,3 +1,5 @@
+package uk.nhs.nhsx.analyticsedge
+
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Event

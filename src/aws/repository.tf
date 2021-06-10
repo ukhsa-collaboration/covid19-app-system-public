@@ -6,7 +6,7 @@ module "artifact_repository" {
   policy_document          = module.artifact_repository_access.policy_document
   tags                     = var.tags
   lambda_project           = "cta-services"
-  lambda_zip_path          = "../../../../out/build/javalambda-0.0.1-SNAPSHOT.zip"
+  lambda_zip_path          = "../../../../out/build/cta-0.0.1-SNAPSHOT.zip"
 }
 
 output "lambda_object_key" {

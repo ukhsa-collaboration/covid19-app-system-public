@@ -44,7 +44,7 @@ class AwsTests < Test::Unit::TestCase
     Commandlines.stubs(:new_lambda_output_file)
 
     invoke_lambda("abc-function", "{'a': 'b'}", { })
-    assert_includes(run_command_args, "aws --cli-read-timeout 0 --cli-connect-timeout 0 lambda invoke --region eu-west-2 --function-name abc-function --cli-binary-format raw-in-base64-out --payload {'a': 'b'} ")
+    assert_includes(run_command_args, "aws --cli-read-timeout 0 --cli-connect-timeout 0 lambda invoke --region eu-west-2 --function-name abc-function --cli-binary-format raw-in-base64-out --payload \\{\\'a\\':\\ \\'b\\'\\} ")
   end
 
   def test_invoke_lambda_no_payload

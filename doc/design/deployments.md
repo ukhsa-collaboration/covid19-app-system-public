@@ -31,3 +31,4 @@ Content Group|Description|
 ---|---|
 |Tiers|The tier metadata configuration controlling the display of region risk information|
 |Availability|The app availability configuration controlling the active versions of the mobile app|
+|Local Messages|The targeted local messaging metadata and message per local authority index|

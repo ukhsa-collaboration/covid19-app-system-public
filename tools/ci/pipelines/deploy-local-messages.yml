@@ -1,0 +1,14 @@
+version: 0.2
+env:
+  shell: bash
+  git-credential-helper: yes
+phases:
+  build:
+    commands:
+      - rake config:codebuild
+      - rake deploy:local_messages:$TARGET_ENVIRONMENT
+artifacts:
+  name: $(date +%Y%m%d%H%M%S)-deploy-local-messages-$TARGET_ENVIRONMENT.zip
+  files:
+    - "out/**/*"
+  discard-paths: no

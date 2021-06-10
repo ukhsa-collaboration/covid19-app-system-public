@@ -16,6 +16,15 @@ module "post_districts_distribution_access" {
   origin_access_identity_arn = module.post_districts_distribution.origin_access_identity_arn
 }
 
+module "local_messages_distribution_access" {
+  source                     = "./modules/s3_access_policies"
+  policy_type                = "cross_account_readonly"
+  prefix                     = "analytics"
+  principal_aws_accounts     = var.analytics_aws_accounts
+  s3_bucket_arn              = module.local_messages_distribution.store.arn
+  origin_access_identity_arn = module.local_messages_distribution.origin_access_identity_arn
+}
+
 module "risky_venues_distribution_access" {
   source                     = "./modules/s3_access_policies"
   policy_type                = "secure_origin_access"

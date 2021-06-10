@@ -496,6 +496,22 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "successfullySharedExposureKeys"
       type = "int"
     }
+    columns {
+      name = "didSendLocalInfoNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaBanner"
+      type = "int"
+    }
+    columns {
+      name = "isDisplayingLocalInfoBackgroundTick"
+      type = "int"
+    }
   }
 }
 
@@ -867,6 +883,22 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "successfullySharedExposureKeys"
+      type = "int"
+    }
+    columns {
+      name = "didSendLocalInfoNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaNotification"
+      type = "int"
+    }
+    columns {
+      name = "didAccessLocalInfoScreenViaBanner"
+      type = "int"
+    }
+    columns {
+      name = "isDisplayingLocalInfoBackgroundTick"
       type = "int"
     }
   }

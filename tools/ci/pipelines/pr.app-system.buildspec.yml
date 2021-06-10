@@ -6,6 +6,7 @@ phases:
       - rake lint:terraform
       - rake validate:static
       - rake validate:tier-metadata
+      - rake validate:local_messages
       - rake plan:ci
       - rake plan:analytics:ci
       - rake plan:pubdash:ci

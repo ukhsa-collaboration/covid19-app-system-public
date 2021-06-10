@@ -1,5 +1,5 @@
 require "json"
-
+require "shellwords"
 module NHSx
   # Helpers that codify the use of the AWS CLI within the NHSx project
   module AWS
@@ -20,7 +20,7 @@ module NHSx
 
       # Invoke an AWS Lambda function by name and put the response under out/logs/lambdas
       def self.invoke_lambda(lambda_function, payload, output_file)
-        payload_cmd = "--cli-binary-format raw-in-base64-out --payload #{payload}" unless payload.empty?
+        payload_cmd = "--cli-binary-format raw-in-base64-out --payload #{Shellwords.escape(payload)}" unless payload.empty?
         "aws --cli-read-timeout 0 --cli-connect-timeout 0 lambda invoke --region #{AWS_REGION} --function-name #{lambda_function} #{payload_cmd} #{output_file}"
       end
 
@@ -75,6 +75,10 @@ module NHSx
       # Delete recursively from S3.
       def self.delete_from_s3_recursively(object_name)
         "aws s3 rm s3://#{object_name} --recursive"
+      end
+
+      def self.list_objects(bucket_name, prefix)
+        "aws s3api list-objects-v2 --bucket #{bucket_name} --prefix \"#{prefix}\""
       end
 
       # Download the public key in .der format for the given key_id into public_key
@@ -341,6 +345,12 @@ module NHSx
     def download_recursively_from_s3(s3_location, local_dir, system_config)
       cmdline = NHSx::AWS::Commandlines.download_from_s3_recursively(s3_location, local_dir)
       run_command("Downloading #{s3_location} to #{local_dir}", cmdline, system_config)
+    end
+
+    def list_objects(bucket_name, prefix, system_config)
+      cmdline = NHSx::AWS::Commandlines.list_objects(bucket_name, prefix)
+      cmd = run_command("List objects for #{bucket_name} with prefix #{prefix}", cmdline, system_config)
+      cmd.output.empty? ? [] : JSON.parse(cmd.output)["Contents"]
     end
 
     def invoke_lambda(lambda_function, payload, system_config)

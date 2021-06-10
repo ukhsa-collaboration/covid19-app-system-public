@@ -31,7 +31,7 @@ App <- VirologyTestingAPI: test result
 
 App->App: take test result action
 User<-App: show/update isolation advice
-ref over User, App : Share diagnosis keys and venue history
+ref over User, App : Help to stop the spread of the virus
 ...
 
 @enduml

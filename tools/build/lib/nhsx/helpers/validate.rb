@@ -1,3 +1,5 @@
+require_relative "../../gaudi/helpers/errors"
+
 module NHSx
   # Helpers for facilitating format validation checks in static content
   module Validate
@@ -9,6 +11,7 @@ module NHSx
     TIERS_WITH_POLICIES = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4].freeze
     VALID_TIERS = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 EN.Tier4.MassTest EN.Border.Tier1 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4
                      EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh EN.NationalRestrictions EN.VariantTier EN.EasingStep1 EN.EasingStep2 EN.VariantTier2 EN.EasingStep3].freeze
+    LANGUAGES = %w[ar bn cy en gu pa pl ro so tr ur zh]
 
     # Validate the given key is present in file_content, raise GaudiError otherwise
     def valid_key?(file_content, key)
@@ -92,14 +95,13 @@ module NHSx
     end
 
     def validate_tier(tier, metadata)
-      languages = %w[ar bn cy en gu pa pl ro so tr ur zh]
       validate_colours(metadata)
 
-      validation_errors = validate_languages(metadata, %w[name content linkTitle linkUrl], languages)
+      validation_errors = validate_languages(metadata, %w[name content linkTitle linkUrl], LANGUAGES)
 
       raise GaudiError, "Validation failed for #{tier}:\n#{validation_errors.join("\n")}" unless validation_errors.empty?
 
-      validation_errors += validate_policy_data(metadata, languages) if TIERS_WITH_POLICIES.include? tier
+      validation_errors += validate_policy_data(metadata, LANGUAGES) if TIERS_WITH_POLICIES.include? tier
       return validation_errors
     end
 
@@ -122,6 +124,26 @@ module NHSx
         end
       end
       raise GaudiError, "Tier metadata validation failed" if validation_failed
+    end
+
+    def validate_local_messages(la_mapping, msg_metadata)
+      indexed_messages = []
+      la_mapping.each_value { |el| indexed_messages += el }
+      indexed_messages.uniq!
+      available_messages = msg_metadata.keys
+      missing_messages = indexed_messages.map do |msg|
+        "Message #{msg} is used but missing in the metadata (not defined in Localise)" unless available_messages.include?(msg)
+      end.compact
+      raise GaudiError, missing_messages.join("\n") unless missing_messages.empty?
+    end
+
+    def validate_local_messages_metadata_languages(msg_metadata)
+      diff_lang = []
+      msg_metadata.each do |key, value|
+        languages_value_match = value.keys.sort == LANGUAGES.sort
+        diff_lang.push({ key => value.keys }) unless languages_value_match
+      end
+      raise GaudiError, "The following messages either do not have valid languages or are missing the required languages:\nLanguages provided by lokalise import: #{diff_lang.join("\n")}\nValid languages: #{LANGUAGES}" unless diff_lang.empty?
     end
   end
 end
