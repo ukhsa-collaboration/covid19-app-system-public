@@ -1,8 +1,8 @@
 # Diagnosis Key Distribution
 
-API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Distribution](../../../api-patterns.md#distribution)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Daily ZIP of diagnosis keys: ```GET https://<FQDN>/distribution/daily/yyyyMMdd00.zip```
 - Two-hourly ZIP of diagnosis keys: ```GET https://<FQDN>/distribution/two-hourly/yyyyMMddhh.zip```
@@ -10,7 +10,7 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 ### Parameters
 
 - FQDN: One (CDN) hostname for all distributed APIs
-- Authorization NOT required and signatures provided - see [API security](../../security.md)
+- Authorization NOT required and signatures provided - see [API security](../../../api-security.md)
 - ```yyyyMMdd00``` (formatted UTC timestamp): 14 valid values (the last 14 days < today)
 - ```yyyyMMddhh``` (formatted UTC timestamp, ```hh``` = ```hour of day - hour of day % 2```): ```14*12``` valid values (the last ```14*12``` two-hour periods < current two-hour period)
 

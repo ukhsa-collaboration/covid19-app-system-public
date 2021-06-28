@@ -16,9 +16,12 @@ resource "aws_s3_bucket" "this" {
 
   tags = var.tags
 
-  logging {
-    target_bucket = var.logs_bucket_id
-    target_prefix = "${local.identifier_prefix}/"
+  dynamic "logging" {
+    for_each = var.logs_bucket_id == null || var.logs_bucket_id == "" ? [] : [{}]
+    content {
+      target_bucket = var.logs_bucket_id
+      target_prefix = "${local.identifier_prefix}/"
+    }
   }
   server_side_encryption_configuration {
     rule {
@@ -93,9 +96,12 @@ resource "aws_s3_bucket" "destination" {
   force_destroy = var.force_destroy_s3_buckets
 
   tags = var.tags
-  logging {
-    target_bucket = var.logs_bucket_id
-    target_prefix = "${local.identifier_prefix}/"
+  dynamic "logging" {
+    for_each = var.logs_bucket_id == null || var.logs_bucket_id == "" ? [] : [{}]
+    content {
+      target_bucket = var.logs_bucket_id
+      target_prefix = "${local.identifier_prefix}/"
+    }
   }
   lifecycle_rule {
     id      = "${local.identifier_prefix}-replica-days_to_retain"

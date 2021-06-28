@@ -44,5 +44,3 @@ Ordinarily, bearer tokens are not preserved when generated - and for staging and
 
 An exception is made for tests. The bearer tokens are stored in the AWS secrets manager for retrieval by the test harness.
 The test automation ensures that secrets used by tests in staging and prod are removed upon completion of the tests.
-
-Similarly, synthetic canaries bearer tokens that allow access to the health API are also stored in a pre-defined AWS secrets manager entry.

@@ -1,8 +1,8 @@
 # Risky Venue Circuit Breaker
 
-API group: [Submission](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Circuit Breaker](../../../api-patterns.md#circuit-breaker)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Circuit Breaker Request: ```POST https://<FQDN>/circuit-breaker/venue/request```
 - Circuit Breaker Resolution: ```GET https://<FQDN>/circuit-breaker/venue/resolution/<approval_token>```
@@ -10,14 +10,14 @@ API group: [Submission](../../../guidebook.md#system-apis-and-interfaces)
 ### Parameters
 
 - FQDN: Hostname can be different per API
-- Authorization required and signatures provided - see [API security](../../security.md)
+- Authorization required and signatures provided - see [API security](../../../api-security.md)
 - Response payload content-type: application/json
 
 ## Scenario
 
 Used as a pre-requisite to check if a notification should be sent to the mobile app making the request.
 
-### Example: Initial request
+### Initial request
 ```POST https://<FQDN>/circuit-breaker/venue/request```
 
 #### Response Payload Example

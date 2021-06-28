@@ -6,7 +6,7 @@ A target environment contains all API implementation necessary to support the mo
 
 A target environment requires a correctly configured AWS account. Issues with access, security etc. are handled at the AWS account level.
 
-## Accounts and target envrinoments in terraform
+## Accounts and target environments in terraform
 
 AWS accounts are mapped to terraform root modules and are stored in [src/aws/accounts](./aws/accounts), one directory per account.
 
@@ -18,10 +18,10 @@ An account can contain multiple target environments - but the build system will 
 
 ## Features, patterns and re-usable implementations
 
-In [src/aws](./aws/) each TF file is used to group the different design pattern instantiations together (e.g. distributions, submissions etc.). 
-Outputs are placed at the bottom of the file (and need to be replicated in every root module to be visible).
+In [src/aws](./aws/) each TF file is used to group the different design pattern instantiations together, e.g. distributions, submissions, etc.. 
+Outputs are placed at the bottom of the file, and need to be replicated in every root module to be visible.
 
-The [patterns identified in the design](../../doc/architecture/guidebook.md#System-APIs-and-Interfaces) are implemented as Terraform modules in [src/aws/modules](./modules/).
+The [patterns identified in the design](../../doc/architecture/api-patterns.md) are implemented as Terraform modules in [src/aws/modules](./modules/).
 
 AWS resources are also instantiated and managed in Terraform modules. The technical building block modules are in [src/aws/libraries](./libraries/).
 This allows us to maintain them centrally following the "single source of truth" principle.

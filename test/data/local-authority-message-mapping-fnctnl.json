@@ -1,10 +1,13 @@
 {
-  "las": {
-    "E08000001": [
-      "Notification.Voc.Practice"
-    ],
-    "E06000008": [
-      "Notification.Voc.Practice"
-    ]
-  }
+    "las": {
+        "E06000026": [
+            "Notification.Voc.Level1"
+        ],
+        "E08000029": [
+            "Notification.Voc.Level2"
+        ],
+        "E08000035": [
+            "Notification.Voc.Level3"
+        ]
+    }
 }

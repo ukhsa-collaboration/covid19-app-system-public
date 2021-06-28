@@ -12,6 +12,16 @@ data class S3ToParquetObjectConversionFailure(
     val key: ObjectKey
 ) : Event(Error)
 
+data class S3ParquetFileNotCreatedByFirehouse(
+    val sqsMessageId: String?,
+    val bucketName: BucketName,
+    val key: ObjectKey) : Event(Error)
+
+data class S3ObjectStartsWithDisallowedPrefix(
+    val sqsMessageId: String?,
+    val bucketName: BucketName,
+    val key: ObjectKey) : Event(Error)
+
 data class S3ObjectNotFound(val sqsMessageId: String?, val bucketName: BucketName, val key: ObjectKey) : Event(Error)
 
 data class DataUploadedToS3(val sqsMessageId: String?, val bucketName: BucketName, val key: ObjectKey) : Event(Info)

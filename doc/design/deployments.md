@@ -14,7 +14,6 @@ Bubble Name|Description|
 ---|---|
 AppSystem|The main CTA functionality serving the COVID19 app and third party backend integrations|
 Analytics|The analytics subsystem based on QuickSight|
-Synthetics|The monitoring functionality based on AWS synthetic canaries|
 PublicDashboard|The website providing a dashboard view on the CTA system statistics|
 
 ## Functionality vs. Content

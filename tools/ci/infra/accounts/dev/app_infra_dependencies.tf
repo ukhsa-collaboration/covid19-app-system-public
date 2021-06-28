@@ -3,7 +3,7 @@ data "terraform_remote_state" "app_services_core_infra" {
 
   config = {
     bucket = "tf-state-****-****-****-****-***********"
-    key    = "iam"
+    key    = "core-infra"
     region = "eu-west-2"
   }
 }

@@ -39,3 +39,7 @@ variable "enabled_workspaces" {
   description = "Target environments with enabled SQS processing (allowed values: te-<env>)"
   type        = list(string)
 }
+
+variable "mobile_analytics_table" {
+  description = "name of table to be used for mobile analytics"
+}

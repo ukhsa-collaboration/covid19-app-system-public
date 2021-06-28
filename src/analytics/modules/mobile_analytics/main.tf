@@ -400,6 +400,30 @@ resource "aws_glue_catalog_table" "this" {
       name = "isDisplayingLocalInfoBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "positiveLabResultAfterPositiveLFD"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDOutsideTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "positiveLabResultAfterPositiveSelfRapidTest"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit"
+      type = "int"
+    }
   }
 }
 
@@ -799,6 +823,30 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "isDisplayingLocalInfoBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "positiveLabResultAfterPositiveLFD"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDOutsideTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "positiveLabResultAfterPositiveSelfRapidTest"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit"
       type = "int"
     }
   }

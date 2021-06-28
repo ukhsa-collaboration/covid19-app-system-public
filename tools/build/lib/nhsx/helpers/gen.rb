@@ -43,10 +43,19 @@ module NHSx
     def generate_local_messages(mapping_filepath, metadata_filepath, system_config)
       mapping = JSON.parse(File.read(mapping_filepath))
       metadata = JSON.parse(File.read(metadata_filepath))
-      metadata["messages"].each { |msg_id, msg| msg["updated"] = Time.now.utc.iso8601 }
+
+      metadata["messages"] = filter_unused_messages_from_metadata(mapping["las"], metadata["messages"])
+      metadata["messages"].each { |_, msg| msg["updated"] = Time.now.utc.iso8601 }
       mapping_metadata = { "las" => mapping["las"], "messages" => metadata["messages"] }
       output_file = "#{system_config.out}/local-messages/local-messages.json"
       write_file(output_file, JSON.pretty_generate(mapping_metadata))
+    end
+
+    def filter_unused_messages_from_metadata(la_mapping, messages_metadata)
+      used_messages = la_mapping.values.each_with_object([]) do |mapped_msgs, used_msgs|
+        used_msgs.append(*mapped_msgs)
+      end.uniq
+      messages_metadata.select { |k, _| used_messages.include?(k) }
     end
   end
 end

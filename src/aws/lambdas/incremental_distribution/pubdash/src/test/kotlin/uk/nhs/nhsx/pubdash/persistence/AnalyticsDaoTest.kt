@@ -19,7 +19,7 @@ class AnalyticsDaoTest {
     @Test
     fun `async agnostic dataset sql contains correct workspace and returns queryId`() {
         val dbClient = FakeDbClient(listOf(queryId))
-        val dao = AnalyticsDao(workspace, dbClient)
+        val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
         assertThat(dao.startAgnosticDatasetQueryAsync()).isEqualTo(queryId)
         assertThat(dbClient.submittedSqlQueries()).hasSize(1)
@@ -32,7 +32,7 @@ class AnalyticsDaoTest {
     @Test
     fun `async country dataset sql contains correct workspace and returns queryId`() {
         val dbClient = FakeDbClient(listOf(queryId))
-        val dao = AnalyticsDao(workspace, dbClient)
+        val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
         assertThat(dao.startLocalAuthorityDatasetQueryAsync()).isEqualTo(queryId)
         assertThat(dbClient.submittedSqlQueries()).hasSize(1)
@@ -45,7 +45,7 @@ class AnalyticsDaoTest {
     @Test
     fun `async local authority dataset sql contains correct workspace and returns queryId`() {
         val dbClient = FakeDbClient(listOf(queryId))
-        val dao = AnalyticsDao(workspace, dbClient)
+        val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
         assertThat(dao.startLocalAuthorityDatasetQueryAsync()).isEqualTo(queryId)
         assertThat(dbClient.submittedSqlQueries()).hasSize(1)
@@ -62,7 +62,7 @@ class AnalyticsDaoTest {
         val finished = QueryResult.Finished(Unit)
         val waiting = QueryResult.Waiting<Unit>()
         val dbClient = FakeDbClient(listOf(queryId), mapOf(queryId to listOf(waiting, finished)))
-        val dao = AnalyticsDao(workspace, dbClient)
+        val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
         assertThat(dao.checkQueryState(queryId)).isInstanceOf(QueryResult.Waiting::class.java)
         assertThat(dao.checkQueryState(queryId)).isEqualTo(QueryResult.Finished(Unit))

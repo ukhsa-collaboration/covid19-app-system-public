@@ -293,6 +293,900 @@
           ]
         }
       }
+    },
+    "Notification.Voc.Level1": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "zh": {
+          "head": "在 [postcode] 出现了一种令人担忧的新冠肺炎 (COVID-19)",
+          "body": "请打开此消息以获取更多信息",
+          "content": [
+            {
+              "type": "para",
+              "text": "这种变种病毒可能会以更快的速度传播。"
+            },
+            {
+              "type": "para",
+              "text": "您所在的地区正在进行额外的检测。"
+            },
+            {
+              "type": "para",
+              "text": "即便您尚未出现新冠肺炎症状，相关部门可能也会要求您进行聚合酶链反应 (PCR) 检测。"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "请联系当地政府以获取更多信息"
+            }
+          ]
+        },
+        "en": {
+          "head": "Coronavirus (COVID-19) variant of concern in [postcode]",
+          "body": "Open this message for more information.",
+          "content": [
+            {
+              "type": "para",
+              "text": "This variant could cause the virus to spread more quickly or be more harmful than before."
+            },
+            {
+              "type": "para",
+              "text": "Extra testing is now taking place in your area."
+            },
+            {
+              "type": "para",
+              "text": "You may be asked to take a polymerase chain reaction (PCR) test even if you do not have COVID-19 symptoms."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Check with your local authority for more information"
+            }
+          ]
+        },
+        "ar": {
+          "head": "هناك مخاوف من ظهور سلالة جديدة من فيروس كورونا (كوفيد-19) في [postcode]",
+          "body": "افتح هذه الرسالة للاطلاع على المزيد من المعلومات.",
+          "content": [
+            {
+              "type": "para",
+              "text": "قد تتسبب هذه السلالة في تفشي الفيروس على نحوٍ أسرع."
+            },
+            {
+              "type": "para",
+              "text": "تُجرى الآن اختبارات إضافية في منطقتك"
+            },
+            {
+              "type": "para",
+              "text": "قد يُطلب منك إجراء اختبار تفاعل البوليمراز المتسلسل (PCR) حتى إذا لم تظهر عليك أعراض الإصابة بفيروس كوفيد-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "تواصل مع السلطة المحلية لديك للمزيد من المعلومات."
+            }
+          ]
+        },
+        "tr": {
+          "head": "[postcode] bölgesinde endişe verici bir koronavirüs (COVID-19) varyantı söz konusudur.",
+          "body": "Daha fazla bilgi için bu mesajı açın.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Bu varyant, virüsün daha hızlı şekilde yayılmasına sebep olabilir."
+            },
+            {
+              "type": "para",
+              "text": "Bölgenizde şu anda ekstra testler gerçekleştirilmektedir."
+            },
+            {
+              "type": "para",
+              "text": "COVID-19 belirtilerine sahip olmasanız dahi bir polimeraz zincir reaksiyonu (PCR) testi yaptırmanız istenebilir."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Daha fazla bilgi için lütfen yerel yönetiminize danışın."
+            }
+          ]
+        },
+        "pl": {
+          "head": "Wariant koronawirusa (COVID-19) rozprzestrzenia się w okolicy kodu pocztowego [postcode].",
+          "body": "Otwórz tę wiadomość, aby otrzymać więcej informacji.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Ten wariant może powodować szybsze rozprzestrzenianie się wirusa."
+            },
+            {
+              "type": "para",
+              "text": "Obecnie w Twojej okolicy przeprowadzane są dodatkowe testy."
+            },
+            {
+              "type": "para",
+              "text": "Możesz zostać poproszony(-a) o wykonanie testu wykorzystującego reakcję łańcuchową polimerazy (PCR), nawet jeżeli nie występują u Ciebie objawy COVID-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Poproś swoje władze lokalne o więcej informacji."
+            }
+          ]
+        },
+        "ro": {
+          "head": "O tulpină periculoasă de coronavirus (COVID-19) a fost depistată în [postcode]",
+          "body": "Deschideți acest mesaj pentru a afla mai multe informații.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Această tulpină ar putea cauza răspândirea virusului mai rapid."
+            },
+            {
+              "type": "para",
+              "text": "În zona dvs. s-au organizat testări suplimentare."
+            },
+            {
+              "type": "para",
+              "text": "Vi se poate solicita să faceți un test de reacție în lanț a polimerazei (PCR) chiar dacă nu aveți simptome COVID-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Aflați mai multe de la autoritatea dvs. locală"
+            }
+          ]
+        },
+        "pa": {
+          "head": "ਕੋਰੋਨਾਵਾਇਰਸ (COVID-19) ਦਾ ਇੱਕ ਚਿੰਤਾਜਨਕ ਵੇਰੀਏਂਟ [postcode] ਵਿੱਚ ਹੈ",
+          "body": "ਹੋਰ ਜਾਣਕਾਰੀ ਲਈ ਇਸ ਸੁਨੇਹੇ ਨੂੰ ਖੋਲ੍ਹੋ।",
+          "content": [
+            {
+              "type": "para",
+              "text": "ਇਸ ਵੇਰੀਏਂਟ ਦੇ ਕਾਰਨ ਵਾਇਰਸ ਜ਼ਿਆਦਾ ਤੇਜ਼ੀ ਨਾਲ ਫੈਲ ਸਕਦਾ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਹੁਣ ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਵਾਧੂ ਟੈਸਟਿੰਗ ਹੋ ਰਹੀ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਤੁਹਾਨੂੰ ਪੋਲੀਮੇਰੇਸ ਚੇਨ ਰਿਐਕਸ਼ਨ (PCR) ਟੈਸਟ ਕਰਾਉਣ ਲਈ ਕਿਹਾ ਜਾ ਸਕਦਾ ਹੈ ਭਾਵੇਂ ਤੁਹਾਨੂੰ COVID-19 ਦੇ ਲੱਛਣ ਨਾ ਹੋਣ।"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "ਜ਼ਿਆਦਾ ਜਾਣਕਾਰੀ ਲਈ ਆਪਣੀ ਲੋਕਲ ਅਥਾਰਿਟੀ ਤੋਂ ਪਤਾ ਕਰੋ"
+            }
+          ]
+        },
+        "bn": {
+          "head": "[postcode] এ করোনাভাইরাসের (কোভিড-১৯) একটি উদ্বেগজনক ধরণ পাওয়া গেছে",
+          "body": "আরো তথ্যের জন্য এই বার্তা খুলুন।",
+          "content": [
+            {
+              "type": "para",
+              "text": "ভাইরাসের এই ধরণ আরো দ্রুত ছড়াতে পারে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার এলাকায় এখন বাড়তি পরীক্ষা করা হচ্ছে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার কোভিড-১৯-এর উপসর্গ না থাকলেও আপনাকে একটি পলিমারেইজ চেইন রিঅ্যাকশন (পিসিআর) পরীক্ষা করাতে বলা হতে পারে।"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "আরো তথ্যের জন্য আপনার স্থানীয় কর্তৃপক্ষের সাথে কথা বলুন"
+            }
+          ]
+        },
+        "gu": {
+          "head": "[postcode]માં કોરોનાવાયરસ (કોવિડ-19)નો બીજો પ્રકાર ચિંતાનો વિષય છે",
+          "body": "વધુ માહિતી માટે આ સંદેશ ખોલો.",
+          "content": [
+            {
+              "type": "para",
+              "text": "આ પ્રકારથી વાયરસ વધુ ઝડપથી ફેલાય છે"
+            },
+            {
+              "type": "para",
+              "text": "હવે તમારા વિસ્તારમાં વધારે ટેસ્ટિંગ થઈ રહ્યું છે."
+            },
+            {
+              "type": "para",
+              "text": "જો તમને કોવિડ-19 ના લક્ષણો ન હોય તો પણ તમને પોલિમરેઝ ચેઇન રિએક્શનનું (પીસીઆર) ટેસ્ટ કરવાની કહેવામાં આવશે."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "વધુ માહિતી માટે તમારી લૉકલ ઑથોરિટી સાથે તપાસ કરો"
+            }
+          ]
+        },
+        "cy": {
+          "head": "Mae amrywiolyn coronafeirws (COVID-19) sy'n peri pryder yn [postcode]",
+          "body": "Agorwch y neges yma i gael rhagor o wybodaeth.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Gallai'r amrywiolyn hwn beri i'r feirws ledaenu'n gyflymach."
+            },
+            {
+              "type": "para",
+              "text": "Mae profion ychwanegol yn cael eu cynnal yn eich ardal chi nawr."
+            },
+            {
+              "type": "para",
+              "text": "Efallai y gofynnir i chi gael prawf adwaith cadwynol polymerasau (PCR) hyd yn oed os nad oes symptomau COVID-19 arnoch."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Gwiriwch gyda'ch awdurdod lleol i gael rhagor o wybodaeth"
+            }
+          ]
+        },
+        "so": {
+          "head": "Nooca coronavirus (COVID-19) ee laga walaacsan yahay ayaa laga helay [postcode]",
+          "body": "Fur farriintan si aad u hesho macluumaad dheeraad ah.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Noocani wuxuu sababi karaa in fayrasku si xawli ah u faafo."
+            },
+            {
+              "type": "para",
+              "text": "Baaritaanno dheeraad ah ayaa ka socda aaggaaga."
+            },
+            {
+              "type": "para",
+              "text": "Waxaa laga yaaba in laga codsado inaad qaadatid baaritaanka nooca loo yaqaano polymerase chain reaction (PCR) xitaa haddii aadan qabin astaamaha COVID-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "La soco maamulka deegaankaaga si aad u hesho macluumaad dheeraad ah"
+            }
+          ]
+        },
+        "ur": {
+          "head": "[postcode] میں باعث تشویش کورونا وائرس (COVID-19) کی قسم موجود ہے",
+          "body": "مزید معلومات کے لیے یہ پیغام کھولیں",
+          "content": [
+            {
+              "type": "para",
+              "text": "اس قسم  کی وجہ سے مزید تیزی سے وائرس کا پھیلاؤ ہو سکتا ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "اب آپ کے علاقے میں اضافی ٹیسٹنگ ہو رہی ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "آپ سے پولیمیریس چین ری ایکشن (PCR) ٹیسٹ کروانے کو کہا جا سکتا ہے چاہے آپ میں COVID-19 کی علامات نہ ہوں۔"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "مزید معلومات اپنی مقامی اتھارٹی سے معلوم کریں"
+            }
+          ]
+        }
+      }
+    },
+    "Notification.Voc.Level2": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "zh": {
+          "head": "在 [postcode] 出现了一种令人担忧的新冠肺炎 (COVID-19)",
+          "body": "请打开此消息以获取更多信息",
+          "content": [
+            {
+              "type": "para",
+              "text": "这种变种病毒可能会以更快的速度传播。"
+            },
+            {
+              "type": "para",
+              "text": "您所在的地区正在进行额外的检测。"
+            },
+            {
+              "type": "para",
+              "text": "即便您尚未出现新冠肺炎症状，我们也建议您进行聚合酶链反应 (PCR) 检测。"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "请进行检测，通过地方政府了解更多信息"
+            }
+          ]
+        },
+        "en": {
+          "head": "Coronavirus (COVID-19) variant of concern in [postcode]",
+          "body": "Open this message for more information.",
+          "content": [
+            {
+              "type": "para",
+              "text": "This variant could cause the virus to spread more quickly or be more harmful than before."
+            },
+            {
+              "type": "para",
+              "text": "Extra testing is now taking place in your area."
+            },
+            {
+              "type": "para",
+              "text": "We advise you to take a polymerase chain reaction (PCR) test even if you do not have COVID-19 symptoms."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Get a test and find out more information from your local authority"
+            }
+          ]
+        },
+        "ar": {
+          "head": "هناك مخاوف من ظهور سلالة جديدة من فيروس كورونا (كوفيد-19) في [postcode]",
+          "body": "افتح هذه الرسالة للاطلاع على المزيد من المعلومات.",
+          "content": [
+            {
+              "type": "para",
+              "text": "قد تتسبب هذه السلالة في تفشي الفيروس على نحوٍ أسرع."
+            },
+            {
+              "type": "para",
+              "text": "تُجرى الآن اختبارات إضافية في منطقتك"
+            },
+            {
+              "type": "para",
+              "text": "نوصيك بإجراء اختبار تفاعل البوليمراز المتسلسل (PCR) حتى إذا لم تظهر عليك أعراض الإصابة بفيروس كوفيد-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "احصل على الاختبار وتعرّف على المزيد من المعلومات من السلطة المحلية لديك."
+            }
+          ]
+        },
+        "tr": {
+          "head": "[postcode] bölgesinde endişe verici bir koronavirüs (COVID-19) varyantı söz konusudur.",
+          "body": "Daha fazla bilgi için bu mesajı açın.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Bu varyant, virüsün daha hızlı şekilde yayılmasına sebep olabilir."
+            },
+            {
+              "type": "para",
+              "text": "Bölgenizde şu anda ekstra testler gerçekleştirilmektedir."
+            },
+            {
+              "type": "para",
+              "text": "COVID-19 belirtilerine sahip olmasanız dahi bir polimeraz zincir reaksiyonu (PCR) testi yaptırmanızı tavsiye ediyoruz."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Bir test yaptırın ve yerel yönetiminizden daha fazla bilgi edinin."
+            }
+          ]
+        },
+        "pl": {
+          "head": "Wariant koronawirusa (COVID-19) rozprzestrzenia się w okolicy kodu pocztowego [postcode].",
+          "body": "Otwórz tę wiadomość, aby otrzymać więcej informacji.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Ten wariant może powodować szybsze rozprzestrzenianie się wirusa."
+            },
+            {
+              "type": "para",
+              "text": "Obecnie w Twojej okolicy przeprowadzane są dodatkowe testy."
+            },
+            {
+              "type": "para",
+              "text": "Radzimy, aby wykonać test wykorzystujący reakcję łańcuchową polimerazy (PCR), nawet jeżeli nie występują u Ciebie objawy COVID-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Zamów test i uzyskaj więcej informacji od swoich władz lokalnych."
+            }
+          ]
+        },
+        "ro": {
+          "head": "O tulpină periculoasă de coronavirus (COVID-19) a fost depistată în [postcode]",
+          "body": "Deschideți acest mesaj pentru a afla mai multe informații.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Această tulpină ar putea cauza răspândirea virusului mai rapid."
+            },
+            {
+              "type": "para",
+              "text": "În zona dvs. s-au organizat testări suplimentare."
+            },
+            {
+              "type": "para",
+              "text": "Vă recomandăm să faceți un test de reacție în lanț a polimerazei (PCR) chiar dacă nu aveți simptome COVID-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Obțineți un test și aflați mai multe de la autoritatea dvs. locală"
+            }
+          ]
+        },
+        "pa": {
+          "head": "ਕੋਰੋਨਾਵਾਇਰਸ (COVID-19) ਦਾ ਇੱਕ ਚਿੰਤਾਜਨਕ ਵੇਰੀਏਂਟ [postcode] ਵਿੱਚ ਹੈ",
+          "body": "ਹੋਰ ਜਾਣਕਾਰੀ ਲਈ ਇਸ ਸੁਨੇਹੇ ਨੂੰ ਖੋਲ੍ਹੋ।",
+          "content": [
+            {
+              "type": "para",
+              "text": "ਇਸ ਵੇਰੀਏਂਟ ਦੇ ਕਾਰਨ ਵਾਇਰਸ ਜ਼ਿਆਦਾ ਤੇਜ਼ੀ ਨਾਲ ਫੈਲ ਸਕਦਾ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਹੁਣ ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਵਾਧੂ ਟੈਸਟਿੰਗ ਹੋ ਰਹੀ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਅਸੀਂ ਤੁਹਾਨੂੰ ਪੋਲੀਮੇਰੇਸ ਚੇਨ ਰਿਐਕਸ਼ਨ (PCR) ਟੈਸਟ ਕਰਾਉਣ ਦੀ ਸਿਫ਼ਾਰਿਸ਼ ਕਰਦੇ ਹਾਂ ਭਾਵੇਂ ਤੁਹਾਨੂੰ COVID-19 ਦੇ ਲੱਛਣ ਨਾ ਹੋਣ।"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "ਇੱਕ ਟੈਸਟ ਕਰਵਾਓ ਅਤੇ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਿਟੀ ਤੋਂ ਹੋਰ ਜਾਣਕਾਰੀ ਲਵੋ"
+            }
+          ]
+        },
+        "bn": {
+          "head": "[postcode] এ করোনাভাইরাসের (কোভিড-১৯) একটি উদ্বেগজনক ধরণ পাওয়া গেছে",
+          "body": "আরো তথ্যের জন্য এই বার্তা খুলুন।",
+          "content": [
+            {
+              "type": "para",
+              "text": "ভাইরাসের এই ধরণ আরো দ্রুত ছড়াতে পারে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার এলাকায় এখন বাড়তি পরীক্ষা করা হচ্ছে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার কোভিড-১৯-এর উপসর্গ না থাকলেও আমরা আপনাকে একটি পলিমারেইজ চেইন রিঅ্যাকশন (পিসিআর) পরীক্ষা করানোর পরামর্শ দিচ্ছি।"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "পরীক্ষা করান এবং আপনার স্থানীয় কর্তৃপক্ষের কাছ থেকে আরো তথ্য জেনে নিন"
+            }
+          ]
+        },
+        "gu": {
+          "head": "[postcode]માં કોરોનાવાયરસ (કોવિડ-19)નો બીજો પ્રકાર ચિંતાનો વિષય છે",
+          "body": "વધુ માહિતી માટે આ સંદેશ ખોલો.",
+          "content": [
+            {
+              "type": "para",
+              "text": "આ પ્રકારથી વાયરસ વધુ ઝડપથી ફેલાય છે"
+            },
+            {
+              "type": "para",
+              "text": "હવે તમારા વિસ્તારમાં વધારે ટેસ્ટિંગ થઈ રહ્યું છે."
+            },
+            {
+              "type": "para",
+              "text": "જો તમને કોવિડ-19 ના લક્ષણો ન હોય તો પણ તમને પોલિમરેઝ ચેઇન રિએક્શન (પીસીઆર) ટેસ્ટ કરવાની સલાહ આપીશું."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "ટેસ્ટ મેળવો અને તમારા લૉકલ ઑથોરિટી પાસેથી વધુ માહિતી મેળવો"
+            }
+          ]
+        },
+        "cy": {
+          "head": "Mae amrywiolyn coronafeirws (COVID-19) sy'n peri pryder yn [postcode]",
+          "body": "Agorwch y neges yma i gael rhagor o wybodaeth.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Gallai'r amrywiolyn hwn beri i'r feirws ledaenu'n gyflymach."
+            },
+            {
+              "type": "para",
+              "text": "Mae profion ychwanegol yn cael eu cynnal yn eich ardal chi nawr."
+            },
+            {
+              "type": "para",
+              "text": "Rydym yn eich cynghori i gael prawf adwaith cadwynol polymerasau (PCR) hyd yn oed os nad oes symptomau COVID-19 arnoch."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Ewch am brawf a darganfod rhagor o wybodaeth gan eich awdurdod lleol"
+            }
+          ]
+        },
+        "so": {
+          "head": "Nooca coronavirus (COVID-19) ee laga walaacsan yahay ayaa laga helay [postcode]",
+          "body": "Fur farriintan si aad u hesho macluumaad dheeraad ah.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Noocani wuxuu sababi karaa in fayrasku si xawli ah u faafo."
+            },
+            {
+              "type": "para",
+              "text": "Baaritaanno dheeraad ah ayaa ka socda aaggaaga."
+            },
+            {
+              "type": "para",
+              "text": "Waxaan kugula talinaynaa inaad qaadatid baaritaanka nooca loo yaqaanno polymerase chain reaction (PCR) xitaa haddii aadan qabin astaamaha COVID-19."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Ha lagu baaro   oo macluumaad dheeraad ah ka raadso maamulka deegaankaaga"
+            }
+          ]
+        },
+        "ur": {
+          "head": "[postcode] میں باعث تشویش کورونا وائرس (COVID-19) کی قسم موجود ہے",
+          "body": "مزید معلومات کے لیے یہ پیغام کھولیں",
+          "content": [
+            {
+              "type": "para",
+              "text": "اس قسم  کی وجہ سے مزید تیزی سے وائرس کا پھیلاؤ ہو سکتا ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "اب آپ کے علاقے میں اضافی ٹیسٹنگ ہو رہی ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "ہم آپ کو پولیمیریس چین ری ایکشن (PCR) ٹیسٹ کروانے کی صلاح دیتے ہیں چاہے آپ میں COVID-19 کی علامات نہ ہوں۔"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "جانچ کروائیں اور اپنی مقامی اتھارٹی سے مزید معلومات حاصل کریں"
+            }
+          ]
+        }
+      }
+    },
+    "Notification.Voc.Level3": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "zh": {
+          "head": "在 [postcode] 出现了一种令人担忧的新冠肺炎 (COVID-19)",
+          "body": "请打开此消息以获取更多信息",
+          "content": [
+            {
+              "type": "para",
+              "text": "这种变种病毒可能会以更快的速度传播。"
+            },
+            {
+              "type": "para",
+              "text": "您所在的地区正在进行额外的检测。"
+            },
+            {
+              "type": "para",
+              "text": "即便您尚未出现新冠肺炎症状，我们也建议您进行聚合酶链反应 (PCR) 检测。"
+            },
+            {
+              "type": "para",
+              "text": "地方政府可能还会采取其他措施控制这种变种病毒的传播。"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "请进行检测，通过地方政府了解更多信息"
+            }
+          ]
+        },
+        "en": {
+          "head": "Coronavirus (COVID-19) variant of concern in [postcode]",
+          "body": "Open this message for more information.",
+          "content": [
+            {
+              "type": "para",
+              "text": "This variant could cause the virus to spread more quickly or be more harmful than before."
+            },
+            {
+              "type": "para",
+              "text": "Extra testing is now taking place in your area."
+            },
+            {
+              "type": "para",
+              "text": "We advise you to take a polymerase chain reaction (PCR) test even if you do not have COVID-19 symptoms."
+            },
+            {
+              "type": "para",
+              "text": "Your local authority may also be taking other steps to reduce the spread of this variant."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Get a test and find out more information from your local authority"
+            }
+          ]
+        },
+        "ar": {
+          "head": "هناك مخاوف من ظهور سلالة جديدة من فيروس كورونا (كوفيد-19) في [postcode]",
+          "body": "افتح هذه الرسالة للاطلاع على المزيد من المعلومات.",
+          "content": [
+            {
+              "type": "para",
+              "text": "قد تتسبب هذه السلالة في تفشي الفيروس على نحوٍ أسرع."
+            },
+            {
+              "type": "para",
+              "text": "تُجرى الآن اختبارات إضافية في منطقتك"
+            },
+            {
+              "type": "para",
+              "text": "نوصيك بإجراء اختبار تفاعل البوليمراز المتسلسل (PCR) حتى إذا لم تظهر عليك أعراض الإصابة بفيروس كوفيد-19."
+            },
+            {
+              "type": "para",
+              "text": "قد تبادر السلطة المحلية لديك أيضًا باتخاذ إجراءات أخرى للحدِّ من تفشي هذه السلالة."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "احصل على الاختبار وتعرّف على المزيد من المعلومات من السلطة المحلية لديك."
+            }
+          ]
+        },
+        "tr": {
+          "head": "[postcode] bölgesinde endişe verici bir koronavirüs (COVID-19) varyantı söz konusudur.",
+          "body": "Daha fazla bilgi için bu mesajı açın.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Bu varyant, virüsün daha hızlı şekilde yayılmasına sebep olabilir."
+            },
+            {
+              "type": "para",
+              "text": "Bölgenizde şu anda ekstra testler gerçekleştirilmektedir."
+            },
+            {
+              "type": "para",
+              "text": "COVID-19 belirtilerine sahip olmasanız dahi bir polimeraz zincir reaksiyonu (PCR) testi yaptırmanızı tavsiye ediyoruz."
+            },
+            {
+              "type": "para",
+              "text": "Bu varyantın yayılmasını azaltmak için yerel yönetiminiz de farklı önlemler alıyor olabilir."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Bir test yaptırın ve yerel yönetiminizden daha fazla bilgi edinin."
+            }
+          ]
+        },
+        "pl": {
+          "head": "Wariant koronawirusa (COVID-19) rozprzestrzenia się w okolicy kodu pocztowego [postcode].",
+          "body": "Otwórz tę wiadomość, aby otrzymać więcej informacji.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Ten wariant może powodować szybsze rozprzestrzenianie się wirusa."
+            },
+            {
+              "type": "para",
+              "text": "Obecnie w Twojej okolicy przeprowadzane są dodatkowe testy."
+            },
+            {
+              "type": "para",
+              "text": "Radzimy, aby wykonać test wykorzystujący reakcję łańcuchową polimerazy (PCR), nawet jeżeli nie występują u Ciebie objawy COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Twoje władze lokalne mogą również podjąć dodatkowe kroki w celu zmniejszenia rozprzestrzeniania się tego wariantu."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Zamów test i uzyskaj więcej informacji od swoich władz lokalnych."
+            }
+          ]
+        },
+        "ro": {
+          "head": "O tulpină periculoasă de coronavirus (COVID-19) a fost depistată în [postcode]",
+          "body": "Deschideți acest mesaj pentru a afla mai multe informații.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Această tulpină ar putea cauza răspândirea virusului mai rapid."
+            },
+            {
+              "type": "para",
+              "text": "În zona dvs. s-au organizat testări suplimentare."
+            },
+            {
+              "type": "para",
+              "text": "Vă recomandăm să faceți un test de reacție în lanț a polimerazei (PCR) chiar dacă nu aveți simptome COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Este posibil ca autoritatea locală să ia și alte măsuri pentru a reduce răspândirea acestei tulpini."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Obțineți un test și aflați mai multe de la autoritatea dvs. locală"
+            }
+          ]
+        },
+        "pa": {
+          "head": "ਕੋਰੋਨਾਵਾਇਰਸ (COVID-19) ਦਾ ਇੱਕ ਚਿੰਤਾਜਨਕ ਵੇਰੀਏਂਟ [postcode] ਵਿੱਚ ਹੈ",
+          "body": "ਹੋਰ ਜਾਣਕਾਰੀ ਲਈ ਇਸ ਸੁਨੇਹੇ ਨੂੰ ਖੋਲ੍ਹੋ।",
+          "content": [
+            {
+              "type": "para",
+              "text": "ਇਸ ਵੇਰੀਏਂਟ ਦੇ ਕਾਰਨ ਵਾਇਰਸ ਜ਼ਿਆਦਾ ਤੇਜ਼ੀ ਨਾਲ ਫੈਲ ਸਕਦਾ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਹੁਣ ਤੁਹਾਡੇ ਇਲਾਕੇ ਵਿੱਚ ਵਾਧੂ ਟੈਸਟਿੰਗ ਹੋ ਰਹੀ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਅਸੀਂ ਤੁਹਾਨੂੰ ਪੋਲੀਮੇਰੇਸ ਚੇਨ ਰਿਐਕਸ਼ਨ (PCR) ਟੈਸਟ ਕਰਾਉਣ ਦੀ ਸਿਫ਼ਾਰਿਸ਼ ਕਰਦੇ ਹਾਂ ਭਾਵੇਂ ਤੁਹਾਨੂੰ COVID-19 ਦੇ ਲੱਛਣ ਨਾ ਹੋਣ।"
+            },
+            {
+              "type": "para",
+              "text": "ਹੋ ਸਕਦਾ ਹੈ ਤੁਹਾਡੀ ਸਥਾਨਕ ਅਥਾਰਿਟੀ ਇਸ ਵੇਰੀਏਂਟ ਦੇ ਪ੍ਰਸਾਰ ਨੂੰ ਘਟਾਉਣ ਲਈ ਹੋਰ ਕਦਮ ਵੀ ਚੁੱਕ ਰਹੀ ਹੋਵੇ।"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "ਇੱਕ ਟੈਸਟ ਕਰਵਾਓ ਅਤੇ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਿਟੀ ਤੋਂ ਹੋਰ ਜਾਣਕਾਰੀ ਲਵੋ"
+            }
+          ]
+        },
+        "bn": {
+          "head": "[postcode] এ করোনাভাইরাসের (কোভিড-১৯) একটি উদ্বেগজনক ধরণ পাওয়া গেছে",
+          "body": "আরো তথ্যের জন্য এই বার্তা খুলুন।",
+          "content": [
+            {
+              "type": "para",
+              "text": "ভাইরাসের এই ধরণ আরো দ্রুত ছড়াতে পারে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার এলাকায় এখন বাড়তি পরীক্ষা করা হচ্ছে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার কোভিড-১৯-এর উপসর্গ না থাকলেও আমরা আপনাকে একটি পলিমারেইজ চেইন রিঅ্যাকশন (পিসিআর) পরীক্ষা করানোর পরামর্শ দিচ্ছি।"
+            },
+            {
+              "type": "para",
+              "text": "এই ধরণ ছড়িয়ে পড়া কমাতে আপনার স্থানীয় কর্তৃপক্ষ অন্যান্য পদক্ষেপও নিয়ে থাকতে পারে।"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "পরীক্ষা করান এবং আপনার স্থানীয় কর্তৃপক্ষের কাছ থেকে আরো তথ্য জেনে নিন"
+            }
+          ]
+        },
+        "gu": {
+          "head": "[postcode]માં કોરોનાવાયરસ (કોવિડ-19)નો બીજો પ્રકાર ચિંતાનો વિષય છે",
+          "body": "વધુ માહિતી માટે આ સંદેશ ખોલો.",
+          "content": [
+            {
+              "type": "para",
+              "text": "આ પ્રકારથી વાયરસ વધુ ઝડપથી ફેલાય છે"
+            },
+            {
+              "type": "para",
+              "text": "હવે તમારા વિસ્તારમાં વધારે ટેસ્ટિંગ થઈ રહ્યું છે."
+            },
+            {
+              "type": "para",
+              "text": "જો તમને કોવિડ-19 ના લક્ષણો ન હોય તો પણ તમને પોલિમરેઝ ચેઇન રિએક્શન (પીસીઆર) ટેસ્ટ કરવાની સલાહ આપીશું."
+            },
+            {
+              "type": "para",
+              "text": "તમારી લૉકલ ઑથોરિટી પણ આ વેરિએન્ટનો ફેલાવો ઘટાડવા માટે અન્ય પગલાં લઈ શકે છે."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "ટેસ્ટ મેળવો અને તમારા લૉકલ ઑથોરિટી પાસેથી વધુ માહિતી મેળવો"
+            }
+          ]
+        },
+        "cy": {
+          "head": "Mae amrywiolyn coronafeirws (COVID-19) sy'n peri pryder yn [postcode]",
+          "body": "Agorwch y neges yma i gael rhagor o wybodaeth.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Gallai'r amrywiolyn hwn beri i'r feirws ledaenu'n gyflymach."
+            },
+            {
+              "type": "para",
+              "text": "Mae profion ychwanegol yn cael eu cynnal yn eich ardal chi nawr."
+            },
+            {
+              "type": "para",
+              "text": "Rydym yn eich cynghori i gael prawf adwaith cadwynol polymerasau (PCR) hyd yn oed os nad oes symptomau COVID-19 arnoch."
+            },
+            {
+              "type": "para",
+              "text": "Efallai bod eich awdurdod lleol hefyd  yn cymryd camau eraill i leihau lledaeniad yr amrywiolyn."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Ewch am brawf a darganfod rhagor o wybodaeth gan eich awdurdod lleol"
+            }
+          ]
+        },
+        "so": {
+          "head": "Nooca coronavirus (COVID-19) ee laga walaacsan yahay ayaa laga helay [postcode]",
+          "body": "Fur farriintan si aad u hesho macluumaad dheeraad ah.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Noocani wuxuu sababi karaa in fayrasku si xawli ah u faafo."
+            },
+            {
+              "type": "para",
+              "text": "Baaritaanno dheeraad ah ayaa ka socda aaggaaga."
+            },
+            {
+              "type": "para",
+              "text": "Waxaan kugula talinaynaa inaad qaadatid baaritaanka nooca loo yaqaanno polymerase chain reaction (PCR) xitaa haddii aadan qabin astaamaha COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Waxaa sidoo kale laga yaabaa in maamulka deegaankaaga ay qaadayaan  tallaabooyin kale si loo yareeyo faafitaanka noocyadan."
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "Ha lagu baaro   oo macluumaad dheeraad ah ka raadso maamulka deegaankaaga"
+            }
+          ]
+        },
+        "ur": {
+          "head": "[postcode] میں باعث تشویش کورونا وائرس (COVID-19) کی قسم موجود ہے",
+          "body": "مزید معلومات کے لیے یہ پیغام کھولیں",
+          "content": [
+            {
+              "type": "para",
+              "text": "اس قسم  کی وجہ سے مزید تیزی سے وائرس کا پھیلاؤ ہو سکتا ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "اب آپ کے علاقے میں اضافی ٹیسٹنگ ہو رہی ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "ہم آپ کو پولیمیریس چین ری ایکشن (PCR) ٹیسٹ کروانے کی صلاح دیتے ہیں چاہے آپ میں COVID-19 کی علامات نہ ہوں۔"
+            },
+            {
+              "type": "para",
+              "text": "اس قسم  کے پھیلاؤ کو کم کرنے کے لیے آپ کی مقامی اتھارٹی ہو سکتا ہے دیگر اقدامات بھی کر رہی ہو۔"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/find-local-council",
+              "linkText": "جانچ کروائیں اور اپنی مقامی اتھارٹی سے مزید معلومات حاصل کریں"
+            }
+          ]
+        }
+      }
     }
   }
 }

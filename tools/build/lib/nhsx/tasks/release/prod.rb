@@ -8,7 +8,7 @@ namespace :release do
   end
 
   desc "Release of version RELEASE_VERSION in prod of the full CTA system"
-  task :"cta:prod" => [:"login:prod"] do
+  task :"cta:prod" => [:"clean:wipe", :"login:prod"] do
     include NHSx::Queue
 
     release_version = configure_release_process("cta", $configuration)
@@ -20,7 +20,7 @@ namespace :release do
     Rake::Task["tag:release:availability"].invoke
   end
   desc "Release of version RELEASE_VERSION of the tier metadata"
-  task :"tier_metadata:prod" => [:"login:prod"] do
+  task :"tier_metadata:prod" => [:"clean:wipe", :"login:prod"] do
     release_version = configure_release_process("tiers", $configuration)
     puts "Initiating CTA tier metadata release #{release_version}"
 
@@ -28,7 +28,7 @@ namespace :release do
     Rake::Task["tag:release:tier_metadata"].invoke
   end
   desc "Release of version RELEASE_VERSION of the availability configuration"
-  task :"availability:prod" => [:"login:prod"] do
+  task :"availability:prod" => [:"clean:wipe", :"login:prod"] do
     release_version = configure_release_process("availability", $configuration)
     puts "Initiating CTA availability configuration release #{release_version}"
 
@@ -36,7 +36,7 @@ namespace :release do
     Rake::Task["tag:release:availability"].invoke
   end
   desc "Release version RELEASE_VERSION of local messaging configuration to prod"
-  task :"local_messages:prod" => [:"login:prod"] do
+  task :"local_messages:prod" => [:"clean:wipe", :"login:prod"] do
     release_version = configure_release_process("local_messages", $configuration)
     puts "Initiating CTA local messages configuration release #{release_version}"
 
@@ -44,22 +44,21 @@ namespace :release do
     Rake::Task["tag:release:local_messages"].invoke
   end
   desc "Release of version RELEASE_VERSION of the analytics system to prod"
-  task :"analytics::prod" => [:"login:prod"] do
+  task :"analytics:prod" => [:"clean:wipe", :"login:prod"] do
     release_version = configure_release_process("analytics", $configuration)
     puts "Initiating CTA analytics release #{release_version}"
 
     Rake::Task["deploy:analytics:prod"].invoke
-    Rake::Task["tag:release:analytics"].invoke
   end
   desc "Release of version RELEASE_VERSION of the analytics system to aa-prod"
-  task :"analytics:aa-prod" => [:"login:aa-prod"] do
+  task :"analytics:aa-prod" => [:"clean:wipe", :"login:aa-prod"] do
     release_version = configure_release_process("analytics", $configuration)
     puts "Initiating CTA analytics release #{release_version}"
     Rake::Task["deploy:analytics:aa-prod"].invoke
     Rake::Task["tag:release:analytics"].invoke
   end
   desc "Release of version RELEASE_VERSION of the public dashboard"
-  task :"pubdash::prod" => [:"login:prod"] do
+  task :"pubdash:prod" => [:"clean:wipe", :"login:prod"] do
     release_version = configure_release_process("pubdash", $configuration)
     puts "Initiating CTA public dashboard release #{release_version}"
 

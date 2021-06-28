@@ -9,7 +9,6 @@ data class EnvConfig(
     val analytics_submission_ingestion_interval: String,
     val analytics_submission_endpoint: String,
     val analytics_submission_health_endpoint: String,
-    val analytics_submission_store: String,
     val analytics_submission_parquet_store: String,
     val availability_android_distribution_endpoint: String,
     val availability_android_distribution_store: String,

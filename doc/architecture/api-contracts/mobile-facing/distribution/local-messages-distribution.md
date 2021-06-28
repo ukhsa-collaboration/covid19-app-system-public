@@ -1,15 +1,15 @@
 # Local Messages Distribution
 
-API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Distribution](../../../api-patterns.md#distribution)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Content module: ```GET https://<FQDN>/distribution/local-messages```
 
 ### Parameters
 
 - FQDN: One (CDN) hostname for all distributed APIs
-- Authorization NOT required and signatures provided - see [API security](../../security.md)
+- Authorization NOT required and signatures provided - see [API security](../../../api-security.md)
 - Payload content-type: `application/json`
 
 ## Scenario
@@ -35,15 +35,15 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
             - Text replacements DO NOT apply
         - `linkText` block of text that describes the url
             - Text replacements DO NOT apply
-    
-### Text replacements
-    - Client replaces `[postcode]` with device selected postcode
-    - Client replaces `[local authority]` with device selected local authority
+- Client performs placeholder substitution on the message content
+    - replaces `[postcode]` with device selected postcode
+    - replaces `[local authority]` with device selected local authority
 
-## Example: 
+    
+### Get local messages 
 `GET https://<FQDN>/distribution/local-messages`
 
-### Response Example (structure)
+#### Response Payload Example (structure)
 ```json
 {
     "las": {
@@ -76,3 +76,5 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
     }
 }
 ```
+
+

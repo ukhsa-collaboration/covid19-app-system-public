@@ -1,24 +1,25 @@
 # Risky Venue Distribution
 
-API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Distribution](../../../api-patterns.md#distribution)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Risky Venues: ```GET https://<FQDN>/distribution/risky-venues```
 
 ### Parameters
 
 - FQDN: One (CDN) hostname for all distributed APIs
-- Authorization NOT required and signatures provided - see [API security](../../security.md)
+- Authorization NOT required and signatures provided - see [API security](../../../api-security.md)
 - Payload content-type: `application/json`
 
-## Scenario
+## Scenarios
 - Client downloads the list of risky venues periodically
 - Later client scans some venue qr code, extracts the venue id from the base64 encoded string (in the qr code payload) and compares it (plus the risky window) with the risky venues it has stored locally and reacts based on the result of this comparison 
 
-## Example: Risky Venues
 
-### Response Example: Message Type "M1" (without optional parameter):
+### Risky Venues
+
+#### Response Payload Example: Message Type "M1" (without optional parameter)
 ```json
 {
     "venues" : [
@@ -34,7 +35,7 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 }
 ```
 
-### Response Example: Message Type "M2" (without optional parameter):
+#### Response Payload Example: Message Type "M2" (without optional parameter)
 ```json
 {
     "venues" : [
@@ -50,7 +51,7 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 }
 ```
 
-### Response Example: Message Type "M3" (with optional parameter):
+#### Response Payload Example: Message Type "M3" (with optional parameter)
 ```json
 {
     "venues" : [
@@ -67,11 +68,12 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 }
 ```
 
-#### Notes
-- The server sends the date & time in ISO-8601 YYYY-MM-DD'T'hh:mm:ssZ format
-- Example: if the downstream data source has a granularity of a day, the time will be default to 00:00:00
+- The server sends the date & time in ISO-8601 YYYY-MM-DD'T'hh:mm:ssZ format 
+  - Example: if the downstream data source has a granularity of a day, the time will be default to 00:00:00
 
-## Message types and actions triggered in mobile apps (work in progress - placeholders for now)
+
+
+### Message types and actions triggered in mobile apps (work in progress - placeholders for now)
 - see also: "Risky Venue Messages Configuration-Download API"
 - `M1`: type: to be defined, message: to be defined, actions (mobile app): to be defined
 - `M2`: type: to be defined, message: to be defined, actions (mobile app): to be defined

@@ -77,6 +77,14 @@ module NHSx
         "aws s3 rm s3://#{object_name} --recursive"
       end
 
+      def self.create_bucket(s3_uri)
+        "aws s3 mb #{s3_uri}"
+      end
+
+      def self.delete_bucket(s3_uri)
+        "aws s3 rb #{s3_uri}"
+      end
+
       def self.list_objects(bucket_name, prefix)
         "aws s3api list-objects-v2 --bucket #{bucket_name} --prefix \"#{prefix}\""
       end

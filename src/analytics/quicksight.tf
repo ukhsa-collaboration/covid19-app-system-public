@@ -17,7 +17,13 @@ module "output_store" {
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id
-  tags                     = var.tags
+  lifecycle_rules = [{
+    id      = "expire-all-after-7-days"
+    prefix  = null
+    enabled = true
+    days    = 7
+  }]
+  tags = var.tags
 }
 
 module "workgroup" {

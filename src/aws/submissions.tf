@@ -1,28 +1,5 @@
 resource "random_uuid" "submission-custom-oai" {}
 
-module "analytics_submission" {
-  source                   = "./modules/submission"
-  name                     = "analytics"
-  lambda_repository_bucket = module.artifact_repository.bucket_name
-  lambda_object_key        = module.artifact_repository.lambda_object_key
-  lambda_handler_class     = "uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandler"
-  lambda_environment_variables = {
-    firehose_stream_name    = aws_kinesis_firehose_delivery_stream.analytics_stream.name
-    s3_ingest_enabled       = "false"
-    firehose_ingest_enabled = "true"
-    custom_oai              = random_uuid.submission-custom-oai.result
-  }
-  burst_limit                       = var.burst_limit
-  rate_limit                        = var.rate_limit
-  logs_bucket_id                    = var.logs_bucket_id
-  force_destroy_s3_buckets          = var.force_destroy_s3_buckets
-  log_retention_in_days             = var.log_retention_in_days
-  alarm_topic_arn                   = var.alarm_topic_arn
-  provisioned_concurrent_executions = var.analytics_submission_scale_down_provisioned_concurrent_executions
-  policy_document                   = module.analytics_submission_access.policy_document
-  tags                              = var.tags
-}
-
 module "analytics_submission_fast_ingest" {
   source                   = "./modules/submission_analytics"
   name                     = "analytics"
@@ -30,10 +7,8 @@ module "analytics_submission_fast_ingest" {
   lambda_object_key        = module.artifact_repository.lambda_object_key
   lambda_environment_variables = {
     firehose_stream_name    = aws_kinesis_firehose_delivery_stream.analytics_stream.name
-    s3_ingest_enabled       = "false"
     firehose_ingest_enabled = "true"
     custom_oai              = random_uuid.submission-custom-oai.result
-    SUBMISSION_STORE        = module.analytics_submission.store
   }
   burst_limit                    = var.burst_limit
   rate_limit                     = var.rate_limit
@@ -63,48 +38,11 @@ module "analytics_events_submission" {
   tags                     = var.tags
 }
 
-resource "aws_appautoscaling_target" "analytics_submission" {
-  count              = var.analytics_submission_scale_up_provisioned_concurrent_executions != 0 && var.analytics_submission_scale_down_provisioned_concurrent_executions != 0 ? 1 : 0
-  max_capacity       = var.analytics_submission_scale_down_provisioned_concurrent_executions
-  min_capacity       = var.analytics_submission_scale_down_provisioned_concurrent_executions
-  resource_id        = "function:${module.analytics_submission.function}:${module.analytics_submission.version}"
-  scalable_dimension = "lambda:function:ProvisionedConcurrency"
-  service_namespace  = "lambda"
-}
-
-resource "aws_appautoscaling_scheduled_action" "analytics_submission_scale_up" {
-  count              = var.analytics_submission_scale_up_provisioned_concurrent_executions != 0 ? 1 : 0
-  name               = "${terraform.workspace}-analytics_up"
-  service_namespace  = aws_appautoscaling_target.analytics_submission[0].service_namespace
-  resource_id        = aws_appautoscaling_target.analytics_submission[0].resource_id
-  scalable_dimension = aws_appautoscaling_target.analytics_submission[0].scalable_dimension
-  schedule           = var.analytics_submission_scale_up_cron
-
-  scalable_target_action {
-    min_capacity = var.analytics_submission_scale_up_provisioned_concurrent_executions
-    max_capacity = var.analytics_submission_scale_up_provisioned_concurrent_executions
-  }
-}
-
-resource "aws_appautoscaling_scheduled_action" "analytics_submission_scale_down" {
-  count              = var.analytics_submission_scale_down_provisioned_concurrent_executions != 0 ? 1 : 0
-  name               = "${terraform.workspace}-analytics_down"
-  service_namespace  = aws_appautoscaling_target.analytics_submission[0].service_namespace
-  resource_id        = aws_appautoscaling_target.analytics_submission[0].resource_id
-  scalable_dimension = aws_appautoscaling_target.analytics_submission[0].scalable_dimension
-  schedule           = var.analytics_submission_scale_down_cron
-
-  scalable_target_action {
-    min_capacity = var.analytics_submission_scale_down_provisioned_concurrent_executions
-    max_capacity = var.analytics_submission_scale_down_provisioned_concurrent_executions
-  }
-}
-
 module "analytics_submission_store_parquet" {
   source                   = "./libraries/submission_s3"
   name                     = "analytics"
   service                  = "submission-parquet"
-  logs_bucket_id           = var.logs_bucket_id
+  logs_bucket_id           = null
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   policy_document          = module.analytics_submission_store_parquet_access.policy_document
   tags                     = var.tags
@@ -114,7 +52,7 @@ module "analytics_submission_store_parquet_consolidated" {
   source                   = "./libraries/submission_s3"
   name                     = "analytics-consolidated"
   service                  = "submission-parquet"
-  logs_bucket_id           = var.logs_bucket_id
+  logs_bucket_id           = null
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   policy_document          = module.analytics_submission_store_parquet_access_consolidated.policy_document
   tags                     = var.tags
@@ -512,6 +450,30 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "isDisplayingLocalInfoBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "positiveLabResultAfterPositiveLFD"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDOutsideTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "positiveLabResultAfterPositiveSelfRapidTest"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit"
+      type = "int"
+    }
   }
 }
 
@@ -901,6 +863,30 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       name = "isDisplayingLocalInfoBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "positiveLabResultAfterPositiveLFD"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveLFDOutsideTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "positiveLabResultAfterPositiveSelfRapidTest"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit"
+      type = "int"
+    }
   }
 }
 
@@ -1132,9 +1118,6 @@ module "submission_apis" {
 }
 ############################
 
-output "analytics_submission_store" {
-  value = module.analytics_submission.store
-}
 output "analytics_submission_parquet_store" {
   value = module.analytics_submission_store_parquet.bucket_name
 }

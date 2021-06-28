@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.core.events
 
 import uk.nhs.nhsx.core.events.EventCategory.*
+import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.headers.UserAgent
 import uk.nhs.nhsx.domain.Country
@@ -54,4 +55,4 @@ data class UnprocessableJson(val e: Exception) : Event(Warning)
 data class InfoEvent(val message: String) : Event(Info)
 
 data class RequestRejected(val reason: String) : Event(Info)
-data class SuccessfulCtaExchange(val ctaToken: String, val country: Country, val testKit: TestKit, val mobileOS: MobileOS, val tokenAgeRange: TokenAgeRange) : Event(Info)
+data class SuccessfulCtaExchange(val ctaToken: String, val country: Country, val testKit: TestKit, val mobileOS: MobileOS, val tokenAgeRange: TokenAgeRange, val appVersion: MobileAppVersion) : Event(Info)

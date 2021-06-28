@@ -1,8 +1,8 @@
-# App availability Distribution
+# App Availability Distribution
 
-API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Distribution](../../../api-patterns.md#distribution)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Availability iOS: ```GET https://<FQDN>/distribution/availability-ios```
 - Availability Android: ```GET https://<FQDN>/distribution/availability-android```
@@ -10,7 +10,7 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 ### Parameters
 
 - FQDN: One (CDN) hostname for all distributed APIs
-- Authorization NOT required and signatures provided - see [API security](../../security.md)
+- Authorization NOT required and signatures provided - see [API security](../../../api-security.md)
 - Payload content-type: `application/json`
 
 ## Scenario
@@ -20,10 +20,10 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 - [Only iOS] Client uses the `recommendedOSVersion` to determine whether a recommended OS update is available or not. If it is the case, it asks the user to go to the Phone settings to upgrade their OS.
 - Client uses the `recommendedAppVersion` to determine whether a recommended App update is available or not. If it is the case, it asks the user regularly to upgrade their App in the App store. **For Android that must be a single integer**
  
-## Example: Availability iOS
+### Availability iOS
 `GET https://<FQDN>/distribution/availability-ios`
 
-### Response Example (structure)
+#### Response Payload Example (structure)
 ```json
 {
    "minimumOSVersion": {
@@ -60,10 +60,10 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 
 ```
 
-## Example: Availability Android
+### Availability Android
 `GET https://<FQDN>/distribution/availability-android`
 
-### Response Example (structure)
+#### Response Payload Example (structure)
 ```json
 {
   "minimumSDKVersion": {

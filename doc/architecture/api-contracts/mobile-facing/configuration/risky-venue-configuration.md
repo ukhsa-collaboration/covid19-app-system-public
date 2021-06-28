@@ -1,21 +1,22 @@
 # Risky Venue Configuration Distribution
 
-API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Distribution](../../../api-patterns.md#distribution)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Risky Venue Configuration: ```https://<FQDN>/distribution/risky-venue-configuration```
 
-## Parameters
+### Parameters
 
 - FQDN: One (CDN-) hostname for all distribute APIs
-- Authorization NOT required and signatures provided - see [API security](../../security.md)
+- Authorization NOT required and signatures provided - see [API security](../../../api-security.md)
 - Payload content-type: application/json
 
 ## Scenario
 Mobile clients fetch this configuration to be able to calculate how long to show the "book a test" button after visiting a risky venue.
 
-### Response Example (structure)
+### Risky Venue Configuration
+#### Response Payload Example (structure)
 
 ```json
 {

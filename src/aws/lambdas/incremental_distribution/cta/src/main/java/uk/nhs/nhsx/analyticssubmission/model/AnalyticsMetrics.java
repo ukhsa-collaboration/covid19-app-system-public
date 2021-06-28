@@ -84,6 +84,12 @@ public class AnalyticsMetrics {
     public Integer didAccessLocalInfoScreenViaNotification;
     public Integer didAccessLocalInfoScreenViaBanner;
     public Integer isDisplayingLocalInfoBackgroundTick;
+    public Integer positiveLabResultAfterPositiveLFD;
+    public Integer negativeLabResultAfterPositiveLFDWithinTimeLimit;
+    public Integer negativeLabResultAfterPositiveLFDOutsideTimeLimit;
+    public Integer positiveLabResultAfterPositiveSelfRapidTest;
+    public Integer negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit;
+    public Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit;
 
     public AnalyticsMetrics() {
     }

@@ -81,14 +81,14 @@ class DistributionSanityChecks : LambdaSanityCheck() {
         )
     }
 
-// FIXME: we had to ignore this to make it deploy to staging and pass all the tests!
-//    @MethodSource("distribution")
-//    @ParameterizedTest(name = "{arguments}")
-//    fun `Distribution endpoint returns a 200 and matches resource`(distribution: Distribution) {
-//        assertThat(insecureClient(Request(GET, distribution.endpointUri)),
-//            hasStatus(OK).and(distribution.resource.contentMatcher())
-//        )
-//    }
+
+    @MethodSource("distribution")
+    @ParameterizedTest(name = "{arguments}")
+    fun `Distribution endpoint returns a 200 and matches resource`(distribution: Distribution) {
+        assertThat(insecureClient(Request(GET, distribution.endpointUri)),
+            hasStatus(OK).and(distribution.resource.contentMatcher())
+        )
+    }
 
     @Suppress("unused")
     companion object {

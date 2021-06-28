@@ -1,6 +1,6 @@
-# NHS CV19 App System | Architecture Guidebook
+# NHS COVID-19 App System | Architecture Guidebook
 
-This is a living guidebook and unique point of architectural reference for the NHS COVID-19 Application
+This is a living guidebook and unique point of architectural reference for the NHS COVID-19 App System
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ This is a living guidebook and unique point of architectural reference for the N
 
 ## Context
 
-The NHS COVID-19 Application is about speed, precision and reach in the context of the Test & Trace programme. It triggers isolation advice in minutes, measures encounters in time and approximate
+The NHS COVID-19 App is about speed, precision and reach in the context of the Test & Trace programme. It triggers isolation advice in minutes, measures encounters in time and approximate
 distance and can alert those you have had contact with  -  all while protecting your privacy.
 
 * Trace: Get alerted you if you’ve been near other app users who have tested positive for coronavirus.
@@ -28,7 +28,7 @@ distance and can alert those you have had contact with  -  all while protecting 
 >App statistics are available online at [https://stats.app.covid19.nhs.uk](https://stats.app.covid19.nhs.uk/)
 ## Functional Architecture
 
-The CV19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journeys:
+The COVID-19 App System is a composition of different functional, technical and organisational domains, related to each other by different app user journeys:
 
 ![Figure: Domains](diagrams/img/cv19-app-system-domain-model-domain-overview-2021-04-19.png "Figure: Domain Model")
 
@@ -68,7 +68,7 @@ Our concepts make use of terminology from the [Google and Apple Exposure Notific
 Our use of the GAEN framework and it's versions and core behaviour is described in [gaen.md](gaen.md).
 ## System Overview
 
-The NHS CV19 App and Cloud Services (CV19 App System) has five major parts: Mobile apps, Cloud backend with API services, Infrastructure, Exposure Notification (EN) configuration and algorithm, and Dependent systems.
+The NHS COVID-19 App and Cloud Services (COVID-19 App System) has five major parts: Mobile apps, Cloud backend with API services, Infrastructure, Exposure Notification (EN) configuration and algorithm, and Dependent systems.
 
 ![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2021-04-19.png "Figure: Overview")
 
@@ -116,11 +116,11 @@ The Cloud Services ports in the system architecture are implemented by API servi
 
 These are described in more detail in [api-patterns.md](api-patterns.md)
 
-The following solution patterns take characteristics of these groups into account. The patterns are applied in [specific API contracts](./api-contracts), provided by the cloud services backend and consumed by mobile or external systems. We use an API specification by example approach based on semi-formal .md files.
+The following solution patterns take characteristics of these groups into account. The patterns are applied in specific [API contracts](api-contracts/README.md), provided by the cloud services backend and consumed by mobile or external systems. We use an API specification by example approach based on semi-formal .md files.
 
 ### API Foundations
 
-Base principles for communicating over the internet are described in [api-foundation.md](api-foundation.md)
+Base principles for communicating over the internet are described in [api-foundation.md](api-foundation.md) and API security in [api-security.md](api-security.md)
 
 ## Tech Stacks and Repositories
 
@@ -150,7 +150,7 @@ The **Web apps** use React SPA hosted on S3, delivered by CDN. However, note tha
 
 ## Infrastructure
 
-The CV19 App System infrastructure and operations uses AWS cloud-native components like Route53, AWS CDN, API Gateways, Lambdas and S3. The infrastructure components implement support for
+The COVID-19 App System infrastructure and operations uses AWS cloud-native components like Route53, AWS CDN, API Gateways, Lambdas and S3. The infrastructure components implement support for
 
 * Mobile app integration
 * API services

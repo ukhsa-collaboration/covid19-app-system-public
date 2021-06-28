@@ -13,9 +13,9 @@ namespace :import do
     validate_local_messages_metadata_languages(local_messages_metadata)
     la_message_mapping = JSON.parse(File.read(File.join($configuration.base, "src/static/local-authority-message-mapping.json")))
     validate_local_messages(la_message_mapping["las"], local_messages_metadata)
-    voc_payload = construct_local_messages_payload(local_messages_metadata)
+    voc_message_metadata = construct_local_messages_metadata(local_messages_metadata)
 
-    json_payload = File.join($configuration.base, "src/static/local-messages-metadata.json")
-    write_file(json_payload, JSON.pretty_generate(voc_payload))
+    json_message_metadata = File.join($configuration.base, "src/static/local-messages-metadata.json")
+    write_file(json_message_metadata, JSON.pretty_generate(voc_message_metadata))
   end
 end

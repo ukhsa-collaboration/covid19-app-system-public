@@ -71,13 +71,6 @@ module NHSx
       return authorization_header
     end
 
-    # Simultaneously set up the bearer token used by canaries and the secret the health-check endpoints use to verify it
-    def create_linked_secrets(api_name, auth_key_name, hash_key_name, description)
-      authorization_header = create_and_store_api_key(api_name, hash_key_name, description, $configuration)
-      name = "/#{api_name}/#{auth_key_name}"
-      store_secret_string(name, authorization_header, description, $configuration, "eu-west-1") # cf. src/synthetics/accounts/staging/terraform.tf
-    end
-
     def aae_configuration(system_config)
       certificate_dir = File.join(system_config.out, "/certificates")
 

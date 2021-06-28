@@ -103,6 +103,12 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer didAccessLocalInfoScreenViaNotification;
     public final Integer didAccessLocalInfoScreenViaBanner;
     public final Integer isDisplayingLocalInfoBackgroundTick;
+    public final Integer positiveLabResultAfterPositiveLFD;
+    public final Integer negativeLabResultAfterPositiveLFDWithinTimeLimit;
+    public final Integer negativeLabResultAfterPositiveLFDOutsideTimeLimit;
+    public final Integer positiveLabResultAfterPositiveSelfRapidTest;
+    public final Integer negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit;
+    public final Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit;
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
@@ -193,7 +199,13 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer didSendLocalInfoNotification,
                                              Integer didAccessLocalInfoScreenViaNotification,
                                              Integer didAccessLocalInfoScreenViaBanner,
-                                             Integer isDisplayingLocalInfoBackgroundTick) {
+                                             Integer isDisplayingLocalInfoBackgroundTick,
+                                             Integer positiveLabResultAfterPositiveLFD,
+                                             Integer negativeLabResultAfterPositiveLFDWithinTimeLimit,
+                                             Integer negativeLabResultAfterPositiveLFDOutsideTimeLimit,
+                                             Integer positiveLabResultAfterPositiveSelfRapidTest,
+                                             Integer negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit,
+                                             Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -284,6 +296,12 @@ public class StoredAnalyticsSubmissionPayload {
         this.didAccessLocalInfoScreenViaNotification = didAccessLocalInfoScreenViaNotification;
         this.didAccessLocalInfoScreenViaBanner = didAccessLocalInfoScreenViaBanner;
         this.isDisplayingLocalInfoBackgroundTick = isDisplayingLocalInfoBackgroundTick;
+        this.positiveLabResultAfterPositiveLFD = positiveLabResultAfterPositiveLFD;
+        this.negativeLabResultAfterPositiveLFDWithinTimeLimit = negativeLabResultAfterPositiveLFDWithinTimeLimit;
+        this.negativeLabResultAfterPositiveLFDOutsideTimeLimit = negativeLabResultAfterPositiveLFDOutsideTimeLimit;
+        this.positiveLabResultAfterPositiveSelfRapidTest = positiveLabResultAfterPositiveSelfRapidTest;
+        this.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit;
+        this.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit;
     }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload, Events events) {
@@ -378,6 +396,12 @@ public class StoredAnalyticsSubmissionPayload {
             clientPayload.metrics.didSendLocalInfoNotification,
             clientPayload.metrics.didAccessLocalInfoScreenViaNotification,
             clientPayload.metrics.didAccessLocalInfoScreenViaBanner,
-            clientPayload.metrics.isDisplayingLocalInfoBackgroundTick);
+            clientPayload.metrics.isDisplayingLocalInfoBackgroundTick,
+            clientPayload.metrics.positiveLabResultAfterPositiveLFD,
+            clientPayload.metrics.negativeLabResultAfterPositiveLFDWithinTimeLimit,
+            clientPayload.metrics.negativeLabResultAfterPositiveLFDOutsideTimeLimit,
+            clientPayload.metrics.positiveLabResultAfterPositiveSelfRapidTest,
+            clientPayload.metrics.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit,
+            clientPayload.metrics.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit);
     }
 }

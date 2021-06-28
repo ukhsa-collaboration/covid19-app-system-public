@@ -160,6 +160,12 @@ class AnalyticsSubmissionSmokeTest {
         didSendLocalInfoNotification = counter++.toInt()
         didAccessLocalInfoScreenViaNotification = counter++.toInt()
         didAccessLocalInfoScreenViaBanner = counter++.toInt()
-        isDisplayingLocalInfoBackgroundTick = counter.toInt()
+        isDisplayingLocalInfoBackgroundTick = counter++.toInt()
+        positiveLabResultAfterPositiveLFD = counter++.toInt()
+        negativeLabResultAfterPositiveLFDWithinTimeLimit = counter++.toInt()
+        negativeLabResultAfterPositiveLFDOutsideTimeLimit = counter++.toInt()
+        positiveLabResultAfterPositiveSelfRapidTest = counter++.toInt()
+        negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = counter++.toInt()
+        negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = counter.toInt()
     }
 }

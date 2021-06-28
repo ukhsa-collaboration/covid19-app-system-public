@@ -22,7 +22,6 @@ class VersionsTests < Test::Unit::TestCase
     assert_equal("Analytics-2.9", label_tag_name("analytics", "2.9"))
     assert_equal("Tiers-2.9", label_tag_name("tiers", "2.9"))
     assert_equal("Doreto-2.9", label_tag_name("doreto", "2.9"))
-    assert_equal("Synthetics-2.9", label_tag_name("synthetics", "2.9"))
     assert_equal("Availability-2.9", label_tag_name("availability", "2.9"))
     assert_equal("PublicDashboard-2.9", label_tag_name("pubdash", "2.9"))
     assert_raise(GaudiError) {

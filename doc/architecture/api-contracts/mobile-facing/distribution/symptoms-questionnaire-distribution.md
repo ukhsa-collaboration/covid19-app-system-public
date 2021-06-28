@@ -1,13 +1,13 @@
 # Symptoms Questionnaire Distribution
 
-API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Distribution](../../../api-patterns.md#distribution)
 
-## HTTP request and response
+## HTTP Request and Response
 - Symptomatic Questionnaire: ```GET https://<FQDN>/distribution/symptomatic-questionnaire```
 
 ### Parameters
 - FQDN: One (CDN-) hostname for all distribute APIs
-- Authorization NOT required and signatures provided - see [API security](../../security.md)
+- Authorization NOT required and signatures provided - see [API security](../../../api-security.md)
 - Payload content-type: application/json
 
 ## Scenario
@@ -15,8 +15,9 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 - Client uses the `riskWeight` to calculate the total risk of all the checked symptoms
 - Client uses the `riskThreshold` to check if the total risk is above or below this value and progress to the next screen accordingly
 - Client uses the `symptomsOnsetWindowDays` for the selection of the date when the symptoms have started
- 
-### Response Example (structure)
+
+### Get Symptoms Questionnaire
+#### Response Payload Example (structure)
 
 ```json
 {

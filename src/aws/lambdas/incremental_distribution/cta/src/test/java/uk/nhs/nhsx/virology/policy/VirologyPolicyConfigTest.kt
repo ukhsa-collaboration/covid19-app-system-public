@@ -81,12 +81,13 @@ class VirologyPolicyConfigTest {
     }
 
     @Test
-    fun `confirmatory test is required for RAPID_RESULT test kit on specific mobile versions`() {
+    fun `confirmatory test is required for RAPID_RESULT, RAPID_SELF_REPORTED test kit on specific mobile versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 11)
 
         val testCases = listOf(
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
             VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
+            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
         )
 
         testCases.forEach {
@@ -95,12 +96,13 @@ class VirologyPolicyConfigTest {
     }
 
     @Test
-    fun `confirmatory test is not required for RAPID_RESULT test kit on specific mobile versions`() {
+    fun `confirmatory test is not required for RAPID_RESULT, RAPID_SELF_REPORTED test kit on specific mobile versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 10)
 
         val testCases = listOf(
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
             VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
+            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive),
         )
 
         testCases.forEach {
@@ -243,30 +245,58 @@ class VirologyPolicyConfigTest {
     }
 
     @Test
-    fun `confirmatory day limit on cta exchange for Wales for new app versions`() {
+    fun `confirmatory day limit on cta exchange for Wales RAPID_RESULT for new app versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 11)
         val virologyCriteria = VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive)
         assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(1))
     }
 
     @Test
-    fun `confirmatory day limit on cta exchange for Wales for old app versions`() {
+    fun `confirmatory day limit on cta exchange for Wales RAPID_RESULT for old app versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 10)
         val virologyCriteria = VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive)
         assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(null))
     }
 
     @Test
-    fun `confirmatory day limit on lookup for Wales for new app versions`() {
+    fun `confirmatory day limit on lookup for Wales RAPID_RESULT for new app versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 11)
         val virologyCriteria = VirologyCriteria(Lookup, Wales, RAPID_RESULT, Positive)
         assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(null))
     }
 
     @Test
-    fun `confirmatory day limit on lookup for Wales for old app versions`() {
+    fun `confirmatory day limit on lookup for Wales RAPID_RESULT for old app versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 10)
         val virologyCriteria = VirologyCriteria(Lookup, Wales, RAPID_RESULT, Positive)
+        assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(null))
+    }
+
+    @Test
+    fun `confirmatory day limit on cta exchange for Wales RAPID_SELF_REPORTED for new app versions`() {
+        val mobileAppVersion = MobileAppVersion.Version(4, 11)
+        val virologyCriteria = VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
+        assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(1))
+    }
+
+    @Test
+    fun `confirmatory day limit on cta exchange for Wales RAPID_SELF_REPORTED for old app versions`() {
+        val mobileAppVersion = MobileAppVersion.Version(4, 10)
+        val virologyCriteria = VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
+        assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(null))
+    }
+
+    @Test
+    fun `confirmatory day limit on lookup for Wales RAPID_SELF_REPORTED for new app versions`() {
+        val mobileAppVersion = MobileAppVersion.Version(4, 11)
+        val virologyCriteria = VirologyCriteria(Lookup, Wales, RAPID_SELF_REPORTED, Positive)
+        assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(null))
+    }
+
+    @Test
+    fun `confirmatory day limit on lookup for Wales RAPID_SELF_REPORTED for old app versions`() {
+        val mobileAppVersion = MobileAppVersion.Version(4, 10)
+        val virologyCriteria = VirologyCriteria(Lookup, Wales, RAPID_SELF_REPORTED, Positive)
         assertThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion), equalTo(null))
     }
 }

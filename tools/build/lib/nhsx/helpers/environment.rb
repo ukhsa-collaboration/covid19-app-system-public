@@ -167,12 +167,14 @@ module Gaudi
       def cta_token
         token = mandatory("TOKEN")
         raise GaudiError, "Invalid TOKEN" unless token
+
         return token
       end
 
       def polling_token
         token = mandatory("POLLING_TOKEN")
         raise GaudiError, "Invalid POLLING_TOKEN" unless token
+
         return token
       end
 
@@ -221,6 +223,7 @@ module Gaudi
       # Returns the value of FROM_VERSION or the last backend release tag
       def from_version(version_metadata)
         return ENV["FROM_VERSION"] if ENV["FROM_VERSION"]
+
         source_commit = "Backend-#{version_metadata["Major"]}.#{version_metadata["Minor"]}"
         return source_commit
       end
@@ -230,9 +233,17 @@ module Gaudi
         ENV.fetch("TO_VERSION", current_sha)
       end
 
-      # Path to a file containing static content. This is a parameter for most publish tasks and the format of the STATIC_CONTENT file depends on the corresponding task.
+      # Path to a file containing static content. This is a parameter for most publish tasks and the format of the MESSAGE_MAPPING file depends on the corresponding task.
       def message_mapping(system_config)
         static_content_file = File.expand_path(ENV.fetch("MESSAGE_MAPPING", "#{system_config.base}/src/static/local-authority-message-mapping.json"))
+        raise GaudiError, "Static content file #{static_content_file} not found" unless File.exist?(static_content_file)
+
+        return static_content_file
+      end
+
+      # Path to a file containing static content. This is a parameter for most publish tasks and the format of the MESSAGES_METADATA file depends on the corresponding task.
+      def messages_metadata(system_config)
+        static_content_file = File.expand_path(ENV.fetch("MESSAGES_METADATA", "#{system_config.base}/src/static/local-messages-metadata.json"))
         raise GaudiError, "Static content file #{static_content_file} not found" unless File.exist?(static_content_file)
 
         return static_content_file

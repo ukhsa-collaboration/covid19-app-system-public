@@ -32,7 +32,7 @@ import uk.nhs.nhsx.keyfederation.InteropClient
  * Key Federation upload lambda
  *
  *
- * doc/architecture/api-contracts/diagnosis-key-federation.md
+ * doc/architecture/api-contracts/diagnosis-key-federation-connector.md
  */
 class KeyFederationUploadHandler @JvmOverloads constructor(
     private val environment: Environment = Environment.fromSystem(),

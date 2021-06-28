@@ -31,6 +31,20 @@ resource "aws_s3_bucket" "this" {
     target_bucket = var.logs_bucket_id
     target_prefix = "${local.identifier_prefix}/"
   }
+
+  dynamic "lifecycle_rule" {
+    for_each = var.lifecycle_rules
+    content {
+      id                                     = lifecycle_rule.value.id
+      prefix                                 = lifecycle_rule.value.prefix
+      enabled                                = lifecycle_rule.value.enabled
+      abort_incomplete_multipart_upload_days = 1
+
+      expiration {
+        days = lifecycle_rule.value.days
+      }
+    }
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "this" {

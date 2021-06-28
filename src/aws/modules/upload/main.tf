@@ -15,7 +15,7 @@ module "upload_lambda" {
   lambda_object_key         = var.lambda_object_key
   lambda_handler_class      = var.lambda_handler_class
   lambda_execution_role_arn = module.upload_role.arn
-  lambda_timeout            = 20
+  lambda_timeout            = 60
   lambda_memory             = 1024
   lambda_environment_variables = {
     BUCKET_NAME                       = var.bucket_name,

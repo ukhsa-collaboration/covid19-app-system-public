@@ -269,7 +269,10 @@ object TestData {
                 .withValue("England"),
             ResultField()
                 .withField("total")
-                .withValue("300")
+                .withValue("300"),
+            ResultField()
+                .withField("app_version")
+                .withValue("4.10")
         ),
         listOf(
             ResultField()
@@ -289,7 +292,10 @@ object TestData {
                 .withValue("England"),
             ResultField()
                 .withField("total")
-                .withValue("200")
+                .withValue("200"),
+            ResultField()
+                .withField("app_version")
+                .withValue("4.10")
         )
     )
 

@@ -5,6 +5,7 @@ import uk.nhs.nhsx.core.aws.s3.BucketName
 
 class AnalyticsDao(
     private val workspace: String,
+    private val mobileAnalyticsTable: String,
     private val athenaOutputBucket: BucketName,
     private val asyncDbClient: AsyncDbClient
 ) {
@@ -23,7 +24,7 @@ class AnalyticsDao(
             aad.postaldistrict,
             CASE WHEN Upper(devicemodel) LIKE '%IPHONE%' THEN 'Apple' ELSE 'Android' END AS platform,
             COUNT(*) as numberOfRecords
-            FROM "${workspace}_analytics_db"."${workspace}_analytics_mobile" aad
+            FROM "${workspace}_analytics_db"."${workspace}_${mobileAnalyticsTable}" aad
                     WHERE date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') < current_date - interval '3' day
                         AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2020-08-13')
                         AND aad.startdate <> aad.enddate
@@ -155,7 +156,7 @@ class AnalyticsDao(
                         END AS receivedriskycontactnotificationind_combined,
                         aad.receivedriskycontactnotification AS receivedriskycontactnotification,
                         COALESCE(pdgl.local_authority, pdgl2.local_authority) AS local_authority
-                    FROM "${workspace}_analytics_db"."${workspace}_analytics_mobile" aad
+                    FROM "${workspace}_analytics_db"."${workspace}_${mobileAnalyticsTable}" aad
                     LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl
                         ON (aad.localauthority <> '' AND aad.postaldistrict = pdgl.postcode AND aad.localauthority = pdgl.lad20cd AND (pdgl.country NOT IN ('Scotland', 'Northern Ireland') OR pdgl.country IS NULL))
                     LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl2
@@ -294,7 +295,7 @@ class AnalyticsDao(
                             THEN 1 
                             ELSE 0 
                         END AS selfdiagnosedisolationind
-                    FROM "${workspace}_analytics_db"."${workspace}_analytics_mobile" aad
+                    FROM "${workspace}_analytics_db"."${workspace}_${mobileAnalyticsTable}" aad
                     WHERE date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') < current_date - interval '3' day
                         AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2020-09-23')
                         AND aad.startdate <> aad.enddate

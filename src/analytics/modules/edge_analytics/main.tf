@@ -20,7 +20,8 @@ module "trigger_export_processing_lambda" {
   lambda_timeout            = 60
   lambda_memory             = 512
   lambda_environment_variables = {
-    export_bucket_name = module.edge_export_store.bucket_name
+    export_bucket_name     = module.edge_export_store.bucket_name
+    mobile_analytics_table = var.mobile_analytics_table
   }
   log_retention_in_days     = var.log_retention_in_days
   app_alarms_topic          = var.alarm_topic_arn

@@ -27,7 +27,7 @@ namespace :queue do
     end
   end
   namespace :release do
-    desc "Queue a release to the staging target environment in CodeBuild"
+    desc "Queue a release to the te-staging and aa-staging target environment in CodeBuild"
     task :"analytics:staging" => [:"login:staging"] do
       include NHSx::Queue
       branch_name = branch_to_queue("staging", $configuration)      
@@ -38,6 +38,15 @@ namespace :queue do
             "account" => "staging"            
           }
       build_info = queue(build_parameters, $configuration)
+      with_account("aa-staging", "analytics") do
+        build_parameters = {
+            "project_name" => "release-analytics-aa-staging",
+            "source_version" => branch_name,
+            "target_environment" => "staging",
+            "account" => "aa-staging"
+          }
+        build_info = queue(build_parameters, $configuration)
+      end
       if $configuration.print_logs
         pipe_logs(build_info)
         puts "Download the full logs with \n\trake download:codebuild:staging JOB_ID=#{build_info.build_id}"
@@ -47,7 +56,7 @@ namespace :queue do
     end
   end
   namespace :release do
-    desc "Queue a release to the prod target environment in CodeBuild"
+    desc "Queue a release to the te-prod and aa-prod target environment in CodeBuild"
     task :"analytics:prod" => [:"login:prod"] do
       include NHSx::Queue
       version_metadata = subsystem_version_metadata("analytics", $configuration)
@@ -65,7 +74,7 @@ namespace :queue do
             "project_name" => "release-analytics-aa-prod",
             "source_version" => "te-staging",
             "target_environment" => "prod",
-            "account" => "prod",
+            "account" => "aa-prod",
             "release_version" => release_version
           }
         build_info = queue(build_parameters, $configuration)

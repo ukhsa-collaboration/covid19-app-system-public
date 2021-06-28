@@ -15,6 +15,7 @@ module NHSx
     SSO_ACCOUNTS = ["aa-prod", "aa-staging", "aa-dev"].freeze
     # The ARNs for the deployment roles per account
     AWS_DEPLOYMENT_ROLES = {
+      "dev" => "arn:aws:iam::123456789012:role/dev-ApplicationDeploymentUser",
       "staging" => "arn:aws:iam::123456789012:role/staging-ApplicationDeploymentUser",
       "prod" => "arn:aws:iam::123456789012:role/prod-ApplicationDeploymentUser",
       "aa-dev" => "arn:aws:iam::181706652550:role/ApplicationDeploymentUser",

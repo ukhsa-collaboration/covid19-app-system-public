@@ -64,6 +64,7 @@ class ImportTests < Test::Unit::TestCase
     Lokalise.expects(:client).returns(lokalise_client)
     lokalise_key = mock
     lokalise_key.expects(:key_id).returns("dummy_key")
+    lokalise_key.expects(:key_name).returns("dummy_key")
     translations_mock = mock
     translations_mock.expects(:translations).returns(JSON.load(translations))
     lokalise_client.expects(:key).returns(translations_mock)

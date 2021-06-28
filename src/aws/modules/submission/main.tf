@@ -34,6 +34,7 @@ module "submission_lambda" {
   app_alarms_topic             = var.alarm_topic_arn
   publish                      = var.provisioned_concurrent_executions != 0 ? true : false
   tags                         = var.tags
+  invocations_alarm_enabled    = var.invocations_alarm_enabled
 }
 
 resource "aws_lambda_provisioned_concurrency_config" "submission_lambda_provisioned_concurrency" {

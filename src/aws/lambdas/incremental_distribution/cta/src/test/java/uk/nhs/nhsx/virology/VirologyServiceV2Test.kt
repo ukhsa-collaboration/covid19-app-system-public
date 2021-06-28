@@ -164,7 +164,7 @@ class VirologyServiceV2Test {
     }
 
     @ParameterizedTest
-    @CsvSource("England,true", "Wales,false", "random,false")
+    @CsvSource("England,true", "Wales,true", "random,false")
     fun `exchanges cta token requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testOrder = TestOrder(ctaToken, pollingToken, DiagnosisKeySubmissionToken.of("sub-token"), LocalDateTime.now().plusWeeks(4))
         val testResult = TestData.positiveResultFor(testOrder.testResultPollingToken, RAPID_SELF_REPORTED)
@@ -496,7 +496,6 @@ class VirologyServiceV2Test {
 
     @Test
     fun `check token returns other when ctaToken is not valid`() {
-
         val service = virologyService(TokensGenerator)
         val request = VirologyTokenStatusRequest("invalidCtaToken")
         val result = service.checkStatusOfToken(request, VirologyTokenExchangeSource.Eng)

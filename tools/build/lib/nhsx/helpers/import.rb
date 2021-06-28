@@ -18,29 +18,33 @@ module NHS
         error_messages += validation_errors
         voc_messages[message_key] = valid_translations
       end
-      raise GaudiError, "schema validation error\n#{error_messages}" unless error_messages.empty?
+      raise GaudiError, "schema validation error\n#{error_messages.join("\n")}" unless error_messages.empty?
 
       return voc_messages
     end
 
     def extract_local_message_translations(lokalise_key, lokalise_project, system_config)
       valid_translations = {}
+      missing_translations = []
       error_messages = []
       schema = Nokogiri::XML::Schema(File.read(File.join(system_config.base, "tools/lokalise/message.xsd")))
       lokalise_client = Lokalise.client lokalise_key
 
       lokalise_translations = lokalise_client.key(lokalise_project, lokalise_key.key_id, {}).translations
+
       lokalise_translations.each do |k|
-        translation = "<message>#{k["translation"]}</message>"
-        validation_result = schema.validate(Nokogiri::XML(translation))
-        if validation_result.empty?
-          lang_iso = k["language_iso"]
-          if lang_iso.include? "_"
-            lang_iso = lang_iso.split("_")[0]
-          end
-          valid_translations[lang_iso] = translation
+        lang_iso = k["language_iso"].split("_").first
+        key_name = lokalise_key.key_name["web"]
+        if k["translation"].empty?
+          missing_translations << "Missing translation for #{lang_iso} in #{key_name}"
         else
-          error_messages += validation_result.map { |e| "#{k["translation"]} failed validation: #{e.message}" }
+          translation = "<message>#{k["translation"]}</message>"
+          validation_result = schema.validate(Nokogiri::XML(translation))
+          if validation_result.empty?
+            valid_translations[lang_iso] = translation
+          else
+            error_messages += validation_result.map { |e| "#{lang_iso} in #{key_name} failed schema validation: #{e.message}" }
+          end
         end
       end
       return valid_translations, error_messages
@@ -67,12 +71,17 @@ module NHS
       end.first
       link_content = para.children.select { |elem| elem.is_a?(Nokogiri::XML::Element) && elem.name == "link" }.map do |el|
         {
+          "type" => "para",
           "link" => el["url"],
           "linkText" => el.text,
         }
       end.first
-      text_content.merge!(link_content) if link_content
-      text_content
+      if text_content
+        text_content.merge!(link_content) if link_content
+        return text_content
+      else
+        return link_content
+      end
     end
 
     def construct_local_messages_translations(valid_messages)
@@ -81,7 +90,7 @@ module NHS
       return translations
     end
 
-    def construct_local_messages_payload(voc_messages)
+    def construct_local_messages_metadata(voc_messages)
       local_messages_payload = {}
       local_messages_payload["messages"] = voc_messages.each_with_object({}) do |message, messages|
         messages[message.first] = { "type" => "notification", "contentVersion" => 1 }

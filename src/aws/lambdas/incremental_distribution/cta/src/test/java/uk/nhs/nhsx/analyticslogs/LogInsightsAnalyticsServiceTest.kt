@@ -107,11 +107,11 @@ class LogInsightsAnalyticsServiceTest {
     @Test
     fun `convert cta exchange stats logs`() {
         val expectedList = listOf(
-            CtaExchangeStats(LocalDate.of(2021,5,4), TestKit.RAPID_SELF_REPORTED, MobileOS.iOS, TokenAgeRange.GREATER_THAN_48_HOURS, Country.England, 300),
-            CtaExchangeStats(LocalDate.of(2021,5,4), TestKit.RAPID_SELF_REPORTED, MobileOS.Android, TokenAgeRange.GREATER_THAN_48_HOURS, Country.England, 200),
+            CtaExchangeStats(LocalDate.of(2021,5,4), TestKit.RAPID_SELF_REPORTED, MobileOS.iOS, TokenAgeRange.GREATER_THAN_48_HOURS, Country.England, 300,"4.10"),
+            CtaExchangeStats(LocalDate.of(2021,5,4), TestKit.RAPID_SELF_REPORTED, MobileOS.Android, TokenAgeRange.GREATER_THAN_48_HOURS, Country.England, 200,"4.10"),
         )
-        val expectedFormat = """{"startDate":"2021-05-04","testType":"RAPID_SELF_REPORTED","platform":"iOS","tokenAgeRange":"GREATER_THAN_48_HOURS","source":"England","total":300}
-                                |{"startDate":"2021-05-04","testType":"RAPID_SELF_REPORTED","platform":"Android","tokenAgeRange":"GREATER_THAN_48_HOURS","source":"England","total":200}
+        val expectedFormat = """{"startDate":"2021-05-04","testType":"RAPID_SELF_REPORTED","platform":"iOS","tokenAgeRange":"GREATER_THAN_48_HOURS","source":"England","total":300,"appVersion":"4.10"}
+                                |{"startDate":"2021-05-04","testType":"RAPID_SELF_REPORTED","platform":"Android","tokenAgeRange":"GREATER_THAN_48_HOURS","source":"England","total":200,"appVersion":"4.10"}
         """.trimMargin()
         assertThat(CtaExchangeStatsConverter().from(expectedCtaExchangeStats), equalTo(expectedList))
         assertThat(LogInsightsAnalyticsService.toAnalyticsJson(expectedList), equalTo(expectedFormat))

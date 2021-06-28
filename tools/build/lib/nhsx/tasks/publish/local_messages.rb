@@ -1,7 +1,7 @@
 namespace :publish do
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     tgt_envs.each do |tgt_env|
-      desc "Publish local messages to #{tgt_env}"
+      desc "Publish local messages to #{tgt_env} with MESSAGE_MAPPING and MESSAGES_METADATA"
       task :"local_messages:#{tgt_env}" => [:"login:#{account}", :"gen:signatures:#{account}"] do
         include NHSx::Publish
         include NHSx::Terraform

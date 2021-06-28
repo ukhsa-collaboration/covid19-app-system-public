@@ -301,6 +301,10 @@ resource "aws_glue_catalog_table" "cta_exchange_stats_analytics" {
       name = "total"
       type = "int"
     }
+    columns {
+      name = "appVersion"
+      type = "string"
+    }
   }
 }
 

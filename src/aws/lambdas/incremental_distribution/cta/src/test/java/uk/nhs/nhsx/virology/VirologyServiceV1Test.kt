@@ -4,6 +4,7 @@ import io.mockk.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.domain.*
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
@@ -34,6 +35,7 @@ class VirologyServiceV1Test {
     private val persistenceService = mockk<VirologyPersistenceService>()
     private val fourWeeksExpireAt = now.plus(Period.ofWeeks(4))
     private val mobileOS = MobileOS.iOS
+    private val mobileAppVersion = MobileAppVersion.Version(5, 0)
     private val virologyPolicyConfig = mockk<VirologyPolicyConfig>()
     private val websiteConfig = VirologyWebsiteConfig(
         "https://example.order-a-test.uk",
@@ -99,7 +101,7 @@ class VirologyServiceV1Test {
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns false
 
         val service = virologyService()
-        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS) as CtaExchangeResult.Available
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS, mobileAppVersion) as CtaExchangeResult.Available
 
         assertThat(result.ctaExchangeResponse.diagnosisKeySubmissionToken).isEqualTo(DiagnosisKeySubmissionToken.of("sub-token"))
         assertThat(result.ctaExchangeResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
@@ -124,7 +126,7 @@ class VirologyServiceV1Test {
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns false
 
         val service = virologyService()
-        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS)
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS, mobileAppVersion)
 
         assertThat(result).isInstanceOf(CtaExchangeResult.Pending::class.java)
         verifySequence {
@@ -139,7 +141,7 @@ class VirologyServiceV1Test {
         every { persistenceService.getTestOrder(ctaToken) } returns Optional.empty()
 
         val service = virologyService()
-        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS)
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS, mobileAppVersion)
 
         assertThat(result).isInstanceOf(CtaExchangeResult.NotFound::class.java)
         verifySequence { persistenceService.getTestOrder(ctaToken) }
@@ -155,7 +157,7 @@ class VirologyServiceV1Test {
         every { persistenceService.getTestResult(testResultPollingToken) } returns Optional.empty()
 
         val service = virologyService()
-        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS)
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS, mobileAppVersion)
 
         assertThat(result).isInstanceOf(CtaExchangeResult.NotFound::class.java)
         verifySequence {
@@ -175,7 +177,7 @@ class VirologyServiceV1Test {
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns true
 
         val service = virologyService()
-        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS)
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS, mobileAppVersion)
 
         assertThat(result).isInstanceOf(CtaExchangeResult.NotFound::class.java)
         verifySequence {
@@ -200,7 +202,7 @@ class VirologyServiceV1Test {
 
         val service = virologyService()
 
-        assertThat(service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS)).isInstanceOf(CtaExchangeResult.NotFound::class.java)
+        assertThat(service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS, mobileAppVersion)).isInstanceOf(CtaExchangeResult.NotFound::class.java)
 
         verify(exactly = 1) { persistenceService.getTestOrder(ctaToken) }
     }
@@ -373,7 +375,7 @@ class VirologyServiceV1Test {
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns false
 
         val service = virologyService()
-        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS)
+        val result = service.exchangeCtaTokenForV1(CtaExchangeRequestV1(ctaToken), mobileOS, mobileAppVersion)
 
         assertThat(result).isInstanceOf(CtaExchangeResult.Available::class.java)
         verifySequence {

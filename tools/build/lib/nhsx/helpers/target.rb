@@ -17,7 +17,6 @@ module NHSx
     # The location for the terraform configuration of the account used for hosting temporary deployment environments
     # relative to the root of the repository
     CTA_DEV_ACCOUNT = "src/aws/accounts/dev".freeze
-    SYNTH_DEV_ACCOUNT = "src/synthetics/accounts/dev".freeze
     ANALYTICS_DEV_ACCOUNT = "src/analytics/accounts/dev".freeze
     PUBDASH_DEV_ACCOUNT = "src/pubdash/infrastructure/accounts/dev".freeze
     DORETO_DEV_ACCOUNT = "src/documentation_reporting_tool/infrastructure/accounts/dev".freeze

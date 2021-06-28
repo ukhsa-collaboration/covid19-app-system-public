@@ -8,7 +8,7 @@ namespace :deploy do
         include NHSx::Deploy
         deploy_app_system(tgt_env, account, $configuration)
       end
-      desc "Full CTA system deployment with analytics and sanity checks"
+      desc "Full CTA system deployment with tier metadata,local messages and sanity checks"
       task :"cta:#{tgt_env}" => prerequisites do
         begin
           Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"

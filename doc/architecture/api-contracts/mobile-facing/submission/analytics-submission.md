@@ -1,24 +1,24 @@
-# Daily mobile analytics submission
+# Daily Analytics Submission
 
-API group: [Submission](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Submission](../../../api-patterns.md#submission)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Submit Mobile Analytics: ```POST https://<FQDN>/submission/mobile-analytics```
 
 ### Parameters
 
 - FQDN: Target-environment specific CNAME of the Mobile Submission CloudFront distribution 
-- Authorization required and signatures NOT provided - see [API security](../../security.md)
+- Authorization required and signatures NOT provided - see [API security](../../../api-security.md)
 - Extensibility: new Key-Value Pairs can be added to the request without breaking request processing
 
 ## Scenario
 
 Mobile clients collect and send app analytics periodically (roughly once per 24h) to the backend.
  
-## Example: Submit Mobile Analytics
+### Submit Mobile Analytics
 
-### iOS Request Payload Example
+#### iOS Request Payload Example
 ```json
 {
   "metadata" : {
@@ -112,13 +112,19 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "didSendLocalInfoNotification": 1,
     "didAccessLocalInfoScreenViaNotification": 1,
     "didAccessLocalInfoScreenViaBanner": 1,
-    "isDisplayingLocalInfoBackgroundTick": 1
+    "isDisplayingLocalInfoBackgroundTick": 1,
+    "positiveLabResultAfterPositiveLFD": 1,
+    "negativeLabResultAfterPositiveLFDWithinTimeLimit": 1,
+    "negativeLabResultAfterPositiveLFDOutsideTimeLimit": 1,
+    "positiveLabResultAfterPositiveSelfRapidTest": 1,
+    "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit": 1,
+    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit": 1
   },
   "includesMultipleApplicationVersions" : false
 }
 ```
 
-### Android Request Payload Example
+#### Android Request Payload Example
 ```json
 {
   "metadata" : {
@@ -208,7 +214,13 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "didSendLocalInfoNotification": 1,
     "didAccessLocalInfoScreenViaNotification": 1,
     "didAccessLocalInfoScreenViaBanner": 1, 
-    "isDisplayingLocalInfoBackgroundTick": 1
+    "isDisplayingLocalInfoBackgroundTick": 1,
+    "positiveLabResultAfterPositiveLFD": 1,
+    "negativeLabResultAfterPositiveLFDWithinTimeLimit": 1,
+    "negativeLabResultAfterPositiveLFDOutsideTimeLimit": 1,
+    "positiveLabResultAfterPositiveSelfRapidTest": 1,
+    "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit": 1,
+    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -284,8 +296,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `isDisplayingLocalInfoBackgroundTick`
 
 
-### Responses
+### HTTP Response Codes
 | Status Code | Description |
 | --- | --- |
-| 200 | Submission processed |
-| 400 | Bad request could not process payload |
+| `200 OK` | Submission processed |
+| `400 Bad Request` | Bad request could not process payload |

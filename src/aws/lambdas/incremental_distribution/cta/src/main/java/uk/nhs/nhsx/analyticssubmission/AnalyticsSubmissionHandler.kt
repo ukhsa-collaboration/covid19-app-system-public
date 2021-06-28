@@ -39,7 +39,6 @@ class AnalyticsSubmissionHandler @JvmOverloads constructor(
     events: Events = PrintingJsonEvents(clock),
     healthAuthenticator: Authenticator = awsAuthentication(Health, events),
     mobileAuthenticator: Authenticator = awsAuthentication(Mobile, events),
-    s3Storage: S3Storage = AwsS3Client(events),
     kinesisFirehose: AmazonKinesisFirehose = AmazonKinesisFirehoseClientBuilder.defaultClient(),
     objectKeyNameProvider: ObjectKeyNameProvider = UniqueObjectKeyNameProvider(clock, UniqueId.ID),
     analyticsConfig: AnalyticsConfig = analyticsConfig(environment)
@@ -48,7 +47,6 @@ class AnalyticsSubmissionHandler @JvmOverloads constructor(
 
     private val service = AnalyticsSubmissionService(
         analyticsConfig,
-        s3Storage,
         objectKeyNameProvider,
         kinesisFirehose,
         events,
@@ -78,15 +76,12 @@ class AnalyticsSubmissionHandler @JvmOverloads constructor(
     )
 
     companion object {
-        private val S3_INGEST_ENABLED = EnvironmentKey.bool("s3_ingest_enabled")
         private val FIREHOSE_INGEST_ENABLED = EnvironmentKey.bool("firehose_ingest_enabled")
         private val FIREHOSE_STREAM = EnvironmentKey.string("firehose_stream_name")
 
         private fun analyticsConfig(environment: Environment) = AnalyticsConfig(
             environment.access.required(FIREHOSE_STREAM),
-            environment.access.required(S3_INGEST_ENABLED),
-            environment.access.required(FIREHOSE_INGEST_ENABLED),
-            environment.access.required(EnvironmentKeys.SUBMISSION_STORE)
+            environment.access.required(FIREHOSE_INGEST_ENABLED)
         )
     }
 }

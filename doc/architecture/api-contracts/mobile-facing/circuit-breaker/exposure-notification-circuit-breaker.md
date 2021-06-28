@@ -1,24 +1,24 @@
 # Exposure Notification Circuit Breaker
 
-API group: [Submission](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Circuit Breaker](../../../api-patterns.md#circuit-breaker)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Circuit Breaker Request: ```POST https://<FQDN>/circuit-breaker/exposure-notification/request```
 - Circuit Breaker Resolution: ```GET https://<FQDN>/circuit-breaker/exposure-notification/resolution/<approval_token>```
 
 ### Parameters
 - FQDN: Hostname can be different per API
-- Authorization required and signatures provided - see [API security](../../security.md)
+- Authorization required and signatures provided - see [API security](../../../api-security.md)
 - Request payload content-type: `application/json`
 - Response payload content-type: `application/json`
 
 ## Scenario
 
-### Example: Initial request
+### Initial request
 ```POST https://<FQDN>/circuit-breaker/exposure-notification/request```
 
-#### Payload Example
+#### Request Payload Example
 
 ```json
 {
@@ -33,12 +33,11 @@ Notes: `riskCalculationVersion` should be an optional field and default to `1` i
 ##### Risk calculation version
 Currently there are two risk calculation versions with the following mapping:
 
-*Version 1*
+Risk Calculation *V1*
 - Apps or devices using EN API v1.5/1 (App version < 3.9, iOS devices < iOS 13.7)
 
-*Version 2*
+Risk Calculation *V2*
 - Apps or devices using EN API v1.6/2 or higher (App version >= 3.9, iOS devices >= iOS 13.7)
-
 
 #### Response Payload Example
 
@@ -49,7 +48,7 @@ Currently there are two risk calculation versions with the following mapping:
 }
 ```
 
-### Example: Poll for resolution status
+### Poll for resolution status
 
 ```GET https://<FQDN>/circuit-breaker/exposure-notification/resolution/<approval_token>```
 

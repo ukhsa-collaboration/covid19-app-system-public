@@ -83,12 +83,6 @@ module "empty_submission_v2_distribution_access" {
 }
 # other bucket types (submission, repository, etc.) have default secure access
 
-module "analytics_submission_access" {
-  source        = "./modules/s3_access_policies"
-  policy_type   = "default"
-  s3_bucket_arn = module.analytics_submission.store_arn
-}
-
 module "analytics_events_submission_access" {
   source        = "./modules/s3_access_policies"
   policy_type   = "default"

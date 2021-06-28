@@ -26,7 +26,8 @@ class TriggerExportHandler(
         ),
         asyncDbClient = AthenaAsyncDbClient(
             athena = AmazonAthenaClient.builder().build()
-        )
+        ),
+        mobileAnalyticsTable = environment.access.required(Environment.EnvironmentKey.string("mobile_analytics_table"))
     )
 ) : SchedulingHandler(events) {
 

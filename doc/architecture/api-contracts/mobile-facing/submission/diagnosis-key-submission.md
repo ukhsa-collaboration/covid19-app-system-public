@@ -1,22 +1,22 @@
 # Diagnosis Key Submission
 
-API group: [Submission](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Submission](../../../api-patterns.md#submission)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Submit Diagnosis Keys - ```POST https://<FQDN>/submission/diagnosis-keys```
 
 ### Parameters
 - FQDN: Hostname can be different per API
-- Authorization required and signatures provided - see [API security](../../security.md)
+- Authorization required and signatures provided - see [API security](../../../api-security.md)
 
 ## Scenario
 
 Mobile clients send diagnostic keys after the user receives a positive test result and agrees to the upload.
 
-## Example: Submit Diagnosis Keys
+### Submit Diagnosis Keys
 
-### Request Payload Example
+#### Request Payload Example
 
 ```json
 {
@@ -47,16 +47,16 @@ Mobile clients send diagnostic keys after the user receives a positive test resu
 }
 ```
 
-## Validation
+### Validation
 
-### Required properties 
-- `diagnosisKeySubmissionToken` valid one-time token (associated with a positive Covid19 test result that has never been used yet). Token must be obtained via the [virology testing api](virology-testing-api.md).
+#### Required properties 
+- `diagnosisKeySubmissionToken` valid one-time token (associated with a positive COVID-19 test result that has never been used yet). Token must be obtained via the [virology testing api](virology-test-order-submission.md).
 - `temporaryExposureKeys` is required array
 - `key` required, non-empty base64 encoded string
 - `rollingStartNumber` required uint32
 - `rollingPeriod` required uint32
 
-### Optional properties
+#### Optional properties
 
 The properties `transmissionRiskLevel` and `daysSinceOnsetOfSymptoms` are now supported by the api. In order to preserve backwards compatibility key payloads without these fields will also be accepted.
 
@@ -64,5 +64,8 @@ If `transmissionRiskLevel` is missing from a key the value will be set to 7 by d
 
 If `daysSinceOnsetOfSymptoms` is missing from a key on submission, then the field will be omitted from that key in the distribution zip.
 
-### Responses
-The API always returns OK (200) even if validation of the payload fails (to prevent api response abuse).
+### HTTP Response Codes
+The API always returns `200 OK` even if validation of the payload fails (to prevent api response abuse).
+
+### Notes
+- See [Key User Journeys](../../../journeys.md) for conceptual system flows

@@ -74,3 +74,9 @@ variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)
 }
+
+variable "invocations_alarm_enabled" {
+  description = "Flag to enable the alarm for lambda invocations"
+  type        = bool
+  default     = true
+}

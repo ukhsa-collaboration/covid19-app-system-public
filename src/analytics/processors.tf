@@ -10,4 +10,5 @@ module "edge_analytics" {
   alarm_topic_arn                           = var.alarm_topic_arn
   edge_export_url                           = var.edge_export_url
   enabled_workspaces                        = var.edge_export_mobile_analytics_enabled_workspaces
+  mobile_analytics_table                    = "analytics_mobile"
 }

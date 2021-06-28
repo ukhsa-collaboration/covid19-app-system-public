@@ -11,7 +11,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 
-data class CtaExchangeStats(val startDate: LocalDate, val testType: TestKit, val platform: MobileOS?, val tokenAgeRange : TokenAgeRange, val source: Country, val total: Int)
+data class CtaExchangeStats(val startDate: LocalDate, val testType: TestKit, val platform: MobileOS?, val tokenAgeRange : TokenAgeRange, val source: Country, val total: Int,  val appVersion: String)
 
 class CtaExchangeStatsConverter : Converter<CtaExchangeStats>() {
     private val dateTimeFormatterPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
@@ -22,7 +22,8 @@ class CtaExchangeStatsConverter : Converter<CtaExchangeStats>() {
             platform = MobileOS.valueOf(map["platform"] ?: error("missing platform field from cloudwatch log insights")),
             tokenAgeRange = TokenAgeRange.valueOf(map["token_age_range"] ?: error("missing token_age_range field from cloudwatch log insights")),
             source = Country.from(map["source"] ?: error("missing source field from cloudwatch log insights")),
-            total = map["total"]?.toInt() ?: 0
+            total = map["total"]?.toInt() ?: 0,
+            appVersion = map["app_version"] ?: "UNKNOWN"
         )
     }
 }
@@ -41,4 +42,4 @@ private const val ctaExchangeQueryString = """fields @timestamp, @message
 | filter @message like /^\{/
 | filter metadata.name = "SuccessfulCtaExchange"
 | sort @timestamp desc
-| stats count() as total by bin(1d) as start_date, event.testKit as test_type, event.country as source, event.mobileOS as platform, event.tokenAgeRange as token_age_range"""
+| stats count() as total by bin(1d) as start_date, event.testKit as test_type, event.country as source, event.mobileOS as platform, event.tokenAgeRange as token_age_range, event.appVersion.semVer as app_version"""

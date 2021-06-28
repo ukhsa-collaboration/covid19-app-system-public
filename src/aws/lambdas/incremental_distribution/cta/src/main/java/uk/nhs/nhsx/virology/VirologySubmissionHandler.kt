@@ -114,7 +114,7 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                                 UnprocessableVirologyCtaExchange(it)
                             )
                         }
-                            ?.let { virology.exchangeCtaTokenForV1(it, mobileOSFrom(r)).toHttpResponse() }
+                            ?.let { virology.exchangeCtaTokenForV1(it, mobileOSFrom(r), mobileAppVersionFrom(r)).toHttpResponse() }
                             ?: HttpResponses.badRequest()
                     }
                 }

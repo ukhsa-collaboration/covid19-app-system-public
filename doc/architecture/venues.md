@@ -36,7 +36,7 @@ should be communicated to user devices.
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
-| Identified Risk Venues | [Upload](./api-patterns.md#upload) | [risky-venue-upload.md](api-contracts/service-facing/risky-venue-upload.md) | Data source for Risky Venue distribution API. |
+| Identified Risk Venues | [Upload](./api-patterns.md#upload) | [risky-venue-upload.md](api-contracts/service-facing/upload/risky-venue-upload.md) | Data source for Risky Venue distribution API. |
 
 In this regard, the Covid-19 app system acts only as a distributor of this information.
 

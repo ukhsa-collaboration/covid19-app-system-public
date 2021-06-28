@@ -9,4 +9,23 @@ namespace :delete do
       run_command("Delete risky venues", cmdline, $configuration)
     end
   end
+  namespace :parquet_consolidation_job do
+    NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+      tgt_envs.each do |tgt_env|
+        desc "delete a parquet consolidation job"
+        task :"#{tgt_env}" => [:"login:#{account}"] do
+          prefix = target_environment_name(tgt_env, account, $configuration)
+          job_name = "#{prefix}-parquet-consolidation"
+          s3_bucket = "#{prefix}-temporary-analytics-consolidated-submission-parquet"
+
+          cmdline = "aws glue delete-job --job-name #{job_name}"
+          run_command("Deleting glue job", cmdline, $configuration)
+
+          NHSx::AWS::Commandlines.empty_s3_bucket(s3_bucket, $configuration)
+          cmdline = NHSx::AWS::Commandlines.delete_bucket("s3://#{s3_bucket}")
+          run_command("Delete parquet consolidation bucket", cmdline, $configuration)
+        end
+      end
+    end
+  end
 end

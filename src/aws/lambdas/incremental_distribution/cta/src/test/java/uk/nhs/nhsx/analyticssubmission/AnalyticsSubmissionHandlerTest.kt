@@ -51,9 +51,7 @@ class AnalyticsSubmissionHandlerTest {
     private val objectKeyNameProvider = mockk<ObjectKeyNameProvider>()
     private val config = AnalyticsConfig(
         "firehoseStreamName",
-        s3IngestEnabled = true,
-        firehoseIngestEnabled = false,
-        bucketName = BUCKET_NAME
+        firehoseIngestEnabled = false
     )
 
     private val events = RecordingEvents()
@@ -68,7 +66,6 @@ class AnalyticsSubmissionHandlerTest {
         events,
         { true },
         { true },
-        s3Storage,
         kinesisFirehose,
         objectKeyNameProvider,
         config
@@ -253,15 +250,10 @@ class AnalyticsSubmissionHandlerTest {
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(OK_200))
         assertThat(responseEvent, hasBody(equalTo(null)))
-        assertThat(s3Storage.count, equalTo(1))
-        assertThat(s3Storage.name, equalTo(objectKey.append(".json")))
-        assertThat(s3Storage.bucket, equalTo(BUCKET_NAME))
-        assertThat(s3Storage.bytes.toUtf8String(), equalTo(testCombo.expectedJson))
         events.contains(MobileAnalyticsSubmission::class)
     }
 
     companion object {
-        private val BUCKET_NAME = BucketName.of("some-bucket-name")
         fun iOSPayloadFromNewMetrics(startDate: String, endDate: String): String {
             val metrics = """
                     ,"receivedVoidTestResultEnteredManually" : 1,    
@@ -325,7 +317,13 @@ class AnalyticsSubmissionHandlerTest {
                     "didSendLocalInfoNotification":1,
                     "didAccessLocalInfoScreenViaNotification":1,
                     "didAccessLocalInfoScreenViaBanner":1,
-                    "isDisplayingLocalInfoBackgroundTick":1""".trimIndent()
+                    "isDisplayingLocalInfoBackgroundTick":1,
+                    "positiveLabResultAfterPositiveLFD":1,
+                    "negativeLabResultAfterPositiveLFDWithinTimeLimit":1,
+                    "negativeLabResultAfterPositiveLFDOutsideTimeLimit":1,
+                    "positiveLabResultAfterPositiveSelfRapidTest":1,
+                    "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit":1,
+                    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit":1""".trimIndent()
             return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", metrics)
         }
 

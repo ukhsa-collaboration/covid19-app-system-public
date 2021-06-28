@@ -349,7 +349,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token for available test result`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any(), any()) } returns
+            every { exchangeCtaTokenForV1(any(), any(), any()) } returns
                 CtaExchangeResult.Available(
                     CtaExchangeResponseV1(DiagnosisKeySubmissionToken.of("sub-token"), Positive, TestEndDate.of(2020, 4, 23), LAB_RESULT)
                 )
@@ -379,7 +379,7 @@ class VirologySubmissionHandlerTest {
         assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
 
         verify(exactly = 1) {
-            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any())
+            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any(), any())
         }
         events.contains(VirologyCtaExchange::class)
     }
@@ -387,7 +387,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token handling test result not available yet`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any(), any()) } returns CtaExchangeResult.Pending()
+            every { exchangeCtaTokenForV1(any(), any(), any()) } returns CtaExchangeResult.Pending()
         }
 
         val requestEvent = ProxyRequestBuilder.request()
@@ -406,7 +406,7 @@ class VirologySubmissionHandlerTest {
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
         verify(exactly = 1) {
-            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any())
+            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any(), any())
         }
         events.contains(VirologyCtaExchange::class)
     }
@@ -414,7 +414,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token handling cta token not found`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any(), any()) } returns CtaExchangeResult.NotFound()
+            every { exchangeCtaTokenForV1(any(), any(), any()) } returns CtaExchangeResult.NotFound()
         }
 
         val requestEvent = ProxyRequestBuilder.request()
@@ -433,7 +433,7 @@ class VirologySubmissionHandlerTest {
         assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
 
         verify(exactly = 1) {
-            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any())
+            virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any(), any())
         }
         events.contains(VirologyCtaExchange::class)
     }

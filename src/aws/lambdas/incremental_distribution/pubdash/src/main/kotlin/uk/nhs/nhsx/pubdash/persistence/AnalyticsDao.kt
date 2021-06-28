@@ -4,7 +4,9 @@ import uk.nhs.nhsx.pubdash.QueryId
 import uk.nhs.nhsx.pubdash.QueryResult
 import uk.nhs.nhsx.pubdash.datasets.AnalyticsSource
 
-class AnalyticsDao(private val workspace: String, private val asyncDbClient: AsyncDbClient) : AnalyticsSource {
+class AnalyticsDao(
+    private val workspace: String, private val asyncDbClient: AsyncDbClient, private val mobileAnalyticsTable: String,
+) : AnalyticsSource {
 
     override fun startAgnosticDatasetQueryAsync(): QueryId = asyncDbClient.submitQuery(
         """
@@ -209,7 +211,7 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
                             THEN 1
                             ELSE 0
                         END AS receivedRiskyContactNotificationInd
-                    FROM "${workspace}_analytics_db"."${workspace}_analytics_mobile" aad
+                    FROM "${workspace}_analytics_db"."${workspace}_${mobileAnalyticsTable}" aad
                     WHERE date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2020-09-24')
                         AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') <=
                             (CASE day_of_week(current_date)
@@ -221,7 +223,9 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
                                 WHEN 5 THEN current_date - interval '9' day /* Fri */
                                 WHEN 6 THEN current_date - interval '10' day /* Sat */
                             END)
-                        AND date_parse(aad.submitteddatehour,'%Y/%c/%d/%H') <=
+                        AND coalesce(
+                            try(date_parse(aad.submitteddatehour,'%Y/%c/%d/%H')),
+                            try(date_parse(aad.submitteddatehour,'%Y-%c-%d-%H')))<=
                             (CASE day_of_week(current_date)
                                 WHEN 7 THEN current_date - interval '7' day /* Sun */
                                 WHEN 1 THEN current_date - interval '1' day /* Mon */
@@ -408,7 +412,7 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
                             THEN 1
                             ELSE 0
                         END AS receivedRiskyContactNotificationInd
-                    FROM "${workspace}_analytics_db"."${workspace}_analytics_mobile" aad
+                    FROM "${workspace}_analytics_db"."${workspace}_${mobileAnalyticsTable}" aad
                     WHERE date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2020-09-24')
                         AND date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') <=
                             (CASE day_of_week(current_date)
@@ -420,7 +424,9 @@ class AnalyticsDao(private val workspace: String, private val asyncDbClient: Asy
                                 WHEN 5 THEN current_date - interval '9' day /* Fri */
                                 WHEN 6 THEN current_date - interval '10' day /* Sat */
                             END)
-                        AND date_parse(aad.submitteddatehour,'%Y/%c/%d/%H') <=
+                        AND coalesce(
+                            try(date_parse(aad.submitteddatehour,'%Y/%c/%d/%H')),
+                            try(date_parse(aad.submitteddatehour,'%Y-%c-%d-%H'))) <=
                             (CASE day_of_week(current_date)
                                 WHEN 7 THEN current_date - interval '7' day /* Sun */
                                 WHEN 1 THEN current_date - interval '1' day /* Mon */

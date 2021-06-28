@@ -116,14 +116,14 @@ class VirologyService(
             }.orElse(VirologyTokenStatusResponse("other"))
     }
 
-    fun exchangeCtaTokenForV1(request: CtaExchangeRequestV1, mobileOS: MobileOS): CtaExchangeResult {
+    fun exchangeCtaTokenForV1(request: CtaExchangeRequestV1, mobileOS: MobileOS, mobileAppVersion: MobileAppVersion): CtaExchangeResult {
         return persistence
             .getTestOrder(request.ctaToken)
             .filter { it.downloadCounter < maxCtaExchangeRetryCount }
             .map { testOrder: TestOrder ->
                 persistence
                     .getTestResult(testOrder.testResultPollingToken)
-                    .map { mapToCtaExchangeResultV1(testOrder, it, mobileOS) }
+                    .map { mapToCtaExchangeResultV1(testOrder, it, mobileOS, mobileAppVersion) }
                     .orElseGet {
                         ctaTokenNotFound(
                             testOrder.ctaToken,
@@ -138,7 +138,8 @@ class VirologyService(
     private fun mapToCtaExchangeResultV1(
         testOrder: TestOrder,
         testState: TestState,
-        mobileOS: MobileOS
+        mobileOS: MobileOS,
+        mobileAppVersion: MobileAppVersion,
     ): CtaExchangeResult {
         return when {
             policyConfig.shouldBlockV1TestResultQueries(testState.testKit) ->
@@ -167,7 +168,8 @@ class VirologyService(
                             Country.UNKNOWN,
                             testState.testKit,
                             mobileOS,
-                            tokenAgeRange
+                            tokenAgeRange,
+                            mobileAppVersion
                         )
                     )
                 }
@@ -254,7 +256,8 @@ class VirologyService(
                                     country,
                                     testState.testKit,
                                     mobileOS,
-                                    tokenAgeRange
+                                    tokenAgeRange,
+                                    mobileAppVersion
                                 )
                             )
                         }

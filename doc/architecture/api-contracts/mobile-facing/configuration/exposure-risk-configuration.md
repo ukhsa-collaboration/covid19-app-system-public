@@ -1,15 +1,15 @@
 # Exposure Notification & Risk Calculation Configuration Distribution
 
-API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Distribution](../../../api-patterns.md#distribution)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Exposure Configuration: ```GET https://<FQDN>/distribution/exposure-configuration```
 
 ### Parameters
 
 - FQDN: One (CDN) hostname for all distributed APIs
-- Authorization NOT required and signatures provided - see [API security](../../security.md)
+- Authorization NOT required and signatures provided - see [API security](../../../api-security.md)
 - Payload content-type: `application/json`
 
 ## Scenario
@@ -21,10 +21,8 @@ API group: [Distribution](../../../guidebook.md#system-apis-and-interfaces)
 
 [Read more about the API for Exposure Notification Configuration](https://developers.google.com/android/exposure-notifications/exposure-notifications-api)
 
-## Example: Exposure Configuration
-```GET https://<FQDN>/distribution/exposure-configuration```
-
-### Response Example (structure)
+### Exposure Configuration
+#### Response Payload Example (structure)
 ```json
     {
       "exposureNotification": {

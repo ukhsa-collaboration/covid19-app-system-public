@@ -86,7 +86,9 @@ fun dataExportService(
         asyncDbClient = AthenaAsyncDbClient(
             athena = AmazonAthenaClient.builder().build(),
             workgroup = environment.access.required(string("analytics_workgroup"))
-        )
+        ),
+        mobileAnalyticsTable = environment.access.required(string("mobile_analytics_table"))
+
     ),
     queueClient = QueueClient(
         queueUrl = environment.access.required(string("queue_url")),

@@ -10,7 +10,7 @@ module NHSx
     POLICY_COLOURS_V2 = %w[black maroon green yellow red amber neutral].freeze
     TIERS_WITH_POLICIES = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4].freeze
     VALID_TIERS = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 EN.Tier4.MassTest EN.Border.Tier1 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4
-                     EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh EN.NationalRestrictions EN.VariantTier EN.EasingStep1 EN.EasingStep2 EN.VariantTier2 EN.EasingStep3].freeze
+                     EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh EN.NationalRestrictions EN.VariantTier EN.EasingStep1 EN.EasingStep2 EN.VariantTier2 EN.EasingStep3 WA.Easing1].freeze
     LANGUAGES = %w[ar bn cy en gu pa pl ro so tr ur zh]
 
     # Validate the given key is present in file_content, raise GaudiError otherwise
@@ -139,11 +139,14 @@ module NHSx
 
     def validate_local_messages_metadata_languages(msg_metadata)
       diff_lang = []
+      required_language_errors = []
       msg_metadata.each do |key, value|
-        languages_value_match = value.keys.sort == LANGUAGES.sort
-        diff_lang.push({ key => value.keys }) unless languages_value_match
+        required_language_errors << "Missing en content for #{key}" unless value.keys.include?("en")
+        diff_lang.push({ key => value.keys }) unless value.keys.sort == LANGUAGES.sort
       end
-      raise GaudiError, "The following messages either do not have valid languages or are missing the required languages:\nLanguages provided by lokalise import: #{diff_lang.join("\n")}\nValid languages: #{LANGUAGES}" unless diff_lang.empty?
+      raise GaudiError, "Missing required content from:\n#{required_language_errors.join("\n")}" unless required_language_errors.empty?
+
+      puts "The following messages are missing translations:\nLanguages provided by lokalise import: \n#{diff_lang.join("\n")}\nValid languages: #{LANGUAGES}" unless diff_lang.empty?
     end
   end
 end

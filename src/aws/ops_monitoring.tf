@@ -6,7 +6,6 @@ module "cloudwatch_analytics" {
   cloudfront_upload_id       = module.upload_apis.distribution_id
   monitored_buckets = [
     module.diagnosis_keys_distribution_store.bucket_id,
-    module.analytics_submission.store_id,
     module.diagnosis_keys_submission.store_id,
   ]
   request_triggered = [

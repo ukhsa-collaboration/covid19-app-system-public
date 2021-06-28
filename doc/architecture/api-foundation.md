@@ -1,4 +1,5 @@
 ## Foundations and Security
+
 All APIs adhere to the following **structure and foundational features**
 
 * Basic endpoint schema: ```https://<FQDN>/<api-group>```
@@ -10,7 +11,7 @@ All APIs adhere to the following **structure and foundational features**
 
 * Cloudfront presents SSL certificate with our host name in it, pinned on the root certificate(s) of the chain for our mobile app
 * TLS 1.2 (tls1.2_2018 policy) is used for connection encryption
-* [Authorisation with API Key](./api-contracts/security.md#authentication) specially issued for each API: ```Authorization: Bearer <API KEY>```
+* [Authorisation with API Key](api-security.md#authentication) specially issued for each API: ```Authorization: Bearer <API KEY>```
 * Secure process for generating and distributing API Keys relies on out-of-band identity authentication:
     1. We generate and exchange GPG public keys and establish a trust relationship (e.g. phone call) with third party (ext system responsible)
     1. We generate the API key using the third-party's public key, encrypt and send it via mail
@@ -22,7 +23,7 @@ All APIs adhere to the following **structure and foundational features**
 ### Signature of responses via Submission and Distribution
 
 The majority of APIs in the submission and distribution API groups will include a HTTP header containing a signature to support verification of payloads.
-* [Signature (ECDSA_SHA_256) of response body](./api-contracts/security.md#response-signature): ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
+* [Signature (ECDSA_SHA_256) of response body](api-security.md#response-signature): ```x-amz-meta-signature: keyId="(AWS ACM CMK key id)",signature="(base64 encoded signature)"```
 * One Signing Key #1 for all APIs
 * Public Key #1 embedded into mobile apps (in obfuscated form)
 * Clients (mobile apps) must verify signature

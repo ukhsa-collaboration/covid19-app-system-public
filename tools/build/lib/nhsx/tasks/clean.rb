@@ -3,7 +3,6 @@ require_relative "clean/analytics"
 require_relative "clean/cta"
 require_relative "clean/doreto"
 require_relative "clean/pubdash"
-require_relative "clean/synthetics"
 require_relative "clean/virology"
 
 namespace :clean do

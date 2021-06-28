@@ -88,16 +88,6 @@ namespace :gen do
       end
       update_secrets_entry(NHSx::TargetEnvironment::TEST_API_KEY_HEADERS_SECRET, JSON.dump(authorization_headers).gsub("\"", "\\\""), $configuration)
     end
-
-    desc "Create bearer token and secret password hash for synthetic canaries in the #{account} account"
-    task :"secrets:synth:#{account}" => [:"login:#{account}"] do
-      include NHSx::Secret
-
-      api_name = "health"
-      hash_key_name = "synthetic_canary"
-      auth_key_name = "#{hash_key_name}_auth"
-      create_linked_secrets(api_name, auth_key_name, hash_key_name, "Synthetic canaries auth header")
-    end
   end
 
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
@@ -128,6 +118,7 @@ namespace :gen do
     include NHSx::Generate
 
     mapping_file = $configuration.message_mapping($configuration)
-    generate_local_messages(mapping_file, "#{$configuration.base}/src/static/local-messages-metadata.json", $configuration)
+    metadata_file = $configuration.messages_metadata($configuration)
+    generate_local_messages(mapping_file, metadata_file, $configuration)
   end
 end

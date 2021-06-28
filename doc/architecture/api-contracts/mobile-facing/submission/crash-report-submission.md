@@ -1,15 +1,15 @@
-# Mobile crash reports submission
+# Crash Report Submission
 
-API group: [Submission](../../../guidebook.md#system-apis-and-interfaces)
+> API Pattern: [Submission](../../../api-patterns.md#submission)
 
-## HTTP request and response
+## HTTP Request and Response
 
 - Submit mobile crash reports: ```POST https://<FQDN>/submission/crash-reports```
 
 ### Parameters
 
 - FQDN: Target-environment specific CNAME of the Mobile Submission CloudFront distribution 
-- Authorization required and signatures NOT provided - see [API security](../../security.md)
+- Authorization required and signatures NOT provided - see [API security](../../../api-security.md)
 - Extensibility: new Key-Value Pairs can be added to the request without breaking request processing
 
 ## Scenario
@@ -20,9 +20,9 @@ The backend receives the payload (see example below) from the mobile client and 
 
 This data is preserved for a limited amount of time (7 days) to allow further investigation of the exception.
 
-## Example: Submit 
+### Submit Crash Report
 
-### Android Request Payload Example
+#### Android Request Payload Example
 ```json
 {
   "exception": "android.app.RemoteServiceException",
@@ -47,8 +47,8 @@ All payload values will be sanitised to avoid XSS malicious urls (remove http://
 #### Feature flag
 Logging the payload data can be switched off, e.g. api is under attack or this endpoint is no longer needed
 
-### Responses
+### HTTP Response Codes
 | Status Code | Description |
 | --- | --- |
-| 200 | Submission processed | Exception field is not recognised by the backend (prevent api abuse)
-| 400 | Bad request could not process payload
+| `200 OK` | Submission processed | Exception field is not recognised by the backend (prevent api abuse)
+| `400 Bad Request` | Bad request could not process payload

@@ -31,4 +31,3 @@ Analytics- | {target-environment}-analytics | Analytics subsystem|
 Tiers-  | {target-environment}-tiers | Tier metadata configuration |
 Availability- | {target-environment}-availability | App availability configuration|
 PublicDashboard- | {target-environment}-pubdash| Public dashboard subsystem|
-Synthetics- | {target-environment}-synthetics| Synthetics monitoring subsystem|

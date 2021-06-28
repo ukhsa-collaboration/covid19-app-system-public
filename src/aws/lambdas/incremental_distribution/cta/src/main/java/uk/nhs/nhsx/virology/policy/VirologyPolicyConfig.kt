@@ -18,7 +18,8 @@ class VirologyPolicyConfig(
         mapOf(
             VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive) to AllVersions,
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive) to FromMinimumInclusive(Version(4, 11)),
-            VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive) to FromMinimumInclusive(Version(4, 11))
+            VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive) to FromMinimumInclusive(Version(4, 11)),
+            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive) to FromMinimumInclusive(Version(4, 11))
         ),
     private val diagnosisKeySubmissionSupported: Set<VirologyCriteria> =
         setOf(
@@ -39,6 +40,8 @@ class VirologyPolicyConfig(
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive) to
                 ConfirmatoryDayLimit(FromMinimumInclusive(Version(4, 11)), 2),
             VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive) to
+                ConfirmatoryDayLimit(FromMinimumInclusive(Version(4, 11)), 1),
+            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive) to
                 ConfirmatoryDayLimit(FromMinimumInclusive(Version(4, 11)), 1)
         ),
     private val blockedV1TestKitQueries: Set<TestKit> =
