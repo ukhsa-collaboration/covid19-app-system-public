@@ -219,7 +219,7 @@ private val resources = mapOf(
     AvailabilityAndroidDistribution to Static("src/static/availability-android.json"),
     AvailabilityIosDistribution to Static("src/static/availability-ios.json"),
     ExposureNotificationDistribution to Static("src/static/exposure-configuration.json"),
-    LocalMessagesDistribution to Static("out/local-messages/local-messages.json"),
+    LocalMessagesDistribution to DynamicContent,
     SymptomaticQuestionnaireDistribution to Static("src/static/symptomatic-questionnaire.json"),
     SelfIsolationDistribution to Static("src/static/self-isolation.json"),
     RiskyVenueConfigurationDistribution to Static("src/static/risky-venue-configuration.json"),

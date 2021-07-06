@@ -18,7 +18,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.analyticsexporter.S3ObjectNotFound
+import uk.nhs.nhsx.aae.S3ObjectNotFound
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.AwsS3
@@ -175,14 +175,11 @@ class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
 
     private fun getEdgeUploaderConfig(server: WireMockServer): EdgeUploaderConfig = EdgeUploaderConfig(
         server.baseUrl(),
-        "SAS_TOKEN_KEY",
-        ""
+        "SAS_TOKEN_KEY"
     )
 }
 
 class FakeSecretManager constructor(private val sasToken: String) : SecretManager {
-
-
     override fun getSecret(secretName: SecretName): Optional<SecretValue> =
         when (secretName.value) {
             "SAS_TOKEN_KEY" -> Optional.of(SecretValue.of(sasToken))

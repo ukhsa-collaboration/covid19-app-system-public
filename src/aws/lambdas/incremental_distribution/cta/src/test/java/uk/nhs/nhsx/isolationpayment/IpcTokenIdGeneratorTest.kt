@@ -22,7 +22,7 @@ class IpcTokenIdGeneratorTest {
 
     @Test
     fun `fails validation`() {
-        assertThatThrownBy { IpcTokenId.of("foobar") }.hasMessage("Validation failed for: (foobar)")
+        assertThatThrownBy { IpcTokenId.of("foobar") }.hasMessageContaining("Validation failed for: (foobar)")
     }
 
     @Test

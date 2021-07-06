@@ -9,7 +9,9 @@ import com.natpryce.snodge.json.forStrings
 import com.natpryce.snodge.mutants
 import io.mockk.every
 import io.mockk.mockk
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.anyOf
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -18,15 +20,20 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
-import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
 import uk.nhs.nhsx.core.events.MobileAnalyticsSubmission
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.*
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.BAD_REQUEST_400
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.FORBIDDEN_403
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.INTERNAL_SERVER_ERROR_500
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.METHOD_NOT_ALLOWED_405
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.NOT_FOUND_404
+import uk.nhs.nhsx.core.exceptions.HttpStatusCode.OK_200
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_EMPTY_PAIR
 import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_INVALID_PAIR
 import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_MERGED_POSTCODE_PAYLOAD_ANDROID
@@ -41,6 +48,11 @@ import uk.nhs.nhsx.testhelper.data.TestData.STORED_ANALYTICS_UNKNOWN_POSTCODE_PA
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
 import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
 import java.util.function.Consumer
 import kotlin.random.Random
 
@@ -79,14 +91,14 @@ class AnalyticsSubmissionHandlerTest {
 
     @Test
     fun notFoundWhenPathIsWrong() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withBearerToken("anything")
             .withPath("dodgy")
             .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
-            .build()
+
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(NOT_FOUND_404))
         assertThat(responseEvent, hasBody(equalTo(null)))
@@ -102,7 +114,7 @@ class AnalyticsSubmissionHandlerTest {
             .withBearerToken("something")
             .withPath("/submission/mobile-analytics")
             .withJson(iOSPayloadFrom("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z"))
-            .build()
+
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(METHOD_NOT_ALLOWED_405))
         assertThat(responseEvent, hasBody(equalTo(null)))
@@ -137,11 +149,11 @@ class AnalyticsSubmissionHandlerTest {
                     val response = responseFor(json)
                     assertThat(
                         response, not(
-                        anyOf(
-                            hasStatus(INTERNAL_SERVER_ERROR_500),
-                            hasStatus(FORBIDDEN_403)
+                            anyOf(
+                                hasStatus(INTERNAL_SERVER_ERROR_500),
+                                hasStatus(FORBIDDEN_403)
+                            )
                         )
-                    )
                     )
                     assertThat(response, hasBody(equalTo(null)))
                 }
@@ -179,7 +191,7 @@ class AnalyticsSubmissionHandlerTest {
             .withBearerToken("anything")
             .withPath("/submission/mobile-analytics")
             .withBody(requestPayload)
-            .build()
+
         return handler.handleRequest(requestEvent, ContextBuilder.aContext())
     }
 
@@ -206,7 +218,13 @@ class AnalyticsSubmissionHandlerTest {
             expectedJson = STORED_ANALYTICS_PAYLOAD_IOS_NEW_METRICS
         ),
         WITH_INVALID_PAIR_POSTCODE_LOCAL_AUTHORITY_IOS(
-            payload = iOSPayloadFromWithMetrics("2020-07-27T23:00:00Z", "2020-07-28T22:59:00Z", "YO62", "", "E07000152"),
+            payload = iOSPayloadFromWithMetrics(
+                "2020-07-27T23:00:00Z",
+                "2020-07-28T22:59:00Z",
+                "YO62",
+                "",
+                "E07000152"
+            ),
             expectedJson = STORED_ANALYTICS_INVALID_PAIR
         ),
         WITH_INVALID_LOCAL_AUTHORITY_IOS(
@@ -246,7 +264,7 @@ class AnalyticsSubmissionHandlerTest {
             .withPath("/submission/mobile-analytics")
             .withBearerToken("anything")
             .withJson(testCombo.payload)
-            .build()
+
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(OK_200))
         assertThat(responseEvent, hasBody(equalTo(null)))
@@ -323,7 +341,14 @@ class AnalyticsSubmissionHandlerTest {
                     "negativeLabResultAfterPositiveLFDOutsideTimeLimit":1,
                     "positiveLabResultAfterPositiveSelfRapidTest":1,
                     "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit":1,
-                    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit":1""".trimIndent()
+                    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit":1,
+                    "didAccessRiskyVenueM2Notification":1,
+                    "selectedTakeTestM2Journey":1,
+                    "selectedTakeTestLaterM2Journey":1,
+                    "selectedHasSymptomsM2Journey":1,
+                    "selectedHasNoSymptomsM2Journey":1,
+                    "selectedLFDTestOrderingM2Journey":1,
+                    "selectedHasLFDTestM2Journey":1""".trimIndent()
             return iOSPayloadFromWithMetrics(startDate, endDate, "AB10", metrics)
         }
 

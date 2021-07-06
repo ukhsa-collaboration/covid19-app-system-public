@@ -14,9 +14,11 @@ namespace :release do
     puts "Initiating CTA availability configuration release to staging"
     Rake::Task["deploy:availability:staging"].invoke
   end
-  desc "Release of the local messaging to staging"
-  task :"local_messages:staging" => [:"login:staging", "deploy:local_messages:staging"]
-
+  desc "Release of the local messages to staging"
+  task :"local_messages:staging" => [:"login:staging"] do
+    puts "Initiating CTA local messages release to staging"
+    Rake::Task["deploy:local_messages:staging"].invoke
+  end
   desc "Release of the analytics system to staging"
   task :"analytics:staging" => [:"login:staging"] do
     puts "Initiating CTA analytics release to staging"

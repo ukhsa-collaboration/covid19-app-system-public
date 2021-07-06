@@ -10,7 +10,9 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.withHeader
+import uk.nhs.nhsx.testhelper.withMethod
 import java.time.Instant
 import java.util.*
 
@@ -25,12 +27,10 @@ class AwsResponseSignerTest {
 
     @Test
     fun `signs a response and sets the signature date`() {
-        val request = ProxyRequestBuilder
-            .request()
+        val request = request()
             .withMethod(POST)
             .withPath("/some/path")
             .withHeader("Request-Id", "client-request-id")
-            .build()
 
         val response = HttpResponses.ok("""{"foo":"bar"}""")
 
@@ -50,12 +50,10 @@ class AwsResponseSignerTest {
 
     @Test
     fun `signs a response when header set lowercase and sets the signature date`() {
-        val request = ProxyRequestBuilder
-            .request()
+        val request = request()
             .withMethod(POST)
             .withPath("/some/path")
             .withHeader("request-id", "client-request-id")
-            .build()
 
         val response = HttpResponses.ok("""{"foo":"bar"}""")
 
@@ -75,12 +73,10 @@ class AwsResponseSignerTest {
 
     @Test
     fun `signing some binary content`() {
-        val request = ProxyRequestBuilder
-            .request()
+        val request = request()
             .withMethod(POST)
             .withPath("/some/path")
             .withHeader("Request-Id", "client-request-id")
-            .build()
 
         val response = HttpResponses.ok().apply {
             isBase64Encoded = true
@@ -103,12 +99,10 @@ class AwsResponseSignerTest {
 
     @Test
     fun `signing a response with no content`() {
-        val request = ProxyRequestBuilder
-            .request()
+        val request = request()
             .withMethod(POST)
             .withPath("/some/path")
             .withHeader("Request-Id", "client-request-id")
-            .build()
 
         val response = HttpResponses.ok()
 
@@ -127,12 +121,10 @@ class AwsResponseSignerTest {
 
     @Test
     fun `signing a response when isBase64Encoded is null`() {
-        val request = ProxyRequestBuilder
-            .request()
+        val request = request()
             .withMethod(POST)
             .withPath("/some/path")
             .withHeader("Request-Id", "client-request-id")
-            .build()
 
         val response = HttpResponses.ok().apply {
             isBase64Encoded = null
@@ -153,11 +145,9 @@ class AwsResponseSignerTest {
 
     @Test
     fun `missing requestId raises event`() {
-        val request = ProxyRequestBuilder
-            .request()
+        val request = request()
             .withMethod(POST)
             .withPath("/some/path")
-            .build()
 
         val response = HttpResponses.ok("""{"foo":"bar"}""")
 

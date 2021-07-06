@@ -1,20 +1,8 @@
-plugins {
-    id "org.jetbrains.kotlin.jvm"
-}
-
-group 'com.demo'
-version '0.0.1-SNAPSHOT'
-
 dependencies {
-    implementation project(':infra')
+    api project(':infra')
 
-    implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
-    implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
-
-    implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
-    implementation "com.amazonaws:aws-java-sdk-s3"
-    implementation "com.amazonaws:aws-java-sdk-athena"
-    implementation "com.amazonaws:aws-java-sdk-sqs"
+    implementation(Libs.aws_java_sdk_athena)
+    implementation(Libs.aws_java_sdk_sqs)
 
     testApi project(path: ":infra", configuration: 'testArtifacts')
 }

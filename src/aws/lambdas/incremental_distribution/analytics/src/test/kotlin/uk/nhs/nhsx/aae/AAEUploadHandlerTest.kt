@@ -17,10 +17,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.analyticsexporter.DataUploadedToS3
-import uk.nhs.nhsx.analyticsexporter.S3ObjectNotFound
-import uk.nhs.nhsx.analyticsexporter.S3ObjectStartsWithDisallowedPrefix
-import uk.nhs.nhsx.analyticsexporter.S3ToParquetObjectConversionFailure
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.AwsS3
@@ -69,12 +65,12 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("DataUploadedToS3(sqsMessageId=null, bucketName=TEST_BUCKET, key=2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
+        assertThat(result).isEqualTo("DataUploadedToAAE(sqsMessageId=null, bucketName=TEST_BUCKET, key=2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
 
         events.containsExactly(
             QueuedEventStarted::class,
             OutgoingHttpRequest::class,
-            DataUploadedToS3::class,
+            DataUploadedToAAE::class,
             QueuedEventCompleted::class
         )
     }
@@ -240,7 +236,9 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
         "p12Cert",
         "p12CertPassword",
         "subKey",
-        "submitteddatehour=__HIVE_DEFAULT_PARTITION__/"
+        "submitteddatehour=__HIVE_DEFAULT_PARTITION__/",
+        "analyticsEvents",
+        "TEST_BUCKET"
     )
 }
 

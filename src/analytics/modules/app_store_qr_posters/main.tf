@@ -8,6 +8,7 @@ module "analytics_app_store_qr_posters_s3" {
   name                     = "analytics-app-store-qr-posters"
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   tags                     = var.tags
 }

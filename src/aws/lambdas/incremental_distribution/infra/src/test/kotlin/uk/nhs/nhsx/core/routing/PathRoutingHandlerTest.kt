@@ -1,12 +1,14 @@
 package uk.nhs.nhsx.core.routing
 
-import com.amazonaws.HttpMethod
+import com.amazonaws.HttpMethod.GET
+import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.Companion
-import java.util.Optional
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.withMethod
+import java.util.*
 
 class PathRoutingHandlerTest {
 
@@ -18,8 +20,8 @@ class PathRoutingHandlerTest {
 
         assertThat(
             handler(
-                Companion.request().withPath("/path/to/resource")
-                    .withMethod(HttpMethod.POST).build(),
+                request().withPath("/path/to/resource")
+                    .withMethod(POST),
                 TestContext()
             )
         )
@@ -33,8 +35,8 @@ class PathRoutingHandlerTest {
 
         assertThat(
             handler(
-                Companion.request().withPath("/path/to/resource")
-                    .withMethod(HttpMethod.GET).build(),
+                request().withPath("/path/to/resource")
+                    .withMethod(GET),
                 TestContext()
             ).statusCode
         )
@@ -48,8 +50,8 @@ class PathRoutingHandlerTest {
 
         assertThat(
             handler(
-                Companion.request().withPath("/path/to/unknown/resource")
-                    .withMethod(HttpMethod.GET).build(),
+                request().withPath("/path/to/unknown/resource")
+                    .withMethod(GET),
                 TestContext()
             ).statusCode
         )
@@ -63,8 +65,8 @@ class PathRoutingHandlerTest {
 
         assertThat(
             handler(
-                Companion.request().withPath("/path/to/resource")
-                    .withMethod(HttpMethod.POST).build(),
+                request().withPath("/path/to/resource")
+                    .withMethod(POST),
                 TestContext()
             )
         )
@@ -72,8 +74,8 @@ class PathRoutingHandlerTest {
 
         assertThat(
             handler(
-                Companion.request().withPath("/path/to/resource")
-                    .withMethod(HttpMethod.GET).build(),
+                request().withPath("/path/to/resource")
+                    .withMethod(GET),
                 TestContext()
             )
         )
@@ -91,16 +93,16 @@ class PathRoutingHandlerTest {
 
         assertThat(
             handler(
-                Companion.request().withPath("/path")
-                    .withMethod(HttpMethod.POST).build(), TestContext()
+                request().withPath("/path")
+                    .withMethod(POST), TestContext()
             )
         )
             .isSameAs(responseEvent)
 
         assertThat(
             handler(
-                Companion.request().withPath("/path/to/resource")
-                    .withMethod(HttpMethod.POST).build(),
+                request().withPath("/path/to/resource")
+                    .withMethod(POST),
                 TestContext()
             )
         )
@@ -108,8 +110,8 @@ class PathRoutingHandlerTest {
 
         assertThat(
             handler(
-                Companion.request().withPath("/pat")
-                    .withMethod(HttpMethod.POST).build(),
+                request().withPath("/pat")
+                    .withMethod(POST),
                 TestContext()
             ).statusCode
         )

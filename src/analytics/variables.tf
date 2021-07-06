@@ -1,9 +1,17 @@
+variable "env" {
+  description = "env-name"
+}
+
 variable "force_destroy_s3_buckets" {
   description = "Force destroy s3 buckets if set to true"
 }
 
 variable "logs_bucket_id" {
   description = "The name of the bucket to which all S3 access logs are saved"
+}
+
+variable "risky_venues_bucket_name" {
+  description = "The name of the bucket that stores the risky venues"
 }
 
 variable "risky_post_codes_bucket_id" {

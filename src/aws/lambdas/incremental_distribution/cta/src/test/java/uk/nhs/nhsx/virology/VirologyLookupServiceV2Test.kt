@@ -21,6 +21,7 @@ import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequestV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.AvailableV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
@@ -48,7 +49,7 @@ class VirologyLookupServiceV2Test {
         val request = VirologyLookupRequestV2(pollingToken, country)
         val lookupResult = service.lookup(request, mobileAppVersion)
 
-        val resultAvailable = lookupResult as VirologyLookupResult.AvailableV2
+        val resultAvailable = lookupResult as AvailableV2
         assertThat(resultAvailable.response.testEndDate).isEqualTo(testResult.testEndDate)
         assertThat(resultAvailable.response.testResult).isEqualTo(testResult.testResult)
         assertThat(resultAvailable.response.testKit).isEqualTo(LAB_RESULT)
@@ -76,7 +77,7 @@ class VirologyLookupServiceV2Test {
 
         val service = virologyLookup()
         val request = VirologyLookupRequestV2(pollingToken, country)
-        val result = service.lookup(request, mobileAppVersion) as VirologyLookupResult.AvailableV2
+        val result = service.lookup(request, mobileAppVersion) as AvailableV2
 
         assertThat(result.response.diagnosisKeySubmissionSupported).isFalse
         assertThat(result.response.requiresConfirmatoryTest).isFalse
@@ -92,7 +93,7 @@ class VirologyLookupServiceV2Test {
 
         val service = virologyLookup()
         val request = VirologyLookupRequestV2(pollingToken, country)
-        val result = service.lookup(request, mobileAppVersion) as VirologyLookupResult.AvailableV2
+        val result = service.lookup(request, mobileAppVersion) as AvailableV2
 
         assertThat(result.response.diagnosisKeySubmissionSupported).isFalse
         assertThat(result.response.requiresConfirmatoryTest).isFalse
@@ -108,7 +109,7 @@ class VirologyLookupServiceV2Test {
 
         val service = virologyLookup()
         val request = VirologyLookupRequestV2(pollingToken, Country.of(country))
-        val result = service.lookup(request, mobileAppVersion) as VirologyLookupResult.AvailableV2
+        val result = service.lookup(request, mobileAppVersion) as AvailableV2
 
         assertThat(result.response.diagnosisKeySubmissionSupported).isEqualTo(expectedFlag)
     }
@@ -118,27 +119,14 @@ class VirologyLookupServiceV2Test {
     fun `lookup requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testResult = TestData.positiveResultFor(pollingToken, RAPID_SELF_REPORTED)
 
-        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
+        every { persistence.getTestResult(pollingToken) } returns Optional.of(testResult)
         every { persistence.markForDeletion(any(), any()) } just Runs
 
         val service = virologyLookup()
         val request = VirologyLookupRequestV2(pollingToken, Country.of(country))
-        val result = service.lookup(request, mobileAppVersion) as VirologyLookupResult.AvailableV2
+        val result = service.lookup(request, mobileAppVersion) as AvailableV2
 
         assertThat(result.response.requiresConfirmatoryTest).isEqualTo(expectedFlag)
-    }
-
-    @ParameterizedTest
-    @CsvSource("England,true", "Wales,true", "random,false")
-    fun `lookup supporting venue history submission for each country`(country: String, expectedFlag: Boolean) {
-        val testResult = TestData.positiveLabResult
-
-        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
-        every { persistence.markForDeletion(any(), any()) } just Runs
-
-        val service = virologyLookup()
-        val request = VirologyLookupRequestV2(pollingToken, Country.of(country))
-        service.lookup(request, mobileAppVersion) as VirologyLookupResult.AvailableV2
     }
 
     @Test

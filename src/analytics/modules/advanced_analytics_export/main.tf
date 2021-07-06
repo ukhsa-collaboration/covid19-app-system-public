@@ -24,6 +24,8 @@ module "processing_lambda" {
     P12_CERT_SECRET_NAME          = var.p12_cert_secret_name
     P12_CERT_PASSWORD_SECRET_NAME = var.p12_cert_password_secret_name
     AAE_SUBSCRIPTION_SECRET_NAME  = var.aae_subscription_secret_name
+    ANALYTICS_EVENTS_BUCKET       = var.analytics_events_bucket
+    ANALYTICS_DATA_BUCKET         = var.analytics_data_bucket
 
     # [PARQUET CONSOLIDATION] FIXME (before delta-migration)
     S3_DISALLOWED_PREFIX_LIST = "submitteddatehour=__HIVE_DEFAULT_PARTITION__,_temporary,submitteddatehour=/2021/03/FIXME/FIXME"

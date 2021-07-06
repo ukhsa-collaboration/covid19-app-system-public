@@ -1,0 +1,2 @@
+class UnitTestsError < RuntimeError
+end

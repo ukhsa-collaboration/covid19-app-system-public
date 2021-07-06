@@ -30,15 +30,10 @@ enum class DeployedLambda(
         "diagnosis_keys_submission",
         "mobile"
     ),
-    LocalMessagesDistribution(
-        Distribution.Companion::from,
-        "local_messages_distribution"
-    ),
-
+    LocalMessagesDistribution(Distribution.Companion::from, "local_messages_distribution"),
     ExposureNotificationDistribution(Distribution.Companion::from, "exposure_configuration_distribution"),
     ExposureNotificationCircuitBreaker(CircuitBreaker.Companion::from, "exposure_notification_circuit_breaker", "mobile"),
     IsolationPayment(Submission.Companion::from, "isolation_payment", "mobile", listOf("_create", "_update")),
-    LocalMessages(Distribution.Companion::from, "local_messages_distribution"),
     PostDistrictsDistribution(Distribution.Companion::from, "post_districts_distribution"),
     RiskyPostcodeDistrictsUpload(Upload.Companion::from, "risky_post_districts_upload", "highRiskPostCodeUpload"),
     RiskyVenueConfigurationDistribution(Distribution.Companion::from, "risky_venue_configuration_distribution"),

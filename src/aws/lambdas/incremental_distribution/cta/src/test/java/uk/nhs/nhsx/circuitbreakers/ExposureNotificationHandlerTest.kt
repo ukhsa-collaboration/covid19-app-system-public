@@ -20,8 +20,14 @@ import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import java.util.Optional
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.build
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
+import java.util.*
 
 class ExposureNotificationHandlerTest {
 
@@ -55,7 +61,7 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker request success`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
@@ -69,7 +75,7 @@ class ExposureNotificationHandlerTest {
                     "maximumRiskScore": 150.123456
                 }
                 """.trimIndent()
-            ).build()
+            )
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -84,7 +90,7 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker request success with extra risk calculation score field`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
@@ -99,7 +105,7 @@ class ExposureNotificationHandlerTest {
                     "riskCalculationVersion": 8
                 }
                 """.trimIndent()
-            ).build()
+            )
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -113,14 +119,13 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker request invalid json data`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
             .withJson("{\"invalidField\": null}")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -129,14 +134,13 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker request invalid json format`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
             .withJson("{ invalid }")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -145,13 +149,12 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker request no body`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/request")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -160,13 +163,12 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker no such path`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/unknown-feature")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(404)
@@ -174,13 +176,12 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker missing token`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(GET)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/resolution")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -188,13 +189,12 @@ class ExposureNotificationHandlerTest {
 
     @Test
     fun `handle circuit breaker resolution success`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(GET)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/exposure-notification/resolution/abc123")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)

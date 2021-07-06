@@ -19,17 +19,13 @@ import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.headers.MobileOSVersion
 import uk.nhs.nhsx.core.headers.UserAgent
 import uk.nhs.nhsx.core.routing.Routing.RouterMatch.Matched
-import uk.nhs.nhsx.core.routing.authorisedBy
-import uk.nhs.nhsx.core.routing.filteringWhileMaintenanceModeEnabled
-import uk.nhs.nhsx.core.routing.loggingIncomingRequests
-import uk.nhs.nhsx.core.routing.requiringAuthorizationHeader
-import uk.nhs.nhsx.core.routing.requiringCustomAccessIdentity
-import uk.nhs.nhsx.core.routing.signedBy
-import uk.nhs.nhsx.core.routing.withoutSignedResponses
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.Companion.request
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasHeader
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withHeader
+import uk.nhs.nhsx.testhelper.withMethod
 import java.time.Instant
 
 class ApiGatewayBehavioursTest {
@@ -41,7 +37,7 @@ class ApiGatewayBehavioursTest {
     fun `sign successful responses`() {
         val signer = ResponseSigner { _, response -> response.headers["signature"] = "signature" }
         val handler = signedBy(signer) { _, _ -> HttpResponses.ok() }
-        val response = handler(request().build(), testContext)
+        val response = handler(request(), testContext)
         assertThat(
             response,
             hasHeader(
@@ -56,7 +52,7 @@ class ApiGatewayBehavioursTest {
         val signer = ResponseSigner { _, response -> response.headers["signature"] = "signature" }
         val handler =
             signedBy(signer) { _, _ -> HttpResponses.withStatusCode(HttpStatusCode.FORBIDDEN_403) }
-        val response = handler(request().build(), testContext)
+        val response = handler(request(), testContext)
         assertThat(
             response,
             CoreMatchers.not(hasHeader("signature"))
@@ -72,32 +68,29 @@ class ApiGatewayBehavioursTest {
         ) { _, _ -> HttpResponses.ok() }
         assertThat(
             handler(
-                request().build(),
+                request(),
                 testContext
             ), hasStatus(HttpStatusCode.FORBIDDEN_403)
         )
         assertThat(
             handler(
-                request().withHeader("x-custom-oai", "bob")
-                    .build(), testContext
+                request().withHeader("x-custom-oai", "bob"), testContext
             ), hasStatus(HttpStatusCode.OK_200)
         )
         assertThat(
             handler(
-                request().withHeader("x-custom-oai", "jim")
-                    .build(), testContext
+                request().withHeader("x-custom-oai", "jim"), testContext
             ), hasStatus(HttpStatusCode.FORBIDDEN_403)
         )
         assertThat(
             handler(
-                request().withHeader("x-custom-oai", "").build(),
-                testContext
+                request().withHeader("x-custom-oai", ""), testContext
             ), hasStatus(HttpStatusCode.FORBIDDEN_403)
         )
         assertThat(
             handler(
                 request()
-                    .withHeader("x-custom-oai-something", "bob").build(), testContext
+                    .withHeader("x-custom-oai-something", "bob"), testContext
             ), hasStatus(
                 HttpStatusCode.FORBIDDEN_403
             )
@@ -109,8 +102,7 @@ class ApiGatewayBehavioursTest {
         val handler = requiringAuthorizationHeader { _, _ -> HttpResponses.ok() }
         assertThat(
             handler(
-                request().withHeader("authorization", "something")
-                    .build(), testContext
+                request().withHeader("authorization", "something"), testContext
             ), hasStatus(HttpStatusCode.OK_200)
         )
     }
@@ -119,10 +111,8 @@ class ApiGatewayBehavioursTest {
     fun `requiring AuthorizationHeader not supplied`() {
         val handler = requiringAuthorizationHeader { _, _ -> HttpResponses.ok() }
         assertThat(
-            handler(
-                request().build(),
-                testContext
-            ), hasStatus(HttpStatusCode.FORBIDDEN_403)
+            handler(request(), testContext),
+            hasStatus(HttpStatusCode.FORBIDDEN_403)
         )
     }
 
@@ -131,7 +121,7 @@ class ApiGatewayBehavioursTest {
         val handler = authorisedBy({ true }, okRoutingHandler())
         assertThat(
             handler(
-                request().build(),
+                request(),
                 testContext
             ), hasStatus(HttpStatusCode.FORBIDDEN_403)
         )
@@ -147,8 +137,7 @@ class ApiGatewayBehavioursTest {
         val handler = authorisedBy({ true }, okRoutingHandler())
         assertThat(
             handler(
-                request().withHeader("authorization", "something")
-                    .build(), testContext
+                request().withHeader("authorization", "something"), testContext
             ), hasStatus(HttpStatusCode.OK_200)
         )
     }
@@ -158,8 +147,7 @@ class ApiGatewayBehavioursTest {
         val handler = authorisedBy({ false }, okRoutingHandler())
         assertThat(
             handler(
-                request().withHeader("authorization", "something")
-                    .build(), testContext
+                request().withHeader("authorization", "something"), testContext
             ),
             hasStatus(HttpStatusCode.FORBIDDEN_403)
         )
@@ -167,7 +155,7 @@ class ApiGatewayBehavioursTest {
 
     @Test
     fun `authorisedBy match and handle`() {
-        val request = request().build()
+        val request = request()
         val handler = authorisedBy({ true }, okRoutingHandler())
 
         when (val match = handler.match(request)) {
@@ -189,7 +177,7 @@ class ApiGatewayBehavioursTest {
             ) { _, _ -> HttpResponses.ok() }
         assertThat(
             handler(
-                request().build(),
+                request(),
                 testContext
             ), hasStatus(HttpStatusCode.SERVICE_UNAVAILABLE_503)
         )
@@ -206,7 +194,7 @@ class ApiGatewayBehavioursTest {
             ) { _, _ -> HttpResponses.ok() }
         assertThat(
             handler(
-                request().build(),
+                request(),
                 testContext
             ), hasStatus(HttpStatusCode.OK_200)
         )
@@ -223,7 +211,7 @@ class ApiGatewayBehavioursTest {
             ) { _, _ -> HttpResponses.ok() }
         assertThat(
             handler(
-                request().build(),
+                request(),
                 testContext
             ), hasStatus(HttpStatusCode.OK_200)
         )
@@ -247,7 +235,6 @@ class ApiGatewayBehavioursTest {
             .withPath("/hello")
             .withCustomOai("OAI")
             .withHeader("User-Agent", "Android")
-            .build()
 
         handler(request, testContext)
 
@@ -266,7 +253,6 @@ class ApiGatewayBehavioursTest {
             .withPath("/hello")
             .withCustomOai("OAI")
             .withHeader("User-Agent", "p=Android,o=29,v=4.3.0,b=138")
-            .build()
 
         handler(request, testContext)
 

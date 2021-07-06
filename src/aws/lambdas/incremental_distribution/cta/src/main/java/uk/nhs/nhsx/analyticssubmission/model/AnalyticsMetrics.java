@@ -90,6 +90,13 @@ public class AnalyticsMetrics {
     public Integer positiveLabResultAfterPositiveSelfRapidTest;
     public Integer negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit;
     public Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit;
+    public Integer didAccessRiskyVenueM2Notification;
+    public Integer selectedTakeTestM2Journey;
+    public Integer selectedTakeTestLaterM2Journey;
+    public Integer selectedHasSymptomsM2Journey;
+    public Integer selectedHasNoSymptomsM2Journey;
+    public Integer selectedLFDTestOrderingM2Journey;
+    public Integer selectedHasLFDTestM2Journey;
 
     public AnalyticsMetrics() {
     }

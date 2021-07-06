@@ -10,28 +10,26 @@ class ContextBuilder {
 
     fun build(): Context = TestContext()
 
-
     class TestContext : Context by proxy() {
-
         var requestId = UUID(0, 0)
 
-        override fun getAwsRequestId(): String = requestId.toString()
+        override fun getAwsRequestId() = requestId.toString()
 
-        override fun getLogGroupName(): String = "test-log-group"
+        override fun getLogGroupName() = "test-log-group"
 
-        override fun getLogStreamName(): String = "test-log-stream"
+        override fun getLogStreamName() = "test-log-stream"
 
-        override fun getFunctionName(): String = "function-name"
+        override fun getFunctionName() = "function-name"
 
-        override fun getFunctionVersion(): String = "function-version"
+        override fun getFunctionVersion() = "function-version"
 
-        override fun getInvokedFunctionArn(): String = "lambda-function-arn"
+        override fun getInvokedFunctionArn() = "lambda-function-arn"
 
         override fun getIdentity(): CognitoIdentity? = null
 
-        override fun getRemainingTimeInMillis(): Int = 1000
+        override fun getRemainingTimeInMillis() = 1000
 
-        override fun getMemoryLimitInMB(): Int = 100
+        override fun getMemoryLimitInMB() = 100
 
         override fun getLogger() = object : LambdaLogger {
             override fun log(s: String) {
@@ -39,14 +37,13 @@ class ContextBuilder {
             }
 
             override fun log(bytes: ByteArray) {
-                println("bytes = " + String(bytes, StandardCharsets.UTF_8))
+                println("bytes = ${String(bytes)}")
             }
         }
     }
 
     companion object {
-        fun context(): ContextBuilder = ContextBuilder()
-
-        fun aContext(): Context = ContextBuilder().build()
+        fun context() = ContextBuilder()
+        fun aContext() = ContextBuilder().build()
     }
 }

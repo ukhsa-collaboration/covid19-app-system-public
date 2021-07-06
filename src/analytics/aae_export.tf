@@ -23,6 +23,13 @@ module "advanced_analytics_export" {
   p12_cert_secret_name          = var.aae_mobile_analytics_p12_cert_secret_name
   p12_cert_password_secret_name = var.aae_mobile_analytics_p12_cert_password_secret_name
   aae_subscription_secret_name  = var.aae_mobile_analytics_subscription_secret_name
+  analytics_events_bucket       = var.analytics_submission_events_bucket_id
+
+  # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be active during the initial migration (parquet consolidation)
+  analytics_data_bucket = var.analytics_submission_store_parquet_bucket_id
+
+  # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be activated before the delta migration (parquet consolidation) is started
+  # analytics_data_bucket         = var.analytics_submission_store_consolidated_parquet_bucket_id
 }
 
 module "advanced_analytics_events_export" {
@@ -40,4 +47,11 @@ module "advanced_analytics_events_export" {
   p12_cert_secret_name          = var.aae_mobile_analytics_events_p12_cert_secret_name
   p12_cert_password_secret_name = var.aae_mobile_analytics_events_p12_cert_password_secret_name
   aae_subscription_secret_name  = var.aae_mobile_analytics_events_subscription_secret_name
+  analytics_events_bucket       = var.analytics_submission_events_bucket_id
+
+  # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be active during the initial migration (parquet consolidation)
+  analytics_data_bucket = var.analytics_submission_store_parquet_bucket_id
+
+  # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be activated before the delta migration (parquet consolidation) is started
+  # analytics_data_bucket         = var.analytics_submission_store_consolidated_parquet_bucket_id
 }

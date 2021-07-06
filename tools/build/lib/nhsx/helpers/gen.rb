@@ -43,7 +43,7 @@ module NHSx
     def generate_local_messages(mapping_filepath, metadata_filepath, system_config)
       mapping = JSON.parse(File.read(mapping_filepath))
       metadata = JSON.parse(File.read(metadata_filepath))
-
+      check_if_las_exists(mapping["las"].keys,system_config)
       metadata["messages"] = filter_unused_messages_from_metadata(mapping["las"], metadata["messages"])
       metadata["messages"].each { |_, msg| msg["updated"] = Time.now.utc.iso8601 }
       mapping_metadata = { "las" => mapping["las"], "messages" => metadata["messages"] }
@@ -56,6 +56,13 @@ module NHSx
         used_msgs.append(*mapped_msgs)
       end.uniq
       messages_metadata.select { |k, _| used_messages.include?(k) }
+    end
+
+    def check_if_las_exists(las,system_config)
+      list_of_las = JSON.parse(File.read("#{system_config.base}/tools/lokalise/localAuthorities.json"))
+      las_not_exists = las - list_of_las.keys
+      raise GaudiError, "The following are not valid local authority IDs in the LAD20CD format #{las_not_exists}" unless las_not_exists.empty?
+
     end
   end
 end

@@ -2,7 +2,6 @@ package uk.nhs.nhsx.aae
 
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder
-import uk.nhs.nhsx.analyticsexporter.AnalyticsFileExporter
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Handler
@@ -29,15 +28,14 @@ class AAEUploadHandler @JvmOverloads constructor(
         AwsSecretManager(AWSSecretsManagerClientBuilder.defaultClient()),
         events
     ),
-    analyticsFileExporter: AnalyticsFileExporter = AnalyticsFileExporter(
-        events,
+    fileExporter: AAEFileExporter = AAEFileExporter(
         s3Client,
         aaeUploader,
         config
     )
 ) : QueuedHandler(events) {
     private val handler =
-        Handler<SQSEvent, Event> { input, _ -> analyticsFileExporter.export(input) }
+        Handler<SQSEvent, Event> { input, _ -> fileExporter.export(input) }
 
     override fun handler() = handler
 

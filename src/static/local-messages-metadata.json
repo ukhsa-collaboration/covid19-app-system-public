@@ -327,7 +327,7 @@
           "content": [
             {
               "type": "para",
-              "text": "This variant could cause the virus to spread more quickly or be more harmful than before."
+              "text": "This variant could cause the virus to spread more quickly."
             },
             {
               "type": "para",
@@ -363,7 +363,7 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "تواصل مع السلطة المحلية لديك للمزيد من المعلومات."
+              "linkText": "تواصل مع السلطة المحلية لديك للمزيد من المعلومات"
             }
           ]
         },
@@ -599,7 +599,7 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "请进行检测，通过地方政府了解更多信息"
+              "linkText": "请进行检测，并通过当地政府了解更多信息"
             }
           ]
         },
@@ -609,7 +609,7 @@
           "content": [
             {
               "type": "para",
-              "text": "This variant could cause the virus to spread more quickly or be more harmful than before."
+              "text": "This variant could cause the virus to spread more quickly."
             },
             {
               "type": "para",
@@ -645,7 +645,7 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "احصل على الاختبار وتعرّف على المزيد من المعلومات من السلطة المحلية لديك."
+              "linkText": "احصل على الاختبار وتعرّف على المزيد من المعلومات من السلطة المحلية لديك"
             }
           ]
         },
@@ -829,7 +829,7 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Ha lagu baaro   oo macluumaad dheeraad ah ka raadso maamulka deegaankaaga"
+              "linkText": "Ha lagu baaro oo macluumaad dheeraad ah ka raadso maamulka deegaankaaga"
             }
           ]
         },
@@ -885,7 +885,7 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "请进行检测，通过地方政府了解更多信息"
+              "linkText": "请进行检测，并通过当地政府了解更多信息"
             }
           ]
         },
@@ -895,7 +895,7 @@
           "content": [
             {
               "type": "para",
-              "text": "This variant could cause the virus to spread more quickly or be more harmful than before."
+              "text": "This variant could cause the virus to spread more quickly."
             },
             {
               "type": "para",
@@ -939,7 +939,7 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "احصل على الاختبار وتعرّف على المزيد من المعلومات من السلطة المحلية لديك."
+              "linkText": "احصل على الاختبار وتعرّف على المزيد من المعلومات من السلطة المحلية لديك"
             }
           ]
         },
@@ -1155,7 +1155,7 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Ha lagu baaro   oo macluumaad dheeraad ah ka raadso maamulka deegaankaaga"
+              "linkText": "Ha lagu baaro oo macluumaad dheeraad ah ka raadso maamulka deegaankaaga"
             }
           ]
         },

@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.crashreports
 
 import com.amazonaws.HttpMethod
+import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.apache.commons.lang3.RandomStringUtils
 import org.assertj.core.api.Assertions.assertThat
@@ -15,9 +16,14 @@ import uk.nhs.nhsx.core.events.RequestRejected
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
 
 class CrashReportsHandlerTest {
 
@@ -146,14 +152,14 @@ class CrashReportsHandlerTest {
 
     @Test
     fun `not found when path is wrong`() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withBearerToken("anything")
             .withPath("invalid")
             .withJson("")
-            .build()
+
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
         assertThat(responseEvent, hasBody(equalTo(null)))
@@ -162,14 +168,14 @@ class CrashReportsHandlerTest {
 
     @Test
     fun `not allowed when method is wrong`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(HttpMethod.GET)
             .withCustomOai("OAI")
             .withRequestId()
             .withBearerToken("something")
             .withPath("/submission/crash-reports")
             .withJson("")
-            .build()
+
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
 
         assertThat(responseEvent, hasStatus(HttpStatusCode.METHOD_NOT_ALLOWED_405))
@@ -188,14 +194,14 @@ class CrashReportsHandlerTest {
     }
 
     private fun responseFor(requestPayload: String): APIGatewayProxyResponseEvent {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withBearerToken("anything")
             .withPath("/submission/crash-reports")
             .withBody(requestPayload)
-            .build()
+
         return handler.handleRequest(requestEvent, ContextBuilder.aContext())
     }
 }

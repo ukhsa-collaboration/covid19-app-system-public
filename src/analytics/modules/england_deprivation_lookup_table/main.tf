@@ -8,6 +8,7 @@ module "england_deprivation_lookup" {
   name                     = "analytics-england-deprivation-lookup-table"
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   tags                     = var.tags
 }

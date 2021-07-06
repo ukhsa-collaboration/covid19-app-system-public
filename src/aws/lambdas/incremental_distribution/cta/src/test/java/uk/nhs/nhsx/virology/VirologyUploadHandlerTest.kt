@@ -10,20 +10,28 @@ import com.natpryce.snodge.mutants
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.hamcrest.CoreMatchers.*
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.core.TestEnvironments
-import uk.nhs.nhsx.core.events.*
+import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.core.events.UnprocessableJson
+import uk.nhs.nhsx.core.events.VirologyResults
+import uk.nhs.nhsx.core.events.VirologyTokenGen
+import uk.nhs.nhsx.core.events.VirologyTokenStatus
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.ACCEPTED_202
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422
 import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.domain.TestEndDate
-import uk.nhs.nhsx.domain.TestKit.*
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.data.TestData.rapidLabResultV2
 import uk.nhs.nhsx.testhelper.data.TestData.rapidSelfReportedResultV2
 import uk.nhs.nhsx.testhelper.data.TestData.testLabResultV1
@@ -33,6 +41,11 @@ import uk.nhs.nhsx.testhelper.data.TestData.tokenGenSelfReportedPayloadV2
 import uk.nhs.nhsx.testhelper.data.TestData.tokenStatusPayloadV2
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
@@ -447,14 +460,13 @@ class VirologyUploadHandlerTest {
         payload: String,
         method: HttpMethod = POST
     ): APIGatewayProxyResponseEvent {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(method)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath(path)
             .withJson(payload)
             .withBearerToken("anything")
-            .build()
 
         val environment = TestEnvironments.TEST.apply(
             mapOf(

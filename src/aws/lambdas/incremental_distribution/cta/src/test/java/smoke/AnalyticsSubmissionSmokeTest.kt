@@ -17,8 +17,8 @@ import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.headers.MobileOS.Android
+import uk.nhs.nhsx.testhelper.assertions.assertWithin
 import uk.nhs.nhsx.testhelper.http4k.assertApproved
-import uk.nhs.nhsx.testhelper.junit.assertWithin
 import java.time.Duration
 import java.time.Duration.ofDays
 import java.time.Instant
@@ -166,6 +166,13 @@ class AnalyticsSubmissionSmokeTest {
         negativeLabResultAfterPositiveLFDOutsideTimeLimit = counter++.toInt()
         positiveLabResultAfterPositiveSelfRapidTest = counter++.toInt()
         negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = counter++.toInt()
-        negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = counter.toInt()
+        negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = counter++.toInt()
+        didAccessRiskyVenueM2Notification = counter++.toInt()
+        selectedTakeTestM2Journey = counter++.toInt()
+        selectedTakeTestLaterM2Journey = counter++.toInt()
+        selectedHasSymptomsM2Journey= counter++.toInt()
+        selectedHasNoSymptomsM2Journey = counter++.toInt()
+        selectedLFDTestOrderingM2Journey = counter++.toInt()
+        selectedHasLFDTestM2Journey = counter.toInt()
     }
 }

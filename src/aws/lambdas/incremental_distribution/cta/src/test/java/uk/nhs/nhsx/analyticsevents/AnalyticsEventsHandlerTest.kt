@@ -16,9 +16,13 @@ import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
-import java.util.UUID
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
+import java.util.*
 
 class AnalyticsEventsHandlerTest {
 
@@ -54,13 +58,13 @@ class AnalyticsEventsHandlerTest {
 
     @Test
     fun `exposure window payload returns success`() {
-        val request = ProxyRequestBuilder()
+        val request = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/submission/mobile-analytics-events")
             .withBearerToken("anything")
-            .withBody(analyticsEvents(UUID.randomUUID()).trimIndent()).build()
+            .withBody(analyticsEvents(UUID.randomUUID()).trimIndent())
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
         assertThat(response.statusCode).isEqualTo(200)
@@ -68,7 +72,7 @@ class AnalyticsEventsHandlerTest {
 
     @Test
     fun `missing json fields returns bad request`() {
-        val request = ProxyRequestBuilder()
+        val request = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
@@ -101,8 +105,8 @@ class AnalyticsEventsHandlerTest {
                         }
                     ]
                 }
-        """.trimIndent()
-            ).build()
+        """.trimIndent())
+
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
         assertThat(response.statusCode).isEqualTo(400)
@@ -110,14 +114,13 @@ class AnalyticsEventsHandlerTest {
 
     @Test
     fun `empty json payload returns bad request`() {
-        val request = ProxyRequestBuilder()
+        val request = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/submission/mobile-analytics-events")
             .withBearerToken("anything")
             .withBody("{}")
-            .build()
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
@@ -126,13 +129,12 @@ class AnalyticsEventsHandlerTest {
 
     @Test
     fun `no json payload returns bad request`() {
-        val request = ProxyRequestBuilder()
+        val request = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/submission/mobile-analytics-events")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
@@ -141,13 +143,12 @@ class AnalyticsEventsHandlerTest {
 
     @Test
     fun `http get not allowed`() {
-        val request = ProxyRequestBuilder()
+        val request = request()
             .withMethod(HttpMethod.GET)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/submission/mobile-analytics-events")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
@@ -156,13 +157,12 @@ class AnalyticsEventsHandlerTest {
 
     @Test
     fun `accept requests disabled`() {
-        val request = ProxyRequestBuilder()
+        val request = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/submission/mobile-analytics-events")
             .withBearerToken("anything")
-            .build()
 
         val handler = AnalyticsEventsHandler(
             TestEnvironments.TEST.apply(

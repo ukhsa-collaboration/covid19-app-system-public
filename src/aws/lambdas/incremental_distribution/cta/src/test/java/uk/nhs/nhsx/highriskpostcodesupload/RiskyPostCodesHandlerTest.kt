@@ -18,9 +18,15 @@ import uk.nhs.nhsx.core.events.RiskyPostDistrictUpload
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode.METHOD_NOT_ALLOWED_405
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.TestDatedSigner
 import uk.nhs.nhsx.testhelper.mocks.FakeCsvUploadServiceS3
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCsv
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
 
 class RiskyPostCodesHandlerTest {
 
@@ -72,14 +78,13 @@ class RiskyPostCodesHandlerTest {
     @Test
     fun `accepts payload`() {
         every { awsCloudFront.invalidateCache(any(), any()) } just Runs
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson(payload)
-            .build()
 
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.ACCEPTED_202.code)
@@ -97,14 +102,13 @@ class RiskyPostCodesHandlerTest {
 
     @Test
     fun `not found when path is wrong`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("dodgy")
             .withBearerToken("anything")
             .withJson(payload)
-            .build()
 
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
 
@@ -115,14 +119,13 @@ class RiskyPostCodesHandlerTest {
 
     @Test
     fun `not allowed when method is wrong`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(GET)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson(payload)
-            .build()
 
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
 
@@ -133,14 +136,13 @@ class RiskyPostCodesHandlerTest {
 
     @Test
     fun `unprocessable when wrong content type`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withCsv("some random csv")
-            .build()
 
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
 
@@ -149,14 +151,13 @@ class RiskyPostCodesHandlerTest {
 
     @Test
     fun `unprocessable when no body`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson(null)
-            .build()
 
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
 
@@ -165,14 +166,13 @@ class RiskyPostCodesHandlerTest {
 
     @Test
     fun `unprocessable when empty body`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/upload/high-risk-postal-districts")
             .withBearerToken("anything")
             .withJson("")
-            .build()
 
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
 

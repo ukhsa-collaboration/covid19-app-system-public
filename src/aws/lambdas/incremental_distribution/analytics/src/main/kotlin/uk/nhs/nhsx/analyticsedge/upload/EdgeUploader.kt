@@ -1,7 +1,6 @@
 package uk.nhs.nhsx.analyticsedge.upload
 
 import org.apache.http.client.utils.URIBuilder
-import uk.nhs.nhsx.analyticsexporter.ExportDestinationUploader
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue
@@ -17,7 +16,7 @@ class EdgeUploader(
     config: EdgeUploaderConfig,
     secretManager: SecretManager,
     private val events: Events
-) : ExportDestinationUploader {
+) {
 
     private val targetUrl = config.targetUrl
         .let { if (it.endsWith("/")) it else "$it/" }
@@ -31,7 +30,7 @@ class EdgeUploader(
         .connectTimeout(HTTP_PUT_TIME_OUT)
         .build()
 
-    override fun uploadFile(filename: String, content: ByteArray, contentType: String) {
+    fun uploadFile(filename: String, content: ByteArray, contentType: String) {
         val uploadRequest = HttpRequest.newBuilder()
             .header("Content-Type", contentType)
             .header("x-ms-version", "2018-03-28")

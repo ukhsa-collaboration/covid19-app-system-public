@@ -1,44 +1,40 @@
 import java.text.DecimalFormat
 
-plugins {
-    id "java"
-    id "org.jetbrains.kotlin.jvm" version "1.4.32"
-    id "com.adarshr.test-logger" version "2.1.1"
-    id "com.github.spotbugs" version "4.6.0"
-}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 
-group = 'com.demo'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
-configurations.testImplementation.canBeResolved = true
+    dependencies {
+        classpath Libs.org_jetbrains_kotlin_jvm_gradle_plugin
+        classpath Libs.com_adarshr_test_logger_gradle_plugin
+    }
+}
 
 allprojects {
     apply plugin: 'java'
     apply plugin: 'kotlin'
+    apply plugin: 'com.adarshr.test-logger'
 
-    ext {
-        aws_sdk_version = "1.11.993"
-        aws_sdk2_version = "2.16.36"
-        aws_xray_version = "2.4.0"
-        forkhandles_version = "1.8.6.0"
-        http4k_version = "4.5.0.1"
-        jackson_version = "2.12.2"
-        junit_version = "5.7.1"
-    }
+    group = 'com.demo'
+    version = '0.0.1-SNAPSHOT'
 
     repositories {
         mavenCentral()
         maven {
-            name "DynamoDB Local Release Repo"
-            url "https://s3-us-west-2.amazonaws.com/dynamodb-local/release"
+            name "amazonaws:DynamoDBLocal Release Repo"
+            url "https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/release"
         }
     }
 
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-        kotlinOptions {
-            suppressWarnings = false
-            jvmTarget = "11"
-        }
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    compileKotlin.kotlinOptions {
+        jvmTarget = "11"
+        suppressWarnings = false
     }
 
     compileTestKotlin.kotlinOptions {
@@ -46,25 +42,19 @@ allprojects {
         freeCompilerArgs += "-Xjvm-default=enable"
     }
 
-    tasks.withType(JavaCompile) {
+    compileJava {
         options.encoding = 'UTF-8'
         options.compilerArgs += ["-parameters"]
     }
 
-    tasks.withType(Test) {
-        outputs.upToDateWhen { false }
-    }
-
     testlogger {
-        showExceptions false
-        // log tests that take longer than ...
-        slowThreshold 2000
+        theme 'standard-parallel'
     }
 
     task zipLambdaDistribution(type: Zip) {
         preserveFileTimestamps = false
         reproducibleFileOrder = true
-        setDestinationDir(new File(rootDir, "../../../../out/build"))
+        destinationDirectory = new File(rootDir, "../../../../out/build")
         from compileJava
         from compileKotlin
         from processResources
@@ -79,14 +69,12 @@ allprojects {
 
     test {
         maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-
-        scanForTestClasses = false
-
         useJUnitPlatform()
 
         testlogger {
-            showStandardStreams false
             showPassed false
+            showSkipped false
+            slowThreshold 5000
         }
 
         reports.html.destination = file("$projectDir/../../../../out/reports")
@@ -107,55 +95,34 @@ allprojects {
     }
 
     dependencies {
-        implementation "org.jetbrains.kotlin:kotlin-stdlib"
-        implementation platform("dev.forkhandles:forkhandles-bom:$forkhandles_version")
-        implementation platform("org.http4k:http4k-bom:$http4k_version")
-        implementation "dev.forkhandles:values4k:$forkhandles_version"
-        implementation "org.http4k:http4k-format-jackson"
+        testApi(platform(Libs.junit_bom))
+        testApi(Libs.junit_jupiter)
+        testApi(Libs.junit_jupiter_params)
 
-        implementation platform("com.amazonaws:aws-java-sdk-bom:$aws_sdk_version")
-        implementation "com.amazonaws:aws-java-sdk-s3"
+        testApi(platform(Libs.http4k_bom))
+        testApi(Libs.http4k_format_moshi)
+        testApi(Libs.http4k_testing_approval)
+        testApi(Libs.http4k_testing_hamkrest)
+        testApi(Libs.http4k_testing_servirtium)
+        testApi(Libs.http4k_testing_strikt)
 
-        implementation "commons-codec:commons-codec:1.15"
+        testApi(Libs.assertj_core)
+        testApi(Libs.hamcrest)
+        testApi(Libs.hamcrest_optional)
+        testApi(Libs.jsonassert)
 
-        implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
-        implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
+        testApi(Libs.mockk)
+        testApi(Libs.awaitility)
+        testApi(Libs.snodge)
+        testApi(Libs.jose4j)
 
-        implementation "com.fasterxml.jackson.module:jackson-module-parameter-names"
+        testApi(Libs.wiremock_jre8)
+        testApi(Libs.bcpkix_jdk15on)
+        testApi(Libs.bcprov_ext_jdk15on)
 
-        testImplementation platform("org.junit:junit-bom:$junit_version")
-        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-        testImplementation "org.awaitility:awaitility:4.0.3"
-        testImplementation "org.junit.jupiter:junit-jupiter-api"
-        testImplementation "org.junit.jupiter:junit-jupiter-params"
-        testImplementation "org.http4k:http4k-format-moshi"
-        testImplementation "org.http4k:http4k-testing-hamkrest"
-        testImplementation "org.http4k:http4k-testing-approval"
-        testImplementation "org.assertj:assertj-core:3.18.1"
-        testImplementation "io.mockk:mockk:1.10.2"
-        testImplementation "org.hamcrest:hamcrest:2.2"
-        testImplementation "com.github.npathai:hamcrest-optional:2.0.0"
-        testImplementation "org.assertj:assertj-core:3.19.0"
-        testImplementation "org.skyscreamer:jsonassert:1.5.0"
-        testImplementation "com.natpryce:snodge:3.7.0.0"
-        testRuntimeOnly "org.glassfish:javax.json:1.1"
+        testRuntimeOnly(Libs.javax_json)
     }
 }
-
-spotbugsMain {
-    ignoreFailures = false
-    showStackTraces = false
-    excludeFilter = file("spotbugs-exclude.xml")
-    reports {
-        html {
-            enabled = true
-            destination = file("$projectDir/../../../../out/reports/spotbugs-incremental-distribution.html")
-            stylesheet = 'fancy-hist.xsl'
-        }
-    }
-}
-
-spotbugsTest.enabled = false // do not run spotbugs against the test-suite for now
 
 tasks.create("weighDependencies") {
     doLast {
@@ -169,7 +136,7 @@ tasks.create("weighDependencies") {
                     def sorted = it.allModuleArtifacts.toSorted()
                     def sum = sorted.sum { it.file.length() }
 
-                    println "  " + it.name + " = " + ( sum ? new DecimalFormat("#.00Mb").format(sum / 1024 / 1000d) : "0Mb")
+                    println "  " + it.name + " = " + (sum ? new DecimalFormat("#.00Mb").format(sum / 1024d / 1000d) : "0Mb")
                     sorted.forEach { println("    " + it.file.name + " = " + it.file.length()) }
                 }
             }

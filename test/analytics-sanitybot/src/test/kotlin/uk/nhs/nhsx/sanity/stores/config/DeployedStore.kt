@@ -9,7 +9,6 @@ enum class DeployedStore(
     val converter: KFunction1<Store, (JsonNode) -> S3BucketConfig>,
     val storeReference: String
 ) {
-    AnalyticsSubmissionEvents(CTAStore.Companion::from, "analytics_submission_events_bucket_id"),
     AnalyticsSubmissionStoreConsolidatedParquet(CTAStore.Companion::from, "analytics_submission_store_consolidated_parquet_bucket_id"),
     AnalyticsSubmissionStoreParquet(CTAStore.Companion::from, "analytics_submission_store_parquet_bucket"),
     CircuitBreakerStats(CTAStore.Companion::from, "circuit_breaker_stats_bucket_id"),

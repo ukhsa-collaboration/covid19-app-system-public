@@ -1,8 +1,22 @@
 dependencies {
-    implementation "com.amazonaws:aws-lambda-java-core:1.2.1"
-    implementation "com.amazonaws:aws-lambda-java-events:2.2.9"
-    implementation "com.amazonaws:aws-java-sdk-secretsmanager"
+    api(Libs.kotlin_stdlib_jdk8)
 
-    testImplementation "com.github.tomakehurst:wiremock-jre8:2.27.2"
+    api(Libs.aws_lambda_java_core)
+    api(Libs.aws_lambda_java_events)
+
+    api(platform(Libs.aws_java_sdk_bom))
+    api(Libs.aws_java_sdk_secretsmanager)
+    api(Libs.aws_java_sdk_s3)
+
+    api(platform(Libs.forkhandles_bom))
+    api(Libs.values4k)
+
+    api(platform(Libs.http4k_bom))
+    api(Libs.http4k_format_jackson)
+    api(Libs.http4k_realtime_core)
+    api(Libs.jackson_module_parameter_names)
+
+    api(Libs.commons_codec)
+    api(Libs.commons_lang3)
 }
 

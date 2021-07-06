@@ -18,12 +18,16 @@ import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
+import uk.nhs.nhsx.domain.IpcTokenId
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.OK
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
-import uk.nhs.nhsx.domain.IpcTokenId
-import java.util.Optional
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
+import java.util.*
 
 class IsolationPaymentOrderHandlerTest {
 
@@ -77,14 +81,13 @@ class IsolationPaymentOrderHandlerTest {
             IpcTokenId.of("1".repeat(64))
         )
 
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withBody("""{ "country": "England" }""")
             .withPath("/isolation-payment/ipc-token/create")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(201)
@@ -101,14 +104,13 @@ class IsolationPaymentOrderHandlerTest {
 
     @Test
     fun `token create returns 400 when invalid request`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withBody("{}")
             .withPath("/isolation-payment/ipc-token/create")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(400)
@@ -123,11 +125,10 @@ class IsolationPaymentOrderHandlerTest {
             RecordingEvents(),
             authenticator,
             signer,
-            service,
-            { true }
-        )
+            service
+        ) { true }
 
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
@@ -140,7 +141,6 @@ class IsolationPaymentOrderHandlerTest {
             )
             .withPath("/isolation-payment/ipc-token/create")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(503)
@@ -151,7 +151,7 @@ class IsolationPaymentOrderHandlerTest {
     fun `token update returns 200 when tokens is updated`() {
         every { service.handleIsolationPaymentUpdate(any()) } returns TokenUpdateResponse("https://test?ipcToken=some-id")
 
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
@@ -164,9 +164,7 @@ class IsolationPaymentOrderHandlerTest {
                     "riskyEncounterDate": "2020-08-24T21:59:00Z",
                     "isolationPeriodEndDate": "2020-08-24T21:59:00Z"
                 }
-            """.trimIndent()
-            )
-            .build()
+            """.trimIndent())
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -178,14 +176,13 @@ class IsolationPaymentOrderHandlerTest {
 
     @Test
     fun `token update returns 400 when invalid request`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withBody("{}")
             .withPath("/isolation-payment/ipc-token/update")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(400)
@@ -200,11 +197,10 @@ class IsolationPaymentOrderHandlerTest {
             RecordingEvents(),
             authenticator,
             signer,
-            service,
-            { true }
-        )
+            service
+        ) { true }
 
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
@@ -219,7 +215,6 @@ class IsolationPaymentOrderHandlerTest {
             )
             .withPath("/isolation-payment/ipc-token/update")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(503)
@@ -228,13 +223,12 @@ class IsolationPaymentOrderHandlerTest {
 
     @Test
     fun `returns 404 for unknown paths`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/unknown/path")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(404)
@@ -244,13 +238,12 @@ class IsolationPaymentOrderHandlerTest {
 
     @Test
     fun `returns 200 if health is ok`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/isolation-payment/health")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)

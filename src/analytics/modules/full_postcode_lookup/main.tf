@@ -8,6 +8,7 @@ module "full_postcode_lookup" {
   name                     = "analytics-full-postcode-lookup"
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   tags                     = var.tags
 }

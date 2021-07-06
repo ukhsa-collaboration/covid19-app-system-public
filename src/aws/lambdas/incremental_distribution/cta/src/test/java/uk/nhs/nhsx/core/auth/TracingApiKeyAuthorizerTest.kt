@@ -31,7 +31,7 @@ class TracingApiKeyAuthorizerTest {
 
     private fun inDummySegment(runnable: Runnable) {
         try {
-            AWSXRay.beginDummySegment().use { runnable.run() }
+            AWSXRay.getGlobalRecorder().beginNoOpSegment().use { runnable.run() }
         } finally {
             AWSXRay.endSegment()
         }

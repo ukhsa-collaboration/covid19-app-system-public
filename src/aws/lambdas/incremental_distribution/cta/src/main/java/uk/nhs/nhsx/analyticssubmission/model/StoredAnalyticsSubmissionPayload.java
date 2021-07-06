@@ -109,6 +109,13 @@ public class StoredAnalyticsSubmissionPayload {
     public final Integer positiveLabResultAfterPositiveSelfRapidTest;
     public final Integer negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit;
     public final Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit;
+    public final Integer didAccessRiskyVenueM2Notification;
+    public final Integer selectedTakeTestM2Journey;
+    public final Integer selectedTakeTestLaterM2Journey;
+    public final Integer selectedHasSymptomsM2Journey;
+    public final Integer selectedHasNoSymptomsM2Journey;
+    public final Integer selectedLFDTestOrderingM2Journey;
+    public final Integer selectedHasLFDTestM2Journey;
 
     private StoredAnalyticsSubmissionPayload(String postalDistrict,
                                              String deviceModel,
@@ -205,7 +212,14 @@ public class StoredAnalyticsSubmissionPayload {
                                              Integer negativeLabResultAfterPositiveLFDOutsideTimeLimit,
                                              Integer positiveLabResultAfterPositiveSelfRapidTest,
                                              Integer negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit,
-                                             Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit) {
+                                             Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit,
+                                             Integer didAccessRiskyVenueM2Notification,
+                                             Integer selectedTakeTestM2Journey,
+                                             Integer selectedTakeTestLaterM2Journey,
+                                             Integer selectedHasSymptomsM2Journey,
+                                             Integer selectedHasNoSymptomsM2Journey,
+                                             Integer selectedLFDTestOrderingM2Journey,
+                                             Integer selectedHasLFDTestM2Journey) {
         this.postalDistrict = postalDistrict;
         this.deviceModel = deviceModel;
         this.operatingSystemVersion = operatingSystemVersion;
@@ -302,6 +316,13 @@ public class StoredAnalyticsSubmissionPayload {
         this.positiveLabResultAfterPositiveSelfRapidTest = positiveLabResultAfterPositiveSelfRapidTest;
         this.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit;
         this.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit;
+        this.didAccessRiskyVenueM2Notification = didAccessRiskyVenueM2Notification;
+        this.selectedTakeTestM2Journey = selectedTakeTestM2Journey;
+        this.selectedTakeTestLaterM2Journey = selectedTakeTestLaterM2Journey;
+        this.selectedHasSymptomsM2Journey = selectedHasSymptomsM2Journey;
+        this.selectedHasNoSymptomsM2Journey = selectedHasNoSymptomsM2Journey;
+        this.selectedLFDTestOrderingM2Journey = selectedLFDTestOrderingM2Journey;
+        this.selectedHasLFDTestM2Journey = selectedHasLFDTestM2Journey;
     }
 
     public static StoredAnalyticsSubmissionPayload convertFrom(ClientAnalyticsSubmissionPayload clientPayload, Events events) {
@@ -402,6 +423,13 @@ public class StoredAnalyticsSubmissionPayload {
             clientPayload.metrics.negativeLabResultAfterPositiveLFDOutsideTimeLimit,
             clientPayload.metrics.positiveLabResultAfterPositiveSelfRapidTest,
             clientPayload.metrics.negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit,
-            clientPayload.metrics.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit);
+            clientPayload.metrics.negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit,
+            clientPayload.metrics.didAccessRiskyVenueM2Notification,
+            clientPayload.metrics.selectedTakeTestM2Journey,
+            clientPayload.metrics.selectedTakeTestLaterM2Journey,
+            clientPayload.metrics.selectedHasSymptomsM2Journey,
+            clientPayload.metrics.selectedHasNoSymptomsM2Journey,
+            clientPayload.metrics.selectedLFDTestOrderingM2Journey,
+            clientPayload.metrics.selectedHasLFDTestM2Journey);
     }
 }

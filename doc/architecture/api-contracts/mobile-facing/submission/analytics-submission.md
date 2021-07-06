@@ -118,7 +118,14 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "negativeLabResultAfterPositiveLFDOutsideTimeLimit": 1,
     "positiveLabResultAfterPositiveSelfRapidTest": 1,
     "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit": 1,
-    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit": 1
+    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit": 1,
+    "didAccessRiskyVenueM2Notification": 1,
+    "selectedTakeTestM2Journey": 1,
+    "selectedTakeTestLaterM2Journey": 1,
+    "selectedHasSymptomsM2Journey": 1,
+    "selectedHasNoSymptomsM2Journey": 1,
+    "selectedLFDTestOrderingM2Journey": 1,
+    "selectedHasLFDTestM2Journey": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -220,7 +227,14 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "negativeLabResultAfterPositiveLFDOutsideTimeLimit": 1,
     "positiveLabResultAfterPositiveSelfRapidTest": 1,
     "negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit": 1,
-    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit": 1
+    "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit": 1,
+    "didAccessRiskyVenueM2Notification": 1,
+    "selectedTakeTestM2Journey": 1,
+    "selectedTakeTestLaterM2Journey": 1,
+    "selectedHasSymptomsM2Journey": 1,
+    "selectedHasNoSymptomsM2Journey": 1,
+    "selectedLFDTestOrderingM2Journey": 1,
+    "selectedHasLFDTestM2Journey": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -294,6 +308,20 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `didAccessLocalInfoScreenViaNotification`
   * `didAccessLocalInfoScreenViaBanner`
   * `isDisplayingLocalInfoBackgroundTick`
+  * `positiveLabResultAfterPositiveLFD`
+  * `negativeLabResultAfterPositiveLFDWithinTimeLimit`
+  * `negativeLabResultAfterPositiveLFDOutsideTimeLimit`
+  * `positiveLabResultAfterPositiveSelfRapidTest`
+  * `negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit`
+  * `negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit`
+  * `didAccessRiskyVenueM2Notification`
+  * `selectedTakeTestM2Journey`
+  * `selectedTakeTestLaterM2Journey`
+  * `selectedHasSymptomsM2Journey`
+  * `selectedHasNoSymptomsM2Journey`
+  * `selectedLFDTestOrderingM2Journey`
+  * `selectedHasLFDTestM2Journey`
+  
 
 
 ### HTTP Response Codes

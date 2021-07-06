@@ -30,4 +30,5 @@ Backend- | {target-environment}| Main CTA system, A.K.A. AppSystem|
 Analytics- | {target-environment}-analytics | Analytics subsystem|
 Tiers-  | {target-environment}-tiers | Tier metadata configuration |
 Availability- | {target-environment}-availability | App availability configuration|
+LocalMessages- | {target-environment}-local-messages | Targeted messages for local authorities
 PublicDashboard- | {target-environment}-pubdash| Public dashboard subsystem|

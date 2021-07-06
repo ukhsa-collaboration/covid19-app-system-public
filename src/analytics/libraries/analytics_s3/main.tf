@@ -16,7 +16,7 @@ resource "aws_s3_bucket" "this" {
   tags = var.tags
 
   versioning {
-    enabled = false
+    enabled = var.enable_versioning
   }
 
   server_side_encryption_configuration {

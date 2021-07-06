@@ -2,11 +2,11 @@ package uk.nhs.nhsx.analyticsedge.upload
 
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.s3.model.S3Object
+import uk.nhs.nhsx.aae.S3ObjectNotFound
 import uk.nhs.nhsx.analyticsedge.DataUploadSkipped
 import uk.nhs.nhsx.analyticsedge.DataUploadedToEdge
 import uk.nhs.nhsx.analyticsedge.Dataset
 import uk.nhs.nhsx.analyticsedge.S3PutObjectEvent
-import uk.nhs.nhsx.analyticsexporter.S3ObjectNotFound
 import uk.nhs.nhsx.core.Json.readJsonOrNull
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.Locator

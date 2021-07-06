@@ -7,6 +7,7 @@ module "archive_store" {
   name                     = "analytics-archive-quicksight"
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   tags                     = var.tags
 }
@@ -16,6 +17,7 @@ module "output_store" {
   name                     = "analytics-output-quicksight"
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   lifecycle_rules = [{
     id      = "expire-all-after-7-days"
@@ -61,16 +63,6 @@ module "risky_post_districts" {
   database_name              = aws_glue_catalog_database.this.name
   workgroup_name             = module.workgroup.name
   risky_post_codes_bucket_id = var.risky_post_codes_bucket_id
-}
-
-module "postcodes_geofence" {
-  source                   = "./modules/postcodes_geofence"
-  service                  = local.service
-  force_destroy_s3_buckets = var.force_destroy_s3_buckets
-  logs_bucket_id           = var.logs_bucket_id
-  database_name            = aws_glue_catalog_database.this.name
-  workgroup_name           = module.workgroup.name
-  tags                     = var.tags
 }
 
 module "demographics_data" {
@@ -160,6 +152,15 @@ module "analytics_app_store_extended" {
   tags                     = var.tags
 }
 
+module "analytics_google_installs_overview_report" {
+  source                   = "./modules/google_installs_overview_report"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
 module "analytics_vaccinations_england" {
   source                   = "./modules/analytics_vaccinations_england"
   service                  = local.service
@@ -189,6 +190,39 @@ module "local_authorities_ethnicity_lookup" {
 
 module "england_deprivation_lookup" {
   source                   = "./modules/england_deprivation_lookup_table"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "risky_venues" {
+  source                   = "./modules/risky_venues"
+  database_name            = aws_glue_catalog_database.this.name
+  workgroup_name           = module.workgroup.name
+  risky_venues_bucket_name = var.risky_venues_bucket_name
+}
+
+module "ios_historical_ratings" {
+  source                   = "./modules/ios_historical_ratings"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "android_historical_ratings" {
+  source                   = "./modules/android_historical_ratings"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+module "quicksight_users" {
+  source                   = "./modules/quicksight_users"
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id

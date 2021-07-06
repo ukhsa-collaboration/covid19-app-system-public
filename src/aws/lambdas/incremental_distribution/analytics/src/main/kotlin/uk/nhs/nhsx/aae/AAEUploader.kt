@@ -1,7 +1,6 @@
 package uk.nhs.nhsx.aae
 
 import org.apache.http.ssl.SSLContexts
-import uk.nhs.nhsx.analyticsexporter.ExportDestinationUploader
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretValue
@@ -16,8 +15,7 @@ import java.net.http.HttpResponse
 import java.security.KeyStore
 import java.time.Duration
 
-class AAEUploader(private val config: AAEUploadConfig, secretManager: SecretManager, private val events: Events) :
-    ExportDestinationUploader {
+class AAEUploader(private val config: AAEUploadConfig, secretManager: SecretManager, private val events: Events) {
     private val subscription = secretManager
         .getSecret(SecretName.of(config.subscriptionKeySecretName))
         .map(SecretValue::value)
@@ -25,7 +23,7 @@ class AAEUploader(private val config: AAEUploadConfig, secretManager: SecretMana
 
     private val httpClient = createMutualAuthHttpClient(secretManager, config)
 
-    override fun uploadFile(filename: String, content: ByteArray, contentType: String) {
+    fun uploadFile(filename: String, content: ByteArray, contentType: String) {
         val uploadRequest = HttpRequest.newBuilder()
             .header(SUBSCRIPTION_HEADER_NAME, subscription)
             .header("Content-Type", contentType)

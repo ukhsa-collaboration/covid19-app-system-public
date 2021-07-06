@@ -8,6 +8,7 @@ module "coronavirus_gov_public_data_lookup" {
   name                     = "analytics-coronavirus-gov-lookup-${var.country}"
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   tags                     = var.tags
 }

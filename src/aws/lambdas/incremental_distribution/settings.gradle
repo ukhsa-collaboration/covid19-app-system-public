@@ -1,6 +1,14 @@
+plugins {
+    id("de.fayard.refreshVersions").version("0.10.1")
+}
+
+refreshVersions {
+    enableBuildSrcLibs()
+}
+
 rootProject.name = 'javalambda'
+
 include 'infra'
 include 'cta'
 include 'pubdash'
 include 'analytics'
-include 'analytics-exporter'

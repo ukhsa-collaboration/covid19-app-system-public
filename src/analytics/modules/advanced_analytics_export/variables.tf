@@ -47,3 +47,11 @@ variable "p12_cert_password_secret_name" {
 variable "aae_subscription_secret_name" {
   description = "Name of the SecretsManager secret containing the Ocp-Apim-Subscription-Key HTTP header value (string secret)"
 }
+
+variable "analytics_events_bucket" {
+  description = "Name of the bucket containing analytics events files"
+}
+
+variable "analytics_data_bucket" {
+  description = "Name of the bucket containing analytics data files"
+}

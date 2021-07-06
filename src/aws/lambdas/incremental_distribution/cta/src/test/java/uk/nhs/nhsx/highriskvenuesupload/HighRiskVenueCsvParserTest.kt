@@ -73,7 +73,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
+            assertThat(it.message).contains("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
         }
     }
 
@@ -87,7 +87,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: Message Type must match M[1-2]")
+            assertThat(it.message).contains("validation error: Message Type must match M[1-2]")
         }
     }
 
@@ -101,7 +101,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: Message type M1 does not support optional parameter")
+            assertThat(it.message).contains("validation error: Message type M1 does not support optional parameter")
         }
     }
 
@@ -204,7 +204,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson("")
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: No payload")
+            assertThat(it.message).contains("validation error: No payload")
         }
     }
 
@@ -213,7 +213,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson("     ")
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: No payload")
+            assertThat(it.message).contains("validation error: No payload")
         }
     }
 
@@ -244,7 +244,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: Invalid header. Expected [venue_id, start_time, end_time, message_type, optional_parameter]")
+            assertThat(it.message).contains("validation error: Invalid header. Expected [venue_id, start_time, end_time, message_type, optional_parameter]")
         }
     }
 
@@ -260,7 +260,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: Invalid data in row 4")
+            assertThat(it.message).contains("validation error: Invalid data in row 4")
         }
     }
 
@@ -276,7 +276,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: Invalid data in row 3")
+            assertThat(it.message).contains("validation error: Invalid data in row 3")
         }
     }
 
@@ -292,7 +292,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: Invalid data in row 3")
+            assertThat(it.message).contains("validation error: Invalid data in row 3")
         }
     }
 
@@ -350,7 +350,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
+            assertThat(it.message).contains("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
         }
     }
 
@@ -372,7 +372,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
+            assertThat(it.message).contains("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
         }
     }
 
@@ -386,7 +386,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
+            assertThat(it.message).contains("validation error: VenueId must match [CDEFHJKMPRTVWXY2345689]{1,12}")
         }
     }
 
@@ -402,7 +402,7 @@ class HighRiskVenueCsvParserTest {
         val result = HighRiskVenueCsvParser().toJson(csv)
 
         assertThat(result).isInstanceOfSatisfying(Failure::class.java) {
-            assertThat(it.message).isEqualTo("validation error: Message Type must match M[1-2]")
+            assertThat(it.message).contains("validation error: Message Type must match M[1-2]")
         }
     }
 }

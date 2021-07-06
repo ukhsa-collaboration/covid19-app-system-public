@@ -18,6 +18,7 @@ namespace :release do
     Rake::Task["tag:release:cta"].invoke
     Rake::Task["tag:release:tier_metadata"].invoke
     Rake::Task["tag:release:availability"].invoke
+    Rake::Task["tag:release:local_messages"].invoke
   end
   desc "Release of version RELEASE_VERSION of the tier metadata"
   task :"tier_metadata:prod" => [:"clean:wipe", :"login:prod"] do

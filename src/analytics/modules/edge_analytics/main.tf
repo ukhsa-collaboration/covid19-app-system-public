@@ -59,6 +59,7 @@ module "edge_export_store" {
   name                     = "edge-export" //TODO - revisit the name
   service                  = "edge"        // would like to verify this
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   tags                     = var.tags
 }

@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.diagnosiskeyssubmission
 
 import com.amazonaws.HttpMethod
+import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.dynamodbv2.document.Item
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import com.natpryce.snodge.json.defaultJsonMutagens
@@ -22,13 +23,18 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.exceptions.HttpStatusCode
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.testhelper.data.TestData.STORED_KEYS_PAYLOAD_DAYS_SINCE_ONSET_SUBMISSION
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasHeader
 import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
 import uk.nhs.nhsx.testhelper.mocks.FakeS3Storage
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
 import java.time.Instant
 import java.util.function.Consumer
 import kotlin.random.Random
@@ -177,14 +183,14 @@ class DiagnosisKeySubmissionHandlerTest {
 
     @Test
     fun `not found when path is wrong`() {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withPath("dodgy")
             .withCustomOai("OAI")
             .withRequestId()
             .withBearerToken("anything")
             .withJson(payloadJson)
-            .build()
+
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
         assertThat(responseEvent, hasBody(equalTo(null)))
@@ -193,14 +199,14 @@ class DiagnosisKeySubmissionHandlerTest {
 
     @Test
     fun `method not allowed when method is wrong`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(HttpMethod.GET)
             .withPath(submissionDiagnosisKeysPath)
             .withCustomOai("OAI")
             .withRequestId()
             .withBearerToken("anything")
             .withJson(payloadJson)
-            .build()
+
         val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(responseEvent, hasStatus(HttpStatusCode.METHOD_NOT_ALLOWED_405))
         assertThat(responseEvent, hasBody(equalTo(null)))
@@ -263,14 +269,14 @@ class DiagnosisKeySubmissionHandlerTest {
     }
 
     private fun responseFor(requestPayload: String): APIGatewayProxyResponseEvent {
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath(submissionDiagnosisKeysPath)
             .withBearerToken("anything")
             .withBody(requestPayload)
-            .build()
+
         return handler.handleRequest(requestEvent, ContextBuilder.aContext())
     }
 

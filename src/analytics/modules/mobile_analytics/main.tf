@@ -424,6 +424,34 @@ resource "aws_glue_catalog_table" "this" {
       name = "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit"
       type = "int"
     }
+    columns {
+      name = "didAccessRiskyVenueM2Notification"
+      type = "int"
+    }
+    columns {
+      name = "selectedTakeTestM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedTakeTestLaterM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedHasSymptomsM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedHasNoSymptomsM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedLFDTestOrderingM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedHasLFDTestM2Journey"
+      type = "int"
+    }
   }
 }
 
@@ -847,6 +875,34 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit"
+      type = "int"
+    }
+    columns {
+      name = "didAccessRiskyVenueM2Notification"
+      type = "int"
+    }
+    columns {
+      name = "selectedTakeTestM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedTakeTestLaterM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedHasSymptomsM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedHasNoSymptomsM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedLFDTestOrderingM2Journey"
+      type = "int"
+    }
+    columns {
+      name = "selectedHasLFDTestM2Journey"
       type = "int"
     }
   }

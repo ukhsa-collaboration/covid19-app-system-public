@@ -24,6 +24,6 @@ class TokenUpdateRequestTest {
                 "2020-12-01T00:59:00Z".asInstant(),
                 "2020-12-01T00:59:00Z".asInstant()
             )
-        }.hasMessage("Validation failed for: (<script lang='bash'>rm -fR /</script>)")
+        }.hasMessageContaining("Validation failed for: (<script lang='bash'>rm -fR /</script>)")
     }
 }

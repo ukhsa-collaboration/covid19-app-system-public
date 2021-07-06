@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.virology
 
-import com.amazonaws.HttpMethod
+import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import io.mockk.Runs
@@ -44,8 +44,14 @@ import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.data.TestData
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withHeader
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V1
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V2
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
@@ -102,14 +108,13 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -130,14 +135,13 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(204)
@@ -153,14 +157,13 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
             .withJson("""{"testResultPollingToken":""}""")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -176,14 +179,13 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
             .withJson("""{"testResultPollingToken":null}""")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -198,14 +200,13 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(404)
@@ -218,14 +219,13 @@ class VirologySubmissionHandlerTest {
     fun `handle test result request for incorrect request json`() {
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
             .withJson("""{"invalidField":"98cff3dd-882c-417b-a00a-350a205378c7"}""")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -238,13 +238,12 @@ class VirologySubmissionHandlerTest {
     fun `handle test result request for missing body`() {
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -261,13 +260,12 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath(orderUrl)
             .withBearerToken("anything")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -288,13 +286,12 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/home-kit/register")
             .withBearerToken("anything")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -312,13 +309,12 @@ class VirologySubmissionHandlerTest {
     fun `handle unknown path`() {
         val virology = virologyService(mockk())
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/unknown/path")
             .withBearerToken("anything")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
         assertThat(response.statusCode).isEqualTo(404)
@@ -330,14 +326,13 @@ class VirologySubmissionHandlerTest {
     fun `exchange invalid cta token`() {
         val virology = mockk<VirologyService>()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/cta-exchange")
             .withBearerToken("anything")
             .withJson(""" "{"ctaToken":null} """)
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -355,14 +350,13 @@ class VirologySubmissionHandlerTest {
                 )
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/cta-exchange")
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V1))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -390,14 +384,13 @@ class VirologySubmissionHandlerTest {
             every { exchangeCtaTokenForV1(any(), any(), any()) } returns CtaExchangeResult.Pending()
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/cta-exchange")
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V1))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -417,14 +410,13 @@ class VirologySubmissionHandlerTest {
             every { exchangeCtaTokenForV1(any(), any(), any()) } returns CtaExchangeResult.NotFound()
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/cta-exchange")
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V1))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -442,14 +434,13 @@ class VirologySubmissionHandlerTest {
     fun `exchange cta token handling invalid cta token`() {
         val virology = mockk<VirologyService>()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/cta-exchange")
             .withBearerToken("anything")
             .withJson("""{"ctaToken":"invalid-cta-token"}""")
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -466,14 +457,13 @@ class VirologySubmissionHandlerTest {
             every { lookup(any(), any()) } returns lookupAvailableResultV2(testKit)
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/v2/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V2))
-            .build()
 
         val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
 
@@ -503,14 +493,13 @@ class VirologySubmissionHandlerTest {
             )
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/v2/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V2))
-            .build()
 
         val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
 
@@ -537,15 +526,14 @@ class VirologySubmissionHandlerTest {
             every { lookup(any(), any()) } returns lookupAvailableResultV2()
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withHeader("User-Agent", "p=Android,o=29,v=4.3.5,b=138")
             .withPath("/virology-test/v2/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V2))
-            .build()
 
         val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
 
@@ -559,15 +547,14 @@ class VirologySubmissionHandlerTest {
             every { lookup(any(), any()) } returns lookupAvailableResultV2()
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withHeader("User-Agent-Dodgy", "null")
             .withPath("/virology-test/v2/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V2))
-            .build()
 
         val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
 
@@ -587,14 +574,13 @@ class VirologySubmissionHandlerTest {
                 )
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/v2/cta-exchange")
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -630,14 +616,13 @@ class VirologySubmissionHandlerTest {
                 )
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/v2/cta-exchange")
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -669,15 +654,14 @@ class VirologySubmissionHandlerTest {
             every { exchangeCtaTokenForV2(any(), any(), any()) } returns ctaExchangeAvailableResultV2()
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withHeader("User-Agent", "p=Android,o=29,v=4.3.5,b=138")
             .withPath("/virology-test/v2/cta-exchange")
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -697,15 +681,14 @@ class VirologySubmissionHandlerTest {
             every { exchangeCtaTokenForV2(any(), any(), any()) } returns ctaExchangeAvailableResultV2()
         }
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withHeader("User-Agent-Dodgy", "null")
             .withPath("/virology-test/v2/cta-exchange")
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 
@@ -724,14 +707,13 @@ class VirologySubmissionHandlerTest {
 
         val virology = virologyService()
 
-        val requestEvent = ProxyRequestBuilder.request()
-            .withMethod(HttpMethod.POST)
+        val requestEvent = request()
+            .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/virology-test/results")
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
-            .build()
 
         val response = newHandler(virology).handleRequest(requestEvent, aContext())
 

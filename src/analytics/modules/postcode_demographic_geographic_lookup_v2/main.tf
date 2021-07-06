@@ -8,6 +8,7 @@ module "postcode_demographic_geographic_lookup_v2" {
   name                     = "analytics-postcode-demographic-geo-lookup-v2"
   service                  = var.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = false
   logs_bucket_id           = var.logs_bucket_id
   tags                     = var.tags
 }

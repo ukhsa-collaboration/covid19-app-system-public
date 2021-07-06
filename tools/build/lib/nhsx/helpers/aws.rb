@@ -24,13 +24,19 @@ module NHSx
         "aws --cli-read-timeout 0 --cli-connect-timeout 0 lambda invoke --region #{AWS_REGION} --function-name #{lambda_function} #{payload_cmd} #{output_file}"
       end
 
-      #Execute an Athena query
-      def self.start_athena_query(query, database, workgroup, region = AWS_REGION)
-        "aws athena start-query-execution --query-string \"#{query}\" --query-execution-context Database=#{database} --work-group #{workgroup} --region #{region}"
+      # Start an Athena query execution
+      def self.start_athena_query(query, work_group, region = AWS_REGION)
+        "aws athena start-query-execution --query-string #{Shellwords.escape(query)} --work-group #{work_group} --region #{region}"
       end
 
-      def self.get_athena_named_query(query_id, region = AWS_REGION)
-        "aws athena get-named-query --named-query-id #{query_id} --region #{region}"
+      # Get Athena query execution
+      def self.get_athena_query_execution(query_execution_id)
+        "aws athena get-query-execution --query-execution-id #{query_execution_id}"
+      end
+
+      # Get Athena query results
+      def self.get_athena_query_results(query_execution_id)
+        "aws athena get-query-results --query-execution-id #{query_execution_id}"
       end
 
       # Retrieve a temporary ECR authentication token
@@ -83,6 +89,10 @@ module NHSx
 
       def self.delete_bucket(s3_uri)
         "aws s3 rb #{s3_uri}"
+      end
+
+      def self.move_s3_file(s3_uri_source, s3_uri_destination)
+        "aws s3 mv #{s3_uri_source} #{s3_uri_destination}"
       end
 
       def self.list_objects(bucket_name, prefix)
@@ -192,6 +202,10 @@ module NHSx
 
       def self.list_lambda_functions(region)
         "aws lambda list-functions --region #{region}"
+      end
+
+      def self.get_glue_table(database_name, table_name)
+        "aws glue get-table --database-name #{database_name} --name #{table_name}"
       end
 
       # Lists all S3 buckets known to Terraform in the workspace, extracts their AWS identifier and recursively deletes
@@ -355,6 +369,11 @@ module NHSx
       run_command("Downloading #{s3_location} to #{local_dir}", cmdline, system_config)
     end
 
+    def move_s3_file(source_file, destination_file, system_config)
+      cmd_line = NHSx::AWS::Commandlines.move_s3_file(source_file, destination_file)
+      run_command("Move s3 file #{source_file} to #{destination_file}", cmd_line, system_config)
+    end
+
     def list_objects(bucket_name, prefix, system_config)
       cmdline = NHSx::AWS::Commandlines.list_objects(bucket_name, prefix)
       cmd = run_command("List objects for #{bucket_name} with prefix #{prefix}", cmdline, system_config)
@@ -365,6 +384,30 @@ module NHSx
       output_log_file = NHSx::AWS::Commandlines.new_lambda_output_file(lambda_function, system_config)
       cmd_line = NHSx::AWS::Commandlines.invoke_lambda(lambda_function, payload, output_log_file)
       run_command("Invoke #{lambda_function} lambda", cmd_line, system_config)
+    end
+
+    def get_glue_table(database_name, table_name, system_config)
+      cmdline = NHSx::AWS::Commandlines.get_glue_table(database_name, table_name)
+      cmd = run_command("Get glue table #{table_name} from database #{database_name}", cmdline, system_config)
+      JSON.parse(cmd.output)["Table"]
+    end
+
+    def start_athena_query(query, work_group, system_config)
+      cmdline = NHSx::AWS::Commandlines.start_athena_query(query, work_group)
+      cmd = run_command("Start athena query execution", cmdline, system_config)
+      JSON.parse(cmd.output)["QueryExecutionId"]
+    end
+
+    def get_athena_query_execution(query_execution_id, system_config)
+      cmdline = NHSx::AWS::Commandlines.get_athena_query_execution(query_execution_id)
+      cmd = run_command("Get athena query execution", cmdline, system_config)
+      JSON.parse(cmd.output)["QueryExecution"]
+    end
+
+    def get_athena_query_results(query_execution_id, system_config)
+      cmdline = NHSx::AWS::Commandlines.get_athena_query_results(query_execution_id)
+      cmd = run_command("Get athena query results", cmdline, system_config)
+      JSON.parse(cmd.output)["ResultSet"]["Rows"]
     end
 
     def empty_s3_bucket(s3_location, system_config)

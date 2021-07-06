@@ -19,9 +19,14 @@ import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.testhelper.ProxyRequestBuilder
+import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.proxy
-import java.util.Optional
+import uk.nhs.nhsx.testhelper.withBearerToken
+import uk.nhs.nhsx.testhelper.withCustomOai
+import uk.nhs.nhsx.testhelper.withJson
+import uk.nhs.nhsx.testhelper.withMethod
+import uk.nhs.nhsx.testhelper.withRequestId
+import java.util.*
 
 class RiskyVenueHandlerTest {
 
@@ -53,14 +58,13 @@ class RiskyVenueHandlerTest {
 
     @Test
     fun `handle circuit breaker request with venue id`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/venue/request")
             .withBearerToken("anything")
-            .withJson("{\"venueId\": \"MAX8CHR1\"}")
-            .build()
+            .withJson("""{"venueId": "MAX8CHR1"}""")
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -74,14 +78,13 @@ class RiskyVenueHandlerTest {
 
     @Test
     fun `handle circuit breaker request invalid json data`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/venue/request")
             .withBearerToken("anything")
-            .withJson("{\"invalidField\": null}")
-            .build()
+            .withJson("""{"invalidField": null}""")
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -90,13 +93,12 @@ class RiskyVenueHandlerTest {
 
     @Test
     fun `handle circuit breaker request no body`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/venue/request")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
@@ -105,13 +107,12 @@ class RiskyVenueHandlerTest {
 
     @Test
     fun `handle circuit breaker no such path`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/unknown-feature")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(404)
@@ -119,13 +120,12 @@ class RiskyVenueHandlerTest {
 
     @Test
     fun `handle circuit breaker missing token`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(GET)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/venue/resolution")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(422)
@@ -133,13 +133,12 @@ class RiskyVenueHandlerTest {
 
     @Test
     fun `handle circuit breaker resolution success`() {
-        val requestEvent = ProxyRequestBuilder.request()
+        val requestEvent = request()
             .withMethod(GET)
             .withCustomOai("OAI")
             .withRequestId()
             .withPath("/circuit-breaker/venue/resolution/abc123")
             .withBearerToken("anything")
-            .build()
 
         val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
         assertThat(response.statusCode).isEqualTo(200)
