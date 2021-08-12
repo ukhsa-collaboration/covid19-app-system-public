@@ -1,38 +1,30 @@
 namespace :report do
   desc "Prints a report on the open branches and associated target environments"
-  task :targets do
+  task :targets => [:"login:dev"] do
     include NHSx::Terraform
+    include NHSx::Report
     cmd = run_command("List all branches", "git branch -r --no-color", $configuration)
     branches = cmd.output.gsub("origin/", "").lines.map(&:chomp).map(&:strip).reject { |ln| ln =~ /master/ }
 
     puts "There are #{branches.size} remote branches excluding master"
-
+    puts "*" * 74
+    puts "CTA Core"
     terraform_configuration = File.join($configuration.base, NHSx::TargetEnvironment::CTA_DEV_ACCOUNT)
-    Dir.chdir(terraform_configuration) do
-      run_command("Select default workspace", "terraform workspace select default", $configuration)
-      cmd = run_command("List workspaces", "terraform workspace list", $configuration)
-      workspaces = cmd.output.chomp.lines.map(&:chomp).map(&:strip).reject { |ln| ln =~ /default/ }
-
-      temporary_workspaces = workspaces - NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].map { |env| "te-#{env}" }
-
-      puts "There are #{branches.size} remote branches excluding master"
-      puts "There are #{temporary_workspaces.size} temporary target environments"
-
-      active_workspaces = {}
-      branches.each do |branch|
-        active_workspaces[branch] = generate_workspace_id(branch)
-      end
-
-      active_workspaces.each do |branch, workspace|
-        puts "Workspace #{workspace} corresponds to branch #{branch}" if temporary_workspaces.include?(workspace)
-      end
-
-      orphan_workspaces = temporary_workspaces - active_workspaces.values
-      puts "There #{orphan_workspaces.size} orphan temporary target environments\n #{orphan_workspaces.join(",")}"
-    end
+    named_environments = NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].map { |env| "te-#{env}" }
+    targets_report(terraform_configuration, named_environments, branches, $configuration)
+    puts "*" * 74
+    puts "Analytics"
+    terraform_configuration = File.join($configuration.base, NHSx::TargetEnvironment::ANALYTICS_DEV_ACCOUNT)
+    named_environments = NHSx::TargetEnvironment::ANALYTICS_TARGET_ENVIRONMENTS["dev"].map { |env| "te-#{env}" }
+    targets_report(terraform_configuration, named_environments, branches, $configuration)
+    puts "*" * 74
+    puts "PubDash"
+    terraform_configuration = File.join($configuration.base, NHSx::TargetEnvironment::PUBDASH_DEV_ACCOUNT)
+    named_environments = NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["dev"].map { |env| "te-#{env}" }
+    targets_report(terraform_configuration, named_environments, branches, $configuration)
   end
   desc "Prints a report on all named target environments and their endpoints in the dev account"
-  task :dev do
+  task :dev => [:"login:dev"] do
     include NHSx::Report
     include NHSx::Git
 

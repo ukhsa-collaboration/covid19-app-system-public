@@ -28,6 +28,7 @@ import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.time.ZoneOffset.UTC
 import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
@@ -40,7 +41,7 @@ class VirologyPersistenceService(
     fun getTestResult(pollingToken: TestResultPollingToken): Optional<TestState> {
         val itemResult = dynamoDbClient.getItem(
             GetItemRequest(
-                config.testResultsTable,
+                config.testResultsTable.value,
                 attributeMap("testResultPollingToken", pollingToken)
             )
         )
@@ -52,12 +53,12 @@ class VirologyPersistenceService(
                         TestResultPollingToken.of(itemValueOrThrow(it, "testResultPollingToken")),
                         itemValueOrThrow(it, "testEndDate").let(TestEndDate.Companion::parse),
                         TestResult.from(itemValueOrThrow(it, "testResult")),
-                        itemValueOrNull(it, "testKit")?.let { TestKit.valueOf(it) } ?: LAB_RESULT
+                        itemValueOrNull(it, "testKit")?.let { k -> TestKit.valueOf(k) } ?: LAB_RESULT
                     )
                 } else {
                     PendingTestResult(
                         TestResultPollingToken.of(itemValueOrThrow(it, "testResultPollingToken")),
-                        itemValueOrNull(it, "testKit")?.let { TestKit.valueOf(it) } ?: LAB_RESULT
+                        itemValueOrNull(it, "testKit")?.let { k -> TestKit.valueOf(k) } ?: LAB_RESULT
                     )
                 }
             }
@@ -66,7 +67,7 @@ class VirologyPersistenceService(
     fun getTestOrder(ctaToken: CtaToken): Optional<TestOrder> {
         val itemResult = dynamoDbClient.getItem(
             GetItemRequest(
-                config.testOrdersTable,
+                config.testOrdersTable.value,
                 attributeMap("ctaToken", ctaToken)
             )
         )
@@ -78,7 +79,7 @@ class VirologyPersistenceService(
                     itemIntegerValueOrNull(it, "downloadCount") ?: 0,
                     itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken.Companion::of),
                     itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken.Companion::of),
-                    itemLongValueOrThrow(it, "expireAt").let{LocalDateTime.ofEpochSecond(it,0,ZoneOffset.UTC)}
+                    itemLongValueOrThrow(it, "expireAt").let { LocalDateTime.ofEpochSecond(it, 0, UTC) }
                 )
             }
     }
@@ -86,15 +87,12 @@ class VirologyPersistenceService(
     fun persistTestOrder(
         testOrderSupplier: Supplier<TestOrder>,
         expireAt: Instant
-    ): TestOrder = persistTestOrderTransactItems(
-        testOrderSupplier,
-        { testOrder: TestOrder ->
-            listOf(
-                testOrderCreateOp(testOrder, expireAt),
-                testResultPendingCreateOp(testOrder, expireAt)
-            )
-        }
-    )
+    ) = persistTestOrderTransactItems(testOrderSupplier) { testOrder: TestOrder ->
+        listOf(
+            testOrderCreateOp(testOrder, expireAt),
+            testResultPendingCreateOp(testOrder, expireAt)
+        )
+    }
 
     fun persistTestOrderAndResult(
         testOrderSupplier: Supplier<TestOrder>,
@@ -102,22 +100,19 @@ class VirologyPersistenceService(
         testResult: TestResult,
         testEndDate: TestEndDate,
         testKit: TestKit
-    ): TestOrder = persistTestOrderTransactItems(
-        testOrderSupplier,
-        { testOrder: TestOrder ->
-            if (Positive == testResult) {
-                listOf(
-                    testOrderCreateOp(testOrder, expireAt),
-                    testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit),
-                    submissionTokenCreateOp(testOrder, expireAt, testKit)
-                )
-            } else
-                listOf(
-                    testOrderCreateOp(testOrder, expireAt),
-                    testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit)
-                )
-        }
-    )
+    ) = persistTestOrderTransactItems(testOrderSupplier) { testOrder: TestOrder ->
+        if (Positive == testResult) {
+            listOf(
+                testOrderCreateOp(testOrder, expireAt),
+                testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit),
+                submissionTokenCreateOp(testOrder, expireAt, testKit)
+            )
+        } else
+            listOf(
+                testOrderCreateOp(testOrder, expireAt),
+                testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit)
+            )
+    }
 
     private fun persistTestOrderTransactItems(
         testOrderSupplier: Supplier<TestOrder>,
@@ -143,7 +138,10 @@ class VirologyPersistenceService(
         throw RuntimeException("""Persistence of test order exceeded maximum of ${config.maxTokenPersistenceRetryCount} retries""")
     }
 
-    fun markForDeletion(testResult: AvailableTestResult, virologyTimeToLive: VirologyDataTimeToLive) {
+    fun markForDeletion(
+        testResult: AvailableTestResult,
+        virologyTimeToLive: VirologyDataTimeToLive
+    ) {
         queryTestOrderFor(testResult)
             .ifPresentOrElse(
                 { testOrder: TestOrder -> markTestResultForDeletion(testResult, virologyTimeToLive, testOrder) }
@@ -226,14 +224,14 @@ class VirologyPersistenceService(
     }
 
     private fun submissionTokenPresent(testOrder: TestOrder): Boolean = dynamoDbClient.getItem(
-        config.submissionTokensTable,
+        config.submissionTokensTable.value,
         attributeMap("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken)
     ).item != null
 
     private fun queryTestOrderFor(testState: TestState): Optional<TestOrder> {
         val request = QueryRequest()
-            .withTableName(config.testOrdersTable)
-            .withIndexName(config.testOrdersIndex)
+            .withTableName(config.testOrdersTable.value)
+            .withIndexName(config.testOrdersIndex.value)
             .withKeyConditionExpression("testResultPollingToken = :pollingToken")
             .withExpressionAttributeValues(
                 attributeMap(
@@ -253,33 +251,37 @@ class VirologyPersistenceService(
             }
     }
 
-    private fun testOrderCreateOp(testOrder: TestOrder, expireAt: Instant): TransactWriteItem =
-        TransactWriteItem().withPut(
-            Put()
-                .withTableName(config.testOrdersTable)
-                .withItem(
-                    mapOf(
-                        "ctaToken" to stringAttribute(testOrder.ctaToken),
-                        "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
-                        "diagnosisKeySubmissionToken" to stringAttribute(testOrder.diagnosisKeySubmissionToken),
-                        "expireAt" to numericAttribute(expireAt)
-                    )
+    private fun testOrderCreateOp(
+        testOrder: TestOrder,
+        expireAt: Instant
+    ) = TransactWriteItem().withPut(
+        Put()
+            .withTableName(config.testOrdersTable.value)
+            .withItem(
+                mapOf(
+                    "ctaToken" to stringAttribute(testOrder.ctaToken),
+                    "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
+                    "diagnosisKeySubmissionToken" to stringAttribute(testOrder.diagnosisKeySubmissionToken),
+                    "expireAt" to numericAttribute(expireAt)
                 )
-                .withConditionExpression("attribute_not_exists(ctaToken)")
-        )
+            )
+            .withConditionExpression("attribute_not_exists(ctaToken)")
+    )
 
-    private fun testResultPendingCreateOp(testOrder: TestOrder, expireAt: Instant): TransactWriteItem =
-        TransactWriteItem().withPut(
-            Put()
-                .withTableName(config.testResultsTable)
-                .withItem(
-                    mapOf(
-                        "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
-                        "status" to stringAttribute(PENDING.text),
-                        "expireAt" to numericAttribute(expireAt)
-                    )
+    private fun testResultPendingCreateOp(
+        testOrder: TestOrder,
+        expireAt: Instant
+    ) = TransactWriteItem().withPut(
+        Put()
+            .withTableName(config.testResultsTable.value)
+            .withItem(
+                mapOf(
+                    "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
+                    "status" to stringAttribute(PENDING.text),
+                    "expireAt" to numericAttribute(expireAt)
                 )
-        )
+            )
+    )
 
     private fun testResultAvailableCreateOp(
         testOrder: TestOrder,
@@ -287,9 +289,9 @@ class VirologyPersistenceService(
         testResult: TestResult,
         testEndDate: TestEndDate,
         testKit: TestKit
-    ): TransactWriteItem = TransactWriteItem().withPut(
+    ) = TransactWriteItem().withPut(
         Put()
-            .withTableName(config.testResultsTable)
+            .withTableName(config.testResultsTable.value)
             .withItem(
                 mapOf(
                     "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
@@ -302,35 +304,39 @@ class VirologyPersistenceService(
             )
     )
 
-    private fun testOrderTtlUpdateOp(ctaToken: CtaToken, testDataExpireAt: Instant): TransactWriteItem =
-        TransactWriteItem().withUpdate(
-            Update()
-                .withTableName(config.testOrdersTable)
-                .withKey(attributeMap("ctaToken", ctaToken))
-                .withUpdateExpression("set expireAt = :expireAt")
-                .withExpressionAttributeValues(attributeMap(":expireAt", testDataExpireAt.epochSecond))
-        )
+    private fun testOrderTtlUpdateOp(
+        ctaToken: CtaToken,
+        testDataExpireAt: Instant
+    ) = TransactWriteItem().withUpdate(
+        Update()
+            .withTableName(config.testOrdersTable.value)
+            .withKey(attributeMap("ctaToken", ctaToken))
+            .withUpdateExpression("set expireAt = :expireAt")
+            .withExpressionAttributeValues(attributeMap(":expireAt", testDataExpireAt.epochSecond))
+    )
 
-    private fun testOrderTtlAndCounterUpdateOp(ctaToken: CtaToken, testDataExpireAt: Instant): TransactWriteItem =
-        TransactWriteItem().withUpdate(
-            Update()
-                .withTableName(config.testOrdersTable)
-                .withKey(attributeMap("ctaToken", ctaToken))
-                .withUpdateExpression("set expireAt = :expireAt add downloadCount :dc")
-                .withExpressionAttributeValues(
-                    mapOf(
-                        ":expireAt" to numericAttribute(testDataExpireAt),
-                        ":dc" to numericAttribute(1)
-                    )
+    private fun testOrderTtlAndCounterUpdateOp(
+        ctaToken: CtaToken,
+        testDataExpireAt: Instant
+    ) = TransactWriteItem().withUpdate(
+        Update()
+            .withTableName(config.testOrdersTable.value)
+            .withKey(attributeMap("ctaToken", ctaToken))
+            .withUpdateExpression("set expireAt = :expireAt add downloadCount :dc")
+            .withExpressionAttributeValues(
+                mapOf(
+                    ":expireAt" to numericAttribute(testDataExpireAt),
+                    ":dc" to numericAttribute(1)
                 )
-        )
+            )
+    )
 
     private fun testResultTtlUpdateOp(
         testResultPollingToken: TestResultPollingToken,
         testDataExpireAt: Instant
-    ): TransactWriteItem = TransactWriteItem().withUpdate(
+    ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.testResultsTable)
+            .withTableName(config.testResultsTable.value)
             .withKey(attributeMap("testResultPollingToken", testResultPollingToken))
             .withUpdateExpression("set expireAt = :expireAt")
             .withExpressionAttributeValues(attributeMap(":expireAt", testDataExpireAt.epochSecond))
@@ -339,9 +345,9 @@ class VirologyPersistenceService(
     private fun submissionTokenTimeToLiveUpdateOp(
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
         submissionDataExpireAt: Instant
-    ): TransactWriteItem = TransactWriteItem().withUpdate(
+    ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.submissionTokensTable)
+            .withTableName(config.submissionTokensTable.value)
             .withKey(attributeMap("diagnosisKeySubmissionToken", diagnosisKeySubmissionToken))
             .withConditionExpression("attribute_exists(diagnosisKeySubmissionToken)")
             .withUpdateExpression("set expireAt = :expireAt")
@@ -369,7 +375,7 @@ class VirologyPersistenceService(
     private fun persistTestResult(
         testResult: VirologyResultRequestV2,
         transactWriteItems: Function<TestOrder, List<TransactWriteItem>>
-    ): VirologyResultPersistOperation = getOrder(testResult.ctaToken)
+    ) = getOrder(testResult.ctaToken)
         .map { order: TestOrder ->
             try {
                 executeTransaction(dynamoDbClient, transactWriteItems.apply(order))
@@ -385,14 +391,15 @@ class VirologyPersistenceService(
         }
 
     private fun getOrder(ctaToken: CtaToken): Optional<TestOrder> {
-        val itemResult = dynamoDbClient.getItem(config.testOrdersTable, attributeMap("ctaToken", ctaToken.value))
+        val itemResult = dynamoDbClient.getItem(config.testOrdersTable.value, attributeMap("ctaToken", ctaToken.value))
+
         return Optional.ofNullable(itemResult.item)
             .map {
                 TestOrder(
                     itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
                     itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
                     itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of),
-                    itemLongValueOrThrow(it, "expireAt").let{LocalDateTime.ofEpochSecond(it,0,ZoneOffset.UTC)}
+                    itemLongValueOrThrow(it, "expireAt").let { e -> LocalDateTime.ofEpochSecond(e, 0, UTC) }
                 )
             }
     }
@@ -400,9 +407,9 @@ class VirologyPersistenceService(
     private fun resultPollingTokenUpdateOp(
         testOrder: TestOrder,
         testResult: VirologyResultRequestV2
-    ): TransactWriteItem = TransactWriteItem().withUpdate(
+    ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.testResultsTable)
+            .withTableName(config.testResultsTable.value)
             .withKey(
                 attributeMap(
                     "testResultPollingToken",
@@ -423,16 +430,19 @@ class VirologyPersistenceService(
             .withExpressionAttributeNames(mapOf("#s" to "status"))
     )
 
-    private fun submissionTokenCreateOp(testOrder: TestOrder, expireAt: Instant, testKit: TestKit): TransactWriteItem =
-        TransactWriteItem().withPut(
-            Put()
-                .withTableName(config.submissionTokensTable)
-                .withItem(
-                    mapOf(
-                        "diagnosisKeySubmissionToken" to stringAttribute(testOrder.diagnosisKeySubmissionToken),
-                        "testKit" to stringAttribute(testKit.name),
-                        "expireAt" to numericAttribute(expireAt)
-                    )
+    private fun submissionTokenCreateOp(
+        testOrder: TestOrder,
+        expireAt: Instant,
+        testKit: TestKit
+    ) = TransactWriteItem().withPut(
+        Put()
+            .withTableName(config.submissionTokensTable.value)
+            .withItem(
+                mapOf(
+                    "diagnosisKeySubmissionToken" to stringAttribute(testOrder.diagnosisKeySubmissionToken),
+                    "testKit" to stringAttribute(testKit.name),
+                    "expireAt" to numericAttribute(expireAt)
                 )
-        )
+            )
+    )
 }

@@ -1,12 +1,17 @@
 package uk.nhs.nhsx.virology.tokengen
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.java.extension
+import strikt.java.text
 import uk.nhs.nhsx.diagnosiskeydist.ZipFileUtility
 import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.domain.TestEndDate
-import uk.nhs.nhsx.domain.TestResult.*
+import uk.nhs.nhsx.domain.TestResult.Positive
 import java.io.File
+import java.nio.file.Path
 
 class VirologyProcessorExportsTest {
 
@@ -16,95 +21,96 @@ class VirologyProcessorExportsTest {
             gve9v72v, POSITIVE, 2020-10-06T00:00:00Z
             fveeqkrn, POSITIVE, 2020-10-06T00:00:00Z
         """.trimIndent()
-    private val virologyProcessorExports = VirologyProcessorExports(System.getProperty("java.io.tmpdir") + File.separator)
 
     @Test
-    fun `generates csv`() {
-        val csv = virologyProcessorExports.csvFrom(
-            listOf(
+    fun `generates csv`(@TempDir tempDir: Path) {
+        val csv = VirologyProcessorExports(tempDir).csvFrom(
+            tokens = listOf(
                 CtaToken.of("pesddgrq"),
                 CtaToken.of("gve9v72v"),
                 CtaToken.of("fveeqkrn")
             ),
-            Positive, TestEndDate.of(2020, 10, 6)
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 10, 6)
         )
 
-        assertThat(csv).isEqualTo(csvContent)
+        expectThat(csv).isEqualTo(csvContent)
     }
 
     @Test
-    fun `generates zip file without password protection`() {
-        val zipFile = virologyProcessorExports.zipFrom(
-            "not-protected-file",
-            listOf(CtaTokensCsv("file-name", csvContent))
+    fun `generates zip file without password protection`(@TempDir tempDir: Path) {
+        val zipFile = VirologyProcessorExports(tempDir).zipFrom(
+            zipFileName = "not-protected-file",
+            ctaTokensCsv = listOf(CtaTokensCsv("file-name", csvContent))
         )
-        assertThat(zipFile.extension).isEqualTo("zip")
+
+        expectThat(zipFile).extension.isEqualTo("zip")
 
         val workingDir = ZipFileUtility.extractZipFileToTempLocation(zipFile)
         val csvFile = File(workingDir, "file-name.csv")
-        val csv = csvFile.readText(Charsets.UTF_8)
-        assertThat(csv).isEqualTo(csvContent)
+
+        expectThat(csvFile).text().isEqualTo(csvContent)
     }
 
     @Test
-    fun `generates zip file with multiple entries`() {
-        val zipFile = virologyProcessorExports.zipFrom(
-            "file-name",
-            listOf(CtaTokensCsv("20200101", csvContent),CtaTokensCsv("20200102", csvContent),CtaTokensCsv("20200103", csvContent)),
-            "password"
+    fun `generates zip file with multiple entries`(@TempDir tempDir: Path) {
+        val zipFile = VirologyProcessorExports(tempDir).zipFrom(
+            zipFileName = "file-name",
+            ctaTokensCsv = listOf(
+                CtaTokensCsv("20200101", csvContent),
+                CtaTokensCsv("20200102", csvContent),
+                CtaTokensCsv("20200103", csvContent)
+            ),
+            zipFilePassword = "password"
         )
-        assertThat(zipFile.extension).isEqualTo("zip")
-        val workingDir = ZipFileUtility.extractZipFileToTempLocation(zipFile,"password")
+        expectThat(zipFile).extension.isEqualTo("zip")
 
-        readFileAndAssertContent(workingDir,"20200101.csv",csvContent)
-        readFileAndAssertContent(workingDir,"20200102.csv",csvContent)
-        readFileAndAssertContent(workingDir,"20200103.csv",csvContent)
-    }
+        val workingDir = ZipFileUtility.extractZipFileToTempLocation(zipFile, "password")
 
-
-    @Test
-    fun `generate multiple zip files with same content`() {
-        val zipFile1 = virologyProcessorExports.zipFrom(
-            "zip1",
-            listOf(CtaTokensCsv("20200101", csvContent)),
-            "password"
-        )
-
-        val zipFile2 = virologyProcessorExports.zipFrom(
-            "zip2",
-            listOf(CtaTokensCsv("20200101", csvContent)),
-            "password"
-        )
-        assertThat(zipFile1.extension).isEqualTo("zip")
-        assertThat(zipFile2.extension).isEqualTo("zip")
-
-        val workingDirZip1 = ZipFileUtility.extractZipFileToTempLocation(zipFile1,"password")
-        readFileAndAssertContent(workingDirZip1,"20200101.csv",csvContent)
-
-        val workingDirZip2 = ZipFileUtility.extractZipFileToTempLocation(zipFile2,"password")
-        readFileAndAssertContent(workingDirZip2,"20200101.csv",csvContent)
-
+        expectThat(File(workingDir, "20200101.csv")).text().isEqualTo(csvContent)
+        expectThat(File(workingDir, "20200102.csv")).text().isEqualTo(csvContent)
+        expectThat(File(workingDir, "20200103.csv")).text().isEqualTo(csvContent)
     }
 
     @Test
-    fun `generates zip file with password protection`() {
-        val zipFile = virologyProcessorExports.zipFrom(
-            "file-name",
-            listOf(CtaTokensCsv("file-name", csvContent)),
-            "password"
-        )
-        assertThat(zipFile.extension).isEqualTo("zip")
+    fun `generate multiple zip files with same content`(@TempDir tempDir: Path) {
+        val exports = VirologyProcessorExports(tempDir)
 
-        val workingDir = ZipFileUtility.extractZipFileToTempLocation(zipFile,"password")
+        val zipFile1 = exports.zipFrom(
+            zipFileName = "zip1",
+            ctaTokensCsv = listOf(CtaTokensCsv("20200101", csvContent)),
+            zipFilePassword = "password"
+        )
+
+        val zipFile2 = exports.zipFrom(
+            zipFileName = "zip2",
+            ctaTokensCsv = listOf(CtaTokensCsv("20200101", csvContent)),
+            zipFilePassword = "password"
+        )
+
+        expectThat(zipFile1).extension.isEqualTo("zip")
+        expectThat(zipFile2).extension.isEqualTo("zip")
+
+        val workingDirZip1 = ZipFileUtility.extractZipFileToTempLocation(zipFile1, "password")
+        expectThat(File(workingDirZip1, "20200101.csv")).text().isEqualTo(csvContent)
+
+        val workingDirZip2 = ZipFileUtility.extractZipFileToTempLocation(zipFile2, "password")
+        expectThat(File(workingDirZip2, "20200101.csv")).text().isEqualTo(csvContent)
+    }
+
+    @Test
+    fun `generates zip file with password protection`(@TempDir tempDir: Path) {
+        val zipFile = VirologyProcessorExports(tempDir).zipFrom(
+            zipFileName = "file-name",
+            ctaTokensCsv = listOf(CtaTokensCsv("file-name", csvContent)),
+            zipFilePassword = "password"
+        )
+
+        expectThat(zipFile).extension.isEqualTo("zip")
+
+        val workingDir = ZipFileUtility.extractZipFileToTempLocation(zipFile, "password")
         val csvFile = File(workingDir, "file-name.csv")
-        val csv = csvFile.readText(Charsets.UTF_8)
-        assertThat(csv).isEqualTo(csvContent)
-    }
 
-    private fun readFileAndAssertContent(workingDir:File, filename:String, content:String) {
-        val csvFile = File(workingDir, filename)
-        val csv = csvFile.readText(Charsets.UTF_8)
-        assertThat(csv).isEqualTo(content)
+        expectThat(csvFile).text().isEqualTo(csvContent)
     }
-
 }

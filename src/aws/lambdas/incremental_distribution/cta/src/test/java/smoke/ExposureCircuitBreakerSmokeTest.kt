@@ -1,15 +1,15 @@
 package smoke
 
-import org.http4k.client.JavaHttpClient
-import org.http4k.filter.debug
+import org.http4k.cloudnative.env.Environment
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
+import smoke.actors.createHandler
 import smoke.env.SmokeTests
 
 class ExposureCircuitBreakerSmokeTest {
 
     private val config = SmokeTests.loadConfig()
-    private val client = JavaHttpClient().debug()
+    private val client = createHandler(Environment.ENV)
 
     private val mobileApp = MobileApp(client, config)
 

@@ -1,27 +1,33 @@
 package smoke
 
-import org.assertj.core.api.Assertions.assertThat
-import org.http4k.client.JavaHttpClient
-import org.http4k.filter.debug
+import assertions.IsolationPaymentAssertions.hasValidIpcToken
+import org.http4k.cloudnative.env.Environment
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
 import smoke.actors.SIPGateway
+import smoke.actors.createHandler
 import smoke.env.SmokeTests
+import strikt.api.expectThat
+import strikt.assertions.containsKeys
+import strikt.assertions.getValue
+import strikt.assertions.isEqualTo
+import strikt.assertions.isFalse
 import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.domain.Country.Companion.England
 import uk.nhs.nhsx.domain.IpcTokenId
-import java.time.Duration
+import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse
+import java.time.Duration.ofDays
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS
 
 class IsolationPaymentSmokeTest {
-    private val client = JavaHttpClient()
+    private val client = createHandler(Environment.ENV)
     private val config = SmokeTests.loadConfig()
-    private val mobileApp = MobileApp(client.debug(), config)
+    private val mobileApp = MobileApp(client, config)
     private val sipGateway = SIPGateway(config)
 
-    private val riskyEncounterDate = Instant.now().minus(Duration.ofDays(4)).truncatedTo(SECONDS)
-    private val isolationPeriodEndDate = Instant.now().plus(Duration.ofDays(4)).truncatedTo(SECONDS)
+    private val riskyEncounterDate = Instant.now().minus(ofDays(4)).truncatedTo(SECONDS)
+    private val isolationPeriodEndDate = Instant.now().plus(ofDays(4)).truncatedTo(SECONDS)
 
     @Test
     fun `happy path - submit isolation payment, update, verify and consume ipcToken`() {
@@ -34,7 +40,10 @@ class IsolationPaymentSmokeTest {
     @Test
     fun `isolation payment order creation is not enabled for non whitelisted countries`() {
         val createIsolationToken = mobileApp.createNonWhiteListedIsolationToken(Country.of("Switzerland"))
-        assertThat(createIsolationToken.isEnabled).isFalse
+
+        expectThat(createIsolationToken)
+            .get(TokenGenerationResponse.Disabled::isEnabled)
+            .isFalse()
     }
 
     @Test
@@ -73,35 +82,34 @@ class IsolationPaymentSmokeTest {
         verifyValidToken(ipcToken)
     }
 
-    private fun createValidToken(): IpcTokenId {
-        val response = mobileApp.createIsolationToken(England)
-        assertThat(response.ipcToken).isNotNull
-        assertThat(response.isEnabled).isTrue
-        return response.ipcToken
-    }
+    private fun createValidToken() = mobileApp
+        .createIsolationToken(England)
+        .apply { expectThat(this).hasValidIpcToken() }
+        .ipcToken
 
     private fun verifyValidToken(ipcToken: IpcTokenId) {
         val verifyPayload = sipGateway.verifiesIpcToken(ipcToken)
-        assertThat(verifyPayload["state"]).isEqualTo("valid")
-        assertThat(Instant.parse(verifyPayload["riskyEncounterDate"])).isEqualTo(riskyEncounterDate)
-        assertThat(Instant.parse(verifyPayload["isolationPeriodEndDate"])).isEqualTo(isolationPeriodEndDate)
-        assertThat(verifyPayload).containsKey("createdTimestamp")
-        assertThat(verifyPayload).containsKey("updatedTimestamp")
+
+        expectThat(verifyPayload) {
+            getValue("state").isEqualTo("valid")
+            getValue("riskyEncounterDate").get(Instant::parse).isEqualTo(riskyEncounterDate)
+            getValue("isolationPeriodEndDate").get(Instant::parse).isEqualTo(isolationPeriodEndDate)
+            containsKeys("createdTimestamp", "updatedTimestamp")
+        }
     }
 
     private fun verifyInvalidToken(ipcToken: IpcTokenId) {
         val verifyPayload = sipGateway.verifiesIpcToken(ipcToken)
-        assertThat(verifyPayload["state"]).isEqualTo("invalid")
+        expectThat(verifyPayload).getValue("state").isEqualTo("invalid")
     }
 
     private fun consumeValidToken(ipcToken: IpcTokenId) {
         val consumePayload = sipGateway.consumesIpcToken(ipcToken)
-        assertThat(consumePayload["state"]).isEqualTo("consumed")
+        expectThat(consumePayload).getValue("state").isEqualTo("consumed")
     }
 
     private fun consumeInvalidToken(ipcToken: IpcTokenId) {
         val consumePayload = sipGateway.consumesIpcToken(ipcToken)
-        assertThat(consumePayload["state"]).isEqualTo("invalid")
+        expectThat(consumePayload).getValue("state").isEqualTo("invalid")
     }
-
 }

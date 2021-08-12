@@ -16,7 +16,6 @@ internal class StandardSigningFactoryTest {
 
     @Test
     fun `SSM is only called once and result cached`() {
-
         val parameters = mockk<Parameters>()
         val name = ParameterName.of("foobar")
 
@@ -25,7 +24,12 @@ internal class StandardSigningFactoryTest {
         val client: AWSKMS = mockk()
         every { client.sign(any()) } returns SignResult().withSignature(ByteBuffer.allocate(0))
 
-        val signer = StandardSigningFactory(SystemClock.CLOCK, parameters, client).signContentWithKeyFromParameter(name)
+        val signer = StandardSigningFactory(
+            SystemClock.CLOCK,
+            parameters,
+            client
+        ).signContentWithKeyFromParameter(name)
+
         signer.sign(ByteArray(0))
         signer.sign(ByteArray(0))
 

@@ -9,7 +9,7 @@ import java.io.ByteArrayInputStream
 import java.util.*
 
 class FakeCsvUploadServiceS3 : FakeS3(), AwsS3 {
-    override fun getObject(locator: Locator): Optional<S3Object> = Optional.of(S3Object().apply {
+    override fun getObject(locator: Locator) = Optional.of(S3Object().apply {
         setObjectContent(ByteArrayInputStream(Json.toJson(tierMetadata).toByteArray()))
     })
 }

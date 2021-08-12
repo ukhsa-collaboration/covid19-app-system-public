@@ -93,7 +93,7 @@ The system architecture diagram below specifies the complete system showing the 
 * As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
 * Security and operations are built on AWS cloud-native components.
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2021-04-19.png "Figure: System Architecture")
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2021-07-15.png "Figure: System Architecture")
 
 The port names in the system architecture are usually defined by ```API Group/API Name```, e.g. ```Submission/Diagnosis Key```.
 

@@ -49,8 +49,8 @@ module NHSx
     def login_to_mfa_account(account_name, use_prompt)
       use_prompt = false if ENV["CODEBUILD_BUILD_ID"]
       double_check_prompt(account_name) if use_prompt
-      ENV["AWS_PROFILE"] = mfa_login(account_name) unless ENV["CODEBUILD_BUILD_ID"]
 
+      ENV["AWS_PROFILE"] = mfa_login(account_name) unless ENV["CODEBUILD_BUILD_ID"]
       ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
       ENV["ACCOUNT"] = account_name
     end
@@ -94,7 +94,7 @@ module NHSx
       double_check_prompt(account) if use_prompt
 
       ENV.delete("AWS_PROFILE")
-      ENV["AWS_PROFILE"] = sso_login(account, domain)
+      ENV["AWS_PROFILE"] = sso_login(account, domain) unless ENV["CODEBUILD_BUILD_ID"]
       ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
       ENV["ACCOUNT"] = account
     end

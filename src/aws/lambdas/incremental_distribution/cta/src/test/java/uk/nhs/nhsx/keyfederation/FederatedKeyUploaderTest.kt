@@ -1,42 +1,57 @@
 package uk.nhs.nhsx.keyfederation
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.containsExactlyInAnyOrder
+import strikt.assertions.containsKeys
+import strikt.assertions.getValue
+import strikt.assertions.hasSize
+import strikt.assertions.isA
+import strikt.assertions.isEqualTo
+import strikt.assertions.withElementAt
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber.Companion.enIntervalNumberFromTimestamp
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.domain.BatchTag
-import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
-import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.domain.ReportType.CONFIRMED_CLINICAL_DIAGNOSIS
 import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.ReportType.UNKNOWN
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
 import uk.nhs.nhsx.domain.TestType.RAPID_RESULT
-import uk.nhs.nhsx.testhelper.data.TestData
-import uk.nhs.nhsx.testhelper.mocks.FakeS3StorageMultipleObjects
+import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
+import uk.nhs.nhsx.keyfederation.download.ExposureDownload
+import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.asString
+import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.content
+import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.key
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_FEDERATED_KEYS_PAYLOAD_IE
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_FEDERATED_KEYS_PAYLOAD_NI
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
+import uk.nhs.nhsx.testhelper.mocks.getBucket
+import uk.nhs.nhsx.testhelper.mocks.isEmpty
 import java.time.Duration
 import java.time.Instant
+import java.util.*
 
 class FederatedKeyUploaderTest {
 
-    private val bucketName = BucketName.of("some-bucket-name")
-    private val s3Storage = FakeS3StorageMultipleObjects()
+    private val bucketName = BucketName.of(UUID.randomUUID().toString())
+    private val s3Storage = FakeS3()
     private val clock = { Instant.parse("2020-09-15T00:00:00Z") }
     private val validOrigins = listOf("NI", "IE")
     private val events = RecordingEvents()
 
     private val uploader = FederatedKeyUploader(
-        s3Storage,
-        bucketName,
-        "federatedKeyPrefix",
-        clock,
-        validOrigins,
-        events
+        s3Storage = s3Storage,
+        bucketName = bucketName,
+        federatedKeySourcePrefix = "federatedKeyPrefix",
+        clock = clock,
+        validOrigins = validOrigins,
+        events = events
     )
 
     private val now = clock()
@@ -47,132 +62,137 @@ class FederatedKeyUploaderTest {
 
     @Test
     fun `emits events`() {
-        val exposures: List<ExposureDownload> = listOf(
+        val exposures = listOf(
             ExposureDownload(
-                "W2zb3BeMWt6Xr2u0ABG32Q==",
-                rollingStartNumber1.toInt(),
-                3,
-                144,
-                "NI",
-                listOf("NI"),
-                LAB_RESULT,
-                CONFIRMED_TEST,
-                0
+                keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = rollingStartNumber1.toInt(),
+                transmissionRiskLevel = 3,
+                rollingPeriod = 144,
+                origin = "NI",
+                regions = listOf("NI"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
             ), ExposureDownload(
-                "B3xb3BeMWt6Xr2u0ABG45F==",
-                rollingStartNumber2.toInt(),
-                6,
-                144,
-                "NI",
-                listOf("NI"),
-                LAB_RESULT,
-                CONFIRMED_TEST,
-                0
+                keyData = "B3xb3BeMWt6Xr2u0ABG45F==",
+                rollingStartNumber = rollingStartNumber2.toInt(),
+                transmissionRiskLevel = 6,
+                rollingPeriod = 144,
+                origin = "NI",
+                regions = listOf("NI"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
             ),
             ExposureDownload(
-                "kzQt9Lf3xjtAlMtm7jkSqw==",
-                rollingStartNumber3.toInt(),
-                4,
-                144,
-                "IE",
-                listOf("IE"),
-                LAB_RESULT,
-                CONFIRMED_TEST,
-                0
+                keyData = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                rollingStartNumber = rollingStartNumber3.toInt(),
+                transmissionRiskLevel = 4,
+                rollingPeriod = 144,
+                origin = "IE",
+                regions = listOf("IE"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
             )
         )
 
         uploader.acceptKeysFromFederatedServer(DiagnosisKeysDownloadResponse(BatchTag.of("batchTag"), exposures))
 
-        val iterator = events.iterator()
-        val firstEvent = iterator.next() as DownloadedFederatedDiagnosisKeys
-        val secondEvent = iterator.next() as DownloadedFederatedDiagnosisKeys
-
-        assertThat(
-            firstEvent,
-            equalTo(DownloadedFederatedDiagnosisKeys(testType = LAB_RESULT, validKeys = 2, invalidKeys = 0, origin = "NI"))
-        )
-        assertThat(
-            secondEvent,
-            equalTo(DownloadedFederatedDiagnosisKeys(testType = LAB_RESULT, validKeys = 1, invalidKeys = 0, origin = "IE"))
-        )
+        expectThat(events)
+            .withElementAt(0) {
+                isA<DownloadedFederatedDiagnosisKeys>().isEqualTo(
+                    DownloadedFederatedDiagnosisKeys(
+                        testType = LAB_RESULT,
+                        validKeys = 2,
+                        invalidKeys = 0,
+                        origin = "NI"
+                    )
+                )
+            }
+            .withElementAt(1) {
+                isA<DownloadedFederatedDiagnosisKeys>().isEqualTo(
+                    DownloadedFederatedDiagnosisKeys(
+                        testType = LAB_RESULT,
+                        validKeys = 1,
+                        invalidKeys = 0,
+                        origin = "IE"
+                    )
+                )
+            }
     }
 
     @Test
     fun `convert to stored model test`() {
         val federatedKey1 = ExposureDownload(
-            "W2zb3BeMWt6Xr2u0ABG32Q==",
-            5,
-            3,
-            2,
-            "NI",
-            listOf("NI"),
-            LAB_RESULT,
-            CONFIRMED_TEST,
-            0
+            keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+            rollingStartNumber = 5,
+            transmissionRiskLevel = 3,
+            rollingPeriod = 2,
+            origin = "NI",
+            regions = listOf("NI"),
+            testType = LAB_RESULT,
+            reportType = CONFIRMED_TEST,
+            daysSinceOnset = 0
         )
+
         val federatedKey2 = ExposureDownload(
-            "B3xb3BeMWt6Xr2u0ABG45F==",
-            2,
-            6,
-            4,
-            "NI",
-            listOf("NI"),
-            LAB_RESULT,
-            CONFIRMED_TEST,
-            0
+            keyData = "B3xb3BeMWt6Xr2u0ABG45F==",
+            rollingStartNumber = 2,
+            transmissionRiskLevel = 6,
+            rollingPeriod = 4,
+            origin = "NI",
+            regions = listOf("NI"),
+            testType = LAB_RESULT,
+            reportType = CONFIRMED_TEST,
+            daysSinceOnset = 0
         )
+
         val federatedKey3 = ExposureDownload(
-            "kzQt9Lf3xjtAlMtm7jkSqw==",
-            134,
-            4,
-            222,
-            "IE",
-            listOf("IE"),
-            LAB_RESULT,
-            CONFIRMED_TEST,
-            0
+            keyData = "kzQt9Lf3xjtAlMtm7jkSqw==",
+            rollingStartNumber = 134,
+            transmissionRiskLevel = 4,
+            rollingPeriod = 222,
+            origin = "IE",
+            regions = listOf("IE"),
+            testType = LAB_RESULT,
+            reportType = CONFIRMED_TEST,
+            daysSinceOnset = 0
         )
 
-        val federatedKeys: List<ExposureDownload> = listOf(federatedKey1, federatedKey2, federatedKey3)
-        val payload = DiagnosisKeysDownloadResponse(BatchTag.of("batch-tag"), federatedKeys)
-        val niKeys: List<ExposureDownload> = listOf(federatedKey1, federatedKey2)
-        val ieKeys: List<ExposureDownload> = listOf(federatedKey3)
-        val expectedResponsesMap = HashMap<String, List<ExposureDownload>>()
-        expectedResponsesMap["NI"] = niKeys
-        expectedResponsesMap["IE"] = ieKeys
+        val payload = DiagnosisKeysDownloadResponse(
+            batchTag = BatchTag.of("batch-tag"),
+            exposures = listOf(federatedKey1, federatedKey2, federatedKey3)
+        )
 
-        val responsesMap = uploader.groupByOrigin(payload)
-        responsesMap.keys.forEach { region ->
-            assertThat(expectedResponsesMap.containsKey(region)).isNotEqualTo(null)
-            val expectedKeys: List<ExposureDownload>? = expectedResponsesMap[region]
-            val actualKeys: List<ExposureDownload>? = responsesMap[region]
-            assertThat(expectedKeys).containsExactlyInAnyOrderElementsOf(actualKeys)
+        expectThat(uploader.groupByOrigin(payload)) {
+            containsKeys("NI", "IE")
+            getValue("NI").containsExactlyInAnyOrder(federatedKey1, federatedKey2)
+            getValue("IE").containsExactlyInAnyOrder(federatedKey3)
         }
     }
 
     @Test
     fun converts() {
         val federatedKey1 = ExposureDownload(
-            "W2zb3BeMWt6Xr2u0ABG32Q==",
-            5,
-            3,
-            2,
-            "NI",
-            listOf("NI"),
-            LAB_RESULT,
-            CONFIRMED_TEST,
-            0
+            keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+            rollingStartNumber = 5,
+            transmissionRiskLevel = 3,
+            rollingPeriod = 2,
+            origin = "NI",
+            regions = listOf("NI"),
+            testType = LAB_RESULT,
+            reportType = CONFIRMED_TEST,
+            daysSinceOnset = 0
         )
-        assertThat(
-            StoredTemporaryExposureKeyTransform(federatedKey1), equalTo(
-                StoredTemporaryExposureKey(
-                    "W2zb3BeMWt6Xr2u0ABG32Q==",
-                    5,
-                    2,
-                    3,
-                    0
-                )
+
+        expectThat(StoredTemporaryExposureKeyTransform(federatedKey1)).isEqualTo(
+            StoredTemporaryExposureKey(
+                key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = 5,
+                rollingPeriod = 2,
+                transmissionRisk = 3,
+                daysSinceOnsetOfSymptoms = 0
             )
         )
     }
@@ -181,90 +201,107 @@ class FederatedKeyUploaderTest {
     fun `accept temporary exposure keys from federated server`() {
         val objectKeyIE = ObjectKey.of("nearform/IE/20200915/batchTag.json")
         val objectKeyNI = ObjectKey.of("nearform/NI/20200915/batchTag.json")
-        val keyUploader = FederatedKeyUploader(s3Storage, bucketName, "nearform", clock, validOrigins, events)
-        val exposures: List<ExposureDownload> = listOf(
+        val keyUploader = FederatedKeyUploader(
+            s3Storage = s3Storage,
+            bucketName = bucketName,
+            federatedKeySourcePrefix = "nearform",
+            clock = clock,
+            validOrigins = validOrigins,
+            events = events
+        )
+
+        val exposures = listOf(
             ExposureDownload(
-                "W2zb3BeMWt6Xr2u0ABG32Q==",
-                rollingStartNumber1.toInt(),
-                3,
-                144,
-                "NI",
-                listOf("NI"),
-                LAB_RESULT,
-                CONFIRMED_TEST,
-                0
+                keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = rollingStartNumber1.toInt(),
+                transmissionRiskLevel = 3,
+                rollingPeriod = 144,
+                origin = "NI",
+                regions = listOf("NI"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
             ), ExposureDownload(
-                "B3xb3BeMWt6Xr2u0ABG45F==",
-                rollingStartNumber2.toInt(),
-                6,
-                144,
-                "NI",
-                listOf("NI"),
-                LAB_RESULT,
-                CONFIRMED_TEST,
-                0
+                keyData = "B3xb3BeMWt6Xr2u0ABG45F==",
+                rollingStartNumber = rollingStartNumber2.toInt(),
+                transmissionRiskLevel = 6,
+                rollingPeriod = 144,
+                origin = "NI",
+                regions = listOf("NI"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
             ),
             ExposureDownload(
-                "kzQt9Lf3xjtAlMtm7jkSqw==",
-                rollingStartNumber3.toInt(),
-                4,
-                144,
-                "IE",
-                listOf("IE"),
-                LAB_RESULT,
-                CONFIRMED_TEST,
-                0
+                keyData = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                rollingStartNumber = rollingStartNumber3.toInt(),
+                transmissionRiskLevel = 4,
+                rollingPeriod = 144,
+                origin = "IE",
+                regions = listOf("IE"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
             )
         )
 
-        val payload = DiagnosisKeysDownloadResponse(BatchTag.of("batchTag"), exposures)
-        keyUploader.acceptKeysFromFederatedServer(payload)
+        DiagnosisKeysDownloadResponse(BatchTag.of("batchTag"), exposures).also {
+            keyUploader.acceptKeysFromFederatedServer(it)
+        }
 
-        events.containsExactly(DownloadedFederatedDiagnosisKeys::class, DownloadedFederatedDiagnosisKeys::class)
+        expectThat(events).containsExactly(
+            DownloadedFederatedDiagnosisKeys::class,
+            DownloadedFederatedDiagnosisKeys::class
+        )
 
-        val firstUpload = s3Storage.fakeS3Objects[0]
-        val secondUpload = s3Storage.fakeS3Objects[1]
-        assertThat(s3Storage.count, equalTo(2))
-        assertThat(s3Storage.bucket, equalTo(bucketName))
-        assertThat(firstUpload.name, equalTo(objectKeyNI))
-        assertThat(secondUpload.name, equalTo(objectKeyIE))
-        assertThat(firstUpload.bytes.toUtf8String(), equalTo(TestData.STORED_FEDERATED_KEYS_PAYLOAD_NI))
-        assertThat(secondUpload.bytes.toUtf8String(), equalTo(TestData.STORED_FEDERATED_KEYS_PAYLOAD_IE))
+        expectThat(s3Storage)
+            .getBucket(bucketName)
+            .hasSize(2)
+            .and {
+                withElementAt(0) {
+                    key.isSameAs(objectKeyNI)
+                    content.asString().isEqualToJson(STORED_FEDERATED_KEYS_PAYLOAD_NI)
+                }
+                withElementAt(1) {
+                    key.isSameAs(objectKeyIE)
+                    content.asString().isEqualToJson(STORED_FEDERATED_KEYS_PAYLOAD_IE)
+                }
+            }
     }
 
     @Test
     fun `reject key longer than 32 bytes`() {
         val payload = DiagnosisKeysDownloadResponse(
-            BatchTag.of("batchTag"),
-            listOf(
+            batchTag = BatchTag.of("batchTag"),
+            exposures = listOf(
                 ExposureDownload(
-                    "W2zb3BeMWt6Xr2u0ABG32Q==",
-                    rollingStartNumber1.toInt(),
-                    7,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                    rollingStartNumber = rollingStartNumber1.toInt(),
+                    transmissionRiskLevel = 7,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 ),
                 ExposureDownload(
-                    "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHCg==",
-                    rollingStartNumber2.toInt(),
-                    4,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXpBQkNERUZHCg==",
+                    rollingStartNumber = rollingStartNumber2.toInt(),
+                    transmissionRiskLevel = 4,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 )
             )
         )
 
         uploader.acceptKeysFromFederatedServer(payload)
 
-        assertThat(s3Storage.count, equalTo(1))
+        expectThat(s3Storage).getBucket(bucketName).hasSize(1)
     }
 
     @Test
@@ -272,35 +309,36 @@ class FederatedKeyUploaderTest {
         val futureInstant1 = enIntervalNumberFromTimestamp(now.plus(Duration.ofDays(1))).enIntervalNumber
         val futureInstant2 = enIntervalNumberFromTimestamp(now.plus(Duration.ofHours(1))).enIntervalNumber
         val payload = DiagnosisKeysDownloadResponse(
-            BatchTag.of("batchTag"),
-            listOf(
+            batchTag = BatchTag.of("batchTag"),
+            exposures = listOf(
                 ExposureDownload(
-                    "W2zb3BeMWt6Xr2u0ABG32Q==",
-                    futureInstant1.toInt(),
-                    7,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                    rollingStartNumber = futureInstant1.toInt(),
+                    transmissionRiskLevel = 7,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 ),
                 ExposureDownload(
-                    "W2zb3BeMWt6Xr2u0ABG32Q==",
-                    futureInstant2.toInt(),
-                    4,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                    rollingStartNumber = futureInstant2.toInt(),
+                    transmissionRiskLevel = 4,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 )
             )
         )
+
         uploader.acceptKeysFromFederatedServer(payload)
 
-        assertThat(s3Storage.count, equalTo(0))
+        expectThat(s3Storage).isEmpty(bucketName)
     }
 
     @Test
@@ -308,125 +346,128 @@ class FederatedKeyUploaderTest {
         val pastInstant1 = enIntervalNumberFromTimestamp(now.minus(Duration.ofDays(20))).enIntervalNumber
         val pastInstant2 = enIntervalNumberFromTimestamp(now.minus(Duration.ofHours((24 * 15) + 1))).enIntervalNumber
         val payload = DiagnosisKeysDownloadResponse(
-            BatchTag.of("batchTag"),
-            listOf(
+            batchTag = BatchTag.of("batchTag"),
+            exposures = listOf(
                 ExposureDownload(
-                    "W2zb3BeMWt6Xr2u0ABG32Q==",
-                    pastInstant1.toInt(),
-                    7,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                    rollingStartNumber = pastInstant1.toInt(),
+                    transmissionRiskLevel = 7,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 ),
                 ExposureDownload(
-                    "kzQt9Lf3xjtAlMtm7jkSqw==",
-                    pastInstant2.toInt(),
-                    4,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                    rollingStartNumber = pastInstant2.toInt(),
+                    transmissionRiskLevel = 4,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 )
             )
         )
+
         uploader.acceptKeysFromFederatedServer(payload)
 
-        assertThat(s3Storage.count, equalTo(0))
+        expectThat(s3Storage).isEmpty(bucketName)
     }
 
     @Test
     fun `reject non-PCR exposures`() {
         val payload = DiagnosisKeysDownloadResponse(
-            BatchTag.of("batchTag"),
-            listOf(
+            batchTag = BatchTag.of("batchTag"),
+            exposures = listOf(
                 ExposureDownload(
-                    "W2zb3BeMWt6Xr2u0ABG32Q==",
-                    rollingStartNumber1.toInt(),
-                    3,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    RAPID_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                    rollingStartNumber = rollingStartNumber1.toInt(),
+                    transmissionRiskLevel = 3,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = RAPID_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 ),
                 ExposureDownload(
-                    "B3xb3BeMWt6Xr2u0ABG45F==",
-                    rollingStartNumber2.toInt(),
-                    6,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    RAPID_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "B3xb3BeMWt6Xr2u0ABG45F==",
+                    rollingStartNumber = rollingStartNumber2.toInt(),
+                    transmissionRiskLevel = 6,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = RAPID_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 ),
                 ExposureDownload(
-                    "kzQt9Lf3xjtAlMtm7jkSqw==",
-                    rollingStartNumber3.toInt(),
-                    4,
-                    144,
-                    "IE",
-                    listOf("IE"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                    rollingStartNumber = rollingStartNumber3.toInt(),
+                    transmissionRiskLevel = 4,
+                    rollingPeriod = 144,
+                    origin = "IE",
+                    regions = listOf("IE"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 )
             )
         )
+
         uploader.acceptKeysFromFederatedServer(payload)
 
-        assertThat(s3Storage.count, equalTo(1))
+        expectThat(s3Storage).getBucket(bucketName).hasSize(1)
     }
 
     @Test
     fun `reject non-CONFIRMED_TEST exposures`() {
         val payload = DiagnosisKeysDownloadResponse(
-            BatchTag.of("batchTag"),
-            listOf(
+            batchTag = BatchTag.of("batchTag"),
+            exposures = listOf(
                 ExposureDownload(
-                    "W2zb3BeMWt6Xr2u0ABG32Q==",
-                    rollingStartNumber1.toInt(),
-                    3,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    UNKNOWN,
-                    0
+                    keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                    rollingStartNumber = rollingStartNumber1.toInt(),
+                    transmissionRiskLevel = 3,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = UNKNOWN,
+                    daysSinceOnset = 0
                 ),
                 ExposureDownload(
-                    "B3xb3BeMWt6Xr2u0ABG45F==",
-                    rollingStartNumber2.toInt(),
-                    6,
-                    144,
-                    "NI",
-                    listOf("NI"),
-                    LAB_RESULT,
-                    CONFIRMED_CLINICAL_DIAGNOSIS,
-                    0
+                    keyData = "B3xb3BeMWt6Xr2u0ABG45F==",
+                    rollingStartNumber = rollingStartNumber2.toInt(),
+                    transmissionRiskLevel = 6,
+                    rollingPeriod = 144,
+                    origin = "NI",
+                    regions = listOf("NI"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_CLINICAL_DIAGNOSIS,
+                    daysSinceOnset = 0
                 ),
                 ExposureDownload(
-                    "kzQt9Lf3xjtAlMtm7jkSqw==",
-                    rollingStartNumber3.toInt(),
-                    4,
-                    144,
-                    "IE",
-                    listOf("IE"),
-                    LAB_RESULT,
-                    CONFIRMED_TEST,
-                    0
+                    keyData = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                    rollingStartNumber = rollingStartNumber3.toInt(),
+                    transmissionRiskLevel = 4,
+                    rollingPeriod = 144,
+                    origin = "IE",
+                    regions = listOf("IE"),
+                    testType = LAB_RESULT,
+                    reportType = CONFIRMED_TEST,
+                    daysSinceOnset = 0
                 )
             )
         )
+
         uploader.acceptKeysFromFederatedServer(payload)
 
-        assertThat(s3Storage.count, equalTo(1))
+        expectThat(s3Storage).getBucket(bucketName).hasSize(1)
     }
 }
 

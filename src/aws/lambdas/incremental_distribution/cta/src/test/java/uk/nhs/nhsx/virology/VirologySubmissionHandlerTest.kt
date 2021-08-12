@@ -1,25 +1,31 @@
+@file:Suppress("TestFunctionName")
+
 package uk.nhs.nhsx.virology
 
 import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
-import org.json.JSONObject
+import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.NO_CONTENT
+import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.UNPROCESSABLE_ENTITY
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.ValueSource
-import org.skyscreamer.jsonassert.JSONAssert.assertEquals
-import org.skyscreamer.jsonassert.JSONCompareMode
-import org.skyscreamer.jsonassert.JSONParser
+import strikt.api.expectThat
+import strikt.assertions.containsKey
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.SystemClock.CLOCK
-import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.TestEnvironments.TEST
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
 import uk.nhs.nhsx.core.events.RecordingEvents
@@ -45,6 +51,12 @@ import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.body
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.headers
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.contains
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withCustomOai
@@ -89,7 +101,7 @@ class VirologySubmissionHandlerTest {
     )
     private val throttleDuration = Duration.ofMillis(1)
     private val authenticator = Authenticator { true }
-    private val environment = TestEnvironments.TEST.apply(
+    private val environment = TEST.apply(
         mapOf(
             "MAINTENANCE_MODE" to "false",
             "custom_oai" to "OAI",
@@ -103,7 +115,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `handle test result request success`() {
         every { persistence.getTestResult(any()) } returns Optional.of(TestData.positiveLabResult)
-        every { persistence.markForDeletion(any(), any()) } just Runs
+        every { persistence.markForDeletion(any(), any()) } just runs
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns false
 
         val virology = virologyService()
@@ -116,21 +128,22 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        assertEquals(
-            """{"testEndDate":"2020-04-23T00:00:00Z","testResult":"POSITIVE","testKit":"LAB_RESULT"}""",
-            response.body,
-            JSONCompareMode.STRICT
-        )
-        events.contains(VirologyResults::class)
+        val response = VirologySubmissionHandler(virology)
+            .handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson("""{"testEndDate":"2020-04-23T00:00:00Z","testResult":"POSITIVE","testKit":"LAB_RESULT"}""")
+        }
+
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
     fun `handle pending test result request success no content`() {
         every { persistence.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
-        every { persistence.markForDeletion(any(), any()) } just Runs
+        every { persistence.markForDeletion(any(), any()) } just runs
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns false
 
         val virology = virologyService()
@@ -143,17 +156,21 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(204)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyResults::class)
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(NO_CONTENT)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
+
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
     fun `handle test result request missing token`() {
         every { persistence.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
-        every { persistence.markForDeletion(any(), any()) } just Runs
+        every { persistence.markForDeletion(any(), any()) } just runs
 
         val virology = virologyService()
 
@@ -165,17 +182,21 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson("""{"testResultPollingToken":""}""")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(422)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyResults::class, UnprocessableJson::class)
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(UNPROCESSABLE_ENTITY)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
+
+        expectThat(events).contains(VirologyResults::class, UnprocessableJson::class)
     }
 
     @Test
     fun `handle test result request null token`() {
         every { persistence.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
-        every { persistence.markForDeletion(any(), any()) } just Runs
+        every { persistence.markForDeletion(any(), any()) } just runs
 
         val virology = virologyService()
 
@@ -187,11 +208,15 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson("""{"testResultPollingToken":null}""")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(422)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyResults::class, UnprocessableJson::class)
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(UNPROCESSABLE_ENTITY)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
+
+        expectThat(events).contains(VirologyResults::class, UnprocessableJson::class)
     }
 
     @Test
@@ -208,11 +233,15 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(404)
-        assertThat(response.body).isEqualTo("Test result lookup submitted for unknown testResultPollingToken")
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyResults::class)
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(NOT_FOUND)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualTo("Test result lookup submitted for unknown testResultPollingToken")
+        }
+
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
@@ -227,11 +256,15 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson("""{"invalidField":"98cff3dd-882c-417b-a00a-350a205378c7"}""")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(422)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyResults::class, UnprocessableJson::class)
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(UNPROCESSABLE_ENTITY)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
+
+        expectThat(events).contains(VirologyResults::class, UnprocessableJson::class)
     }
 
     @Test
@@ -245,18 +278,26 @@ class VirologySubmissionHandlerTest {
             .withPath("/virology-test/results")
             .withBearerToken("anything")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(422)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyResults::class, UnprocessableJson::class)
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(UNPROCESSABLE_ENTITY)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
+
+        expectThat(events).contains(VirologyResults::class, UnprocessableJson::class)
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["/virology-test/home-kit/order", "/virology-test/v2/order"])
     fun `handle test order request success`(orderUrl: String) {
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"), LocalDateTime.now().plusWeeks(4))
+            CtaToken.of("cc8f0b6z"),
+            TestResultPollingToken.of("polling-token"),
+            DiagnosisKeySubmissionToken.of("submission-token"),
+            LocalDateTime.now().plusWeeks(4)
+        )
 
         val virology = virologyService()
 
@@ -267,22 +308,35 @@ class VirologySubmissionHandlerTest {
             .withPath(orderUrl)
             .withBearerToken("anything")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        val jsonObject = JSONParser.parseJSON(response.body) as JSONObject
-        assertThat(jsonObject["diagnosisKeySubmissionToken"] as String).isEqualTo("submission-token")
-        assertThat(jsonObject["testResultPollingToken"] as String).isEqualTo("polling-token")
-        assertThat(jsonObject["tokenParameterValue"] as String).isEqualTo("cc8f0b6z")
-        assertThat(jsonObject["websiteUrlWithQuery"] as String).isEqualTo("https://example.order-a-test.uk?ctaToken=cc8f0b6z")
-        events.contains(VirologyOrder::class)
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson(
+                """
+                {
+                    "websiteUrlWithQuery": "https://example.order-a-test.uk?ctaToken=cc8f0b6z",
+                    "tokenParameterValue": "cc8f0b6z",
+                    "testResultPollingToken": "polling-token",
+                    "diagnosisKeySubmissionToken": "submission-token",
+                    "venueHistorySubmissionToken": ""
+                }
+            """
+            )
+        }
+
+        expectThat(events).contains(VirologyOrder::class)
     }
 
     @Test
     fun `handle test register request success`() {
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"), TestResultPollingToken.of("polling-token"), DiagnosisKeySubmissionToken.of("submission-token"), LocalDateTime.now().plusWeeks(4))
+            CtaToken.of("cc8f0b6z"),
+            TestResultPollingToken.of("polling-token"),
+            DiagnosisKeySubmissionToken.of("submission-token"),
+            LocalDateTime.now().plusWeeks(4)
+        )
 
         val virology = virologyService()
 
@@ -293,16 +347,25 @@ class VirologySubmissionHandlerTest {
             .withPath("/virology-test/home-kit/register")
             .withBearerToken("anything")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        val jsonObject = JSONParser.parseJSON(response.body) as JSONObject
-        assertThat(jsonObject["diagnosisKeySubmissionToken"] as String).isEqualTo("submission-token")
-        assertThat(jsonObject["testResultPollingToken"] as String).isEqualTo("polling-token")
-        assertThat(jsonObject["tokenParameterValue"] as String).isEqualTo("cc8f0b6z")
-        assertThat(jsonObject["websiteUrlWithQuery"] as String).isEqualTo("https://example.register-a-test.uk?ctaToken=cc8f0b6z")
-        events.contains(VirologyRegister::class)
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson(
+                """
+                {
+                    "websiteUrlWithQuery": "https://example.register-a-test.uk?ctaToken=cc8f0b6z",
+                    "tokenParameterValue": "cc8f0b6z",
+                    "testResultPollingToken": "polling-token",
+                    "diagnosisKeySubmissionToken": "submission-token",
+                    "venueHistorySubmissionToken": ""
+                }
+                """
+            )
+        }
+
+        expectThat(events).contains(VirologyRegister::class)
     }
 
     @Test
@@ -316,10 +379,13 @@ class VirologySubmissionHandlerTest {
             .withPath("/unknown/path")
             .withBearerToken("anything")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
-        assertThat(response.statusCode).isEqualTo(404)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(NOT_FOUND)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
     }
 
     @Test
@@ -334,11 +400,13 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(""" "{"ctaToken":null} """)
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(400)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        expectThat(response) {
+            status.isSameAs(BAD_REQUEST)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
     }
 
     @Test
@@ -346,7 +414,12 @@ class VirologySubmissionHandlerTest {
         val virology = mockk<VirologyService> {
             every { exchangeCtaTokenForV1(any(), any(), any()) } returns
                 CtaExchangeResult.Available(
-                    CtaExchangeResponseV1(DiagnosisKeySubmissionToken.of("sub-token"), Positive, TestEndDate.of(2020, 4, 23), LAB_RESULT)
+                    CtaExchangeResponseV1(
+                        DiagnosisKeySubmissionToken.of("sub-token"),
+                        Positive,
+                        TestEndDate.of(2020, 4, 23),
+                        LAB_RESULT
+                    )
                 )
         }
 
@@ -358,24 +431,28 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V1))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        val expectedResponse =
-            """ { 
-                |"testEndDate":"2020-04-23T00:00:00Z", 
-                |"testResult":"POSITIVE", 
-                |"diagnosisKeySubmissionToken":"sub-token",
-                |"testKit":"LAB_RESULT"
-            |} """.trimMargin()
-
-        assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson(
+                """
+                { 
+                    "testEndDate":"2020-04-23T00:00:00Z", 
+                    "testResult":"POSITIVE", 
+                    "diagnosisKeySubmissionToken":"sub-token",
+                    "testKit":"LAB_RESULT"
+                }
+                """
+            )
+        }
 
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any(), any())
         }
-        events.contains(VirologyCtaExchange::class)
+
+        expectThat(events).contains(VirologyCtaExchange::class)
     }
 
     @Test
@@ -392,16 +469,19 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V1))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(204)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        expectThat(response) {
+            status.isSameAs(NO_CONTENT)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
 
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any(), any())
         }
-        events.contains(VirologyCtaExchange::class)
+
+        expectThat(events).contains(VirologyCtaExchange::class)
     }
 
     @Test
@@ -418,16 +498,19 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V1))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(404)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        expectThat(response) {
+            status.isSameAs(NOT_FOUND)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
 
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any(), any())
         }
-        events.contains(VirologyCtaExchange::class)
+
+        expectThat(events).contains(VirologyCtaExchange::class)
     }
 
     @Test
@@ -442,52 +525,21 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson("""{"ctaToken":"invalid-cta-token"}""")
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(400)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyCtaExchange::class, UnprocessableVirologyCtaExchange::class)
-    }
-
-    @ParameterizedTest
-    @EnumSource(TestKit::class)
-    fun `lookup v2 maps test kits to json correctly`(testKit: TestKit) {
-        val lookup = mockk<VirologyLookupService> {
-            every { lookup(any(), any()) } returns lookupAvailableResultV2(testKit)
+        expectThat(response) {
+            status.isSameAs(BAD_REQUEST)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
         }
 
-        val requestEvent = request()
-            .withMethod(POST)
-            .withCustomOai("OAI")
-            .withRequestId()
-            .withPath("/virology-test/v2/results")
-            .withBearerToken("anything")
-            .withJson(lookupPayload(V2))
-
-        val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
-
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-
-        val expectedResponse =
-            """ { 
-                |"testEndDate":"2020-04-23T00:00:00Z", 
-                |"testResult":"POSITIVE",
-                |"testKit":"${testKit.name}",
-                |"diagnosisKeySubmissionSupported": true,
-                |"requiresConfirmatoryTest": false,
-                |"confirmatoryDayLimit": null,
-                |"venueHistorySharingSupported": false
-            |} """.trimMargin()
-
-        assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
+        expectThat(events).contains(VirologyCtaExchange::class, UnprocessableVirologyCtaExchange::class)
     }
 
     @Test
     fun `lookup v2 maps test kits to json correctly with confirmatory day limit`() {
         val lookup = mockk<VirologyLookupService> {
-            every { lookup(any(), any()) } returns lookupAvailableResultV2(
+            every { lookup(any(), any()) } returns VirologyLookupResult(
                 testKit = RAPID_RESULT,
                 confirmatoryDayLimit = 2
             )
@@ -501,29 +553,67 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(lookupPayload(V2))
 
-        val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(lookup = lookup).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson(
+                """
+                { 
+                    "testEndDate":"2020-04-23T00:00:00Z", 
+                    "testResult":"POSITIVE",
+                    "testKit":"${RAPID_RESULT.name}",
+                    "diagnosisKeySubmissionSupported": true,
+                    "requiresConfirmatoryTest": false,
+                    "confirmatoryDayLimit": 2,
+                    "venueHistorySharingSupported": false
+                }
+                """
+            )
+        }
+    }
 
-        val expectedResponse =
-            """ { 
-                |"testEndDate":"2020-04-23T00:00:00Z", 
-                |"testResult":"POSITIVE",
-                |"testKit":"${RAPID_RESULT.name}",
-                |"diagnosisKeySubmissionSupported": true,
-                |"requiresConfirmatoryTest": false,
-                |"confirmatoryDayLimit": 2,
-                |"venueHistorySharingSupported": false
-            |} """.trimMargin()
+    @ParameterizedTest
+    @EnumSource(TestKit::class)
+    fun `lookup v2 maps test kits to json correctly`(testKit: TestKit) {
+        val lookup = mockk<VirologyLookupService> {
+            every { lookup(any(), any()) } returns VirologyLookupResult(testKit)
+        }
 
-        assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
+        val requestEvent = request()
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
+            .withPath("/virology-test/v2/results")
+            .withBearerToken("anything")
+            .withJson(lookupPayload(V2))
+
+        val response = VirologySubmissionHandler(lookup = lookup).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson(
+                """
+                { 
+                    "testEndDate":"2020-04-23T00:00:00Z", 
+                    "testResult":"POSITIVE",
+                    "testKit":"${testKit.name}",
+                    "diagnosisKeySubmissionSupported": true,
+                    "requiresConfirmatoryTest": false,
+                    "confirmatoryDayLimit": null,
+                    "venueHistorySharingSupported": false
+                }
+                """
+            )
+        }
     }
 
     @Test
     fun `lookup v2 parses mobile version header`() {
         val lookup = mockk<VirologyLookupService> {
-            every { lookup(any(), any()) } returns lookupAvailableResultV2()
+            every { lookup(any(), any()) } returns VirologyLookupResult()
         }
 
         val requestEvent = request()
@@ -535,16 +625,17 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(lookupPayload(V2))
 
-        val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(lookup = lookup).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
+        expectThat(response).status.isSameAs(OK)
+
         verify { lookup.lookup(any(), MobileAppVersion.Version(4, 3, 5)) }
     }
 
     @Test
     fun `lookup v2 parses mobile version header handling unknown user agent`() {
         val lookup = mockk<VirologyLookupService> {
-            every { lookup(any(), any()) } returns lookupAvailableResultV2()
+            every { lookup(any(), any()) } returns VirologyLookupResult()
         }
 
         val requestEvent = request()
@@ -556,9 +647,10 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(lookupPayload(V2))
 
-        val response = newHandler(lookup = lookup).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(lookup = lookup).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
+        expectThat(response).status.isSameAs(OK)
+
         verify { lookup.lookup(any(), MobileAppVersion.Unknown) }
     }
 
@@ -567,7 +659,7 @@ class VirologySubmissionHandlerTest {
     fun `exchange v2 cta token for available rapid test result`(testKit: TestKit) {
         val virology = mockk<VirologyService> {
             every { exchangeCtaTokenForV2(any(), any(), any()) } returns
-                ctaExchangeAvailableResultV2(
+                CtaExchangeResult(
                     testKit = testKit,
                     submissionSupported = false,
                     confirmatoryTest = true
@@ -582,35 +674,38 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        val expectedResponse =
-            """ { 
-                |"testEndDate":"2020-04-23T00:00:00Z", 
-                |"testResult":"POSITIVE", 
-                |"diagnosisKeySubmissionToken":"sub-token",
-                |"testKit":${testKit.name},
-                |"diagnosisKeySubmissionSupported": false,
-                |"requiresConfirmatoryTest": true,
-                |"confirmatoryDayLimit": null,
-                |"venueHistorySharingSupported": false
-            |} """.trimMargin()
-
-        assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson(
+                """ 
+                { 
+                    "testEndDate":"2020-04-23T00:00:00Z", 
+                    "testResult":"POSITIVE", 
+                    "diagnosisKeySubmissionToken":"sub-token",
+                    "testKit":${testKit.name},
+                    "diagnosisKeySubmissionSupported": false,
+                    "requiresConfirmatoryTest": true,
+                    "confirmatoryDayLimit": null,
+                    "venueHistorySharingSupported": false
+                }"""
+            )
+        }
 
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV2(CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any(), any())
         }
-        events.contains(VirologyCtaExchange::class)
+
+        expectThat(events).contains(VirologyCtaExchange::class)
     }
 
     @Test
     fun `exchange v2 cta token for available rapid test result with confirmatory day limit`() {
         val virology = mockk<VirologyService> {
             every { exchangeCtaTokenForV2(any(), any(), any()) } returns
-                ctaExchangeAvailableResultV2(
+                CtaExchangeResult(
                     testKit = RAPID_RESULT,
                     confirmatoryDayLimit = 1
                 )
@@ -624,34 +719,37 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        val expectedResponse =
-            """ { 
-                |"testEndDate":"2020-04-23T00:00:00Z", 
-                |"testResult":"POSITIVE", 
-                |"diagnosisKeySubmissionToken":"sub-token",
-                |"testKit":${RAPID_RESULT.name},
-                |"diagnosisKeySubmissionSupported": true,
-                |"requiresConfirmatoryTest": false,
-                |"confirmatoryDayLimit": 1,
-                |"venueHistorySharingSupported": false
-            |} """.trimMargin()
-
-        assertEquals(expectedResponse, response.body, JSONCompareMode.STRICT)
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.isEqualToJson(
+                """ 
+                { 
+                    "testEndDate":"2020-04-23T00:00:00Z", 
+                    "testResult":"POSITIVE", 
+                    "diagnosisKeySubmissionToken":"sub-token",
+                    "testKit":${RAPID_RESULT.name},
+                    "diagnosisKeySubmissionSupported": true,
+                    "requiresConfirmatoryTest": false,
+                    "confirmatoryDayLimit": 1,
+                    "venueHistorySharingSupported": false
+                }"""
+            )
+        }
 
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV2(CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any(), any())
         }
-        events.contains(VirologyCtaExchange::class)
+
+        expectThat(events).contains(VirologyCtaExchange::class)
     }
 
     @Test
     fun `exchange v2 parses mobile version header`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV2(any(), any(), any()) } returns ctaExchangeAvailableResultV2()
+            every { exchangeCtaTokenForV2(any(), any(), any()) } returns CtaExchangeResult()
         }
 
         val requestEvent = request()
@@ -663,9 +761,10 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
+        expectThat(response).status.isSameAs(OK)
+
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV2(
                 CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country),
@@ -678,7 +777,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange v2 parses mobile version header handling unknown user agent`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV2(any(), any(), any()) } returns ctaExchangeAvailableResultV2()
+            every { exchangeCtaTokenForV2(any(), any(), any()) } returns CtaExchangeResult()
         }
 
         val requestEvent = request()
@@ -690,9 +789,10 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(ctaExchangePayload(V2))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
+        expectThat(response).status.isSameAs(OK)
+
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV2(
                 CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any(), any()
@@ -715,12 +815,15 @@ class VirologySubmissionHandlerTest {
             .withBearerToken("anything")
             .withJson(lookupPayload(V1))
 
-        val response = newHandler(virology).handleRequest(requestEvent, aContext())
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
 
-        assertThat(response.statusCode).isEqualTo(204)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
-        events.contains(VirologyResults::class)
+        expectThat(response) {
+            status.isSameAs(NO_CONTENT)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
+
+        expectThat(events).contains(VirologyResults::class)
     }
 
     private fun virologyService(persistence: VirologyPersistenceService = this.persistence) =
@@ -729,27 +832,20 @@ class VirologySubmissionHandlerTest {
     private fun lookupService(persistence: VirologyPersistenceService = this.persistence) =
         VirologyLookupService(persistence, CLOCK, virologyPolicyConfig, events)
 
-    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent): Map<String, String> {
-        return Optional.ofNullable(response.headers).orElse(emptyMap())
-    }
+    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent) =
+        Optional.ofNullable(response.headers).orElse(emptyMap())
 
     private fun lookupPayload(apiVersion: ApiVersion) = when (apiVersion) {
         V1 -> """{"testResultPollingToken":"98cff3dd-882c-417b-a00a-350a205378c7"}"""
-        V2 -> """{
-                "testResultPollingToken":"98cff3dd-882c-417b-a00a-350a205378c7",
-                "country": "England"
-            }"""
+        V2 -> """{"testResultPollingToken":"98cff3dd-882c-417b-a00a-350a205378c7","country": "England"}"""
     }
 
-    private fun ctaExchangePayload(apiVersion: ApiVersion): String = when (apiVersion) {
+    private fun ctaExchangePayload(apiVersion: ApiVersion) = when (apiVersion) {
         V1 -> """{"ctaToken":"cc8f0b6z"}"""
-        V2 -> """ {
-                "ctaToken":"cc8f0b6z",
-                "country": "England"
-            }"""
+        V2 -> """{"ctaToken":"cc8f0b6z", "country": "England"}"""
     }
 
-    private fun lookupAvailableResultV2(
+    private fun VirologyLookupResult(
         testKit: TestKit = LAB_RESULT,
         submissionSupported: Boolean = true,
         confirmatoryTest: Boolean = false,
@@ -765,40 +861,39 @@ class VirologySubmissionHandlerTest {
         )
     )
 
-    private fun ctaExchangeAvailableResultV2(
+    private fun CtaExchangeResult(
         testKit: TestKit = LAB_RESULT,
         submissionSupported: Boolean = true,
         confirmatoryTest: Boolean = false,
         confirmatoryDayLimit: Int? = null
     ) = CtaExchangeResult.AvailableV2(
         CtaExchangeResponseV2(
-            DiagnosisKeySubmissionToken.of("sub-token"),
-            Positive,
-            TestEndDate.of(2020, 4, 23),
-            testKit,
-            submissionSupported,
-            confirmatoryTest,
-            confirmatoryDayLimit
+            diagnosisKeySubmissionToken = DiagnosisKeySubmissionToken.of("sub-token"),
+            testResult = Positive,
+            testEndDate = TestEndDate.of(2020, 4, 23),
+            testKit = testKit,
+            diagnosisKeySubmissionSupported = submissionSupported,
+            requiresConfirmatoryTest = confirmatoryTest,
+            confirmatoryDayLimit = confirmatoryDayLimit
         )
     )
 
-    private fun newHandler(
+    private fun VirologySubmissionHandler(
         virology: VirologyService = virologyService(persistence),
         lookup: VirologyLookupService = lookupService(persistence),
         env: Environment = environment
     ) = VirologySubmissionHandler(
-        env,
-        CLOCK,
-        throttleDuration,
-        events,
-        authenticator,
-        signer,
-        persistence,
-        virology,
-        lookup,
-        websiteConfig,
-        { true }
-    )
+        environment = env,
+        clock = CLOCK,
+        delayDuration = throttleDuration,
+        events = events,
+        mobileAuthenticator = authenticator,
+        signer = signer,
+        persistence = persistence,
+        virology = virology,
+        virologyLookup = lookup,
+        websiteConfig = websiteConfig
+    ) { true }
 
     private enum class ApiVersion { V1, V2 }
 }

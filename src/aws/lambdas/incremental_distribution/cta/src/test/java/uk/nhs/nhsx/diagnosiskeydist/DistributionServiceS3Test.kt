@@ -10,10 +10,19 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
-import org.assertj.core.api.AbstractAssert
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import strikt.api.Assertion
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.contains
+import strikt.assertions.doesNotContain
+import strikt.assertions.hasSize
+import strikt.assertions.isEmpty
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
+import strikt.assertions.map
+import strikt.assertions.message
 import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.ObjectKeyFilters
 import uk.nhs.nhsx.core.UniqueId
@@ -30,8 +39,21 @@ import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
+import uk.nhs.nhsx.diagnosiskeydist.DistributionBucketAssertions.contains
+import uk.nhs.nhsx.diagnosiskeydist.DistributionBucketAssertions.dailyBatchIsEqualTo
+import uk.nhs.nhsx.diagnosiskeydist.DistributionBucketAssertions.doesNotContain
+import uk.nhs.nhsx.diagnosiskeydist.DistributionBucketAssertions.isNotEmptyZip
+import uk.nhs.nhsx.diagnosiskeydist.DistributionBucketAssertions.tekExport
+import uk.nhs.nhsx.diagnosiskeydist.DistributionBucketAssertions.tekSignature
+import uk.nhs.nhsx.diagnosiskeydist.DistributionBucketAssertions.twoHourlyBatchIsEqualTo
 import uk.nhs.nhsx.diagnosiskeydist.Submissions.x
 import uk.nhs.nhsx.diagnosiskeydist.Submissions.y
+import uk.nhs.nhsx.diagnosiskeydist.TEKSignatureListAssertions.contains
+import uk.nhs.nhsx.diagnosiskeydist.TEKSignatureListAssertions.hasSize
+import uk.nhs.nhsx.diagnosiskeydist.TemporaryExposureKeyExportAssertions.contains
+import uk.nhs.nhsx.diagnosiskeydist.TemporaryExposureKeyExportAssertions.hasSignatureSize
+import uk.nhs.nhsx.diagnosiskeydist.TemporaryExposureKeyExportAssertions.hasSize
+import uk.nhs.nhsx.diagnosiskeydist.TemporaryExposureKeyExportAssertions.isEmpty
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber.Companion.enIntervalNumberFromTimestamp
 import uk.nhs.nhsx.diagnosiskeydist.apispec.DailyZIPSubmissionPeriod
 import uk.nhs.nhsx.diagnosiskeydist.keydistribution.UploadToS3KeyDistributor
@@ -39,12 +61,12 @@ import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.diagnosiskeyssubmission.TestKitAwareObjectKeyNameProvider
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.isolationpayment.IpcTokenIdGenerator
 import uk.nhs.nhsx.testhelper.BatchExport
+import uk.nhs.nhsx.testhelper.assertions.contains
 import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.testhelper.s3.TinyS3
-import uk.nhs.nhsx.domain.TestKit
-import uk.nhs.nhsx.domain.TestType
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.security.KeyPair
@@ -59,11 +81,10 @@ import java.util.zip.ZipOutputStream
 
 class DistributionServiceS3Test {
 
-    init {
-        Tracing.disableXRayComplaintsForMainClasses()
-    }
-
     private val clock = Clock.fixed("2020-07-16T07:46:00Z".asInstant(), UTC)
+
+    @BeforeEach
+    fun setup() = Tracing.disableXRayComplaintsForMainClasses()
 
     @Test
     fun `should abort outside service window`() {
@@ -71,9 +92,8 @@ class DistributionServiceS3Test {
             val testSetup = TestSetup(clock, client)
             val distributionService = testSetup.distributionService
 
-            assertThatThrownBy { distributionService.distributeKeys("2020-07-14T19:30:00Z".asInstant()) }
-                .isInstanceOf(IllegalStateException::class.java)
-                .hasMessage("CloudWatch Event triggered Lambda at wrong time.")
+            expectThrows<IllegalStateException> { distributionService.distributeKeys("2020-07-14T19:30:00Z".asInstant()) }
+                .message.isEqualTo("CloudWatch Event triggered Lambda at wrong time.")
         }
     }
 
@@ -96,7 +116,7 @@ class DistributionServiceS3Test {
             distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(15)
                 .twoHourlyBatchIsEqualTo(168)
         }
@@ -122,7 +142,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(15)
                 .twoHourlyBatchIsEqualTo(168)
         }
@@ -151,7 +171,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(15)
                 .twoHourlyBatchIsEqualTo(168)
                 .tekExport(now.dailyZIPSubmissionPeriodS3Key()) { hasSize(14) }
@@ -179,7 +199,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .tekExport(now.dailyZIPSubmissionPeriodS3Key()) {
                     hasSignatureSize(1)
                     contains(
@@ -213,7 +233,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .tekSignature(now.dailyZIPSubmissionPeriodS3Key()) {
                     hasSize(1)
                     contains(
@@ -250,7 +270,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(15)
                 .twoHourlyBatchIsEqualTo(168)
                 .doesNotContain("obj-key-not-uploaded")
@@ -279,7 +299,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(15)
                 .twoHourlyBatchIsEqualTo(168)
                 .contains("distribution/daily/2020070300.zip")
@@ -306,7 +326,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(15)
                 .twoHourlyBatchIsEqualTo(168)
 
@@ -342,7 +362,7 @@ class DistributionServiceS3Test {
             testSetup.distributionService.distributeKeys(now)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(15)
                 .twoHourlyBatchIsEqualTo(168)
                 .contains("distribution/daily/2020091700.zip")
@@ -378,10 +398,10 @@ class DistributionServiceS3Test {
 
             testSetup.distributionService.distributeKeys(processingDate)
 
-            testSetup.events.contains(EmptyZipDistributed::class)
+            expectThat(testSetup.events).contains(EmptyZipDistributed::class)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .tekExport("distribution/daily/2020071800.zip") { isEmpty() }
                 .also {
                     listOf(
@@ -433,10 +453,10 @@ class DistributionServiceS3Test {
 
             testSetup.distributionService.distributeKeys(processingDate)
 
-            testSetup.events.contains(EmptyZipDistributed::class)
+            expectThat(testSetup.events).contains(EmptyZipDistributed::class)
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(16)
                 .twoHourlyBatchIsEqualTo(168)
                 .doesNotContain("random-file")
@@ -481,7 +501,7 @@ class DistributionServiceS3Test {
 
 
             distributionBucket
-                .assertThat()
+                .expectThat()
                 .dailyBatchIsEqualTo(16)
                 .twoHourlyBatchIsEqualTo(168)
                 .isNotEmptyZip("distribution/daily/2019030400.zip")
@@ -556,24 +576,22 @@ class TestSetup(
     ).let(configOverride)
 
     val submissionRepository = SubmissionFromS3Repository(
-        awsS3Client,
-        ObjectKeyFilters.batched().withPrefixes(listOf("LAB_RESULT")),
-        submissionBucketName,
-        events,
-        { clock.instant() }
-    )
+        awsS3 = awsS3Client,
+        objectKeyFilter = ObjectKeyFilters.batched().withPrefixes(listOf("LAB_RESULT")),
+        submissionBucketName = submissionBucketName,
+        events = events
+    ) { clock.instant() }
 
     val distributionService = DistributionService(
-        submissionRepository,
-        exposureProtobuf,
-        keyDistributor,
-        signer,
-        awsCloudFront,
-        awsS3Client,
-        config,
-        events,
-        { clock.instant() }
-    )
+        submissionRepository = submissionRepository,
+        exposureProtobuf = exposureProtobuf,
+        keyDistributor = keyDistributor,
+        signer = signer,
+        awsCloudFront = awsCloudFront,
+        awsS3 = awsS3Client,
+        config = config,
+        events = events
+    ) { clock.instant() }
 }
 
 class DistributionBucket(
@@ -591,7 +609,7 @@ class DistributionBucket(
             .forEach { println("# ${bucketName.value}: ${it.key}") }
     }
 
-    fun assertThat() = DistributionBucketAssert.assertThat(this)
+    fun expectThat() = expectThat(this)
 
     fun putZip(objectKey: String) = apply {
         val source = ByteArrayOutputStream()
@@ -646,7 +664,7 @@ class SubmissionBucket(
         amazonS3.createBucket(bucketName.value)
     }
 
-    fun assertThat() = SubmissionBucketAssert.assertThat(this)
+    fun expectThat() = expectThat(this)
 
     fun debug() = apply {
         amazonS3.listObjects(bucketName.value)
@@ -713,141 +731,123 @@ object Submissions {
                     7
                 )
             }.toList()
-        return Submission(submissionTimestamp, ObjectKey.of("mobile/LAB_RESULT/abc"), StoredTemporaryExposureKeyPayload(keys))
+        return Submission(
+            submissionTimestamp,
+            ObjectKey.of("mobile/LAB_RESULT/abc"),
+            StoredTemporaryExposureKeyPayload(keys)
+        )
     }
 }
 
-class MockSubmissions(private val submissions: MutableList<Submission> = mutableListOf()) : SubmissionRepository {
-    override fun loadAllSubmissions(
-        minimalSubmissionTimeEpochMillisExclusive: Long,
-        limit: Int,
-        maxResults: Int
-    ): List<Submission> = submissions
-
-    fun clear() = submissions.clear()
-    fun addAll(input: List<Submission>) = submissions.addAll(input)
-    fun add(input: Submission) = submissions.add(input)
-}
-
-
-class SubmissionBucketAssert(actual: SubmissionBucket) :
-    AbstractAssert<SubmissionBucketAssert, SubmissionBucket>(actual, SubmissionBucketAssert::class.java) {
-
-    private val bucketName = actual.bucketName.value
-    private val amazonS3 = actual.amazonS3
-
-    fun isEmpty() = apply {
-        assertThat(amazonS3.listObjects(bucketName).objectSummaries).isEmpty()
-    }
-
-    companion object {
-        fun assertThat(actual: SubmissionBucket) = SubmissionBucketAssert(actual)
+object SubmissionBucketAssertions {
+    fun Assertion.Builder<SubmissionBucket>.isEmpty() {
+        assert("is empty") { submissionBucket ->
+            val bucketName = submissionBucket.bucketName.value
+            val amazonS3 = submissionBucket.amazonS3
+            val summaries = amazonS3.listObjects(bucketName).objectSummaries
+            get("object summaries") { summaries }.isEmpty()
+        }
     }
 }
 
-class DistributionBucketAssert(actual: DistributionBucket) :
-    AbstractAssert<DistributionBucketAssert, DistributionBucket>(actual, DistributionBucketAssert::class.java) {
-
-    private val bucketName = actual.bucketName.value
-    private val amazonS3 = actual.amazonS3
-
-    fun isEmpty() = apply {
-        assertThat(amazonS3.listObjects(bucketName).objectSummaries).isEmpty()
+object DistributionBucketAssertions {
+    fun Assertion.Builder<DistributionBucket>.isEmpty() = apply {
+        assert("is empty") { distributionBucket ->
+            val bucketName = distributionBucket.bucketName.value
+            val amazonS3 = distributionBucket.amazonS3
+            val summaries = amazonS3.listObjects(bucketName).objectSummaries
+            get("object summaries") { summaries }.isEmpty()
+        }
     }
 
-    fun dailyBatchIsEqualTo(expected: Int) = apply {
-        assertThat(amazonS3.listObjects(bucketName, "distribution/daily").objectSummaries.count())
-            .describedAs("should have created daily batch with the prefix: distribution/daily")
-            .isEqualTo(expected)
+    fun Assertion.Builder<DistributionBucket>.dailyBatchIsEqualTo(expected: Int) = apply {
+        assert("should have created daily batch with the prefix: distribution/daily") { distributionBucket ->
+            val bucketName = distributionBucket.bucketName.value
+            val amazonS3 = distributionBucket.amazonS3
+            val summaries = amazonS3.listObjects(bucketName, "distribution/daily").objectSummaries
+            get("object summaries") { summaries }.hasSize(expected)
+        }
     }
 
-    fun twoHourlyBatchIsEqualTo(expected: Int) = apply {
-        assertThat(amazonS3.listObjects(bucketName, "distribution/two-hourly").objectSummaries.count())
-            .describedAs("should have created two hourly batch with the prefix: distribution/two-hourly")
-            .isEqualTo(expected)
+    fun Assertion.Builder<DistributionBucket>.twoHourlyBatchIsEqualTo(expected: Int) = apply {
+        assert("should have created two hourly batch with the prefix: distribution/two-hourly") { distributionBucket ->
+            val bucketName = distributionBucket.bucketName.value
+            val amazonS3 = distributionBucket.amazonS3
+            val summaries = amazonS3.listObjects(bucketName, "distribution/two-hourly").objectSummaries
+            get("object summaries") { summaries }.hasSize(expected)
+        }
     }
 
-    fun contains(objectKey: String) = apply {
-        assertThat(amazonS3.listObjects(bucketName).objectSummaries.map { it.key })
-            .contains(objectKey)
+    fun Assertion.Builder<DistributionBucket>.contains(expected: String) = apply {
+        assert("contains %s", expected) { distributionBucket ->
+            val bucketName = distributionBucket.bucketName.value
+            val amazonS3 = distributionBucket.amazonS3
+            val summaries = amazonS3.listObjects(bucketName).objectSummaries
+            get("object summaries") { summaries }.map { it.key }.contains(expected)
+        }
     }
 
-    fun doesNotContain(objectKey: String) = apply {
-        assertThat(amazonS3.listObjects(bucketName).objectSummaries.map { it.key })
-            .doesNotContain(objectKey)
+    fun Assertion.Builder<DistributionBucket>.doesNotContain(expected: String) = apply {
+        assert("does not contain %s", expected) { distributionBucket ->
+            val bucketName = distributionBucket.bucketName.value
+            val amazonS3 = distributionBucket.amazonS3
+            val summaries = amazonS3.listObjects(bucketName).objectSummaries
+            get("object summaries") { summaries }.map { it.key }.doesNotContain(expected)
+        }
     }
 
-    fun isNotEmptyZip(objectKey: String) = apply {
-        assertThat(actual.getZip(objectKey)).isNotEmpty
+    fun Assertion.Builder<DistributionBucket>.isNotEmptyZip(objectKey: String) = apply {
+        assert("zip is not empty %s", objectKey) { distributionBucket ->
+            distributionBucket.getZip(objectKey).isNotEmpty()
+        }
     }
 
-    fun tekExport(objectKey: String, fn: TemporaryExposureKeyExportAssert.() -> Unit) = apply {
-        val export = actual.getTekExportOrNull(objectKey)
-
-        assertThat(export)
+    fun Assertion.Builder<DistributionBucket>.tekExport(
+        objectKey: String,
+        fn: Assertion.Builder<TemporaryExposureKeyExport>.() -> Unit
+    ) = apply {
+        get("get tek export") { getTekExportOrNull(objectKey) }
             .describedAs("TekExport for $objectKey does not exist")
-            .isNotNull
-
-        TemporaryExposureKeyExportAssert.assertThat(export).run(fn)
+            .isNotNull()
+            .and(fn)
     }
 
-    fun tekSignature(objectKey: String, fn: TEKSignatureListAssert.() -> Unit) = apply {
-        val export = actual.getTekSignatureListOrNull(objectKey)
-
-        assertThat(export)
+    fun Assertion.Builder<DistributionBucket>.tekSignature(
+        objectKey: String,
+        fn: Assertion.Builder<Exposure.TEKSignatureList>.() -> Unit
+    ) = apply {
+        get("get tek signature") { getTekSignatureListOrNull(objectKey) }
             .describedAs("TEKSignatureList for $objectKey does not exist")
-            .isNotNull
-
-        TEKSignatureListAssert.assertThat(export).run(fn)
-    }
-
-    companion object {
-        fun assertThat(actual: DistributionBucket) = DistributionBucketAssert(actual)
+            .isNotNull()
+            .and(fn)
     }
 }
 
-class TEKSignatureListAssert(actual: Exposure.TEKSignatureList) :
-    AbstractAssert<TEKSignatureListAssert, Exposure.TEKSignatureList>(actual, TEKSignatureListAssert::class.java) {
-
-    fun hasSize(expected: Int) = apply {
-        assertThat(actual.signaturesCount).isEqualTo(expected)
+object TEKSignatureListAssertions {
+    fun Assertion.Builder<Exposure.TEKSignatureList>.hasSize(expected: Int) = apply {
+        get(Exposure.TEKSignatureList::getSignaturesCount).isEqualTo(expected)
     }
 
-    fun contains(info: Exposure.SignatureInfo) = apply {
-        assertThat(actual.signaturesList.map { it.signatureInfo }).contains(info)
-    }
-
-    companion object {
-        fun assertThat(actual: Exposure.TEKSignatureList?): TEKSignatureListAssert =
-            TEKSignatureListAssert(requireNotNull(actual))
+    fun Assertion.Builder<Exposure.TEKSignatureList>.contains(expected: Exposure.SignatureInfo) = apply {
+        get(Exposure.TEKSignatureList::getSignaturesList).map { it.signatureInfo }.contains(expected)
     }
 }
 
-class TemporaryExposureKeyExportAssert(actual: TemporaryExposureKeyExport) :
-    AbstractAssert<TemporaryExposureKeyExportAssert, TemporaryExposureKeyExport>(
-        actual,
-        TemporaryExposureKeyExportAssert::class.java
-    ) {
-
-    fun hasSignatureSize(expected: Int) = apply {
-        assertThat(actual.signatureInfosList).hasSize(expected)
+object TemporaryExposureKeyExportAssertions {
+    fun Assertion.Builder<TemporaryExposureKeyExport>.hasSignatureSize(expected: Int) = apply {
+        get(TemporaryExposureKeyExport::getSignatureInfosList).hasSize(expected)
     }
 
-    fun contains(info: Exposure.SignatureInfo) = apply {
-        assertThat(actual.signatureInfosList).contains(info)
+    fun Assertion.Builder<TemporaryExposureKeyExport>.contains(expected: Exposure.SignatureInfo) = apply {
+        get(TemporaryExposureKeyExport::getSignatureInfosList).contains(expected)
     }
 
-    fun hasSize(expected: Int) = apply {
-        assertThat(actual.keysCount).isEqualTo(expected)
+    fun Assertion.Builder<TemporaryExposureKeyExport>.hasSize(expected: Int) = apply {
+        get(TemporaryExposureKeyExport::getKeysCount).isEqualTo(expected)
     }
 
-    fun isEmpty() = apply {
-        assertThat(actual.keysCount).isEqualTo(0)
-    }
-
-    companion object {
-        fun assertThat(actual: TemporaryExposureKeyExport?): TemporaryExposureKeyExportAssert =
-            TemporaryExposureKeyExportAssert(requireNotNull(actual))
+    fun Assertion.Builder<TemporaryExposureKeyExport>.isEmpty() = apply {
+        hasSize(0)
     }
 }
 
@@ -873,7 +873,7 @@ class KeyPairSigner(private val keyPair: KeyPair) : Signer {
     }
 }
 
-fun Instant.dailyZIPSubmissionPeriodS3Key(): String = DailyZIPSubmissionPeriod.zipPathFor(this)
+fun Instant.dailyZIPSubmissionPeriodS3Key() = DailyZIPSubmissionPeriod.zipPathFor(this)
 
 object ZipFileReader {
     fun read(input: InputStream) = input.use { read(ZipInputStream(it)) }
@@ -901,4 +901,3 @@ object ZipFileReader {
         return contents.toMap()
     }
 }
-

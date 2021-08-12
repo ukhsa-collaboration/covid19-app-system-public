@@ -1,29 +1,30 @@
 package uk.nhs.nhsx.core.auth
 
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isFalse
+import strikt.assertions.isTrue
 
 class StandardAuthenticationTest {
 
     @Test
-    fun anApi() {
+    fun `an api`() {
         assertSomeKeyNames(api())
     }
 
     @Test
-    fun mobileApi() {
+    fun `mobile api`() {
         assertSomeKeyNames(api())
     }
 
     private fun assertSomeKeyNames(authorizer: ApiKeyAuthorizer) {
-        assertThat(authorizer.authorize(ApiKey("mobile", "")), `is`(true))
-        assertThat(authorizer.authorize(ApiKey("blah_c-_134", "")), `is`(true))
-        assertThat(authorizer.authorize(ApiKey("third-party-integration-2020102", "")), `is`(true))
-        assertThat(authorizer.authorize(ApiKey("-/_+=.@!", "")), `is`(false))
-        assertThat(authorizer.authorize(ApiKey("©∞", "")), `is`(false))
-        assertThat(authorizer.authorize(ApiKey("0123456789012345678900123456789012345678901234567890", "")), `is`(false))
+        expectThat(authorizer.authorize(ApiKey("mobile", ""))).isTrue()
+        expectThat(authorizer.authorize(ApiKey("blah_c-_134", ""))).isTrue()
+        expectThat(authorizer.authorize(ApiKey("third-party-integration-2020102", ""))).isTrue()
+        expectThat(authorizer.authorize(ApiKey("-/_+=.@!", ""))).isFalse()
+        expectThat(authorizer.authorize(ApiKey("©∞", ""))).isFalse()
+        expectThat(authorizer.authorize(ApiKey("0123456789012345678900123456789012345678901234567890", ""))).isFalse()
     }
 
-    private fun api(): ApiKeyAuthorizer = StandardAuthentication.apiKeyNameValidator()
+    private fun api() = StandardAuthentication.apiKeyNameValidator()
 }

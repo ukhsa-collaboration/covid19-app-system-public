@@ -1,6 +1,5 @@
 package smoke.actors
 
-import com.natpryce.hamkrest.containsSubstring
 import org.http4k.core.Status.Companion.OK
 import org.joda.time.DateTime
 import smoke.clients.AwsLambda
@@ -16,15 +15,15 @@ class BackgroundActivities(private val envConfig: EnvConfig) {
 
         AwsLambda.invokeFunction(envConfig.diagnosis_keys_processing_function)
             .requireStatusCode(OK)
-            .requireBodyText(containsSubstring("KeysDistributed"))
+            .requireBodyContains("KeysDistributed")
 
         AwsLambda.invokeFunction(envConfig.federation_keys_processing_download_function)
             .requireStatusCode(OK)
-            .requireBodyText(containsSubstring("InteropConnectorDownloadStats"))
+            .requireBodyContains("InteropConnectorDownloadStats")
 
         AwsLambda.invokeFunction(envConfig.federation_keys_processing_upload_function)
             .requireStatusCode(OK)
-            .requireBodyText(containsSubstring("InteropConnectorUploadStats"))
+            .requireBodyContains("InteropConnectorUploadStats")
     }
 
     fun invokeAnalyticsLogs(scheduledEventTime: Instant, functionName: String): InvokeResponse {

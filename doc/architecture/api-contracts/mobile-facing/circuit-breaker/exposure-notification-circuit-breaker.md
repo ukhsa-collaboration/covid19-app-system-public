@@ -14,6 +14,7 @@
 - Response payload content-type: `application/json`
 
 ## Scenario
+The circuit breaker is polled following an exposure notification to get a decision on whether to proceed to notify the user of the contact risk.
 
 ### Initial request
 ```POST https://<FQDN>/circuit-breaker/exposure-notification/request```

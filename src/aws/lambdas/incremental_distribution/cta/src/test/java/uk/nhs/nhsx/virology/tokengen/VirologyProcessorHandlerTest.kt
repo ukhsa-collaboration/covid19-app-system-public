@@ -1,30 +1,39 @@
+@file:Suppress("BlockingMethodInNonBlockingContext")
+
 package uk.nhs.nhsx.virology.tokengen
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.throws
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import strikt.api.expectCatching
+import strikt.api.expectThat
+import strikt.assertions.isFailure
 import uk.nhs.nhsx.core.Json
-import uk.nhs.nhsx.core.handler.DirectRequestCompleted
-import uk.nhs.nhsx.core.handler.DirectRequestStarted
 import uk.nhs.nhsx.core.events.CtaTokensGenerated
 import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
-import uk.nhs.nhsx.virology.CtaTokensGenerationComplete
-import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
-import uk.nhs.nhsx.virology.VirologyProcessorHandler
+import uk.nhs.nhsx.core.handler.DirectRequestCompleted
+import uk.nhs.nhsx.core.handler.DirectRequestStarted
 import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
 import uk.nhs.nhsx.domain.TestResult.Positive
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
+import uk.nhs.nhsx.virology.CtaTokensGenerationComplete
+import uk.nhs.nhsx.virology.VirologyProcessorHandler
 import uk.nhs.nhsx.virology.tokengen.CtaProcessorResult.Success
 import java.io.ByteArrayOutputStream
-import java.lang.Exception
 
 class VirologyProcessorHandlerTest {
 
-    private val service = mockk<VirologyProcessorService>()
+    private val service = mockk<VirologyProcessorService> {
+        every { generateAndStoreTokens(any()) } returns Success(
+            "some-file.zip",
+            "some-message"
+        )
+    }
+
     private val events = RecordingEvents()
     private val handler = VirologyProcessorHandler(events, service)
 
@@ -39,30 +48,27 @@ class VirologyProcessorHandlerTest {
             )
         ).byteInputStream()
 
-        every { service.generateAndStoreTokens(any()) } returns Success(
-            "some-file.zip",
-            "some-message"
-        )
+        val out = ByteArrayOutputStream().also {
+            handler.handleRequest(input, it, TestContext())
+        }
 
-        val out = ByteArrayOutputStream()
+        expectThat(out)
+            .get(ByteArrayOutputStream::toByteArray)
+            .get(::String)
+            .isEqualToJson("""{"result":"success","message":"some-message","filename":"some-file.zip"}""")
 
-        handler.handleRequest(input, out, TestContext())
+        verify {
+            service.generateAndStoreTokens(
+                CtaProcessorRequest(
+                    testResult = Positive,
+                    testEndDate = TestEndDate.of(2020, 10, 6),
+                    testKit = LAB_RESULT,
+                    numberOfTokens = 1000
+                )
+            )
+        }
 
-        assertThat(
-            Json.readJsonOrNull(String(out.toByteArray())),
-            equalTo(mapOf("result" to "success", "message" to "some-message", "filename" to "some-file.zip"))
-        )
-
-        val expectedEvent = CtaProcessorRequest(
-            Positive,
-            TestEndDate.of(2020, 10, 6),
-            LAB_RESULT,
-            1000
-        )
-
-        verify { service.generateAndStoreTokens(expectedEvent) }
-
-        events.containsExactly(
+        expectThat(events).containsExactly(
             DirectRequestStarted::class,
             CtaTokensGenerated::class,
             CtaTokensGenerationComplete::class,
@@ -80,7 +86,7 @@ class VirologyProcessorHandlerTest {
             )
         ).byteInputStream()
 
-        assertThat({ handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }, throws<Exception>())
+        expectCatching { handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }.isFailure()
     }
 
     @Test
@@ -93,7 +99,7 @@ class VirologyProcessorHandlerTest {
             )
         ).byteInputStream()
 
-        assertThat({ handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }, throws<Exception>())
+        expectCatching { handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }.isFailure()
     }
 
     @Test
@@ -105,7 +111,7 @@ class VirologyProcessorHandlerTest {
             )
         ).byteInputStream()
 
-        assertThat({ handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }, throws<Exception>())
+        expectCatching { handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }.isFailure()
     }
 
     @Test
@@ -118,7 +124,7 @@ class VirologyProcessorHandlerTest {
             )
         ).byteInputStream()
 
-        assertThat({ handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }, throws<Exception>())
+        expectCatching { handler.handleRequest(input, ByteArrayOutputStream(), TestContext()) }.isFailure()
     }
 }
 

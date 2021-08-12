@@ -7,10 +7,10 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isA
 import uk.nhs.nhsx.core.aws.s3.AwsS3
-import uk.nhs.nhsx.core.events.RecordingEvents
 import java.util.*
 
 class AAEFileExporterTest {
@@ -32,7 +32,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(S3ParquetFileNotCreatedByFirehouse::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<S3ParquetFileNotCreatedByFirehouse>()
         verify(exactly = 0) {
             uploader.uploadFile(any(), any(), any())
         }
@@ -62,7 +62,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(DataUploadedToAAE::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<DataUploadedToAAE>()
         verify(exactly = 1) {
             uploader.uploadFile(any(), any(), any())
         }
@@ -92,7 +92,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(DataUploadedToAAE::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<DataUploadedToAAE>()
         verify(exactly = 1) {
             uploader.uploadFile(any(), any(), any())
         }
@@ -122,7 +122,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(S3ParquetFileNotCreatedByFirehouse::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<S3ParquetFileNotCreatedByFirehouse>()
         verify(exactly = 0) {
             uploader.uploadFile(any(), any(), any())
         }
@@ -152,7 +152,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(DataUploadedToAAE::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<DataUploadedToAAE>()
         verify(exactly = 1) {
             uploader.uploadFile(any(), any(), any())
         }
@@ -174,7 +174,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(S3ToParquetObjectConversionFailure::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<S3ToParquetObjectConversionFailure>()
         verify(exactly = 0) {
             uploader.uploadFile(any(), any(), any())
         }
@@ -197,7 +197,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(S3ObjectStartsWithDisallowedPrefix::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<S3ObjectStartsWithDisallowedPrefix>()
         verify(exactly = 0) {
             uploader.uploadFile(any(), any(), any())
         }
@@ -227,7 +227,7 @@ class AAEFileExporterTest {
             )
         }
 
-        assertThat(exporter.export(sqsEvent)).isInstanceOf(DataUploadedToAAE::class.java)
+        expectThat(exporter.export(sqsEvent)).isA<DataUploadedToAAE>()
         verify(exactly = 1) {
             uploader.uploadFile(any(), any(), any())
         }

@@ -4,10 +4,12 @@ import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.S3Object
 import com.github.tomakehurst.wiremock.WireMockServer
-import com.github.tomakehurst.wiremock.client.WireMock.*
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.throws
-import org.assertj.core.api.Assertions.assertThat
+import com.github.tomakehurst.wiremock.client.WireMock.aResponse
+import com.github.tomakehurst.wiremock.client.WireMock.any
+import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
+import com.github.tomakehurst.wiremock.client.WireMock.exactly
+import com.github.tomakehurst.wiremock.client.WireMock.put
+import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
 import org.bouncycastle.asn1.ASN1InputStream
 import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
@@ -17,6 +19,9 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.AwsS3
@@ -30,6 +35,7 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.handler.QueuedEventCompleted
 import uk.nhs.nhsx.core.handler.QueuedEventStarted
 import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
 import uk.nhs.nhsx.testhelper.proxy
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.io.ByteArrayInputStream
@@ -58,16 +64,17 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
         val sqsEvent = SQSEvent().apply {
             records = listOf(
                 SQSEvent.SQSMessage().apply {
-                    body = """{ "bucketName": "TEST_BUCKET", "key": "2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet" }"""
+                    body =
+                        """{ "bucketName": "TEST_BUCKET", "key": "2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet" }"""
                 }
             )
         }
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("DataUploadedToAAE(sqsMessageId=null, bucketName=TEST_BUCKET, key=2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
+        expectThat(result).isEqualTo("DataUploadedToAAE(sqsMessageId=null, bucketName=TEST_BUCKET, key=2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
 
-        events.containsExactly(
+        expectThat(events).containsExactly(
             QueuedEventStarted::class,
             OutgoingHttpRequest::class,
             DataUploadedToAAE::class,
@@ -88,17 +95,21 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
         val sqsEvent = SQSEvent().apply {
             records = listOf(
                 SQSEvent.SQSMessage().apply {
-                    body = """{ "bucketName": "TEST_BUCKET", "key": "2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet" }"""
+                    body =
+                        """{ "bucketName": "TEST_BUCKET", "key": "2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet" }"""
                 }
             )
         }
 
-        assertThat(
-            { newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext()) },
-            throws<RuntimeException>()
-        )
+        expectThrows<RuntimeException> {
+            newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
+        }
 
-        events.containsExactly(QueuedEventStarted::class, OutgoingHttpRequest::class, ExceptionThrown::class)
+        expectThat(events).containsExactly(
+            QueuedEventStarted::class,
+            OutgoingHttpRequest::class,
+            ExceptionThrown::class
+        )
     }
 
     @Test
@@ -114,17 +125,24 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
         val sqsEvent = SQSEvent().apply {
             records = listOf(
                 SQSEvent.SQSMessage()
-                    .apply { body = """{ "bucketName": "TEST_BUCKET", "key": "2022/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet" }""" }
+                    .apply {
+                        body =
+                            """{ "bucketName": "TEST_BUCKET", "key": "2022/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet" }"""
+                    }
             )
         }
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("S3ObjectNotFound(sqsMessageId=null, bucketName=TEST_BUCKET, key=2022/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
+        expectThat(result).isEqualTo("S3ObjectNotFound(sqsMessageId=null, bucketName=TEST_BUCKET, key=2022/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
+
         wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
 
-        events.containsExactly(QueuedEventStarted::class, S3ObjectNotFound::class, QueuedEventCompleted::class)
-
+        expectThat(events).containsExactly(
+            QueuedEventStarted::class,
+            S3ObjectNotFound::class,
+            QueuedEventCompleted::class
+        )
     }
 
     @Test
@@ -149,11 +167,15 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("S3ObjectStartsWithDisallowedPrefix(sqsMessageId=null, bucketName=TEST_BUCKET, key=submitteddatehour=__HIVE_DEFAULT_PARTITION__/2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
+        expectThat(result).isEqualTo("S3ObjectStartsWithDisallowedPrefix(sqsMessageId=null, bucketName=TEST_BUCKET, key=submitteddatehour=__HIVE_DEFAULT_PARTITION__/2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet)")
+
         wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
 
-        events.containsExactly(QueuedEventStarted::class, S3ObjectStartsWithDisallowedPrefix::class, QueuedEventCompleted::class)
-
+        expectThat(events).containsExactly(
+            QueuedEventStarted::class,
+            S3ObjectStartsWithDisallowedPrefix::class,
+            QueuedEventCompleted::class
+        )
     }
 
     @Test
@@ -174,10 +196,15 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("ExceptionThrown(exception=java.lang.RuntimeException: SQS message parsing failed (no retry): sqsMessage.id=null, body={}, message=SQS message parsing failed (no retry): sqsMessage.id=null, body={})")
+        expectThat(result).isEqualTo("ExceptionThrown(exception=java.lang.RuntimeException: SQS message parsing failed (no retry): sqsMessage.id=null, body={}, message=SQS message parsing failed (no retry): sqsMessage.id=null, body={})")
+
         wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
 
-        events.containsExactly(QueuedEventStarted::class, ExceptionThrown::class, QueuedEventCompleted::class)
+        expectThat(events).containsExactly(
+            QueuedEventStarted::class,
+            ExceptionThrown::class,
+            QueuedEventCompleted::class
+        )
     }
 
     @Test
@@ -200,10 +227,11 @@ class AAEUploadHandlerTest(private val wireMock: WireMockServer) {
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("S3ToParquetObjectConversionFailure(sqsMessageId=null, bucketName=TEST_BUCKET, key=format-conversion-failed/TEST_KEY_ERROR_FILE)")
+        expectThat(result).isEqualTo("S3ToParquetObjectConversionFailure(sqsMessageId=null, bucketName=TEST_BUCKET, key=format-conversion-failed/TEST_KEY_ERROR_FILE)")
+
         wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
 
-        events.containsExactly(
+        expectThat(events).containsExactly(
             QueuedEventStarted::class,
             S3ToParquetObjectConversionFailure::class,
             QueuedEventCompleted::class
@@ -290,7 +318,8 @@ class FakeParquetS3 : AwsS3 by proxy() {
 
     private val objects = mapOf(
         "2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet" to S3Object().apply {
-            key = "2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet"
+            key =
+                "2021/05/18/04/te-staging-analytics-6-2021-05-12-12-30-21-c81ba8a5-d040-4398-a173-ff4569cdd24a.parquet"
             setObjectContent(ByteArrayInputStream(ByteArray(0)))
             objectMetadata = ObjectMetadata().apply { contentType = "" }
         },

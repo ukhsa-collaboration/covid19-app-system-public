@@ -38,15 +38,6 @@ namespace :queue do
             "account" => "staging"            
           }
       build_info = queue(build_parameters, $configuration)
-      with_account("aa-staging", "analytics") do
-        build_parameters = {
-            "project_name" => "release-analytics-aa-staging",
-            "source_version" => branch_name,
-            "target_environment" => "staging",
-            "account" => "aa-staging"
-          }
-        build_info = queue(build_parameters, $configuration)
-      end
       if $configuration.print_logs
         pipe_logs(build_info)
         puts "Download the full logs with \n\trake download:codebuild:staging JOB_ID=#{build_info.build_id}"
@@ -63,22 +54,12 @@ namespace :queue do
       release_version = $configuration.release_version(version_metadata)
       build_parameters = {
             "project_name" => "release-analytics-prod",
-            "source_version" => "te-staging",
+            "source_version" => "te-staging-analytics",
             "target_environment" => "prod",
             "account" => "prod",
             "release_version" => release_version
           }
       build_info = queue(build_parameters, $configuration)
-      with_account("aa-prod", "analytics") do
-        build_parameters = {
-            "project_name" => "release-analytics-aa-prod",
-            "source_version" => "te-staging",
-            "target_environment" => "prod",
-            "account" => "aa-prod",
-            "release_version" => release_version
-          }
-        build_info = queue(build_parameters, $configuration)
-      end
       if $configuration.print_logs
         pipe_logs(build_info)
         puts "Download the full logs with \n\trake download:codebuild:prod JOB_ID=#{build_info.build_id}"

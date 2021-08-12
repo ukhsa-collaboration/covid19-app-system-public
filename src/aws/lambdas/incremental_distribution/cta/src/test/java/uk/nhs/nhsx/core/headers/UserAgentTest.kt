@@ -1,23 +1,28 @@
 package uk.nhs.nhsx.core.headers
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Json
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.headers.MobileAppVersion.Unknown
 import uk.nhs.nhsx.core.headers.MobileAppVersion.Version
 import uk.nhs.nhsx.core.headers.MobileOS.Android
 import uk.nhs.nhsx.core.headers.MobileOS.iOS
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
+import uk.nhs.nhsx.testhelper.assertions.toJson
 
 class UserAgentTest {
 
     @Test
     fun `serializes to JSON correctly`() {
-        assertThat(
-            Json.toJson(UserAgent(Version(4, 3), Android, MobileOSVersion.of("29"))),
-            equalTo("""{"appVersion":{"major":4,"minor":3,"patch":0,"semVer":"4.3.0"},"os":"Android","osVersion":"29"}""")
+        val userAgent = UserAgent(
+            Version(4, 3),
+            Android,
+            MobileOSVersion.of("29")
         )
+
+        expectThat(userAgent)
+            .toJson()
+            .isEqualToJson("""{"appVersion":{"major":4,"minor":3,"patch":0,"semVer":"4.3.0"},"os":"Android","osVersion":"29"}""")
     }
 
     @Test
@@ -70,9 +75,10 @@ class UserAgentTest {
         os: MobileOS?,
         osVersion: MobileOSVersion?
     ) {
-        val agent = UserAgent.of(value)
-        assertThat(agent.osVersion).isEqualTo(osVersion)
-        assertThat(agent.appVersion).isEqualTo(appVersion)
-        assertThat(agent.os).isEqualTo(os)
+        expectThat(UserAgent.of(value)) {
+            get(UserAgent::osVersion).isEqualTo(osVersion)
+            get(UserAgent::appVersion).isEqualTo(appVersion)
+            get(UserAgent::os).isEqualTo(os)
+        }
     }
 }

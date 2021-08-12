@@ -6,14 +6,24 @@ import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import org.assertj.core.api.Assertions.assertThat
+import org.http4k.core.Method.POST
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.hasEntry
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyRequest.body
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyRequest.headers
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyRequest.method
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyRequest.path
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
+import uk.nhs.nhsx.testhelper.assertions.withCaptured
 
 class AnalyticsSubmissionQueuedHandlerTest {
 
@@ -35,28 +45,38 @@ class AnalyticsSubmissionQueuedHandlerTest {
     @Test
     fun `handle valid request`() {
         val requestEventSlot = slot<APIGatewayProxyRequestEvent>()
-        every { analyticsSubmissionHandler.handleRequest(capture(requestEventSlot), any()) } returns APIGatewayProxyResponseEvent()
+
+        every {
+            analyticsSubmissionHandler.handleRequest(
+                capture(requestEventSlot),
+                any()
+            )
+        } returns APIGatewayProxyResponseEvent()
 
         val event = SQSEvent().apply {
             records = listOf(SQSEvent.SQSMessage().apply { body = apiGatewayEventJson })
         }
 
-        handler.handleRequest(event, ContextBuilder.aContext())
+        handler.handleRequest(event, aContext())
 
-        val requestEvent = requestEventSlot.captured
-        assertThat(requestEvent.httpMethod).isEqualTo("POST")
-        assertThat(requestEvent.path).isEqualTo("/submission/mobile-analytics")
-        assertThat(requestEvent.headers).containsEntry("User-Agent", "Custom User Agent String")
-
-        val analyticsPayload = Json.readJsonOrNull<ClientAnalyticsSubmissionPayload>(requestEvent.body)
-        assertThat(analyticsPayload).isNotNull
-
+        expectThat(requestEventSlot).withCaptured {
+            method.isSameAs(POST)
+            path.isEqualTo("/submission/mobile-analytics")
+            headers.hasEntry("User-Agent", "Custom User Agent String")
+            body.get("json") { Json.readJsonOrNull<ClientAnalyticsSubmissionPayload>(this) }.isNotNull()
+        }
     }
 
     @Test
     fun `handle valid request null body`() {
         val requestEventSlot = slot<APIGatewayProxyRequestEvent>()
-        every { analyticsSubmissionHandler.handleRequest(capture(requestEventSlot), any()) } returns APIGatewayProxyResponseEvent()
+
+        every {
+            analyticsSubmissionHandler.handleRequest(
+                capture(requestEventSlot),
+                any()
+            )
+        } returns APIGatewayProxyResponseEvent()
 
         val event = SQSEvent().apply {
             records = listOf(SQSEvent.SQSMessage().apply {
@@ -71,13 +91,13 @@ class AnalyticsSubmissionQueuedHandlerTest {
             })
         }
 
-        handler.handleRequest(event, ContextBuilder.aContext())
+        handler.handleRequest(event, aContext())
 
-        val requestEvent = requestEventSlot.captured
-        assertThat(requestEvent.httpMethod).isEqualTo("POST")
-        assertThat(requestEvent.path).isEqualTo("/submission/mobile-analytics")
-        assertThat(requestEvent.headers).containsEntry("HEADER", "HEADER_VALUE")
-
+        expectThat(requestEventSlot).withCaptured {
+            method.isSameAs(POST)
+            path.isEqualTo("/submission/mobile-analytics")
+            headers.hasEntry("HEADER", "HEADER_VALUE")
+        }
     }
 
     private val apiGatewayEventJson = """

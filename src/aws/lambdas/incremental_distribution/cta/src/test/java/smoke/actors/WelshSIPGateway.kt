@@ -8,9 +8,9 @@ import org.http4k.core.Status
 import org.http4k.core.then
 import smoke.env.EnvConfig
 import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.domain.IpcTokenId
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
-import uk.nhs.nhsx.domain.IpcTokenId
 
 class WelshSIPGateway(
     unauthedClient: HttpHandler,
@@ -18,25 +18,16 @@ class WelshSIPGateway(
 ) {
     private val authedClient = SetAuthHeader(envConfig.auth_headers.isolationPayment).then(unauthedClient)
 
-    fun consumeToken(ipcToken: IpcTokenId, status: Status): IsolationResponse {
-        val consumedToken = authedClient(
+    fun consumeToken(ipcToken: IpcTokenId, status: Status): IsolationResponse =
+        authedClient(
             Request(POST, envConfig.isolation_payment_consume_endpoint)
                 .header("Content-Type", ContentType.APPLICATION_JSON.value)
                 .body(Json.toJson(IsolationRequest(ipcToken)))
-        )
-            .requireStatusCode(status)
-            .deserializeOrThrow<IsolationResponse>()
-        return consumedToken
-    }
+        ).requireStatusCode(status).deserializeOrThrow()
 
-    fun verifyToken(ipcToken: IpcTokenId, status: Status): IsolationResponse {
-        val verifiedToken = authedClient(
-            Request(POST, envConfig.isolation_payment_verify_endpoint)
-                .header("Content-Type", ContentType.APPLICATION_JSON.value)
-                .body(Json.toJson(IsolationRequest(ipcToken)))
-        )
-            .requireStatusCode(status)
-            .deserializeOrThrow<IsolationResponse>()
-        return verifiedToken
-    }
+    fun verifyToken(ipcToken: IpcTokenId, status: Status): IsolationResponse = authedClient(
+        Request(POST, envConfig.isolation_payment_verify_endpoint)
+            .header("Content-Type", ContentType.APPLICATION_JSON.value)
+            .body(Json.toJson(IsolationRequest(ipcToken)))
+    ).requireStatusCode(status).deserializeOrThrow()
 }

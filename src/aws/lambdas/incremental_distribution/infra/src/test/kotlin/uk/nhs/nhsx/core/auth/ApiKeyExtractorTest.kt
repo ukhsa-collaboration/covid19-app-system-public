@@ -1,46 +1,47 @@
 package uk.nhs.nhsx.core.auth
 
-import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.*
 import org.http4k.base64Encode
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
 
 class ApiKeyExtractorTest {
 
     @Test
     fun `handles api key with non base 64 encoding`() {
-        assertThat(ApiKeyExtractor("Bearer name:value")).isNull()
+        expectThat(ApiKeyExtractor("Bearer name:value")).isNull()
     }
 
     @Test
     fun `handles empty auth header`() {
-        assertThat(ApiKeyExtractor("")).isNull()
+        expectThat(ApiKeyExtractor("")).isNull()
     }
 
     @Test
     fun `handles empty api key`() {
-        assertThat(ApiKeyExtractor("Bearer ")).isNull()
+        expectThat(ApiKeyExtractor("Bearer ")).isNull()
     }
 
     @Test
     fun `handles api key with empty key name and key value`() {
-        assertThat(ApiKeyExtractor("Bearer ${":".base64Encode()}")).isNull()
+        expectThat(ApiKeyExtractor("Bearer ${":".base64Encode()}")).isNull()
     }
 
     @Test
     fun `handles api key with empty key name`() {
-        assertThat(ApiKeyExtractor("Bearer ${":value".base64Encode()}")).isNull()
+        expectThat(ApiKeyExtractor("Bearer ${":value".base64Encode()}")).isNull()
     }
 
     @Test
     fun `handles api key with empty key value`() {
-        assertThat(ApiKeyExtractor("Bearer ${"name:".base64Encode()}")).isNull()
+        expectThat(ApiKeyExtractor("Bearer ${"name:".base64Encode()}")).isNull()
     }
 
     @Test
     fun `handles api key with value containing colon`() {
         val authorizationHeader = "Bearer ${"name:value:blah".base64Encode()}"
 
-        assertThat(ApiKeyExtractor(authorizationHeader)).isEqualTo(ApiKey("name", "value:blah"))
+        expectThat(ApiKeyExtractor(authorizationHeader)).isEqualTo(ApiKey("name", "value:blah"))
     }
 }

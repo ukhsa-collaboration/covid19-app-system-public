@@ -3,8 +3,14 @@ package uk.nhs.nhsx.diagnosiskeydist
 import batchZipCreation.Exposure
 import batchZipCreation.Exposure.TemporaryExposureKey
 import com.google.protobuf.ByteString
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.hasSize
+import strikt.assertions.isEmpty
+import strikt.assertions.isEqualTo
+import strikt.assertions.isTrue
+import strikt.assertions.withElementAt
+import strikt.assertions.withFirst
 import uk.nhs.nhsx.diagnosiskeydist.apispec.DailyZIPSubmissionPeriod
 import uk.nhs.nhsx.diagnosiskeydist.apispec.ZIPSubmissionPeriod
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
@@ -13,7 +19,6 @@ import java.time.Duration
 import java.time.Instant
 import java.util.*
 
-@Suppress("UsePropertyAccessSyntax")
 class ExposureProtobufTest {
     private val bundleId = "some-bundle-id"
     private val sig = "some-sig"
@@ -37,52 +42,53 @@ class ExposureProtobufTest {
     )
 
     @Test
-    fun signatureListContainsOneSignature() {
+    fun `signature list contains one signature`() {
         val tekSignatureList = exposureProtobuf.buildTEKSignatureList(signatureResult)
         val signaturesList = tekSignatureList.signaturesList
 
-        assertThat(signaturesList).hasSize(1)
+        expectThat(signaturesList).hasSize(1)
     }
 
     @Test
-    fun signatureHasBatchNumAndSize() {
+    fun `signature has batch num and size`() {
         val tekSignatureList = exposureProtobuf.buildTEKSignatureList(signatureResult)
         val tekSignature = tekSignatureList.signaturesList[0]
 
-        assertThat(tekSignature.batchNum).isEqualTo(1)
-        assertThat(tekSignature.batchSize).isEqualTo(1)
+        expectThat(tekSignature.batchNum).isEqualTo(1)
+        expectThat(tekSignature.batchSize).isEqualTo(1)
     }
 
     @Test
-    fun signatureMatchesTheOneProvided() {
+    fun `signature matches the one provided`() {
         val tekSignatureList = exposureProtobuf.buildTEKSignatureList(signatureResult)
         val tekSignature = tekSignatureList.signaturesList[0]
 
-        assertThat(tekSignature.signature).isEqualTo(ByteString.copyFrom(sig.toByteArray()))
+        expectThat(tekSignature.signature).isEqualTo(ByteString.copyFrom(sig.toByteArray()))
     }
 
     @Test
-    fun signatureInfoCreatedWithCorrectValues() {
+    fun `signature info created with correct values`() {
         val tekSignatureList = exposureProtobuf.buildTEKSignatureList(signatureResult)
         val tekSignature = tekSignatureList.signaturesList[0]
 
-        assertThat(tekSignature.signatureInfo).isEqualTo(expectedSignatureInfo)
+        expectThat(tekSignature.signatureInfo).isEqualTo(expectedSignatureInfo)
     }
 
     @Test
-    fun exportContainsCorrectAmountOfKeys() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+    fun `export contains correct amount of keys`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
         val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
 
-        assertThat(tekExport.keysList).hasSize(2)
-        assertThat(tekExport.keysCount).isEqualTo(2)
+        expectThat(tekExport.keysList).hasSize(2)
+        expectThat(tekExport.keysCount).isEqualTo(2)
     }
 
     @Test
-    fun exportKeysHaveSameData() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+    fun `export keys have same data`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
         val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
         val exposureKeys = tekExport.keysList
+
         val expectedKey1 = TemporaryExposureKey.newBuilder()
             .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode("W2zb3BeMWt6Xr2u0ABG32Q==")))
             .setRollingPeriod(144)
@@ -90,6 +96,7 @@ class ExposureProtobufTest {
             .setTransmissionRiskLevel(7)
             .setDaysSinceOnsetOfSymptoms(0)
             .build()
+
         val expectedKey2 = TemporaryExposureKey.newBuilder()
             .setKeyData(ByteString.copyFrom(Base64.getDecoder().decode("kzQt9Lf3xjtAlMtm7jkSqw==")))
             .setRollingPeriod(144)
@@ -97,78 +104,83 @@ class ExposureProtobufTest {
             .setTransmissionRiskLevel(7)
             .setDaysSinceOnsetOfSymptoms(4)
             .build()
-        assertThat(exposureKeys).isEqualTo(listOf(expectedKey1, expectedKey2))
+
+        expectThat(exposureKeys).isEqualTo(listOf(expectedKey1, expectedKey2))
     }
 
     @Test
-    fun exportHasBatchNumAndSize() {
+    fun `export has batch num and size`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
+
+        expectThat(tekExport.batchNum).isEqualTo(1)
+        expectThat(tekExport.batchSize).isEqualTo(1)
+    }
+
+    @Test
+    fun `export has default region`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
+
+        expectThat(tekExport.region).isEmpty()
+    }
+
+    @Test
+    fun `export has right signature infos count`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
+
+        expectThat(tekExport.signatureInfosCount).isEqualTo(1)
+        expectThat(tekExport.signatureInfosList).hasSize(1)
+    }
+
+    @Test
+    fun `export has right signature infos content`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
+
+        expectThat(tekExport.getSignatureInfos(0)).isEqualTo(expectedSignatureInfo)
+    }
+
+    @Test
+    fun `export time stamps`() {
         val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
         val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
 
-        assertThat(tekExport.batchNum).isEqualTo(1)
-        assertThat(tekExport.batchSize).isEqualTo(1)
+        expectThat(tekExport.startTimestamp).isEqualTo(1611100800L)
+        expectThat(tekExport.endTimestamp).isEqualTo(1611187200L)
     }
 
     @Test
-    fun exportHasDefaultRegion() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
-        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
-
-        assertThat(tekExport.region).isEmpty()
-    }
-
-    @Test
-    fun exportHasRightSignatureInfosCount() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
-        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
-
-        assertThat(tekExport.signatureInfosCount).isEqualTo(1)
-        assertThat(tekExport.signatureInfosList).hasSize(1)
-    }
-
-    @Test
-    fun exportHasRightSignatureInfosContent() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
-        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
-
-        assertThat(tekExport.getSignatureInfos(0)).isEqualTo(expectedSignatureInfo)
-    }
-
-    @Test
-    fun exportTimeStamps() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
-        val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
-
-        assertThat(tekExport.startTimestamp).isEqualTo(1611100800L)
-        assertThat(tekExport.endTimestamp).isEqualTo(1611187200L)
-    }
-
-    @Test
-    fun exportTimeStampsWithOffset() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+    fun `export time stamps with offset`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
         val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, Duration.ofMinutes(-15))
 
-        assertThat(tekExport.startTimestamp).isEqualTo(1611099900L)
-        assertThat(tekExport.endTimestamp).isEqualTo(1611186300L)
+        expectThat(tekExport.startTimestamp).isEqualTo(1611099900L)
+        expectThat(tekExport.endTimestamp).isEqualTo(1611186300L)
     }
 
     @Test
-    fun exportContainsDaysSinceOnsetOfSymptomsWhenKeyNotPresent() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+    fun `export contains days since onset of symptoms when key not present`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
         val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
         val exposureKeys = tekExport.keysList
 
-        assertThat(exposureKeys[0].hasDaysSinceOnsetOfSymptoms()).isTrue()
-        assertThat(exposureKeys[0].daysSinceOnsetOfSymptoms).isEqualTo(0)
+        expectThat(exposureKeys.toList()).withFirst {
+            get(TemporaryExposureKey::hasDaysSinceOnsetOfSymptoms).isTrue()
+            get(TemporaryExposureKey::getDaysSinceOnsetOfSymptoms).isEqualTo(0)
+        }
     }
 
     @Test
-    fun exportContainsDaysSinceOnsetOfSymptomsWhenKeyPresent() {
-        val period: ZIPSubmissionPeriod = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
+    fun `export contains days since onset of symptoms when key present`() {
+        val period = DailyZIPSubmissionPeriod.periodForSubmissionDate(now)
         val tekExport = exposureProtobuf.buildTemporaryExposureKeyExport(storedKeys, period, zero)
         val exposureKeys = tekExport.keysList
 
-        assertThat(exposureKeys[1].hasDaysSinceOnsetOfSymptoms()).isTrue()
-        assertThat(exposureKeys[1].daysSinceOnsetOfSymptoms).isEqualTo(4)
+        expectThat(exposureKeys.toList()).withElementAt(1) {
+            get(TemporaryExposureKey::hasDaysSinceOnsetOfSymptoms).isTrue()
+            get(TemporaryExposureKey::getDaysSinceOnsetOfSymptoms).isEqualTo(4)
+        }
     }
 }

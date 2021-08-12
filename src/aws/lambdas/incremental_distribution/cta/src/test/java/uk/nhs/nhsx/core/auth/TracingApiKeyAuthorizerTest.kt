@@ -1,10 +1,10 @@
 package uk.nhs.nhsx.core.auth
 
 import com.amazonaws.xray.AWSXRay
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isTrue
 import java.io.FileNotFoundException
 
 class TracingApiKeyAuthorizerTest {
@@ -12,19 +12,19 @@ class TracingApiKeyAuthorizerTest {
     @Test
     fun `invokes delegate and returns correct result`() {
         inDummySegment {
-            val outcome: Boolean = TracingApiKeyAuthorizer { true }
+            val outcome = TracingApiKeyAuthorizer { true }
                 .authorize(ApiKey("name", "value"))
-            assertThat(outcome, equalTo(true))
+
+            expectThat(outcome).isTrue()
         }
     }
 
     @Test
     fun `throws correct exception`() {
-        assertThrows(FileNotFoundException::class.java) {
+        expectThrows<FileNotFoundException> {
             inDummySegment {
-                TracingApiKeyAuthorizer {
-                    throw FileNotFoundException("should not get converted to invocation/undeclared throwable exception")
-                }.authorize(ApiKey("name", "value"))
+                TracingApiKeyAuthorizer { throw FileNotFoundException("should not get converted to invocation/undeclared throwable exception") }
+                    .authorize(ApiKey("name", "value"))
             }
         }
     }

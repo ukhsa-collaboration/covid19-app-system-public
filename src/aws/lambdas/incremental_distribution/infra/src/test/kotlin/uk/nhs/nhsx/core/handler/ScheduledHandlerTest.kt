@@ -1,20 +1,22 @@
 package uk.nhs.nhsx.core.handler
 
-import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.throws
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
+import strikt.assertions.message
 import uk.nhs.nhsx.core.Handler
 import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.ExceptionThrown
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
-import java.util.UUID
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import java.util.*
 
 class ScheduledHandlerTest {
+
     private val events = RecordingEvents()
 
     @Test
@@ -23,19 +25,22 @@ class ScheduledHandlerTest {
             override fun handler() = Handler<ScheduledEvent, Event> { _, _ -> Result }
         }.handleRequest(ScheduledEvent(), TestContext())
 
-        events.containsExactly(ScheduledEventStarted::class, Result::class, ScheduledEventCompleted::class)
+        expectThat(events).containsExactly(
+            ScheduledEventStarted::class,
+            Result::class,
+            ScheduledEventCompleted::class
+        )
     }
 
     @Test
     fun `logs events when exception`() {
-        val e = RuntimeException("hello")
-        assertThat({
+        expectThrows<RuntimeException> {
             object : SchedulingHandler(events) {
-                override fun handler() = Handler<ScheduledEvent, Event> { _, _ -> throw e }
+                override fun handler() = Handler<ScheduledEvent, Event> { _, _ -> throw RuntimeException("hello") }
             }.handleRequest(ScheduledEvent(), TestContext())
-        }, throws(equalTo(e)))
+        }.message.isEqualTo("hello")
 
-        events.containsExactly(ScheduledEventStarted::class, ExceptionThrown::class)
+        expectThat(events).containsExactly(ScheduledEventStarted::class, ExceptionThrown::class)
     }
 
     @Test
@@ -48,7 +53,7 @@ class ScheduledHandlerTest {
             override fun handler() = Handler<ScheduledEvent, Event> { _, _ -> Result }
         }.handleRequest(ScheduledEvent(), context)
 
-        assertThat(RequestContext.awsRequestId(), equalTo(uuid.toString()))
+        expectThat(RequestContext.awsRequestId()).isEqualTo(uuid.toString())
     }
 }
 

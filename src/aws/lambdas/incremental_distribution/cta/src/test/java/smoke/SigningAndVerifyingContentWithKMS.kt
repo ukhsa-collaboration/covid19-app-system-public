@@ -1,11 +1,14 @@
 package smoke
 
+import assertions.JwtAssertions.algorithmEqualTo
+import assertions.JwtAssertions.hasValidSignature
+import assertions.JwtAssertions.signaturePayload
 import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.kms.model.GetPublicKeyRequest
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import org.jose4j.jws.JsonWebSignature
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.aws.kms.KmsSigner
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.aws.ssm.ParameterKeyLookup
@@ -49,8 +52,10 @@ class SigningAndVerifyingContentWithKMS {
             it.compactSerialization = generated
         }
 
-        assertThat(jws.payload, equalTo(payload))
-        assertThat("signature is valid", jws.verifySignature(), equalTo(true))
-        assertThat(jws.headers.getStringHeaderValue("alg"), equalTo("ES256"))
+        expectThat(jws) {
+            algorithmEqualTo("ES256")
+            hasValidSignature()
+            signaturePayload.isEqualTo(payload)
+        }
     }
 }

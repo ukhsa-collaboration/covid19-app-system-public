@@ -15,12 +15,21 @@ import org.junit.jupiter.api.extension.ParameterResolver
 
 class WireMockExtension : BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-    private val server: WireMockServer = WireMockServer(WireMockConfiguration().port(0).notifier(ConsoleNotifier(true)))
+    private val server = WireMockServer(
+        WireMockConfiguration()
+            .port(0)
+            .notifier(ConsoleNotifier(true))
+    )
 
-    override fun supportsParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Boolean =
-        parameterContext.parameter.type.equals(WireMockServer::class.java)
+    override fun supportsParameter(
+        parameterContext: ParameterContext,
+        extensionContext: ExtensionContext
+    ) = parameterContext.parameter.type.equals(WireMockServer::class.java)
 
-    override fun resolveParameter(parameterContext: ParameterContext, extensionContext: ExtensionContext): Any = server
+    override fun resolveParameter(
+        parameterContext: ParameterContext,
+        extensionContext: ExtensionContext
+    ): Any = server
 
     override fun beforeEach(context: ExtensionContext) {
         server.start()
@@ -34,15 +43,15 @@ class WireMockExtension : BeforeEachCallback, AfterEachCallback, ParameterResolv
 
     override fun afterEach(context: ExtensionContext) = try {
         failOnUnmatchedRequests()
-        server.resetAll()
     } finally {
+        server.resetAll()
         server.stop()
     }
 
     private fun failOnUnmatchedRequests() {
-        val unmatchedRequests: List<LoggedRequest> = server.findAllUnmatchedRequests()
+        val unmatchedRequests = server.findAllUnmatchedRequests()
         if (unmatchedRequests.isNotEmpty()) {
-            val nearMisses: List<NearMiss> = server.findNearMissesForAllUnmatchedRequests()
+            val nearMisses = server.findNearMissesForAllUnmatchedRequests()
             if (nearMisses.isEmpty()) {
                 throw VerificationException.forUnmatchedRequests(unmatchedRequests)
             } else {

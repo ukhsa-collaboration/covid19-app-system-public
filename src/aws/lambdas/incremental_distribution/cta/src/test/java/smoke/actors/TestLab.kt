@@ -11,16 +11,15 @@ import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
 import smoke.env.EnvConfig
 import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestKit
+import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Fiorano
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Wls
-import uk.nhs.nhsx.domain.TestEndDate
-import uk.nhs.nhsx.domain.TestResult
-import uk.nhs.nhsx.virology.VirologyUploadHandler
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import uk.nhs.nhsx.virology.result.VirologyTokenStatusResponse
 

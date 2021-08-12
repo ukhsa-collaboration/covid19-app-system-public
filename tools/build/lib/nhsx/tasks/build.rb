@@ -70,7 +70,7 @@ namespace :build do
             run_command("Install public dashboard webapp dependencies", "npm ci", $configuration)
             run_command("Run public dashboard webapp tests", "npm run test:nowatch", $configuration)
 
-            if account == "prod"
+            if account == "prod" || account == "aa-prod"
               run_command("Build public dashboard webapp for prod", "npm run build:prod", $configuration)
             else
               run_command("Build public dashboard webapp for non-prod", "npm run build", $configuration)

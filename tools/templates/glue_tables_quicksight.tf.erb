@@ -1,0 +1,99 @@
+################################################################################
+# THIS FILE IS AUTO-GENERATED, DO NOT EDIT DIRECTLY
+# CHANGES TO TEMPLATE SHOULD BE MADE VIA: <%= template_file %>
+# TO ADD NEW FIELDS, EDIT src/aws/analytics_fields/fields.json
+################################################################################
+
+# [PARQUET CONSOLIDATION] FIXME: columns need to be kept in sync with glue table below
+resource "aws_glue_catalog_table" "this" {
+  name          = local.table_name
+  database_name = var.database_name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL                                     = "TRUE"
+    "parquet.compression"                        = "SNAPPY"
+    "projection.submitteddatehour.type"          = "date"
+    "projection.submitteddatehour.range"         = "2020/01/01/00,NOW"
+    "projection.submitteddatehour.format"        = "yyyy/MM/dd/HH"
+    "projection.submitteddatehour.interval"      = 1
+    "projection.submitteddatehour.interval.unit" = "HOURS"
+    "projection.enabled"                         = true
+    "storage.location.template"                  = "s3://${var.analytics_submission_store_parquet_bucket_id}/$${submitteddatehour}"
+  }
+
+  partition_keys {
+    name = "submitteddatehour"
+    type = "string"
+  }
+
+  storage_descriptor {
+    location      = "s3://${var.analytics_submission_store_parquet_bucket_id}/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    <% columns.each do |name, type|  %>
+    columns {
+      name = "<%= name %>"
+      type = "<%= type %>"
+    }
+    <% end %>
+  }
+}
+
+# [PARQUET CONSOLIDATION] FIXME: columns need to be kept in sync with glue table above
+resource "aws_glue_catalog_table" "this_consolidated" {
+  name          = "${local.table_name}_consolidated"
+  database_name = var.database_name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL                                     = "TRUE"
+    "parquet.compression"                        = "SNAPPY"
+    "projection.submitteddatehour.type"          = "date"
+    "projection.submitteddatehour.range"         = "2020-01-01-00,NOW"
+    "projection.submitteddatehour.format"        = "yyyy-MM-dd-HH"
+    "projection.submitteddatehour.interval"      = 1
+    "projection.submitteddatehour.interval.unit" = "HOURS"
+    "projection.enabled"                         = true
+    "storage.location.template"                  = "s3://${var.analytics_submission_store_consolidated_parquet_bucket_id}/submitteddatehour=$${submitteddatehour}"
+  }
+
+  partition_keys {
+    name = "submitteddatehour"
+    type = "string"
+  }
+
+  storage_descriptor {
+    location      = "s3://${var.analytics_submission_store_consolidated_parquet_bucket_id}/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    <% columns.each do |name, type|  %>
+    columns {
+      name = "<%= name %>"
+      type = "<%= type %>"
+    }
+    <% end %>
+  }
+}

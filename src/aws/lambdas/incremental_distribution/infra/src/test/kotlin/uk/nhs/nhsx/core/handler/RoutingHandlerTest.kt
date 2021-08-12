@@ -1,20 +1,21 @@
 package uk.nhs.nhsx.core.handler
 
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
+import strikt.api.expectCatching
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
+import strikt.assertions.isSuccess
 import uk.nhs.nhsx.core.HttpResponses
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
-import java.util.Optional
-import java.util.UUID
+import java.util.*
 
 class RoutingHandlerTest {
 
     @Test
-    fun noHeaders() {
-        assertThrows(RuntimeException::class.java) {
+    fun `no headers`() {
+        expectThrows<RuntimeException> {
             MyRoutingHandler("content-type").handleRequest(
                 APIGatewayProxyRequestEvent(),
                 TestContext()
@@ -28,12 +29,16 @@ class RoutingHandlerTest {
 
     @Test
     fun lowercase() {
-        MyRoutingHandler("content-type").handleRequest(request, TestContext())
+        expectCatching {
+            MyRoutingHandler("content-type").handleRequest(request, TestContext())
+        }.isSuccess()
     }
 
     @Test
     fun uppercase() {
-        MyRoutingHandler("Content-Type").handleRequest(request, TestContext())
+        expectCatching {
+            MyRoutingHandler("Content-Type").handleRequest(request, TestContext())
+        }.isSuccess()
     }
 
     @Test
@@ -42,9 +47,8 @@ class RoutingHandlerTest {
 
         MyRoutingHandler("content-type").handleRequest(request, TestContext().apply { requestId = uuid })
 
-        assertThat(RequestContext.awsRequestId(), equalTo(uuid.toString()))
+        expectThat(RequestContext.awsRequestId()).isEqualTo(uuid.toString())
     }
-
 
     private class MyRoutingHandler(val header: String) : RoutingHandler() {
         override fun handler(): ApiGatewayHandler =

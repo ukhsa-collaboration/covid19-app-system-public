@@ -80,7 +80,7 @@ object Libs {
 
     const val caffeine: String = "com.github.ben-manes.caffeine:caffeine:_"
 
-    const val hamcrest_optional: String = "com.github.npathai:hamcrest-optional:_"
+    const val javafaker: String = "com.github.javafaker:javafaker:_"
 
     const val wiremock_jre8: String = "com.github.tomakehurst:wiremock-jre8:_"
 
@@ -101,6 +101,8 @@ object Libs {
 
     const val mockk: String = "io.mockk:mockk:_"
 
+    const val strikt_jvm: String = "io.strikt:strikt-jvm:_"
+
     const val jaxb_api: String = "javax.xml.bind:jaxb-api:_"
 
     const val zip4j: String = "net.lingala.zip4j:zip4j:_"
@@ -108,8 +110,6 @@ object Libs {
     const val commons_csv: String = "org.apache.commons:commons-csv:_"
 
     const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
-
-    const val assertj_core: String = "org.assertj:assertj-core:_"
 
     const val awaitility: String = "org.awaitility:awaitility:_"
 
@@ -121,8 +121,6 @@ object Libs {
 
     const val javax_json: String = "org.glassfish:javax.json:_"
 
-    const val hamcrest: String = "org.hamcrest:hamcrest:_"
-
     const val http4k_aws: String = "org.http4k:http4k-aws"
 
     const val http4k_bom: String = "org.http4k:http4k-bom:_"
@@ -131,13 +129,9 @@ object Libs {
 
     const val http4k_format_moshi: String = "org.http4k:http4k-format-moshi"
 
-    const val http4k_realtime_core: String = "org.http4k:http4k-realtime-core"
-
     const val http4k_resilience4j: String = "org.http4k:http4k-resilience4j"
 
     const val http4k_testing_approval: String = "org.http4k:http4k-testing-approval"
-
-    const val http4k_testing_hamkrest: String = "org.http4k:http4k-testing-hamkrest"
 
     const val http4k_testing_servirtium: String = "org.http4k:http4k-testing-servirtium"
 

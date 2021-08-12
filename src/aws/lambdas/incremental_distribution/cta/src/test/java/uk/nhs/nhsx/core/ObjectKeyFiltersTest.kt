@@ -1,8 +1,9 @@
 package uk.nhs.nhsx.core
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 
 class ObjectKeyFiltersTest {
@@ -32,14 +33,16 @@ class ObjectKeyFiltersTest {
             "///,false",
         ]
     )
-    fun `federated filter - includes LAB_RESULT, mobile root and federated prefix`(input: String,
-                                                                                   expected: Boolean) {
+    fun `federated filter - includes LAB_RESULT, mobile root and federated prefix`(
+        input: String,
+        expected: Boolean
+    ) {
         val includeKeyWithAbcPrefix = ObjectKeyFilters
             .federated()
             .withPrefixes(listOf("abc"))
 
-        assertThat(includeKeyWithAbcPrefix.test(ObjectKey.of(input)))
-            .describedAs("Key of $input")
+        expectThat(ObjectKey.of(input))
+            .get { includeKeyWithAbcPrefix.test(this) }
             .isEqualTo(expected)
     }
 
@@ -68,14 +71,16 @@ class ObjectKeyFiltersTest {
             "///,false",
         ]
     )
-    fun `batch filter - includes all test kits, mobile root and allowed federated prefix`(input: String,
-                                                                                          expected: Boolean) {
+    fun `batch filter - includes all test kits, mobile root and allowed federated prefix`(
+        input: String,
+        expected: Boolean
+    ) {
         val includeKeyWithAbcPrefix = ObjectKeyFilters
             .batched()
             .withPrefixes(listOf("abc"))
 
-        assertThat(includeKeyWithAbcPrefix.test(ObjectKey.of(input)))
-            .describedAs("Key of $input")
+        expectThat(ObjectKey.of(input))
+            .get { includeKeyWithAbcPrefix.test(this) }
             .isEqualTo(expected)
     }
 }

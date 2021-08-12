@@ -1,20 +1,23 @@
 package uk.nhs.nhsx.domain
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.contains
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
+import strikt.assertions.message
 
 class CtaTokenTest {
 
     @Test
     fun `create valid ctaToken`() {
-        assertThat(CtaToken.of("cc8f0b6z").value).isEqualTo("cc8f0b6z")
+        expectThat(CtaToken.of("cc8f0b6z").value).isEqualTo("cc8f0b6z")
     }
 
     @Test
     fun `throw exception when invalid ctaToken`() {
-        assertThatThrownBy { CtaToken.of("invalid-token") }
-            .isInstanceOf(IllegalArgumentException::class.java)
-            .hasMessageContaining("Validation failed for: (invalid-token)")
+        expectThrows<IllegalArgumentException> { CtaToken.of("invalid-token") }
+            .message.isNotNull().contains("Validation failed for: (invalid-token)")
     }
 }

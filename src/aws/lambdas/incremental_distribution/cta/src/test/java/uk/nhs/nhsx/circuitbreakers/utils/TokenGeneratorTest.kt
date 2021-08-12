@@ -1,19 +1,22 @@
 package uk.nhs.nhsx.circuitbreakers.utils
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.length
+import strikt.assertions.matches
 
 class TokenGeneratorTest {
 
     @Test
-    fun testTokenContainsOnlyAlphanumericCharacters() {
+    fun `test token contains only alphanumeric characters`() {
         val token = TokenGenerator.token
-        assertThat(token).matches("[A-Za-z0-9]+")
+        expectThat(token).matches(Regex("[A-Za-z0-9]+"))
     }
 
     @Test
-    fun testTokenLengthIsFiftyCharacters() {
+    fun `test token length is fifty characters`() {
         val token = TokenGenerator.token
-        assertThat(token).hasSize(50)
+        expectThat(token).length.isEqualTo(50)
     }
 }

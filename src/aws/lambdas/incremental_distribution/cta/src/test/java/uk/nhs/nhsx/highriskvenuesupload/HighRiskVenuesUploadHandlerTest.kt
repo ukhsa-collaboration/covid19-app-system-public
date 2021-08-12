@@ -5,15 +5,24 @@ import com.amazonaws.HttpMethod.POST
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
+import org.http4k.core.Status.Companion.ACCEPTED
+import org.http4k.core.Status.Companion.METHOD_NOT_ALLOWED
+import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.UNPROCESSABLE_ENTITY
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.TestEnvironments.TEST
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.RiskyVenuesUpload
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode
-import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.body
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.contains
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
 import uk.nhs.nhsx.testhelper.data.TestData.RISKY_VENUES_UPLOAD_PAYLOAD
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withCsv
@@ -27,19 +36,21 @@ class HighRiskVenuesUploadHandlerTest {
     private val service = mockk<HighRiskVenuesUploadService>()
     private val events = RecordingEvents()
     private val handler = HighRiskVenuesUploadHandler(
-        TestEnvironments.TEST.apply(mapOf(
-            "MAINTENANCE_MODE" to "false",
-            "custom_oai" to "OAI")
+        environment = TEST.apply(
+            mapOf(
+                "MAINTENANCE_MODE" to "false",
+                "custom_oai" to "OAI"
+            )
         ),
-        SystemClock.CLOCK,
-        events,
-        { true },
-        service,
-        { true }
+        clock = SystemClock.CLOCK,
+        events = events,
+        authenticator = { true },
+        service = service,
+        healthAuthenticator = { true }
     )
 
     @Test
-    fun mapsOkResultToHttpResponse() {
+    fun `maps ok result to http response`() {
         every { service.upload(any()) } returns VenuesUploadResult.ok()
 
         val requestEvent = request()
@@ -50,18 +61,22 @@ class HighRiskVenuesUploadHandlerTest {
             .withBearerToken("anything")
             .withCsv(RISKY_VENUES_UPLOAD_PAYLOAD)
 
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.ACCEPTED_202.code)
-        assertThat(responseEvent.body).isEqualTo("successfully uploaded")
+        val responseEvent = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(responseEvent) {
+            status.isSameAs(ACCEPTED)
+            body.isEqualTo("successfully uploaded")
+        }
 
         verify(exactly = 1) { service.upload(RISKY_VENUES_UPLOAD_PAYLOAD) }
 
-        events.contains(RiskyVenuesUpload::class)
+        expectThat(events).contains(RiskyVenuesUpload::class)
     }
 
     @Test
-    fun mapsValidationErrorResultToHttpResponse() {
+    fun `maps validation error result to http response`() {
         every { service.upload(any()) } returns VenuesUploadResult.validationError("some-error")
+
         val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
@@ -70,15 +85,20 @@ class HighRiskVenuesUploadHandlerTest {
             .withBearerToken("anything")
             .withCsv(RISKY_VENUES_UPLOAD_PAYLOAD)
 
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.UNPROCESSABLE_ENTITY_422.code)
-        assertThat(responseEvent.body).isEqualTo("some-error")
+        val responseEvent = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(responseEvent) {
+            status.isSameAs(UNPROCESSABLE_ENTITY)
+            body.isEqualTo("some-error")
+        }
+
         verify(exactly = 1) { service.upload(RISKY_VENUES_UPLOAD_PAYLOAD) }
-        events.contains(RiskyVenuesUpload::class, HighRiskVenueUploadFileInvalid::class)
+
+        expectThat(events).contains(RiskyVenuesUpload::class, HighRiskVenueUploadFileInvalid::class)
     }
 
     @Test
-    fun notFoundWhenPathIsWrong() {
+    fun `not found when path is wrong`() {
         val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
@@ -87,13 +107,16 @@ class HighRiskVenuesUploadHandlerTest {
             .withBearerToken("anything")
             .withCsv(RISKY_VENUES_UPLOAD_PAYLOAD)
 
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.NOT_FOUND_404.code)
-        assertThat(responseEvent.body).isEqualTo(null)
+        val responseEvent = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(responseEvent) {
+            status.isSameAs(NOT_FOUND)
+            body.isNull()
+        }
     }
 
     @Test
-    fun notAllowedWhenMethodIsWrong() {
+    fun `not allowed when method is wrong`() {
         val requestEvent = request()
             .withMethod(GET)
             .withCustomOai("OAI")
@@ -102,13 +125,16 @@ class HighRiskVenuesUploadHandlerTest {
             .withBearerToken("anything")
             .withCsv(RISKY_VENUES_UPLOAD_PAYLOAD)
 
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.METHOD_NOT_ALLOWED_405.code)
-        assertThat(responseEvent.body).isEqualTo(null)
+        val responseEvent = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(responseEvent) {
+            status.isSameAs(METHOD_NOT_ALLOWED)
+            body.isNull()
+        }
     }
 
     @Test
-    fun unprocessableWhenWrongContentType() {
+    fun `unprocessable when wrong content type`() {
         val requestEvent = request()
             .withMethod(POST)
             .withCustomOai("OAI")
@@ -117,8 +143,11 @@ class HighRiskVenuesUploadHandlerTest {
             .withBearerToken("anything")
             .withJson("{}")
 
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent.statusCode).isEqualTo(HttpStatusCode.UNPROCESSABLE_ENTITY_422.code)
-        assertThat(responseEvent.body).isEqualTo("validation error: Content type is not text/csv")
+        val responseEvent = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(responseEvent) {
+            status.isSameAs(UNPROCESSABLE_ENTITY)
+            body.isEqualTo("validation error: Content type is not text/csv")
+        }
     }
 }

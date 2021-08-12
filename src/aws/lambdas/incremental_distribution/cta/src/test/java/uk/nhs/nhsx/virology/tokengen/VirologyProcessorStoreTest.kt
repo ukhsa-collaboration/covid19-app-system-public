@@ -1,20 +1,24 @@
 package uk.nhs.nhsx.virology.tokengen
 
-import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.S3Storage
+import uk.nhs.nhsx.testhelper.assertions.asString
+import uk.nhs.nhsx.testhelper.assertions.captured
+import uk.nhs.nhsx.testhelper.assertions.withCaptured
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -22,11 +26,17 @@ import java.nio.file.Path
 class VirologyProcessorStoreTest {
 
     private val bucketName = BucketName.of("bucket")
-    private val locatorSlot = slot<Locator>()
-    private val contentTypeSlot = slot<ContentType>()
-    private val bytesSlot = slot<ByteArraySource>()
+    private val locator = slot<Locator>()
+    private val contentType = slot<ContentType>()
+    private val bytes = slot<ByteArraySource>()
     private val s3Storage = mockk<S3Storage> {
-        every { upload(capture(locatorSlot), capture(contentTypeSlot), capture(bytesSlot)) } just Runs
+        every {
+            upload(
+                capture(locator),
+                capture(contentType),
+                capture(bytes)
+            )
+        } just runs
     }
     private val store = VirologyProcessorStore(s3Storage, bucketName)
 
@@ -35,10 +45,14 @@ class VirologyProcessorStoreTest {
         store.storeCsv(CtaTokensCsv("file.csv", "file-content"))
 
         verify(exactly = 1) { s3Storage.upload(any(), any(), any()) }
-        assertThat(locatorSlot.captured.bucket).isEqualTo(BucketName.of("bucket"))
-        assertThat(locatorSlot.captured.key).isEqualTo(ObjectKey.of("file.csv"))
-        assertThat(contentTypeSlot.captured.value).isEqualTo("text/csv")
-        assertThat(String(bytesSlot.captured.toArray())).isEqualTo("file-content")
+
+        expectThat(locator).withCaptured {
+            get(Locator::bucket).isEqualTo(BucketName.of("bucket"))
+            get(Locator::key).isEqualTo(ObjectKey.of("file.csv"))
+        }
+
+        expectThat(contentType).captured.isEqualTo(ContentType.of("text/csv"))
+        expectThat(bytes).captured.asString().isEqualTo("file-content")
     }
 
     @Test
@@ -50,9 +64,13 @@ class VirologyProcessorStoreTest {
         store.storeZip(CtaTokensZip("file.zip", zipFile))
 
         verify(exactly = 1) { s3Storage.upload(any(), any(), any()) }
-        assertThat(locatorSlot.captured.bucket).isEqualTo(BucketName.of("bucket"))
-        assertThat(locatorSlot.captured.key).isEqualTo(ObjectKey.of("file.zip"))
-        assertThat(contentTypeSlot.captured.value).isEqualTo("application/zip")
-        assertThat(bytesSlot.captured.toArray()).isEqualTo(Files.readAllBytes(zipFile.toPath()))
+
+        expectThat(locator).withCaptured {
+            get(Locator::bucket).isEqualTo(BucketName.of("bucket"))
+            get(Locator::key).isEqualTo(ObjectKey.of("file.zip"))
+        }
+
+        expectThat(contentType).captured.isEqualTo(ContentType.of("application/zip"))
+        expectThat(bytes).captured.get { toArray() }.isEqualTo(Files.readAllBytes(zipFile.toPath()))
     }
 }

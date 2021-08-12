@@ -4,13 +4,13 @@ import com.amazonaws.services.dynamodbv2.document.Item
 
 interface AwsDynamoClient {
     fun getItem(
-        tableName: String,
+        tableName: TableName,
         hashKeyName: String,
         hashKeyValue: String
     ): Item?
 
     fun deleteItem(
-        tableName: String,
+        tableName: TableName,
         hashKeyName: String,
         hashKeyValue: String
     )

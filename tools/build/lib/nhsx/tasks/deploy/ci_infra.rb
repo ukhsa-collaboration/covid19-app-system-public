@@ -1,5 +1,5 @@
 namespace :deploy do
-  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+  NHSx::TargetEnvironment::CI_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     desc "Deploys the AWS resources required for operation of the pipelines in #{account}"
     task :"ci-infra:#{account}" => [:"login:#{account}"] do
       include NHSx::Terraform
@@ -9,7 +9,7 @@ namespace :deploy do
       template_file = File.join($configuration.base, "tools/templates/ci-infra.tfvars.erb")
       params = {
         "sha" => current_sha,
-        "target_environments" => NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS[account],
+        "target_environments" => NHSx::TargetEnvironment::CI_TARGET_ENVIRONMENTS[account],
       }
       variables_file = File.join($configuration.out, "ci-infra.tfvars")
       write_file(variables_file, from_template(template_file, params))
@@ -19,7 +19,7 @@ namespace :deploy do
 end
 
 namespace :plan do
-  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+  NHSx::TargetEnvironment::CI_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
     desc "Plans the AWS resource deployment required for operation of the pipelines in #{account}"
     task :"ci-infra:#{account}" => [:"login:#{account}"] do
       include NHSx::Terraform
@@ -27,7 +27,7 @@ namespace :plan do
       template_file = File.join($configuration.base, "tools/templates/ci-infra.tfvars.erb")
       params = {
         "sha" => current_sha,
-        "target_environments" => NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS[account],
+        "target_environments" => NHSx::TargetEnvironment::CI_TARGET_ENVIRONMENTS[account],
       }
       variables_file = File.join($configuration.out, "ci-infra.tfvars")
       write_file(variables_file, from_template(template_file, params))

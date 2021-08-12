@@ -2,12 +2,15 @@ package uk.nhs.nhsx.core
 
 import dev.forkhandles.values.StringValue
 import dev.forkhandles.values.StringValueFactory
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isFalse
+import strikt.assertions.isTrue
 import uk.nhs.nhsx.core.Environment.Companion.fromName
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.TestEnvironments.NOTHING
+import uk.nhs.nhsx.core.TestEnvironments.TEST
 import java.time.Duration
 
 class EnvironmentTest {
@@ -31,76 +34,66 @@ class EnvironmentTest {
         assertEnvironmentDeduced(EnvironmentType.Production, "te-prod", "te-prodxd", "te-prod1")
     }
 
-    private fun assertEnvironmentDeduced(expected: EnvironmentType, vararg workspaces: String) {
-        for (workspace in workspaces) {
-            val environment = fromName(workspace, NOTHING)
-            assertThat(workspace, environment.name, equalTo(EnvironmentName.of(workspace)))
-            assertThat(workspace, environment.type, equalTo(expected))
-        }
-    }
-
     @Test
     fun `string environment key`() {
         val key = EnvironmentKey.string("STRING")
-        assertThat(
-            TestEnvironments.TEST.apply(mapOf("STRING" to "a nice string")).access.required(key),
-            equalTo("a nice string")
-        )
+        expectThat(TEST.apply(mapOf("STRING" to "a nice string")).access.required(key)).isEqualTo("a nice string")
     }
 
     @Test
     fun `value environment key`() {
         val key = EnvironmentKey.value("VALUE", MyValueType)
-        assertThat(
-            TestEnvironments.TEST.apply(mapOf("VALUE" to "a nice string")).access.required(key),
-            equalTo(MyValueType("a nice string"))
-        )
+        expectThat(TEST.apply(mapOf("VALUE" to "a nice string")).access.required(key)).isEqualTo(MyValueType("a nice string"))
     }
 
     @Test
     fun `strings environment key`() {
         val key = EnvironmentKey.strings("STRINGS")
-        assertThat(
-            TestEnvironments.TEST.apply(mapOf("STRINGS" to "a,b,c")).access.required(key),
-            equalTo(listOf("a", "b", "c"))
-        )
-        assertThat(
-            TestEnvironments.TEST.apply(mapOf("STRINGS" to "a,,c")).access.required(key),
-            equalTo(listOf("a", "c"))
-        )
+        expectThat(TEST.apply(mapOf("STRINGS" to "a,b,c")).access.required(key)).isEqualTo(listOf("a", "b", "c"))
+        expectThat(TEST.apply(mapOf("STRINGS" to "a,,c")).access.required(key)).isEqualTo(listOf("a", "c"))
     }
 
     @Test
     fun `integer environment key`() {
         val key = EnvironmentKey.integer("INTEGER")
-        assertThat(TestEnvironments.TEST.apply(mapOf("INTEGER" to "1")).access.required(key), equalTo(1))
-        assertThat(TestEnvironments.TEST.apply(mapOf("INTEGER" to "1234")).access.required(key), equalTo(1234))
+        expectThat(TEST.apply(mapOf("INTEGER" to "1")).access.required(key)).isEqualTo(1)
+        expectThat(TEST.apply(mapOf("INTEGER" to "1234")).access.required(key)).isEqualTo(1234)
     }
 
     @Test
     fun `duration environment key`() {
         val key = EnvironmentKey.duration("DURATION")
-        assertThat(TestEnvironments.TEST.apply(mapOf("DURATION" to "PT-15M")).access.required(key), equalTo(Duration.ofMinutes(-15)))
-        assertThat(TestEnvironments.TEST.apply(mapOf("DURATION" to "PT24H")).access.required(key), equalTo(Duration.ofDays(1)))
+        expectThat(TEST.apply(mapOf("DURATION" to "PT-15M")).access.required(key)).isEqualTo(Duration.ofMinutes(-15))
+        expectThat(TEST.apply(mapOf("DURATION" to "PT24H")).access.required(key)).isEqualTo(Duration.ofDays(1))
     }
 
     @Test
     fun `bool environment key`() {
         val key = EnvironmentKey.bool("BOOL")
-        assertThat(TestEnvironments.TEST.apply(mapOf("BOOL" to "true")).access.required(key), equalTo(true))
-        assertThat(TestEnvironments.TEST.apply(mapOf("BOOL" to "True")).access.required(key), equalTo(true))
-        assertThat(TestEnvironments.TEST.apply(mapOf("BOOL" to "false")).access.required(key), equalTo(false))
-        assertThat(TestEnvironments.TEST.apply(mapOf("BOOL" to "False")).access.required(key), equalTo(false))
+        expectThat(TEST.apply(mapOf("BOOL" to "true")).access.required(key)).isTrue()
+        expectThat(TEST.apply(mapOf("BOOL" to "True")).access.required(key)).isTrue()
+        expectThat(TEST.apply(mapOf("BOOL" to "false")).access.required(key)).isFalse()
+        expectThat(TEST.apply(mapOf("BOOL" to "False")).access.required(key)).isFalse()
     }
 
     @Test
     fun `defaulted key`() {
         val key = EnvironmentKey.bool("BOOL")
-        assertThat(TestEnvironments.TEST.apply(mapOf()).access.defaulted(key) { false }, equalTo(false))
-        assertThat(TestEnvironments.TEST.apply(mapOf("BOOL" to "true")).access.defaulted(key) { false }, equalTo(true))
+        expectThat(TEST.apply(mapOf()).access.defaulted(key) { false }).isFalse()
+        expectThat(TEST.apply(mapOf("BOOL" to "true")).access.defaulted(key) { false }).isTrue()
+    }
+
+    private fun assertEnvironmentDeduced(expected: EnvironmentType, vararg workspaces: String) {
+        for (workspace in workspaces) {
+            val environment = fromName(workspace, NOTHING)
+            expectThat(environment).describedAs(workspace).and {
+                get(Environment::name).isEqualTo(EnvironmentName.of(workspace))
+                get(Environment::type).isEqualTo(expected)
+            }
+        }
     }
 }
 
-class MyValueType (value: String) : StringValue(value) {
+class MyValueType(value: String) : StringValue(value) {
     companion object : StringValueFactory<MyValueType>(::MyValueType)
 }

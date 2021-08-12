@@ -1,111 +1,121 @@
 package smoke.actors
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.DeserializationFeature.*
-import com.natpryce.hamkrest.Matcher
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.isNullOrEmptyString
+import assertions.AwsSdkAssertions.asString
+import com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_NULL_CREATOR_PROPERTIES
 import org.http4k.core.ContentType
 import org.http4k.core.Response
 import org.http4k.core.Status
 import org.http4k.format.ConfigurableJackson
-import org.http4k.hamkrest.hasBody
-import org.http4k.hamkrest.hasContentType
-import org.http4k.hamkrest.hasHeader
-import org.http4k.hamkrest.hasStatus
+import org.http4k.strikt.contentType
 import software.amazon.awssdk.services.lambda.model.InvokeResponse
+import strikt.api.expectCatching
+import strikt.api.expectThat
+import strikt.assertions.contains
+import strikt.assertions.isEmpty
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotNull
+import strikt.assertions.isNullOrEmpty
+import strikt.assertions.isSuccess
+import strikt.assertions.withElementAt
 import uk.nhs.nhsx.core.AppServicesJson
 import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.testhelper.assertions.bodyString
+import uk.nhs.nhsx.testhelper.assertions.hasStatus
+import uk.nhs.nhsx.testhelper.assertions.header
+import uk.nhs.nhsx.testhelper.assertions.isNotNullOrBlank
+import uk.nhs.nhsx.testhelper.assertions.signatureDateHeader
+import uk.nhs.nhsx.testhelper.assertions.signatureHeader
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
+import java.util.Locale.ENGLISH
 
-fun Response.requireStatusCode(expectedStatus: Status): Response {
-    assertThat(this, hasStatus(expectedStatus))
-    return this
+fun Response.requireStatusCode(expectedStatus: Status) = apply {
+    expectThat(this).hasStatus(expectedStatus)
 }
 
-fun Response.requireSignatureHeaders(): Response {
+fun Response.requireSignatureHeaders() = apply {
     requireSignature()
     requireSignatureDate()
-    return this
 }
 
 private fun Response.requireSignature() {
-    assertThat(this, hasHeader("x-amz-meta-signature"))
+    expectThat(this) {
+        signatureHeader.isNotNull()
+        signatureDateHeader.isNotNull()
 
-    val signature = headerValueOrThrow("x-amz-meta-signature")
+        get("keyIdParts") {
+            header("x-amz-meta-signature")
+            headerValueOrThrow("x-amz-meta-signature")
+                .split(",")[0]
+                .split("=")
+        }
+            .withElementAt(0) { isEqualTo("keyId") }
+            .withElementAt(1) { not().isNullOrEmpty() }
 
-    val fullSignatureParts = signature.split(",")
-
-    val keyIdParts = fullSignatureParts[0].split("=")
-    assertThat(keyIdParts[0], equalTo("keyId"))
-    assertThat(keyIdParts[1], !isNullOrEmptyString)
-
-    val signatureParts = fullSignatureParts[1].split("=")
-    assertThat(signatureParts[0], equalTo("signature"))
-    assertThat(signatureParts[1], !isNullOrEmptyString)
-}
-
-private fun Response.requireSignatureDate(): Response {
-    assertThat(this, hasHeader("x-amz-meta-signature-date"))
-    val signatureDate = headerValueOrThrow("x-amz-meta-signature-date")
-
-    try {
-        DateTimeFormatter
-            .ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz", java.util.Locale.ENGLISH)
-            .parse(signatureDate)
-    } catch (e: DateTimeParseException) {
-        throw IllegalStateException("Invalid signature date header", e)
+        get("signatureParts") {
+            headerValueOrThrow("x-amz-meta-signature")
+                .split(",")[1]
+                .split("=")
+        }
+            .withElementAt(0) { isEqualTo("signature") }
+            .withElementAt(1) { not().isNullOrEmpty() }
     }
-
-    return this
 }
 
-private fun Response.headerValueOrThrow(key: String): String =
-    header(key) ?: throw IllegalStateException("Header not found: $key")
+private fun Response.requireSignatureDate() = apply {
+    expectThat(this)
+        .signatureHeader
+        .isNotNullOrBlank()
 
-fun Response.requireJsonContentType(): Response {
-    assertThat(this, hasContentType(ContentType(ContentType.APPLICATION_JSON.value)))
-    return this
+    expectCatching {
+        DateTimeFormatter
+            .ofPattern("EEE, dd MMM yyyy HH:mm:ss zzz", ENGLISH)
+            .parse(headerValueOrThrow("x-amz-meta-signature-date"))
+    }.isSuccess()
 }
 
-fun Response.requireZipContentType(): Response {
-    assertThat(this, hasContentType(ContentType("application/zip")))
-    return this
+private fun Response.headerValueOrThrow(key: String): String {
+    val header = header(key)
+    expectThat(this).header(key).isNotNull()
+    return header!!
 }
 
-fun Response.requireNoPayload(): Response {
-    assertThat(this, hasBody(""))
-    return this
+fun Response.requireJsonContentType() = apply {
+    expectThat(this).contentType.isEqualTo(ContentType(ContentType.APPLICATION_JSON.value))
 }
 
-fun Response.requireBodyText(expectedText: String): Response {
-    val actual = bodyString()
-    if (actual != expectedText)
-        throw IllegalStateException("Expected: '$expectedText', got: $actual")
-    return this
+fun Response.requireZipContentType() = apply {
+    expectThat(this).contentType.isEqualTo(ContentType("application/zip"))
 }
 
-inline fun <reified T: Any> Response.deserializeOrThrow(): T {
+fun Response.requireNoPayload() = apply {
+    expectThat(this).bodyString.isEmpty()
+}
+
+fun Response.requireBodyText(expectedText: String) = apply {
+    expectThat(this).bodyString.isEqualTo(expectedText)
+}
+
+inline fun <reified T : Any> Response.deserializeOrThrow(): T {
     requireJsonContentType()
     return Json.readJsonOrNull(bodyString()) ?: error("Unable to deserialize: ${bodyString()}")
 }
 
-object JsonAllowingNullCreators :
-    ConfigurableJackson(AppServicesJson.mapper.copy().configure(FAIL_ON_NULL_CREATOR_PROPERTIES, false))
+object JsonAllowingNullCreators : ConfigurableJackson(
+    AppServicesJson.mapper.copy().configure(FAIL_ON_NULL_CREATOR_PROPERTIES, false)
+)
 
-inline fun <reified T: Any> Response.deserializeWithNullCreatorsOrThrow(): T {
+inline fun <reified T : Any> Response.deserializeWithNullCreatorsOrThrow(): T {
     requireJsonContentType()
     return JsonAllowingNullCreators.asA(bodyString(), T::class)
 }
 
-fun InvokeResponse.requireStatusCode(expectedStatus: Status): InvokeResponse {
-    assertThat(statusCode(), equalTo(expectedStatus.code))
-    return this
+fun InvokeResponse.requireStatusCode(expectedStatus: Status) = apply {
+    expectThat(this).get(InvokeResponse::statusCode).isEqualTo(expectedStatus.code)
 }
 
-fun InvokeResponse.requireBodyText(matcher: Matcher<String>): InvokeResponse {
-    assertThat(payload().asUtf8String(), matcher)
-    return this
+fun InvokeResponse.requireBodyContains(expected: String) = apply {
+    expectThat(this)
+        .get(InvokeResponse::payload)
+        .asString()
+        .contains(expected)
 }

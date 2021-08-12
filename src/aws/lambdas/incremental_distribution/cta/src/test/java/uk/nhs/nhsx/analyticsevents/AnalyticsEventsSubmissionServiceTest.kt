@@ -1,25 +1,37 @@
 package uk.nhs.nhsx.analyticsevents
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Json
+import strikt.api.expectThat
+import strikt.assertions.containsKeys
+import strikt.assertions.hasEntry
+import strikt.assertions.hasSize
+import strikt.assertions.isA
+import strikt.assertions.isEqualTo
+import strikt.assertions.withFirst
+import strikt.assertions.withValue
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.content
+import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.key
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
+import uk.nhs.nhsx.testhelper.mocks.getBucket
+import uk.nhs.nhsx.testhelper.mocks.withReadJsonOrThrows
 
-@Suppress("UNCHECKED_CAST")
 class AnalyticsEventsSubmissionServiceTest {
     private val fakeS3 = FakeS3()
     private val events = RecordingEvents()
 
     @Test
     fun `accept payload with no mapped postal district is stored in s3`() {
-        val service = AnalyticsEventsSubmissionService(
-            fakeS3, { ObjectKey.of("key") }, BucketName.of("bucket"),
-            events
-        )
-        service.accept(
+        val bucketName = BucketName.of("bucket")
+
+        AnalyticsEventsSubmissionService(
+            s3Storage = fakeS3,
+            objectKeyNameProvider = { ObjectKey.of("key") },
+            bucketName = bucketName,
+            events = events
+        ).accept(
             mapOf(
                 "metadata" to mapOf(
                     "operatingSystemVersion" to "1",
@@ -37,27 +49,33 @@ class AnalyticsEventsSubmissionServiceTest {
             )
         )
 
-        assertThat(fakeS3.count).isEqualTo(1)
-        assertThat(fakeS3.name.value).isEqualTo("key.json")
-
-        val storedObject: Map<String, Any> =
-            Json.readJsonOrThrow(fakeS3.bytes.openStream()) as Map<String, Any>
-        assertThat(storedObject).containsKey("uuid")
-        assertThat(storedObject).containsKey("metadata")
-        assertThat(storedObject).containsKey("events")
-
-        val storedMetadata = storedObject["metadata"] as Map<String, String>
-        assertThat(storedMetadata["operatingSystemVersion"]).isEqualTo("1")
-        assertThat(storedMetadata["latestApplicationVersion"]).isEqualTo("2")
-        assertThat(storedMetadata["deviceModel"]).isEqualTo("phone")
-        assertThat(storedMetadata["postalDistrict"]).isEqualTo("UNKNOWN")
+        expectThat(fakeS3) {
+            getBucket(bucketName).hasSize(1).withFirst {
+                key.isEqualTo("key.json")
+                content.withReadJsonOrThrows<Map<String, Any>> {
+                    containsKeys("uuid", "metadata", "events")
+                    withValue("metadata") {
+                        isA<Map<String, String>>()
+                            .hasEntry("operatingSystemVersion", "1")
+                            .hasEntry("latestApplicationVersion", "2")
+                            .hasEntry("deviceModel", "phone")
+                            .hasEntry("postalDistrict", "UNKNOWN")
+                    }
+                }
+            }
+        }
     }
 
     @Test
     fun `accept payload with merged postal district is stored in s3`() {
-        val fakeS3 = FakeS3()
-        val service = AnalyticsEventsSubmissionService(fakeS3, { ObjectKey.of("key") }, BucketName.of("bucket"), events)
-        service.accept(
+        val bucketName = BucketName.of("bucket")
+
+        AnalyticsEventsSubmissionService(
+            s3Storage = fakeS3,
+            objectKeyNameProvider = { ObjectKey.of("key") },
+            bucketName = bucketName,
+            events = events
+        ).accept(
             mapOf(
                 "metadata" to mapOf(
                     "operatingSystemVersion" to "1",
@@ -75,20 +93,20 @@ class AnalyticsEventsSubmissionServiceTest {
             )
         )
 
-        assertThat(fakeS3.count).isEqualTo(1)
-        assertThat(fakeS3.name.value).isEqualTo("key.json")
-
-        val storedObject: Map<String, Any> =
-            Json.readJsonOrThrow(fakeS3.bytes.openStream()) as Map<String, Any>
-        assertThat(storedObject).containsKey("uuid")
-        assertThat(storedObject).containsKey("metadata")
-        assertThat(storedObject).containsKey("events")
-
-        val storedMetadata = storedObject["metadata"] as Map<String, String>
-        assertThat(storedMetadata["operatingSystemVersion"]).isEqualTo("1")
-        assertThat(storedMetadata["latestApplicationVersion"]).isEqualTo("2")
-        assertThat(storedMetadata["deviceModel"]).isEqualTo("phone")
-        assertThat(storedMetadata["postalDistrict"]).isEqualTo("AB13_AB14")
+        expectThat(fakeS3) {
+            getBucket(bucketName).hasSize(1).withFirst {
+                key.isEqualTo("key.json")
+                content.withReadJsonOrThrows<Map<String, Any>> {
+                    containsKeys("uuid", "metadata", "events")
+                    withValue("metadata") {
+                        isA<Map<String, String>>()
+                            .hasEntry("operatingSystemVersion", "1")
+                            .hasEntry("latestApplicationVersion", "2")
+                            .hasEntry("deviceModel", "phone")
+                            .hasEntry("postalDistrict", "AB13_AB14")
+                    }
+                }
+            }
+        }
     }
-
 }

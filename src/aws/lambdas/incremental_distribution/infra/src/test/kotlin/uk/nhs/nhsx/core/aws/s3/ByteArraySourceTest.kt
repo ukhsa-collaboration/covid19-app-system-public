@@ -1,8 +1,8 @@
 package uk.nhs.nhsx.core.aws.s3
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import java.io.ByteArrayInputStream
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 
 class ByteArraySourceTest {
 
@@ -12,30 +12,26 @@ class ByteArraySourceTest {
     fun `ByteArraySource can be equal`() {
         val first = ByteArraySource.fromUtf8String("Hello")
         val second = ByteArraySource.fromUtf8String("Hello")
-        assertThat(first).isEqualTo(second)
+        expectThat(first).isEqualTo(second)
     }
 
     @Test
     fun `returns the correct size`() {
-        assertThat(input.size)
-            .isEqualTo(6)
+        expectThat(input.size).isEqualTo(6)
     }
 
     @Test
     fun `returns a byte array`() {
-        assertThat(input.toArray())
-            .isEqualTo("foobar".toByteArray())
+        expectThat(input.toArray()).isEqualTo("foobar".toByteArray())
     }
 
     @Test
     fun `returns a string`() {
-        assertThat(input.toUtf8String())
-            .isEqualTo("foobar")
+        expectThat(input.toUtf8String()).isEqualTo("foobar")
     }
 
     @Test
     fun `returns an InputStream`() {
-        assertThat(input.openStream())
-            .hasSameContentAs(ByteArrayInputStream("foobar".toByteArray()))
+        expectThat(input.openStream().readAllBytes()).isEqualTo("foobar".toByteArray())
     }
 }

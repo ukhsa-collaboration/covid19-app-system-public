@@ -1,0 +1,20 @@
+version: 0.2
+env:
+  shell: bash
+  git-credential-helper: yes
+phases:
+  install:
+    runtime-versions:
+      ruby: 2.6
+    commands:
+      - cd tools/build
+      - gem install bundler
+      - bundle install
+  build:
+    commands:
+      - rake publish:devenv
+artifacts:
+  name: $(date +%Y%m%d%H%M%S)-ci-devenv.zip
+  files:
+    - "out/**/*"
+  discard-paths: no

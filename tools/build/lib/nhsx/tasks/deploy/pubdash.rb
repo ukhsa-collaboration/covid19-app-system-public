@@ -27,6 +27,20 @@ namespace :deploy do
         end
       end
     end
+    namespace :backend_no_build do
+      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+        tgt_envs.each do |tgt_env|
+          desc "Deploy public dashboard backend/infrastructure to #{tgt_env}"
+          desc "Deploys a public dashboard backend/infrastructure temporary environment for the current branch in the dev account" if tgt_env == "branch"
+          task :"#{tgt_env}" => [:"login:#{account}"] do
+            include NHSx::Terraform
+            terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
+            deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
+            tag(pointer_tag_name("pubdash-backend", tgt_env), "Public dashboard backend deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
+          end
+        end
+      end
+    end
   end
 end
 
@@ -40,6 +54,19 @@ namespace :plan do
           include NHSx::Terraform
           terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
           plan_for_workspace(tgt_env, terraform_configuration, [], $configuration)
+        end
+      end
+    end
+    namespace :backend_no_build do
+      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+        tgt_envs.each do |tgt_env|
+          desc "Run a public dashboard plan for the #{tgt_env}"
+          desc "Creates the terraform public dashboard plan of a temporary environment for the current branch in the dev account" if tgt_env == "branch"
+          task :"#{tgt_env}" => [:"login:#{account}"] do
+            include NHSx::Terraform
+            terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
+            plan_for_workspace(tgt_env, terraform_configuration, [], $configuration)
+          end
         end
       end
     end

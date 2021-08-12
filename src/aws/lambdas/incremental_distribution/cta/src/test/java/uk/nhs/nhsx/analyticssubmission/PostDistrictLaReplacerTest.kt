@@ -1,10 +1,13 @@
 package uk.nhs.nhsx.analyticssubmission
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.analyticssubmission.model.PostDistrictPair
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import uk.nhs.nhsx.testhelper.assertions.isEmpty
 
 class PostDistrictLaReplacerTest {
 
@@ -18,8 +21,8 @@ class PostDistrictLaReplacerTest {
             events
         )
 
-        assertThat(result).isEqualTo(PostDistrictPair("CV21_CV23", "E07000151"))
-        events.none()
+        expectThat(result).isEqualTo(PostDistrictPair("CV21_CV23", "E07000151"))
+        expectThat(events).isEmpty()
     }
 
     @Test
@@ -30,8 +33,8 @@ class PostDistrictLaReplacerTest {
             events
         )
 
-        assertThat(result).isEqualTo(PostDistrictPair("CV23", null))
-        events.none()
+        expectThat(result).isEqualTo(PostDistrictPair("CV23", null))
+        expectThat(events).isEmpty()
     }
 
     @Test
@@ -42,7 +45,7 @@ class PostDistrictLaReplacerTest {
             events
         )
 
-        assertThat(result).isEqualTo(PostDistrictPair("UNKNOWN", "UNKNOWN"))
-        events.containsExactly(InfoEvent::class)
+        expectThat(result).isEqualTo(PostDistrictPair("UNKNOWN", "UNKNOWN"))
+        expectThat(events).containsExactly(InfoEvent::class)
     }
 }

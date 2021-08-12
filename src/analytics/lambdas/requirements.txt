@@ -11,3 +11,5 @@ pytest-xdist==2.1.0
 requests
 
 google-cloud-storage
+cryptography
+pyjwt

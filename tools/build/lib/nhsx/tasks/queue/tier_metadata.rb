@@ -49,11 +49,11 @@ namespace :queue do
     desc "Queue a release to the prod target environment in CodeBuild"
     task :"tier_metadata:prod" => [:"login:prod"] do
       include NHSx::Queue
-      version_metadata = subsystem_version_metadata("tier-metadata", $configuration)
+      version_metadata = subsystem_version_metadata("tiers", $configuration)
       release_version = $configuration.release_version(version_metadata)
       build_parameters = {
             "project_name" => "release-tier-metadata-prod",
-            "source_version" => "te-staging",
+            "source_version" => "te-staging-tiers",
             "target_environment" => "prod",
             "account" => "prod",
             "release_version" => release_version

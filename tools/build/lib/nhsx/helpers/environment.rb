@@ -248,6 +248,26 @@ module Gaudi
 
         return static_content_file
       end
+
+      # Pass export start date when invoking the analytics logs export lambda
+      #
+      # Eg: EXPORT_START_DATE=2020/10/10
+      def export_start_date
+        export_start_date = mandatory("EXPORT_START_DATE")
+        raise GaudiError, "Invalid EXPORT_START_DATE" unless export_start_date
+
+        return export_start_date
+      end
+
+      # Pass export end date when invoking the analytics logs export lambda
+      #
+      # Eg: EXPORT_END_DATE=2020/10/10
+      def export_end_date
+        export_end_date = mandatory("EXPORT_END_DATE")
+        raise GaudiError, "Invalid EXPORT_END_DATE" unless export_end_date
+
+        return export_end_date
+      end
     end
   end
 end

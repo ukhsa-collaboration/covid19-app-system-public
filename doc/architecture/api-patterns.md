@@ -17,8 +17,7 @@ Submission APIs are used by the App to submit data to the backend.
 
 * Endpoint schema: ```https://<FQDN>/submission/<payload type>```
 * Payload content-type: application/json
-* Authorisation: ```Authorization: Bearer <API KEY>```
-* One API KEY for all mobile-facing APIs
+* Authentication: ```Authorization: Bearer <API KEY>``` (see [API Security](api-security.md))
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
@@ -39,6 +38,8 @@ Distribution APIs are used by the App to ensure datasets and configurations are 
 * `FQDN`: One (CDN-) hostname for all distribute APIs
 * HTTP verb: GET
 * Payload content-type: payload specific
+* Authentication: none (see [API Security](api-security.md))
+
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
@@ -46,7 +47,7 @@ Distribution APIs are used by the App to ensure datasets and configurations are 
 | Diagnosis Key | Distribution | [diagnosis-key-distribution.md](api-contracts/mobile-facing/distribution/diagnosis-key-distribution.md) | Gets the latest diagnosis keys, valid for 14 days (as per EN API), for matching against the user's recent contacts. |
 | Identified Risk Venues | Distribution | [risky-venue-distribution.md](api-contracts/mobile-facing/distribution/risky-venue-distribution.md) | Gets the latest list of venues identified as risky, for matching against the user's venue check-ins. |
 | Local Messages | Distribution | [local-messages-distribution.md](api-contracts/mobile-facing/distribution/local-messages-distribution.md) | Gets the latest messages, specific to local authorities, for matching against the user's local authority. |
-| Postal District Risk Levels | Distribution | [risky-postal-district-distribution.md](api-contracts/mobile-facing/distribution/risky-postal-district-distribution.md) | Gets the latest risk indicator for postal districts, for matching against the user's postal district. |
+| Postal District Risk Levels | Distribution | [postal-district-risk-level-distribution.md](api-contracts/mobile-facing/distribution/postal-district-risk-level-distribution.md) | Gets the latest risk indicator for postal districts, for matching against the user's postal district. |
 | Symptoms Questionnaire | Distribution | [symptoms-questionnaire-distribution.md](api-contracts/mobile-facing/distribution/symptoms-questionnaire-distribution.md) | Gets the latest symptomatic questionnaire and advice, set by the NHS Medical Policy team, for use by users reporting symptoms. |
 | Exposure Risk Configuration | Distribution | [exposure-risk-configuration.md](api-contracts/mobile-facing/configuration/exposure-risk-configuration.md) | Gets the latest configuration for exposure risk analysis. |
 | Identified Risk Venues Configuration | Distribution | [risky-venue-configuration.md](api-contracts/mobile-facing/configuration/risky-venue-configuration.md) | Gets the latest configuration for venue risk notification e.g. how long a user can book a test after visiting a risky venue. |
@@ -59,16 +60,16 @@ Upload APIs are used by external systems to submit data (files, json) to the bac
 * Endpoint schema: ```https://<FQDN>/upload/<payload type>```
 * Payload content type (HTTP header): application/json or text/csv
 * Payload size restriction: < 6MB
+* Authentication: ```Authorization: Bearer <API KEY>``` (see [API Security](api-security.md))
 * All-or-nothing: No partial processing (no row-by-row processing)
 * Fast-fail: stop processing after first validation exception
 * API GW Rate limit (can be periodically adjusted): 100-150 RPS, max concurrency of 10
-* Security for external system upload
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
 | Identified Risk Venues | Upload | [risky-venue-upload.md](api-contracts/service-facing/upload/risky-venue-upload.md) | Source of data for the Risky Venue distribution API. |
 | Isolation Payment Claim Token | Upload | [isolation-payment-claim-token-upload.md](api-contracts/service-facing/upload/isolation-payment-claim-token-upload.md) | Used by the Isolation Payment Gateway to verify and consume the IPC token for isolation payment claims. |
-| Postal District Risk Levels | Upload | [risky-postal-district-upload.md](api-contracts/service-facing/upload/risky-postal-district-upload.md) | Source of data for the Postal District Risk Levels distribution API. |
+| Postal District Risk Levels | Upload | [postal-district-risk-level-upload.md](api-contracts/service-facing/upload/postal-district-risk-level-upload.md) | Source of data for the Postal District Risk Levels distribution API. |
 | Virology Test Result | Upload | [virology-test-result-upload.md](api-contracts/service-facing/upload/virology-test-result-upload.md) | Source of data for a virology test result from a lab, when a test is booked within the App. |
 | Virology Test Result Token Generation | Upload | [virology-test-result-token-upload.md](api-contracts/service-facing/upload/virology-test-result-token-upload.md) | Used by the notification service (BSA for England, NWIS for Wales) to generate a CTA token for sending with a test result notification, when a test is booked outside the App.|
 
@@ -80,8 +81,7 @@ Circuit breaker APIs delegate the decision for a risk-based action e.g. to advis
 * HTTP verb: POST
 * Payload content-type: application/json
 * Payload: related context information (a simple JSON dictionary, i.e. key-value pairs)
-* Authorisation: ```Authorization: Bearer <API KEY>```
-* One API KEY for all mobile phone-facing APIs
+* Authentication: ```Authorization: Bearer <API KEY>``` (see [API Security](api-security.md))
 
 After receiving the token the mobile client polls the backend until it receives a resolution result from the backend.
 

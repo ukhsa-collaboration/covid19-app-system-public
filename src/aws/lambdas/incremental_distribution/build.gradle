@@ -77,8 +77,8 @@ allprojects {
             slowThreshold 5000
         }
 
-        reports.html.destination = file("$projectDir/../../../../out/reports")
-        reports.junitXml.destination = file("$projectDir/../../../../out/reports")
+        reports.html.destination = file("$projectDir/../../../../../out/reports/testUnit_${project.name}")
+        reports.junitXml.destination = file("$projectDir/../../../../../out/reports/testUnit_${project.name}")
     }
 
     task testJar(type: Jar) {
@@ -102,14 +102,12 @@ allprojects {
         testApi(platform(Libs.http4k_bom))
         testApi(Libs.http4k_format_moshi)
         testApi(Libs.http4k_testing_approval)
-        testApi(Libs.http4k_testing_hamkrest)
         testApi(Libs.http4k_testing_servirtium)
         testApi(Libs.http4k_testing_strikt)
 
-        testApi(Libs.assertj_core)
-        testApi(Libs.hamcrest)
-        testApi(Libs.hamcrest_optional)
+        testApi(Libs.strikt_jvm)
         testApi(Libs.jsonassert)
+        testApi(Libs.javafaker)
 
         testApi(Libs.mockk)
         testApi(Libs.awaitility)

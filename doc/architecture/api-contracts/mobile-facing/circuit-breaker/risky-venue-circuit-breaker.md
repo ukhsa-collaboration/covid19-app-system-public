@@ -15,7 +15,7 @@
 
 ## Scenario
 
-Used as a pre-requisite to check if a notification should be sent to the mobile app making the request.
+The circuit breaker is polled following a risky venue notification to get a decision on whether to proceed to notify the user of the venue risk.
 
 ### Initial request
 ```POST https://<FQDN>/circuit-breaker/venue/request```

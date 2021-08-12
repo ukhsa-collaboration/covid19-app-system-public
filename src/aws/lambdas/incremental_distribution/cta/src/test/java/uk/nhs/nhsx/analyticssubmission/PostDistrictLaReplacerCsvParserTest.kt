@@ -1,14 +1,16 @@
 package uk.nhs.nhsx.analyticssubmission
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.http4k.format.Jackson
 import org.http4k.testing.ApprovalTest
 import org.http4k.testing.Approver
+import org.http4k.testing.assertApproved
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
+import strikt.assertions.message
 import uk.nhs.nhsx.analyticssubmission.model.PostDistrictPair
-import uk.nhs.nhsx.testhelper.http4k.assertApproved
 
 @ExtendWith(ApprovalTest::class)
 class PostDistrictLaReplacerCsvParserTest {
@@ -26,8 +28,7 @@ class PostDistrictLaReplacerCsvParserTest {
             "AL2_E07000098","E07000098","AL2_AL4_WD7"
             """.trimIndent()
 
-        val parsedResult = PostDistrictLaReplacerCsvParser.parse(csv)
-        assertThat(parsedResult).isEqualTo(expectedMap)
+        expectThat(PostDistrictLaReplacerCsvParser.parse(csv)).isEqualTo(expectedMap)
     }
 
     @Test
@@ -38,9 +39,8 @@ class PostDistrictLaReplacerCsvParserTest {
             "AL2_E07000098","E07000098","AL2_AL4_WD7"
             """.trimIndent()
 
-        assertThatThrownBy { PostDistrictLaReplacerCsvParser.parse(csvWithMissingUnderscore) }
-            .isInstanceOf(RuntimeException::class.java)
-            .hasMessage("Invalid header. Expected [Postcode_District_LAD_ID, LAD20CD, Merged_Postcode_District]")
+        expectThrows<RuntimeException> { PostDistrictLaReplacerCsvParser.parse(csvWithMissingUnderscore) }
+            .message.isEqualTo("Invalid header. Expected [Postcode_District_LAD_ID, LAD20CD, Merged_Postcode_District]")
     }
 
     @Test
@@ -51,17 +51,16 @@ class PostDistrictLaReplacerCsvParserTest {
             "AL2E07000098","E07000098","AL2_AL4_WD7"
             """.trimIndent()
 
-        assertThatThrownBy { PostDistrictLaReplacerCsvParser.parse(csvWithInvalidPostcodeLADID) }
-            .isInstanceOf(RuntimeException::class.java)
-            .hasMessage("Invalid data in row 2")
+        expectThrows<RuntimeException> { PostDistrictLaReplacerCsvParser.parse(csvWithInvalidPostcodeLADID) }
+            .message.isEqualTo("Invalid data in row 2")
     }
 
     @Test
     fun `empty csv throws exception`() {
         val csv = "   \n "
-        assertThatThrownBy { PostDistrictLaReplacerCsvParser.parse(csv) }
-            .isInstanceOf(RuntimeException::class.java)
-            .hasMessage("Empty csv")
+
+        expectThrows<RuntimeException> { PostDistrictLaReplacerCsvParser.parse(csv) }
+            .message.isEqualTo("Empty csv")
     }
 
     @Test

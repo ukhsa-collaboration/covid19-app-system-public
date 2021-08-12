@@ -11,12 +11,9 @@ import software.amazon.awssdk.services.athena.model.QueryExecutionState.CANCELLE
 import software.amazon.awssdk.services.athena.model.QueryExecutionState.FAILED
 import software.amazon.awssdk.services.athena.model.QueryExecutionState.SUCCEEDED
 import software.amazon.awssdk.services.athena.model.StartQueryExecutionRequest
-import uk.nhs.nhsx.core.Clock
 import java.lang.Thread.sleep
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
-class Analytics(private val envConfig: EnvConfig, http: HttpHandler, private val clock: Clock) {
+class Analytics(private val envConfig: EnvConfig, http: HttpHandler) {
 
     private val athenaClient = AthenaClient.builder().httpClient(AwsSdkClient(http)).build()
 
@@ -52,12 +49,15 @@ private fun AthenaClient.waitForQueryToComplete(queryExecutionId: String): GetQu
                     .queryExecution().status().stateChangeReason()
             )
             CANCELLED -> throw RuntimeException("The Amazon Athena query was cancelled.")
-            SUCCEEDED ->
-                return getQueryResults(GetQueryResultsRequest.builder().queryExecutionId(queryExecutionId).build())
+            SUCCEEDED -> return getQueryResults(
+                GetQueryResultsRequest.builder()
+                    .queryExecutionId(queryExecutionId)
+                    .build()
+            )
             else -> sleep(5000)
         }
     }
 
-    throw RuntimeException("Query exceeded $attempts seconds")
+    error("Query exceeded $attempts seconds")
 }
 

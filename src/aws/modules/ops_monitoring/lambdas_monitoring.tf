@@ -76,3 +76,41 @@ resource "aws_cloudwatch_dashboard" "duplicate_cta_token_dashboard" {
     virology_upload_function = var.virology_upload_function
   })
 }
+
+resource "aws_cloudwatch_dashboard" "api_gateway_dashboard" {
+  dashboard_name = "${var.env}-api-gateway-dashboard"
+  dashboard_body = templatefile("${path.module}/templates/api_gateway_dashboard.tmpl", {
+    analytics_events_submission_gateway_id           = var.analytics_events_submission_gateway_id
+    analytics_submission_fast_ingest_gateway_id      = var.analytics_submission_fast_ingest_gateway_id
+    crash_reports_submission_gateway_id              = var.crash_reports_submission_gateway_id
+    diagnosis_keys_submission_gateway_id             = var.diagnosis_keys_submission_gateway_id
+    exposure_notification_circuit_breaker_gateway_id = var.exposure_notification_circuit_breaker_gateway_id
+    empty_submission_gateway_id                      = var.empty_submission_gateway_id
+    isolation_payment_submission_gateway_id          = var.isolation_payment_submission_gateway_id
+    risky_post_districts_upload_gateway_id           = var.risky_post_districts_upload_gateway_id
+    risky_venues_upload_gateway_id                   = var.risky_venues_upload_gateway_id
+    risky_venues_circuit_breaker_gateway_id          = var.risky_venues_circuit_breaker_gateway_id
+    virology_submission_api_gateway_id               = var.virology_submission_api_gateway_id
+    virology_upload_api_gateway_id                   = var.virology_upload_api_gateway_id
+  })
+}
+
+resource "aws_cloudwatch_dashboard" "load_profile_dashboard" {
+  dashboard_name = "${var.env}-load-profile-dashboard"
+  dashboard_body = templatefile("${path.module}/templates/load_profile_dashboard.tmpl", {
+    analytics_events_submission_gateway_id         = var.analytics_events_submission_gateway_id,
+    analytics_submission_fast_ingest_gateway_id    = var.analytics_submission_fast_ingest_gateway_id,
+    diagnosis_keys_submission_function             = var.diagnosis_keys_submission_function,
+    empty_submission_gateway_id                    = var.empty_submission_gateway_id,
+    exposure_notification_circuit_breaker_function = var.exposure_notification_circuit_breaker_function,
+    virology_submission_function                   = var.virology_submission_function
+  })
+}
+
+resource "aws_cloudwatch_dashboard" "virology_api_response_dashboard" {
+  dashboard_name = "${var.env}-virology-api-response-dashboard"
+  dashboard_body = templatefile("${path.module}/templates/virology_api_response_dashboard.tmpl", {
+    virology_submission_function = var.virology_submission_function,
+    virology_upload_function     = var.virology_upload_function
+  })
+}

@@ -1,11 +1,13 @@
 package uk.nhs.nhsx.keyfederation.upload
 
+import assertions.JwtAssertions.algorithmEqualTo
+import assertions.JwtAssertions.hasValidSignature
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.throws
 import org.jose4j.jws.JsonWebSignature
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.exceptions.Defect
 import uk.nhs.nhsx.keyfederation.TestKeyPairs
 
@@ -25,15 +27,17 @@ class JWSTest {
             it.compactSerialization = generated
         }
 
-        assertThat(verified.payload, equalTo(payload))
-        assertThat("signature is valid", verified.verifySignature(), equalTo(true))
-        assertThat(verified.headers.getStringHeaderValue("alg"), equalTo("ES256"))
+        expectThat(verified) {
+            algorithmEqualTo("ES256")
+            hasValidSignature()
+            get(JsonWebSignature::getPayload).isEqualTo(payload)
+        }
     }
 
     @Test
     fun `complains when KMS returns incompatible signature`() {
-        assertThat(
-            { JWS(KmsCompatibleSigner(private, SigningAlgorithmSpec.ECDSA_SHA_384)).sign("something") },
-            throws<Defect>())
+        expectThrows<Defect> {
+            JWS(KmsCompatibleSigner(private, SigningAlgorithmSpec.ECDSA_SHA_384)).sign("something")
+        }
     }
 }

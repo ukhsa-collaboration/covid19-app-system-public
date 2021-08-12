@@ -19,7 +19,6 @@ import java.util.*
 
 class FakeInteropDiagnosisKeysS3(
     private val objectSummaries: List<S3ObjectSummary>
-
 ) : AwsS3 {
 
     override fun upload(
@@ -27,14 +26,11 @@ class FakeInteropDiagnosisKeysS3(
         contentType: ContentType,
         bytes: ByteArraySource,
         metaHeaders: List<MetaHeader>
-    ) {
-        // noop
-    }
+    ) = Unit
 
-    override fun getObjectSummaries(bucketName: BucketName): List<S3ObjectSummary> = objectSummaries
+    override fun getObjectSummaries(bucketName: BucketName) = objectSummaries
 
     override fun getObject(locator: Locator): Optional<S3Object> {
-
         val mostRecentKeyRollingStart =
             ENIntervalNumber.enIntervalNumberFromTimestamp(Instant.now()).enIntervalNumber / 144 * 144
 
@@ -49,18 +45,12 @@ class FakeInteropDiagnosisKeysS3(
         })
     }
 
-    override fun deleteObject(locator: Locator) {
-        // noop
-    }
-
-    override fun copyObject(from: Locator, to: Locator) {
-        TODO("Not yet implemented")
-    }
-
+    override fun deleteObject(locator: Locator) = Unit
+    override fun copyObject(from: Locator, to: Locator) = Unit
     override fun getSignedURL(locator: Locator, expiration: Date) =
         Optional.of(URL("https://example.com"))
 
-    private fun makeKey(keyStartTime: Long): StoredTemporaryExposureKey =
+    private fun makeKey(keyStartTime: Long) =
         StoredTemporaryExposureKey(
             getEncodedKeyData(),
             Math.toIntExact(keyStartTime),
@@ -68,7 +58,5 @@ class FakeInteropDiagnosisKeysS3(
             7
         )
 
-    fun getEncodedKeyData(): String =
-        "3/TzKOK2u0O/eHeK4R0VSg=="
-
+    fun getEncodedKeyData() = "3/TzKOK2u0O/eHeK4R0VSg=="
 }

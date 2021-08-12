@@ -3,6 +3,28 @@ require "ruby-lokalise-api"
 
 module NHS
   module Import
+    # Imports all entries in the NHS COVID19 Localise project that are tagged with backend
+    def import_translations(api_key, project_id, system_config)
+      lokalise_client = Lokalise.client api_key
+
+      lokalise_messages = lokalise_client.keys(project_id, { :limit => 5000 }).collection.select { |e| e.tags.include? "backend" }
+      lokalise_export = {}
+      lokalise_messages.each do |key|
+        key_name = key.key_name["web"]
+        translations = lokalise_client.key(project_id, key.key_id, {}).translations
+        translations.each do |translated_key|
+          lang_iso = translated_key["language_iso"].split("_").first
+          translation_text = translated_key["translation"]
+          lokalise_export[key_name] ||= {}
+          lokalise_export[key_name][lang_iso] = translation_text
+        end
+      end
+      lokalise_export.each do |field_key, translations|
+        lokalise_export[field_key] = translations.sort_by { |lang_key, _| lang_key }.to_h
+      end
+      return lokalise_export
+    end
+
     def import_local_messages(api_key, project_id, system_config)
       lokalise_client = Lokalise.client api_key
 
@@ -10,7 +32,7 @@ module NHS
       voc_messages = {}
       error_messages = []
 
-      lokalise_messages = lokalise_client.keys(project_id, params = {}).collection.select { |e| e.tags.include? "message" }
+      lokalise_messages = lokalise_client.keys(project_id, { :limit => 5000 }).collection.select { |e| e.tags.include? "message" }
       lokalise_messages.each do |key|
         message_key = key.key_name["web"]
         # download and check the schema

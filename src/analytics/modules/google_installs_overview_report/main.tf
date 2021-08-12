@@ -2,6 +2,23 @@ locals {
   table_name = "${terraform.workspace}_analytics_google_installs_overview_report"
 }
 
+module "analytics_google_installs_overview_report" {
+  source                   = "../../libraries/analytics_s3"
+  name                     = "analytics-google-installs-overview-report"
+  service                  = var.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  enable_versioning        = true
+  logs_bucket_id           = var.logs_bucket_id
+  lifecycle_rules = [{
+    id         = "expire-all-after-90-days"
+    prefix     = null
+    enabled    = true
+    transition = []
+    days       = 90
+  }]
+  tags = var.tags
+}
+
 resource "aws_glue_catalog_table" "this" {
   name          = local.table_name
   database_name = var.database_name

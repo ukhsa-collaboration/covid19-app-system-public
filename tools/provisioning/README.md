@@ -4,7 +4,7 @@
 
 The development environment is available as a [Docker container](dev/README.md)
 
-To use it there is [pre-requisite software](../../doc/env/PROVISION_PREREQS.md), that needs to be installed on the host.
+To use it there is [pre-requisite software](dev/PROVISION_PREREQS.md), that needs to be installed on the host.
 
 ### Visual Studio Code
 

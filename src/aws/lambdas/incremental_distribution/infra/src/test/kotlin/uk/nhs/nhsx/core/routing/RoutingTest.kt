@@ -1,16 +1,17 @@
 package uk.nhs.nhsx.core.routing
 
 import com.amazonaws.HttpMethod.POST
-import org.hamcrest.CoreMatchers
-import org.hamcrest.MatcherAssert
+import org.http4k.core.Status.Companion.OK
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.HttpResponses
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.OK_200
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
-import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withMethod
 import java.util.concurrent.atomic.AtomicInteger
@@ -43,10 +44,7 @@ class RoutingTest {
             TestContext()
         )
 
-        MatcherAssert.assertThat(
-            response,
-            hasStatus(OK_200)
-        )
-        MatcherAssert.assertThat(chosen.get(), CoreMatchers.equalTo(1))
+        expectThat(response).status.isSameAs(OK)
+        expectThat(chosen.get()).isEqualTo(1)
     }
 }

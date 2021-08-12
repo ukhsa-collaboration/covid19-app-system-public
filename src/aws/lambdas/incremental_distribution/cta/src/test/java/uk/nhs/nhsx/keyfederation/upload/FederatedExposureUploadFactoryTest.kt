@@ -1,14 +1,18 @@
 package uk.nhs.nhsx.keyfederation.upload
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.containsExactly
+import strikt.assertions.isEmpty
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.diagnosiskeydist.Submission
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
-import uk.nhs.nhsx.domain.ReportType
-import uk.nhs.nhsx.domain.TestType
+import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
+import uk.nhs.nhsx.domain.ReportType.UNKNOWN
+import uk.nhs.nhsx.domain.TestType.LAB_RESULT
+import uk.nhs.nhsx.domain.TestType.RAPID_RESULT
+import uk.nhs.nhsx.domain.TestType.RAPID_SELF_REPORTED
 import java.time.Instant
 
 class FederatedExposureUploadFactoryTest {
@@ -23,23 +27,28 @@ class FederatedExposureUploadFactoryTest {
             StoredTemporaryExposureKeyPayload(
                 listOf(
                     StoredTemporaryExposureKey(
-                        "W2zb3BeMWt6Xr2u0ABG32Q==",
-                        5,
-                        2,
-                        3,
-                        10
-                    ))))
+                        key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                        rollingStartNumber = 5,
+                        rollingPeriod = 2,
+                        transmissionRisk = 3,
+                        daysSinceOnsetOfSymptoms = 10
+                    )
+                )
+            )
+        )
 
-        assertThat(fedExposureUploadFactory.create(submission), equalTo(
-            listOf(ExposureUpload(
-                "W2zb3BeMWt6Xr2u0ABG32Q==",
-                5,
-                3,
-                2,
-                listOf("GF"),
-                TestType.LAB_RESULT,
-                ReportType.CONFIRMED_TEST,
-                10))))
+        expectThat(fedExposureUploadFactory.create(submission)).containsExactly(
+            ExposureUpload(
+                keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = 5,
+                transmissionRiskLevel = 3,
+                rollingPeriod = 2,
+                regions = listOf("GF"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 10
+            )
+        )
     }
 
     @Test
@@ -52,23 +61,29 @@ class FederatedExposureUploadFactoryTest {
             StoredTemporaryExposureKeyPayload(
                 listOf(
                     StoredTemporaryExposureKey(
-                        "W2zb3BeMWt6Xr2u0ABG32Q==",
-                        5,
-                        2,
-                        3,
-                        10
-                    ))))
+                        key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                        rollingStartNumber = 5,
+                        rollingPeriod = 2,
+                        transmissionRisk = 3,
+                        daysSinceOnsetOfSymptoms = 10
+                    )
+                )
+            )
+        )
 
-        assertThat(fedExposureUploadFactory.create(submission), equalTo(
-            listOf(ExposureUpload(
-                "W2zb3BeMWt6Xr2u0ABG32Q==",
-                5,
-                3,
-                2,
-                listOf("GF"),
-                TestType.RAPID_RESULT,
-                ReportType.UNKNOWN,
-                10))))
+        expectThat(fedExposureUploadFactory.create(submission)).containsExactly(
+            ExposureUpload(
+                keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = 5,
+                transmissionRiskLevel = 3,
+                rollingPeriod = 2,
+                regions = listOf("GF"),
+                testType = RAPID_RESULT,
+                reportType = UNKNOWN,
+                daysSinceOnset = 10
+            )
+        )
+
     }
 
     @Test
@@ -81,23 +96,28 @@ class FederatedExposureUploadFactoryTest {
             StoredTemporaryExposureKeyPayload(
                 listOf(
                     StoredTemporaryExposureKey(
-                        "W2zb3BeMWt6Xr2u0ABG32Q==",
-                        5,
-                        2,
-                        3,
-                        10
-                    ))))
+                        key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                        rollingStartNumber = 5,
+                        rollingPeriod = 2,
+                        transmissionRisk = 3,
+                        daysSinceOnsetOfSymptoms = 10
+                    )
+                )
+            )
+        )
 
-        assertThat(fedExposureUploadFactory.create(submission), equalTo(
-            listOf(ExposureUpload(
-                "W2zb3BeMWt6Xr2u0ABG32Q==",
-                5,
-                3,
-                2,
-                listOf("GF"),
-                TestType.RAPID_SELF_REPORTED,
-                ReportType.UNKNOWN,
-                10))))
+        expectThat(fedExposureUploadFactory.create(submission)).containsExactly(
+            ExposureUpload(
+                keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = 5,
+                transmissionRiskLevel = 3,
+                rollingPeriod = 2,
+                regions = listOf("GF"),
+                testType = RAPID_SELF_REPORTED,
+                reportType = UNKNOWN,
+                daysSinceOnset = 10
+            )
+        )
     }
 
     @Test
@@ -110,22 +130,27 @@ class FederatedExposureUploadFactoryTest {
             StoredTemporaryExposureKeyPayload(
                 listOf(
                     StoredTemporaryExposureKey(
-                        "W2zb3BeMWt6Xr2u0ABG32Q==",
-                        5,
-                        2,
-                        3
-                    ))))
+                        key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                        rollingStartNumber = 5,
+                        rollingPeriod = 2,
+                        transmissionRisk = 3
+                    )
+                )
+            )
+        )
 
-        assertThat(pcrExposureUploadFactory.create(submission), equalTo(
-            listOf(ExposureUpload(
-                "W2zb3BeMWt6Xr2u0ABG32Q==",
-                5,
-                3,
-                2,
-                listOf("GF"),
-                TestType.LAB_RESULT,
-                ReportType.CONFIRMED_TEST,
-                0))))
+        expectThat(pcrExposureUploadFactory.create(submission)).containsExactly(
+            ExposureUpload(
+                keyData = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = 5,
+                transmissionRiskLevel = 3,
+                rollingPeriod = 2,
+                regions = listOf("GF"),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
+            )
+        )
     }
 
     @Test
@@ -134,9 +159,10 @@ class FederatedExposureUploadFactoryTest {
         val submission = Submission(
             Instant.EPOCH,
             ObjectKey.of("mobile/LAB_RESULT/abc"),
-            StoredTemporaryExposureKeyPayload(emptyList()))
+            StoredTemporaryExposureKeyPayload(emptyList())
+        )
 
-        assertThat(fedExposureUploadFactory.create(submission), equalTo(emptyList()))
+        expectThat(fedExposureUploadFactory.create(submission)).isEmpty()
     }
 
 }

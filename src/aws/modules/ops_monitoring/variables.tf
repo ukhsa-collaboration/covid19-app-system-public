@@ -88,6 +88,37 @@ variable "virology_upload_api_gateway_id" {
   description = "id of virology upload api gateway"
 }
 
+variable "analytics_events_submission_gateway_id" {
+  description = "id of analytics events submission api gateway"
+}
+variable "analytics_submission_fast_ingest_gateway_id" {
+  description = "id of analytics submission fast ingest api gateway"
+}
+variable "crash_reports_submission_gateway_id" {
+  description = "id of crash reports submission api gateway"
+}
+variable "diagnosis_keys_submission_gateway_id" {
+  description = "id of diagnosis keys submission api gateway"
+}
+variable "empty_submission_gateway_id" {
+  description = "id of empty submission api gateway"
+}
+variable "exposure_notification_circuit_breaker_gateway_id" {
+  description = "id of exposure notification circuit breaker api gateway"
+}
+variable "isolation_payment_submission_gateway_id" {
+  description = "id of isolation payment submission api gateway"
+}
+variable "risky_post_districts_upload_gateway_id" {
+  description = "id of risky post districts upload api gateway"
+}
+variable "risky_venues_upload_gateway_id" {
+  description = "id of risky venues upload api gateway"
+}
+variable "risky_venues_circuit_breaker_gateway_id" {
+  description = "id of risky venues circuit breaker api gateway"
+}
+
 variable "shield_protected_arns" {
   description = "ARN of resources protected by Shield Advanced"
   type        = list(string)

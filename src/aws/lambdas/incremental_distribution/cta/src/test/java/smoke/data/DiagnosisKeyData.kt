@@ -11,8 +11,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
-import java.util.Base64
-import java.util.UUID
+import java.util.*
 
 object DiagnosisKeyData {
     private val keyGenerator = CrockfordDammRandomStringGenerator(SecureRandom("".toByteArray()), emptyList())

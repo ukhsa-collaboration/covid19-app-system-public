@@ -158,7 +158,9 @@ class DistributionService(
         for (submission in submissions) {
             if (zipPeriod.isCoveringSubmissionDate(submission.submissionDate, window.zipSubmissionPeriodOffset)) {
                 for (key in submission.payload.temporaryExposureKeys) {
-                    if (ENIntervalNumber(key.rollingStartNumber.toLong()).validUntil(window.zipExpirationExclusive())) {
+                    val enIntervalNumber = ENIntervalNumber(key.rollingStartNumber.toLong())
+                    if (enIntervalNumber.validUntil(window.zipExpirationExclusive())) {
+                        events(ValidSubmission(zipPeriod.zipPath(), submission.submissionDate, enIntervalNumber))
                         temporaryExposureKeys.add(key)
                     }
                 }

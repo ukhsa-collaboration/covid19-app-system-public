@@ -37,4 +37,22 @@ namespace :validate do
     puts "Validating \n Mapping file #{mapping_file}\n Message metadata: #{metadata_file}"
     validate_local_messages(la_message_mapping["las"], local_messages_metadata["messages"])
   end
+
+  desc "Validate analytics fields"
+  task :"analytics-fields" do
+    include NHSx::Validate
+
+    class DuplicateCheckingHash < Hash
+      attr_accessor :duplicate_check_off
+
+      def []=(key, value)
+        raise GaudiError, "Failed: Found duplicate key \"#{key}\" while parsing json! Please cleanup your JSON input!" if !duplicate_check_off && has_key?(key)
+        super
+      end
+    end
+
+    fields_file_location = File.join($configuration.base, "/src/aws/analytics_fields/fields.json")
+    analytics_fields = JSON.parse(File.read(fields_file_location), { :object_class => DuplicateCheckingHash })
+    validate_fields(analytics_fields)
+  end
 end

@@ -1,39 +1,51 @@
 package uk.nhs.nhsx.diagnosiskeydist
 
 import com.amazonaws.services.s3.model.S3ObjectSummary
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import strikt.api.expectCatching
+import strikt.api.expectThat
+import strikt.assertions.containsExactly
+import strikt.assertions.isEqualTo
+import strikt.assertions.isFailure
+import strikt.assertions.isNotEmpty
+import strikt.assertions.isTrue
+import strikt.assertions.map
+import strikt.assertions.message
 import uk.nhs.nhsx.diagnosiskeydist.s3.limit
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.testhelper.data.TestData
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_KEYS_PAYLOAD_DESERIALIZED
+import uk.nhs.nhsx.testhelper.data.TestData.STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET
+import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
 import java.io.ByteArrayInputStream
 import java.time.Instant
-import java.util.Date
 
 class SubmissionRepositoryTest {
 
     private val now = Instant.parse("2020-01-13T13:00:00.000Z")
 
     @Test
-    fun deserializesStoredPayload() {
+    fun `deserializes stored payload`() {
         val inputStream = ByteArrayInputStream(TestData.STORED_KEYS_PAYLOAD.toByteArray())
         val payload = SubmissionRepository.getTemporaryExposureKeys(inputStream)
-        assertThat(payload.temporaryExposureKeys).isNotEmpty
-        assertThat(
-            payload.temporaryExposureKeys.stream()
-                .allMatch { matchKey(it, TestData.STORED_KEYS_PAYLOAD_DESERIALIZED) }).isTrue
+
+        expectThat(payload.temporaryExposureKeys).isNotEmpty()
+        expectThat(payload.temporaryExposureKeys.all { matchKey(it, STORED_KEYS_PAYLOAD_DESERIALIZED) }).isTrue()
     }
 
     @Test
-    fun deserializesStoredPayloadWithDaysSinceOnset() {
+    fun `deserializes stored payload with days since onset`() {
         val inputStream = ByteArrayInputStream(TestData.STORED_KEYS_PAYLOAD_DAYS_SINCE_ONSET.toByteArray())
         val payload = SubmissionRepository.getTemporaryExposureKeys(inputStream)
-        assertThat(payload.temporaryExposureKeys).isNotEmpty
-        assertThat(
-            payload.temporaryExposureKeys.stream()
-                .allMatch { matchKey(it, TestData.STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET) }).isTrue
+
+        expectThat(payload.temporaryExposureKeys).isNotEmpty()
+        expectThat(payload.temporaryExposureKeys.all {
+            matchKey(
+                it,
+                STORED_KEYS_PAYLOAD_DESERIALIZED_DAYS_SINCE_ONSET
+            )
+        }).isTrue()
     }
 
     @Test
@@ -61,10 +73,10 @@ class SubmissionRepositoryTest {
         )
 
         testcases.forEach { (limit, maxResults, expected) ->
-            assertThat(summaries.limit(limit, maxResults))
+            expectThat(summaries.limit(limit, maxResults))
                 .describedAs("limit: $limit, maxResults: $maxResults")
-                .extracting("key")
-                .containsExactlyElementsOf(expected)
+                .map(S3ObjectSummary::getKey)
+                .containsExactly(expected)
         }
     }
 
@@ -72,34 +84,32 @@ class SubmissionRepositoryTest {
     fun `throws exception if limit is 0`() {
         val summaries = listOf(summary(2, "e", now))
 
-        assertThatThrownBy { summaries.limit(0, 10) }
-            .hasMessage("limit needs to be greater than 0")
+        expectCatching { summaries.limit(0, 10) }
+            .isFailure().message.isEqualTo("limit needs to be greater than 0")
     }
 
     @Test
     fun `throws exception if limit is negative`() {
         val summaries = listOf(summary(2, "e", now))
 
-        assertThatThrownBy { summaries.limit(-1, 10) }
-            .hasMessage("limit needs to be greater than 0")
+        expectCatching { summaries.limit(-1, 10) }
+            .isFailure().message.isEqualTo("limit needs to be greater than 0")
     }
 
-    private fun summary(ageSeconds: Long, objectKey: String, now: Instant): S3ObjectSummary =
-        S3ObjectSummary().apply {
-            key = objectKey
-            lastModified = Date.from(now.minusSeconds(ageSeconds))
-        }
+    private fun summary(
+        ageSeconds: Long,
+        objectKey: String,
+        now: Instant
+    ) = S3ObjectSummary(objectKey, lastModified = now.minusSeconds(ageSeconds))
 
     private fun matchKey(
         storedKey: StoredTemporaryExposureKey,
         deserializedPayload: StoredTemporaryExposureKeyPayload
-    ): Boolean =
-        deserializedPayload.temporaryExposureKeys.stream()
-            .anyMatch { k: StoredTemporaryExposureKey ->
-                k.key == storedKey.key
-                    && k.rollingPeriod == storedKey.rollingPeriod
-                    && k.rollingStartNumber == storedKey.rollingStartNumber
-                    && k.transmissionRisk == storedKey.transmissionRisk
-                    && (k.daysSinceOnsetOfSymptoms == null && storedKey.daysSinceOnsetOfSymptoms == null || k.daysSinceOnsetOfSymptoms != null && k.daysSinceOnsetOfSymptoms == storedKey.daysSinceOnsetOfSymptoms)
-            }
+    ) = deserializedPayload.temporaryExposureKeys.any {
+        it.key == storedKey.key
+            && it.rollingPeriod == storedKey.rollingPeriod
+            && it.rollingStartNumber == storedKey.rollingStartNumber
+            && it.transmissionRisk == storedKey.transmissionRisk
+            && (it.daysSinceOnsetOfSymptoms == null && storedKey.daysSinceOnsetOfSymptoms == null || it.daysSinceOnsetOfSymptoms != null && it.daysSinceOnsetOfSymptoms == storedKey.daysSinceOnsetOfSymptoms)
+    }
 }

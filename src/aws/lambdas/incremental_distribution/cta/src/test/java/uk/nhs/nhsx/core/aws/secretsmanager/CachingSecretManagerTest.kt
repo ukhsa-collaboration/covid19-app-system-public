@@ -13,7 +13,7 @@ class CachingSecretManagerTest {
         val secretName = SecretName.of("Foobar")
 
         val delegate = mockk<SecretManager>()
-        every { delegate.getSecret(secretName) } returns Optional.ofNullable(SecretValue.of("Fooabr"))
+        every { delegate.getSecret(secretName) } returns Optional.ofNullable(SecretValue.of("Foobar"))
 
         val manager = CachingSecretManager(delegate)
 

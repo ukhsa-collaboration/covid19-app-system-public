@@ -48,3 +48,5 @@ urllib3==1.25.9
 wcwidth==0.2.5
 wrapt==1.12.1
 zipp==3.1.0
+pyarrow==4.0.1
+pandas==1.2.5

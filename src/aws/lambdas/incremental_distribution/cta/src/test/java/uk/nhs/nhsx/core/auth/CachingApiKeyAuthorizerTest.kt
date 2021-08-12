@@ -1,8 +1,11 @@
 package uk.nhs.nhsx.core.auth
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import org.junit.jupiter.api.Test
+import strikt.api.expect
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isFalse
+import strikt.assertions.isTrue
 import java.util.concurrent.atomic.AtomicInteger
 
 class CachingApiKeyAuthorizerTest {
@@ -10,47 +13,96 @@ class CachingApiKeyAuthorizerTest {
     private var result = true
     private val count = AtomicInteger()
     private var expected = "name"
-    private val delegate = ApiKeyAuthorizer { k: ApiKey ->
+
+    private val delegate = ApiKeyAuthorizer {
         count.incrementAndGet()
-        assertThat(k.keyName, equalTo(expected))
+        expectThat(it.keyName).isEqualTo(expected)
         result
     }
-    private val authorizer: ApiKeyAuthorizer = CachingApiKeyAuthorizer(delegate)
+
+    private val authorizer = CachingApiKeyAuthorizer(delegate)
 
     @Test
     fun `caches positive result`() {
-        assertThat(authorizer.authorize(ApiKey("name", "value")), equalTo(true))
-        assertThat(count.get(), equalTo(1))
-        assertThat(authorizer.authorize(ApiKey("name", "value")), equalTo(true))
-        assertThat(count.get(), equalTo(1))
+        expect {
+            repeat(5) {
+                that(authorizer.authorize(ApiKey("name", "value")))
+                    .describedAs("authorize")
+                    .isTrue()
+
+                that(count)
+                    .get("cacheMiss", AtomicInteger::get)
+                    .isEqualTo(1)
+            }
+        }
     }
 
     @Test
     fun `caches negative result`() {
         result = false
-        assertThat(authorizer.authorize(ApiKey("name", "value")), equalTo(false))
-        assertThat(count.get(), equalTo(1))
-        assertThat(authorizer.authorize(ApiKey("name", "value")), equalTo(false))
-        assertThat(count.get(), equalTo(1))
+
+        expect {
+            repeat(5) {
+                that(authorizer.authorize(ApiKey("name", "value")))
+                    .describedAs("authorize")
+                    .isFalse()
+
+                that(count)
+                    .get("cacheMiss", AtomicInteger::get)
+                    .isEqualTo(1)
+            }
+        }
     }
 
     @Test
     fun `does not mix up results by key name`() {
-        assertThat(authorizer.authorize(ApiKey("name", "value")), equalTo(true))
-        assertThat(count.get(), equalTo(1))
-        result = false
-        expected = "somekey"
-        assertThat(authorizer.authorize(ApiKey("somekey", "somevalue")), equalTo(false))
-        assertThat(count.get(), equalTo(2))
+        expect {
+            that(authorizer.authorize(ApiKey("name", "value")))
+                .describedAs("authorize")
+                .isTrue()
+
+            that(count)
+                .get("cacheMiss", AtomicInteger::get)
+                .isEqualTo(1)
+
+            result = false
+            expected = "somekey"
+
+            that(authorizer.authorize(ApiKey("somekey", "somevalue")))
+                .describedAs("authorize")
+                .isFalse()
+
+            that(count)
+                .get("cacheMiss", AtomicInteger::get)
+                .isEqualTo(2)
+        }
     }
 
     @Test
     fun `does not mix up results by key value`() {
-        assertThat(authorizer.authorize(ApiKey("name", "value")), equalTo(true))
-        assertThat(count.get(), equalTo(1))
-        result = false
-        assertThat(authorizer.authorize(ApiKey("name", "othervalue")), equalTo(false))
-        assertThat(authorizer.authorize(ApiKey("name", "value")), equalTo(true))
-        assertThat(count.get(), equalTo(2))
+        expect {
+            that(authorizer.authorize(ApiKey("name", "value")))
+                .describedAs("authorize")
+                .isTrue()
+
+            that(count)
+                .get("cacheMiss", AtomicInteger::get)
+                .isEqualTo(1)
+
+            result = false
+
+            that(authorizer.authorize(ApiKey("name", "othervalue")))
+                .describedAs("authorize")
+                .isFalse()
+
+            that(authorizer.authorize(ApiKey("name", "value")))
+                .describedAs("authorize")
+                .isTrue()
+
+            that(count)
+                .get("cacheMiss", AtomicInteger::get)
+                .isEqualTo(2)
+
+        }
     }
 }

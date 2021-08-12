@@ -4,10 +4,10 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.kms.AWSKMSClientBuilder
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
-import uk.nhs.nhsx.core.EnvironmentKeys
+import uk.nhs.nhsx.core.EnvironmentKeys.SUBMISSIONS_TOKENS_TABLE
+import uk.nhs.nhsx.core.EnvironmentKeys.SUBMISSION_STORE
 import uk.nhs.nhsx.core.HttpResponses.ok
 import uk.nhs.nhsx.core.Json
-import uk.nhs.nhsx.core.readJsonOrNull
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.UniqueId.Companion.ID
@@ -28,10 +28,11 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.handler.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.RoutingHandler
+import uk.nhs.nhsx.core.readJsonOrNull
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
-import uk.nhs.nhsx.core.handler.RoutingHandler
 import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.withSignedResponses
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
@@ -63,8 +64,8 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
         s3Storage,
         awsDynamoClient,
         objectKeyNameProvider,
-        environment.access.required(EnvironmentKeys.SUBMISSIONS_TOKENS_TABLE),
-        environment.access.required(EnvironmentKeys.SUBMISSION_STORE),
+        environment.access.required(SUBMISSIONS_TOKENS_TABLE),
+        environment.access.required(SUBMISSION_STORE),
         clock,
         events
     )

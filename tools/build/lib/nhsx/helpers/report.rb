@@ -71,5 +71,30 @@ module NHSx
       files_changed.map { |path| SIGNIFICANT_FILES.include?(path) }.uniq.reduce(:|)
     end
 
+    def targets_report(terraform_configuration, named_environments, branches, system_config)
+      Dir.chdir(terraform_configuration) do
+        init_terraform(system_config)
+        run_command("Select default workspace", "terraform workspace select default", system_config)
+        cmd = run_command("List workspaces", "terraform workspace list", system_config)
+        workspaces = cmd.output.chomp.lines.map(&:chomp).map(&:strip).reject { |ln| ln =~ /default/ }
+
+        temporary_workspaces = workspaces - named_environments
+
+        puts "There are #{branches.size} remote branches excluding master"
+        puts "There are #{temporary_workspaces.size} temporary target environments"
+
+        active_workspaces = {}
+        branches.each do |branch|
+          active_workspaces[branch] = generate_workspace_id(branch)
+        end
+
+        active_workspaces.each do |branch, workspace|
+          puts "Workspace #{workspace} corresponds to branch #{branch}" if temporary_workspaces.include?(workspace)
+        end
+
+        orphan_workspaces = temporary_workspaces - active_workspaces.values
+        puts "There #{orphan_workspaces.size} orphan temporary target environments\n #{orphan_workspaces.join(",")}"
+      end
+    end
   end
 end

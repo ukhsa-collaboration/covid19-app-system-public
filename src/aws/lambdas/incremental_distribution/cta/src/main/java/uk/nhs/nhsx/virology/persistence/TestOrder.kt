@@ -5,7 +5,7 @@ import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
 import uk.nhs.nhsx.domain.TestResultPollingToken
 import java.time.LocalDateTime
 
-class TestOrder(
+data class TestOrder(
     val ctaToken: CtaToken,
     val downloadCounter: Int,
     val testResultPollingToken: TestResultPollingToken,
@@ -17,5 +17,11 @@ class TestOrder(
         testResultPollingToken: TestResultPollingToken,
         diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
         expiryTimeToLive: LocalDateTime
-    ) : this(ctaToken, 0, testResultPollingToken, diagnosisKeySubmissionToken, expiryTimeToLive)
+    ) : this(
+        ctaToken = ctaToken,
+        downloadCounter = 0,
+        testResultPollingToken = testResultPollingToken,
+        diagnosisKeySubmissionToken = diagnosisKeySubmissionToken,
+        expiryTimeToLive = expiryTimeToLive
+    )
 }

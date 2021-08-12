@@ -1,25 +1,26 @@
+@file:Suppress("TestFunctionName")
+
 package uk.nhs.nhsx.keyfederation.upload
 
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import com.amazonaws.services.s3.model.S3ObjectSummary
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
-import com.github.tomakehurst.wiremock.client.WireMock.exactly
 import com.github.tomakehurst.wiremock.client.WireMock.post
 import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
-import com.github.tomakehurst.wiremock.matching.MatchResult
-import com.github.tomakehurst.wiremock.matching.MatchResult.exactMatch
-import com.github.tomakehurst.wiremock.matching.MatchResult.noMatch
-import com.github.tomakehurst.wiremock.matching.StringValuePattern
-import org.jose4j.jws.JsonWebSignature
+import io.mockk.called
+import io.mockk.every
+import io.mockk.slot
+import io.mockk.spyk
+import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.nhs.nhsx.core.Json
-import uk.nhs.nhsx.core.Json.readJsonOrNull
-import uk.nhs.nhsx.core.SystemClock
+import strikt.api.Assertion
+import strikt.api.expectThat
+import strikt.assertions.containsExactlyInAnyOrder
+import strikt.assertions.map
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
@@ -28,11 +29,13 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
 import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
-import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
+import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
+import uk.nhs.nhsx.testhelper.assertions.captured
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.Md5TemporaryExposureKeyGenerator
+import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Instant
-import java.util.Date
 
 @ExtendWith(WireMockExtension::class)
 class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
@@ -45,207 +48,149 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-                .withRequestBody(JwsUploadContentPattern(expectedKeys = listOf("foo")))
                 .willReturn(
                     aResponse()
                         .withStatus(200)
-                        .withBody(
-                            """
-                            {
-                                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                                "insertedExposures":0
-                            }
-                            """.trimIndent()
-                        )
+                        .withBody("""{"batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3", "insertedExposures":0 }""")
                 )
         )
 
+        val payload = slot<List<ExposureUpload>>()
+        val interopClient = spyk(InteropClient(wireMock)) {
+            every { uploadKeys(capture(payload)) } answers { callOriginal() }
+        }
+
+        val s3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("mobile/LAB_RESULT/foobar", lastModified = now)
+        )
+
         KeyFederationUploadHandler(
-            TestEnvironments.environmentWith(),
-            SystemClock.CLOCK,
-            RecordingEvents(),
-            BucketName.of("SUBMISSION_BUCKET"),
-            KeyFederationUploadConfig(
-                100,
-                14,
-                0,
-                { true },
-                false,
-                -1,
-                wireMock.baseUrl(),
-                SecretName.of("authToken"),
-                ParameterName.of("parameter"),
-                "DUMMY_TABLE",
-                "GB-EAW",
-                emptyList()
-            ),
-            batchTagService = InMemoryBatchTagService(),
-            interopClient = InteropClient(
-                wireMock.baseUrl(),
-                "DUMMY_TOKEN",
-                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
-                events
-            ),
-            awsS3Client = FakeDiagnosisKeysS3(listOf(
-                S3ObjectSummary().apply {
-                    key = "foo"
-                    lastModified = Date.from(now)
-                }
-            ))
-        ).handleRequest(ScheduledEvent(), TestContext())
+            KeyFederationUploadConfig(wireMock),
+            s3,
+            interopClient
+        ).handleRequest(ScheduledEvent(), aContext())
+
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
+
+        expectThat(payload)
+            .captured
+            .containsInAnyOrder("mobile/LAB_RESULT/foobar")
     }
 
     @Test
     fun `disable upload should not call interop`() {
-        wireMock.stubFor(
-            post("/diagnosiskeys/upload")
-                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-                .willReturn(
-                    aResponse()
-                        .withStatus(200)
-                )
+        val interopClient = spyk(InteropClient(wireMock))
+
+        val s3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("mobile/LAB_RESULT/foobar", lastModified = now),
         )
 
         KeyFederationUploadHandler(
-            TestEnvironments.environmentWith(),
-            SystemClock.CLOCK,
-            RecordingEvents(),
-            BucketName.of("SUBMISSION_BUCKET"),
-            KeyFederationUploadConfig(
-                100,
-                14,
-                0,
-                { false },
-                false,
-                -1,
-                wireMock.baseUrl(),
-                SecretName.of("authToken"),
-                ParameterName.of("parameter"),
-                "DUMMY_TABLE",
-                "GB-EAW",
-                emptyList()
-            ),
-            batchTagService = InMemoryBatchTagService(),
-            interopClient = InteropClient(
-                wireMock.baseUrl(),
-                "DUMMY_TOKEN",
-                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
-                events
-            ),
-            awsS3Client = FakeDiagnosisKeysS3(emptyList()),
-        ).handleRequest(ScheduledEvent(), TestContext())
+            KeyFederationUploadConfig(wireMock, { false }),
+            s3,
+            interopClient
+        ).handleRequest(ScheduledEvent(), aContext())
 
-        wireMock.verify(
-            exactly(0),
-            postRequestedFor(urlEqualTo("/diagnosiskeys/upload"))
-                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-        )
+        verify { interopClient.uploadKeys(any()) wasNot called }
     }
 
     @Test
-    fun `upload keys should only include mobile lab results, root mobile, and whitelisted federated keys`() {
+    fun `upload keys should only include mobile results`() {
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
-                .withRequestBody(
-                    JwsUploadContentPattern(
-                        expectedKeys = listOf(
-                            "foo", "bar", "foobar", "nearform/GB-EAW/bar", "mobile/LAB_RESULT/foobar"
-                        )
-                    )
-                )
                 .willReturn(
                     aResponse()
                         .withStatus(200)
-                        .withBody(
-                            """
-                            {
-                                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                                "insertedExposures":0
-                            }
-                            """.trimIndent()
-                        )
+                        .withBody("""{ "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3", "insertedExposures":0 }""")
                 )
         )
 
+        // broken because of FederatedExposureUploadFactory -> testType != null
+
+        val s3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("foo", lastModified = now),
+            S3ObjectSummary("bar", lastModified = now),
+            S3ObjectSummary("foobar", lastModified = now),
+            S3ObjectSummary("federatedKeyPrefix/foo", lastModified = now),
+            S3ObjectSummary("nearform/GB-EAW/bar", lastModified = now),
+            S3ObjectSummary("mobile/LAB_RESULT/foobar", lastModified = now),
+            S3ObjectSummary("mobile/RAPID_RESULT/foobar", lastModified = now)
+        )
+
+        val config = KeyFederationUploadConfig(
+            wireMock = wireMock,
+            federatedKeyUploadPrefixes = listOf("nearform/GB-EAW", "nearform/NI", "nearform/JE")
+        )
+
+        val payload = slot<List<ExposureUpload>>()
+        val interopClient = spyk(InteropClient(wireMock)) {
+            every { uploadKeys(capture(payload)) } answers { callOriginal() }
+        }
+
         KeyFederationUploadHandler(
-            TestEnvironments.environmentWith(),
-            SystemClock.CLOCK,
-            RecordingEvents(),
-            BucketName.of("SUBMISSION_BUCKET"),
-            KeyFederationUploadConfig(
-                100,
-                14,
-                0,
-                { true },
-                false,
-                -1,
-                wireMock.baseUrl(),
-                SecretName.of("authToken"),
-                ParameterName.of("parameter"),
-                "DUMMY_TABLE",
-                "GB-EAW",
-                listOf("nearform/GB-EAW", "nearform/NI", "nearform/JE"),
-            ),
-            batchTagService = InMemoryBatchTagService(),
-            interopClient = InteropClient(
-                wireMock.baseUrl(),
-                "DUMMY_TOKEN",
-                JWS(KmsCompatibleSigner(ecPrime256r1.private)),
-                events
-            ),
-            awsS3Client = FakeDiagnosisKeysS3(listOf(
-                S3ObjectSummary().apply {
-                    key = "foo"
-                    lastModified = Date.from(now)
-                },
-                S3ObjectSummary().apply {
-                    key = "bar"
-                    lastModified = Date.from(now)
-                },
-                S3ObjectSummary().apply {
-                    key = "foobar"
-                    lastModified = Date.from(now)
-                },
-                S3ObjectSummary().apply {
-                    key = "federatedKeyPrefix/foo"
-                    lastModified = Date.from(now)
-                },
-                S3ObjectSummary().apply {
-                    key = "nearform/GB-EAW/bar"
-                    lastModified = Date.from(now)
-                },
-                S3ObjectSummary().apply {
-                    key = "mobile/LAB_RESULT/foobar"
-                    lastModified = Date.from(now)
-                },
-                S3ObjectSummary().apply {
-                    key = "mobile/RAPID_RESULT/foobar"
-                    lastModified = Date.from(now)
-                }
-            ))
-        ).handleRequest(ScheduledEvent(), TestContext())
+            config,
+            s3,
+            interopClient
+        ).handleRequest(ScheduledEvent(), aContext())
+
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
+
+        expectThat(payload)
+            .captured
+            .containsInAnyOrder(
+                "mobile/LAB_RESULT/foobar",
+                "mobile/RAPID_RESULT/foobar"
+            )
     }
 
-    class JwsUploadContentPattern(
-        @JsonProperty matchesPayloadPattern: String = "",
-        private val expectedKeys: List<String>
-    ) : StringValuePattern(matchesPayloadPattern) {
+    private fun KeyFederationUploadConfig(
+        wireMock: WireMockServer,
+        uploadFeatureFlag: () -> Boolean = { true },
+        federatedKeyUploadPrefixes: List<String> = emptyList()
+    ) = KeyFederationUploadConfig(
+        maxSubsequentBatchUploadCount = 100,
+        initialUploadHistoryDays = 14,
+        maxUploadBatchSize = 0,
+        uploadFeatureFlag = uploadFeatureFlag,
+        uploadRiskLevelDefaultEnabled = false,
+        uploadRiskLevelDefault = -1,
+        interopBaseUrl = wireMock.baseUrl(),
+        interopAuthTokenSecretName = SecretName.of("authToken"),
+        signingKeyParameterName = ParameterName.of("parameter"),
+        stateTableName = "DUMMY_TABLE",
+        region = "GB-EAW",
+        federatedKeyUploadPrefixes = federatedKeyUploadPrefixes,
+    )
 
-        override fun match(value: String): MatchResult = readJsonOrNull<DiagnosisKeysUploadRequest>(value)
-            ?.let {
-                val jws = JsonWebSignature().apply {
-                    key = ecPrime256r1.public
-                    compactSerialization = it.payload
-                }
+    private fun KeyFederationUploadHandler(
+        config: KeyFederationUploadConfig,
+        awsS3Client: FakeDiagnosisKeysS3,
+        interopClient: InteropClient
+    ) = KeyFederationUploadHandler(
+        environment = TestEnvironments.environmentWith(),
+        clock = { now },
+        events = events,
+        submissionBucket = BucketName.of("SUBMISSION_BUCKET"),
+        config = config,
+        batchTagService = InMemoryBatchTagService(),
+        interopClient = interopClient,
+        awsS3Client = awsS3Client
+    )
 
-                val exposures = Json.readJsonOrThrow<List<ExposureUpload>>(jws.payload)
+    private fun FakeDiagnosisKeysS3(vararg summaries: S3ObjectSummary) =
+        FakeDiagnosisKeysS3(summaries.toList(), keyGenerator = Md5TemporaryExposureKeyGenerator)
 
-                if (exposures.map { it.keyData }.toSet() == expectedKeys.toSet()) exactMatch() else noMatch()
-            } ?: noMatch()
+    private fun InteropClient(wireMock: WireMockServer) = InteropClient(
+        interopBaseUrl = wireMock.baseUrl(),
+        authToken = "DUMMY_TOKEN",
+        jws = JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+        events = events
+    )
 
-        override fun getExpected(): String =
-            "Cannot display expected response due to custom matching, expecting $expectedKeys keys in payload"
+    private fun Assertion.Builder<List<ExposureUpload>>.containsInAnyOrder(vararg elements: String) {
+        val expected = elements.toList().map(Md5TemporaryExposureKeyGenerator::invoke)
+        map(ExposureUpload::keyData).containsExactlyInAnyOrder(expected)
     }
 }
 

@@ -3,9 +3,13 @@ package uk.nhs.nhsx.analyticsevents
 import com.amazonaws.HttpMethod
 import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
-import org.assertj.core.api.Assertions.assertThat
+import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.METHOD_NOT_ALLOWED
+import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.SERVICE_UNAVAILABLE
 import org.junit.jupiter.api.Test
 import smoke.data.AnalyticsEventsData.analyticsEvents
+import strikt.api.expectThat
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
@@ -17,6 +21,8 @@ import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withCustomOai
@@ -67,7 +73,7 @@ class AnalyticsEventsHandlerTest {
             .withBody(analyticsEvents(UUID.randomUUID()).trimIndent())
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
-        assertThat(response.statusCode).isEqualTo(200)
+        expectThat(response).status.isSameAs(OK)
     }
 
     @Test
@@ -109,7 +115,7 @@ class AnalyticsEventsHandlerTest {
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
-        assertThat(response.statusCode).isEqualTo(400)
+        expectThat(response).status.isSameAs(BAD_REQUEST)
     }
 
     @Test
@@ -124,7 +130,7 @@ class AnalyticsEventsHandlerTest {
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
-        assertThat(response.statusCode).isEqualTo(400)
+        expectThat(response).status.isSameAs(BAD_REQUEST)
     }
 
     @Test
@@ -138,7 +144,7 @@ class AnalyticsEventsHandlerTest {
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
-        assertThat(response.statusCode).isEqualTo(400)
+        expectThat(response).status.isSameAs(BAD_REQUEST)
     }
 
     @Test
@@ -152,7 +158,7 @@ class AnalyticsEventsHandlerTest {
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
-        assertThat(response.statusCode).isEqualTo(405)
+        expectThat(response).status.isSameAs(METHOD_NOT_ALLOWED)
     }
 
     @Test
@@ -184,7 +190,6 @@ class AnalyticsEventsHandlerTest {
 
         val response = handler.handleRequest(request, ContextBuilder.aContext())
 
-        assertThat(response.statusCode).isEqualTo(503)
+        expectThat(response).status.isSameAs(SERVICE_UNAVAILABLE)
     }
-
 }

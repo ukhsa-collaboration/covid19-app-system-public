@@ -1,3 +1,70 @@
 {
-    "las": {}
+    "las": {
+        "W06000018": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000008": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000022": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000012": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000002": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000021": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000011": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000001": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000016": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000006": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000020": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000010": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000015": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000005": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000024": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000014": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000004": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000019": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000009": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000023": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000013": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000003": [
+            "Notification.Wales.SelfIsolation"
+        ]
+    }
 }

@@ -125,7 +125,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "selectedHasSymptomsM2Journey": 1,
     "selectedHasNoSymptomsM2Journey": 1,
     "selectedLFDTestOrderingM2Journey": 1,
-    "selectedHasLFDTestM2Journey": 1
+    "selectedHasLFDTestM2Journey": 1,
+    "optedOutForContactIsolation": 1,
+    "optedOutForContactIsolationBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -234,7 +236,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "selectedHasSymptomsM2Journey": 1,
     "selectedHasNoSymptomsM2Journey": 1,
     "selectedLFDTestOrderingM2Journey": 1,
-    "selectedHasLFDTestM2Journey": 1
+    "selectedHasLFDTestM2Journey": 1,
+    "optedOutForContactIsolation": 1,
+    "optedOutForContactIsolationBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -321,7 +325,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `selectedHasNoSymptomsM2Journey`
   * `selectedLFDTestOrderingM2Journey`
   * `selectedHasLFDTestM2Journey`
-  
+  * `optedOutForContactIsolation`
+  * `optedOutForContactIsolationBackgroundTick`
 
 
 ### HTTP Response Codes
@@ -329,3 +334,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
 | --- | --- |
 | `200 OK` | Submission processed |
 | `400 Bad Request` | Bad request could not process payload |
+
+##Notes
+
+To preserve user privacy,  smaller postal districts in analytics submissions are aggregated before persisting and forwarding.
+See [Privacy Filtering](../../../../design/details/privacy-filtering.md).

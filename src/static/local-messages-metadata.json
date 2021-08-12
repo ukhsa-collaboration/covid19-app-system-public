@@ -1187,6 +1187,152 @@
           ]
         }
       }
+    },
+    "Notification.Wales.SelfIsolation": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "en": {
+          "head": "Change in self-isolation advice in Wales from 7 August",
+          "body": "Open this message for more information.",
+          "content": [
+            {
+              "type": "para",
+              "text": "In Wales, those who are fully vaccinated (full course of vaccine plus 14 days) or under 18 are no longer advised to self-isolate if they are contact of a confirmed case. You are still advised to book a test on day 2 and day 8."
+            },
+            {
+              "type": "para",
+              "text": "The app will be updated soon to reflect these changes, but right now you will see a self-isolation countdown clock telling you to self-isolate if you’re a close contact. You are not required to follow this advice if you’re fully vaccinated, but please remember to book a test and continue to follow the latest advice to help stop the spread of COVID-19."
+            }
+          ]
+        },
+        "cy": {
+          "head": "Nodyn pwysig am y newid i’r cyngor hunanynysu yng Nghymru o 7 Awst",
+          "body": "Agorwch y neges yma i gael rhagor o wybodaeth.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Yng Nghymru, os ydych wedi’ch brechu’n llawn (h.y. cwrs llawn y brechlyn + 14 diwrnod) neu dan 18 oed, nid oes rhaid ichi hunanynysu os ydych yn gyswllt agos i rywun positif.  Ond dylech gymryd prawf ar ddiwrnod 2 a diwrnod 8."
+            },
+            {
+              "type": "para",
+              "text": "Caiff yr ap ei ddiweddaru cyn bo hir i adlewyrchu’r newid hwn. Am y tro, fe welwch gloc yn cyfri’r dyddiau hunanynysu os ydych yn gyswllt agos. Cewch anwybyddu hyn os ydych wedi’ch brechu’n llawn. Ond cofiwch drefnu prawf a dal ati i ddilyn y cyngor diweddaraf i atal lledaeniad COVID-19."
+            }
+          ]
+        }
+      }
+    },
+    "Notification.Examples.EnglishOnly": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "en": {
+          "head": "Here is an interesting notification",
+          "body": "Here is the body of the notification",
+          "content": [
+            {
+              "type": "para",
+              "text": "Something interesting in [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "Here are some key pieces of information to help you stay safe.",
+              "link": "https://example.com",
+              "linkText": "Find out about testing"
+            }
+          ]
+        }
+      }
+    },
+    "Notification.Examples.EnglishAndWelsh": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "en": {
+          "head": "Here is an interesting notification",
+          "body": "Here is the body of the notification",
+          "content": [
+            {
+              "type": "para",
+              "text": "Something interesting in [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "Here are some key pieces of information to help you stay safe.",
+              "link": "https://example.com",
+              "linkText": "Find out about testing"
+            }
+          ]
+        },
+        "cy": {
+          "head": "This is a Welsh notification",
+          "body": "Here is the body of the notification in Welse",
+          "content": [
+            {
+              "type": "para",
+              "text": "Welsh: Something interesting in [postcode]."
+            },
+            {
+              "type": "para",
+              "text": "Welsh: Here are some key pieces of information to help you stay safe.",
+              "link": "https://example.com",
+              "linkText": "Welsh: Find out about testing"
+            }
+          ]
+        }
+      }
+    },
+    "Notification.Examples.ReferenceGood.EnglishOnly": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "en": {
+          "head": "Coronavirus (COVID-19) variant of concern in [postcode]",
+          "body": "Open this message for more information.",
+          "content": [
+            {
+              "type": "para",
+              "text": "This variant could cause the virus to spread more quickly."
+            }
+          ]
+        }
+      }
+    },
+    "Notification.Examples.ReferenceBad.MissingLanguage": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "en": {
+          "head": "Coronavirus (COVID-19) variant of concern in [postcode]",
+          "body": "Open this message for more information.",
+          "content": [
+            {
+              "type": "para",
+              "text": "This is a phrase"
+            }
+          ]
+        },
+        "ar": {
+          "head": "هناك مخاوف من ظهور سلالة جديدة من فيروس كورونا (كوفيد-19) في [postcode]",
+          "body": "افتح هذه الرسالة للاطلاع على المزيد من المعلومات.",
+          "content": [
+            {
+              "type": "para",
+              "text": ""
+            }
+          ]
+        },
+        "cy": {
+          "head": "Mae amrywiolyn coronafeirws (COVID-19) sy'n peri pryder yn [postcode]",
+          "body": "Agorwch y neges yma i gael rhagor o wybodaeth.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Welsh: This is a phrase"
+            }
+          ]
+        }
+      }
     }
   }
 }

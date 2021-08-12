@@ -1,22 +1,27 @@
 package smoke
 
-import com.natpryce.hamkrest.assertion.assertThat
-import org.http4k.client.JavaHttpClient
+import org.http4k.cloudnative.env.Environment
 import org.http4k.core.ContentType.Companion.APPLICATION_JSON
 import org.http4k.core.Method.POST
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status
-import org.http4k.hamkrest.hasBody
-import org.http4k.hamkrest.hasHeader
-import org.http4k.hamkrest.hasStatus
+import org.http4k.core.Status.Companion.FORBIDDEN
+import org.http4k.core.Status.Companion.OK
 import org.junit.jupiter.api.Test
+import smoke.actors.createHandler
 import smoke.env.SmokeTests
+import strikt.api.expectThat
+import strikt.assertions.isEmpty
+import strikt.assertions.isNull
+import uk.nhs.nhsx.testhelper.assertions.bodyString
+import uk.nhs.nhsx.testhelper.assertions.hasStatus
+import uk.nhs.nhsx.testhelper.assertions.signatureDateHeader
+import uk.nhs.nhsx.testhelper.assertions.signatureHeader
 
 class UnauthorizedRequestsSmokeTest {
 
     private val config = SmokeTests.loadConfig()
-    private val client = JavaHttpClient()
+    private val client = createHandler(Environment.ENV)
     private val unAuthHeaders = listOf(Pair("Content-Type", APPLICATION_JSON.value))
     private fun unAuthorizedPostRequest(uri: String) = Request(POST, uri).headers(unAuthHeaders)
 
@@ -125,10 +130,13 @@ class UnauthorizedRequestsSmokeTest {
         val request = unAuthorizedPostRequest(uri)
         val response = client(request)
 
-        assertThat(response, hasStatus(Status.OK)) // analytics submissions are authorized further downstream
-        assertThat(response, !hasHeader("x-amz-meta-signature"))
-        assertThat(response, !hasHeader("x-amz-meta-signature-date"))
-        assertThat(response, hasBody(""))
+        expectThat(response)
+            .hasStatus(OK)  // analytics submissions are authorized further downstream
+            .and {
+                signatureHeader.isNull()
+                signatureDateHeader.isNull()
+                bodyString.isEmpty()
+            }
     }
 
     @Test
@@ -141,9 +149,10 @@ class UnauthorizedRequestsSmokeTest {
     }
 
     private fun assertUnAuthorized(response: Response) {
-        assertThat(response, hasStatus(Status.FORBIDDEN))
-        assertThat(response, !hasHeader("x-amz-meta-signature"))
-        assertThat(response, !hasHeader("x-amz-meta-signature-date"))
-        assertThat(response, hasBody(""))
+        expectThat(response).hasStatus(FORBIDDEN).and {
+            signatureHeader.isNull()
+            signatureDateHeader.isNull()
+            bodyString.isEmpty()
+        }
     }
 }

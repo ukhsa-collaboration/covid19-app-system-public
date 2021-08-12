@@ -161,6 +161,15 @@ module "analytics_google_installs_overview_report" {
   tags                     = var.tags
 }
 
+module "analytics_apple_sales_report" {
+  source                   = "./modules/apple_sales_report"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
 module "analytics_vaccinations_england" {
   source                   = "./modules/analytics_vaccinations_england"
   service                  = local.service
@@ -221,8 +230,90 @@ module "android_historical_ratings" {
   database_name            = aws_glue_catalog_database.this.name
   tags                     = var.tags
 }
+
 module "quicksight_users" {
   source                   = "./modules/quicksight_users"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_usage" {
+  source                   = "./modules/quicksight_usage"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_data_sets" {
+  source                   = "./modules/quicksight_data_sets"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_ingestions" {
+  source                   = "./modules/quicksight_ingestions"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_dashboards" {
+  source                   = "./modules/quicksight_dashboards"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_dashboards_for_data_sets" {
+  source                   = "./modules/quicksight_dashboards_for_data_sets"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_data_sources" {
+  source                   = "./modules/quicksight_data_sources"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_analyses" {
+  source                   = "./modules/quicksight_analyses"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_analyses_for_data_sets" {
+  source                   = "./modules/quicksight_analyses_for_data_sets"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
+module "quicksight_users_for_data_sets" {
+  source                   = "./modules/quicksight_users_for_data_sets"
   service                  = local.service
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   logs_bucket_id           = var.logs_bucket_id

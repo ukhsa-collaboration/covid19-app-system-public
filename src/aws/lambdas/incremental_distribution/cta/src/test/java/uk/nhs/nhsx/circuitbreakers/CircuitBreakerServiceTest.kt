@@ -1,25 +1,43 @@
 package uk.nhs.nhsx.circuitbreakers
 
-import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.NullSource
+import org.junit.jupiter.params.provider.ValueSource
+import strikt.api.expect
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNotEmpty
+import strikt.java.isAbsent
+import strikt.java.isPresent
+import uk.nhs.nhsx.circuitbreakers.ApprovalStatus.NO
+import uk.nhs.nhsx.circuitbreakers.ApprovalStatus.PENDING
+import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType.MissingPollingTokenError
+import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType.Ok
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.Companion.extractPollingToken
 import uk.nhs.nhsx.core.Json
 
 class CircuitBreakerServiceTest {
 
-    private val initial = { ApprovalStatus.PENDING }
-    private val poll = { ApprovalStatus.NO }
+    private val initial = { PENDING }
+    private val poll = { NO }
     private val circuitBreakerService = CircuitBreakerService(initial, poll)
 
     @Test
     fun `test get approval token`() {
-        val result: CircuitBreakerResult = circuitBreakerService.getApprovalToken()
-        assertThat(result.type).isEqualTo(ResultType.Ok)
-        val approvalValue = JSONObject(result.responseBody).getString("approval")
-        assertThat(approvalValue).isEqualTo(ApprovalStatus.PENDING.statusName)
-        assertThat(result.responseBody).isNotEmpty
+        val result = circuitBreakerService.getApprovalToken()
+
+        expect {
+            that(result).get(CircuitBreakerResult::type)
+                .isEqualTo(Ok)
+
+            that(result).get(CircuitBreakerResult::responseBody)
+                .isNotEmpty()
+                .get(::JSONObject)
+                .get { getString("approval") }
+                .isEqualTo(PENDING.statusName)
+        }
     }
 
     @Test
@@ -28,8 +46,10 @@ class CircuitBreakerServiceTest {
         val responseEvent = circuitBreakerService.getResolution(path)
         val resolutionResponse = resolutionFromResponse(responseEvent)
 
-        assertThat(responseEvent.type).isEqualTo(ResultType.Ok)
-        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.statusName)
+        expect {
+            that(responseEvent).get(CircuitBreakerResult::type).isEqualTo(Ok)
+            that(resolutionResponse).get(ResolutionResponse::approval).isEqualTo(NO.statusName)
+        }
     }
 
     @Test
@@ -39,8 +59,10 @@ class CircuitBreakerServiceTest {
         val responseEvent = circuitBreakerService.getResolution(path)
         val resolutionResponse = resolutionFromResponse(responseEvent)
 
-        assertThat(responseEvent.type).isEqualTo(ResultType.Ok)
-        assertThat(resolutionResponse.approval).isEqualTo(ApprovalStatus.NO.statusName)
+        expect {
+            that(responseEvent).get(CircuitBreakerResult::type).isEqualTo(Ok)
+            that(resolutionResponse).get(ResolutionResponse::approval).isEqualTo(NO.statusName)
+        }
     }
 
     @Test
@@ -48,7 +70,7 @@ class CircuitBreakerServiceTest {
         val path = "/circuit-breaker/venue/resolution/"
         val responseEvent = circuitBreakerService.getResolution(path)
 
-        assertThat(responseEvent.type).isEqualTo(ResultType.MissingPollingTokenError)
+        expectThat(responseEvent).get(CircuitBreakerResult::type).isEqualTo(MissingPollingTokenError)
     }
 
     @Test
@@ -56,7 +78,7 @@ class CircuitBreakerServiceTest {
         val path = "/circuit-breaker/exposure-notification/resolution/"
         val responseEvent = circuitBreakerService.getResolution(path)
 
-        assertThat(responseEvent.type).isEqualTo(ResultType.MissingPollingTokenError)
+        expectThat(responseEvent).get(CircuitBreakerResult::type).isEqualTo(MissingPollingTokenError)
     }
 
     @Test
@@ -64,7 +86,7 @@ class CircuitBreakerServiceTest {
         val path = "/circuit-breaker/venue/resolution"
         val responseEvent = circuitBreakerService.getResolution(path)
 
-        assertThat(responseEvent.type).isEqualTo(ResultType.MissingPollingTokenError)
+        expectThat(responseEvent).get(CircuitBreakerResult::type).isEqualTo(MissingPollingTokenError)
     }
 
     @Test
@@ -72,21 +94,24 @@ class CircuitBreakerServiceTest {
         val path = "/circuit-breaker/exposure-notification/resolution"
         val responseEvent = circuitBreakerService.getResolution(path)
 
-        assertThat(responseEvent.type).isEqualTo(ResultType.MissingPollingTokenError)
+        expectThat(responseEvent).get(CircuitBreakerResult::type).isEqualTo(MissingPollingTokenError)
     }
 
-    @Test
-    fun `extract polling token`() {
-        assertThat(extractPollingToken("/circuit-breaker/exposure-notification/resolution/token123")).contains("token123")
-        assertThat(extractPollingToken("/circuit-breaker/venue/resolution/token789")).contains("token789")
-        assertThat(extractPollingToken("token789")).isEmpty
-        assertThat(extractPollingToken(null)).isEmpty
-        assertThat(extractPollingToken("")).isEmpty
-        assertThat(extractPollingToken("/")).isEmpty
-        assertThat(extractPollingToken("/circuit-breaker/exposure-notification/resolution/")).isEmpty
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = ["token789", "", "/", "/circuit-breaker/exposure-notification/resolution/"])
+    fun `extracts absent polling token`(input: String?) {
+        expectThat(extractPollingToken(input)).isAbsent()
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["/circuit-breaker/exposure-notification/resolution/token123", "/circuit-breaker/venue/resolution/token789"])
+    fun `extracts polling token`(input: String) {
+        expectThat(extractPollingToken(input))
+            .isPresent()
+            .isEqualTo(input.substringAfterLast("/"))
     }
 
     private fun resolutionFromResponse(responseEvent: CircuitBreakerResult) =
-        Json.readJsonOrNull<ResolutionResponse>(responseEvent.responseBody)
-            ?: throw IllegalStateException("Could not deserialize: " + responseEvent.responseBody)
+        Json.readJsonOrThrow<ResolutionResponse>(responseEvent.responseBody)
 }

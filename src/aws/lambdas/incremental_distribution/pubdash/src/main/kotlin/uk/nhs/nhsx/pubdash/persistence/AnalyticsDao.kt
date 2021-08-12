@@ -13,12 +13,12 @@ class AnalyticsDao(
         SELECT
             DATE_FORMAT(firstDayReportingWeek, '%Y-%m-%d') AS "Week starting (Wythnos yn dechrau)",
             DATE_FORMAT(lastDayReportingWeek, '%Y-%m-%d') AS "Week ending (Wythnos yn gorffen)",
-            SUM(downloads) AS "Number of app downloads (Nifer o lawrlwythiadau ap)",
-            SUM(riskyVenues) AS "Number of venues the app has sent alerts about (Nifer o leoliadau mae’r ap wedi anfon hysbysiadau amdanynt)",
-            SUM(posters) AS "Number of NHS QR posters created (Nifer o bosteri cod QR y GIG a grëwyd)",
-            SUM(SUM(downloads)) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of app downloads (Nifer o lawrlwythiadau ap cronnus)",
-            SUM(SUM(riskyVenues)) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of 'at risk' venues triggering venue alerts (Nifer o leoliadau 'dan risg' cronnus)",
-            SUM(SUM(posters)) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of NHS QR posters created (Nifer o bosteri cod QR y GIG a grëwyd cronnus)"
+            SUM(coalesce(downloads,0)) AS "Number of app downloads (Nifer o lawrlwythiadau ap)",
+            SUM(coalesce(riskyVenues,0)) AS "Number of venues the app has sent alerts about (Nifer o leoliadau mae’r ap wedi anfon hysbysiadau amdanynt)",
+            SUM(coalesce(posters, 0)) AS "Number of NHS QR posters created (Nifer o bosteri cod QR y GIG a grëwyd)",
+            SUM(SUM(coalesce(downloads,0))) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of app downloads (Nifer o lawrlwythiadau ap cronnus)",
+            SUM(SUM(coalesce(riskyVenues,0))) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of 'at risk' venues triggering venue alerts (Nifer o leoliadau 'dan risg' cronnus)",
+            SUM(SUM(coalesce(posters, 0))) OVER (ORDER BY lastDayReportingWeek) AS "Cumulative number of NHS QR posters created (Nifer o bosteri cod QR y GIG a grëwyd cronnus)"
         FROM(
             SELECT
                 /* This calculates the date of the first day of the reporting week

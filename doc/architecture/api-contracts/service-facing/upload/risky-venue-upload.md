@@ -51,7 +51,7 @@ After a successful upload the new json file is going to replace the existing one
 
 #### Maintenance Mode
 
-When the service is in maintenance mode, all services will return `503 Service Unavailable`. Maintenance mode is used when performing operations like backup and restore of the service data.
+When the service is in [maintenance mode](../../../../design/details/api-maintenance-mode.md), all services will return `503 Service Unavailable`. Maintenance mode is used when performing operations like backup and restore of the service data.
 
 
 ### Notes

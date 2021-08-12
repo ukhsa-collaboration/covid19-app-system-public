@@ -5,27 +5,29 @@ import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Item
 import com.amazonaws.services.dynamodbv2.document.PrimaryKey
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec
-import com.amazonaws.services.dynamodbv2.model.ReturnValue
+import com.amazonaws.services.dynamodbv2.model.ReturnValue.ALL_OLD
 
 class DynamoDBUtils(client: AmazonDynamoDB) : AwsDynamoClient {
 
     private val dynamoDB: DynamoDB = DynamoDB(client)
 
     override fun getItem(
-        tableName: String,
+        tableName: TableName,
         hashKeyName: String,
         hashKeyValue: String
-    ): Item? = dynamoDB.getTable(tableName).getItem(hashKeyName, hashKeyValue)
+    ): Item? = getTable(tableName).getItem(hashKeyName, hashKeyValue)
 
     override fun deleteItem(
-        tableName: String,
+        tableName: TableName,
         hashKeyName: String,
         hashKeyValue: String
     ) {
-        dynamoDB.getTable(tableName).deleteItem(
-            DeleteItemSpec()
-                .withPrimaryKey(PrimaryKey(hashKeyName, hashKeyValue))
-                .withReturnValues(ReturnValue.ALL_OLD)
-        )
+        val spec = DeleteItemSpec()
+            .withPrimaryKey(PrimaryKey(hashKeyName, hashKeyValue))
+            .withReturnValues(ALL_OLD)
+
+        getTable(tableName).deleteItem(spec)
     }
+
+    private fun getTable(tableName: TableName) = dynamoDB.getTable(tableName.value)
 }

@@ -104,7 +104,7 @@ module NHS
             "heading" => translations["#{tier_label}.PolicyData.Heading"],
             "content" => translations["#{tier_label}.PolicyData.Content"],
             "footer" => translations["#{tier_label}.PolicyData.Footer"],
-            "policies" => tier_policies.map { |_, v| v },
+            "policies" => tier_policies.map { |_, v| v }.sort_by { |el| el["policyIcon"] },
           }
         end
       end

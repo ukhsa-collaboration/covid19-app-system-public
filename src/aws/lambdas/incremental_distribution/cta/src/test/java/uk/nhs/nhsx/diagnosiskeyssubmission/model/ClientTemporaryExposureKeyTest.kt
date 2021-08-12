@@ -1,27 +1,28 @@
 package uk.nhs.nhsx.diagnosiskeyssubmission.model
 
 import org.junit.jupiter.api.Test
-import org.skyscreamer.jsonassert.JSONAssert
-import org.skyscreamer.jsonassert.JSONCompareMode.STRICT
-import uk.nhs.nhsx.core.Json.toJson
+import strikt.api.expectThat
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
+import uk.nhs.nhsx.testhelper.assertions.toJson
 
 class ClientTemporaryExposureKeyTest {
+
     @Test
     fun `marshall to JSON`() {
-        assertTheSame(
-            ClientTemporaryExposureKey("key", 0, 0), """{"key":"key","rollingStartNumber":0,"rollingPeriod":0,"transmissionRiskLevel":7}"""
-        )
-        assertTheSame(
-            ClientTemporaryExposureKey(null, 0, 0), """{"key":null,"rollingStartNumber":0,"rollingPeriod":0,"transmissionRiskLevel":7}"""
-        )
-        assertTheSame(
-            ClientTemporaryExposureKey(null, 0, 0).apply {
-                daysSinceOnsetOfSymptoms = 5
-            }, """{"key":null,"rollingStartNumber":0,"rollingPeriod":0,"transmissionRiskLevel":7,"daysSinceOnsetOfSymptoms":5}"""
-        )
-    }
+        expectThat(ClientTemporaryExposureKey("key", 0, 0))
+            .toJson()
+            .isEqualToJson("""{"key":"key","rollingStartNumber":0,"rollingPeriod":0,"transmissionRiskLevel":7}""")
 
-    private fun assertTheSame(value: ClientTemporaryExposureKey, expected: String) {
-        JSONAssert.assertEquals(expected.trimIndent(), toJson(value), STRICT)
+        expectThat(ClientTemporaryExposureKey(null, 0, 0))
+            .toJson()
+            .isEqualToJson("""{"key":null,"rollingStartNumber":0,"rollingPeriod":0,"transmissionRiskLevel":7}""")
+
+        expectThat(ClientTemporaryExposureKey(null, 0, 0).apply { daysSinceOnsetOfSymptoms = 5 })
+            .toJson()
+            .isEqualToJson("""{"key":null,"rollingStartNumber":0,"rollingPeriod":0,"transmissionRiskLevel":7,"daysSinceOnsetOfSymptoms":5}""")
+
+        expectThat(ClientTemporaryExposureKey(null, 0, 0).apply { daysSinceOnsetOfSymptoms = 5 })
+            .toJson()
+            .isEqualToJson("""{"key":null,"rollingStartNumber":0,"rollingPeriod":0,"transmissionRiskLevel":7,"daysSinceOnsetOfSymptoms":5}""")
     }
 }

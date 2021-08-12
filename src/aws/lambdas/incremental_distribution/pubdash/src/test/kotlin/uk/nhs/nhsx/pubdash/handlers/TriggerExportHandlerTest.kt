@@ -5,14 +5,16 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.handler.ScheduledEventCompleted
 import uk.nhs.nhsx.core.handler.ScheduledEventStarted
 import uk.nhs.nhsx.pubdash.DataExportService
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
 
 class TriggerExportHandlerTest {
 
@@ -32,10 +34,10 @@ class TriggerExportHandlerTest {
     fun `runs export and succeeds`() {
         val response = handler.handleRequest(mockk(), TestContext())
 
-        assertThat(response).isEqualTo(ExportTriggered.toString())
+        expectThat(response).isEqualTo(ExportTriggered.toString())
         verify(exactly = 1) { service.triggerAllQueries() }
 
-        events.containsExactly(
+        expectThat(events).containsExactly(
             ScheduledEventStarted::class,
             ExportTriggered::class,
             ScheduledEventCompleted::class

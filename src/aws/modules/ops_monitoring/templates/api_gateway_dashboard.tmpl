@@ -1,0 +1,103 @@
+{
+    "widgets": [
+        {
+            "height": 9,
+            "width": 24,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [     
+                    [ "AWS/ApiGateway", "5xx", "ApiId", "${analytics_events_submission_gateway_id}", { "label": "analytics-events_submission-5xx" }], 
+                    [ ".", "5xx", ".", "${analytics_submission_fast_ingest_gateway_id}", { "label": "analytics-submission-fast-ingest-5xx" }], 
+                    [ ".", "5xx", ".", "${crash_reports_submission_gateway_id}", { "label": "crash-reports-submission-5xx" }],    
+                    [ ".", "5xx", ".", "${diagnosis_keys_submission_gateway_id}", { "label": "diagnosis-keys-submission-5xx" }],  
+                    [ ".", "5xx", ".", "${empty_submission_gateway_id}", { "label": "empty-submission-5xx" }],  
+                    [ ".", "5xx", ".", "${exposure_notification_circuit_breaker_gateway_id}", { "label": "exposure-notification-circuit-breaker-5xx" }], 
+                    [ ".", "5xx", ".", "${isolation_payment_submission_gateway_id}", { "label": "isolation-payment-submission-5xx" }],                   
+                    [ ".", "5xx", ".", "${risky_post_districts_upload_gateway_id}", { "label": "risky-post-districts-upload-5xx" }], 
+                    [ ".", "5xx", ".", "${risky_venues_circuit_breaker_gateway_id}", { "label": "risky-venues-circuit-breaker-5xx" }],   
+                    [ ".", "5xx", ".", "${risky_venues_upload_gateway_id}", { "label": "risky-venues-upload-5xx" }],                         
+                    [ ".", "5xx", ".", "${virology_submission_api_gateway_id}", { "label": "virology-submission-5xx" }],                  
+                    [ ".", "5xx", ".", "${virology_upload_api_gateway_id}", { "label": "virology-upload-5xx" }],
+                    [ ".", "4xx", "ApiId", "${analytics_events_submission_gateway_id}", { "label": "analytics-events-submission-4xx" }], 
+                    [ ".", "4xx", ".", "${analytics_submission_fast_ingest_gateway_id}", { "label": "analytics-submission-fast-ingest-4xx" }], 
+                    [ ".", "4xx", ".", "${crash_reports_submission_gateway_id}", { "label": "crash-reports-submission-4xx" }], 
+                    [ ".", "4xx", ".", "${diagnosis_keys_submission_gateway_id}", { "label": "diagnosis-keys-submission-4xx" }],
+                    [ ".", "4xx", ".", "${empty_submission_gateway_id}", { "label": "empty-submission-4xx" }],  
+                    [ ".", "4xx", ".", "${exposure_notification_circuit_breaker_gateway_id}", { "label": "exposure-notification-circuit-breaker-4xx" }], 
+                    [ ".", "4xx", ".", "${isolation_payment_submission_gateway_id}", { "label": "isolation-payment-submission-4xx" }], 
+                    [ ".", "4xx", ".", "${risky_post_districts_upload_gateway_id}", { "label": "risky-post-districts-upload-4xx" }], 
+                    [ ".", "4xx", ".", "${risky_venues_circuit_breaker_gateway_id}", { "label": "risky-venues-circuit-breaker-4xx" }],   
+                    [ ".", "4xx", ".", "${risky_venues_upload_gateway_id}", { "label": "risky-venues-upload-4xx" }],                         
+                    [ ".", "4xx", ".", "${virology_submission_api_gateway_id}", { "label": "virology-submission-4xx" }],                  
+                    [ ".", "4xx", ".", "${virology_upload_api_gateway_id}", { "label": "virology-upload-4xx" }]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "4xx, 5xx [sum]"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 9,
+            "width": 24,
+            "height": 9,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "ApiId", "${analytics_events_submission_gateway_id}", { "label": "analytics-events_submission" }], 
+                    [ ".", "Count", ".", "${analytics_submission_fast_ingest_gateway_id}", { "label": "analytics-submission-fast-ingest" }],  
+                    [ ".", "Count", ".", "${crash_reports_submission_gateway_id}", { "label": "crash-reports-submission" }],
+                    [ ".", "Count", ".", "${diagnosis_keys_submission_gateway_id}", { "label": "diagnosis-keys-submission" }],  
+                    [ ".", "Count", ".", "${empty_submission_gateway_id}", { "label": "empty-submission" }],
+                    [ ".", "Count", ".", "${exposure_notification_circuit_breaker_gateway_id}", { "label": "exposure-notification-circuit-breaker" }], 
+                    [ ".", "Count", ".", "${isolation_payment_submission_gateway_id}", { "label": "isolation-payment-submission" }], 
+                    [ ".", "Count", ".", "${risky_post_districts_upload_gateway_id}", { "label": "risky-post-districts-upload" }], 
+                    [ ".", "Count", ".", "${risky_venues_circuit_breaker_gateway_id}", { "label": "risky-venues-circuit-breaker" }],   
+                    [ ".", "Count", ".", "${risky_venues_upload_gateway_id}", { "label": "risky-venues-upload" }],                         
+                    [ ".", "Count", ".", "${virology_submission_api_gateway_id}", { "label": "virology-submission" }],                  
+                    [ ".", "Count", ".", "${virology_upload_api_gateway_id}", { "label": "virology-upload" }]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Count [sum]"
+            }
+        },
+        {
+            "type": "metric",
+            "x": 0,
+            "y": 27,
+            "width": 24,
+            "height": 9,
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Latency", "ApiId", "${analytics_events_submission_gateway_id}", { "label": "analytics-events_submission" }], 
+                    [ ".", "Latency", ".", "${analytics_submission_fast_ingest_gateway_id}", { "label": "analytics-submission-fast-ingest" }],  
+                    [ ".", "Latency", ".", "${crash_reports_submission_gateway_id}", { "label": "crash-reports-submission" }],
+                    [ ".", "Latency", ".", "${diagnosis_keys_submission_gateway_id}", { "label": "diagnosis-keys-submission" }],  
+                    [ ".", "Latency", ".", "${empty_submission_gateway_id}", { "label": "empty-submission" }],
+                    [ ".", "Latency", ".", "${exposure_notification_circuit_breaker_gateway_id}", { "label": "exposure-notification-circuit-breaker" }], 
+                    [ ".", "Latency", ".", "${isolation_payment_submission_gateway_id}", { "label": "isolation-payment-submission" }], 
+                    [ ".", "Latency", ".", "${risky_post_districts_upload_gateway_id}", { "label": "risky-post-districts-upload" }], 
+                    [ ".", "Latency", ".", "${risky_venues_circuit_breaker_gateway_id}", { "label": "risky-venues-circuit-breaker" }],   
+                    [ ".", "Latency", ".", "${risky_venues_upload_gateway_id}", { "label": "risky-venues-upload" }],                         
+                    [ ".", "Latency", ".", "${virology_submission_api_gateway_id}", { "label": "virology-submission" }],                  
+                    [ ".", "Latency", ".", "${virology_upload_api_gateway_id}", { "label": "virology-upload" }]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 300,
+                "title": "Latency"
+            }
+        }
+    ]
+}

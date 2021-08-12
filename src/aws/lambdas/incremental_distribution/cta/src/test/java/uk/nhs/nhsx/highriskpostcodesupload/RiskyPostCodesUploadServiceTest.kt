@@ -6,8 +6,9 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verifySequence
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.events.RecordingEvents
@@ -141,7 +142,7 @@ class RiskyPostCodesUploadServiceTest {
         verifyMocksInvoked(postDistrictsAndLocalAuthoritiesJson, rawCsv)
 
         val v1Captured = toMap(postDistrictsV1Slot.captured)
-        assertThat(v1Captured).isEqualTo(
+        expectThat(v1Captured).isEqualTo(
             mapOf(
                 "postDistricts" to mapOf(
                     "CODE1" to "H",
@@ -152,7 +153,7 @@ class RiskyPostCodesUploadServiceTest {
         )
 
         val v2Captured = toMap(postDistrictsV2Slot.captured)
-        assertThat(v2Captured).isEqualTo(
+        expectThat(v2Captured).isEqualTo(
             mapOf(
                 "postDistricts" to mapOf(
                     "CODE1" to "EN.Tier3",
@@ -176,14 +177,14 @@ class RiskyPostCodesUploadServiceTest {
         verifyMocksInvoked(localAuthoritiesOnlyJson, emptyRawCsv)
 
         val v1Captured = toMap(postDistrictsV1Slot.captured)
-        assertThat(v1Captured).isEqualTo(
+        expectThat(v1Captured).isEqualTo(
             mapOf(
                 "postDistricts" to emptyMap<String, Any>()
             )
         )
 
         val v2Captured = toMap(postDistrictsV2Slot.captured)
-        assertThat(v2Captured).isEqualTo(
+        expectThat(v2Captured).isEqualTo(
             mapOf(
                 "postDistricts" to mapOf(),
                 "localAuthorities" to mapOf(
@@ -204,7 +205,7 @@ class RiskyPostCodesUploadServiceTest {
 
         val v1Captured = toMap(postDistrictsV1Slot.captured)
 
-        assertThat(v1Captured).isEqualTo(
+        expectThat(v1Captured).isEqualTo(
             mapOf(
                 "postDistricts" to mapOf(
                     "CODE1" to "H",
@@ -215,7 +216,7 @@ class RiskyPostCodesUploadServiceTest {
         )
 
         val v2Captured = toMap(postDistrictsV2Slot.captured)
-        assertThat(v2Captured).isEqualTo(
+        expectThat(v2Captured).isEqualTo(
             mapOf(
                 "postDistricts" to mapOf(
                     "CODE1" to "EN.Tier3",

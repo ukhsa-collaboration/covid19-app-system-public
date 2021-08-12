@@ -8,14 +8,12 @@ namespace :deploy do
         include NHSx::Deploy
         deploy_app_system(tgt_env, account, $configuration)
       end
-      desc "Full CTA system deployment with tier metadata,local messages and sanity checks"
+      desc "Full CTA system deployment without tier metadata,local messages"
       task :"cta:#{tgt_env}" => prerequisites do
         begin
           Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["deploy:#{tgt_env}"].invoke
-          Rake::Task["publish:tier_metadata:#{tgt_env}"].invoke unless account == "dev" and tgt_env == "branch"
-          Rake::Task["publish:local_messages:#{tgt_env}"].invoke
           Rake::Task["test:sanity_check:#{tgt_env}"].invoke
           Rake::Task["report:changes"].invoke
         ensure

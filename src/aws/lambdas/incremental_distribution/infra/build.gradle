@@ -13,7 +13,6 @@ dependencies {
 
     api(platform(Libs.http4k_bom))
     api(Libs.http4k_format_jackson)
-    api(Libs.http4k_realtime_core)
     api(Libs.jackson_module_parameter_names)
 
     api(Libs.commons_codec)

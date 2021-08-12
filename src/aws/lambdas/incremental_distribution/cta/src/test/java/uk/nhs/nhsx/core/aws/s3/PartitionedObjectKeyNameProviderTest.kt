@@ -1,11 +1,12 @@
 package uk.nhs.nhsx.core.aws.s3
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import java.util.UUID
+import java.util.*
 
 class PartitionedObjectKeyNameProviderTest {
 
@@ -14,7 +15,8 @@ class PartitionedObjectKeyNameProviderTest {
         val uuid = UUID.randomUUID()
         val objectKeyNameProvider = PartitionedObjectKeyNameProvider({ Instant.ofEpochSecond(0) }, { uuid })
         val objectKeyName = objectKeyNameProvider.generateObjectKeyName()
-        assertThat(objectKeyName.value).isEqualTo("1970/01/01/00/0_${uuid}")
+
+        expectThat(objectKeyName.value).isEqualTo("1970/01/01/00/0_${uuid}")
     }
 
     @Test
@@ -23,7 +25,8 @@ class PartitionedObjectKeyNameProviderTest {
         val uuid = UUID.randomUUID()
         val objectKeyNameProvider = PartitionedObjectKeyNameProvider({ dateTime.toInstant() }, { uuid })
         val objectKeyName = objectKeyNameProvider.generateObjectKeyName()
-        assertThat(objectKeyName.value).isEqualTo("2020/11/12/13/1605186429000_${uuid}")
+
+        expectThat(objectKeyName.value).isEqualTo("2020/11/12/13/1605186429000_${uuid}")
     }
 
 }

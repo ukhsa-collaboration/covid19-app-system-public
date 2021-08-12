@@ -1,15 +1,14 @@
 package uk.nhs.nhsx.core.events
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.startsWith
 import org.junit.jupiter.api.Test
-import org.skyscreamer.jsonassert.JSONAssert.assertEquals
-import org.skyscreamer.jsonassert.JSONCompareMode.STRICT
+import strikt.api.expectThat
+import strikt.assertions.startsWith
 import uk.nhs.nhsx.core.handler.RequestContext
 import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
-import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
 import java.time.Instant
-import java.util.UUID
+import java.util.*
 
 class PrintingJsonEventsTest {
 
@@ -28,10 +27,7 @@ class PrintingJsonEventsTest {
         val events = PrintingJsonEvents({ Instant.EPOCH }, { event.append(it) })
         events(ExceptionThrown(RuntimeException("foo")))
 
-        assertThat(
-            event.toString(),
-            startsWith("""{"metadata":{"category":"ERROR","name":"ExceptionThrown","timestamp":"1970-01-01T00:00:00Z","awsRequestId":"12345"},"event":{"exception":"java.lang.RuntimeException: foo""")
-        )
+        expectThat(event.toString()).startsWith("""{"metadata":{"category":"ERROR","name":"ExceptionThrown","timestamp":"1970-01-01T00:00:00Z","awsRequestId":"12345"},"event":{"exception":"java.lang.RuntimeException: foo""")
     }
 
     @Test
@@ -50,7 +46,7 @@ class PrintingJsonEventsTest {
             )
         )
 
-        assertEquals(
+        expectThat(event.toString()).isEqualToJson(
             """
             {
               "metadata": {
@@ -67,18 +63,21 @@ class PrintingJsonEventsTest {
                 "field5": "DiagnosisKeySubmissionToken"
               }
             }
-            """.trimIndent(), event.toString(), STRICT
+            """
         )
     }
 
     @Test
     fun `appends the AWSRequestId from RequestContext`() {
-        val s = ContextBuilder.TestContext()
-            .apply { requestId = UUID.fromString("d06971ab-21b4-4ebc-a951-a83c5a9b080e") }
-        RequestContext.assignAwsRequestId(s.awsRequestId)
+        val context = TestContext().apply {
+            requestId = UUID.fromString("d06971ab-21b4-4ebc-a951-a83c5a9b080e")
+        }
+
+        RequestContext.assignAwsRequestId(context.awsRequestId)
 
         val event = StringBuilder()
         val events = PrintingJsonEvents({ Instant.EPOCH }, { event.append(it) })
+
         events(
             MyGreatEvent(
                 123,
@@ -89,7 +88,7 @@ class PrintingJsonEventsTest {
             )
         )
 
-        assertEquals(
+        expectThat(event.toString()).isEqualToJson(
             """
                 {
                   "metadata": {
@@ -106,7 +105,7 @@ class PrintingJsonEventsTest {
                     "field5": "DiagnosisKeySubmissionToken"
                   }
                 }
-              """.trimIndent(), event.toString(), STRICT
+              """
         )
     }
 }

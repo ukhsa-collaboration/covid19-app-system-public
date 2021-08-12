@@ -44,6 +44,12 @@ module NHSx
       "staging" => ["staging"],
       "prod" => ["prod"],
     }.freeze
+    CI_TARGET_ENVIRONMENTS = {
+      "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
+      "staging" => ["staging"],
+      "prod" => ["prod"],
+      "aa-prod" => ["aa-prod"],
+    }.freeze
     # All the fixed (named) Analytics target environments per account: {"account"=>[target_environments]}
     ANALYTICS_TARGET_ENVIRONMENTS = {
       "dev" => ["load-test", "ci", "fnctnl", "qa", "branch", "extdev", "test", "demo"],
@@ -62,6 +68,7 @@ module NHSx
       "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
+      "aa-prod" => ["aa-prod"],
     }.freeze
     # The parameter name that contains the ARN of the signing key in the SSM paramater store
     SIGNING_KEY_PARAMETER = "/app/kms/SigningKeyArn".freeze

@@ -1,27 +1,34 @@
 package smoke
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.isIn
-import com.natpryce.hamkrest.isNullOrEmptyString
-import com.natpryce.hamkrest.present
-import org.http4k.client.JavaHttpClient
-import org.http4k.core.Status
+import org.http4k.cloudnative.env.Environment
+import org.http4k.core.Status.Companion.OK
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.skyscreamer.jsonassert.JSONAssert.assertEquals
-import org.skyscreamer.jsonassert.JSONCompareMode
 import smoke.actors.ApiVersion
 import smoke.actors.MobileApp
-import smoke.actors.requireBodyText
-import smoke.actors.requireStatusCode
+import smoke.actors.createHandler
 import smoke.env.SmokeTests
+import smoke.env.SmokeTests.loadStaticContent
+import strikt.api.expectThat
+import strikt.assertions.all
+import strikt.assertions.isA
+import strikt.assertions.isEmpty
+import strikt.assertions.isGreaterThanOrEqualTo
+import strikt.assertions.isNotEmpty
+import strikt.assertions.matches
 import uk.nhs.nhsx.core.headers.MobileOS.Android
 import uk.nhs.nhsx.core.headers.MobileOS.iOS
+import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
+import uk.nhs.nhsx.testhelper.assertions.bodyString
+import uk.nhs.nhsx.testhelper.assertions.hasStatus
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
+import uk.nhs.nhsx.testhelper.assertions.key
+import uk.nhs.nhsx.testhelper.assertions.value
 
 class MobileAppPollingSmokeTest {
 
     private val config = SmokeTests.loadConfig()
-    private val client = JavaHttpClient()
+    private val client = createHandler(Environment.ENV)
 
     private val mobileApp = MobileApp(client, config)
 
@@ -29,33 +36,21 @@ class MobileAppPollingSmokeTest {
     fun `android mobile app polls availability`() {
         val json = MobileApp(client, config, Android).pollAvailability()
 
-        assertEquals(
-            SmokeTests.loadStaticContent("availability-android.json"),
-            json,
-            JSONCompareMode.STRICT
-        )
+        expectThat(json).isEqualToJson(loadStaticContent("availability-android.json"))
     }
 
     @Test
     fun `ios mobile app polls availability`() {
         val json = MobileApp(client, config, iOS).pollAvailability()
 
-        assertEquals(
-            SmokeTests.loadStaticContent("availability-ios.json"),
-            json,
-            JSONCompareMode.STRICT
-        )
+        expectThat(json).isEqualToJson(loadStaticContent("availability-ios.json"))
     }
 
     @Test
     fun `mobile app polls exposure configuration`() {
         val json = MobileApp(client, config).pollExposureConfig()
 
-        assertEquals(
-            SmokeTests.loadStaticContent("exposure-configuration.json"),
-            json,
-            JSONCompareMode.STRICT
-        )
+        expectThat(json).isEqualToJson(loadStaticContent("exposure-configuration.json"))
     }
 
     @Disabled
@@ -63,62 +58,56 @@ class MobileAppPollingSmokeTest {
     fun `gets risky postal districts`() {
         val postalDistricts = mobileApp.pollRiskyPostcodes(ApiVersion.V1)
 
-        postalDistricts.entries.forEach {
-            assertThat(it.key, !isNullOrEmptyString)
-            assertThat(it.value, isIn("L", "M", "H"))
+        expectThat(postalDistricts.entries).all {
+            key.isNotEmpty()
+            value.isA<String>().matches(Regex("[LMH]"))
         }
     }
 
     @Test
     fun `mobile app polls risky venues`() {
         val venues = mobileApp.pollRiskyVenues()
-        assertThat(venues.venues, present())
+
+        expectThat(venues)
+            .get(HighRiskVenues::venues)
+            .get("size") { size }
+            .isGreaterThanOrEqualTo(0)
     }
 
     @Test
     fun `mobile app polls self isolation`() {
         val json = mobileApp.pollSelfIsolation()
 
-        assertEquals(
-            SmokeTests.loadStaticContent("self-isolation.json"),
-            json,
-            JSONCompareMode.STRICT
-        )
+        expectThat(json).isEqualToJson(loadStaticContent("self-isolation.json"))
     }
 
     @Test
     fun `mobile app polls symptomatic questionnaire`() {
         val json = mobileApp.pollSymptomaticQuestionnaire()
 
-        assertEquals(
-            SmokeTests.loadStaticContent("symptomatic-questionnaire.json"),
-            json,
-            JSONCompareMode.STRICT
-        )
+        expectThat(json).isEqualToJson(loadStaticContent("symptomatic-questionnaire.json"))
     }
 
     @Test
     fun `mobile app polls risky venue configuration`() {
         val json = mobileApp.pollRiskyVenueConfiguration()
 
-        assertEquals(
-            SmokeTests.loadStaticContent("risky-venue-configuration.json"),
-            json,
-            JSONCompareMode.STRICT
-        )
+        expectThat(json).isEqualToJson(loadStaticContent("risky-venue-configuration.json"))
     }
 
     @Test
     fun `mobile app polls empty submission`() {
-        mobileApp.emptySubmission()
-            .requireStatusCode(Status.OK)
-            .requireBodyText("")
+        expectThat(mobileApp.emptySubmission()) {
+            hasStatus(OK)
+            bodyString.isEmpty()
+        }
     }
 
     @Test
     fun `mobile app polls empty submission v2`() {
-        mobileApp.emptySubmissionV2()
-            .requireStatusCode(Status.OK)
-            .requireBodyText("")
+        expectThat(mobileApp.emptySubmissionV2()) {
+            hasStatus(OK)
+            bodyString.isEmpty()
+        }
     }
 }

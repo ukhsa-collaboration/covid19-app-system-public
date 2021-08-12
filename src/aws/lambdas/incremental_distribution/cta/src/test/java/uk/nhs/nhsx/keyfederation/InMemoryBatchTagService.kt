@@ -4,7 +4,7 @@ import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult
 import java.time.Instant
 import java.time.LocalDate
-import java.util.Optional
+import java.util.*
 
 class InMemoryBatchTagService(
     var batchTag: BatchTag? = null,
@@ -12,10 +12,7 @@ class InMemoryBatchTagService(
 ) : BatchTagService {
 
     override fun lastUploadState(): Optional<UploadKeysResult> = Optional.empty()
-
-    override fun updateLastUploadState(lastUploadTimestamp: Instant) {
-        // noop
-    }
+    override fun updateLastUploadState(lastUploadTimestamp: Instant) = Unit
 
     override fun latestFederationBatch() = when {
         batchTag != null && batchDate != null -> Optional.of(FederationBatch(batchTag!!, batchDate!!))
@@ -26,4 +23,6 @@ class InMemoryBatchTagService(
         this.batchTag = batch.batchTag
         this.batchDate = batch.batchDate
     }
+
+    override fun toString() = "InMemoryBatchTagService(batchTag=$batchTag, batchDate=$batchDate)"
 }

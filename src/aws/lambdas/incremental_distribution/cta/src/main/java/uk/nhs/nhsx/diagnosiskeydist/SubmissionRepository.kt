@@ -13,7 +13,6 @@ interface SubmissionRepository {
     ): List<Submission>
 
     companion object {
-        fun getTemporaryExposureKeys(jsonInputStream: InputStream?): StoredTemporaryExposureKeyPayload =
-            readJsonOrThrow(jsonInputStream)
+        fun getTemporaryExposureKeys(input: InputStream?) = readJsonOrThrow<StoredTemporaryExposureKeyPayload>(input)
     }
 }

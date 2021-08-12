@@ -1,8 +1,9 @@
 package uk.nhs.nhsx.diagnosiskeyssubmission.model
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Json
+import strikt.api.expectThat
+import strikt.assertions.hasSize
+import uk.nhs.nhsx.testhelper.assertions.readJsonOrThrow
 
 class ClientTemporaryExposureKeysPayloadTest {
 
@@ -23,7 +24,9 @@ class ClientTemporaryExposureKeysPayloadTest {
         }
         """.trimIndent()
 
-        val payload = Json.readJsonOrNull<ClientTemporaryExposureKeysPayload>(json)
-        assertThat(payload?.temporaryExposureKeys).hasSize(2)
+        expectThat(json)
+            .readJsonOrThrow<ClientTemporaryExposureKeysPayload>()
+            .get(ClientTemporaryExposureKeysPayload::temporaryExposureKeys)
+            .hasSize(2)
     }
 }

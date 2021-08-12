@@ -91,8 +91,8 @@ task testSmokeParallel(type: Test) {
         includeTestsMatching "smoke.*Test"
     }
 
-    reports.html.destination = file("$projectDir/../../../../../out/reports")
-    reports.junitXml.destination = file("$projectDir/../../../../../out/reports")
+    reports.html.destination = file("$projectDir/../../../../../out/reports/testSmokeParallel")
+    reports.junitXml.destination = file("$projectDir/../../../../../out/reports/testSmokeParallel")
 }
 
 task testSmokeSerial(type: Test) {
@@ -110,8 +110,8 @@ task testSmokeSerial(type: Test) {
     // include serial tags
     mustRunAfter(testSmokeParallel)
 
-    reports.html.destination = file("$projectDir/../../../../../out/reports")
-    reports.junitXml.destination = file("$projectDir/../../../../../out/reports")
+    reports.html.destination = file("$projectDir/../../../../../out/reports/testSmokeSerial")
+    reports.junitXml.destination = file("$projectDir/../../../../../out/reports/testSmokeSerial")
 }
 
 task testSmoke(type: Test) {

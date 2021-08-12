@@ -8,8 +8,11 @@ import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestResult
 import java.io.File
+import java.nio.file.Path
 
-class VirologyProcessorExports(private var tempDirPath: String = System.getProperty("java.io.tmpdir") + File.separator) {
+class VirologyProcessorExports(private val tempDirPath: String = System.getProperty("java.io.tmpdir") + File.separator) {
+
+    constructor(tempDir: Path) : this(tempDir.toAbsolutePath().toString())
 
     fun csvFrom(tokens: List<CtaToken>, testResult: TestResult, testEndDate: TestEndDate): String = tokens
         .map { """${it.value}, ${testResult.wireValue}, ${TestEndDate.show(testEndDate)}""" }

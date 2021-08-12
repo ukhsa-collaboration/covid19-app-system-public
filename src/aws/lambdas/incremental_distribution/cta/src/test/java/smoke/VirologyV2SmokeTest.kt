@@ -1,14 +1,32 @@
 package smoke
 
-import org.assertj.core.api.Assertions.assertThat
-import org.http4k.client.JavaHttpClient
+import assertions.CtaExchangeAssertionsV2.confirmatoryDayLimit
+import assertions.CtaExchangeAssertionsV2.diagnosisKeySubmissionSupported
+import assertions.CtaExchangeAssertionsV2.requiresConfirmatoryTest
+import assertions.CtaExchangeAssertionsV2.testEndDate
+import assertions.CtaExchangeAssertionsV2.testKit
+import assertions.CtaExchangeAssertionsV2.testResult
+import assertions.VirologyAssertionsV2.confirmatoryDayLimit
+import assertions.VirologyAssertionsV2.diagnosisKeySubmissionSupported
+import assertions.VirologyAssertionsV2.requiresConfirmatoryTest
+import assertions.VirologyAssertionsV2.testEndDate
+import assertions.VirologyAssertionsV2.testKit
+import assertions.VirologyAssertionsV2.testResult
+import org.http4k.cloudnative.env.Environment
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.EnumSource
 import smoke.actors.ApiVersion.V2
 import smoke.actors.MobileApp
 import smoke.actors.TestLab
+import smoke.actors.createHandler
 import smoke.env.SmokeTests
+import strikt.api.expectThat
+import strikt.assertions.isA
+import strikt.assertions.isEqualTo
+import strikt.assertions.isFalse
+import strikt.assertions.isNull
+import strikt.assertions.isTrue
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.domain.Country.Companion.England
@@ -25,7 +43,6 @@ import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.domain.TestResult.Negative
 import uk.nhs.nhsx.domain.TestResult.Plod
 import uk.nhs.nhsx.domain.TestResult.Positive
-import uk.nhs.nhsx.virology.policy.VirologyCriteria
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Fiorano
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
@@ -34,10 +51,11 @@ import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
+import uk.nhs.nhsx.virology.policy.VirologyCriteria
 
 class VirologyV2SmokeTest {
 
-    private val client = JavaHttpClient()
+    private val client = createHandler(Environment.ENV)
     private val config = SmokeTests.loadConfig()
     private val mobileApp = MobileApp(client, config)
     private val testLab = TestLab(client, config)
@@ -84,29 +102,31 @@ class VirologyV2SmokeTest {
 
     @ParameterizedTest
     @EnumSource(TestKit::class)
-    fun `order, upload positive result and poll via npex for all test kits`(testKit: TestKit) {
+    fun `order, upload positive result and poll via npex for all test kits`(input: TestKit) {
         val orderResponse = mobileApp.orderTest(V2)
 
         testLab.uploadTestResult(
             token = orderResponse.tokenParameterValue,
             result = Positive,
-            testKit = testKit,
+            testKit = input,
             source = Npex,
             apiVersion = V2
         )
 
-        val testResponse = lookupResponse(orderResponse, England)
+        val testResponse: VirologyLookupResponseV2 = lookupResponse(orderResponse, England)
 
-        assertThat(testResponse.testResult).isEqualTo(Positive)
-        assertThat(testResponse.testKit).isEqualTo(testKit)
-        assertThat(testResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
-        assertThat(testResponse.diagnosisKeySubmissionSupported).isEqualTo(
-            expectedSupportedFlagFor(Lookup, England, testKit, Positive)
-        )
-        assertThat(testResponse.requiresConfirmatoryTest).isEqualTo(
-            expectedRequiredFlagFor(Lookup, England, testKit, Positive)
-        )
-        assertThat(testResponse.confirmatoryDayLimit).isNull()
+        expectThat(testResponse) {
+            testResult.isEqualTo(Positive)
+            testKit.isEqualTo(input)
+            testEndDate.isEqualTo(TestEndDate.of(2020, 4, 23))
+            diagnosisKeySubmissionSupported.isEqualTo(
+                expectedSupportedFlagFor(Lookup, England, input, Positive)
+            )
+            requiresConfirmatoryTest.isEqualTo(
+                expectedRequiredFlagFor(Lookup, England, input, Positive)
+            )
+            confirmatoryDayLimit.isNull()
+        }
     }
 
     @Test
@@ -123,39 +143,43 @@ class VirologyV2SmokeTest {
 
         val testResponse = lookupResponse(orderResponse, England)
 
-        assertThat(testResponse.testResult).isEqualTo(Plod)
-        assertThat(testResponse.testKit).isEqualTo(LAB_RESULT)
-        assertThat(testResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
-        assertThat(testResponse.diagnosisKeySubmissionSupported).isEqualTo(false)
-        assertThat(testResponse.requiresConfirmatoryTest).isEqualTo(false)
-        assertThat(testResponse.confirmatoryDayLimit).isNull()
+        expectThat(testResponse) {
+            testResult.isEqualTo(Plod)
+            testKit.isEqualTo(LAB_RESULT)
+            testEndDate.isEqualTo(TestEndDate.of(2020, 4, 23))
+            diagnosisKeySubmissionSupported.isFalse()
+            requiresConfirmatoryTest.isFalse()
+            confirmatoryDayLimit.isNull()
+        }
     }
 
     @ParameterizedTest
     @EnumSource(TestKit::class)
-    fun `order, upload positive result and poll via fiorano for all test kits`(testKit: TestKit) {
+    fun `order, upload positive result and poll via fiorano for all test kits`(input: TestKit) {
         val orderResponse = mobileApp.orderTest(V2)
 
         testLab.uploadTestResult(
             token = orderResponse.tokenParameterValue,
             result = Positive,
-            testKit = testKit,
+            testKit = input,
             source = Fiorano,
             apiVersion = V2
         )
 
         val testResponse = lookupResponse(orderResponse, Wales)
 
-        assertThat(testResponse.testResult).isEqualTo(Positive)
-        assertThat(testResponse.testKit).isEqualTo(testKit)
-        assertThat(testResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
-        assertThat(testResponse.diagnosisKeySubmissionSupported).isEqualTo(
-            expectedSupportedFlagFor(Lookup, Wales, testKit, Positive)
-        )
-        assertThat(testResponse.requiresConfirmatoryTest).isEqualTo(
-            expectedRequiredFlagFor(Lookup, Wales, testKit, Positive)
-        )
-        assertThat(testResponse.confirmatoryDayLimit).isNull()
+        expectThat(testResponse) {
+            testResult.isEqualTo(Positive)
+            testKit.isEqualTo(input)
+            testEndDate.isEqualTo(TestEndDate.of(2020, 4, 23))
+            diagnosisKeySubmissionSupported.isEqualTo(
+                expectedSupportedFlagFor(Lookup, Wales, input, Positive)
+            )
+            requiresConfirmatoryTest.isEqualTo(
+                expectedRequiredFlagFor(Lookup, Wales, input, Positive)
+            )
+            confirmatoryDayLimit.isNull()
+        }
     }
 
     @ParameterizedTest
@@ -199,42 +223,47 @@ class VirologyV2SmokeTest {
 
         val testResponse = lookupResponse(orderResponse, England)
 
-        assertThat(testResponse.testResult).isEqualTo(Negative)
-        assertThat(testResponse.testKit).isEqualTo(LAB_RESULT)
-        assertThat(testResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 4, 23))
-        assertThat(testResponse.diagnosisKeySubmissionSupported).isEqualTo(
-            expectedSupportedFlagFor(Lookup, England, LAB_RESULT, Negative)
-        )
-        assertThat(testResponse.requiresConfirmatoryTest).isEqualTo(
-            expectedRequiredFlagFor(Lookup, England, LAB_RESULT, Negative)
-        )
-        assertThat(testResponse.confirmatoryDayLimit).isNull()
+        expectThat(testResponse) {
+            testResult.isEqualTo(Negative)
+            testKit.isEqualTo(LAB_RESULT)
+            testEndDate.isEqualTo(TestEndDate.of(2020, 4, 23))
+            diagnosisKeySubmissionSupported.isEqualTo(
+                expectedSupportedFlagFor(Lookup, England, LAB_RESULT, Negative)
+            )
+            requiresConfirmatoryTest.isEqualTo(
+                expectedRequiredFlagFor(Lookup, England, LAB_RESULT, Negative)
+            )
+            confirmatoryDayLimit.isNull()
+        }
     }
 
     @ParameterizedTest
     @EnumSource(TestKit::class)
-    fun `lab token gen and cta exchange via eng source for all test kits`(testKit: TestKit) {
+    fun `lab token gen and cta exchange via eng source for all test kits`(input: TestKit) {
         val ctaToken = testLab.generateCtaTokenFor(
             testResult = Positive,
             testEndDate = TestEndDate.of(2020, 11, 19),
             source = VirologyTokenExchangeSource.Eng,
             apiVersion = V2,
-            testKit = testKit
+            testKit = input
         )
 
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
 
-        val ctaExchangeResponse = (exchangeResponse as CtaExchangeResult.AvailableV2).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.testResult).isEqualTo(Positive)
-        assertThat(ctaExchangeResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 11, 19))
-        assertThat(ctaExchangeResponse.testKit).isEqualTo(testKit)
-        assertThat(ctaExchangeResponse.diagnosisKeySubmissionSupported).isEqualTo(
-            expectedSupportedFlagFor(CtaExchange, England, testKit, Positive)
-        )
-        assertThat(ctaExchangeResponse.requiresConfirmatoryTest).isEqualTo(
-            expectedRequiredFlagFor(CtaExchange, England, testKit, Positive)
-        )
-        assertThat(ctaExchangeResponse.confirmatoryDayLimit).isNull()
+        expectThat(exchangeResponse)
+            .isA<CtaExchangeResult.AvailableV2>()
+            .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
+                testResult.isEqualTo(Positive)
+                testEndDate.isEqualTo(TestEndDate.of(2020, 11, 19))
+                testKit.isEqualTo(input)
+                diagnosisKeySubmissionSupported.isEqualTo(
+                    expectedSupportedFlagFor(CtaExchange, England, input, Positive)
+                )
+                requiresConfirmatoryTest.isEqualTo(
+                    expectedRequiredFlagFor(CtaExchange, England, input, Positive)
+                )
+                confirmatoryDayLimit.isNull()
+            }
     }
 
     @Test
@@ -249,39 +278,45 @@ class VirologyV2SmokeTest {
 
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
 
-        val ctaExchangeResponse = (exchangeResponse as CtaExchangeResult.AvailableV2).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.testResult).isEqualTo(Plod)
-        assertThat(ctaExchangeResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 11, 19))
-        assertThat(ctaExchangeResponse.testKit).isEqualTo(LAB_RESULT)
-        assertThat(ctaExchangeResponse.diagnosisKeySubmissionSupported).isEqualTo(false)
-        assertThat(ctaExchangeResponse.requiresConfirmatoryTest).isEqualTo(false)
-        assertThat(ctaExchangeResponse.confirmatoryDayLimit).isNull()
+        expectThat(exchangeResponse)
+            .isA<CtaExchangeResult.AvailableV2>()
+            .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
+                testResult.isEqualTo(Plod)
+                testKit.isEqualTo(LAB_RESULT)
+                testEndDate.isEqualTo(TestEndDate.of(2020, 11, 19))
+                diagnosisKeySubmissionSupported.isFalse()
+                requiresConfirmatoryTest.isFalse()
+                confirmatoryDayLimit.isNull()
+            }
     }
 
     @ParameterizedTest
     @EnumSource(TestKit::class)
-    fun `lab token gen and cta exchange via wls source for all test kits`(testKit: TestKit) {
+    fun `lab token gen and cta exchange via wls source for all test kits`(input: TestKit) {
         val ctaToken = testLab.generateCtaTokenFor(
             testResult = Positive,
             testEndDate = TestEndDate.of(2020, 11, 19),
             source = VirologyTokenExchangeSource.Wls,
             apiVersion = V2,
-            testKit = testKit
+            testKit = input
         )
 
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, Wales)
 
-        val ctaExchangeResponse = (exchangeResponse as CtaExchangeResult.AvailableV2).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.testResult).isEqualTo(Positive)
-        assertThat(ctaExchangeResponse.testEndDate).isEqualTo(TestEndDate.of(2020, 11, 19))
-        assertThat(ctaExchangeResponse.testKit).isEqualTo(testKit)
-        assertThat(ctaExchangeResponse.diagnosisKeySubmissionSupported).isEqualTo(
-            expectedSupportedFlagFor(CtaExchange, Wales, testKit, Positive)
-        )
-        assertThat(ctaExchangeResponse.requiresConfirmatoryTest).isEqualTo(
-            expectedRequiredFlagFor(CtaExchange, Wales, testKit, Positive)
-        )
-        assertThat(ctaExchangeResponse.confirmatoryDayLimit).isNull()
+        expectThat(exchangeResponse)
+            .isA<CtaExchangeResult.AvailableV2>()
+            .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
+                testResult.isEqualTo(Positive)
+                testKit.isEqualTo(input)
+                testEndDate.isEqualTo(TestEndDate.of(2020, 11, 19))
+                diagnosisKeySubmissionSupported.isEqualTo(
+                    expectedSupportedFlagFor(CtaExchange, Wales, input, Positive)
+                )
+                requiresConfirmatoryTest.isEqualTo(
+                    expectedRequiredFlagFor(CtaExchange, Wales, input, Positive)
+                )
+                confirmatoryDayLimit.isNull()
+            }
     }
 
     @Test
@@ -296,7 +331,8 @@ class VirologyV2SmokeTest {
 
         val mobileApp = MobileApp(client, config, appVersion = MobileAppVersion.Version(4, 3))
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
-        assertThat(exchangeResponse).isInstanceOf(CtaExchangeResult.NotFound::class.java)
+
+        expectThat(exchangeResponse).isA<CtaExchangeResult.NotFound>()
     }
 
     @Test
@@ -311,9 +347,13 @@ class VirologyV2SmokeTest {
 
         val mobileApp = MobileApp(client, config, appVersion = MobileAppVersion.Version(4, 11))
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
-        val ctaExchangeResponse = (exchangeResponse as CtaExchangeResult.AvailableV2).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.confirmatoryDayLimit).isEqualTo(2)
-        assertThat(ctaExchangeResponse.requiresConfirmatoryTest).isEqualTo(true)
+
+        expectThat(exchangeResponse)
+            .isA<CtaExchangeResult.AvailableV2>()
+            .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
+                confirmatoryDayLimit.isEqualTo(2)
+                requiresConfirmatoryTest.isTrue()
+            }
     }
 
     @Test
@@ -328,9 +368,13 @@ class VirologyV2SmokeTest {
 
         val mobileApp = MobileApp(client, config, appVersion = MobileAppVersion.Version(4, 11))
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, Wales)
-        val ctaExchangeResponse = (exchangeResponse as CtaExchangeResult.AvailableV2).ctaExchangeResponse
-        assertThat(ctaExchangeResponse.confirmatoryDayLimit).isEqualTo(1)
-        assertThat(ctaExchangeResponse.requiresConfirmatoryTest).isEqualTo(true)
+
+        expectThat(exchangeResponse)
+            .isA<CtaExchangeResult.AvailableV2>()
+            .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
+                confirmatoryDayLimit.isEqualTo(1)
+                requiresConfirmatoryTest.isTrue()
+            }
     }
 
     @ParameterizedTest
@@ -346,8 +390,8 @@ class VirologyV2SmokeTest {
             testKit = testKit
         )
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Eng)
-        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
 
+        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
     }
 
     @ParameterizedTest
@@ -363,8 +407,8 @@ class VirologyV2SmokeTest {
             testKit = testKit
         )
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Wls)
-        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
 
+        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
     }
 
     @ParameterizedTest
@@ -379,8 +423,8 @@ class VirologyV2SmokeTest {
         )
         mobileApp.exchange(ctaToken, V2, England)
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Eng)
-        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
 
+        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
     }
 
     @ParameterizedTest
@@ -395,7 +439,7 @@ class VirologyV2SmokeTest {
         )
         mobileApp.exchange(ctaToken, V2, Wales)
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Wls)
-        assertThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
 
+        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
     }
 }

@@ -1,13 +1,16 @@
+@file:Suppress("TestFunctionName")
+
 package uk.nhs.nhsx.keyfederation
 
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.s3.model.S3ObjectSummary
-import com.amazonaws.xray.strategy.ContextMissingStrategy
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.post
+import com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor
+import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.github.tomakehurst.wiremock.matching.MatchResult
 import com.github.tomakehurst.wiremock.matching.MatchResult.exactMatch
 import com.github.tomakehurst.wiremock.matching.MatchResult.noMatch
@@ -17,123 +20,99 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import strikt.api.expectThat
+import strikt.assertions.hasSize
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.Json.readJsonOrNull
 import uk.nhs.nhsx.core.SystemClock
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.aws.s3.ObjectKey
+import uk.nhs.nhsx.core.aws.xray.Tracing
 import uk.nhs.nhsx.core.events.IncomingHttpResponse
 import uk.nhs.nhsx.core.events.InfoEvent
-import uk.nhs.nhsx.core.events.OutgoingHttpRequest
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
-import uk.nhs.nhsx.domain.ReportType
-import uk.nhs.nhsx.domain.TestType
+import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
+import uk.nhs.nhsx.domain.TestType.LAB_RESULT
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.FederatedExposureUploadFactory
-import uk.nhs.nhsx.keyfederation.upload.JWS
-import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import uk.nhs.nhsx.testhelper.assertions.withCaptured
 import uk.nhs.nhsx.testhelper.mocks.FakeInteropDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
+import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset.UTC
-import java.util.*
 
 @ExtendWith(WireMockExtension::class)
 class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
-
-    @BeforeEach
-    fun disableXrayLogging() {
-        System.setProperty(ContextMissingStrategy.CONTEXT_MISSING_STRATEGY_SYSTEM_PROPERTY_OVERRIDE_KEY, "LOG_ERROR")
-    }
 
     private val events = RecordingEvents()
     private val clock = Clock.fixed(Instant.parse("2021-02-02T11:13:00.000Z"), UTC)
     private val now = Instant.now(clock)
 
+    @BeforeEach
+    fun disableXrayLogging() = Tracing.disableXRayComplaintsForMainClasses()
+
     @Test
     fun `test update risk level if default enabled`() {
-        val jws = mockk<JWS>()
-        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
-
         val service = DiagnosisKeysUploadService(
-            { now },
-            InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
-            FakeSubmissionRepository(listOf(now)),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            true,
-            2,
-            14,
-            0,
-            100,
-            TestContext(),
-            events
+            interopClient = InteropClient(wireMock),
+            submissionRepository = FakeSubmissionRepository(listOf(now)),
+            uploadRiskLevelDefaultEnabled = true,
+            uploadRiskLevelDefault = 2
         )
 
         val transformed = service.updateRiskLevelIfDefaultEnabled(
             ExposureUpload(
-                "key",
-                0,
-                4,
-                144,
-                emptyList(),
-                TestType.LAB_RESULT,
-                ReportType.CONFIRMED_TEST,
-                0
+                keyData = "key",
+                rollingStartNumber = 0,
+                transmissionRiskLevel = 4,
+                rollingPeriod = 144,
+                regions = emptyList(),
+                testType = LAB_RESULT,
+                reportType = CONFIRMED_TEST,
+                daysSinceOnset = 0
             )
         )
 
-        assertThat(transformed.transmissionRiskLevel).isEqualTo(2)
+        expectThat(transformed)
+            .get(ExposureUpload::transmissionRiskLevel)
+            .isEqualTo(2)
     }
 
     @Test
     fun `upload diagnosis keys and raises event`() {
-        val jws = mockk<JWS>()
-        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
-
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
-                .withHeader("Authorization", equalTo("Bearer" + " DUMMY_TOKEN")) // string split on purpose
+                .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
                 .withRequestBody(UploadPayloadPattern())
                 .willReturn(
                     aResponse()
                         .withStatus(200)
-                        .withBody(
-                            """
-                            {
-                                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                                "insertedExposures":0
-                            }
-                            """.trimIndent()
-                        )
+                        .withBody("""{ "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3", "insertedExposures":0 }""")
                 )
         )
 
         val service = DiagnosisKeysUploadService(
-            { now },
-            InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
-            FakeSubmissionRepository(listOf(now)),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            0,
-            100,
-            TestContext(),
-            events
+            interopClient = InteropClient(wireMock),
+            submissionRepository = FakeSubmissionRepository(listOf(now)),
         )
 
         service.loadKeysAndUploadToFederatedServer()
 
-        events.containsExactly(
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
+
+        expectThat(events).containsExactly(
             InfoEvent::class,
             InfoEvent::class,
             IncomingHttpResponse::class,
@@ -144,9 +123,6 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
 
     @Test
     fun `no filter for federation diagnosis keys and upload`() {
-        val jws = mockk<JWS>()
-        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
-
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
@@ -154,60 +130,36 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 .willReturn(
                     aResponse()
                         .withStatus(200)
-                        .withBody(
-                            """
-                            {
-                                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                                "insertedExposures":0
-                            }""".trimIndent()
-                        )
+                        .withBody("""{ "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3", "insertedExposures":0 }""")
                 )
         )
 
-        val interopClient = mockk<InteropClient>()
         val payload = slot<List<ExposureUpload>>()
-
-        every {
-            interopClient.uploadKeys(capture(payload))
-        }.answers {
-            InteropClient(
-                wireMock.baseUrl(),
-                "DUMMY_TOKEN",
-                jws, events
-            ).uploadKeys(payload.captured)
+        val interopClient = spyk(InteropClient(wireMock)) {
+            every { uploadKeys(capture(payload)) } answers { callOriginal() }
         }
 
+        val submissionRepository = SubmissionFromS3Repository(
+            FakeInteropDiagnosisKeysS3(
+                S3ObjectSummary("mobile/LAB_RESULT/abc", lastModified = now),
+                S3ObjectSummary("mobile/RAPID_RESULT/def", lastModified = now)
+            )
+        )
+
         val service = DiagnosisKeysUploadService(
-            { now },
-            interopClient,
-            SubmissionFromS3Repository(
-                FakeInteropDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/LAB_RESULT/abc"), s3ObjectSummary("mobile/RAPID_RESULT/def"))),
-                { true },
-                BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents(),
-                SystemClock.CLOCK
-            ),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            0,
-            100,
-            TestContext(),
-            RecordingEvents()
+            interopClient = interopClient,
+            submissionRepository = submissionRepository,
         )
 
         service.loadKeysAndUploadToFederatedServer()
 
-        assertThat(payload.captured).hasSize(2)
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
+
+        expectThat(payload).withCaptured { hasSize(2) }
     }
 
     @Test
     fun `filter prefix for federation diagnosis keys and upload`() {
-        val jws = mockk<JWS>()
-        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
-
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
@@ -226,50 +178,31 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                 )
         )
 
-        val interopClient = mockk<InteropClient>()
         val payload = slot<List<ExposureUpload>>()
-
-        every {
-            interopClient.uploadKeys(capture(payload))
-        }.answers {
-            InteropClient(
-                wireMock.baseUrl(),
-                "DUMMY_TOKEN",
-                jws, events
-            ).uploadKeys(payload.captured)
+        val interopClient = spyk(InteropClient(wireMock)) {
+            every { uploadKeys(capture(payload)) } answers { callOriginal() }
         }
 
+        val awsS3 = FakeInteropDiagnosisKeysS3(
+            S3ObjectSummary("mobile/RAPID_RESULT/abc.json", lastModified = now),
+            S3ObjectSummary("bar", lastModified = now)
+        )
+        val submissionRepository = SubmissionFromS3Repository(awsS3) { it.value.startsWith("mobile") }
+
         val service = DiagnosisKeysUploadService(
-            { now },
-            interopClient,
-            SubmissionFromS3Repository(
-                FakeInteropDiagnosisKeysS3(listOf(s3ObjectSummary("mobile/RAPID_RESULT/abc.json"), s3ObjectSummary("bar"))),
-                { objectKey -> objectKey.value.startsWith("mobile") },
-                BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents(),
-                SystemClock.CLOCK
-            ),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            0,
-            100,
-            TestContext(),
-            RecordingEvents()
+            interopClient = interopClient,
+            submissionRepository = submissionRepository,
         )
 
         service.loadKeysAndUploadToFederatedServer()
 
-        assertThat(payload.captured).hasSize(1)
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
+
+        expectThat(payload).withCaptured { hasSize(1) }
     }
 
     @Test
     fun `verify diagnosis keys upload updates time in database`() {
-        val jws = mockk<JWS>()
-        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
-
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
@@ -290,34 +223,23 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
 
         val batchTagService = spyk(InMemoryBatchTagService())
 
+        val interopClient = InteropClient(wireMock)
+        val submissionRepository = FakeSubmissionRepository(listOf(now))
         val service = DiagnosisKeysUploadService(
-            { now },
-            InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
-            FakeSubmissionRepository(listOf(now)),
-            batchTagService,
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            0,
-            100,
-            TestContext(),
-            RecordingEvents()
+            interopClient = interopClient,
+            submissionRepository = submissionRepository,
+            batchTagService = batchTagService
         )
 
         service.loadKeysAndUploadToFederatedServer()
 
         verify { batchTagService.updateLastUploadState(any()) }
+
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
     }
 
     @Test
     fun `stop the upload loop if the remaining time is not sufficient`() {
-        val jws = mockk<JWS>()
-        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
-
-        val context = mockk<Context>()
-        every { context.remainingTimeInMillis }.returns(-2)
-
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .withHeader("Authorization", equalTo("Bearer DUMMY_TOKEN"))
@@ -326,118 +248,76 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
                     aResponse()
                         .withStatus(200)
                         .withBody(
-                            """
-                            {
-                                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                                "insertedExposures":1
-                            }
-                            """.trimIndent()
+                            """{ "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3", "insertedExposures": 1 } """
                         )
                 )
         )
 
-        val lastModifiedDateBatchOne = Date.from(now.minusSeconds(4))
-        val lastModifiedDateBatchTwo = Date.from(now)
+        val lastModifiedDateBatchOne = now.minusSeconds(4)
+        val lastModifiedDateBatchTwo = now
 
-        val service = DiagnosisKeysUploadService(
-            { now },
-            InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
-            SubmissionFromS3Repository(
-                FakeInteropDiagnosisKeysS3(
-                    listOf(
-                        s3ObjectSummary("foo", lastModifiedDateBatchOne),
-                        s3ObjectSummary("bar", lastModifiedDateBatchOne),
-                        s3ObjectSummary("abc", lastModifiedDateBatchOne),
-                        s3ObjectSummary("def", lastModifiedDateBatchTwo)
-                    )
-                ),
-                { true },
-                BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents(),
-                SystemClock.CLOCK
-            ),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            5,
-            2,
-            context,
-            RecordingEvents()
+        val interopClient = InteropClient(wireMock)
+        val submissionRepository = SubmissionFromS3Repository(
+            FakeInteropDiagnosisKeysS3(
+                S3ObjectSummary("mobile/LAB_RESULT/foo", lastModified = lastModifiedDateBatchOne),
+                S3ObjectSummary("mobile/LAB_RESULT/bar", lastModified = lastModifiedDateBatchOne),
+                S3ObjectSummary("mobile/LAB_RESULT/abc", lastModified = lastModifiedDateBatchOne),
+                S3ObjectSummary("mobile/LAB_RESULT/def", lastModified = lastModifiedDateBatchTwo)
+            )
         )
 
-        assertThat(service.loadKeysAndUploadToFederatedServer()).isEqualTo(3)
+        val service = DiagnosisKeysUploadService(
+            interopClient = interopClient,
+            submissionRepository = submissionRepository,
+            maxUploadBatchSize = 5,
+            maxSubsequentBatchUploadCount = 2,
+            context = mockk { every { remainingTimeInMillis } returns -2 }
+        )
+
+        val submissionCount = service.loadKeysAndUploadToFederatedServer()
+
+        expectThat(submissionCount).describedAs("submission count").isEqualTo(3)
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
     }
 
     @Test
     fun `continue uploading the keys if we have enough time to execute the next batch`() {
-        val jws = mockk<JWS>()
-        every { jws.sign(any()) }.returns("DUMMY_SIGNATURE")
-
-        val context = mockk<Context>()
-        every { context.remainingTimeInMillis }.returns(1000000)
-
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .willReturn(
                     aResponse()
                         .withStatus(200)
-                        .withBody(
-                            """
-                            {
-                                "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3",
-                                "insertedExposures":1
-                            }
-                            """.trimIndent()
-                        )
+                        .withBody("""{ "batchTag": "75b326f7-ae6f-42f6-9354-00c0a6b797b3", "insertedExposures": 1 }""")
                 )
         )
 
-        val lastModifiedDate = Date.from(now.minusSeconds(4))
+        val lastModifiedDate = now.minusSeconds(4)
 
-        val service = DiagnosisKeysUploadService(
-            { now },
-            InteropClient(wireMock.baseUrl(), "DUMMY_TOKEN", jws, events),
-            SubmissionFromS3Repository(
-                FakeInteropDiagnosisKeysS3(
-                    listOf(
-                        s3ObjectSummary("foo", lastModifiedDate),
-                        s3ObjectSummary("bar", lastModifiedDate),
-                        s3ObjectSummary("abc", lastModifiedDate),
-                        s3ObjectSummary("def", lastModifiedDate)
-                    )
-                ),
-                { true },
-                BucketName.of("SUBMISSION_BUCKET"),
-                RecordingEvents(),
-                SystemClock.CLOCK
-            ),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            5,
-            2,
-            context,
-            RecordingEvents()
+        val interopClient = InteropClient(wireMock)
+
+        val submissionRepository = SubmissionFromS3Repository(
+            FakeInteropDiagnosisKeysS3(
+                S3ObjectSummary("mobile/LAB_RESULT/foo", lastModified = lastModifiedDate),
+                S3ObjectSummary("mobile/LAB_RESULT/bar", lastModified = lastModifiedDate),
+                S3ObjectSummary("mobile/LAB_RESULT/abc", lastModified = lastModifiedDate),
+                S3ObjectSummary("mobile/LAB_RESULT/def", lastModified = lastModifiedDate)
+            )
         )
 
-        assertThat(service.loadKeysAndUploadToFederatedServer()).isEqualTo(4)
+        val service = DiagnosisKeysUploadService(
+            interopClient = interopClient,
+            submissionRepository = submissionRepository,
+            maxUploadBatchSize = 5,
+            maxSubsequentBatchUploadCount = 2,
+        )
+
+        val submissionCount = service.loadKeysAndUploadToFederatedServer()
+
+        expectThat(submissionCount).describedAs("submission count").isEqualTo(4)
+        wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
     }
 
-    private fun s3ObjectSummary(
-        s3Key: String,
-        lastModifiedDate: Date = Date.from(Instant.now(clock))
-    ): S3ObjectSummary {
-        return S3ObjectSummary().apply {
-            key = s3Key
-            lastModified = lastModifiedDate
-        }
-    }
-
-    class UploadPayloadPattern(@JsonProperty matchesPayloadPattern: String = """{ batchTag: [a-f0-9\-]+, payload: "DUMMY_SIGNATURE" }""") :
+    private class UploadPayloadPattern(@JsonProperty matchesPayloadPattern: String = """{ batchTag: [a-f0-9\-]+, payload: "DUMMY_SIGNATURE" }""") :
         StringValuePattern(matchesPayloadPattern) {
         override fun match(value: String): MatchResult = readJsonOrNull<DiagnosisKeysUploadRequest>(value)
             ?.let {
@@ -448,5 +328,49 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             } ?: noMatch()
     }
 
-}
+    private fun DiagnosisKeysUploadService(
+        interopClient: InteropClient,
+        submissionRepository: SubmissionRepository,
+        batchTagService: BatchTagService = InMemoryBatchTagService(),
+        exposureUploadFactory: FederatedExposureUploadFactory = FederatedExposureUploadFactory("GB-EAW"),
+        uploadRiskLevelDefaultEnabled: Boolean = false,
+        uploadRiskLevelDefault: Int = -1,
+        maxUploadBatchSize: Int = 0,
+        maxSubsequentBatchUploadCount: Int = 100,
+        context: Context = mockk { every { remainingTimeInMillis } returns 1000000 }
+    ) = DiagnosisKeysUploadService(
+        clock = { now },
+        interopClient = interopClient,
+        submissionRepository = submissionRepository,
+        batchTagService = batchTagService,
+        exposureUploadFactory = exposureUploadFactory,
+        uploadRiskLevelDefaultEnabled = uploadRiskLevelDefaultEnabled,
+        uploadRiskLevelDefault = uploadRiskLevelDefault,
+        initialUploadHistoryDays = 14,
+        maxUploadBatchSize = maxUploadBatchSize,
+        maxSubsequentBatchUploadCount = maxSubsequentBatchUploadCount,
+        context = context,
+        events = events
+    )
 
+    private fun InteropClient(wireMock: WireMockServer) = InteropClient(
+        interopBaseUrl = wireMock.baseUrl(),
+        authToken = "DUMMY_TOKEN",
+        jws = mockk { every { sign(any()) } returns "DUMMY_SIGNATURE" },
+        events = events
+    )
+
+    private fun FakeInteropDiagnosisKeysS3(vararg summaries: S3ObjectSummary) =
+        FakeInteropDiagnosisKeysS3(summaries.toList())
+
+    private fun SubmissionFromS3Repository(
+        awsS3: AwsS3,
+        keyFilter: (ObjectKey) -> Boolean = { true }
+    ) = SubmissionFromS3Repository(
+        awsS3 = awsS3,
+        objectKeyFilter = keyFilter,
+        submissionBucketName = BucketName.of("SUBMISSION_BUCKET"),
+        events = events,
+        clock = SystemClock.CLOCK
+    )
+}

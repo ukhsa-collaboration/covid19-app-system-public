@@ -1,8 +1,9 @@
 package uk.nhs.nhsx.virology.result
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
 import uk.nhs.nhsx.core.Json.readStrictOrNull
 import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.domain.TestEndDate
@@ -23,7 +24,7 @@ class VirologyResultRequestV2Test {
             """.trimIndent()
         )
 
-        assertThat(request).isEqualTo(
+        expectThat(request).isEqualTo(
             VirologyResultRequestV2(
                 CtaToken.of("cc8f0b6z"),
                 TestEndDate.of(2020, 9, 29),
@@ -35,7 +36,7 @@ class VirologyResultRequestV2Test {
 
     @Test
     fun `does not read JSON if testEndDate is not at midnight`() {
-        assertNull(
+        expectThat(
             readStrictOrNull<VirologyResultRequestV2>(
                 """{
                     "ctaToken": "cc8f0b6z",
@@ -45,12 +46,12 @@ class VirologyResultRequestV2Test {
                 }
                 """.trimIndent()
             )
-        )
+        ).isNull()
     }
 
     @Test
     fun `does not read JSON for LFD negative`() {
-        assertNull(
+        expectThat(
             readStrictOrNull<VirologyResultRequestV2>(
                 """{
                     "ctaToken": "cc8f0b6z",
@@ -60,12 +61,12 @@ class VirologyResultRequestV2Test {
                 }
                 """.trimIndent()
             )
-        )
+        ).isNull()
     }
 
     @Test
     fun `does not read JSON for LFD void`() {
-        assertNull(
+        expectThat(
             readStrictOrNull<VirologyResultRequestV2>("""{
                     "ctaToken": "cc8f0b6z",
                     "testEndDate": "2020-09-29T20:00:00Z",
@@ -73,7 +74,7 @@ class VirologyResultRequestV2Test {
                     "testKit": "RAPID_RESULT"
                 }
                 """.trimIndent())
-        )
+        ).isNull()
     }
 
     @Test
@@ -91,6 +92,6 @@ class VirologyResultRequestV2Test {
             LAB_RESULT
         )
 
-        assertThat(version1.convertToV2()).isEqualTo(version2)
+        expectThat(version1.convertToV2()).isEqualTo(version2)
     }
 }

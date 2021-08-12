@@ -1,6 +1,6 @@
-# Deployment structure for AppSystem and supporting subsystems
+# Deployments
 
-The complete CTA system combines several subsystems that are loosely interdependent but can be deployed individually.
+The COVID-19 App System combines several subsystems that are loosely interdependent but can be deployed individually.
 
 We refer to an individual subsystem as a "bubble". A bubble is comprised of a set of AWS resources and associated artifacts (i.e. lambda binaries, static resources etc.) that are deployed together and managed in a separate terraform state.
 
@@ -12,13 +12,13 @@ There are currently the following bubbles hosting production functionality:
 
 Bubble Name|Description|
 ---|---|
-AppSystem|The main CTA functionality serving the COVID19 app and third party backend integrations|
-Analytics|The analytics subsystem based on QuickSight|
-PublicDashboard|The website providing a dashboard view on the CTA system statistics|
+AppSystem| Backend services for the COVID-19 App, and for third-party integrations|
+Analytics|Analytics data processing for the internal dashboard (based on Quicksight), the public dashboard (PubDash), and for exporting to other consumers |
+PublicDashboard|A web-based dashboard of charts showing Covid-19 App System statistics - accessible from the NHS COVID-19 public website |
 
 ## Functionality vs. Content
 
-The bubbles correspond too the implementation of different parts of the system and represent subsystems of functionality supporting features.
+The bubbles correspond to the implementation of different parts of the system and represent subsystems of functionality supporting features.
 
 In addition to the bubbles, there is a requirement for updates to the content of the system (i.e. configuration files, content served to the mobile clients etc.) individually and independently of the rest of the system.
 

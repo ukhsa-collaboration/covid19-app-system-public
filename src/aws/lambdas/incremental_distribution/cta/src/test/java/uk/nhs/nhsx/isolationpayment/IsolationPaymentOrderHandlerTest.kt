@@ -1,16 +1,22 @@
 package uk.nhs.nhsx.isolationpayment
 
 import com.amazonaws.HttpMethod.POST
-import com.amazonaws.services.kms.model.SigningAlgorithmSpec
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
+import com.amazonaws.services.kms.model.SigningAlgorithmSpec.ECDSA_SHA_256
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
+import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.CREATED
+import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.SERVICE_UNAVAILABLE
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
-import uk.nhs.nhsx.core.Json.readJsonOrNull
+import strikt.api.expectThat
+import strikt.assertions.containsKey
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
+import strikt.assertions.isTrue
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.TestEnvironments.TEST
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.AwsResponseSigner
 import uk.nhs.nhsx.core.events.RecordingEvents
@@ -19,19 +25,24 @@ import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.Signer
 import uk.nhs.nhsx.domain.IpcTokenId
+import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.OK
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
-import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.body
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.headers
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
+import uk.nhs.nhsx.testhelper.assertions.withReadJsonOrThrow
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withCustomOai
 import uk.nhs.nhsx.testhelper.withMethod
 import uk.nhs.nhsx.testhelper.withRequestId
-import java.util.*
 
 class IsolationPaymentOrderHandlerTest {
 
-    private val environment = TestEnvironments.TEST.apply(
+    private val environment = TEST.apply(
         mapOf(
             "MAINTENANCE_MODE" to "false",
             "TOKEN_CREATION_ENABLED" to "true",
@@ -39,7 +50,7 @@ class IsolationPaymentOrderHandlerTest {
         )
     )
 
-    private val environmentTokenCreationDisabled = TestEnvironments.TEST.apply(
+    private val environmentTokenCreationDisabled = TEST.apply(
         mapOf(
             "MAINTENANCE_MODE" to "false",
             "TOKEN_CREATION_ENABLED" to "false",
@@ -53,33 +64,26 @@ class IsolationPaymentOrderHandlerTest {
         every { sign(any()) } returns
             Signature(
                 KeyId.of("TEST_KEY_ID"),
-                SigningAlgorithmSpec.ECDSA_SHA_256, "TEST_SIGNATURE".toByteArray()
+                ECDSA_SHA_256, "TEST_SIGNATURE".toByteArray()
             )
     }
 
     private val events = RecordingEvents()
     private val signer = AwsResponseSigner(RFC2616DatedSigner(SystemClock.CLOCK, contentSigner), events)
-
-    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent): Map<String, String> =
-        Optional.ofNullable(response.headers).orElse(emptyMap())
-
     private val service = mockk<IsolationPaymentMobileService>()
 
     private val handler = IsolationPaymentOrderHandler(
-        environment,
-        SystemClock.CLOCK,
-        RecordingEvents(),
-        authenticator,
-        signer,
-        service,
-        { true }
-    )
+        environment = environment,
+        clock = SystemClock.CLOCK,
+        events = RecordingEvents(),
+        authenticator = authenticator,
+        signer = signer,
+        service = service
+    ) { true }
 
     @Test
     fun `token create returns 201 when tokens is created`() {
-        every { service.handleIsolationPaymentOrder(any()) } returns OK(
-            IpcTokenId.of("1".repeat(64))
-        )
+        every { service.handleIsolationPaymentOrder(any()) } returns OK(IpcTokenId.of("1".repeat(64)))
 
         val requestEvent = request()
             .withMethod(POST)
@@ -89,16 +93,15 @@ class IsolationPaymentOrderHandlerTest {
             .withPath("/isolation-payment/ipc-token/create")
             .withBearerToken("anything")
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(201)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
 
-        when (val tokenGenerationResponse = readJsonOrNull<OK>(response.body)) {
-            is OK -> {
-                assertThat(tokenGenerationResponse.ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
-                assertThat(tokenGenerationResponse.isEnabled).isEqualTo(true)
+        expectThat(response) {
+            status.isSameAs(CREATED)
+            headers.containsKey("x-amz-meta-signature")
+            body.withReadJsonOrThrow<OK> {
+                get(TokenGenerationResponse.OK::ipcToken).isEqualTo(IpcTokenId.of("1".repeat(64)))
+                get(TokenGenerationResponse.OK::isEnabled).isTrue()
             }
-            null -> fail { "Could not read JSON" }
         }
     }
 
@@ -112,9 +115,12 @@ class IsolationPaymentOrderHandlerTest {
             .withPath("/isolation-payment/ipc-token/create")
             .withBearerToken("anything")
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(400)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(BAD_REQUEST)
+            headers.containsKey("x-amz-meta-signature")
+        }
     }
 
     @Test
@@ -132,19 +138,16 @@ class IsolationPaymentOrderHandlerTest {
             .withMethod(POST)
             .withCustomOai("OAI")
             .withRequestId()
-            .withBody(
-                """
-                {
-                    "country": "England"
-                }
-                """.trimIndent()
-            )
+            .withBody("""{ "country": "England" }""")
             .withPath("/isolation-payment/ipc-token/create")
             .withBearerToken("anything")
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(503)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(SERVICE_UNAVAILABLE)
+            headers.containsKey("x-amz-meta-signature")
+        }
     }
 
     @Test
@@ -164,14 +167,18 @@ class IsolationPaymentOrderHandlerTest {
                     "riskyEncounterDate": "2020-08-24T21:59:00Z",
                     "isolationPeriodEndDate": "2020-08-24T21:59:00Z"
                 }
-            """.trimIndent())
+                """
+            )
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
 
-        val tokenUpdateResponse = readJsonOrNull<TokenUpdateResponse>(response.body) ?: error("")
-        assertThat(tokenUpdateResponse.websiteUrlWithQuery).isEqualTo("https://test?ipcToken=some-id")
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+            body.withReadJsonOrThrow<TokenUpdateResponse> {
+                get(TokenUpdateResponse::websiteUrlWithQuery).isEqualTo("https://test?ipcToken=some-id")
+            }
+        }
     }
 
     @Test
@@ -184,9 +191,12 @@ class IsolationPaymentOrderHandlerTest {
             .withPath("/isolation-payment/ipc-token/update")
             .withBearerToken("anything")
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(400)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(BAD_REQUEST)
+            headers.containsKey("x-amz-meta-signature")
+        }
     }
 
     @Test
@@ -211,14 +221,17 @@ class IsolationPaymentOrderHandlerTest {
                     "riskyEncounterDate": "2020-08-24T21:59:00Z",
                     "isolationPeriodEndDate": "2020-08-24T21:59:00Z"
                 }
-            """.trimIndent()
+                """
             )
             .withPath("/isolation-payment/ipc-token/update")
             .withBearerToken("anything")
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(503)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(SERVICE_UNAVAILABLE)
+            headers.containsKey("x-amz-meta-signature")
+        }
     }
 
     @Test
@@ -230,10 +243,13 @@ class IsolationPaymentOrderHandlerTest {
             .withPath("/unknown/path")
             .withBearerToken("anything")
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(404)
-        assertThat(response.body).isNull()
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(NOT_FOUND)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
     }
 
     @Test
@@ -245,8 +261,11 @@ class IsolationPaymentOrderHandlerTest {
             .withPath("/isolation-payment/health")
             .withBearerToken("anything")
 
-        val response = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(response.statusCode).isEqualTo(200)
-        assertThat(headersOrEmpty(response)).containsKey("x-amz-meta-signature")
+        val response = handler.handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(OK)
+            headers.containsKey("x-amz-meta-signature")
+        }
     }
 }

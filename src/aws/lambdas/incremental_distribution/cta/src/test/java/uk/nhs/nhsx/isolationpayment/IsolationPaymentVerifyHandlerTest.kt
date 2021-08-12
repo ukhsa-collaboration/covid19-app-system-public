@@ -3,13 +3,14 @@ package uk.nhs.nhsx.isolationpayment
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verifySequence
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.domain.IpcTokenId
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
-import uk.nhs.nhsx.testhelper.ContextBuilder
-import uk.nhs.nhsx.domain.IpcTokenId
+import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 
 internal class IsolationPaymentVerifyHandlerTest {
 
@@ -23,11 +24,13 @@ internal class IsolationPaymentVerifyHandlerTest {
     fun `verifies token and returns isolation payment response`() {
         every { service.verifyIsolationToken(any()) } returns IsolationResponse(ipcToken, state)
 
-        val response = handler.handler()(IsolationRequest(ipcToken), ContextBuilder.aContext())
+        val response = handler.handler()(IsolationRequest(ipcToken), aContext())
 
-        assertThat(response.contractVersion).isEqualTo(1)
-        assertThat(response.ipcToken).isEqualTo(ipcToken)
-        assertThat(response.state).isEqualTo(state)
+        expectThat(response) {
+            get(IsolationResponse::contractVersion).isEqualTo(1)
+            get(IsolationResponse::ipcToken).isEqualTo(ipcToken)
+            get(IsolationResponse::state).isEqualTo(state)
+        }
 
         verifySequence {
             service.verifyIsolationToken(ipcToken)

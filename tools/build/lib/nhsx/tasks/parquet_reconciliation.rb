@@ -96,10 +96,7 @@ where submitteddatehour < '#{consolidated_end_partition}'
           elsif string_value_1 != string_value_2
             "#{header_name}, #{string_value_1} != #{string_value_2}"
           end
-        }
-
-        puts "=== differences ==="
-        differences.each { |diff| puts diff }
+        }.each { |diff| puts diff }
 
         raise GaudiError, "there are differences in source and destination" unless differences.empty?
 
@@ -127,8 +124,10 @@ having source.part is null or target.part is null or source.cnt != target.cnt
         eos
 
         query_results = run_athena_query(query, "q2", "#{prefix}_analytics_quicksight")
+        raise GaudiError, "expected 1 row but got #{query_results.length}" unless query_results.length == 1
 
-        raise GaudiError, "expected no rows but got #{query_results.length}" unless query_results.empty?
+        header_row = query_results[0]["Data"].map { |header| header["VarCharValue"] }
+        raise GaudiError, "header row does not match" unless header_row == %w[source_part source_count target_part target_count]
       end
 
       desc "Run all reconciliation queries"

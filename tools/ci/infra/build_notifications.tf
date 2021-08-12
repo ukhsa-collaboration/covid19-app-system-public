@@ -20,10 +20,12 @@ resource "aws_cloudwatch_event_rule" "build_state_change" {
     "project-name": [
       "deploy-cta-${each.key}",
       "deploy-tier-metadata-${each.key}",
+      "deploy-local-messages-${each.key}",
       "deploy-analytics-${each.key}",
       "deploy-pubdash-${each.key}",
       "release-cta-${each.key}",
       "release-tier-metadata-${each.key}",
+      "release-local-messages-${each.key}",
       "release-analytics-${each.key}",
       "release-pubdash-${each.key}",
       "release-availability-${each.key}"
@@ -57,6 +59,7 @@ resource "aws_cloudwatch_event_rule" "build_failure_notify_events" {
     ],
     "project-name": [
       "ci-app-system",
+      "ci-devenv",
       "pr-app-system",
       "resources-cleanup"
     ]

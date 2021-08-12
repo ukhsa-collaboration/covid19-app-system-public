@@ -1,29 +1,20 @@
 package uk.nhs.nhsx.core.aws.s3
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.Clock
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.util.UUID
-import java.util.function.Supplier
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import java.time.Instant
+import java.util.*
 
 class UniqueObjectKeyNameProviderTest {
 
     @Test
-    fun returnsObjectKey() {
-        val systemClock: Clock = {
-            LocalDateTime
-                .parse("2020-07-22T16:29:25.687835")
-                .toInstant(ZoneOffset.UTC)
-        }
+    fun `returns object key`() {
+        val clock = { Instant.parse("2020-07-22T16:29:25.687835Z") }
+        val uniqueId = { UUID.fromString("3ed625d7-8914-41be-b57b-60f1489f8e29") }
+        val keyNameProvider = UniqueObjectKeyNameProvider(clock, uniqueId)
 
-        val uniqueId = Supplier {
-            UUID.fromString("3ed625d7-8914-41be-b57b-60f1489f8e29")
-        }
-
-        val uniqueObjectKeyNameProvider = UniqueObjectKeyNameProvider(systemClock, uniqueId)
-        assertThat(uniqueObjectKeyNameProvider.generateObjectKeyName())
+        expectThat(keyNameProvider.generateObjectKeyName())
             .isEqualTo(ObjectKey.of("1595435365687_3ed625d7-8914-41be-b57b-60f1489f8e29"))
     }
 }

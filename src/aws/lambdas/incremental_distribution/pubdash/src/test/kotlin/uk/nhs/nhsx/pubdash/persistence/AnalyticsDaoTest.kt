@@ -1,7 +1,11 @@
 package uk.nhs.nhsx.pubdash.persistence
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.contains
+import strikt.assertions.hasSize
+import strikt.assertions.isA
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.pubdash.QueryId
 import uk.nhs.nhsx.pubdash.QueryResult
 import uk.nhs.nhsx.pubdash.fakes.FakeDbClient
@@ -21,12 +25,12 @@ class AnalyticsDaoTest {
         val dbClient = FakeDbClient(listOf(queryId))
         val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
-        assertThat(dao.startAgnosticDatasetQueryAsync()).isEqualTo(queryId)
-        assertThat(dbClient.submittedSqlQueries()).hasSize(1)
+        expectThat(dao.startAgnosticDatasetQueryAsync()).isEqualTo(queryId)
+        expectThat(dbClient.submittedSqlQueries()).hasSize(1)
 
         val sql = dbClient.lastSubmittedSqlQuery()
-        assertThat(sql).contains(sqlFrom(tableAppStore))
-        assertThat(sql).contains(sqlFrom(tableQrPosters))
+        expectThat(sql).contains(sqlFrom(tableAppStore))
+        expectThat(sql).contains(sqlFrom(tableQrPosters))
     }
 
     @Test
@@ -34,12 +38,12 @@ class AnalyticsDaoTest {
         val dbClient = FakeDbClient(listOf(queryId))
         val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
-        assertThat(dao.startLocalAuthorityDatasetQueryAsync()).isEqualTo(queryId)
-        assertThat(dbClient.submittedSqlQueries()).hasSize(1)
+        expectThat(dao.startLocalAuthorityDatasetQueryAsync()).isEqualTo(queryId)
+        expectThat(dbClient.submittedSqlQueries()).hasSize(1)
 
         val sql = dbClient.lastSubmittedSqlQuery()
-        assertThat(sql).contains(sqlFrom(tableAnalyticsMobile))
-        assertThat(sql).contains(sqlFrom(tablePostcodeLookup))
+        expectThat(sql).contains(sqlFrom(tableAnalyticsMobile))
+        expectThat(sql).contains(sqlFrom(tablePostcodeLookup))
     }
 
     @Test
@@ -47,12 +51,12 @@ class AnalyticsDaoTest {
         val dbClient = FakeDbClient(listOf(queryId))
         val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
-        assertThat(dao.startLocalAuthorityDatasetQueryAsync()).isEqualTo(queryId)
-        assertThat(dbClient.submittedSqlQueries()).hasSize(1)
+        expectThat(dao.startLocalAuthorityDatasetQueryAsync()).isEqualTo(queryId)
+        expectThat(dbClient.submittedSqlQueries()).hasSize(1)
 
         val sql = dbClient.lastSubmittedSqlQuery()
-        assertThat(sql).contains(sqlFrom(tableAnalyticsMobile))
-        assertThat(sql).contains(sqlFrom(tablePostcodeLookup))
+        expectThat(sql).contains(sqlFrom(tableAnalyticsMobile))
+        expectThat(sql).contains(sqlFrom(tablePostcodeLookup))
     }
 
     private fun sqlFrom(table: String): String = """"some-workspace_$schema"."some-workspace_$table""""
@@ -64,8 +68,8 @@ class AnalyticsDaoTest {
         val dbClient = FakeDbClient(listOf(queryId), mapOf(queryId to listOf(waiting, finished)))
         val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
 
-        assertThat(dao.checkQueryState(queryId)).isInstanceOf(QueryResult.Waiting::class.java)
-        assertThat(dao.checkQueryState(queryId)).isEqualTo(QueryResult.Finished(Unit))
+        expectThat(dao.checkQueryState(queryId)).isA<QueryResult.Waiting<Unit>>()
+        expectThat(dao.checkQueryState(queryId)).isEqualTo(QueryResult.Finished(Unit))
     }
 
 }

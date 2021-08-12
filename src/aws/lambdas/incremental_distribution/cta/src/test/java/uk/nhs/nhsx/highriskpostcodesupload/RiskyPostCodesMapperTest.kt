@@ -1,15 +1,16 @@
 package uk.nhs.nhsx.highriskpostcodesupload
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.domain.LocalAuthority
 import uk.nhs.nhsx.domain.PostDistrict
 import uk.nhs.nhsx.domain.PostDistrictIndicators
-import uk.nhs.nhsx.domain.TierIndicator
 import uk.nhs.nhsx.domain.RiskIndicator.HIGH
 import uk.nhs.nhsx.domain.RiskIndicator.LOW
 import uk.nhs.nhsx.domain.RiskIndicator.MEDIUM
+import uk.nhs.nhsx.domain.TierIndicator
 
 class RiskyPostCodesMapperTest {
 
@@ -32,7 +33,7 @@ class RiskyPostCodesMapperTest {
         )
         val result = mapper.mapOrThrow(request)
 
-        assertThat(result).isEqualTo(
+        expectThat(result).isEqualTo(
             RiskyPostCodesResult(
                 RiskyPostCodesV1(
                     mapOf(
@@ -63,7 +64,7 @@ class RiskyPostCodesMapperTest {
         val request = RiskyPostDistrictsRequest(emptyMap(), emptyMap())
         val result = mapper.mapOrThrow(request)
 
-        assertThat(result).isEqualTo(
+        expectThat(result).isEqualTo(
             RiskyPostCodesResult(
                 RiskyPostCodesV1(emptyMap()),
                 RiskyPostCodesV2(emptyMap(), emptyMap(), RiskyPostCodeTestData.tierMetadata)
@@ -82,7 +83,7 @@ class RiskyPostCodesMapperTest {
 
         val result = mapper.mapOrThrow(request)
 
-        assertThat(result).isEqualTo(
+        expectThat(result).isEqualTo(
             RiskyPostCodesResult(
                 RiskyPostCodesV1(
                     mapOf(
@@ -115,7 +116,7 @@ class RiskyPostCodesMapperTest {
 
         val result = mapper.mapOrThrow(request)
 
-        assertThat(result).isEqualTo(
+        expectThat(result).isEqualTo(
             RiskyPostCodesResult(
                 RiskyPostCodesV1(emptyMap()),
                 RiskyPostCodesV2(
@@ -133,26 +134,22 @@ class RiskyPostCodesMapperTest {
 
     @Test
     fun `throws if post districts contains empty key`() {
-        assertThatThrownBy { PostDistrict.of(" ") }
-            .isInstanceOf(IllegalArgumentException::class.java)
+        expectThrows<IllegalArgumentException> { PostDistrict.of(" ") }
     }
 
     @Test
     fun `throws if post district larger than 20 characters`() {
-        assertThatThrownBy { PostDistrict.of("123456789012345678901") }
-            .isInstanceOf(IllegalArgumentException::class.java)
+        expectThrows<IllegalArgumentException> { PostDistrict.of("123456789012345678901") }
     }
 
     @Test
     fun `throws if local authorities contains an empty key`() {
-        assertThatThrownBy { LocalAuthority.of(" ") }
-            .isInstanceOf(IllegalArgumentException::class.java)
+        expectThrows<IllegalArgumentException> { LocalAuthority.of(" ") }
     }
 
     @Test
     fun `throws if local authorities contains an empty tier`() {
-        assertThatThrownBy { TierIndicator.of(" ") }
-            .isInstanceOf(IllegalArgumentException::class.java)
+        expectThrows<IllegalArgumentException> { TierIndicator.of(" ") }
     }
 
     @Test
@@ -173,7 +170,7 @@ class RiskyPostCodesMapperTest {
 
         val result = mapper.convertToAnalyticsCsv(request)
 
-        assertThat(result).isEqualTo(
+        expectThat(result).isEqualTo(
             """
             # postal_district_code, risk_indicator, tier_indicator
             "CODE1", "H", "EN.Tier3"
@@ -189,6 +186,6 @@ class RiskyPostCodesMapperTest {
 
         val result = mapper.convertToAnalyticsCsv(request)
 
-        assertThat(result).isEqualTo("# postal_district_code, risk_indicator, tier_indicator")
+        expectThat(result).isEqualTo("# postal_district_code, risk_indicator, tier_indicator")
     }
 }

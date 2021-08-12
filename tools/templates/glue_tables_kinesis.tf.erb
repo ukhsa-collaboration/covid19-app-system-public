@@ -1,0 +1,75 @@
+################################################################################
+# THIS FILE IS AUTO-GENERATED, DO NOT EDIT DIRECTLY
+# CHANGES TO TEMPLATE SHOULD BE MADE VIA: <%= template_file %>
+# TO ADD NEW FIELDS, EDIT src/aws/analytics_fields/fields.json
+################################################################################
+
+# [PARQUET CONSOLIDATION] FIXME: columns need to be kept in sync with glue table below
+resource "aws_glue_catalog_table" "mobile_analytics" {
+  name          = "${terraform.workspace}_analytics"
+  database_name = aws_glue_catalog_database.mobile_analytics.name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL              = "TRUE"
+    "parquet.compression" = "SNAPPY"
+  }
+
+  storage_descriptor {
+    location      = "s3://${module.analytics_submission_store_parquet.bucket_id}/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    <% columns.each do |name, type|  %>
+    columns {
+      name = "<%= name %>"
+      type = "<%= type %>"
+    }
+    <% end %>
+  }
+}
+
+# [PARQUET CONSOLIDATION] FIXME: columns need to be kept in sync with glue table above
+resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
+  name          = "${terraform.workspace}_analytics_consolidated"
+  database_name = aws_glue_catalog_database.mobile_analytics.name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL              = "TRUE"
+    "parquet.compression" = "SNAPPY"
+  }
+
+  storage_descriptor {
+    location      = "s3://${module.analytics_submission_store_parquet_consolidated.bucket_id}/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    <% columns.each do |name, type|  %>
+    columns {
+      name = "<%= name %>"
+      type = "<%= type %>"
+    }
+    <% end %>
+  }
+}

@@ -1,11 +1,11 @@
 package uk.nhs.nhsx.diagnosiskeydist
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.testhelper.data.asInstant
 import java.time.Duration
-
 
 class DistributionServiceWindowTest {
 
@@ -22,7 +22,7 @@ class DistributionServiceWindowTest {
     )
 
     fun `determines distribution start time window`(input: String, description: String, expected: Boolean) {
-        assertThat(distributionServiceWindow(input).isValidBatchStartDate())
+        expectThat(distributionServiceWindow(input).isValidBatchStartDate())
             .describedAs("$description: $input should have invalid start time window")
             .isEqualTo(expected)
     }
@@ -43,7 +43,7 @@ class DistributionServiceWindowTest {
         val nextWindow = distributionServiceWindow(input)
             .nextWindow()
 
-        assertThat(nextWindow)
+        expectThat(nextWindow)
             .isEqualTo(expected.asInstant())
     }
 
@@ -63,7 +63,7 @@ class DistributionServiceWindowTest {
         val zipExpirationExclusive = distributionServiceWindow(input)
             .zipExpirationExclusive()
 
-        assertThat(zipExpirationExclusive)
+        expectThat(zipExpirationExclusive)
             .isEqualTo(expected.asInstant())
     }
 
@@ -83,7 +83,7 @@ class DistributionServiceWindowTest {
         val withinHourInclusive = distributionServiceWindow(input)
             .earliestBatchStartDateWithinHourInclusive()
 
-        assertThat(withinHourInclusive)
+        expectThat(withinHourInclusive)
             .isEqualTo(expected.asInstant())
     }
 
@@ -102,7 +102,7 @@ class DistributionServiceWindowTest {
         val withinHourExclusive = distributionServiceWindow(input)
             .latestBatchStartDateWithinHourExclusive()
 
-        assertThat(withinHourExclusive)
+        expectThat(withinHourExclusive)
             .isEqualTo(expected.asInstant())
     }
 

@@ -121,4 +121,45 @@ namespace :gen do
     metadata_file = $configuration.messages_metadata($configuration)
     generate_local_messages(mapping_file, metadata_file, $configuration)
   end
+
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+    desc "Generate synthetic analytics for #{tgt_env}"
+    task :"analytics:#{tgt_env}" do
+      include Zuehlke::Execution
+
+      raise GaudiError, "Generating synthetic analytics for env branch is not supported yet!" unless tgt_env != "branch"
+
+      args = {
+        'submission_parquet_bucket' => "te-#{tgt_env}-analytics-submission-parquet",
+        'consolidated_submission_parquet_bucket' => "te-#{tgt_env}-analytics-consolidated-submission-parquet",
+        'app_store_data_bucket' => "te-#{tgt_env}-analytics-app-store-qr-posters"
+      }
+      require "highline"
+      cli = HighLine.new
+      puts "\nRunning this task will delete and re-generate the contents of the following buckets: #{args.values}"
+      answer = cli.ask "\nDo you want to proceed? Type 'yes' to confirm"
+      raise GaudiError, "Aborted" unless ["yes"].include?(answer.downcase)
+
+      args_cmdline = args.map { |k, v| "--#{k} #{v}"}.join(" ")
+      cmdline = "python3 #{File.join($configuration.base, "tools/analytics/gen-parquet.py")} #{args_cmdline}"
+      run_command("Generating parquet files", cmdline, $configuration)
+    end
+  end
+
+  desc "Generate analytics fields in terraform source"
+  task :"analytics-fields" => :"validate:analytics-fields" do
+    include Zuehlke::Templates
+    analytics_fields = File.join($configuration.base, "src/aws/analytics_fields/fields.json")
+    columns = JSON.parse(File.read(analytics_fields))
+
+    kinesis_glue_file = File.join($configuration.base, "src/aws/glue_tables.tf")
+    kinesis_glue_template_file = "tools/templates/glue_tables_kinesis.tf.erb"
+    kinesis_glue_template = File.join($configuration.base, kinesis_glue_template_file)
+    write_file(kinesis_glue_file, from_template(kinesis_glue_template, { :columns => columns, :template_file => kinesis_glue_template_file }))
+
+    quicksight_glue_file = File.join($configuration.base, "src/analytics/modules/mobile_analytics/glue_tables.tf")
+    quicksight_glue_template_file = "tools/templates/glue_tables_quicksight.tf.erb"
+    quicksight_glue_template = File.join($configuration.base, quicksight_glue_template_file)
+    write_file(quicksight_glue_file, from_template(quicksight_glue_template, { :columns => columns, :template_file => quicksight_glue_template_file }))
+  end
 end

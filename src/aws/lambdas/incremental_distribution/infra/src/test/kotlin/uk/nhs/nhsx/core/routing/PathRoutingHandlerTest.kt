@@ -3,118 +3,120 @@ package uk.nhs.nhsx.core.routing
 import com.amazonaws.HttpMethod.GET
 import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
-import org.assertj.core.api.Assertions.assertThat
+import org.http4k.core.Status.Companion.METHOD_NOT_ALLOWED
+import org.http4k.core.Status.Companion.NOT_FOUND
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import uk.nhs.nhsx.core.routing.Routing.Method
+import uk.nhs.nhsx.core.routing.Routing.PathRoutingHandler
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
 import uk.nhs.nhsx.testhelper.withMethod
 import java.util.*
 
 class PathRoutingHandlerTest {
 
     @Test
-    fun pathAndMethodMatches() {
+    fun `path and method matches`() {
         val responseEvent = APIGatewayProxyResponseEvent()
-        val handler =
-            Routing.PathRoutingHandler("/path/to/resource", Optional.of(Routing.Method.POST)) { _, _ -> responseEvent }
 
-        assertThat(
-            handler(
-                request().withPath("/path/to/resource")
-                    .withMethod(POST),
-                TestContext()
-            )
-        )
-            .isSameAs(responseEvent)
+        val handler = PathRoutingHandler(
+            "/path/to/resource",
+            Optional.of(Method.POST)
+        ) { _, _ -> responseEvent }
+
+        expectThat(handler(request().withPath("/path/to/resource").withMethod(POST), TestContext()))
+            .isEqualTo(responseEvent)
     }
 
     @Test
     fun pathMatchesAndMethodDifferent() {
-        val handler =
-            Routing.PathRoutingHandler("/path/to/resource", Optional.of(Routing.Method.POST)) { _, _ -> TODO() }
+        val handler = PathRoutingHandler(
+            "/path/to/resource",
+            Optional.of(Method.POST)
+        ) { _, _ -> TODO() }
 
-        assertThat(
+        expectThat(
             handler(
-                request().withPath("/path/to/resource")
-                    .withMethod(GET),
+                request().withPath("/path/to/resource").withMethod(GET),
                 TestContext()
-            ).statusCode
-        )
-            .isEqualTo(405)
+            )
+        ).status.isSameAs(METHOD_NOT_ALLOWED)
     }
 
     @Test
     fun noMatchAtAll() {
-        val handler =
-            Routing.PathRoutingHandler("/path/to/resource", Optional.of(Routing.Method.POST)) { _, _ -> TODO() }
+        val handler = PathRoutingHandler(
+            "/path/to/resource",
+            Optional.of(Method.POST)
+        ) { _, _ -> TODO() }
 
-        assertThat(
+        expectThat(
             handler(
                 request().withPath("/path/to/unknown/resource")
                     .withMethod(GET),
                 TestContext()
-            ).statusCode
-        )
-            .isEqualTo(404)
+            )
+        ).status.isSameAs(NOT_FOUND)
     }
 
     @Test
     fun pathOnlyMatch() {
         val responseEvent = APIGatewayProxyResponseEvent()
-        val handler = Routing.PathRoutingHandler("/path/to/resource", Optional.empty()) { _, _ -> responseEvent }
+        val handler = PathRoutingHandler(
+            "/path/to/resource",
+            Optional.empty()
+        ) { _, _ -> responseEvent }
 
-        assertThat(
+        expectThat(
             handler(
                 request().withPath("/path/to/resource")
                     .withMethod(POST),
                 TestContext()
             )
-        )
-            .isSameAs(responseEvent)
+        ).isEqualTo(responseEvent)
 
-        assertThat(
+        expectThat(
             handler(
                 request().withPath("/path/to/resource")
                     .withMethod(GET),
                 TestContext()
             )
-        )
-            .isSameAs(responseEvent)
+        ).isEqualTo(responseEvent)
     }
 
     @Test
     fun customPathMatcher() {
         val responseEvent = APIGatewayProxyResponseEvent()
-        val handler =
-            Routing.PathRoutingHandler(
-                { it.startsWith("/path") },
-                Optional.of(Routing.Method.POST)
-            ) { _, _ -> responseEvent }
+        val handler = PathRoutingHandler(
+            { it.startsWith("/path") },
+            Optional.of(Method.POST)
+        ) { _, _ -> responseEvent }
 
-        assertThat(
+        expectThat(
             handler(
                 request().withPath("/path")
                     .withMethod(POST), TestContext()
             )
-        )
-            .isSameAs(responseEvent)
+        ).isEqualTo(responseEvent)
 
-        assertThat(
+        expectThat(
             handler(
                 request().withPath("/path/to/resource")
                     .withMethod(POST),
                 TestContext()
             )
-        )
-            .isSameAs(responseEvent)
+        ).isEqualTo(responseEvent)
 
-        assertThat(
+        expectThat(
             handler(
                 request().withPath("/pat")
                     .withMethod(POST),
                 TestContext()
-            ).statusCode
-        )
-            .isEqualTo(404)
+            )
+        ).status.isSameAs(NOT_FOUND)
     }
 }

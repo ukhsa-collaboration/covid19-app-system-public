@@ -172,5 +172,20 @@ module NHSx
       stripped_header = serialized_export.slice(16, serialized_export.size)
       TemporaryExposureKeyExport.decode(stripped_header)
     end
+
+    def trigger_analytics_export_lambda(lambda_name, missing_dates)
+      begin
+        update_lambda_env_vars(lambda_name, { "ABORT_OUTSIDE_TIME_WINDOW" => "false" }, $configuration)
+        missing_dates.each do |missing_date|
+          puts "Exporting data for #{missing_date.iso8601}"
+          # The lambda triggers the day after the one we want the data for
+          run_for_date = missing_date + 1
+          payload = { "time" => run_for_date.iso8601 }
+          invoke_lambda(lambda_name, JSON.dump(payload), $configuration)
+        end
+      ensure
+        update_lambda_env_vars(lambda_name, { "ABORT_OUTSIDE_TIME_WINDOW" => "true" }, $configuration)
+      end
+    end
   end
 end

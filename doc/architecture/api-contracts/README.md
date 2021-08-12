@@ -16,7 +16,7 @@ The following API contacts are in in use within the COVID-19 App System:
      - [app-availability-distribution.md](mobile-facing/distribution/app-availability-distribution.md)
      - [diagnosis-key-distribution.md](mobile-facing/distribution/diagnosis-key-distribution.md)
      - [local-messages-distribution.md](mobile-facing/distribution/local-messages-distribution.md)
-     - [risky-postal-district-distribution.md](mobile-facing/distribution/risky-postal-district-distribution.md)
+     - [postal-district-risk-level-distribution.md](mobile-facing/distribution/postal-district-risk-level-distribution.md)
      - [risky-venue-distribution.md](mobile-facing/distribution/risky-venue-distribution.md)
      - [symptoms-questionnaire-distribution.md](mobile-facing/distribution/symptoms-questionnaire-distribution.md)
    - __submission__
@@ -36,7 +36,7 @@ The following API contacts are in in use within the COVID-19 App System:
      - [analytics-event-aae-exporter.md](service-facing/exporter/analytics-event-aae-exporter.md)
    - __upload__
      - [isolation-payment-claim-token-upload.md](service-facing/upload/isolation-payment-claim-token-upload.md)
-     - [risky-postal-district-upload.md](service-facing/upload/risky-postal-district-upload.md)
+     - [postal-district-risk-level-upload.md](service-facing/upload/postal-district-risk-level-upload.md)
      - [risky-venue-upload.md](service-facing/upload/risky-venue-upload.md)
      - [virology-test-result-token-upload.md](service-facing/upload/virology-test-result-token-upload.md)
      - [virology-test-result-upload.md](service-facing/upload/virology-test-result-upload.md)

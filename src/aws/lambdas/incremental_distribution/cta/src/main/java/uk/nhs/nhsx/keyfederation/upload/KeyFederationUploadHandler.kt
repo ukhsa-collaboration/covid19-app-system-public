@@ -30,8 +30,7 @@ import uk.nhs.nhsx.keyfederation.InteropClient
 
 /**
  * Key Federation upload lambda
- *
- *
+ * s
  * doc/architecture/api-contracts/diagnosis-key-federation-connector.md
  */
 class KeyFederationUploadHandler @JvmOverloads constructor(
@@ -55,7 +54,7 @@ class KeyFederationUploadHandler @JvmOverloads constructor(
 
     private fun loadKeysAndUploadToFederatedServer(context: Context) = if (config.uploadFeatureFlag.isEnabled()) {
         try {
-            val (filter, factory) = FederatedExposureUploadConfig.create(
+            val (filter, factory) = FederatedExposureUploadConfig(
                 config.region,
                 config.federatedKeyUploadPrefixes
             )

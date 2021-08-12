@@ -1,11 +1,11 @@
 {
     "widgets": [
         {
-            "type": "metric",
-            "x": 12,
-            "y": 3,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 15,
+            "x": 12,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "ErrorLogCount", "${diagnosis_keys_processing_function}-errors" ]
@@ -19,11 +19,11 @@
             }
         },
         {
-            "type": "metric",
-            "x": 12,
-            "y": 21,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 36,
+            "x": 12,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "WarningLogCount", "${diagnosis_keys_processing_function}-warnings" ]
@@ -37,11 +37,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 12,
-            "y": 27,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 42,
+            "x": 12,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'WARNING' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -52,11 +52,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 12,
-            "y": 33,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 48,
+            "x": 12,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message | filter metadata.category = 'WARNING' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -67,11 +67,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 12,
-            "y": 15,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 27,
+            "x": 12,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message | filter metadata.category = 'ERROR' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -82,11 +82,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 12,
-            "y": 9,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 21,
+            "x": 12,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'ERROR' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -97,11 +97,11 @@
             }
         },
         {
-            "type": "metric",
-            "x": 12,
-            "y": 0,
-            "width": 12,
             "height": 3,
+            "width": 12,
+            "y": 0,
+            "x": 12,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "AWS/Lambda", "Invocations", "FunctionName", "${diagnosis_keys_processing_function}" ],
@@ -115,11 +115,11 @@
             }
         },
         {
-            "type": "metric",
-            "x": 0,
-            "y": 3,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 15,
+            "x": 0,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "ErrorLogCount", "${diagnosis_keys_submission_function}-errors" ]
@@ -133,11 +133,11 @@
             }
         },
         {
-            "type": "metric",
-            "x": 0,
-            "y": 21,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 36,
+            "x": 0,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "WarningLogCount", "${diagnosis_keys_submission_function}-warnings" ]
@@ -151,11 +151,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 0,
-            "y": 9,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 21,
+            "x": 0,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'ERROR' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -166,11 +166,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 0,
-            "y": 33,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 48,
+            "x": 0,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message | filter metadata.category = 'WARNING' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -181,11 +181,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 0,
-            "y": 15,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 27,
+            "x": 0,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message | filter metadata.category = 'ERROR' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -196,11 +196,11 @@
             }
         },
         {
-            "type": "log",
-            "x": 0,
-            "y": 27,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 42,
+            "x": 0,
+            "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'WARNING' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -211,11 +211,11 @@
             }
         },
         {
-            "type": "metric",
-            "x": 0,
-            "y": 0,
-            "width": 12,
             "height": 3,
+            "width": 12,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "AWS/Lambda", "Invocations", "FunctionName", "${diagnosis_keys_submission_function}" ],
@@ -229,11 +229,11 @@
             }
         },
         {
-            "type": "metric",
-            "x": 12,
-            "y": 21,
-            "width": 12,
             "height": 3,
+            "width": 12,
+            "y": 33,
+            "x": 12,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "WarningLogCount", "${diagnosis_keys_processing_function}-warnings" ]
@@ -246,11 +246,11 @@
             }
         },
         {
-            "type": "metric",
-            "x": 0,
-            "y": 21,
-            "width": 12,
             "height": 3,
+            "width": 12,
+            "y": 33,
+            "x": 0,
+            "type": "metric",
             "properties": {
                 "metrics": [
                     [ "WarningLogCount", "${diagnosis_keys_submission_function}-warnings" ]
@@ -260,6 +260,62 @@
                 "stat": "Sum",
                 "title": "Warnings for Key Submission Lambda",
                 "setPeriodToTimeRange": true
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 9,
+            "x": 12,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | filter metadata.name = 'ScheduledEventStarted'\n| sort @timestamp desc\n| limit 10",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Most recent incremental distribution runs",
+                "view": "table"
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 3,
+            "x": 0,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| filter @message like /Submission summaries loaded/\n| sort @timestamp desc\n| parse @message /Count=(?<count>[0-9]+), Duration=(?<duration>[0-9]+)/ \n| stats max(count) as loadedSubmissions by bin(2h)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Incremental Distribution - processed Submissions",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 3,
+            "x": 12,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| filter metadata.name = 'ValidSubmission'\n| sort @timestamp desc\n| stats count() as exportedDiagnosisKeyCount by bin(2h)",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Incremental Distribution - exported Diagnosis Keys",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 9,
+            "x": 0,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @timestamp, @message\n| filter @message like /Duration:/\n| parse @message /Duration: (?<duration>.+?) ms/\n| stats max(duration/1000/60) as inc_dist_duration_minutes by bin(2h)",
+                "region": "eu-west-2",
+                "title": "Incremental Distribution Duration (in minutes)",
+                "view": "timeSeries",
+                "stacked": false
             }
         }
     ]

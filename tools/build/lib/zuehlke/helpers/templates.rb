@@ -15,7 +15,7 @@ module Zuehlke
     def from_template template_file,params
       template_content=File.read(template_file)
       template=Erubis::Eruby.new(template_content)
-      return template.result(params).gsub("\n","\r\n")
+      return template.result(params)
     end
   end
 end

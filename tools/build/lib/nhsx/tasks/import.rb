@@ -18,4 +18,20 @@ namespace :import do
     json_message_metadata = File.join($configuration.base, "src/static/local-messages-metadata.json")
     write_file(json_message_metadata, JSON.pretty_generate(voc_message_metadata))
   end
+  desc "Download the i18n content from Lokalise and add it to the system"
+  task :translations => [:"login:dev"] do
+    include NHS::Import
+    include NHS::I18N
+
+    secret = secrets_entry("/lokalise/apiKey", $configuration)
+    api_key = JSON.parse(secret)["apiKey"]
+    project_id = "895873615f401231224445.23171698" # project id for NHS COVID19
+
+    translations = import_translations(api_key, project_id, $configuration)
+
+    update_questionaire(translations, $configuration)
+    update_android_availability_configuration(translations, $configuration)
+    update_ios_availability_configuration(translations, $configuration)
+    update_tier_metadata(translations, $configuration)
+  end
 end

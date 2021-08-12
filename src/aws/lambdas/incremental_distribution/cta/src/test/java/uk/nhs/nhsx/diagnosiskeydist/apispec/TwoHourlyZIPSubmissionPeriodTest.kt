@@ -1,10 +1,15 @@
 package uk.nhs.nhsx.diagnosiskeydist.apispec
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import strikt.api.expectCatching
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.containsExactly
+import strikt.assertions.isEqualTo
+import strikt.assertions.isSuccess
+import strikt.assertions.map
 import uk.nhs.nhsx.testhelper.data.asInstant
 import java.time.Duration
 
@@ -24,9 +29,9 @@ class TwoHourlyZIPSubmissionPeriodTest {
         val endDate = periodEndDate.asInstant()
 
         if (throwsEx) {
-            assertThatThrownBy { TwoHourlyZIPSubmissionPeriod(endDate) }.isInstanceOf(IllegalStateException::class.java)
+            expectThrows<IllegalStateException> { TwoHourlyZIPSubmissionPeriod(endDate) }
         } else {
-            assertThat(TwoHourlyZIPSubmissionPeriod(endDate)).isNotNull
+            expectCatching { TwoHourlyZIPSubmissionPeriod(endDate) }.isSuccess()
         }
     }
 
@@ -36,7 +41,7 @@ class TwoHourlyZIPSubmissionPeriodTest {
     )
     fun `creates ZIP path`(periodEndDate: String, expected: String) {
         TwoHourlyZIPSubmissionPeriod(periodEndDate.asInstant()).run {
-            assertThat(zipPath()).isEqualTo(expected)
+            expectThat(zipPath()).isEqualTo(expected)
         }
     }
 
@@ -56,7 +61,7 @@ class TwoHourlyZIPSubmissionPeriodTest {
         TwoHourlyZIPSubmissionPeriod(periodEndDate.asInstant())
             .isCoveringSubmissionDate(submissionDate.asInstant(), Duration.ofMinutes(offsetMinutes))
             .run {
-                assertThat(this)
+                expectThat(this)
                     .describedAs("end date: $periodEndDate submission date: $submissionDate offset: $offsetMinutes")
                     .isEqualTo(expected)
             }
@@ -69,7 +74,7 @@ class TwoHourlyZIPSubmissionPeriodTest {
     )
     fun `calculates period for submission date`(submissionDate: String, expected: String) {
         TwoHourlyZIPSubmissionPeriod.periodForSubmissionDate(submissionDate.asInstant()).run {
-            assertThat(zipPath())
+            expectThat(zipPath())
                 .describedAs("submission date: $submissionDate")
                 .isEqualTo(expected)
         }
@@ -80,8 +85,8 @@ class TwoHourlyZIPSubmissionPeriodTest {
         val zipSubmissionPeriod = TwoHourlyZIPSubmissionPeriod("2020-07-20T04:00:00.000Z".asInstant())
         val allPeriods = zipSubmissionPeriod.allPeriodsToGenerate()
 
-        assertThat(allPeriods.map { it.zipPath() })
-            .hasSize(168)
+        expectThat(allPeriods)
+            .map(TwoHourlyZIPSubmissionPeriod::zipPath)
             .containsExactly(
                 "distribution/two-hourly/2020072004.zip",
                 "distribution/two-hourly/2020072002.zip",
@@ -260,7 +265,7 @@ class TwoHourlyZIPSubmissionPeriodTest {
         val midnight = TwoHourlyZIPSubmissionPeriod
             .periodForSubmissionDate(almostMidnight)
 
-        assertThat(almostMidnight.plusMillis(1))
+        expectThat(almostMidnight.plusMillis(1))
             .isEqualTo(midnight.endExclusive)
     }
 
@@ -270,7 +275,7 @@ class TwoHourlyZIPSubmissionPeriodTest {
         val twoInTheMorning = TwoHourlyZIPSubmissionPeriod
             .periodForSubmissionDate(afterMidnight)
 
-        assertThat(
+        expectThat(
             afterMidnight
                 .plus(Duration.ofMinutes(59))
                 .plus(Duration.ofHours(1))
@@ -284,13 +289,13 @@ class TwoHourlyZIPSubmissionPeriodTest {
     )
     fun `calculate start date inclusive`(periodEndDate: String, expected: String) {
         TwoHourlyZIPSubmissionPeriod(periodEndDate.asInstant()).startInclusive.run {
-            assertThat(this).isEqualTo(expected.asInstant())
+            expectThat(this).isEqualTo(expected.asInstant())
         }
     }
 
     @Test
     fun `verify toString`() {
-        assertThat(TwoHourlyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant()).toString())
+        expectThat(TwoHourlyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant()).toString())
             .isEqualTo("2 hours: from 2020071922 (inclusive) to 2020072000 (exclusive)")
     }
 }

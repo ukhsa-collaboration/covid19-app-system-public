@@ -1,20 +1,28 @@
 package smoke.actors
 
+import assertions.CircuitBreakersAssertions.approval
+import assertions.CircuitBreakersAssertions.approvalToken
 import batchZipCreation.Exposure
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.isNullOrEmptyString
-import org.assertj.core.api.Assertions.assertThat
-import org.http4k.core.*
+import org.http4k.core.ContentType
 import org.http4k.core.ContentType.Companion.APPLICATION_JSON
+import org.http4k.core.HttpHandler
 import org.http4k.core.Method.GET
 import org.http4k.core.Method.POST
+import org.http4k.core.Request
+import org.http4k.core.Response
+import org.http4k.core.Status
+import org.http4k.core.Status.Companion.OK
+import org.http4k.core.then
 import org.http4k.filter.ResilienceFilters
 import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
 import smoke.data.DiagnosisKeyData.createKeysPayload
 import smoke.data.DiagnosisKeyData.createKeysPayloadWithOnsetDays
 import smoke.env.EnvConfig
+import strikt.api.expectThat
+import strikt.assertions.endsWith
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNullOrEmpty
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetadata
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
@@ -25,11 +33,17 @@ import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.core.headers.MobileOS
+import uk.nhs.nhsx.core.headers.MobileOS.Android
+import uk.nhs.nhsx.core.headers.MobileOS.Unknown
+import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import uk.nhs.nhsx.crashreports.CrashReportRequest
-import uk.nhs.nhsx.core.headers.MobileOS.*
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
-import uk.nhs.nhsx.domain.*
+import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.domain.Country.Companion.England
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.IpcTokenId
+import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.Disabled
@@ -41,7 +55,12 @@ import uk.nhs.nhsx.testhelper.data.TestData.EXPOSURE_NOTIFICATION_CIRCUIT_BREAKE
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
-import java.time.*
+import java.time.Clock
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class MobileApp(
@@ -67,10 +86,12 @@ class MobileApp(
     private var orderedTest: VirologyOrderResponse? = null
 
     fun pollRiskyPostcodes(version: ApiVersion): Map<String, Any> =
-        readJsonOrThrow(when (version) {
-            V1 -> getStaticContent(envConfig.post_districts_distribution_endpoint)
-            V2 -> getStaticContent(envConfig.post_districts_distribution_endpoint + "-v2")
-        })
+        readJsonOrThrow(
+            when (version) {
+                V1 -> getStaticContent(envConfig.post_districts_distribution_endpoint)
+                V2 -> getStaticContent(envConfig.post_districts_distribution_endpoint + "-v2")
+            }
+        )
 
     fun pollRiskyVenues() = deserializeWithOptional(getStaticContent(envConfig.risky_venues_distribution_endpoint))!!
 
@@ -89,7 +110,7 @@ class MobileApp(
             Android -> AnalyticsMetadata("AL1", model?.value ?: "HUAWEI-smoke-test", "29", "3.0", "E07000240")
             iOS, Unknown -> AnalyticsMetadata(
                 "AL1", model?.value
-                ?: "iPhone-smoke-test", "iPhone OS 13.5.1 (17F80)", "3.0", "E07000240"
+                    ?: "iPhone-smoke-test", "iPhone OS 13.5.1 (17F80)", "3.0", "E07000240"
             )
         }
         return authedClient(
@@ -101,7 +122,7 @@ class MobileApp(
 
     fun orderTest(): VirologyOrderResponse {
         orderedTest = authedClient(Request(POST, "${envConfig.virology_kit_endpoint}/home-kit/order"))
-            .requireStatusCode(Status.OK)
+            .requireStatusCode(OK)
             .requireSignatureHeaders()
             .deserializeOrThrow()
         return orderedTest!!
@@ -109,7 +130,7 @@ class MobileApp(
 
     fun registerTest(): VirologyOrderResponse {
         orderedTest = authedClient(Request(POST, "${envConfig.virology_kit_endpoint}/home-kit/register"))
-            .requireStatusCode(Status.OK)
+            .requireStatusCode(OK)
             .requireSignatureHeaders()
             .deserializeOrThrow()
         return orderedTest!!
@@ -124,7 +145,6 @@ class MobileApp(
     fun emptySubmission(): Response {
         return authedClient(Request(POST, envConfig.empty_submission_endpoint))
     }
-
 
     fun emptySubmissionV2(): Response {
         return unauthedClient(Request(GET, envConfig.empty_submission_v2_endpoint))
@@ -172,14 +192,14 @@ class MobileApp(
                 TokenUpdateRequest(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
             )
         )
-            .requireStatusCode(Status.OK)
+            .requireStatusCode(OK)
             .requireSignatureHeaders()
             .deserializeOrThrow<TokenUpdateResponse>()
-        assertThat(isolationTokenUpdateResponse.websiteUrlWithQuery).endsWith(ipcToken.value)
+        expectThat(isolationTokenUpdateResponse.websiteUrlWithQuery).endsWith(ipcToken.value)
     }
 
     private fun getStaticContent(uri: String) = unauthedClient(Request(GET, uri))
-        .requireStatusCode(Status.OK)
+        .requireStatusCode(OK)
         .requireSignatureHeaders()
         .requireJsonContentType()
         .bodyString()
@@ -198,7 +218,7 @@ class MobileApp(
                 .header("UserAgent", "p=Android,o=29,v=4.7,b=168")
                 .header("User-Agent", "p=Android,o=29,v=4.7,b=168")
         )
-            .requireStatusCode(Status.OK)
+            .requireStatusCode(OK)
             .requireSignatureHeaders()
             .requireNoPayload()
     }
@@ -214,7 +234,7 @@ class MobileApp(
         }
 
         val response = authedClient(Request(POST, "${envConfig.virology_kit_endpoint}$url"))
-            .requireStatusCode(Status.OK)
+            .requireStatusCode(OK)
             .requireSignatureHeaders()
 
         return when (version) {
@@ -222,7 +242,6 @@ class MobileApp(
             V2 -> response.deserializeOrThrow()
         }
     }
-
 
     fun pollForTestResult(
         pollingToken: TestResultPollingToken,
@@ -234,7 +253,9 @@ class MobileApp(
         return when (response.status.code) {
             200 -> when (version) {
                 V1 -> VirologyLookupResult.Available(response.requireSignatureHeaders().deserializeOrThrow())
-                V2 -> VirologyLookupResult.AvailableV2(response.requireSignatureHeaders().deserializeWithNullCreatorsOrThrow())
+                V2 -> VirologyLookupResult.AvailableV2(
+                    response.requireSignatureHeaders().deserializeWithNullCreatorsOrThrow()
+                )
             }
             204 -> VirologyLookupResult.Pending()
             404 -> VirologyLookupResult.NotFound()
@@ -294,13 +315,6 @@ class MobileApp(
             .requireNoPayload()
     }
 
-    private fun checkTestResultNotFound(pollingToken: TestResultPollingToken, version: ApiVersion) {
-        retrieveVirologyResultFor(pollingToken, version)
-            .requireStatusCode(Status.NOT_FOUND)
-            .requireSignatureHeaders()
-            .requireBodyText("Test result lookup submitted for unknown testResultPollingToken")
-    }
-
     private fun retrieveVirologyResultFor(
         pollingToken: TestResultPollingToken,
         version: ApiVersion,
@@ -340,11 +354,11 @@ class MobileApp(
     }
 
     fun submitCrashReport(crashReportRequest: CrashReportRequest) {
-        authedClient(Request(POST, envConfig.crash_reports_submission_endpoint)
-            .header("Content-Type", "application/json")
-            .body(Json.toJson(crashReportRequest)))
-            .requireStatusCode(Status.OK)
-            .requireNoPayload()
+        authedClient(
+            Request(POST, envConfig.crash_reports_submission_endpoint)
+                .header("Content-Type", "application/json")
+                .body(Json.toJson(crashReportRequest))
+        ).requireStatusCode(OK).requireNoPayload()
     }
 }
 
@@ -353,32 +367,31 @@ class CircuitBreaker(
     private val baseUrl: String,
     private val payload: String = ""
 ) {
+    fun request(): TokenResponse = authedClient(
+        when {
+            payload.isNotEmpty() -> Request(POST, "$baseUrl/request")
+                .header("Content-Type", APPLICATION_JSON.value)
+                .body(payload)
+            else -> Request(POST, "$baseUrl/request")
+        }
+    ).requireStatusCode(OK)
+        .requireSignatureHeaders()
+        .deserializeOrThrow()
 
-
-    fun request(): TokenResponse =
-        authedClient(
-            when {
-                payload.isNotEmpty() -> Request(POST, "$baseUrl/request")
-                    .header("Content-Type", APPLICATION_JSON.value)
-                    .body(payload)
-                else -> Request(POST, "$baseUrl/request")
-            }
-        ).requireStatusCode(Status.OK)
-            .requireSignatureHeaders()
-            .deserializeOrThrow()
-
-    fun resolve(tokenResponse: TokenResponse): ResolutionResponse =
+    private fun resolve(tokenResponse: TokenResponse): ResolutionResponse =
         authedClient(Request(GET, "$baseUrl/resolution/${tokenResponse.approvalToken}"))
-            .requireStatusCode(Status.OK)
+            .requireStatusCode(OK)
             .requireSignatureHeaders()
             .deserializeOrThrow()
-
 
     fun requestAndApproveCircuitBreak() {
-        val tokenResponse = request()
-        assertThat(tokenResponse.approval, equalTo("yes"))
-        assertThat(tokenResponse.approvalToken, !isNullOrEmptyString)
-        assertThat(resolve(tokenResponse).approval, equalTo("yes"))
+        val tokenResponse: TokenResponse = request()
+
+        expectThat(tokenResponse) {
+            approval.isEqualTo("yes")
+            approvalToken.not().isNullOrEmpty()
+            get(::resolve).get(ResolutionResponse::approval).isEqualTo("yes")
+        }
     }
 }
 
@@ -402,7 +415,7 @@ class DiagnosisKeysDownload(
         val request = Request(GET, "${envConfig.diagnosis_keys_distribution_2hourly_endpoint}/$filename")
 
         val response = getCloudfrontContentRetrying(request)
-            .requireStatusCode(Status.OK)
+            .requireStatusCode(OK)
             .requireSignatureHeaders()
             .requireZipContentType()
 
@@ -414,11 +427,10 @@ class DiagnosisKeysDownload(
         val uri = "${envConfig.diagnosis_keys_distribution_daily_endpoint}/$fileName"
         val request = Request(GET, uri)
 
-        val response =
-            getCloudfrontContentRetrying(request)
-                .requireStatusCode(Status.OK)
-                .requireSignatureHeaders()
-                .requireZipContentType()
+        val response = getCloudfrontContentRetrying(request)
+            .requireStatusCode(OK)
+            .requireSignatureHeaders()
+            .requireZipContentType()
 
         return BatchExport.tekExportFrom(response.body.stream)
     }
@@ -435,7 +447,9 @@ class DiagnosisKeysDownload(
 
         do {
             val response = unauthedClient(request)
-            if (response.status == Status.OK) return response
+            if (response.status == OK) {
+                return response
+            }
             numberOfTries++
             val sleepDuration = Duration.ofSeconds(numberOfTries).plus(retryWaitDuration)
 

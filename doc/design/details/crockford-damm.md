@@ -1,9 +1,11 @@
-# Crockford Damm base 32 codes
+# Crockford-Damm base 32 code
 
-Base32 encoded 40byte random number, using the Crockford encoding.
-Javascript for validation is attached below.
+[Crockford Base32](https://www.crockford.com/base32.html) is an encoding scheme designed to be compact, human readable, pronouncable and error resistant.
 
-## Javascript to validate Token
+A 5 byte random number is encoded as 8 characters using the [Crockford Base32](https://www.crockford.com/base32.html) encoding, and the [Damm](https://en.wikipedia.org/wiki/Damm_algorithm) check-digit algorithm.
+
+
+## Validation (Javascript)
 
 Taken fom the V2 documentation
 

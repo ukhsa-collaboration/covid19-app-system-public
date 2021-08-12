@@ -1,22 +1,24 @@
 package smoke
 
-import com.natpryce.hamkrest.assertion.assertThat
 import org.apache.commons.lang3.RandomStringUtils
-import org.http4k.client.JavaHttpClient
+import org.http4k.cloudnative.env.Environment
 import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
-import org.http4k.core.Status
-import org.http4k.hamkrest.hasBody
-import org.http4k.hamkrest.hasStatus
+import org.http4k.core.Status.Companion.FORBIDDEN
 import org.junit.jupiter.api.Test
+import smoke.actors.createHandler
 import smoke.env.SmokeTests
-import java.util.Base64
+import strikt.api.expectThat
+import strikt.assertions.isEmpty
+import uk.nhs.nhsx.testhelper.assertions.bodyString
+import uk.nhs.nhsx.testhelper.assertions.hasStatus
+import java.util.*
 
 class ApiKeysSmokeTest {
 
     private val config = SmokeTests.loadConfig()
-    private val client = JavaHttpClient()
+    private val client = createHandler(Environment.ENV)
 
     @Test
     fun `empty auth header`() {
@@ -114,11 +116,11 @@ class ApiKeysSmokeTest {
         return client(request)
     }
 
-    private fun toAuthHeader(apiKey: String): String =
-        "Bearer " + Base64.getEncoder().encodeToString(apiKey.toByteArray())
+    private fun toAuthHeader(apiKey: String) = """Bearer ${Base64.getEncoder().encodeToString(apiKey.toByteArray())}"""
 
     private fun assertUnAuthorized(response: Response) {
-        assertThat(response, hasStatus(Status.FORBIDDEN))
-        assertThat(response, hasBody(""))
+        expectThat(response).hasStatus(FORBIDDEN).and {
+            bodyString.isEmpty()
+        }
     }
 }

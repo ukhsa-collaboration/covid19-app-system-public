@@ -1,6 +1,6 @@
 # Tracking versions
 
-The CTA system consists of several target environments (several instances of the system used for testing etc.).
+The COVID-19 App system consists of several target environments (several instances of the system used for testing etc.).
 
 In order to be able to track which particular version is deployed to which target environment we make use of git tags.
 
@@ -26,7 +26,7 @@ For all bubbles and content we deploy independently we have both pointer and lab
 
 Label tag prefix|Pointer tag| Bubble/Content|
 ---|---|---|
-Backend- | {target-environment}| Main CTA system, A.K.A. AppSystem|
+Backend- | {target-environment}| Main COVID-19 App (aka CTA) System  |
 Analytics- | {target-environment}-analytics | Analytics subsystem|
 Tiers-  | {target-environment}-tiers | Tier metadata configuration |
 Availability- | {target-environment}-availability | App availability configuration|

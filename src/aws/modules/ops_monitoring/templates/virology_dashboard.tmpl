@@ -2,10 +2,10 @@
     "widgets": [
         {
             "type": "metric",
-            "x": 0,
-            "y": 6,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 18,
+            "x": 0,
             "properties": {
                 "metrics": [
                     [ "ErrorLogCount", "${virology_submission_function}-errors" ]
@@ -19,10 +19,10 @@
         },
         {
             "type": "metric",
-            "x": 0,
-            "y": 21,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 33,
+            "x": 0,
             "properties": {
                 "metrics": [
                     [ "WarningLogCount", "${virology_submission_function}-warnings" ]
@@ -37,10 +37,10 @@
         },
         {
             "type": "log",
-            "x": 0,
-            "y": 27,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 39,
+            "x": 0,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message | filter metadata.category = 'WARNING' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -51,10 +51,10 @@
         },
         {
             "type": "log",
-            "x": 0,
-            "y": 15,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 27,
+            "x": 0,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message | filter metadata.category = 'ERROR' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -65,10 +65,10 @@
         },
         {
             "type": "metric",
-            "x": 0,
-            "y": 0,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 0,
+            "x": 0,
             "properties": {
                 "metrics": [
                     [ "AWS/ApiGateway", "5xx", "Resource", "/{proxy+}", "Stage", "$default", "Method", "POST", "ApiId", "${submission_api_gateway_id}", { "stat": "Sum", "label": "ApiGateway 5xx" } ],
@@ -88,10 +88,10 @@
         },
         {
             "type": "log",
-            "x": 0,
-            "y": 12,
-            "width": 6,
             "height": 3,
+            "width": 12,
+            "y": 24,
+            "x": 0,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'ERROR' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -102,10 +102,10 @@
         },
         {
             "type": "log",
-            "x": 0,
-            "y": 33,
-            "width": 6,
             "height": 3,
+            "width": 12,
+            "y": 45,
+            "x": 0,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'WARNING' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -116,10 +116,10 @@
         },
         {
             "type": "metric",
-            "x": 0,
-            "y": 36,
-            "width": 12,
             "height": 3,
+            "width": 12,
+            "y": 48,
+            "x": 0,
             "properties": {
                 "metrics": [
                     [ "AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", "${env}-virology-ordertokens", "Operation", "PutItem", { "label": "PutItem ordertokens" } ],
@@ -134,10 +134,10 @@
         },
         {
             "type": "metric",
-            "x": 12,
-            "y": 0,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 0,
+            "x": 12,
             "properties": {
                 "metrics": [
                     [ "AWS/ApiGateway", "5xx", "Resource", "/{proxy+}", "Stage", "$default", "Method", "POST", "ApiId", "${upload_api_gateway_id}", { "stat": "Sum", "label": "ApiGateway 5xx" } ],
@@ -157,10 +157,10 @@
         },
         {
             "type": "metric",
-            "x": 12,
-            "y": 6,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 18,
+            "x": 12,
             "properties": {
                 "metrics": [
                     [ "ErrorLogCount", "${virology_upload_function}-errors" ]
@@ -174,10 +174,10 @@
         },
         {
             "type": "log",
-            "x": 12,
-            "y": 12,
-            "width": 6,
             "height": 3,
+            "width": 12,
+            "y": 24,
+            "x": 12,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'ERROR' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -188,10 +188,10 @@
         },
         {
             "type": "log",
-            "x": 12,
-            "y": 15,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 27,
+            "x": 12,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, @message | filter metadata.category = 'ERROR' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -202,10 +202,10 @@
         },
         {
             "type": "metric",
-            "x": 12,
-            "y": 21,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 33,
+            "x": 12,
             "properties": {
                 "metrics": [
                     [ "WarningLogCount", "${virology_upload_function}-warnings" ]
@@ -220,10 +220,10 @@
         },
         {
             "type": "log",
-            "x": 12,
-            "y": 27,
-            "width": 12,
             "height": 6,
+            "width": 12,
+            "y": 33,
+            "x": 12,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, @message | filter metadata.category = 'WARNING' | sort @timestamp desc",
                 "region": "eu-west-2",
@@ -234,10 +234,10 @@
         },
         {
             "type": "log",
-            "x": 12,
-            "y": 33,
-            "width": 6,
             "height": 3,
+            "width": 12,
+            "y": 45,
+            "x": 12,
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @timestamp, metadata.awsRequestId as RequestId, @message | filter metadata.category = 'WARNING' | stats count(*) by metadata.name",
                 "region": "eu-west-2",
@@ -248,10 +248,10 @@
         },
         {
             "type": "metric",
-            "x": 12,
-            "y": 36,
-            "width": 12,
             "height": 3,
+            "width": 12,
+            "y": 48,
+            "x": 12,
             "properties": {
                 "metrics": [
                     [ "AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", "${env}-virology-testresults", "Operation", "PutItem", { "label": "PutItem testresults" } ],
@@ -262,6 +262,48 @@
                 "stat": "Average",
                 "period": 300
             }
-        }
+        },
+        {
+            "height": 6,
+            "width": 24,
+            "y": 12,
+            "x": 0,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message\n| filter @message like /eceived http request: method=POST/\n| parse @message  /path=(?<path1>\\/virology-test\\/results),requestId/\n| parse @message  /path=(?<path2>\\/virology-test\\/cta-exchange),requestId/\n| parse @message  /path=(?<path3>\\/virology-test\\/home-kit\\/order),requestId/\n| parse @message  /path=(?<path1V2>\\/virology-test\\/v2\\/results),requestId/\n| parse @message  /path=(?<path2V2>\\/virology-test\\/v2\\/cta-exchange),requestId/\n| parse @message  /path=(?<path3V2>\\/virology-test\\/v2\\/order),requestId/\n| stats count(path1) as result_polling_v1 , \n count(path2) as cta_exchange_v1 , \n count(path3) as order_v1 ,\n count(path1V2) as result_polling_v2 , \n count(path2V2) as cta_exchange_v2 , \n count(path3V2) as order_v2 \n by bin(1d)\n",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Mobile-facing Virology API calls [count/day]",
+                "view": "table"
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 6,
+            "x": 0,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name='CtaTokenGen' or metadata.name='TestResultUploaded'\n| stats count() by bin(1d) as day, event.source, event.testKit, event.testResult\n| sort day, event.source, event.testKit, event.testResult\n",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Upload [count/day]",
+                "view": "table"
+            }
+        },
+        {
+            "height": 6,
+            "width": 12,
+            "y": 6,
+            "x": 12,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name='CtaTokenGen' or metadata.name='TestResultUploaded'\n| filter event.testKit != 'LAB_RESULT'\n| stats count() by bin(1d) as day, event.source, event.testKit, event.testResult\n| sort day, event.source, event.testKit, event.testResult\n",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Upload [count/day] non-PCR",
+                "view": "table"
+            }
+        }    
     ]
 }

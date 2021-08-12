@@ -6,17 +6,21 @@ import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.domain.TestResult.Positive
 
-sealed class TestState(val testResultPollingToken: TestResultPollingToken, val testKit: TestKit) {
+sealed class TestState {
+    abstract val testResultPollingToken: TestResultPollingToken
+    abstract val testKit: TestKit
 
-    class PendingTestResult(testResultPollingToken: TestResultPollingToken, testKit: TestKit) :
-        TestState(testResultPollingToken, testKit)
+    data class PendingTestResult(
+        override val testResultPollingToken: TestResultPollingToken,
+        override val testKit: TestKit
+    ) : TestState()
 
-    class AvailableTestResult(
-        testResultPollingToken: TestResultPollingToken,
+    data class AvailableTestResult(
+        override val testResultPollingToken: TestResultPollingToken,
         val testEndDate: TestEndDate,
         val testResult: TestResult,
-        testKit: TestKit,
-    ) : TestState(testResultPollingToken, testKit) {
-        fun isPositive(): Boolean = testResult == Positive
+        override val testKit: TestKit,
+    ) : TestState() {
+        fun isPositive() = testResult == Positive
     }
 }

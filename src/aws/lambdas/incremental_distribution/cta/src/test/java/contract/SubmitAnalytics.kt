@@ -5,11 +5,11 @@ import contract.infra.RecordingTest
 import contract.infra.ReplayTest
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
-import uk.nhs.nhsx.core.headers.MobileOS.Android
-import uk.nhs.nhsx.core.headers.MobileOS.iOS
-import smoke.data.AnalyticsMetricsData
+import smoke.data.AnalyticsMetricsData.populatedAnalyticsMetrics
 import smoke.env.SmokeTests
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
+import uk.nhs.nhsx.core.headers.MobileOS.Android
+import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import java.time.Duration
 import java.time.Instant
 
@@ -19,26 +19,28 @@ interface SubmitAnalyticsKeys : BackendContractScenario {
     fun `Mobile app submits ios analytics data`() {
         control.addNote("Mobile app submits ios analytics data")
 
-        MobileApp(mitmHttpClient(), envConfig, iOS).submitAnalyticsKeys(
-            AnalyticsWindow(
-                Instant.now().minus(Duration.ofDays(1)),
-                Instant.now().plus(Duration.ofDays(1))
-            ),
-            AnalyticsMetricsData.populatedAnalyticsMetrics()
-        )
+        MobileApp(mitmHttpClient(), envConfig, iOS)
+            .submitAnalyticsKeys(
+                AnalyticsWindow(
+                    Instant.now().minus(Duration.ofDays(1)),
+                    Instant.now().plus(Duration.ofDays(1))
+                ),
+                populatedAnalyticsMetrics()
+            )
     }
 
     @Test
     fun `Mobile app submits android analytics data`() {
         control.addNote("Mobile app submits android analytics data")
 
-        MobileApp(mitmHttpClient(), envConfig, Android).submitAnalyticsKeys(
-            AnalyticsWindow(
-                Instant.now().minus(Duration.ofDays(1)),
-                Instant.now().plus(Duration.ofDays(1))
-            ),
-            AnalyticsMetricsData.populatedAnalyticsMetrics()
-        )
+        MobileApp(mitmHttpClient(), envConfig, Android)
+            .submitAnalyticsKeys(
+                AnalyticsWindow(
+                    Instant.now().minus(Duration.ofDays(1)),
+                    Instant.now().plus(Duration.ofDays(1))
+                ),
+                populatedAnalyticsMetrics()
+            )
     }
 }
 

@@ -4,21 +4,29 @@ import com.amazonaws.HttpMethod
 import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import org.apache.commons.lang3.RandomStringUtils
-import org.assertj.core.api.Assertions.assertThat
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
+import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.METHOD_NOT_ALLOWED
+import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.OK
 import org.junit.jupiter.api.Test
+import strikt.api.expect
+import strikt.api.expectThat
+import strikt.assertions.filterIsInstance
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
+import strikt.assertions.withFirst
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.events.IncomingHttpRequest
 import uk.nhs.nhsx.core.events.MobileCrashReportsSubmission
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.RequestRejected
 import uk.nhs.nhsx.core.events.UnprocessableJson
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode
-import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
-import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
-import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.body
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withCustomOai
 import uk.nhs.nhsx.testhelper.withJson
@@ -50,8 +58,8 @@ class CrashReportsHandlerTest {
             }
         """.trimIndent()
         )
-        assertThat(responseEvent.statusCode).isEqualTo(200)
-        events.containsExactly(
+        expectThat(responseEvent).status.isSameAs(OK)
+        expectThat(events).containsExactly(
             MobileCrashReportsSubmission::class,
             CrashReportStored::class,
             IncomingHttpRequest::class
@@ -69,22 +77,24 @@ class CrashReportsHandlerTest {
             }
         """.trimIndent()
         )
-        assertThat(responseEvent.statusCode).isEqualTo(200)
-        events.containsExactly(
+
+        expectThat(responseEvent).status.isSameAs(OK)
+
+        expectThat(events).containsExactly(
             MobileCrashReportsSubmission::class,
             CrashReportStored::class,
             IncomingHttpRequest::class
         )
 
-        val event = events.first { it is CrashReportStored } as CrashReportStored
-
-        assertThat(event.crashReport).isEqualTo(
-            CrashReportRequest(
-                exception = "android.app.RemoteServiceException",
-                threadName = "some     www.abc.com     message",
-                stackTrace = "another message www.example.com"
+        expectThat(events).filterIsInstance<CrashReportStored>().withFirst {
+            get(CrashReportStored::crashReport).isEqualTo(
+                CrashReportRequest(
+                    exception = "android.app.RemoteServiceException",
+                    threadName = "some     www.abc.com     message",
+                    stackTrace = "another message www.example.com"
+                )
             )
-        )
+        }
     }
 
     @Test
@@ -98,8 +108,10 @@ class CrashReportsHandlerTest {
             }
         """.trimIndent()
         )
-        assertThat(responseEvent.statusCode).isEqualTo(200)
-        events.containsExactly(
+
+        expectThat(responseEvent).status.isSameAs(OK)
+
+        expectThat(events).containsExactly(
             MobileCrashReportsSubmission::class,
             CrashReportNotRecognised::class,
             IncomingHttpRequest::class
@@ -141,13 +153,18 @@ class CrashReportsHandlerTest {
         val payload = RandomStringUtils.randomAlphabetic(15000)
         val responseEvent = responseFor(payload)
 
-        assertThat(responseEvent, hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        events.containsExactly(
-            MobileCrashReportsSubmission::class,
-            RequestRejected::class,
-            IncomingHttpRequest::class
-        )
+        expect {
+            that(responseEvent) {
+                status.isSameAs(BAD_REQUEST)
+                body.isNull()
+            }
+
+            that(events).containsExactly(
+                MobileCrashReportsSubmission::class,
+                RequestRejected::class,
+                IncomingHttpRequest::class
+            )
+        }
     }
 
     @Test
@@ -160,10 +177,16 @@ class CrashReportsHandlerTest {
             .withPath("invalid")
             .withJson("")
 
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
-        assertThat(responseEvent, hasStatus(HttpStatusCode.NOT_FOUND_404))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        events.containsExactly(IncomingHttpRequest::class)
+        val responseEvent = handler.handleRequest(requestEvent, aContext())
+
+        expect {
+            that(responseEvent) {
+                status.isSameAs(NOT_FOUND)
+                body.isNull()
+            }
+
+            that(events).containsExactly(IncomingHttpRequest::class)
+        }
     }
 
     @Test
@@ -176,21 +199,31 @@ class CrashReportsHandlerTest {
             .withPath("/submission/crash-reports")
             .withJson("")
 
-        val responseEvent = handler.handleRequest(requestEvent, ContextBuilder.aContext())
+        val responseEvent = handler.handleRequest(requestEvent, aContext())
 
-        assertThat(responseEvent, hasStatus(HttpStatusCode.METHOD_NOT_ALLOWED_405))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        events.containsExactly(IncomingHttpRequest::class)
+        expect {
+            that(responseEvent) {
+                status.isSameAs(METHOD_NOT_ALLOWED)
+                body.isNull()
+            }
+
+            that(events).containsExactly(IncomingHttpRequest::class)
+        }
     }
 
     private fun assertStatusIs400(responseEvent: APIGatewayProxyResponseEvent) {
-        assertThat(responseEvent, hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        assertThat(responseEvent, hasBody(equalTo(null)))
-        events.containsExactly(
-            MobileCrashReportsSubmission::class,
-            UnprocessableJson::class,
-            IncomingHttpRequest::class
-        )
+        expect {
+            that(responseEvent) {
+                status.isSameAs(BAD_REQUEST)
+                body.isNull()
+            }
+
+            that(events).containsExactly(
+                MobileCrashReportsSubmission::class,
+                UnprocessableJson::class,
+                IncomingHttpRequest::class
+            )
+        }
     }
 
     private fun responseFor(requestPayload: String): APIGatewayProxyResponseEvent {
@@ -202,6 +235,6 @@ class CrashReportsHandlerTest {
             .withPath("/submission/crash-reports")
             .withBody(requestPayload)
 
-        return handler.handleRequest(requestEvent, ContextBuilder.aContext())
+        return handler.handleRequest(requestEvent, aContext())
     }
 }

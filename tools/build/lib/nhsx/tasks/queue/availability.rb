@@ -27,7 +27,7 @@ namespace :queue do
         release_version = $configuration.release_version(version_metadata)
         build_parameters = {
               "project_name" => "release-availability-prod",
-              "source_version" => "te-staging",
+              "source_version" => "te-staging-availability",
               "target_environment" => "prod",
               "account" => "prod",
               "release_version" => release_version
@@ -42,4 +42,3 @@ namespace :queue do
       end
     end
   end
-  

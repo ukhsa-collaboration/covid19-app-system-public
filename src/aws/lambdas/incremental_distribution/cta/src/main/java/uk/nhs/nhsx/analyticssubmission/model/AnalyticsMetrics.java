@@ -97,6 +97,8 @@ public class AnalyticsMetrics {
     public Integer selectedHasNoSymptomsM2Journey;
     public Integer selectedLFDTestOrderingM2Journey;
     public Integer selectedHasLFDTestM2Journey;
+    public Integer optedOutForContactIsolation;
+    public Integer optedOutForContactIsolationBackgroundTick;
 
     public AnalyticsMetrics() {
     }

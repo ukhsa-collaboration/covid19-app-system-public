@@ -1,10 +1,12 @@
 package smoke.actors
 
-import org.assertj.core.api.Assertions.assertThat
 import org.http4k.format.Jackson
 import org.http4k.unquoted
 import smoke.clients.AwsLambda
 import smoke.env.EnvConfig
+import strikt.api.expectThat
+import strikt.assertions.getValue
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.domain.IpcTokenId
 
 class SIPGateway(private val envConfig: EnvConfig) {
@@ -14,7 +16,7 @@ class SIPGateway(private val envConfig: EnvConfig) {
             envConfig.isolation_payment_consume_lambda_function_name,
             """{ "contractVersion": 1, "ipcToken": "${ipcToken.value}" }"""
         )
-        assertThat(consumePayload["ipcToken"]).isEqualTo(ipcToken.value)
+        expectThat(consumePayload).getValue("ipcToken").isEqualTo(ipcToken.value)
         return consumePayload
     }
 
@@ -23,7 +25,7 @@ class SIPGateway(private val envConfig: EnvConfig) {
             envConfig.isolation_payment_verify_lambda_function_name,
             """{ "contractVersion": 1, "ipcToken": "${ipcToken.value}" }"""
         )
-        assertThat(verifyPayload["ipcToken"]).isEqualTo(ipcToken.value)
+        expectThat(verifyPayload).getValue("ipcToken").isEqualTo(ipcToken.value)
         return verifyPayload
     }
 }

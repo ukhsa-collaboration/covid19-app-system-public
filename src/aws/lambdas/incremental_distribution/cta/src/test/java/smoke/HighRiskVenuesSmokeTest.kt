@@ -1,19 +1,21 @@
 package smoke
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import org.http4k.client.JavaHttpClient
+import org.http4k.cloudnative.env.Environment
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
 import smoke.actors.RiskParties
+import smoke.actors.createHandler
 import smoke.data.RiskPartyData.generateCsvFrom
 import smoke.data.RiskPartyData.generateRiskyVenues
 import smoke.env.SmokeTests
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 
 class HighRiskVenuesSmokeTest {
 
     private val config = SmokeTests.loadConfig()
-    private val client = JavaHttpClient()
+    private val client = createHandler(Environment.ENV)
 
     private val mobileApp = MobileApp(client, config)
     private val riskParties = RiskParties(client, config)
@@ -27,7 +29,9 @@ class HighRiskVenuesSmokeTest {
 
         // download
         val highRiskVenues = mobileApp.pollRiskyVenues()
-        assertThat(highRiskVenues.venues, equalTo(expectedRiskyVenues.venues))
+        expectThat(highRiskVenues)
+            .get(HighRiskVenues::venues)
+            .isEqualTo(expectedRiskyVenues.venues)
 
         mobileApp.venueCircuitBreaker.requestAndApproveCircuitBreak()
     }

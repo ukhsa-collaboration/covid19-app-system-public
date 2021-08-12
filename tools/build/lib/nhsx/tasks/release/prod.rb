@@ -13,12 +13,8 @@ namespace :release do
 
     release_version = configure_release_process("cta", $configuration)
     puts "Initiating CTA release #{release_version}"
-
     Rake::Task["deploy:cta:prod"].invoke
     Rake::Task["tag:release:cta"].invoke
-    Rake::Task["tag:release:tier_metadata"].invoke
-    Rake::Task["tag:release:availability"].invoke
-    Rake::Task["tag:release:local_messages"].invoke
   end
   desc "Release of version RELEASE_VERSION of the tier metadata"
   task :"tier_metadata:prod" => [:"clean:wipe", :"login:prod"] do
@@ -64,6 +60,14 @@ namespace :release do
     puts "Initiating CTA public dashboard release #{release_version}"
 
     Rake::Task["deploy:pubdash:prod"].invoke
+    Rake::Task["tag:release:pubdash"].invoke
+  end
+  desc "Release of version RELEASE_VERSION of the public dashboard"
+  task :"pubdash:aa-prod" => [:"clean:wipe", :"login:aa-prod"] do
+    release_version = configure_release_process("pubdash", $configuration)
+    puts "Initiating CTA public dashboard release #{release_version}"
+
+    Rake::Task["deploy:pubdash:aa-prod"].invoke
     Rake::Task["tag:release:pubdash"].invoke
   end
 end

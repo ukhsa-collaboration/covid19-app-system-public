@@ -1,9 +1,12 @@
 package smoke
 
-import org.assertj.core.api.Assertions.assertThat
+import assertions.AwsSdkAssertions.asString
 import org.junit.jupiter.api.Test
 import smoke.actors.BackgroundActivities
 import smoke.env.SmokeTests
+import software.amazon.awssdk.services.lambda.model.InvokeResponse
+import strikt.api.expectThat
+import strikt.assertions.contains
 import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestResult
@@ -24,6 +27,10 @@ class VirologyTokenProcessorSmokeTest {
             numberOfTokens = 1
         )
         val result = backgroundActivities.invokeVirologyTokenProcessor(request)
-        assertThat(result.payload().asUtf8String()).contains("success")
+
+        expectThat(result)
+            .get(InvokeResponse::payload)
+            .asString()
+            .contains("success")
     }
 }

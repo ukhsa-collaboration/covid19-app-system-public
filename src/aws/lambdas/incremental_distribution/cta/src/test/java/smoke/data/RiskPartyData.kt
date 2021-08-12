@@ -8,7 +8,7 @@ import uk.nhs.nhsx.highriskvenuesupload.model.RiskyWindow
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit.SECONDS
-import java.util.Random
+import java.util.*
 
 object RiskPartyData {
     fun generateRiskyPostcodes() = """{

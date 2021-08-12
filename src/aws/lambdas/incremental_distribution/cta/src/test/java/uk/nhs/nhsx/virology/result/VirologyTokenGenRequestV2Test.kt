@@ -1,8 +1,9 @@
 package uk.nhs.nhsx.virology.result
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
 import uk.nhs.nhsx.core.Json.readStrictOrNull
 import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
@@ -21,7 +22,7 @@ class VirologyTokenGenRequestV2Test {
             """.trimIndent()
         )
 
-        assertThat(request).isEqualTo(
+        expectThat(request).isEqualTo(
             VirologyTokenGenRequestV2(
                 TestEndDate.of(2020, 9, 29),
                 TestResult.Void,
@@ -32,7 +33,7 @@ class VirologyTokenGenRequestV2Test {
 
     @Test
     fun `does not read json if testEndDate is not at midnight`() {
-        assertNull(
+        expectThat(
             readStrictOrNull<VirologyTokenGenRequestV2>(
                 """{
                     "testEndDate": "2020-09-29T20:00:00Z",
@@ -41,12 +42,12 @@ class VirologyTokenGenRequestV2Test {
                 }
                 """.trimIndent()
             )
-        )
+        ).isNull()
     }
 
     @Test
     fun `does not read json for LFD negative`() {
-        assertNull(
+        expectThat(
             readStrictOrNull<VirologyTokenGenRequestV2>(
                 """{
                     "testEndDate": "2020-09-29T20:00:00Z",
@@ -55,12 +56,12 @@ class VirologyTokenGenRequestV2Test {
                 }
                 """.trimIndent(),
             )
-        )
+        ).isNull()
     }
 
     @Test
     fun `does not read json for LFD void`() {
-        assertNull(
+        expectThat(
             readStrictOrNull<VirologyTokenGenRequestV2>(
                 """{
                     "testEndDate": "2020-09-29T20:00:00Z",
@@ -69,7 +70,7 @@ class VirologyTokenGenRequestV2Test {
                 }
                 """.trimIndent()
             )
-        )
+        ).isNull()
     }
 
     @Test
@@ -85,6 +86,6 @@ class VirologyTokenGenRequestV2Test {
             LAB_RESULT
         )
 
-        assertThat(version1.convertToV2()).isEqualTo(version2)
+        expectThat(version1.convertToV2()).isEqualTo(version2)
     }
 }

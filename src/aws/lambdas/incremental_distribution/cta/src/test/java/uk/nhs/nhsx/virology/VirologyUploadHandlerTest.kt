@@ -10,20 +10,24 @@ import com.natpryce.snodge.mutants
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.CoreMatchers.nullValue
-import org.hamcrest.MatcherAssert.assertThat
+import org.http4k.core.Status.Companion.ACCEPTED
+import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.CONFLICT
+import org.http4k.core.Status.Companion.INTERNAL_SERVER_ERROR
+import org.http4k.core.Status.Companion.METHOD_NOT_ALLOWED
+import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.UNPROCESSABLE_ENTITY
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.core.TestEnvironments
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
+import uk.nhs.nhsx.core.TestEnvironments.TEST
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.events.VirologyResults
 import uk.nhs.nhsx.core.events.VirologyTokenGen
 import uk.nhs.nhsx.core.events.VirologyTokenStatus
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.ACCEPTED_202
-import uk.nhs.nhsx.core.exceptions.HttpStatusCode.UNPROCESSABLE_ENTITY_422
 import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
@@ -32,6 +36,11 @@ import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.body
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
+import uk.nhs.nhsx.testhelper.assertions.contains
+import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
+import uk.nhs.nhsx.testhelper.assertions.isSameAs
 import uk.nhs.nhsx.testhelper.data.TestData.rapidLabResultV2
 import uk.nhs.nhsx.testhelper.data.TestData.rapidSelfReportedResultV2
 import uk.nhs.nhsx.testhelper.data.TestData.testLabResultV1
@@ -39,14 +48,14 @@ import uk.nhs.nhsx.testhelper.data.TestData.tokenGenPayloadV1
 import uk.nhs.nhsx.testhelper.data.TestData.tokenGenPayloadV2
 import uk.nhs.nhsx.testhelper.data.TestData.tokenGenSelfReportedPayloadV2
 import uk.nhs.nhsx.testhelper.data.TestData.tokenStatusPayloadV2
-import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasBody
-import uk.nhs.nhsx.testhelper.matchers.ProxyResponseAssertions.hasStatus
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withCustomOai
 import uk.nhs.nhsx.testhelper.withJson
 import uk.nhs.nhsx.testhelper.withMethod
 import uk.nhs.nhsx.testhelper.withRequestId
-import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.OrderNotFound
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.Success
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.TransactionFailed
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import uk.nhs.nhsx.virology.result.VirologyTokenStatusRequest
@@ -70,60 +79,60 @@ class VirologyUploadHandlerTest {
 
     @Test
     fun `accepts npex test result v1 returns 202`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
+        every { service.acceptTestResult(any()) } returns Success()
 
         val response = sendAndReceive(path = npexPath, payload = testLabResultV1)
 
-        assertThat(response, hasStatus(ACCEPTED_202))
-        assertThat(response, hasBody(equalTo("successfully processed")))
-        events.contains(VirologyResults::class, TestResultUploaded::class)
+        expectThat(response).status.isSameAs(ACCEPTED)
+        expectThat(response).body.isEqualTo("successfully processed")
+        expectThat(events).contains(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `test order is not present returns 400`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.OrderNotFound()
+        every { service.acceptTestResult(any()) } returns OrderNotFound()
 
         val response = sendAndReceive(path = npexPath, payload = testLabResultV1)
 
-        assertThat(response, hasStatus(HttpStatusCode.BAD_REQUEST_400))
-        assertThat(response, hasBody(nullValue(String::class.java)))
-        events.contains(VirologyResults::class, TestResultUploaded::class)
+        expectThat(response).status.isSameAs(BAD_REQUEST)
+        expectThat(response).body.isNull()
+        expectThat(events).contains(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `transaction failure returns 409`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.TransactionFailed()
+        every { service.acceptTestResult(any()) } returns TransactionFailed()
 
         val response = sendAndReceive(path = npexPath, payload = testLabResultV1)
 
-        assertThat(response, hasStatus(HttpStatusCode.CONFLICT_409))
-        assertThat(response, hasBody(nullValue(String::class.java)))
-        events.contains(VirologyResults::class, TestResultUploaded::class)
+        expectThat(response).status.isSameAs(CONFLICT)
+        expectThat(response).body.isNull()
+        expectThat(events).contains(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `invalid path returns 404`() {
         val response = sendAndReceive(path = "/upload/incorrect/npex-result", payload = testLabResultV1)
 
-        assertThat(response, hasStatus(HttpStatusCode.NOT_FOUND_404))
-        assertThat(response, hasBody(equalTo(null)))
+        expectThat(response).status.isSameAs(NOT_FOUND)
+        expectThat(response).body.isNull()
     }
 
     @Test
     fun `invalid method returns 405`() {
         val response = sendAndReceive(path = npexPath, payload = testLabResultV1, method = GET)
 
-        assertThat(response, hasStatus(HttpStatusCode.METHOD_NOT_ALLOWED_405))
-        assertThat(response, hasBody(equalTo(null)))
+        expectThat(response).status.isSameAs(METHOD_NOT_ALLOWED)
+        expectThat(response).body.isNull()
     }
 
     @Test
     fun `empty body returns 422`() {
         val response = sendAndReceive(path = npexPath, payload = "")
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        assertThat(response, hasBody(equalTo(null)))
-        events.contains(VirologyResults::class, UnprocessableJson::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(response).body.isNull()
+        expectThat(events).contains(VirologyResults::class, UnprocessableJson::class)
     }
 
     @Test
@@ -133,20 +142,20 @@ class VirologyUploadHandlerTest {
             payload = """{"ctaToken": "cc8f0b6z","testEndDate": "2020-04-23T00:FOO:00Z","testResult": "NEGATIVE"}"""
         )
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        assertThat(response, hasBody(equalTo(null)))
-        events.contains(VirologyResults::class, UnprocessableJson::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(response).body.isNull()
+        expectThat(events).contains(VirologyResults::class, UnprocessableJson::class)
     }
 
     @Test
     fun `random payload does not cause 500`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
+        every { service.acceptTestResult(any()) } returns Success()
 
         Random.mutants(defaultJsonMutagens().forStrings(), 100, testLabResultV1)
             .filter { it != testLabResultV1 }
             .forEach { json: String ->
                 val response = sendAndReceive(path = npexPath, payload = json)
-                assertThat(response, not(hasStatus(HttpStatusCode.INTERNAL_SERVER_ERROR_500)))
+                expectThat(response).status.not().isSameAs(INTERNAL_SERVER_ERROR)
             }
     }
 
@@ -168,9 +177,9 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(response, hasStatus(HttpStatusCode.OK_200))
-        assertThat(response, hasBody(equalTo("""{"ctaToken":"cc8f0b6z"}""")))
-        events.contains(VirologyTokenGen::class, CtaTokenGen::class)
+        expectThat(response).status.isSameAs(OK)
+        expectThat(response).body.isEqualToJson("""{"ctaToken":"cc8f0b6z"}""")
+        expectThat(events).contains(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
@@ -189,36 +198,36 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(response, hasStatus(HttpStatusCode.OK_200))
-        assertThat(response, hasBody(equalTo("""{"ctaToken":"cc8f0b6z"}""")))
-        events.contains(VirologyTokenGen::class, CtaTokenGen::class)
+        expectThat(response).status.isSameAs(OK)
+        expectThat(response).body.isEqualToJson("""{"ctaToken":"cc8f0b6z"}""")
+        expectThat(events).contains(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
     fun `accepts test result v1 returns 422 on invalid testKit`() {
         val response = sendAndReceive(path = npexPath, payload = rapidLabResultV2)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
     fun `accepts npex rapid lab test result v2 returns 202`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
+        every { service.acceptTestResult(any()) } returns Success()
 
         val response = sendAndReceive(path = npexV2Path, payload = rapidLabResultV2)
 
-        assertThat(response, hasStatus(ACCEPTED_202))
-        assertThat(response, hasBody(equalTo("successfully processed")))
-        events.contains(VirologyResults::class, TestResultUploaded::class)
+        expectThat(response).status.isSameAs(ACCEPTED)
+        expectThat(response).body.isEqualTo("successfully processed")
+        expectThat(events).contains(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `v2 returns 422 when receiving v1 payload`() {
         val response = sendAndReceive(path = npexV2Path, payload = testLabResultV1)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
@@ -232,8 +241,8 @@ class VirologyUploadHandlerTest {
 
         val response = sendAndReceive(path = npexV2Path, payload = payload)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
@@ -247,8 +256,8 @@ class VirologyUploadHandlerTest {
 
         val response = sendAndReceive(path = npexV2Path, payload = payload)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
@@ -262,8 +271,8 @@ class VirologyUploadHandlerTest {
 
         val response = sendAndReceive(path = npexV2Path, payload = payload)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
@@ -277,8 +286,8 @@ class VirologyUploadHandlerTest {
 
         val response = sendAndReceive(path = npexV2Path, payload = payload)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
@@ -292,8 +301,8 @@ class VirologyUploadHandlerTest {
 
         val response = sendAndReceive(path = npexV2Path, payload = payload)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
@@ -307,30 +316,30 @@ class VirologyUploadHandlerTest {
 
         val response = sendAndReceive(path = npexV2Path, payload = payload)
 
-        assertThat(response, hasStatus(UNPROCESSABLE_ENTITY_422))
-        events.contains(VirologyResults::class)
+        expectThat(response).status.isSameAs(UNPROCESSABLE_ENTITY)
+        expectThat(events).contains(VirologyResults::class)
     }
 
     @Test
     fun `accepts fiorano test result v1 returns 202`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
+        every { service.acceptTestResult(any()) } returns Success()
 
         val response = sendAndReceive(path = fioranoPathV1, payload = testLabResultV1)
 
-        assertThat(response, hasStatus(ACCEPTED_202))
-        assertThat(response, hasBody(equalTo("successfully processed")))
-        events.contains(VirologyResults::class, TestResultUploaded::class)
+        expectThat(response).status.isSameAs(ACCEPTED)
+        expectThat(response).body.isEqualTo("successfully processed")
+        expectThat(events).contains(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
     fun `accepts fiorano test result v2 returns 202`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
+        every { service.acceptTestResult(any()) } returns Success()
 
         val response = sendAndReceive(path = fioranoPathV2, payload = rapidLabResultV2)
 
-        assertThat(response, hasStatus(ACCEPTED_202))
-        assertThat(response, hasBody(equalTo("successfully processed")))
-        events.contains(VirologyResults::class, TestResultUploaded::class)
+        expectThat(response).status.isSameAs(ACCEPTED)
+        expectThat(response).body.isEqualTo("successfully processed")
+        expectThat(events).contains(VirologyResults::class, TestResultUploaded::class)
     }
 
     @Test
@@ -351,9 +360,9 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(response, hasStatus(HttpStatusCode.OK_200))
-        assertThat(response, hasBody(equalTo("""{"ctaToken":"cc8f0b6z"}""")))
-        events.contains(VirologyTokenGen::class, CtaTokenGen::class)
+        expectThat(response).status.isSameAs(OK)
+        expectThat(response).body.isEqualToJson("""{"ctaToken":"cc8f0b6z"}""")
+        expectThat(events).contains(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
@@ -374,9 +383,9 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(response, hasStatus(HttpStatusCode.OK_200))
-        assertThat(response, hasBody(equalTo("""{"ctaToken":"cc8f0b6z"}""")))
-        events.contains(VirologyTokenGen::class, CtaTokenGen::class)
+        expectThat(response).status.isSameAs(OK)
+        expectThat(response).body.isEqualToJson("""{"ctaToken":"cc8f0b6z"}""")
+        expectThat(events).contains(VirologyTokenGen::class, CtaTokenGen::class)
     }
 
     @Test
@@ -396,14 +405,14 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(response, hasStatus(HttpStatusCode.OK_200))
-        assertThat(response, hasBody(equalTo("""{"tokenStatus":"consumable"}""")))
-        events.contains(TokenStatusCheck::class, VirologyTokenStatus::class)
+        expectThat(response).status.isSameAs(OK)
+        expectThat(response).body.isEqualToJson("""{"tokenStatus":"consumable"}""")
+        expectThat(events).contains(TokenStatusCheck::class, VirologyTokenStatus::class)
     }
 
     @Test
     fun `accepts v2 wales token status request`() {
-        every { service.checkStatusOfToken(any(),any()) } returns VirologyTokenStatusResponse(
+        every { service.checkStatusOfToken(any(), any()) } returns VirologyTokenStatusResponse(
             "consumable"
         )
 
@@ -418,19 +427,19 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(response, hasStatus(HttpStatusCode.OK_200))
-        assertThat(response, hasBody(equalTo("""{"tokenStatus":"consumable"}""")))
-        events.contains(TokenStatusCheck::class, VirologyTokenStatus::class)
+        expectThat(response).status.isSameAs(OK)
+        expectThat(response).body.isEqualToJson("""{"tokenStatus":"consumable"}""")
+        expectThat(events).contains(TokenStatusCheck::class, VirologyTokenStatus::class)
     }
 
     @Test
     fun `accepts rapid self reported test result v2 returns 202`() {
-        every { service.acceptTestResult(any()) } returns VirologyResultPersistOperation.Success()
+        every { service.acceptTestResult(any()) } returns Success()
 
         val response = sendAndReceive(path = npexV2Path, payload = rapidSelfReportedResultV2)
 
-        assertThat(response, hasStatus(ACCEPTED_202))
-        assertThat(response, hasBody(equalTo("successfully processed")))
+        expectThat(response).status.isSameAs(ACCEPTED)
+        expectThat(response).body.isEqualTo("successfully processed")
     }
 
     @Test
@@ -451,8 +460,8 @@ class VirologyUploadHandlerTest {
             )
         }
 
-        assertThat(response, hasStatus(HttpStatusCode.OK_200))
-        assertThat(response, hasBody(equalTo("""{"ctaToken":"cc8f0b6z"}""")))
+        expectThat(response).status.isSameAs(OK)
+        expectThat(response).body.isEqualToJson("""{"ctaToken":"cc8f0b6z"}""")
     }
 
     private fun sendAndReceive(
@@ -468,14 +477,19 @@ class VirologyUploadHandlerTest {
             .withJson(payload)
             .withBearerToken("anything")
 
-        val environment = TestEnvironments.TEST.apply(
+        val environment = TEST.apply(
             mapOf(
                 "MAINTENANCE_MODE" to "false",
                 "custom_oai" to "OAI"
             )
         )
 
-        val handler = VirologyUploadHandler(environment, events, { true }, service, { true })
-        return handler.handleRequest(requestEvent, aContext())
+        return VirologyUploadHandler(
+            environment = environment,
+            events = events,
+            authenticator = { true },
+            virologyService = service,
+            healthAuthenticator = { true }
+        ).handleRequest(requestEvent, aContext())
     }
 }

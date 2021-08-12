@@ -1,8 +1,9 @@
 package uk.nhs.nhsx.diagnosiskeydist.s3
 
-import com.amazonaws.services.s3.model.S3ObjectSummary
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.containsExactly
+import strikt.assertions.flatMap
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
@@ -10,174 +11,156 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.Submission
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
-import java.util.*
-import java.util.function.Predicate
+import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
+import java.time.Instant
 
 class SubmissionFromS3RepositoryTest {
 
     private val clock = SystemClock.CLOCK
     private val now = clock()
-
     private val nowMinus5Sec = now.minusSeconds(5)
-
     private val nowMinus1Sec = now.minusSeconds(1)
 
     @Test
     fun `submissions from s3 accept all filter`() {
-
-        val fakeS3 = FakeDiagnosisKeysS3(listOf(
-            S3ObjectSummary().apply { key = "my-prefix-abc"; lastModified = Date.from(nowMinus5Sec) },
-            S3ObjectSummary().apply { key = "my-prefix-def"; lastModified = Date.from(now) },
-            S3ObjectSummary().apply { key = "abcdef"; lastModified = Date.from(nowMinus1Sec) }
-        ))
-        val submissionRepository = SubmissionFromS3Repository(
-            fakeS3,
-            { true },
-            BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents(),
-            { now }
+        val fakeS3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
+            S3ObjectSummary("my-prefix-def", lastModified = now),
+            S3ObjectSummary("abcdef", lastModified = nowMinus1Sec)
         )
-        val submissions = submissionRepository.loadAllSubmissions()
 
-        assertContainsKeys(submissions, listOf("my-prefix-abc", "abcdef", "my-prefix-def"))
+        val submissions = SubmissionFromS3Repository(fakeS3).loadAllSubmissions()
+
+        expectThat(submissions)
+            .flatMap(::keys)
+            .containsExactly("my-prefix-abc", "abcdef", "my-prefix-def")
     }
 
     @Test
-    fun `submissions from s3 has PCR as testtype`() {
-
-        val fakeS3 = FakeDiagnosisKeysS3(listOf(
-            S3ObjectSummary().apply { key = "mobile/LAB_RESULT/abc.json"; lastModified = Date.from(nowMinus5Sec) },
-            S3ObjectSummary().apply { key = "mobile/RAPID_RESULT/def.json"; lastModified = Date.from(now) },
-            S3ObjectSummary().apply { key = "mobile/RAPID_SELF_REPORTED/ghi.json"; lastModified = Date.from(nowMinus1Sec) }
-        ))
-        val submissionRepository = SubmissionFromS3Repository(
-            fakeS3,
-            { true },
-            BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents(),
-            { now }
+    fun `submissions from s3 has PCR as test type`() {
+        val fakeS3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("mobile/LAB_RESULT/abc.json", lastModified = nowMinus5Sec),
+            S3ObjectSummary("mobile/RAPID_RESULT/def.json", lastModified = now),
+            S3ObjectSummary("mobile/RAPID_SELF_REPORTED/ghi.json", lastModified = nowMinus1Sec)
         )
-        val submissions = submissionRepository.loadAllSubmissions()
 
-        assertContainsKeys(submissions, listOf("mobile/LAB_RESULT/abc.json", "mobile/RAPID_SELF_REPORTED/ghi.json","mobile/RAPID_RESULT/def.json"))
+        val submissions = SubmissionFromS3Repository(fakeS3).loadAllSubmissions()
 
+        expectThat(submissions)
+            .flatMap(::keys)
+            .containsExactly(
+                "mobile/LAB_RESULT/abc.json",
+                "mobile/RAPID_SELF_REPORTED/ghi.json",
+                "mobile/RAPID_RESULT/def.json"
+            )
     }
 
     @Test
     fun `submissions from s3 submission time filter`() {
         val nowEpoch = now.toEpochMilli()
 
-        val fakeS3 = FakeDiagnosisKeysS3(listOf(
-            S3ObjectSummary().apply { key = "veryold"; lastModified = Date(nowEpoch - 2 * 60000) },
-            S3ObjectSummary().apply { key = "old"; lastModified = Date(nowEpoch - 60000) },
-            S3ObjectSummary().apply { key = "now"; lastModified = Date(nowEpoch) },
-            S3ObjectSummary().apply { key = "young"; lastModified = Date(nowEpoch + 60000) }
-        ))
-        val submissionRepository = SubmissionFromS3Repository(
-            fakeS3,
-            { true },
-            BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents(),
-            { now }
+        val fakeS3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("veryold", lastModified = Instant.ofEpochMilli(nowEpoch - 2 * 60000)),
+            S3ObjectSummary("old", lastModified = Instant.ofEpochMilli(nowEpoch - 60000)),
+            S3ObjectSummary("now", lastModified = Instant.ofEpochMilli(nowEpoch)),
+            S3ObjectSummary("young", lastModified = Instant.ofEpochMilli(nowEpoch + 60000))
         )
-        val submissions = submissionRepository.loadAllSubmissions(nowEpoch, 100, 100)
 
-        assertContainsKeys(submissions, listOf("young"))
+        val submissions = SubmissionFromS3Repository(fakeS3)
+            .loadAllSubmissions(nowEpoch, 100, 100)
+
+        expectThat(submissions)
+            .flatMap(::keys)
+            .containsExactly("young")
     }
 
     @Test
     fun `submissions from s3 max results`() {
         val nowEpoch = now.toEpochMilli()
-        val fakeS3 = FakeDiagnosisKeysS3(listOf(
-            S3ObjectSummary().apply { key = "A"; lastModified = Date(nowEpoch + 4 * 60000) },
-            S3ObjectSummary().apply { key = "B"; lastModified = Date(nowEpoch + 3 * 60000) },
-            S3ObjectSummary().apply { key = "C"; lastModified = Date(nowEpoch + 2 * 60000) },
-            S3ObjectSummary().apply { key = "D"; lastModified = Date(nowEpoch + 60000) },
-            S3ObjectSummary().apply { key = "D"; lastModified = Date(nowEpoch - 60000) }
-        ))
-        val submissionRepository = SubmissionFromS3Repository(
-            fakeS3,
-            { true },
-            BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents(),
-            { now }
-        )
-        val submissions = submissionRepository.loadAllSubmissions(nowEpoch, 3, 3)
 
-        assertContainsKeys(submissions, listOf("D", "C", "B"))
+        val fakeS3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("A", lastModified = Instant.ofEpochMilli(nowEpoch + 4 * 60000)),
+            S3ObjectSummary("B", lastModified = Instant.ofEpochMilli(nowEpoch + 3 * 60000)),
+            S3ObjectSummary("C", lastModified = Instant.ofEpochMilli(nowEpoch + 2 * 60000)),
+            S3ObjectSummary("D", lastModified = Instant.ofEpochMilli(nowEpoch + 60000)),
+            S3ObjectSummary("D", lastModified = Instant.ofEpochMilli(nowEpoch - 60000))
+        )
+
+        val submissions = SubmissionFromS3Repository(fakeS3)
+            .loadAllSubmissions(nowEpoch, 3, 3)
+
+        expectThat(submissions)
+            .flatMap(::keys)
+            .containsExactly("D", "C", "B")
     }
 
     @Test
     fun `filter submissions from s3`() {
-        val fakeS3 = FakeDiagnosisKeysS3(listOf(
-            S3ObjectSummary().apply { key = "my-prefix-abc"; lastModified = Date.from(nowMinus5Sec) },
-            S3ObjectSummary().apply { key = "my-prefix-def"; lastModified = Date.from(now) },
-            S3ObjectSummary().apply { key = "abcdef"; lastModified = Date.from(nowMinus1Sec) }
-        ))
-        val submissionRepository = SubmissionFromS3Repository(
-            fakeS3,
-            { objectKey -> !objectKey.value.startsWith("my-prefix") },
-            BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents(),
-            { now }
+        val fakeS3 = FakeDiagnosisKeysS3(
+            listOf(
+                S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
+                S3ObjectSummary("my-prefix-def", lastModified = now),
+                S3ObjectSummary("abcdef", lastModified = nowMinus1Sec)
+            )
         )
-        val submissions = submissionRepository.loadAllSubmissions()
 
-        assertContainsKeys(submissions, listOf("abcdef"))
+        val submissions = SubmissionFromS3Repository(fakeS3) { objectKey ->
+            !objectKey.value.startsWith("my-prefix")
+        }.loadAllSubmissions()
+
+        expectThat(submissions)
+            .flatMap(::keys)
+            .containsExactly("abcdef")
     }
 
     @Test
     fun `filter submissions from s3 by prefix`() {
-        val fakeS3 = FakeDiagnosisKeysS3(listOf(
-            S3ObjectSummary().apply { key = "my-prefix-abc"; lastModified = Date.from(nowMinus5Sec) },
-            S3ObjectSummary().apply { key = "/bla/my-prefix-def"; lastModified = Date.from(now) },
-            S3ObjectSummary().apply { key = "/mobile/abc"; lastModified = Date.from(nowMinus1Sec) }
-        ))
-        val allowedPrefixes = "/nearform/IE,/nearform/NIR,/mobile".split(",".toRegex()).toTypedArray()
-        val matchesPrefix = Predicate { objectKey: ObjectKey ->
-            Arrays.stream(allowedPrefixes).anyMatch { prefix: String? -> objectKey.value.startsWith(prefix!!) }
-        }
-        val submissionRepository = SubmissionFromS3Repository(
-            fakeS3,
-            matchesPrefix,
-            BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents(),
-            { now }
+        val fakeS3 = FakeDiagnosisKeysS3(
+            S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
+            S3ObjectSummary("/bla/my-prefix-def", lastModified = now),
+            S3ObjectSummary("/mobile/abc", lastModified = nowMinus1Sec)
         )
-        val submissions = submissionRepository.loadAllSubmissions()
 
-        assertContainsKeys(submissions, listOf("/mobile/abc"))
+        val submissions = SubmissionFromS3Repository(fakeS3) { objectKey ->
+            listOf("/nearform/IE", "/nearform/NIR", "/mobile").any { objectKey.value.startsWith(it) }
+        }.loadAllSubmissions()
+
+        expectThat(submissions)
+            .flatMap(::keys)
+            .containsExactly("/mobile/abc")
     }
 
     @Test
     fun `skip deleted submissions from s3`() {
-        val fakeS3 = FakeDiagnosisKeysS3(listOf(
-            S3ObjectSummary().apply { key = "my-prefix-abc"; lastModified = Date.from(nowMinus5Sec) },
-            S3ObjectSummary().apply { key = "/bla/my-prefix-def"; lastModified = Date.from(now) },
-            S3ObjectSummary().apply { key = "/mobile/abc"; lastModified = Date.from(nowMinus1Sec) }
-        ), listOf("my-prefix-abc"))
-
-        val submissionRepository = SubmissionFromS3Repository(
-            fakeS3,
-            { true },
-            BucketName.of("SUBMISSION_BUCKET"),
-            RecordingEvents(),
-            { now }
+        val fakeS3 = FakeDiagnosisKeysS3(
+            listOf(
+                S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
+                S3ObjectSummary("/bla/my-prefix-def", lastModified = now),
+                S3ObjectSummary("/mobile/abc", lastModified = nowMinus1Sec)
+            ), listOf("my-prefix-abc")
         )
-        val submissions = submissionRepository.loadAllSubmissions()
 
-        assertContainsKeys(submissions, listOf("/mobile/abc", "/bla/my-prefix-def"))
+        val submissions = SubmissionFromS3Repository(fakeS3).loadAllSubmissions()
+
+        expectThat(submissions)
+            .flatMap(::keys)
+            .containsExactly("/mobile/abc", "/bla/my-prefix-def")
     }
 
-    private fun assertContainsKeys(
-        submissions: List<Submission>,
-        expected: List<String>
-    ) {
-        assertThat(submissions).hasSize(expected.size)
-            .flatExtracting({ it.payload.temporaryExposureKeys.map(StoredTemporaryExposureKey::key).first() })
-            .isEqualTo(expected)
-    }
+    @Suppress("TestFunctionName")
+    private fun SubmissionFromS3Repository(
+        fakeS3: FakeDiagnosisKeysS3,
+        predicate: (ObjectKey) -> Boolean = { true }
+    ) = SubmissionFromS3Repository(
+        fakeS3,
+        predicate,
+        BucketName.of("SUBMISSION_BUCKET"),
+        RecordingEvents()
+    ) { now }
 
-
+    private fun keys(submission: Submission) = submission
+        .payload
+        .temporaryExposureKeys
+        .map(StoredTemporaryExposureKey::key)
 }
 

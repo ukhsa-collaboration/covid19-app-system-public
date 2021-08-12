@@ -1,0 +1,12 @@
+{
+    "moves": {
+        "module.analytics.module.apple_sales_importer.module.analytics_apple_sales_report.aws_s3_bucket.this": "module.analytics.module.analytics_apple_sales_report.module.analytics_apple_sales_report.aws_s3_bucket.this",
+        "module.analytics.module.apple_sales_importer.module.analytics_apple_sales_report.aws_s3_bucket_metric.bucket_request_metrics": "module.analytics.module.analytics_apple_sales_report.module.analytics_apple_sales_report.aws_s3_bucket_metric.bucket_request_metrics",
+        "module.analytics.module.apple_sales_importer.module.analytics_apple_sales_report.aws_s3_bucket_policy.this": "module.analytics.module.analytics_apple_sales_report.module.analytics_apple_sales_report.aws_s3_bucket_policy.this",
+        "module.analytics.module.apple_sales_importer.module.analytics_apple_sales_report.aws_s3_bucket_public_access_block.this": "module.analytics.module.analytics_apple_sales_report.module.analytics_apple_sales_report.aws_s3_bucket_public_access_block.this",
+        "module.analytics.module.google_play_installs_importer.module.analytics_google_installs_overview_report.aws_s3_bucket.this": "module.analytics.module.analytics_google_installs_overview_report.module.analytics_google_installs_overview_report.aws_s3_bucket.this",
+        "module.analytics.module.google_play_installs_importer.module.analytics_google_installs_overview_report.aws_s3_bucket_metric.bucket_request_metrics": "module.analytics.module.analytics_google_installs_overview_report.module.analytics_google_installs_overview_report.aws_s3_bucket_metric.bucket_request_metrics",
+        "module.analytics.module.google_play_installs_importer.module.analytics_google_installs_overview_report.aws_s3_bucket_policy.this": "module.analytics.module.analytics_google_installs_overview_report.module.analytics_google_installs_overview_report.aws_s3_bucket_policy.this",
+        "module.analytics.module.google_play_installs_importer.module.analytics_google_installs_overview_report.aws_s3_bucket_public_access_block.this": "module.analytics.module.analytics_google_installs_overview_report.module.analytics_google_installs_overview_report.aws_s3_bucket_public_access_block.this"
+    }
+}

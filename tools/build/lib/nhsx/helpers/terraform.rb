@@ -171,5 +171,25 @@ module NHSx
 
       return workspace_id
     end
+
+    def reset_all_resources_in_tfstate
+      @all_resources = nil
+    end
+
+    def tf_state_mirror(system_config)
+      unless @all_resources
+        cmd = run_quiet("list terraform state", "terraform state list", system_config)
+        @all_resources = TerraformStateTracker.new cmd.output
+      end
+      @all_resources
+    end
+
+    def contains_only_data_resources(system_config, dest)
+      tf_state_mirror(system_config).expand_paths(dest).select{ |i| i !~ /\.data\./}.empty?
+    end
+
+    def check_path_exists_in_tfstate(system_config, source)
+      tf_state_mirror(system_config).resource_exists source
+    end
   end
 end

@@ -7,7 +7,6 @@ import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.core.signature.SignatureDate
 import java.time.Instant
-import java.util.ArrayList
 
 class TestDatedSigner(private val date: String) : DatedSigner {
 

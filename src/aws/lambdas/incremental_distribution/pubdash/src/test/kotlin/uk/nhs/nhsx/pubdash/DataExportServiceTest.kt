@@ -6,12 +6,14 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.pubdash.datasets.AnalyticsSource
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
 
 class DataExportServiceTest {
 
@@ -66,7 +68,7 @@ class DataExportServiceTest {
         verify(exactly = 1) { s3Storage.copyObject(from, to) }
         verify(exactly = 0) { queueClient.sendMessage(any()) }
 
-        events.containsExactly(QueryFinishedEvent::class)
+        expectThat(events).containsExactly(QueryFinishedEvent::class)
     }
 
     @Test
@@ -84,7 +86,7 @@ class DataExportServiceTest {
         verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
         verify(exactly = 1) { queueClient.sendMessage(QueueMessage(QueryId("agnostic"), Dataset.Agnostic)) }
 
-        events.containsExactly(QueryStillRunning::class)
+        expectThat(events).containsExactly(QueryStillRunning::class)
     }
 
     @Test
@@ -102,7 +104,7 @@ class DataExportServiceTest {
         verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
         verify(exactly = 0) { queueClient.sendMessage(any()) }
 
-        events.containsExactly(QueryErrorEvent::class)
+        expectThat(events).containsExactly(QueryErrorEvent::class)
     }
 
     @Test
@@ -122,7 +124,7 @@ class DataExportServiceTest {
         verify(exactly = 1) { s3Storage.copyObject(from, to) }
         verify(exactly = 0) { queueClient.sendMessage(any()) }
 
-        events.containsExactly(QueryFinishedEvent::class)
+        expectThat(events).containsExactly(QueryFinishedEvent::class)
     }
 
     @Test
@@ -140,7 +142,7 @@ class DataExportServiceTest {
         verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
         verify(exactly = 1) { queueClient.sendMessage(QueueMessage(QueryId("country"), Dataset.Country)) }
 
-        events.containsExactly(QueryStillRunning::class)
+        expectThat(events).containsExactly(QueryStillRunning::class)
     }
 
     @Test
@@ -158,7 +160,7 @@ class DataExportServiceTest {
         verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
         verify(exactly = 0) { queueClient.sendMessage(any()) }
 
-        events.containsExactly(QueryErrorEvent::class)
+        expectThat(events).containsExactly(QueryErrorEvent::class)
     }
 
     @Test
@@ -178,7 +180,7 @@ class DataExportServiceTest {
         verify(exactly = 1) { s3Storage.copyObject(from, to) }
         verify(exactly = 0) { queueClient.sendMessage(any()) }
 
-        events.containsExactly(QueryFinishedEvent::class)
+        expectThat(events).containsExactly(QueryFinishedEvent::class)
     }
 
     @Test
@@ -196,7 +198,7 @@ class DataExportServiceTest {
         verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
         verify(exactly = 1) { queueClient.sendMessage(QueueMessage(QueryId("local-auth"), Dataset.LocalAuthority)) }
 
-        events.containsExactly(QueryStillRunning::class)
+        expectThat(events).containsExactly(QueryStillRunning::class)
     }
 
     @Test
@@ -214,6 +216,6 @@ class DataExportServiceTest {
         verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
         verify(exactly = 0) { queueClient.sendMessage(any()) }
 
-        events.containsExactly(QueryErrorEvent::class)
+        expectThat(events).containsExactly(QueryErrorEvent::class)
     }
 }

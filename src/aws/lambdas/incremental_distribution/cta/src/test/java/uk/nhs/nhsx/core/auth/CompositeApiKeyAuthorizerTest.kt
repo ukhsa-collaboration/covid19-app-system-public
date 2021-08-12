@@ -1,25 +1,36 @@
 package uk.nhs.nhsx.core.auth
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.isEqualTo
+import strikt.assertions.isFalse
+import strikt.assertions.message
 
 class CompositeApiKeyAuthorizerTest {
 
     private val apiKey = ApiKey("name", "value")
 
-    @Test
-    fun `returns true only when all authorizers are happy`() {
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "true,true,true",
+            "true,false,false",
+            "false,true,false",
+            "false,false,false",
+        ]
+    )
+    fun `returns true only when all authorizers are happy`(first: Boolean, second: Boolean, expected: Boolean) {
         fun assertAuthFor(first: Boolean, second: Boolean, expected: Boolean) {
-            assertThat(
-                CompositeApiKeyAuthorizer(ApiKeyAuthorizer { first }, ApiKeyAuthorizer { second }).authorize(apiKey)
-            ).isEqualTo(expected)
+            expectThat(CompositeApiKeyAuthorizer(
+                ApiKeyAuthorizer { first },
+                ApiKeyAuthorizer { second }
+            ).authorize(apiKey)).isEqualTo(expected)
         }
 
-        assertAuthFor(first = true, second = true, expected = true)
-        assertAuthFor(first = true, second = false, expected = false)
-        assertAuthFor(first = false, second = true, expected = false)
-        assertAuthFor(first = false, second = false, expected = false)
+        assertAuthFor(first, second, expected)
     }
 
     @Test
@@ -29,12 +40,12 @@ class CompositeApiKeyAuthorizerTest {
             ApiKeyAuthorizer { throw IllegalStateException("I am broken") }
         )
 
-        assertThat(authorizer.authorize(apiKey)).isEqualTo(false)
+        expectThat(authorizer.authorize(apiKey)).isFalse()
     }
 
     @Test
     fun `throws exception for empty list of authorizers`() {
-        assertThatThrownBy { CompositeApiKeyAuthorizer() }
-            .hasMessage("must contain at least one ApiKeyAuthorizer")
+        expectThrows<IllegalStateException> { CompositeApiKeyAuthorizer() }
+            .message.isEqualTo("must contain at least one ApiKeyAuthorizer")
     }
 }

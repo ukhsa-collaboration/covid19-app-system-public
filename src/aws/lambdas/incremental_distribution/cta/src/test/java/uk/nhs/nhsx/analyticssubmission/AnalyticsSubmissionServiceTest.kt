@@ -5,18 +5,20 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.Companion.iOSPayloadFrom
+import strikt.api.expectThat
+import strikt.assertions.contains
+import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.Companion.analyticsPayloadFrom
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import uk.nhs.nhsx.testhelper.assertions.events
 import java.time.Instant
 
 class AnalyticsSubmissionServiceTest {
 
-    private val s3Storage = mockk<S3Storage>()
     private val objectKeyNameProvider = ObjectKeyNameProvider { ObjectKey.of("foo") }
     private val kinesisFirehose = mockk<AmazonKinesisFirehose>()
     private val events = RecordingEvents()
@@ -37,7 +39,7 @@ class AnalyticsSubmissionServiceTest {
 
         verify(exactly = 1) { kinesisFirehose.putRecord(any()) }
 
-        events.containsExactly(AnalyticsSubmissionUploaded::class)
+        expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
     @Test
@@ -55,7 +57,7 @@ class AnalyticsSubmissionServiceTest {
 
         verify(exactly = 1) { kinesisFirehose.putRecord(any()) }
 
-        events.containsExactly(AnalyticsSubmissionUploaded::class)
+        expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
     @Test
@@ -76,18 +78,20 @@ class AnalyticsSubmissionServiceTest {
         )
 
         verify(exactly = 0) { kinesisFirehose.putRecord(any()) }
-        verify(exactly = 0) { s3Storage.upload(any(), any(), any()) }
 
-        events.containsExactly(AnalyticsSubmissionRejected::class)
-        events.contains(
-            AnalyticsSubmissionRejected(
-                startDate = "2021-02-02T00:00:01Z",
-                endDate = "2021-02-02T00:00:00Z",
-                deviceModel = "iPhone11,2",
-                appVersion = "3.0",
-                osVersion = "iPhone OS 13.5.1 (17F80)"
-            )
-        )
+        expectThat(events)
+            .containsExactly(AnalyticsSubmissionRejected::class)
+            .and {
+                events.contains(
+                    AnalyticsSubmissionRejected(
+                        startDate = "2021-02-02T00:00:01Z",
+                        endDate = "2021-02-02T00:00:00Z",
+                        deviceModel = "iPhone11,2",
+                        appVersion = "3.0",
+                        osVersion = "iPhone OS 13.5.1 (17F80)"
+                    )
+                )
+            }
     }
 
     @Test
@@ -108,20 +112,29 @@ class AnalyticsSubmissionServiceTest {
         )
 
         verify(exactly = 0) { kinesisFirehose.putRecord(any()) }
-        verify(exactly = 0) { s3Storage.upload(any(), any(), any()) }
 
-        events.containsExactly(AnalyticsSubmissionRejected::class)
-        events.contains(
-            AnalyticsSubmissionRejected(
-                startDate = "2021-01-01T00:00:00Z",
-                endDate = "2021-02-02T00:00:01Z",
-                deviceModel = "iPhone11,2",
-                appVersion = "3.0",
-                osVersion = "iPhone OS 13.5.1 (17F80)"
-            )
-        )
+        expectThat(events)
+            .containsExactly(AnalyticsSubmissionRejected::class)
+            .and {
+                events.contains(
+                    AnalyticsSubmissionRejected(
+                        startDate = "2021-01-01T00:00:00Z",
+                        endDate = "2021-02-02T00:00:01Z",
+                        deviceModel = "iPhone11,2",
+                        appVersion = "3.0",
+                        osVersion = "iPhone OS 13.5.1 (17F80)"
+                    )
+                )
+            }
     }
 
     private fun clientPayload(startDate: String = "2020-01-27T23:00:00Z", endDate: String = "2020-01-28T22:59:00Z") =
-        readJsonOrThrow<ClientAnalyticsSubmissionPayload>(iOSPayloadFrom(startDate, endDate, "AB13"))
+        readJsonOrThrow<ClientAnalyticsSubmissionPayload>(
+            analyticsPayloadFrom(
+                startDate = startDate,
+                endDate = endDate,
+                postDistrict = "AB13",
+                localAuthority = "E06000051"
+            )
+        )
 }

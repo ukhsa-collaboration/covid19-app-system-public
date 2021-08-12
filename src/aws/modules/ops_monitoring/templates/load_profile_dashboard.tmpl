@@ -1,0 +1,106 @@
+{
+    "widgets": [
+        {
+            "height": 9,
+            "width": 24,
+            "y": 9,
+            "x": 0,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @timestamp, @message\n| filter @message like /eceived http request: method=POST/\n| filter @message like /path=(\\/virology-test\\/cta-exchange|\\/virology-test\\/v2\\/cta-exchange),requestId/\n\n| parse @message /userAgent=p=(?<android>Android),o=/\n| parse @message /userAgent=p=(?<ios>iOS),o=/\n\n| stats \ncount() as cta_exchange_total,\ncount(android) as cta_exchange_android,\ncount(ios) as cta_exchange_ios\nby bin(1h)\n",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Manually entered ctaTokens [count/hour]",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "height": 9,
+            "width": 24,
+            "y": 18,
+            "x": 0,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${exposure_notification_circuit_breaker_function}' | SOURCE '/aws/lambda/te-prod-risky-venues-circuit-breaker' | fields @timestamp, @message\n| filter @message like /eceived http request: method=POST/\n\n| parse @message /(?<en_req>exposure-notification\\/request)/\n| parse @message /(?<en_res>exposure-notification\\/resolution)/\n| parse @message /(?<ven_req>venue\\/request)/\n| parse @message /(?<ven_res>venue\\/resolution)/\n\n| stats \ncount(en_req),\ncount(en_res),\ncount(ven_req),\ncount(ven_res)\nby bin(1h)\n",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Circuit Breaker [count/hour]",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "height": 9,
+            "width": 24,
+            "y": 27,
+            "x": 0,
+            "type": "log",
+            "properties": {
+                "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @timestamp, @message\n| filter @message like /eceived http request: method=POST/\n| stats  count() as total by bin(1h)\n",
+                "region": "eu-west-2",
+                "stacked": false,
+                "title": "Diagnosis Key Submissions [count/hour]",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "height": 9,
+            "width": 24,
+            "y": 54,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "Resource", "/{proxy+}", "Stage", "$default", "Method", "POST", "ApiId", "${empty_submission_gateway_id}" ],
+                    [ ".", "4xx", ".", ".", ".", ".", ".", ".", ".", ".", { "yAxis": "right" } ],
+                    [ ".", "5xx", ".", ".", ".", ".", ".", ".", ".", ".", { "yAxis": "right" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 3600,
+                "title": "Traffic Obfuscation [count/hour]"
+            }
+        },
+        {
+            "height": 9,
+            "width": 24,
+            "y": 45,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "4xx", "Resource", "/{proxy+}", "Stage", "$default", "Method", "POST", "ApiId", "${analytics_submission_fast_ingest_gateway_id}", { "yAxis": "right" } ],
+                    [ ".", "Count", ".", ".", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "5xx", ".", ".", ".", ".", ".", ".", ".", ".", { "yAxis": "right" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 3600,
+                "title": "Analytics Submissions Ingest [count/hour]"
+            }
+        },
+        {
+            "height": 9,
+            "width": 24,
+            "y": 36,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5xx", "Resource", "/{proxy+}", "Stage", "$default", "Method", "POST", "ApiId", "${analytics_events_submission_gateway_id}", { "yAxis": "right" } ],
+                    [ ".", "4xx", ".", ".", ".", ".", ".", ".", ".", ".", { "yAxis": "right" } ],
+                    [ ".", "Count", ".", ".", ".", ".", ".", ".", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 3600,
+                "title": "Analytics Events [count/hours]"
+            }
+        }
+    ]
+}

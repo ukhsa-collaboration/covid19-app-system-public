@@ -9,7 +9,7 @@ data "aws_iam_policy_document" "this" {
   }
 
   statement {
-    actions   = ["logs:CreateLogStream", "logs:PutLogEvents"]
+    actions   = ["logs:CreateLogStream", "logs:PutLogEvents", "logs:CreateLogGroup"]
     resources = ["*"]
   }
 }

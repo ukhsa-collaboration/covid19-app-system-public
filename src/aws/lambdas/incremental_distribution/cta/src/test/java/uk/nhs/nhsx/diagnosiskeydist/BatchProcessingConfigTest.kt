@@ -1,11 +1,11 @@
 package uk.nhs.nhsx.diagnosiskeydist
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.TestEnvironments
 import java.time.Duration
-import java.util.UUID
+import java.util.*
 
 class BatchProcessingConfigTest {
 
@@ -24,7 +24,8 @@ class BatchProcessingConfigTest {
                 )
             )
         )
-        assertThat(config.zipSubmissionPeriodOffset, equalTo(Duration.ofMinutes(-15)))
+
+        expectThat(config.zipSubmissionPeriodOffset).isEqualTo(Duration.ofMinutes(-15))
     }
 
     @Test
@@ -43,6 +44,7 @@ class BatchProcessingConfigTest {
                 )
             )
         )
-        assertThat(config.zipSubmissionPeriodOffset, equalTo(Duration.ofMinutes(-20)))
+
+        expectThat(config.zipSubmissionPeriodOffset).isEqualTo(Duration.ofMinutes(-20))
     }
 }

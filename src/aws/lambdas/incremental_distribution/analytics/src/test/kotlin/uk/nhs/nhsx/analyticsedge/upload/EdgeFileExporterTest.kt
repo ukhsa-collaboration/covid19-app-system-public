@@ -1,16 +1,21 @@
 package uk.nhs.nhsx.analyticsedge.upload
 
-import uk.nhs.nhsx.analyticsedge.DataUploadSkipped
-import uk.nhs.nhsx.analyticsedge.DataUploadedToEdge
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
+import strikt.api.expectCatching
+import strikt.api.expectThat
+import strikt.assertions.contains
+import strikt.assertions.isA
+import strikt.assertions.isFailure
+import strikt.assertions.isNotNull
+import strikt.assertions.message
+import uk.nhs.nhsx.analyticsedge.DataUploadSkipped
+import uk.nhs.nhsx.analyticsedge.DataUploadedToEdge
 
 class EdgeFileExporterTest {
 
@@ -34,7 +39,8 @@ class EdgeFileExporterTest {
         val result = exporter.export(sqsEvent)
 
         verify { uploader.uploadFile("te-some-env-app-posters.csv", any(), any()) }
-        assertThat(result).isInstanceOf(DataUploadedToEdge::class.java)
+
+        expectThat(result).isA<DataUploadedToEdge>()
     }
 
     @Test
@@ -48,8 +54,9 @@ class EdgeFileExporterTest {
             )
         }
 
-        assertThatThrownBy { exporter.export(sqsEvent) }
-            .hasMessage("No enum constant uk.nhs.nhsx.analyticsedge.Dataset.unknown_prefix")
+        expectCatching { exporter.export(sqsEvent) }
+            .isFailure()
+            .message.isNotNull().contains("No enum constant uk.nhs.nhsx.analyticsedge.Dataset.unknown_prefix")
     }
 
     @Test
@@ -65,7 +72,7 @@ class EdgeFileExporterTest {
 
         val result = exporter.export(sqsEvent)
 
-        assertThat(result).isInstanceOf(DataUploadSkipped::class.java)
+        expectThat(result).isA<DataUploadSkipped>()
     }
 
     @Test
@@ -79,8 +86,9 @@ class EdgeFileExporterTest {
             )
         }
 
-        assertThatThrownBy { exporter.export(sqsEvent) }
-            .hasMessage("Event must have batch size of 1")
+        expectCatching { exporter.export(sqsEvent) }
+            .isFailure()
+            .message.isNotNull().contains("Event must have batch size of 1")
     }
 
     @Test
@@ -94,9 +102,9 @@ class EdgeFileExporterTest {
             )
         }
 
-        assertThatThrownBy { exporter.export(sqsEvent) }
-            .hasMessage("""SQS message parsing failed (no retry): sqsMessage.id=null, body={ "some-random": "json" }""")
+        expectCatching { exporter.export(sqsEvent) }
+            .isFailure()
+            .message.isNotNull()
+            .contains("""SQS message parsing failed (no retry): sqsMessage.id=null, body={ "some-random": "json" }""")
     }
-
-
 }

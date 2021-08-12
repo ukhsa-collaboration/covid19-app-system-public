@@ -2,8 +2,10 @@ package uk.nhs.nhsx.core.auth
 
 import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.hasEntry
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.HttpResponses
 import uk.nhs.nhsx.core.events.NoRequestIdFound
 import uk.nhs.nhsx.core.events.RecordingEvents
@@ -11,6 +13,8 @@ import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
 import uk.nhs.nhsx.core.signature.Signature
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
+import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.headers
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
 import uk.nhs.nhsx.testhelper.withHeader
 import uk.nhs.nhsx.testhelper.withMethod
 import java.time.Instant
@@ -44,8 +48,10 @@ class AwsResponseSignerTest {
 
         assert(expectedContentToSign).sign(request, response)
 
-        assertThat(response.headers["X-Amz-Meta-Signature"]).isEqualTo("""keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
-        assertThat(response.headers["X-Amz-Meta-Signature-Date"]).isEqualTo(expectedSignatureDate)
+        expectThat(response)
+            .headers
+            .hasEntry("X-Amz-Meta-Signature", """keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
+            .hasEntry("X-Amz-Meta-Signature-Date", expectedSignatureDate)
     }
 
     @Test
@@ -67,8 +73,10 @@ class AwsResponseSignerTest {
 
         assert(expectedContentToSign).sign(request, response)
 
-        assertThat(response.headers["X-Amz-Meta-Signature"]).isEqualTo("keyId=\"some-id\",signature=\"c29tZS1zaWduYXR1cmU=\"")
-        assertThat(response.headers["X-Amz-Meta-Signature-Date"]).isEqualTo(expectedSignatureDate)
+        expectThat(response)
+            .headers
+            .hasEntry("X-Amz-Meta-Signature", """keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
+            .hasEntry("X-Amz-Meta-Signature-Date", expectedSignatureDate)
     }
 
     @Test
@@ -93,8 +101,10 @@ class AwsResponseSignerTest {
 
         assert(expectedContentToSign).sign(request, response)
 
-        assertThat(response.headers["X-Amz-Meta-Signature"]).isEqualTo("""keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
-        assertThat(response.headers["X-Amz-Meta-Signature-Date"]).isEqualTo(expectedSignatureDate)
+        expectThat(response)
+            .headers
+            .hasEntry("X-Amz-Meta-Signature", """keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
+            .hasEntry("X-Amz-Meta-Signature-Date", expectedSignatureDate)
     }
 
     @Test
@@ -113,10 +123,13 @@ class AwsResponseSignerTest {
             "/some/path",
             ""
         )
+
         assert(expectedContentToSign).sign(request, response)
 
-        assertThat(response.headers["X-Amz-Meta-Signature"]).isEqualTo("""keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
-        assertThat(response.headers["X-Amz-Meta-Signature-Date"]).isEqualTo(expectedSignatureDate)
+        expectThat(response)
+            .headers
+            .hasEntry("X-Amz-Meta-Signature", """keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
+            .hasEntry("X-Amz-Meta-Signature-Date", expectedSignatureDate)
     }
 
     @Test
@@ -137,10 +150,13 @@ class AwsResponseSignerTest {
             "/some/path",
             ""
         )
+
         assert(expectedContentToSign).sign(request, response)
 
-        assertThat(response.headers["X-Amz-Meta-Signature"]).isEqualTo("""keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
-        assertThat(response.headers["X-Amz-Meta-Signature-Date"]).isEqualTo(expectedSignatureDate)
+        expectThat(response)
+            .headers
+            .hasEntry("X-Amz-Meta-Signature", """keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
+            .hasEntry("X-Amz-Meta-Signature-Date", expectedSignatureDate)
     }
 
     @Test
@@ -161,32 +177,37 @@ class AwsResponseSignerTest {
 
         assert(expectedContentToSign).sign(request, response)
 
-        assertThat(response.headers["X-Amz-Meta-Signature"]).isEqualTo("""keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
-        assertThat(response.headers["X-Amz-Meta-Signature-Date"]).isEqualTo(expectedSignatureDate)
+        expectThat(response)
+            .headers
+            .hasEntry("X-Amz-Meta-Signature", """keyId="some-id",signature="c29tZS1zaWduYXR1cmU="""")
+            .hasEntry("X-Amz-Meta-Signature-Date", expectedSignatureDate)
 
-        events.containsExactly(NoRequestIdFound::class)
+        expectThat(events).containsExactly(NoRequestIdFound::class)
     }
 
+    @Suppress("SameParameterValue")
     private fun calculateExpectedContent(
         requestId: String,
         method: String,
         date: String,
         path: String,
         content: String
-    ): ByteArray = "$requestId:$method:$path:$date:$content".toByteArray()
+    ) = "$requestId:$method:$path:$date:$content".toByteArray()
 
+    @Suppress("SameParameterValue")
     private fun calculateExpectedContent(
         requestId: String,
         method: String,
         date: String,
         path: String,
         content: ByteArray
-    ): ByteArray = "$requestId:$method:$path:$date:".toByteArray() + content
+    ) = "$requestId:$method:$path:$date:".toByteArray() + content
 
-    private fun assert(expected: ByteArray): AwsResponseSigner {
-        return AwsResponseSigner(RFC2616DatedSigner({ now }, {
-            assertThat(it).isEqualTo(expected)
+    private fun assert(expected: ByteArray) = AwsResponseSigner(
+        RFC2616DatedSigner({ now }, {
+            expectThat(it).isEqualTo(expected)
             signatureResult
-        }), events)
-    }
+        }),
+        events
+    )
 }

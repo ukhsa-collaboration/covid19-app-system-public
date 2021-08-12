@@ -5,6 +5,7 @@ import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient
+import uk.nhs.nhsx.core.aws.dynamodb.TableName
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator.Companion.of
@@ -29,7 +30,7 @@ class DiagnosisKeysSubmissionService(
     private val s3Storage: S3Storage,
     private val awsDynamoClient: AwsDynamoClient,
     private val objectKeyNameProvider: ObjectKeyNameProvider,
-    private val tableName: String,
+    private val tableName: TableName,
     private val bucketName: BucketName,
     private val clock: Clock,
     private val events: Events

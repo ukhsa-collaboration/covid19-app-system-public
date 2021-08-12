@@ -23,10 +23,9 @@ class LoginTests < Test::Unit::TestCase
     domain = "whatever"
     account = "prod"
     ENV["CODEBUILD_BUILD_ID"] = "codebuild:foo"
-    expects(:sso_login).with(account, domain).returns("profile")
     login_to_sso_account(account, domain, false)
     assert_equal(account, ENV["ACCOUNT"], "Account environment variable not correctly set")
-    assert_equal("profile", ENV["AWS_PROFILE"])
+    assert_nil(ENV["AWS_PROFILE"])
   end
 
   # Login to an account with SSO protected with a confirmation prompt (i.e. prod)

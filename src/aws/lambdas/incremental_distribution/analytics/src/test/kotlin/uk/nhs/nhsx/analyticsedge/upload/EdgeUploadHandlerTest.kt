@@ -1,6 +1,5 @@
 package uk.nhs.nhsx.analyticsedge.upload
 
-import uk.nhs.nhsx.analyticsedge.DataUploadedToEdge
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.S3Object
@@ -11,16 +10,19 @@ import com.github.tomakehurst.wiremock.client.WireMock.anyUrl
 import com.github.tomakehurst.wiremock.client.WireMock.exactly
 import com.github.tomakehurst.wiremock.client.WireMock.put
 import com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.throws
 import org.apache.http.client.utils.URIBuilder
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.filterIsInstance
+import strikt.assertions.first
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNullOrEmpty
 import uk.nhs.nhsx.aae.S3ObjectNotFound
+import uk.nhs.nhsx.analyticsedge.DataUploadedToEdge
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.TestEnvironments.TEST
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
@@ -32,6 +34,8 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.handler.QueuedEventCompleted
 import uk.nhs.nhsx.core.handler.QueuedEventStarted
 import uk.nhs.nhsx.testhelper.ContextBuilder
+import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import uk.nhs.nhsx.testhelper.assertions.events
 import uk.nhs.nhsx.testhelper.proxy
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.io.ByteArrayInputStream
@@ -39,6 +43,8 @@ import java.util.*
 
 @ExtendWith(WireMockExtension::class)
 class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
+
+    private val events = RecordingEvents()
 
     private val workspace = "te-extdev"
     private val fakeS3 = FakeS3().withObject("Poster/TEST.csv")
@@ -63,17 +69,21 @@ class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("DataUploadedToEdge(sqsMessageId=null, bucketName=TEST_BUCKET, key=Poster/TEST.csv)")
+        expectThat(result).isEqualTo("DataUploadedToEdge(sqsMessageId=null, bucketName=TEST_BUCKET, key=Poster/TEST.csv)")
 
-        events.containsExactly(
+        expectThat(events).containsExactly(
             QueuedEventStarted::class,
             OutgoingHttpRequest::class,
             DataUploadedToEdge::class,
             QueuedEventCompleted::class
         )
 
-        val outgoingRequestEvent = events.find { event -> event is OutgoingHttpRequest }
-        assertThat(URIBuilder((outgoingRequestEvent as OutgoingHttpRequest).uri).build().query).isNullOrEmpty()
+        expectThat(events)
+            .events
+            .filterIsInstance<OutgoingHttpRequest>()
+            .first()
+            .get { URIBuilder(uri).build().query }
+            .isNullOrEmpty()
     }
 
     @Test
@@ -94,12 +104,15 @@ class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
             )
         }
 
-        assertThat(
-            { newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext()) },
-            throws<RuntimeException>()
-        )
+        expectThrows<RuntimeException> {
+            newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
+        }
 
-        events.containsExactly(QueuedEventStarted::class, OutgoingHttpRequest::class, ExceptionThrown::class)
+        expectThat(events).containsExactly(
+            QueuedEventStarted::class,
+            OutgoingHttpRequest::class,
+            ExceptionThrown::class
+        )
     }
 
     @Test
@@ -121,11 +134,15 @@ class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
 
         val result = newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext())
 
-        assertThat(result).isEqualTo("S3ObjectNotFound(sqsMessageId=null, bucketName=TEST_BUCKET, key=FILE_NOT_FOUND.csv)")
+        expectThat(result).isEqualTo("S3ObjectNotFound(sqsMessageId=null, bucketName=TEST_BUCKET, key=FILE_NOT_FOUND.csv)")
+
         wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
 
-        events.containsExactly(QueuedEventStarted::class, S3ObjectNotFound::class, QueuedEventCompleted::class)
-
+        expectThat(events).containsExactly(
+            QueuedEventStarted::class,
+            S3ObjectNotFound::class,
+            QueuedEventCompleted::class
+        )
     }
 
     @Test
@@ -144,38 +161,35 @@ class EdgeUploadHandlerTest(private val wireMock: WireMockServer) {
             )
         }
 
-        assertThatThrownBy { newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext()) }
-            .isInstanceOf(RuntimeException::class.java)
+        expectThrows<RuntimeException> { newHandler(wireMock).handleRequest(sqsEvent, ContextBuilder.aContext()) }
 
         wireMock.verify(exactly(0), putRequestedFor(anyUrl()))
 
-        events.containsExactly(QueuedEventStarted::class, ExceptionThrown::class)
+        expectThat(events).containsExactly(QueuedEventStarted::class, ExceptionThrown::class)
     }
 
-    private val events = RecordingEvents()
-
     private fun newHandler(server: WireMockServer) = EdgeDataUploadHandler(
-        TestEnvironments.TEST.apply(
+        environment = TEST.apply(
             mapOf(
                 "WORKSPACE" to workspace,
                 "MAINTENANCE_MODE" to "false",
                 "custom_oai" to "OAI"
             )
         ),
-        SystemClock.CLOCK,
-        events,
-        fakeS3,
-        getEdgeUploaderConfig(server),
-        EdgeUploader(
-            getEdgeUploaderConfig(server),
-            FakeSecretManager("SAS_TOKEN"),
-            events
+        clock = SystemClock.CLOCK,
+        events = events,
+        s3Client = fakeS3,
+        config = getEdgeUploaderConfig(server),
+        edgeUploader = EdgeUploader(
+            config = getEdgeUploaderConfig(server),
+            secretManager = FakeSecretManager("SAS_TOKEN"),
+            events = events
         )
     )
 
-    private fun getEdgeUploaderConfig(server: WireMockServer): EdgeUploaderConfig = EdgeUploaderConfig(
-        server.baseUrl(),
-        "SAS_TOKEN_KEY"
+    private fun getEdgeUploaderConfig(server: WireMockServer) = EdgeUploaderConfig(
+        targetUrl = server.baseUrl(),
+        sasTokenSecretName = "SAS_TOKEN_KEY"
     )
 }
 

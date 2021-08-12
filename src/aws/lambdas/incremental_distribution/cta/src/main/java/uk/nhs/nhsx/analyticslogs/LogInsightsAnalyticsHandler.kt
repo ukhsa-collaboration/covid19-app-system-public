@@ -11,7 +11,6 @@ import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.UniqueObjectKeyNameProvider
 import uk.nhs.nhsx.core.events.Event
-import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.handler.SchedulingHandler
@@ -23,11 +22,9 @@ abstract class LogInsightsAnalyticsHandler(
 ) : SchedulingHandler(events) {
     override fun handler() = Handler<ScheduledEvent, Event> { scheduledEvent, _ ->
         service.generateStatisticsAndUploadToS3(Instant.ofEpochMilli( scheduledEvent.time.millis))
-        AnalyticsUploadedToS3
+        AnalyticsLogsFinished
     }
 }
-
-object AnalyticsUploadedToS3 : Event(EventCategory.Info)
 
 fun logAnalyticsService(
     environment: Environment,

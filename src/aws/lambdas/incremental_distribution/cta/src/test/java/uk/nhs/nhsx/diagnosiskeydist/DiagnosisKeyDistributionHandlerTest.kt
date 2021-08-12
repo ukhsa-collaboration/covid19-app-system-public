@@ -4,11 +4,14 @@ import com.amazonaws.services.kms.AWSKMS
 import com.amazonaws.services.kms.model.SignResult
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
+import io.mockk.runs
 import org.http4k.asByteBuffer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import strikt.api.expectThat
+import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFrontClient
@@ -17,6 +20,7 @@ import uk.nhs.nhsx.core.aws.xray.Tracing
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.testhelper.ContextBuilder.TestContext
+import uk.nhs.nhsx.testhelper.assertions.contains
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
 import java.util.*
 
@@ -44,14 +48,14 @@ class DiagnosisKeyDistributionHandlerTest {
 
         val clock = SystemClock.CLOCK
         val events = RecordingEvents()
-        val s3Client = FakeS3()
+        val s3Client = FakeS3(clock)
         val parameters = mockk<AwsSsmParameters>()
         val awsCloudFrontClient = mockk<AwsCloudFrontClient>()
         val awsKmsClient = mockk<AWSKMS>()
 
         every { parameters.parameter<KeyId>(any(), any()) } returns { KeyId.of("param") }
         every { awsKmsClient.sign(any()) } returns SignResult().withSignature("foobar".asByteBuffer())
-        every { awsCloudFrontClient.invalidateCache(any(), any()) } returns Unit
+        every { awsCloudFrontClient.invalidateCache(any(), any()) } just runs
 
         val handler = DiagnosisKeyDistributionHandler(
             env,
@@ -63,10 +67,10 @@ class DiagnosisKeyDistributionHandlerTest {
             awsKmsClient
         )
 
-        val response: String = handler.handleRequest(ScheduledEvent(), TestContext())
+        val response = handler.handleRequest(ScheduledEvent(), TestContext())
 
-        events.contains(KeysDistributed::class)
+        expectThat(events).contains(KeysDistributed::class)
 
-        assertThat(response).isEqualTo("uk.nhs.nhsx.diagnosiskeydist.KeysDistributed")
+        expectThat(response).isEqualTo("uk.nhs.nhsx.diagnosiskeydist.KeysDistributed")
     }
 }

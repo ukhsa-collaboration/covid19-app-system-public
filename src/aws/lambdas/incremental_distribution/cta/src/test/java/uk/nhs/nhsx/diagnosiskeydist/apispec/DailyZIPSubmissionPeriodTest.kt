@@ -1,11 +1,17 @@
 package uk.nhs.nhsx.diagnosiskeydist.apispec
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
+import strikt.api.expectCatching
+import strikt.api.expectThat
+import strikt.api.expectThrows
+import strikt.assertions.containsExactly
+import strikt.assertions.isEqualTo
+import strikt.assertions.isNull
+import strikt.assertions.isSuccess
+import strikt.assertions.map
 import uk.nhs.nhsx.testhelper.data.asInstant
 import java.time.Duration
 import java.time.Instant
@@ -25,9 +31,9 @@ class DailyZIPSubmissionPeriodTest {
         val endDate = periodEndDate.asInstant()
 
         if (throwsEx) {
-            assertThatThrownBy { DailyZIPSubmissionPeriod(endDate) }.isInstanceOf(IllegalStateException::class.java)
+            expectThrows<IllegalStateException> { DailyZIPSubmissionPeriod(endDate) }
         } else {
-            assertThat(DailyZIPSubmissionPeriod(endDate)).isNotNull
+            expectCatching { (DailyZIPSubmissionPeriod(endDate)) }.isSuccess()
         }
     }
 
@@ -37,7 +43,7 @@ class DailyZIPSubmissionPeriodTest {
     )
     fun `creates ZIP path`(periodEndDate: String, expected: String) {
         DailyZIPSubmissionPeriod(periodEndDate.asInstant()).run {
-            assertThat(zipPath()).isEqualTo(expected)
+            expectThat(zipPath()).isEqualTo(expected)
         }
     }
 
@@ -59,7 +65,7 @@ class DailyZIPSubmissionPeriodTest {
         DailyZIPSubmissionPeriod(periodEndDate.asInstant())
             .isCoveringSubmissionDate(submissionDate.asInstant(), Duration.ofMinutes(offsetMinutes))
             .run {
-                assertThat(this)
+                expectThat(this)
                     .describedAs("end date: $periodEndDate submission date: $submissionDate offset: $offsetMinutes")
                     .isEqualTo(expected)
             }
@@ -73,7 +79,7 @@ class DailyZIPSubmissionPeriodTest {
         )
     fun `calculates period for submission date`(submissionDate: String, expected: String) {
         DailyZIPSubmissionPeriod.periodForSubmissionDate(submissionDate.asInstant()).run {
-            assertThat(zipPath())
+            expectThat(zipPath())
                 .describedAs("submission date: $submissionDate")
                 .isEqualTo(expected)
         }
@@ -84,8 +90,8 @@ class DailyZIPSubmissionPeriodTest {
         val zipSubmissionPeriod = DailyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant())
         val allPeriods = zipSubmissionPeriod.allPeriodsToGenerate()
 
-        assertThat(allPeriods.map { it.zipPath() })
-            .hasSize(15)
+        expectThat(allPeriods)
+            .map(DailyZIPSubmissionPeriod::zipPath)
             .containsExactly(
                 // Special case: zip "unofficially" available during the day and
                 // contains the keys submitted so far (the mobile apps may only
@@ -118,7 +124,7 @@ class DailyZIPSubmissionPeriodTest {
     )
     fun `calculate start date inclusive`(periodEndDate: String, expected: String) {
         DailyZIPSubmissionPeriod(periodEndDate.asInstant()).startInclusive.run {
-            assertThat(this).isEqualTo(expected.asInstant())
+            expectThat(this).isEqualTo(expected.asInstant())
         }
     }
 
@@ -132,23 +138,23 @@ class DailyZIPSubmissionPeriodTest {
     )
     fun `calculate end date inclusive`(input: String) {
         DailyZIPSubmissionPeriod(input.asInstant()).endExclusive.run {
-            assertThat(this).isEqualTo(input.asInstant())
+            expectThat(this).isEqualTo(input.asInstant())
         }
     }
 
     @Test
     fun `verify toString`() {
-        assertThat(DailyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant()).toString())
+        expectThat(DailyZIPSubmissionPeriod("2020-07-20T00:00:00.000Z".asInstant()).toString())
             .isEqualTo("1 day: from 2020071900 (inclusive) to 2020072000 (exclusive)")
     }
 
 
     @Test
     fun `can parse`() {
-        assertThat(DailyZIPSubmissionPeriod.parseOrNull("distribution/daily/2020070100.zip"))
+        expectThat(DailyZIPSubmissionPeriod.parseOrNull("distribution/daily/2020070100.zip"))
             .isEqualTo(Instant.parse("2020-07-01T00:00:00Z"))
 
-        assertThat(DailyZIPSubmissionPeriod.parseOrNull("distribution/daily/2020070106.zip"))
+        expectThat(DailyZIPSubmissionPeriod.parseOrNull("distribution/daily/2020070106.zip"))
             .isNull()
     }
 
@@ -161,6 +167,6 @@ class DailyZIPSubmissionPeriodTest {
         val parsedInstant = DailyZIPSubmissionPeriod.parseOrNull(zipPath) ?: error("should have parsed")
         val recreated = DailyZIPSubmissionPeriod(parsedInstant)
 
-        assertThat(recreated).isEqualTo(origin)
+        expectThat(recreated).isEqualTo(origin)
     }
 }
