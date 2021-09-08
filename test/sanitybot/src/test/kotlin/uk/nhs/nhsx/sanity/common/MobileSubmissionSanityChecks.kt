@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.common
+package uk.nhs.nhsx.sanity.common
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.http4k.core.Method.POST
@@ -12,12 +12,12 @@ import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AnalyticsSubmission
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysSubmission
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.VirologyKit
-import uk.nhs.nhsx.sanity.lambdas.config.Resource
-import uk.nhs.nhsx.sanity.lambdas.config.Submission
+import uk.nhs.nhsx.sanity.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.AnalyticsSubmission
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.DiagnosisKeysSubmission
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.VirologyKit
+import uk.nhs.nhsx.sanity.config.Resource
+import uk.nhs.nhsx.sanity.config.Submission
 
 class MobileSubmissionSanityChecks : LambdaSanityCheck() {
 

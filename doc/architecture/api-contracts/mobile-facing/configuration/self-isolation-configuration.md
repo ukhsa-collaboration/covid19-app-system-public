@@ -26,7 +26,8 @@ Mobile clients fetch this configuration to be able to calculate self isolation d
     "contactCase": 14,
     "maxIsolation": 21,
     "pendingTasksRetentionPeriod": 14,
-    "indexCaseSinceTestResultEndDate": 11
+    "indexCaseSinceTestResultEndDate": 11,
+    "testResultPollingTokenRetentionPeriod": 28
   }
 }
 ```

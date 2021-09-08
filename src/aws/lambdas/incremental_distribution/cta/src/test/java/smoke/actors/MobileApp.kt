@@ -23,10 +23,8 @@ import strikt.api.expectThat
 import strikt.assertions.endsWith
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNullOrEmpty
-import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetadata
-import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
-import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
-import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
+import uk.nhs.nhsx.analyticssubmission.analyticsSubmissionAndroidComplete
+import uk.nhs.nhsx.analyticssubmission.analyticsSubmissionIosComplete
 import uk.nhs.nhsx.circuitbreakers.ResolutionResponse
 import uk.nhs.nhsx.circuitbreakers.TokenResponse
 import uk.nhs.nhsx.core.Json
@@ -64,7 +62,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 class MobileApp(
-    private val unauthedClient: HttpHandler,
+    private val unAuthedClient: HttpHandler,
     private val envConfig: EnvConfig,
     private val os: MobileOS = iOS,
     private val appVersion: MobileAppVersion.Version = MobileAppVersion.Version(4, 4),
@@ -74,7 +72,7 @@ class MobileApp(
 
     private val authedClient = SetAuthHeader(envConfig.auth_headers.mobile)
         .then(ResilienceFilters.RetryFailures(isError = { !it.status.successful }))
-        .then(unauthedClient)
+        .then(unAuthedClient)
     val exposureCircuitBreaker = CircuitBreaker(
         authedClient,
         envConfig.exposure_notification_circuit_breaker_endpoint,
@@ -82,7 +80,7 @@ class MobileApp(
     )
     val venueCircuitBreaker = CircuitBreaker(authedClient, envConfig.risky_venues_circuit_breaker_endpoint)
 
-    private val diagnosisKeys = DiagnosisKeysDownload(unauthedClient, envConfig, clock)
+    private val diagnosisKeys = DiagnosisKeysDownload(unAuthedClient, envConfig, clock)
     private var orderedTest: VirologyOrderResponse? = null
 
     fun pollRiskyPostcodes(version: ApiVersion): Map<String, Any> =
@@ -105,18 +103,30 @@ class MobileApp(
     fun pollSymptomaticQuestionnaire() = getStaticContent(envConfig.symptomatic_questionnaire_distribution_endpoint)
     fun pollRiskyVenueConfiguration() = getStaticContent(envConfig.risky_venue_configuration_distribution_endpoint)
 
-    fun submitAnalyticsKeys(window: AnalyticsWindow, metrics: AnalyticsMetrics): Status {
-        val metadata = when (os) {
-            Android -> AnalyticsMetadata("AL1", model?.value ?: "HUAWEI-smoke-test", "29", "3.0", "E07000240")
-            iOS, Unknown -> AnalyticsMetadata(
-                "AL1", model?.value
-                    ?: "iPhone-smoke-test", "iPhone OS 13.5.1 (17F80)", "3.0", "E07000240"
+    fun submitAnalyticsKeys(startDate: Instant, endDate: Instant): Status {
+        val json = when (os) {
+            iOS -> analyticsSubmissionIosComplete(
+                deviceModel = model?.value ?: "iPhone-smoke-test",
+                localAuthority = "E07000240",
+                postalDistrict = "AL1",
+                startDate = startDate.toString(),
+                endDate = endDate.toString(),
+                useCounter = true
             )
+            Android -> analyticsSubmissionAndroidComplete(
+                deviceModel = model?.value ?: "HUAWEI-smoke-test",
+                localAuthority = "E07000240",
+                postalDistrict = "AL1",
+                startDate = startDate.toString(),
+                endDate = endDate.toString(),
+                useCounter = true
+            )
+            Unknown -> throw RuntimeException("Unknown device os. Set one for ${this::class.java.simpleName}?")
         }
         return authedClient(
             Request(POST, envConfig.analytics_submission_endpoint)
                 .header("Content-Type", ContentType("text/json").value)
-                .body(Json.toJson(ClientAnalyticsSubmissionPayload(window, metadata, metrics, false)))
+                .body(json)
         ).status
     }
 
@@ -147,7 +157,7 @@ class MobileApp(
     }
 
     fun emptySubmissionV2(): Response {
-        return unauthedClient(Request(GET, envConfig.empty_submission_v2_endpoint))
+        return unAuthedClient(Request(GET, envConfig.empty_submission_v2_endpoint))
     }
 
     fun submitKeys(
@@ -198,7 +208,7 @@ class MobileApp(
         expectThat(isolationTokenUpdateResponse.websiteUrlWithQuery).endsWith(ipcToken.value)
     }
 
-    private fun getStaticContent(uri: String) = unauthedClient(Request(GET, uri))
+    private fun getStaticContent(uri: String) = unAuthedClient(Request(GET, uri))
         .requireStatusCode(OK)
         .requireSignatureHeaders()
         .requireJsonContentType()

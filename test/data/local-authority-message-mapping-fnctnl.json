@@ -1,13 +1,13 @@
 {
     "las": {
         "E06000026": [
-            "Notification.Voc.Level1"
+            "Notification.Era.EnglishOnly"
         ],
         "E08000029": [
-            "Notification.Voc.Level2"
+            "Notification.Era.EnglishOnly"
         ],
         "E08000035": [
-            "Notification.Voc.Level3"
+            "Notification.Era.EnglishOnly"
         ]
     }
 }

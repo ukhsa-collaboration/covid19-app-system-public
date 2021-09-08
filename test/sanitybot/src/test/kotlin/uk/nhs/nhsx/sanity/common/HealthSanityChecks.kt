@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.common
+package uk.nhs.nhsx.sanity.common
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.http4k.core.Method.POST
@@ -7,10 +7,10 @@ import org.http4k.core.Status.Companion.OK
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyPostcodeDistrictsUpload
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesUpload
-import uk.nhs.nhsx.sanity.lambdas.config.HealthCheck
+import uk.nhs.nhsx.sanity.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.RiskyPostcodeDistrictsUpload
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.RiskyVenuesUpload
+import uk.nhs.nhsx.sanity.config.HealthCheck
 
 class HealthSanityChecks : LambdaSanityCheck() {
 

@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.prod
+package uk.nhs.nhsx.sanity.prod
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
@@ -7,13 +7,14 @@ import org.http4k.core.Request
 import org.http4k.core.Status
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
-import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda
-import uk.nhs.nhsx.sanity.lambdas.config.Distribution
+import uk.nhs.nhsx.sanity.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.config.DeployedApiResource
+import uk.nhs.nhsx.sanity.config.Distribution
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -21,12 +22,13 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
+@EnabledIfEnvironmentVariable(named = "TARGET_ENVIRONMENT", matches = "prod")
 class DiagnosisKeysDistributionSanityChecks: LambdaSanityCheck() {
 
     @Test
     fun `Daily Diagnosis distribution returns a 200 and matches resource`() {
         val numberOfFiles = numberOfDaysSinceBeginning()
-        val lambda = env.configFor(DeployedLambda.DiagnosisKeysDistribution, "diagnosis_keys_distribution_daily") as Distribution
+        val lambda = env.configFor(DeployedApiResource.DiagnosisKeysDistribution, "diagnosis_keys_distribution_daily") as Distribution
 
         assertThat(countObjectsIn(lambda, "distribution/daily"), equalTo(numberOfFiles.toInt()))
     }
@@ -35,7 +37,7 @@ class DiagnosisKeysDistributionSanityChecks: LambdaSanityCheck() {
     @ParameterizedTest(name = "Daily Diagnosis distribution returns a 200 {arguments}")
     fun `Daily Diagnosis distribution returns a 200`(endpointSuffix:String) {
 
-        val lambda = env.configFor(DeployedLambda.DiagnosisKeysDistribution, "diagnosis_keys_distribution_daily") as Distribution
+        val lambda = env.configFor(DeployedApiResource.DiagnosisKeysDistribution, "diagnosis_keys_distribution_daily") as Distribution
         val endPointURL = "${lambda.endpointUri}/${endpointSuffix}.zip"
         assertThat(insecureClient(Request(Method.GET, endPointURL)),
             hasStatus(Status.OK)

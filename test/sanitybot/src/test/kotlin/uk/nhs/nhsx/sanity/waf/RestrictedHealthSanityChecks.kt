@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.prod
+package uk.nhs.nhsx.sanity.waf
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.http4k.core.Method.POST
@@ -6,11 +6,13 @@ import org.http4k.core.Request
 import org.http4k.core.Status.Companion.FORBIDDEN
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyPostcodeDistrictsUpload
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesUpload
-import uk.nhs.nhsx.sanity.lambdas.config.Upload
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable
+import uk.nhs.nhsx.sanity.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.RiskyPostcodeDistrictsUpload
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.RiskyVenuesUpload
+import uk.nhs.nhsx.sanity.config.Upload
 
+@DisabledIfEnvironmentVariable(named = "TARGET_ENVIRONMENT", matches = "dev")
 class RestrictedHealthSanityChecks : LambdaSanityCheck() {
 
 //    Check risky venues upload health endpoint - post gets 403  - WHY?✅

@@ -110,7 +110,9 @@ resource "aws_cloudwatch_dashboard" "load_profile_dashboard" {
 resource "aws_cloudwatch_dashboard" "virology_api_response_dashboard" {
   dashboard_name = "${var.env}-virology-api-response-dashboard"
   dashboard_body = templatefile("${path.module}/templates/virology_api_response_dashboard.tmpl", {
-    virology_submission_function = var.virology_submission_function,
-    virology_upload_function     = var.virology_upload_function
+    virology_submission_function       = var.virology_submission_function,
+    virology_upload_function           = var.virology_upload_function
+    virology_submission_api_gateway_id = var.virology_submission_api_gateway_id
+    virology_upload_api_gateway_id     = var.virology_upload_api_gateway_id
   })
 }

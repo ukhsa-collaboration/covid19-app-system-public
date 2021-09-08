@@ -462,6 +462,14 @@ resource "aws_glue_catalog_table" "this" {
       name = "optedOutForContactIsolationBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "appIsUsableBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "appIsContactTraceableBackgroundTick"
+      type = "int"
+    }
   }
 }
 
@@ -921,6 +929,14 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "optedOutForContactIsolationBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "appIsUsableBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "appIsContactTraceableBackgroundTick"
       type = "int"
     }
   }

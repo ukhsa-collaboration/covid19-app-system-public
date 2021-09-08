@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas
+package uk.nhs.nhsx.sanity
 
 import org.http4k.client.JavaHttpClient
 import org.http4k.core.Filter
@@ -6,10 +6,9 @@ import org.http4k.core.Request
 import org.http4k.core.then
 import org.http4k.filter.ClientFilters.BearerAuth
 import org.http4k.filter.DebuggingFilters.PrintRequestAndResponse
-import uk.nhs.nhsx.sanity.BaseSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda
-import uk.nhs.nhsx.sanity.lambdas.config.HealthCheck
-import uk.nhs.nhsx.sanity.lambdas.config.Secured
+import uk.nhs.nhsx.sanity.config.DeployedApiResource
+import uk.nhs.nhsx.sanity.config.HealthCheck
+import uk.nhs.nhsx.sanity.config.Secured
 
 abstract class LambdaSanityCheck : BaseSanityCheck() {
 
@@ -30,10 +29,10 @@ abstract class LambdaSanityCheck : BaseSanityCheck() {
         .then(JavaHttpClient())
 
     companion object {
-        fun endpoints() = DeployedLambda.values()
+        fun endpoints() = DeployedApiResource.values()
             .flatMap { it.endpointJsonNames.map { endpoint -> env.configFor(it, endpoint) } }
 
-        fun healthEndPoints() = DeployedLambda.values()
+        fun healthEndPoints() = DeployedApiResource.values()
             .flatMap { it.healthEndpointJsonNames.map { healthEndpoint -> env.configFor(it, healthEndpoint) } }
 
     }

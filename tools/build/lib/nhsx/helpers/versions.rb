@@ -43,7 +43,7 @@ module NHSx
       "pubdash" => { "prefix" => "PublicDashboard-", "label" => "pubdash" },
       "pubdash-backend" => { "prefix" => "PublicDashboard-Backend-", "label" => "pubdash-backend" },
       "doreto" => { "prefix" => "Doreto-", "label" => "doreto" },
-      "local-messages" => { "prefix" => "LocalMessages-", "label" => "local-messages" },
+      "local_messages" => { "prefix" => "LocalMessages-", "label" => "local_messages" },
     }.freeze
 
     # Returns the full GitVersion metadata for the given prefix

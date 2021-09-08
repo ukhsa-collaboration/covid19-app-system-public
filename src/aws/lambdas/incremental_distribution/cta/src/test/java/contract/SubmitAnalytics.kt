@@ -5,9 +5,7 @@ import contract.infra.RecordingTest
 import contract.infra.ReplayTest
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
-import smoke.data.AnalyticsMetricsData.populatedAnalyticsMetrics
 import smoke.env.SmokeTests
-import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
 import uk.nhs.nhsx.core.headers.MobileOS.Android
 import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import java.time.Duration
@@ -21,11 +19,8 @@ interface SubmitAnalyticsKeys : BackendContractScenario {
 
         MobileApp(mitmHttpClient(), envConfig, iOS)
             .submitAnalyticsKeys(
-                AnalyticsWindow(
-                    Instant.now().minus(Duration.ofDays(1)),
-                    Instant.now().plus(Duration.ofDays(1))
-                ),
-                populatedAnalyticsMetrics()
+                startDate = Instant.now().minus(Duration.ofDays(1)),
+                endDate = Instant.now().plus(Duration.ofDays(1))
             )
     }
 
@@ -35,11 +30,8 @@ interface SubmitAnalyticsKeys : BackendContractScenario {
 
         MobileApp(mitmHttpClient(), envConfig, Android)
             .submitAnalyticsKeys(
-                AnalyticsWindow(
-                    Instant.now().minus(Duration.ofDays(1)),
-                    Instant.now().plus(Duration.ofDays(1))
-                ),
-                populatedAnalyticsMetrics()
+                startDate = Instant.now().minus(Duration.ofDays(1)),
+                endDate = Instant.now().plus(Duration.ofDays(1))
             )
     }
 }

@@ -49,7 +49,7 @@ namespace :queue do
     desc "Queue a release to the prod target environment in CodeBuild"
     task :"local_messages:prod" => [:"login:prod"] do
       include NHSx::Queue
-      version_metadata = subsystem_version_metadata("local-messages", $configuration)
+      version_metadata = subsystem_version_metadata("local_messages", $configuration)
       release_version = $configuration.release_version(version_metadata)
       build_parameters = {
         "project_name" => "release-local-messages-prod",

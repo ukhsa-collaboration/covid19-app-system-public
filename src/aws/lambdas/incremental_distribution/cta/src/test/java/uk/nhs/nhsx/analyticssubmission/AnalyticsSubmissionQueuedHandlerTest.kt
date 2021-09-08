@@ -30,7 +30,7 @@ class AnalyticsSubmissionQueuedHandlerTest {
     private val events = RecordingEvents()
     private val analyticsSubmissionHandler = mockk<AnalyticsSubmissionHandler>()
 
-    private val handler: AnalyticsSubmissionQueuedHandler = AnalyticsSubmissionQueuedHandler(
+    private val queuedHandler = AnalyticsSubmissionQueuedHandler(
         TestEnvironments.TEST.apply(
             mapOf(
                 "MAINTENANCE_MODE" to "false",
@@ -57,7 +57,7 @@ class AnalyticsSubmissionQueuedHandlerTest {
             records = listOf(SQSEvent.SQSMessage().apply { body = apiGatewayEventJson })
         }
 
-        handler.handleRequest(event, aContext())
+        queuedHandler.handleRequest(event, aContext())
 
         expectThat(requestEventSlot).withCaptured {
             method.isSameAs(POST)
@@ -91,7 +91,7 @@ class AnalyticsSubmissionQueuedHandlerTest {
             })
         }
 
-        handler.handleRequest(event, aContext())
+        queuedHandler.handleRequest(event, aContext())
 
         expectThat(requestEventSlot).withCaptured {
             method.isSameAs(POST)

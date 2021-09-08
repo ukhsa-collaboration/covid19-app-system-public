@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.common
+package uk.nhs.nhsx.sanity.common
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.http4k.core.Method.GET
@@ -11,8 +11,8 @@ import org.http4k.core.extend
 import org.http4k.hamkrest.hasStatus
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
-import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.CircuitBreaker
+import uk.nhs.nhsx.sanity.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.config.CircuitBreaker
 
 class CircuitBreakerSanityChecks : LambdaSanityCheck() {
 

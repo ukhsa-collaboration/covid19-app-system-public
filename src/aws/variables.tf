@@ -60,12 +60,8 @@ variable "enable_shield_protection" {
   type        = bool
 }
 
-variable "shield_alarm_set_topic_arn" {
-  description = "ARN of SNS topic subscribed to shield alarms ALARM state"
-}
-
-variable "shield_alarm_ok_topic_arn" {
-  description = "ARN of SNS topic subscribed to shield alarms OK state"
+variable "shield_ddos_alarms_sns_arn" {
+  description = "ARN of SNS topic subscribed to shield alarms state transition"
 }
 
 variable "waf_arn" {

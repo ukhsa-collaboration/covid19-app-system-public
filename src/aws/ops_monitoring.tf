@@ -57,8 +57,7 @@ module "cloudwatch_analytics" {
   virology_submission_api_gateway_id               = module.virology_submission.gateway_id
   virology_upload_api_gateway_id                   = module.virology_upload.gateway_id
 
-  shield_alarm_set_topic_arn = var.shield_alarm_set_topic_arn
-  shield_alarm_ok_topic_arn  = var.shield_alarm_ok_topic_arn
+  shield_ddos_alarms_sns_arn = var.shield_ddos_alarms_sns_arn
   shield_protected_arns = [
     module.distribution_apis.distribution_arn,
     module.submission_apis.distribution_arn,

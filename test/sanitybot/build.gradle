@@ -28,11 +28,6 @@ task testSanity(type: Test) {
 
     useJUnitPlatform()
 
-    filter {
-        includeTestsMatching "uk.nhs.nhsx.sanity.lambdas.common.*"
-        includeTestsMatching "uk.nhs.nhsx.sanity.lambdas.${System.getenv("TARGET_ENVIRONMENT")}.*"
-    }
-
     reports.html.destination = file("$projectDir/../../out/reports")
     reports.junitXml.destination = file("$projectDir/../../out/reports")
 }

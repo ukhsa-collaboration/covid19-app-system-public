@@ -11,14 +11,16 @@ import smoke.actors.Analytics
 import smoke.actors.MobileApp
 import smoke.actors.MobileDeviceModel
 import smoke.actors.createHandler
-import smoke.data.AnalyticsMetricsData.populatedAnalyticsMetrics
 import smoke.env.SmokeTests
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import uk.nhs.nhsx.analyticssubmission.analyticsSubmissionAndroidComplete
+import uk.nhs.nhsx.analyticssubmission.analyticsSubmissionIosComplete
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
-import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
+import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.headers.MobileOS
-import uk.nhs.nhsx.core.headers.MobileOS.Android
+import uk.nhs.nhsx.core.headers.MobileOS.*
 import uk.nhs.nhsx.testhelper.assertions.assertWithin
 import java.time.Duration
 import java.time.Duration.ofDays
@@ -39,23 +41,33 @@ class AnalyticsSubmissionSmokeTest {
     @Test
     fun `submit ios analytics data`(approver: Approver) {
         val deviceModel = MobileDeviceModel(UUID.randomUUID().toString())
-        val mobileApp = MobileApp(client, config, os = MobileOS.iOS, model = deviceModel)
-        val metrics = populatedAnalyticsMetrics()
+        val mobileApp = MobileApp(client, config, os = iOS, model = deviceModel)
 
-        expectThat(mobileApp.submitAnalyticsKeys(AnalyticsWindow(startDate, endDate), metrics)).isEqualTo(OK)
+        expectThat(mobileApp.submitAnalyticsKeys(startDate = startDate, endDate = endDate))
+            .isEqualTo(OK)
 
-        approver.assertAthenaQueryReturnsCorrect(deviceModel, metrics)
+        approver.assertAthenaQueryReturnsCorrect(deviceModel, metrics(iOS))
     }
 
     @Test
     fun `submit android analytics data`(approver: Approver) {
         val deviceModel = MobileDeviceModel(UUID.randomUUID().toString())
         val mobileApp = MobileApp(client, config, os = Android, model = deviceModel)
-        val metrics = populatedAnalyticsMetrics()
 
-        expectThat(mobileApp.submitAnalyticsKeys(AnalyticsWindow(startDate, endDate), metrics)).isEqualTo(OK)
+        expectThat(mobileApp.submitAnalyticsKeys(startDate = startDate, endDate = endDate))
+            .isEqualTo(OK)
 
-        approver.assertAthenaQueryReturnsCorrect(deviceModel, metrics)
+        approver.assertAthenaQueryReturnsCorrect(deviceModel, metrics(Android))
+    }
+
+    private fun metrics(os: MobileOS): AnalyticsMetrics {
+        val json = when (os) {
+            Android -> analyticsSubmissionAndroidComplete()
+            iOS -> analyticsSubmissionIosComplete()
+            Unknown -> throw RuntimeException("Unknown device os. Set one for ${this::class.java.simpleName}?")
+        }
+        val clientPayload = Json.readJsonOrThrow<ClientAnalyticsSubmissionPayload>(json)
+        return clientPayload.metrics
     }
 
     private fun Approver.assertAthenaQueryReturnsCorrect(

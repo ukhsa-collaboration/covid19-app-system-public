@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.common
+package uk.nhs.nhsx.sanity.common
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.lessThanOrEqualTo
@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import uk.nhs.nhsx.sanity.AwsSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.Distribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.DiagnosisKeysDistribution
+import uk.nhs.nhsx.sanity.config.Distribution
 
 class DiagnosisKeysDistributionSanityChecks : AwsSanityCheck() {
 

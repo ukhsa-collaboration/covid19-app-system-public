@@ -1,0 +1,11 @@
+{
+    "moves": {
+        "module.analytics.module.apple_sales_importer": "module.analytics.module.apple_sales_importer[0]",
+        "module.analytics.module.coronavirus_importer": "module.analytics.module.coronavirus_importer[0]",
+        "module.analytics.module.google_play_installs_importer": "module.analytics.module.google_play_installs_importer[0]",
+        "module.analytics.module.ios_android_importer": "module.analytics.module.ios_android_importer[0]",
+        "module.analytics.module.quicksight_data_sets_importer": "module.analytics.module.quicksight_data_sets_importer[0]",
+        "module.analytics.module.quicksight_usage_importer": "module.analytics.module.quicksight_usage_importer[0]",
+        "module.analytics.module.quicksight_users_importer": "module.analytics.module.quicksight_users_importer[0]"
+    }
+}

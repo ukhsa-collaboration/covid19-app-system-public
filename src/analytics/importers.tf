@@ -1,4 +1,5 @@
 module "coronavirus_importer" {
+  count             = var.enable_importers ? 1 : 0
   source            = "./modules/analytics_importer"
   resources         = ["arn:aws:s3:::*-analytics-coronavirus-gov-*lookup-*/*"]
   statement_actions = ["*"]
@@ -15,6 +16,7 @@ module "coronavirus_importer" {
 }
 
 module "google_play_installs_importer" {
+  count             = var.enable_importers ? 1 : 0
   source            = "./modules/analytics_importer"
   resources         = ["*"]
   statement_actions = ["secretsmanager:*", "s3:Put*"]
@@ -32,6 +34,7 @@ module "google_play_installs_importer" {
 }
 
 module "apple_sales_importer" {
+  count                 = var.enable_importers ? 1 : 0
   source                = "./modules/analytics_importer"
   resources             = ["*"]
   statement_actions     = ["secretsmanager:*", "s3:Put*", "s3:List*"]
@@ -48,6 +51,7 @@ module "apple_sales_importer" {
 }
 
 module "ios_android_importer" {
+  count                 = var.enable_importers ? 1 : 0
   source                = "./modules/analytics_importer"
   resources             = ["*"]
   statement_actions     = ["secretsmanager:*", "s3:Put*"]
@@ -64,6 +68,7 @@ module "ios_android_importer" {
 }
 
 module "quicksight_users_importer" {
+  count                 = var.enable_importers ? 1 : 0
   source                = "./modules/analytics_importer"
   resources             = ["*"]
   statement_actions     = ["quicksight:*", "s3:Put*"]
@@ -80,6 +85,7 @@ module "quicksight_users_importer" {
 }
 
 module "quicksight_usage_importer" {
+  count                 = var.enable_importers ? 1 : 0
   source                = "./modules/analytics_importer"
   resources             = ["*"]
   statement_actions     = ["cloudtrail:*", "s3:Put*", "s3:List*"]
@@ -96,6 +102,7 @@ module "quicksight_usage_importer" {
 }
 
 module "quicksight_data_sets_importer" {
+  count                 = var.enable_importers ? 1 : 0
   source                = "./modules/analytics_importer"
   resources             = ["*"]
   statement_actions     = ["quicksight:*", "s3:Put*"]

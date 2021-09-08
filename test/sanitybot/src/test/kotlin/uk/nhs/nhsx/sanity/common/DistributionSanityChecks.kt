@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.common
+package uk.nhs.nhsx.sanity.common
 
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
@@ -19,13 +19,13 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.GetObjectRequest
-import uk.nhs.nhsx.sanity.lambdas.LambdaSanityCheck
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.PostDistrictsDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.LocalMessagesDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.Distribution
-import uk.nhs.nhsx.sanity.lambdas.config.Resource.DynamicContent
-import uk.nhs.nhsx.sanity.lambdas.config.Resource.DynamicUrl
+import uk.nhs.nhsx.sanity.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.PostDistrictsDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.RiskyVenuesDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.LocalMessagesDistribution
+import uk.nhs.nhsx.sanity.config.Distribution
+import uk.nhs.nhsx.sanity.config.Resource.DynamicContent
+import uk.nhs.nhsx.sanity.config.Resource.DynamicUrl
 
 @DisabledIfEnvironmentVariable(named = "TARGET_ENVIRONMENT", matches = "dev")
 class DistributionSanityChecks : LambdaSanityCheck() {

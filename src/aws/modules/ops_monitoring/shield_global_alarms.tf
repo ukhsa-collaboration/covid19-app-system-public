@@ -31,8 +31,8 @@ resource "aws_cloudwatch_metric_alarm" "global" {
   evaluation_periods  = "1"
   threshold           = "1"
   treat_missing_data  = "notBreaching"
-  alarm_actions       = [var.shield_alarm_set_topic_arn]
-  ok_actions          = [var.shield_alarm_ok_topic_arn]
+  alarm_actions       = [var.shield_ddos_alarms_sns_arn]
+  ok_actions          = [var.shield_ddos_alarms_sns_arn]
 
   metric_query {
     id          = "e1"

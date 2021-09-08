@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.sanity
 
-import uk.nhs.nhsx.sanity.lambdas.config.EnvironmentConfiguration
+import uk.nhs.nhsx.sanity.config.EnvironmentConfiguration
 import java.io.File
 
 abstract class BaseSanityCheck {

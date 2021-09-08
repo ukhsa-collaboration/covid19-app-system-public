@@ -450,6 +450,14 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "optedOutForContactIsolationBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "appIsUsableBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "appIsContactTraceableBackgroundTick"
+      type = "int"
+    }
   }
 }
 
@@ -897,6 +905,14 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "optedOutForContactIsolationBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "appIsUsableBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "appIsContactTraceableBackgroundTick"
       type = "int"
     }
   }

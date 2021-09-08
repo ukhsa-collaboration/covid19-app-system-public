@@ -103,5 +103,7 @@
     "selectedLFDTestOrderingM2Journey": "int",
     "selectedHasLFDTestM2Journey": "int",
     "optedOutForContactIsolation": "int",
-    "optedOutForContactIsolationBackgroundTick": "int"
+    "optedOutForContactIsolationBackgroundTick": "int",
+    "appIsUsableBackgroundTick": "int",
+    "appIsContactTraceableBackgroundTick": "int"
 }

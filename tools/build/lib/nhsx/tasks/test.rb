@@ -13,24 +13,14 @@ namespace :test do
     run_target_unit_tests
   end
 
-  desc "Runs the cta sanity_check tests against prod"
-  task :"sanity_check:prod" => [:"login:prod", :"clean:config"] do
-    include NHSx::Test
-    run_target_environment_sanity_tests("testSanity", "prod", "prod", $configuration)
-  end
-
-  desc "Runs the cta sanity_check tests against staging"
-  task :"sanity_check:staging" => [:"login:staging", :"clean:config"] do
-    include NHSx::Test
-    run_target_environment_sanity_tests("testSanity", "staging", "staging", $configuration)
-  end
-
   # Generate separate tasks per named environment
-  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
-    desc "Runs the cta sanity_check tests against #{tgt_env} "
-    task :"sanity_check:#{tgt_env}" => [:"login:dev", :"clean:config"] do
-      include NHSx::Test
-      run_target_environment_sanity_tests("testSanity", tgt_env, "dev", $configuration)
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+    tgt_envs.each do |tgt_env|
+      desc "Runs the cta sanity_check tests against #{tgt_env} "
+      task :"sanity_check:#{tgt_env}" => [:"login:#{account}", :"clean:config"] do
+        include NHSx::Test
+        run_target_environment_sanity_tests("testSanity", tgt_env, account, $configuration)
+      end
     end
   end
 

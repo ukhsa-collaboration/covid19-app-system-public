@@ -27,7 +27,7 @@ namespace :queue do
     end
   end
   namespace :release do
-    desc "Queue a release to the te-staging and aa-staging target environment in CodeBuild"
+    desc "Queue a release to the te-staging target environment in CodeBuild"
     task :"analytics:staging" => [:"login:staging"] do
       include NHSx::Queue
       branch_name = branch_to_queue("staging", $configuration)      
@@ -47,7 +47,7 @@ namespace :queue do
     end
   end
   namespace :release do
-    desc "Queue a release to the te-prod and aa-prod target environment in CodeBuild"
+    desc "Queue a release to the te-prod and target environment in CodeBuild"
     task :"analytics:prod" => [:"login:prod"] do
       include NHSx::Queue
       version_metadata = subsystem_version_metadata("analytics", $configuration)

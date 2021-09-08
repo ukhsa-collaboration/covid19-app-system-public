@@ -13,8 +13,8 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.handler.QueuedHandler
 
-object QueueEntryProcessed : Event(EventCategory.Operational)
 
+//TODO: merge AnalyticsSubmissionQueuedHandler and AnalyticsSubmissionHandler
 class AnalyticsSubmissionQueuedHandler constructor(
     environment: Environment = Environment.fromSystem(),
     clock: Clock = SystemClock.CLOCK,

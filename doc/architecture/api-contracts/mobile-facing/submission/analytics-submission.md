@@ -127,7 +127,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "selectedLFDTestOrderingM2Journey": 1,
     "selectedHasLFDTestM2Journey": 1,
     "optedOutForContactIsolation": 1,
-    "optedOutForContactIsolationBackgroundTick": 1
+    "optedOutForContactIsolationBackgroundTick": 1,
+    "appIsUsableBackgroundTick": 1,
+    "appIsContactTraceableBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -238,7 +240,9 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "selectedLFDTestOrderingM2Journey": 1,
     "selectedHasLFDTestM2Journey": 1,
     "optedOutForContactIsolation": 1,
-    "optedOutForContactIsolationBackgroundTick": 1
+    "optedOutForContactIsolationBackgroundTick": 1,
+    "appIsUsableBackgroundTick": 1,
+    "appIsContactTraceableBackgroundTick": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -327,6 +331,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `selectedHasLFDTestM2Journey`
   * `optedOutForContactIsolation`
   * `optedOutForContactIsolationBackgroundTick`
+  * `appIsUsableBackgroundTick` 
+  * `appIsContactTraceableBackgroundTick`
 
 
 ### HTTP Response Codes

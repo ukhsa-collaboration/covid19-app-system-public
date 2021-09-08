@@ -1,14 +1,14 @@
-package uk.nhs.nhsx.sanity.lambdas.config
+package uk.nhs.nhsx.sanity.config
 
 import com.fasterxml.jackson.databind.JsonNode
 import kotlin.reflect.KFunction1
 
-data class Endpoint(val lambda: DeployedLambda, val name: String)
+data class Endpoint(val apiResource: DeployedApiResource, val name: String)
 
 /**
  * Names of all of the lambdas in the system
  */
-enum class DeployedLambda(
+enum class DeployedApiResource(
     val converter: KFunction1<Endpoint, (JsonNode) -> EndpointConfig>,
     val baseEndpoint: String,
     val endpointBearerTokenJsonName: String? = null,

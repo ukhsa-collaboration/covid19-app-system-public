@@ -1,74 +1,75 @@
 package uk.nhs.nhsx.analyticssubmission
 
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose
+import com.amazonaws.services.kinesisfirehose.model.PutRecordRequest
+import com.amazonaws.services.kinesisfirehose.model.PutRecordResult
+import com.fasterxml.jackson.module.kotlin.readValue
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.contains
-import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionHandlerTest.Companion.analyticsPayloadFrom
+import strikt.assertions.isEqualTo
+import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetadata
+import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
+import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
+import uk.nhs.nhsx.core.AppServicesJson.mapper
 import uk.nhs.nhsx.core.Json.readJsonOrThrow
-import uk.nhs.nhsx.core.aws.s3.ObjectKey
-import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.testhelper.assertions.containsExactly
 import uk.nhs.nhsx.testhelper.assertions.events
+import java.nio.charset.Charset
 import java.time.Instant
 
 class AnalyticsSubmissionServiceTest {
 
-    private val objectKeyNameProvider = ObjectKeyNameProvider { ObjectKey.of("foo") }
     private val kinesisFirehose = mockk<AmazonKinesisFirehose>()
     private val events = RecordingEvents()
     private val clock = { Instant.parse("2020-02-01T00:00:00Z") }
+    private val eventStartDate = Instant.parse("2020-01-27T23:00:00Z")
+    private val eventEndDate = Instant.parse("2020-01-28T22:59:00Z")
 
     @Test
     fun `uploads to firehose when feature is enabled`() {
-        val config = AnalyticsConfig(
-            "firehoseStreamName",
-            firehoseIngestEnabled = true
-        )
-
         every { kinesisFirehose.putRecord(any()) } returns mockk()
 
-        val service = AnalyticsSubmissionService(config, objectKeyNameProvider, kinesisFirehose, events, clock)
+        val service = AnalyticsSubmissionService(firehoseConfig(enabled = true), kinesisFirehose, events, clock)
 
         service.accept(clientPayload())
 
         verify(exactly = 1) { kinesisFirehose.putRecord(any()) }
-
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
     @Test
-    fun `uploads to firehose with optional local authority when feature is enabled`() {
-        val config = AnalyticsConfig(
-            "firehoseStreamName",
-            firehoseIngestEnabled = true
-        )
-
-        every { kinesisFirehose.putRecord(any()) } returns mockk()
-
-        val service = AnalyticsSubmissionService(config, objectKeyNameProvider, kinesisFirehose, events, clock)
+    fun `does not upload to firehose when feature is disabled`() {
+        val service = AnalyticsSubmissionService(firehoseConfig(enabled = false), kinesisFirehose, events, clock)
 
         service.accept(clientPayload())
 
-        verify(exactly = 1) { kinesisFirehose.putRecord(any()) }
+        verify(exactly = 0) { kinesisFirehose.putRecord(any()) }
+        expectThat(events).containsExactly(AnalyticsSubmissionDisabled::class)
+    }
 
+    @Test
+    fun `uploads to firehose with optional local authority`() {
+        every { kinesisFirehose.putRecord(any()) } returns mockk()
+
+        val service = AnalyticsSubmissionService(firehoseConfig(enabled = true), kinesisFirehose, events, clock)
+
+        service.accept(clientPayload(localAuthority = null))
+
+        verify(exactly = 1) { kinesisFirehose.putRecord(any()) }
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
     @Test
     fun `filters message if start date is in the future`() {
-        val config = AnalyticsConfig(
-            "firehoseStreamName",
-            firehoseIngestEnabled = true
-        )
         val clock = { Instant.parse("2020-02-01T00:00:00Z") }
-        val service =
-            AnalyticsSubmissionService(config, objectKeyNameProvider, kinesisFirehose, events, clock)
+        val service = AnalyticsSubmissionService(firehoseConfig(enabled = true), kinesisFirehose, events, clock)
 
         service.accept(
             clientPayload(
@@ -78,7 +79,6 @@ class AnalyticsSubmissionServiceTest {
         )
 
         verify(exactly = 0) { kinesisFirehose.putRecord(any()) }
-
         expectThat(events)
             .containsExactly(AnalyticsSubmissionRejected::class)
             .and {
@@ -96,13 +96,8 @@ class AnalyticsSubmissionServiceTest {
 
     @Test
     fun `filters message if end date is in the future`() {
-        val config = AnalyticsConfig(
-            "firehoseStreamName",
-            firehoseIngestEnabled = true
-        )
         val clock = { Instant.parse("2020-02-01T00:00:00Z") }
-        val service =
-            AnalyticsSubmissionService(config, objectKeyNameProvider, kinesisFirehose, events, clock)
+        val service = AnalyticsSubmissionService(firehoseConfig(enabled = true), kinesisFirehose, events, clock)
 
         service.accept(
             clientPayload(
@@ -112,7 +107,6 @@ class AnalyticsSubmissionServiceTest {
         )
 
         verify(exactly = 0) { kinesisFirehose.putRecord(any()) }
-
         expectThat(events)
             .containsExactly(AnalyticsSubmissionRejected::class)
             .and {
@@ -128,13 +122,360 @@ class AnalyticsSubmissionServiceTest {
             }
     }
 
-    private fun clientPayload(startDate: String = "2020-01-27T23:00:00Z", endDate: String = "2020-01-28T22:59:00Z") =
+    @Test
+    fun `flattens all fields from client payload`() {
+        val json = analyticsSubmissionIosComplete(
+            startDate = eventStartDate.toString(),
+            endDate = eventEndDate.toString(),
+            postalDistrict = "AB10",
+            useCounter = true
+        )
+        val clientPayload = readJsonOrThrow<ClientAnalyticsSubmissionPayload>(json)
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        var counter = 1L
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "AB10",
+                deviceModel = "iPhone11,2",
+                operatingSystemVersion = "iPhone OS 13.5.1 (17F80)",
+                latestApplicationVersion = "3.0",
+                localAuthority = null,
+                includesMultipleApplicationVersions = false,
+                cumulativeDownloadBytes = counter++.toInt(),
+                cumulativeUploadBytes = counter++.toInt(),
+                cumulativeCellularDownloadBytes = counter++.toInt(),
+                cumulativeCellularUploadBytes = counter++.toInt(),
+                cumulativeWifiDownloadBytes = counter++.toInt(),
+                cumulativeWifiUploadBytes = counter++.toInt(),
+                checkedIn = counter++.toInt(),
+                canceledCheckIn = counter++.toInt(),
+                receivedVoidTestResult = counter++.toInt(),
+                isIsolatingBackgroundTick = counter++.toInt(),
+                hasHadRiskyContactBackgroundTick = counter++.toInt(),
+                receivedPositiveTestResult = counter++.toInt(),
+                receivedNegativeTestResult = counter++.toInt(),
+                hasSelfDiagnosedPositiveBackgroundTick = counter++.toInt(),
+                completedQuestionnaireAndStartedIsolation = counter++.toInt(),
+                encounterDetectionPausedBackgroundTick = counter++.toInt(),
+                completedQuestionnaireButDidNotStartIsolation = counter++.toInt(),
+                totalBackgroundTasks = counter++.toInt(),
+                runningNormallyBackgroundTick = counter++.toInt(),
+                completedOnboarding = counter++.toInt(),
+                receivedVoidTestResultEnteredManually = counter++.toInt(),
+                receivedPositiveTestResultEnteredManually = counter++.toInt(),
+                receivedNegativeTestResultEnteredManually = counter++.toInt(),
+                receivedVoidTestResultViaPolling = counter++.toInt(),
+                receivedPositiveTestResultViaPolling = counter++.toInt(),
+                receivedNegativeTestResultViaPolling = counter++.toInt(),
+                hasSelfDiagnosedBackgroundTick = counter++.toInt(),
+                hasTestedPositiveBackgroundTick = counter++.toInt(),
+                isIsolatingForSelfDiagnosedBackgroundTick = counter++.toInt(),
+                isIsolatingForTestedPositiveBackgroundTick = counter++.toInt(),
+                isIsolatingForHadRiskyContactBackgroundTick = counter++.toInt(),
+                receivedRiskyContactNotification = counter++.toInt(),
+                startedIsolation = counter++.toInt(),
+                receivedPositiveTestResultWhenIsolatingDueToRiskyContact = counter++.toInt(),
+                receivedActiveIpcToken = counter++.toInt(),
+                haveActiveIpcTokenBackgroundTick = counter++.toInt(),
+                selectedIsolationPaymentsButton = counter++.toInt(),
+                launchedIsolationPaymentsApplication = counter++.toInt(),
+                receivedPositiveLFDTestResultViaPolling = counter++.toInt(),
+                receivedNegativeLFDTestResultViaPolling = counter++.toInt(),
+                receivedVoidLFDTestResultViaPolling = counter++.toInt(),
+                receivedPositiveLFDTestResultEnteredManually = counter++.toInt(),
+                receivedNegativeLFDTestResultEnteredManually = counter++.toInt(),
+                receivedVoidLFDTestResultEnteredManually = counter++.toInt(),
+                hasTestedLFDPositiveBackgroundTick = counter++.toInt(),
+                isIsolatingForTestedLFDPositiveBackgroundTick = counter++.toInt(),
+                totalExposureWindowsNotConsideredRisky = counter++.toInt(),
+                totalExposureWindowsConsideredRisky = counter++.toInt(),
+                acknowledgedStartOfIsolationDueToRiskyContact = counter++.toInt(),
+                hasRiskyContactNotificationsEnabledBackgroundTick = counter++.toInt(),
+                totalRiskyContactReminderNotifications = counter++.toInt(),
+                receivedUnconfirmedPositiveTestResult = counter++.toInt(),
+                isIsolatingForUnconfirmedTestBackgroundTick = counter++.toInt(),
+                launchedTestOrdering = counter++.toInt(),
+                didHaveSymptomsBeforeReceivedTestResult = counter++.toInt(),
+                didRememberOnsetSymptomsDateBeforeReceivedTestResult = counter++.toInt(),
+                didAskForSymptomsOnPositiveTestEntry = counter++.toInt(),
+                declaredNegativeResultFromDCT = counter++.toInt(),
+                receivedPositiveSelfRapidTestResultViaPolling = counter++.toInt(),
+                receivedNegativeSelfRapidTestResultViaPolling = counter++.toInt(),
+                receivedVoidSelfRapidTestResultViaPolling = counter++.toInt(),
+                receivedPositiveSelfRapidTestResultEnteredManually = counter++.toInt(),
+                receivedNegativeSelfRapidTestResultEnteredManually = counter++.toInt(),
+                receivedVoidSelfRapidTestResultEnteredManually = counter++.toInt(),
+                isIsolatingForTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
+                hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
+                receivedRiskyVenueM1Warning = counter++.toInt(),
+                receivedRiskyVenueM2Warning = counter++.toInt(),
+                hasReceivedRiskyVenueM2WarningBackgroundTick = counter++.toInt(),
+                totalAlarmManagerBackgroundTasks = counter++.toInt(),
+                missingPacketsLast7Days = counter++.toInt(),
+                consentedToShareVenueHistory = counter++.toInt(),
+                askedToShareVenueHistory = counter++.toInt(),
+                askedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
+                consentedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
+                totalShareExposureKeysReminderNotifications = counter++.toInt(),
+                consentedToShareExposureKeysInReminderScreen = counter++.toInt(),
+                successfullySharedExposureKeys = counter++.toInt(),
+                didSendLocalInfoNotification = counter++.toInt(),
+                didAccessLocalInfoScreenViaNotification = counter++.toInt(),
+                didAccessLocalInfoScreenViaBanner = counter++.toInt(),
+                isDisplayingLocalInfoBackgroundTick = counter++.toInt(),
+                positiveLabResultAfterPositiveLFD = counter++.toInt(),
+                negativeLabResultAfterPositiveLFDWithinTimeLimit = counter++.toInt(),
+                negativeLabResultAfterPositiveLFDOutsideTimeLimit = counter++.toInt(),
+                positiveLabResultAfterPositiveSelfRapidTest = counter++.toInt(),
+                negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = counter++.toInt(),
+                negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = counter++.toInt(),
+                didAccessRiskyVenueM2Notification = counter++.toInt(),
+                selectedTakeTestM2Journey = counter++.toInt(),
+                selectedTakeTestLaterM2Journey = counter++.toInt(),
+                selectedHasSymptomsM2Journey = counter++.toInt(),
+                selectedHasNoSymptomsM2Journey = counter++.toInt(),
+                selectedLFDTestOrderingM2Journey = counter++.toInt(),
+                selectedHasLFDTestM2Journey = counter++.toInt(),
+                optedOutForContactIsolation = counter++.toInt(),
+                optedOutForContactIsolationBackgroundTick = counter++.toInt(),
+                appIsUsableBackgroundTick = counter++.toInt(),
+                appIsContactTraceableBackgroundTick = counter.toInt()
+            )
+        )
+        expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
+    }
+
+    @Test
+    fun `merged postal district with matching local authority`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "AL2",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = "E07000098"
+            ),
+            metrics = AnalyticsMetrics(),
+            includesMultipleApplicationVersions = false
+        )
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "AL2_AL4_WD7",
+                localAuthority = "E07000098",
+                includesMultipleApplicationVersions = false
+            )
+        )
+        expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
+    }
+
+    @Test
+    fun `merged postal district with null local authority`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "AB13",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = null
+            ),
+            metrics = AnalyticsMetrics(),
+            includesMultipleApplicationVersions = false
+        )
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "AB13_AB14",
+                localAuthority = null,
+                includesMultipleApplicationVersions = false
+            )
+        )
+        expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
+    }
+
+    @Test
+    fun `merged postal district with non-matching local authority`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "YO62",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = "E07000152"
+            ),
+            metrics = AnalyticsMetrics(),
+            includesMultipleApplicationVersions = false
+        )
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "YO60_YO62",
+                localAuthority = null,
+                includesMultipleApplicationVersions = false
+            )
+        )
+        expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
+    }
+
+    @Test
+    fun `merged postal district with invalid local authority`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "YO62",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = "Houston"
+            ),
+            metrics = AnalyticsMetrics(),
+            includesMultipleApplicationVersions = false
+        )
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "YO60_YO62",
+                localAuthority = null,
+                includesMultipleApplicationVersions = false
+            )
+        )
+        expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
+    }
+
+    @Test
+    fun `empty postal district and empty local authority`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = ""
+            ),
+            metrics = AnalyticsMetrics(),
+            includesMultipleApplicationVersions = false
+        )
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "NOT SET",
+                localAuthority = null,
+                includesMultipleApplicationVersions = false
+            )
+        )
+    }
+
+    @Test
+    fun `unknown postcode with non-null local authority`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "F4KEP0STC0DE",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = "E06000051"
+            ),
+            metrics = AnalyticsMetrics(),
+            includesMultipleApplicationVersions = false
+        )
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "UNKNOWN",
+                localAuthority = "UNKNOWN",
+                includesMultipleApplicationVersions = false
+            )
+        )
+    }
+
+    @Test
+    fun `unknown postcode with null local authority`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "F4KEP0STC0DE",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = null
+            ),
+            metrics = AnalyticsMetrics(),
+            includesMultipleApplicationVersions = false
+        )
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
+
+        expectThat(exportedMap).isEqualTo(
+            analyticsStoredPayload(
+                eventStartDate = eventStartDate,
+                eventEndDate = eventEndDate,
+                postalDistrict = "UNKNOWN",
+                localAuthority = "UNKNOWN",
+                includesMultipleApplicationVersions = false
+            )
+        )
+    }
+
+    private fun invokeAndCaptureFirehosePayload(clientPayload: ClientAnalyticsSubmissionPayload): Map<String, Any?> {
+        val slot = slot<PutRecordRequest>()
+        every { kinesisFirehose.putRecord(capture(slot)) } answers { PutRecordResult() }
+
+        val service = AnalyticsSubmissionService(firehoseConfig(enabled = true), kinesisFirehose, events, clock)
+        service.accept(clientPayload)
+
+        val exportedJson = String(slot.captured.record.data.array(), Charset.forName("UTF-8"))
+        return mapper.readValue(exportedJson)
+    }
+
+    private fun firehoseConfig(enabled: Boolean) =
+        AnalyticsConfig(
+            firehoseStreamName = "firehoseStreamName",
+            firehoseIngestEnabled = enabled
+        )
+
+    private fun clientPayload(
+        startDate: String = eventStartDate.toString(),
+        endDate: String = eventEndDate.toString(),
+        localAuthority: String? = "E06000051"
+    ) =
         readJsonOrThrow<ClientAnalyticsSubmissionPayload>(
-            analyticsPayloadFrom(
+            analyticsSubmissionIos(
                 startDate = startDate,
                 endDate = endDate,
-                postDistrict = "AB13",
-                localAuthority = "E06000051"
+                localAuthority = localAuthority
             )
         )
 }

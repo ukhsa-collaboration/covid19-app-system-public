@@ -99,6 +99,8 @@ public class AnalyticsMetrics {
     public Integer selectedHasLFDTestM2Journey;
     public Integer optedOutForContactIsolation;
     public Integer optedOutForContactIsolationBackgroundTick;
+    public Integer appIsUsableBackgroundTick;
+    public Integer appIsContactTraceableBackgroundTick;
 
     public AnalyticsMetrics() {
     }

@@ -129,3 +129,8 @@ variable "virology_test_stats_bucket_id" {
 variable "qr_posters_bucket_location" {
   description = "QR posters bucket location for quicksight usage"
 }
+
+variable "enable_importers" {
+  description = "If TRUE, we create resources for the importers otherwise not"
+  type        = bool
+}

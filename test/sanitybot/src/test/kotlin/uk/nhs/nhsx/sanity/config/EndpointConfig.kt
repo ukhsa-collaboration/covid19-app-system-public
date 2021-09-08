@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sanity.lambdas.config
+package uk.nhs.nhsx.sanity.config
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.natpryce.hamkrest.isNullOrBlank
@@ -8,23 +8,23 @@ import dev.forkhandles.result4k.mapFailure
 import dev.forkhandles.result4k.resultFrom
 import org.http4k.core.Uri
 import org.http4k.hamkrest.hasBody
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AnalyticsSubmission
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AvailabilityAndroidDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.AvailabilityIosDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.DiagnosisKeysSubmission
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.ExposureNotificationDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.PostDistrictsDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenueConfigurationDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.RiskyVenuesDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.SelfIsolationDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.LocalMessagesDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.SymptomaticQuestionnaireDistribution
-import uk.nhs.nhsx.sanity.lambdas.config.DeployedLambda.VirologyKit
-import uk.nhs.nhsx.sanity.lambdas.config.Resource.DynamicContent
-import uk.nhs.nhsx.sanity.lambdas.config.Resource.DynamicUrl
-import uk.nhs.nhsx.sanity.lambdas.config.Resource.Missing
-import uk.nhs.nhsx.sanity.lambdas.config.Resource.Static
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.AnalyticsSubmission
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.AvailabilityAndroidDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.AvailabilityIosDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.DiagnosisKeysDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.DiagnosisKeysSubmission
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.ExposureNotificationDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.PostDistrictsDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.RiskyVenueConfigurationDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.RiskyVenuesDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.SelfIsolationDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.LocalMessagesDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.SymptomaticQuestionnaireDistribution
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.VirologyKit
+import uk.nhs.nhsx.sanity.config.Resource.DynamicContent
+import uk.nhs.nhsx.sanity.config.Resource.DynamicUrl
+import uk.nhs.nhsx.sanity.config.Resource.Missing
+import uk.nhs.nhsx.sanity.config.Resource.Static
 import java.nio.file.Path
 
 sealed class EndpointConfig(val name: String, val endpointUri: Uri) {
@@ -87,26 +87,10 @@ class Distribution(name: String, endpointUri: Uri, private val store: String?, o
     companion object {
         fun from(endpoint: Endpoint) = { config: JsonNode ->
             Distribution(
-                endpoint.lambda.name,
+                endpoint.apiResource.name,
                 config.requiredUri("${endpoint.name}_endpoint"),
-                config.optionalText(endpoint.lambda.storeJsonName),
-                endpoint.lambda.resource()
-            )
-        }
-    }
-}
-
-/**
- * Download lambdas allow Third Parties to download of data through CloudFront and effectively front an S3 bucket
- */
-class Download(name: String, endpointUri: Uri, override val resource: Resource) : EndpointConfig(name, endpointUri),
-    ServesResource {
-    companion object {
-        fun from(endpoint: Endpoint) = { config: JsonNode ->
-            Download(
-                endpoint.lambda.name,
-                config.requiredUri("${endpoint.name}_endpoint"),
-                endpoint.lambda.resource(),
+                config.optionalText(endpoint.apiResource.storeJsonName),
+                endpoint.apiResource.resource()
             )
         }
     }
@@ -125,10 +109,10 @@ class Upload(
     companion object {
         fun from(endpoint: Endpoint) = { config: JsonNode ->
             Upload(
-                endpoint.lambda.name,
+                endpoint.apiResource.name,
                 config.requiredUri("${endpoint.name}_endpoint"),
-                config.authHeader(endpoint.lambda.endpointBearerTokenJsonName!!),
-                config.requiredUri(endpoint.lambda.healthEndpoint),
+                config.authHeader(endpoint.apiResource.endpointBearerTokenJsonName!!),
+                config.requiredUri(endpoint.apiResource.healthEndpoint),
                 config.authHeader("health")
             )
         }
@@ -150,29 +134,13 @@ class Submission(
     companion object {
         fun from(endpoint: Endpoint) = { config: JsonNode ->
             Submission(
-                endpoint.lambda.name,
+                endpoint.apiResource.name,
                 config.requiredUri("${endpoint.name}_endpoint"),
-                config.authHeader(endpoint.lambda.endpointBearerTokenJsonName!!),
-                config.requiredUri(endpoint.lambda.healthEndpoint),
+                config.authHeader(endpoint.apiResource.endpointBearerTokenJsonName!!),
+                config.requiredUri(endpoint.apiResource.healthEndpoint),
                 config.authHeader("health"),
-                config.optionalText(endpoint.lambda.storeJsonName),
-                endpoint.lambda.resource(),
-            )
-        }
-    }
-}
-
-/**
- * Processing lambdas run out-of-band and create work, for example on a schedule. They may have an output store
- */
-class Processing(name: String, endpointUri: Uri, override val storeName: String?) : EndpointConfig(name, endpointUri),
-    StoreBacked {
-    companion object {
-        fun from(endpoint: Endpoint) = { config: JsonNode ->
-            Processing(
-                endpoint.lambda.name,
-                config.requiredUri("${endpoint.name}_endpoint"),
-                config.optionalText(endpoint.lambda.storeJsonName)
+                config.optionalText(endpoint.apiResource.storeJsonName),
+                endpoint.apiResource.resource(),
             )
         }
     }
@@ -193,8 +161,8 @@ class CircuitBreaker(
             CircuitBreaker(
                 endpoint.name,
                 config.requiredUri("${endpoint.name}_endpoint"),
-                config.authHeader(endpoint.lambda.endpointBearerTokenJsonName!!),
-                config.requiredUri(endpoint.lambda.healthEndpoint),
+                config.authHeader(endpoint.apiResource.endpointBearerTokenJsonName!!),
+                config.requiredUri(endpoint.apiResource.healthEndpoint),
                 config.authHeader("health"),
             )
         }
@@ -231,4 +199,4 @@ private val resources = mapOf(
     AnalyticsSubmission to DynamicUrl
 )
 
-fun DeployedLambda.resource() = resources[this] ?: Missing
+fun DeployedApiResource.resource() = resources[this] ?: Missing
