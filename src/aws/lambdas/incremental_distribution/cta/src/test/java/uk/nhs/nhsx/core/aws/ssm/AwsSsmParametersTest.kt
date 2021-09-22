@@ -10,6 +10,7 @@ import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.testhelper.proxy
 import java.time.Duration
+import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 class AwsSsmParametersTest {
@@ -41,5 +42,5 @@ class AwsSsmParametersTest {
     private fun getValue(
         parameters: AwsSsmParameters,
         name: ParameterName
-    ) = parameters.parameter(name, String::toLowerCase).value()
+    ) = parameters.parameter(name) { it.lowercase(Locale.getDefault()) }.value()
 }

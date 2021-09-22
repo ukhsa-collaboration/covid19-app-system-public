@@ -174,7 +174,7 @@ class VirologyProcessorServiceTest {
     }
 
     @Test
-    fun `generates multiple token requests and return signed url`(@TempDir tempDir: Path) {
+    fun `generates multiple token requests and return signed url`() {
         val requestSignedUrlFilename = slot<String>()
         val requestSignedUrlValidityDate = slot<Date>()
         val ctaTokens = slot<List<CtaToken>>()

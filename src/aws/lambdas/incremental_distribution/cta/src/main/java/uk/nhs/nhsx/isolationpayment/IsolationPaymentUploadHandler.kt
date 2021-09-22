@@ -24,6 +24,8 @@ import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.withoutSignedResponses
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.AUDIT_LOG_PREFIX
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.ISOLATION_TOKEN_TABLE
 import uk.nhs.nhsx.isolationpayment.model.IsolationRequest
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal
@@ -74,9 +76,6 @@ class IsolationPaymentUploadHandler(
     override fun handler(): ApiGatewayHandler = handler
 
     companion object {
-        private val ISOLATION_TOKEN_TABLE = EnvironmentKey.string("ISOLATION_PAYMENT_TOKENS_TABLE")
-        private val AUDIT_LOG_PREFIX = EnvironmentKey.string("AUDIT_LOG_PREFIX")
-
         private fun isolationPaymentService(
             clock: Clock,
             environment: Environment,

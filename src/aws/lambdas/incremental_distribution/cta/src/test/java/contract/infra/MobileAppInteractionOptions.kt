@@ -6,6 +6,7 @@ import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.format.Jackson
 import org.http4k.servirtium.InteractionOptions
+import java.util.*
 
 class MobileAppInteractionOptions : InteractionOptions {
 
@@ -43,6 +44,6 @@ fun <T : HttpMessage> T.tidyJsonBody() = when {
 
 @Suppress("UNCHECKED_CAST")
 private fun <T : HttpMessage> T.keepOnlyHeaders(vararg toKeep: String): T {
-    val filteredHeaders = headers.filter { it.first.toLowerCase() in toKeep.map(String::toLowerCase) }
+    val filteredHeaders = headers.filter { it.first.lowercase(Locale.getDefault()) in toKeep.map { it.lowercase(Locale.getDefault()) } }
     return headers.fold(this) { acc, next -> acc.removeHeader(next.first) as T }.headers(filteredHeaders) as T
 }

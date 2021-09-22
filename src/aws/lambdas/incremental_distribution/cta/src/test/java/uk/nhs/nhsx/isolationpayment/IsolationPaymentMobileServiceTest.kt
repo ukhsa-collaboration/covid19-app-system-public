@@ -38,7 +38,7 @@ class IsolationPaymentMobileServiceTest {
 
     private val now = Instant.ofEpochSecond(0)
     private val clock = { now }
-    private val tokenGenerator = Supplier { IpcTokenId.of("1".repeat(64)) }
+    private val tokenGenerator = { IpcTokenId.of("1".repeat(64)) }
     private val persistence = mockk<IsolationPaymentPersistence>()
     private val websiteOrderUrl = "https://test/path?ipcToken="
     private val tokenExpiryInWeeks = 4
@@ -115,7 +115,7 @@ class IsolationPaymentMobileServiceTest {
             expireAt = 0
         )
 
-        every { persistence.getIsolationToken(any()) } returns Optional.of(token)
+        every { persistence.getIsolationToken(any()) } returns token
         every { persistence.updateIsolationToken(any(), any()) } just runs
 
         val request = TokenUpdateRequest(
@@ -159,7 +159,7 @@ class IsolationPaymentMobileServiceTest {
             expireAt = 0
         )
 
-        every { persistence.getIsolationToken(any()) } returns Optional.of(token)
+        every { persistence.getIsolationToken(any()) } returns token
 
         val request = TokenUpdateRequest(
             IpcTokenId.of("1".repeat(64)),
@@ -183,13 +183,11 @@ class IsolationPaymentMobileServiceTest {
             persistence.updateIsolationToken(any(), INT_CREATED)
         } throws ConditionalCheckFailedException("")
 
-        every { persistence.getIsolationToken(any()) } returns Optional.of(
-            IsolationToken(
-                ipcToken,
-                "",
-                createdTimestamp = epoch.epochSecond,
-                expireAt = epoch.epochSecond
-            )
+        every { persistence.getIsolationToken(any()) } returns IsolationToken(
+            ipcToken,
+            "",
+            createdTimestamp = epoch.epochSecond,
+            expireAt = epoch.epochSecond
         )
 
         val request = TokenUpdateRequest(ipcToken, epoch, epoch)

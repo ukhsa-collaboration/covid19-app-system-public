@@ -1340,8 +1340,12 @@
       "translations": {
         "zh": {
           "head": "[postcode] 的 COVID-19 病例增加",
-          "body": "[postcode] 的 COVID-19 病例显著增加。",
+          "body": "点击此处获取更多信息。",
           "content": [
+            {
+              "type": "para",
+              "text": "[postcode] 的 COVID-19 病例显著增加。"
+            },
             {
               "type": "para",
               "text": "即使您没有出现症状，可能也需要在您当地进行额外检测。"
@@ -1350,14 +1354,18 @@
               "type": "para",
               "text": "请咨询当地主管部门了解更多信息。",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "查找地方当局网站"
             }
           ]
         },
         "en": {
           "head": "Rise in COVID-19 cases in [postcode]",
-          "body": "There has been a significant rise in COVID-19 cases in [postcode].",
+          "body": "Tap here for more information",
           "content": [
+            {
+              "type": "para",
+              "text": "There has been a significant rise in COVID-19 cases in [postcode]."
+            },
             {
               "type": "para",
               "text": "Extra testing may be available in your area, even if you do not have symptoms."
@@ -1372,8 +1380,12 @@
         },
         "ar": {
           "head": "هناك زيادة في الحالات المُصابة بفيروس كوفيد-19 في [postcode]",
-          "body": "ثمة زيادة ملحوظة في الحالات المُصابة بفيروس كوفيد-19 في (postcode).",
+          "body": "انقر هنا للاطلاع على المزيد من المعلومات.",
           "content": [
+            {
+              "type": "para",
+              "text": "ثمة زيادة ملحوظة في الحالات المُصابة بفيروس كوفيد-19 في [postcode]"
+            },
             {
               "type": "para",
               "text": "قد يستوجب الأمر توفير المزيد من الاختبارات المطلوب إجراؤها في منطقتكم، حتى في حال عدم ظهور أعراض الإصابة لديكم."
@@ -1382,14 +1394,18 @@
               "type": "para",
               "text": "يجب الرجوع للسلطة المحلية لديكم لمعرفة المزيد من المعلومات.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "البحث عن الموقع الإلكتروني للسلطة المحلية لديك"
             }
           ]
         },
         "tr": {
           "head": "[postcode] bölgesinde COVID-19 vakalarında artış",
-          "body": "[postcode] bölgesinde COVID-19 vakalarında önemli bir artış yaşanmıştır.",
+          "body": "Daha fazla bilgi için buraya dokunun.",
           "content": [
+            {
+              "type": "para",
+              "text": "[postcode] bölgesinde COVID-19 vakalarında önemli bir artış yaşanmıştır."
+            },
             {
               "type": "para",
               "text": "Siz herhangi bir belirti göstermeseniz bile, bölgenizde ekstra test imkanları sunulmuş olabilir."
@@ -1398,14 +1414,18 @@
               "type": "para",
               "text": "Daha fazla bilgi için yerel yönetiminize danışın.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "Yerel yönetiminizin web sitesini bulun"
             }
           ]
         },
         "pl": {
           "head": "Wzrost liczby zakażeń COVID-19 w obrębie kodu pocztowego [postcode]",
-          "body": "Nastąpił znaczny wzrost liczby zakażeń COVID-19 w obrębie kodu pocztowego [postcode].",
+          "body": "Dotknij tutaj, aby uzyskać więcej informacji.",
           "content": [
+            {
+              "type": "para",
+              "text": "Nastąpił znaczny wzrost liczby zakażeń COVID-19 w obrębie kodu pocztowego [postcode]."
+            },
             {
               "type": "para",
               "text": "W Twojej okolicy mogą być dostępne dodatkowe testy, nawet jeżeli nie masz objawów."
@@ -1414,14 +1434,18 @@
               "type": "para",
               "text": "Aby uzyskać więcej informacji, skontaktuj się ze swoimi władzami lokalnymi.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "Strona, na której dowiesz się, jakie są Twoje władze lokalne"
             }
           ]
         },
         "ro": {
           "head": "Creșterea numărului de cazuri de COVID-19 în [postcode]",
-          "body": "Numărul de cazuri de COVID-19 a crescut semnificativ în [postcode].",
+          "body": "Atingeți aici pentru mai multe informații.",
           "content": [
+            {
+              "type": "para",
+              "text": "Numărul de cazuri de COVID-19 a crescut semnificativ în [postcode]."
+            },
             {
               "type": "para",
               "text": "Există posibilitatea ca testări suplimentare să fie disponibile în zona ta, chiar dacă nu ai simptome."
@@ -1430,46 +1454,58 @@
               "type": "para",
               "text": "Consultă autoritatea locală pentru mai multe informații.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "Găsiți pagina web a autorității locale"
             }
           ]
         },
         "pa": {
           "head": "[postcode] ਵਿੱਚ COVID-19  ਦੇ ਮਾਮਲਿਆਂ ਵਿੱਚ ਵਾਧਾ",
-          "body": "[postcode] ਵਿੱਚ COVID-19  ਦੇ ਮਾਮਲਿਆਂ ਵਿੱਚ ਗੌਰ ਕਰਨਯੋਗ ਵਾਧਾ ਹੋਇਆ ਹੈ।",
+          "body": "ਹੋਰ ਜਾਣਕਾਰੀ ਲਈ ਇੱਥੇ ਟੈਪ ਕਰੋ।",
           "content": [
             {
               "type": "para",
-              "text": "ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਵਾਧੂ ਜਾਂਚ ਉਪਲਬਧ ਹੋ ਸਕਦੀ ਹੈ, ਭਾਵੇਂ ਤੁਹਾਨੂੰ ਲੱਛਣ ਨਾ ਹੋਣ।"
+              "text": "[postcode] ਵਿੱਚ COVID-19  ਦੇ ਮਾਮਲਿਆਂ ਵਿੱਚ ਗੌਰ ਕਰਨਯੋਗ ਵਾਧਾ ਹੋਇਆ ਹੈ।."
             },
             {
               "type": "para",
-              "text": "ਵਧੇਰੇ ਜਾਣਕਾਰੀ ਲਈ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਟੀ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।",
+              "text": "ਤੁਹਾਡੇ ਖੇਤਰ ਵਿੱਚ ਵਾਧੂ ਜਾਂਚ ਉਪਲਬਧ ਹੋ ਸਕਦੀ ਹੈ, ਭਾਵੇਂ ਤੁਹਾਨੂੰ ਲੱਛਣ ਨਾ ਹੋਣ।."
+            },
+            {
+              "type": "para",
+              "text": "ਵਧੇਰੇ ਜਾਣਕਾਰੀ ਲਈ ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਟੀ ਨਾਲ ਸੰਪਰਕ ਕਰੋ।.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "ਆਪਣੀ ਸਥਾਨਕ ਅਥਾਰਿਟੀ ਦੀ ਵੈੱਬਸਾਈਟ ਲੱਭੋ"
             }
           ]
         },
         "bn": {
           "head": "[postcode]-এ কোভিড-১৯ আক্রান্তের ঘটনা বৃদ্ধি",
-          "body": "[postcode]-এ কোভিড-১৯ আক্রান্তের ঘটনা উল্লেখযোগ্যভাবে বেড়েছে।.",
+          "body": "আরো তথ্যের জন্য এখানে ট্যাপ করুন।",
           "content": [
             {
               "type": "para",
-              "text": "আপনার উপসর্গ না থাকলেও, আপনার এলাকায় অতিরিক্ত পরীক্ষা পাওয়া যেতে পারে।."
+              "text": "[postcode]-এ কোভিড-১৯ আক্রান্তের ঘটনা উল্লেখযোগ্যভাবে বেড়েছে।"
+            },
+            {
+              "type": "para",
+              "text": " আপনার উপসর্গ না থাকলেও, আপনার এলাকায় অতিরিক্ত পরীক্ষা পাওয়া যেতে পারে।."
             },
             {
               "type": "para",
               "text": "আরো তথ্যের জন্য আপনার স্থানীয় কর্তৃপক্ষের শরণাপন্ন হোন।.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "আপনার স্থানীয় কর্তৃপক্ষের ওয়েবসাইট হলো:"
             }
           ]
         },
         "gu": {
           "head": "કૉવિડ-19 ના કિસ્સા આ [postcode] અરિયામાં વધે છે",
-          "body": "કૉવિડ-19નાં કિસ્સા આ [postcode] એરિયામાં બહુ જ વધવા લાગ્યા છે..",
+          "body": "વધુ માહિતી માટે અહીં ટેપ કરો.",
           "content": [
+            {
+              "type": "para",
+              "text": "કૉવિડ-19નાં કિસ્સા આ [postcode] એરિયામાં બહુ જ વધવા લાગ્યા છે.."
+            },
             {
               "type": "para",
               "text": "તમને લક્ષણો ન હોય તો પણ, તમારા એરિયામાં એક્સ્ટ્રા ટેસ્ટિંગ અવેલેબલ છે."
@@ -1478,14 +1514,18 @@
               "type": "para",
               "text": "વધારે માહિતી માટે તમારી લૉકલ ઑથોરિટી પાસેથી ચેક કરો. .",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "તમારી સ્થાનિક ઓથોરિટી વેબસાઇટ શોધો"
             }
           ]
         },
         "cy": {
           "head": "Cynnydd yn nifer yr achosion COVID-19 yn [postcode]",
-          "body": "Mae cynnydd sylweddol yn nifer yr achosion  COVID-19 yn [postcode].",
+          "body": "Tapiwch yma i gael rhagor o wybodaeth",
           "content": [
+            {
+              "type": "para",
+              "text": "Mae cynnydd sylweddol yn nifer yr achosion  COVID-19 yn [postcode]."
+            },
             {
               "type": "para",
               "text": "Efallai y bydd profion ychwanegol ar gael yn eich ardal chi, hyd yn oed os nad oes symptomau arnoch."
@@ -1494,14 +1534,18 @@
               "type": "para",
               "text": "Holwch eich awdurdod lleol i gael rhagor o wybodaeth.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "Dod o hyd i wefan eich awdurdod lleol"
             }
           ]
         },
         "so": {
           "head": "Kororka ku yimid kiisaska COVID-19 ee ka jira [postcode]",
-          "body": "Waxaa si weyn kor ugu kacay kiisaska COVID-19 ee ka jira [postcode].",
+          "body": "Halkan guji si aad u hesho macluumaad dheeraad ah.",
           "content": [
+            {
+              "type": "para",
+              "text": "Waxaa si weyn kor ugu kacay kiisaska COVID-19 ee ka jira [postcode]."
+            },
             {
               "type": "para",
               "text": "Baaritaan dheeraad ah ayaa laga yaabaa in laga helo deegaankaaga, xitaa haddii aadan lahayn astaamo."
@@ -1510,23 +1554,27 @@
               "type": "para",
               "text": "La soco maamulka deegaankaaga si aad u hesho macluumaad dheeraad ah.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "Raadi degelka maamulka golaha deegaankaaga"
             }
           ]
         },
         "ur": {
           "head": "[postcode] میں COVID-19 کے واقعات میں اضافہ",
-          "body": "[postcode] میں COVID-19 کے واقعات میں کافی اضافہ ہوا ہے۔",
+          "body": "مزید معلومات کے لیے یہاں ٹیپ کریں۔",
           "content": [
             {
               "type": "para",
-              "text": "اگر آپ میں علامات نہیں بھی ہیں تو پھر بھی ہو سکتا ہے کہ آپ کے علاقے میں اضافی ٹیسٹنگ دستیاب ہو۔"
+              "text": " [postcode] میں COVID-19 کے واقعات میں کافی اضافہ ہوا ہے۔."
             },
             {
               "type": "para",
-              "text": "مزید معلومات کے لیے اپنی مقامی اتھارٹی سے معلوم کریں۔",
+              "text": "اگر آپ میں علامات نہیں بھی ہیں تو پھر بھی ہو سکتا ہے کہ آپ کے علاقے میں اضافی ٹیسٹنگ دستیاب ہو۔."
+            },
+            {
+              "type": "para",
+              "text": "مزید معلومات کے لیے اپنی مقامی اتھارٹی سے معلوم کریں۔.",
               "link": "https://www.gov.uk/find-local-council",
-              "linkText": "Find your local authority website"
+              "linkText": "اپنی لوکل اتھارٹی کی ویب سائٹ تلاش کریں"
             }
           ]
         }

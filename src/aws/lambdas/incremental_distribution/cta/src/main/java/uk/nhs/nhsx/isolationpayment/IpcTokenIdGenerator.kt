@@ -2,23 +2,15 @@ package uk.nhs.nhsx.isolationpayment
 
 import uk.nhs.nhsx.domain.IpcTokenId
 import java.security.SecureRandom
+import java.util.*
 
-object IpcTokenIdGenerator {
-    /**
-     * Generates unique ID from secure random source of 32 bytes with hex representation
-     */
-    fun getToken(): IpcTokenId {
-        val random = SecureRandom()
-        val bytes = ByteArray(32)
-        random.nextBytes(bytes)
-        return IpcTokenId.of(convertBytesToHex(bytes))
-    }
+fun interface IpcTokenIdGenerator {
+    fun nextToken(): IpcTokenId
+}
 
-    private fun convertBytesToHex(bytes: ByteArray): String {
-        val result = StringBuilder()
-        for (byteValue in bytes) {
-            result.append(String.format("%02x", byteValue))
-        }
-        return result.toString()
-    }
+class RandomIpcTokenIdGenerator(private val random: Random = SecureRandom()) : IpcTokenIdGenerator {
+    override fun nextToken() = ByteArray(32)
+        .also { random.nextBytes(it) }
+        .let { it.joinToString(separator = "") { byte -> String.format("%02x", byte) } }
+        .let(IpcTokenId::of)
 }

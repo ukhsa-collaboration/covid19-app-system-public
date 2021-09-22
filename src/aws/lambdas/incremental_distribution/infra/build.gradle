@@ -1,5 +1,7 @@
 dependencies {
+    api(platform(Libs.kotlin_bom))
     api(Libs.kotlin_stdlib_jdk8)
+    api(Libs.kotlin_reflect)
 
     api(Libs.aws_lambda_java_core)
     api(Libs.aws_lambda_java_events)

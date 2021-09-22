@@ -1,0 +1,20 @@
+module "app-system-ci" {
+  source = "../.."
+  tags = {
+    Environment = "Development"
+    Owner       = "Zuhlke"
+    Application = "AnalyticsCI"
+    Criticality = "Tier 3"
+    Revision    = var.ci-infra-revision
+  }
+  service_role                 = "arn:aws:iam::181706652550:role/ApplicationDeploymentCodeBuild"
+  build_failure_events_sns_arn = data.terraform_remote_state.core_infra.outputs.cicd_build_events_sns_arn
+  deploy_events_sns_arn        = data.terraform_remote_state.core_infra.outputs.cicd_deploy_events_sns_arn
+  account                      = "aa-dev"
+  # Secrets manager entry containing the GitHub API token
+  github_credentials   = "/ci/github"
+  target_environments  = var.target_environments
+  allow_dev_pipelines  = false
+  allow_prod_pipelines = false
+  repository_url       = "https://github.com/nihp-public/covid19-app-system-public.git"
+}

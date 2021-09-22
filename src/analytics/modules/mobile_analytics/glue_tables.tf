@@ -470,6 +470,10 @@ resource "aws_glue_catalog_table" "this" {
       name = "appIsContactTraceableBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "didAccessSelfIsolationNoteLink"
+      type = "int"
+    }
   }
 }
 
@@ -937,6 +941,10 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "appIsContactTraceableBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "didAccessSelfIsolationNoteLink"
       type = "int"
     }
   }

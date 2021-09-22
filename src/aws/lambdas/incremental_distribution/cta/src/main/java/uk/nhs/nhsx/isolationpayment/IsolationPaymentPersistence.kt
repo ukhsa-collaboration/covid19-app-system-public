@@ -1,7 +1,6 @@
 package uk.nhs.nhsx.isolationpayment
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
-import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest
@@ -11,12 +10,16 @@ import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemValueOrThrow
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericNullableAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
+import uk.nhs.nhsx.core.aws.dynamodb.TableName
+import uk.nhs.nhsx.core.aws.dynamodb.withTableName
+import uk.nhs.nhsx.domain.IpcTokenId
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
-import uk.nhs.nhsx.domain.IpcTokenId
-import java.util.Optional
 
-class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, private val tableName: String) {
+class IsolationPaymentPersistence(
+    private val dynamoDbClient: AmazonDynamoDB,
+    private val tableName: TableName
+) {
     fun insertIsolationToken(token: IsolationToken) {
         dynamoDbClient.putItem(
             PutItemRequest()
@@ -25,7 +28,10 @@ class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, pr
         )
     }
 
-    fun updateIsolationToken(token: IsolationToken, currentTokenStatus: TokenStateInternal) {
+    fun updateIsolationToken(
+        token: IsolationToken,
+        currentTokenStatus: TokenStateInternal
+    ) {
         dynamoDbClient.putItem(
             PutItemRequest()
                 .withTableName(tableName)
@@ -39,7 +45,7 @@ class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, pr
         )
     }
 
-    private fun asAttributes(token: IsolationToken): Map<String, AttributeValue> = mapOf(
+    private fun asAttributes(token: IsolationToken) = mapOf(
         "tokenId" to stringAttribute(token.tokenId),
         "tokenStatus" to stringAttribute(token.tokenStatus),
         "riskyEncounterDate" to numericNullableAttribute(token.riskyEncounterDate),
@@ -51,13 +57,14 @@ class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, pr
         "expireAt" to numericAttribute(token.expireAt)
     )
 
-    fun getIsolationToken(ipcToken: IpcTokenId): Optional<IsolationToken> {
+    fun getIsolationToken(ipcToken: IpcTokenId): IsolationToken? {
         val request = GetItemRequest()
             .withTableName(tableName)
             .withKey(mapOf("tokenId" to stringAttribute(ipcToken)))
+
         val itemResult = dynamoDbClient.getItem(request)
 
-        return Optional.ofNullable(itemResult.item?.let {
+        return itemResult.item?.let {
             IsolationToken(
                 IpcTokenId.of(itemValueOrThrow(it, "tokenId")),
                 itemValueOrThrow(it, "tokenStatus"),
@@ -69,14 +76,17 @@ class IsolationPaymentPersistence(private val dynamoDbClient: AmazonDynamoDB, pr
                 itemLongValueOrNull(it, "consumedTimestamp"),
                 itemLongValueOrThrow(it, "expireAt")
             )
-        })
+        }
     }
 
-    fun deleteIsolationToken(ipcToken: IpcTokenId, currentTokenStatus: TokenStateInternal) {
+    fun deleteIsolationToken(
+        ipcToken: IpcTokenId,
+        currentTokenStatus: TokenStateInternal
+    ) {
         dynamoDbClient.deleteItem(
             DeleteItemRequest()
                 .withTableName(tableName)
-                .withKey(java.util.Map.of("tokenId", stringAttribute(ipcToken)))
+                .withKey(mapOf("tokenId" to stringAttribute(ipcToken)))
                 .withConditionExpression("attribute_exists(tokenId) and tokenStatus=:tokenStatus")
                 .withExpressionAttributeValues(mapOf(":tokenStatus" to stringAttribute(currentTokenStatus.value)))
         )

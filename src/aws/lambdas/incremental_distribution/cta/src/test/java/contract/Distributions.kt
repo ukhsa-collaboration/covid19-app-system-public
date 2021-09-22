@@ -12,21 +12,18 @@ import smoke.env.SmokeTests
 
 interface Distributions : BackendContractScenario {
     @Test
-    @JvmDefault
     fun `Mobile app polls for exposure config`() {
         control.addNote("Mobile app polls for exposure config")
         MobileApp(mitmHttpClient(), envConfig).pollExposureConfig()
     }
 
     @Test
-    @JvmDefault
     fun `Mobile app polls for availability`() {
         control.addNote("Mobile app polls for availability")
         MobileApp(mitmHttpClient(), envConfig).pollAvailability()
     }
 
     @Test
-    @JvmDefault
     fun `Mobile app polls for risky venue info`() {
         RiskParties(http(), envConfig).uploadsRiskyVenues(RiskPartyData.generateCsvFrom(RiskPartyData.generateRiskyVenues()))
 
@@ -35,7 +32,6 @@ interface Distributions : BackendContractScenario {
     }
 
     @Test
-    @JvmDefault
     fun `Mobile app polls for risky postcodes v1`() {
         RiskParties(http(), envConfig).uploadsRiskyPostcodes(RiskPartyData.generateRiskyPostcodes())
 
@@ -44,7 +40,6 @@ interface Distributions : BackendContractScenario {
     }
 
     @Test
-    @JvmDefault
     fun `Mobile app polls for risky postcodes v2`() {
         RiskParties(http(), envConfig).uploadsRiskyPostcodes(RiskPartyData.generateRiskyPostcodes())
 
@@ -53,14 +48,12 @@ interface Distributions : BackendContractScenario {
     }
 
     @Test
-    @JvmDefault
     fun `Mobile app polls for symptom questionnaire`() {
         control.addNote("Mobile app polls for symptom questionnaire")
         MobileApp(mitmHttpClient(), envConfig).pollSymptomaticQuestionnaire()
     }
 
     @Test
-    @JvmDefault
     fun `Mobile app polls for self-isolation data`() {
         control.addNote("Mobile app polls for self-isolation data")
         MobileApp(mitmHttpClient(), envConfig).pollSelfIsolation()

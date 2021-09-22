@@ -32,7 +32,8 @@ resource "aws_codebuild_project" "this" {
     compute_type                = "BUILD_GENERAL1_MEDIUM"
     image                       = var.container
     type                        = "LINUX_CONTAINER"
-    image_pull_credentials_type = "SERVICE_ROLE"
+    image_pull_credentials_type = var.image_pull_credentials_type
+    privileged_mode             = var.privileged_mode
 
     environment_variable {
       name  = "ACCOUNT"

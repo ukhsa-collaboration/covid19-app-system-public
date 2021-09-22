@@ -10,13 +10,11 @@ import java.time.LocalDate
 
 interface DiagnosisKeyDistributions : BackendContractScenario {
     @Test
-    @JvmDefault
     fun `Mobile app polls for two hourly exposure keys`() {
         MobileApp(mitmHttpClient(), envConfig).getLatestTwoHourlyTekExport()
     }
 
     @Test
-    @JvmDefault
     fun `Mobile app polls for daily exposure keys`() {
         MobileApp(mitmHttpClient(), envConfig).getDailyTekExport(LocalDate.now())
     }

@@ -39,6 +39,17 @@ variable "service_role" {
   type        = string
 }
 
+variable "image_pull_credentials_type" {
+  description = "The type of credentials AWS CodeBuild uses to pull images"
+  type        = string
+}
+
+variable "privileged_mode" {
+  description = "Whether to enable running the Docker daemon inside a Docker container"
+  type        = bool
+  default     = false
+}
+
 variable "github_api_token" {
   description = "The authentication token for GitHub"
   type        = string

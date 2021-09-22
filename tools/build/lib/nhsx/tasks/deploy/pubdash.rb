@@ -8,7 +8,11 @@ namespace :deploy do
           include NHSx::Terraform
           terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
           deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
-          Rake::Task["publish:pubdash:#{tgt_env}"].invoke
+          if ["dev", "staging", "prod"].include?(account)
+            puts "Skipping cta account website publish task"
+          else
+            Rake::Task["publish:pubdash:#{tgt_env}"].invoke
+          end
           tag(pointer_tag_name("pubdash", tgt_env), "Public dashboard deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
         end
       end
@@ -19,20 +23,6 @@ namespace :deploy do
           desc "Deploy public dashboard backend/infrastructure to #{tgt_env}"
           desc "Deploys a public dashboard backend/infrastructure temporary environment for the current branch in the dev account" if tgt_env == "branch"
           task :"#{tgt_env}" => [:"login:#{account}", :"build:pubdash:backend"] do
-            include NHSx::Terraform
-            terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
-            deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
-            tag(pointer_tag_name("pubdash-backend", tgt_env), "Public dashboard backend deployed on #{tgt_env}", $configuration) if tgt_env != "branch"
-          end
-        end
-      end
-    end
-    namespace :backend_no_build do
-      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
-        tgt_envs.each do |tgt_env|
-          desc "Deploy public dashboard backend/infrastructure to #{tgt_env}"
-          desc "Deploys a public dashboard backend/infrastructure temporary environment for the current branch in the dev account" if tgt_env == "branch"
-          task :"#{tgt_env}" => [:"login:#{account}"] do
             include NHSx::Terraform
             terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
             deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)
@@ -57,12 +47,12 @@ namespace :plan do
         end
       end
     end
-    namespace :backend_no_build do
+    namespace :backend do
       NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
         tgt_envs.each do |tgt_env|
-          desc "Run a public dashboard plan for the #{tgt_env}"
-          desc "Creates the terraform public dashboard plan of a temporary environment for the current branch in the dev account" if tgt_env == "branch"
-          task :"#{tgt_env}" => [:"login:#{account}"] do
+          desc "Deploy public dashboard backend/infrastructure to #{tgt_env}"
+          desc "Deploys a public dashboard backend/infrastructure temporary environment for the current branch in the dev account" if tgt_env == "branch"
+          task :"#{tgt_env}" => [:"login:#{account}", :"build:pubdash:backend"] do
             include NHSx::Terraform
             terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
             plan_for_workspace(tgt_env, terraform_configuration, [], $configuration)

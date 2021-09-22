@@ -39,6 +39,7 @@ import uk.nhs.nhsx.domain.TestResult
 import java.io.InputStream
 import java.time.Clock
 import java.time.Instant
+import java.util.*
 import kotlin.concurrent.thread
 import kotlin.reflect.KClass
 
@@ -152,4 +153,4 @@ fun AutoMappingConfiguration<ObjectMapper>.domainMappings() =
         .int(BiDiMapping(TestType::from, TestType::wireValue))
         .int(BiDiMapping(ReportType::from, ReportType::wireValue))
         .text(BiDiMapping({ error("illegal") }, Class<*>::getSimpleName))
-        .text(BiDiMapping({ error("illegal") }, { e: EventCategory -> e.name.toUpperCase() }))
+        .text(BiDiMapping({ error("illegal") }, { e: EventCategory -> e.name.uppercase(Locale.getDefault()) }))

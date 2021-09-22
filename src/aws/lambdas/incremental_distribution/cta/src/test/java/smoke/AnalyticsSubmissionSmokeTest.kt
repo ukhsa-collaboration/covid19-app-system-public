@@ -78,7 +78,7 @@ class AnalyticsSubmissionSmokeTest {
             val dataFromAthena = analytics.getRecordedAnalyticsFor(deviceModel)
 
             val fieldsAndValuesWeSent = Http4kJackson.fields(Http4kJackson.asJsonObject(analyticsMetrics))
-                .map { it.first.toLowerCase() to it.second.toString() }
+                .map { it.first.lowercase(Locale.getDefault()) to it.second.toString() }
 
             val interestingFieldsFromAthena =
                 dataFromAthena.filter { it.first in fieldsAndValuesWeSent.map(Pair<String, String>::first) }

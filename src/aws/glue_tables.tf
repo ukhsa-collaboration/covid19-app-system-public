@@ -458,6 +458,10 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "appIsContactTraceableBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "didAccessSelfIsolationNoteLink"
+      type = "int"
+    }
   }
 }
 
@@ -913,6 +917,10 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "appIsContactTraceableBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "didAccessSelfIsolationNoteLink"
       type = "int"
     }
   }

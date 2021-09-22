@@ -35,11 +35,12 @@ allprojects {
     compileKotlin.kotlinOptions {
         jvmTarget = "11"
         suppressWarnings = false
+        freeCompilerArgs += "-Xjvm-default=all"
     }
 
     compileTestKotlin.kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs += "-Xjvm-default=enable"
+        freeCompilerArgs += "-Xjvm-default=all"
     }
 
     compileJava {

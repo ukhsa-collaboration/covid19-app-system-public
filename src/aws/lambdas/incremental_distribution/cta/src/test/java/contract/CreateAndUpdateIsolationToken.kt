@@ -12,7 +12,6 @@ import java.time.Instant
 
 interface CreateAndUpdateIsolationToken : BackendContractScenario {
     @Test
-    @JvmDefault
     fun `Mobile user creates and submits isolation token`() {
         val mobileApp = MobileApp(mitmHttpClient(), envConfig)
 

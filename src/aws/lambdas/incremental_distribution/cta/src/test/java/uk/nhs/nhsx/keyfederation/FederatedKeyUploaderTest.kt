@@ -343,8 +343,8 @@ class FederatedKeyUploaderTest {
 
     @Test
     fun `reject expired keys`() {
-        val pastInstant1 = enIntervalNumberFromTimestamp(now.minus(Duration.ofDays(20))).enIntervalNumber
-        val pastInstant2 = enIntervalNumberFromTimestamp(now.minus(Duration.ofHours((24 * 15) + 1))).enIntervalNumber
+        val pastInstant1 = enIntervalNumberFromTimestamp(now.minus(Duration.ofDays(20L))).enIntervalNumber
+        val pastInstant2 = enIntervalNumberFromTimestamp(now.minus(Duration.ofHours((24L * 15L) + 1L))).enIntervalNumber
         val payload = DiagnosisKeysDownloadResponse(
             batchTag = BatchTag.of("batchTag"),
             exposures = listOf(

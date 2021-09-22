@@ -56,7 +56,7 @@ class IsolationPaymentGatewayServiceTest {
 
     @Test
     fun `consumes isolation token deleting existing token`() {
-        every { persistence.getIsolationToken(any()) } returns Optional.of(validStateToken)
+        every { persistence.getIsolationToken(any()) } returns validStateToken
         every { persistence.deleteIsolationToken(any(), any()) } just runs
 
         val response = service.consumeIsolationToken(validStateToken.tokenId)
@@ -74,7 +74,7 @@ class IsolationPaymentGatewayServiceTest {
 
     @Test
     fun `consumes isolation token handling not found token id`() {
-        every { persistence.getIsolationToken(any()) } returns Optional.empty()
+        every { persistence.getIsolationToken(any()) } returns null
 
         val ipcToken = IpcTokenId.of("2".repeat(64))
         val response = service.consumeIsolationToken(ipcToken)
@@ -91,7 +91,7 @@ class IsolationPaymentGatewayServiceTest {
 
     @Test
     fun `consumes isolation token handling token in created state`() {
-        every { persistence.getIsolationToken(any()) } returns Optional.of(createdStateToken)
+        every { persistence.getIsolationToken(any()) } returns createdStateToken
 
         val response = service.consumeIsolationToken(createdStateToken.tokenId)
 
@@ -107,7 +107,7 @@ class IsolationPaymentGatewayServiceTest {
 
     @Test
     fun `verifies isolation token and updates existing token validated timestamp`() {
-        every { persistence.getIsolationToken(any()) } returns Optional.of(validStateToken)
+        every { persistence.getIsolationToken(any()) } returns validStateToken
         every { persistence.updateIsolationToken(any(), any()) } just runs
 
         val response = service.verifyIsolationToken(validStateToken.tokenId)
@@ -130,7 +130,7 @@ class IsolationPaymentGatewayServiceTest {
 
     @Test
     fun `verifies isolation token handling not found token id`() {
-        every { persistence.getIsolationToken(any()) } returns Optional.empty()
+        every { persistence.getIsolationToken(any()) } returns null
 
         val ipcToken = IpcTokenId.of("3".repeat(64))
         val response = service.verifyIsolationToken(ipcToken)
@@ -147,7 +147,7 @@ class IsolationPaymentGatewayServiceTest {
 
     @Test
     fun `verifies isolation token handling token in created state`() {
-        every { persistence.getIsolationToken(any()) } returns Optional.of(createdStateToken)
+        every { persistence.getIsolationToken(any()) } returns createdStateToken
 
         val response = service.verifyIsolationToken(createdStateToken.tokenId)
 

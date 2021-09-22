@@ -17,7 +17,6 @@ import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Wl
 
 interface UserGetsVirologyTestAndPollForResult : BackendContractScenario {
     @Test
-    @JvmDefault
     fun `Mobile user orders test and polls for result`() {
         val mobileApp = MobileApp(mitmHttpClient(), envConfig)
 
@@ -35,7 +34,6 @@ interface UserGetsVirologyTestAndPollForResult : BackendContractScenario {
     }
 
     @Test
-    @JvmDefault
     fun `Mobile user registers test and polls for result`() {
         val mobileApp = MobileApp(mitmHttpClient(), envConfig)
 
@@ -63,7 +61,6 @@ interface UserGetsVirologyTestAndPollForResult : BackendContractScenario {
     }
 
     @Test
-    @JvmDefault
     fun `Mobile user uploads diagnosis keys`() {
         val mobileApp = MobileApp(mitmHttpClient(), envConfig)
 
@@ -78,7 +75,6 @@ interface UserGetsVirologyTestAndPollForResult : BackendContractScenario {
     }
 
     @Test
-    @JvmDefault
     fun `Mobile performs empty submission`() {
         control.addNote("Mobile performs empty submission")
         MobileApp(mitmHttpClient(), envConfig).emptySubmission()

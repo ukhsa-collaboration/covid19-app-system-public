@@ -1,3 +1,7 @@
 {
-    "las": {}
+    "las": {
+        "E06000052": [
+            "Notification.Era.EnglishOnly"
+        ]
+    }
 }

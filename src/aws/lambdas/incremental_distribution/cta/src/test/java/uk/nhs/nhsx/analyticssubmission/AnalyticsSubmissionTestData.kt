@@ -227,7 +227,8 @@ private fun additionalMetrics(counterValue: Int,
         "optedOutForContactIsolation" to if (useCounter) counter++ else 1,
         "optedOutForContactIsolationBackgroundTick" to if (useCounter) counter++ else 1,
         "appIsUsableBackgroundTick" to if (useCounter) counter++ else 1,
-        "appIsContactTraceableBackgroundTick" to if (useCounter) counter else 1
+        "appIsContactTraceableBackgroundTick" to if (useCounter) counter++ else 1,
+        "didAccessSelfIsolationNoteLink" to if (useCounter) counter else 1
     )
 }
 
@@ -339,6 +340,7 @@ fun analyticsStoredPayload(
     optedOutForContactIsolationBackgroundTick: Int? = null,
     appIsUsableBackgroundTick: Int? = null,
     appIsContactTraceableBackgroundTick: Int? = null,
+    didAccessSelfIsolationNoteLink: Int? = null
 ) = mapOf(
     "startDate" to "$eventStartDate",
     "endDate" to "$eventEndDate",
@@ -447,4 +449,5 @@ fun analyticsStoredPayload(
     "optedOutForContactIsolationBackgroundTick" to optedOutForContactIsolationBackgroundTick,
     "appIsUsableBackgroundTick" to appIsUsableBackgroundTick,
     "appIsContactTraceableBackgroundTick" to appIsContactTraceableBackgroundTick,
+    "didAccessSelfIsolationNoteLink" to didAccessSelfIsolationNoteLink,
 )

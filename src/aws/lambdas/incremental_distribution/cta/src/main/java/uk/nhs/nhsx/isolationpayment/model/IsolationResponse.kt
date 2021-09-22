@@ -15,4 +15,26 @@ data class IsolationResponse(
     val updatedTimestamp: Instant? = null
 ) {
     val contractVersion = 1
+
+    companion object {
+        fun of(
+            tokenId: IpcTokenId,
+            state: TokenStateExternal
+        ) = IsolationResponse(tokenId, state.value)
+
+        fun of(
+            tokenId: IpcTokenId,
+            state: TokenStateExternal,
+            isolationToken: IsolationToken
+        ) = with(isolationToken) {
+            IsolationResponse(
+                ipcToken = tokenId,
+                state = state.value,
+                riskyEncounterDate = riskyEncounterDate?.let(Instant::ofEpochSecond),
+                isolationPeriodEndDate = isolationPeriodEndDate?.let(Instant::ofEpochSecond),
+                createdTimestamp = Instant.ofEpochSecond(createdTimestamp),
+                updatedTimestamp = updatedTimestamp?.let(Instant::ofEpochSecond),
+            )
+        }
+    }
 }

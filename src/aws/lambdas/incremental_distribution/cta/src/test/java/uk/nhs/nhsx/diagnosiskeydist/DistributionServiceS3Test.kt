@@ -62,7 +62,7 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.TestKitAwareObjectKeyNameProvider
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.domain.TestKit
-import uk.nhs.nhsx.isolationpayment.IpcTokenIdGenerator
+import uk.nhs.nhsx.isolationpayment.RandomIpcTokenIdGenerator
 import uk.nhs.nhsx.testhelper.BatchExport
 import uk.nhs.nhsx.testhelper.assertions.contains
 import uk.nhs.nhsx.testhelper.data.asInstant
@@ -725,7 +725,7 @@ object Submissions {
         val keys = g(submissionTimestamp)
             .map {
                 StoredTemporaryExposureKey(
-                    IpcTokenIdGenerator.getToken().value,
+                    RandomIpcTokenIdGenerator().nextToken().value,
                     Math.toIntExact(it),
                     144,
                     7

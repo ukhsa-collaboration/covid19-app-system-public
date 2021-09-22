@@ -1,0 +1,28 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      ruby: 2.6
+      nodejs: 14.x
+    commands:
+      - curl -s -qL -o terraform_install.zip https://releases.hashicorp.com/terraform/0.13.7/terraform_0.13.7_linux_amd64.zip
+      - unzip terraform_install.zip -d /usr/bin/
+      - chmod +x /usr/bin/terraform
+      - cd tools/build
+      - gem install bundler
+      - bundle install
+  build:
+    commands:
+      - rake plan:doreto:test
+      - cd $CODEBUILD_SRC_DIR
+      - cd src/documentation_reporting_tool
+      - npm ci
+      - npm run lint:fix
+      - npm run build
+      - npm run test
+
+artifacts:
+  name: $(date +%Y%m%d%H%M%S)-$(echo $CODEBUILD_SOURCE_VERSION | sed -e 's;/;-;g').zip
+  files:
+    - "src/documentation_reporting_tool/src/components/storyshots/__image_snapshots__/**/*"
+  discard-paths: no

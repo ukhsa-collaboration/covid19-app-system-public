@@ -140,10 +140,14 @@ object Libs {
     const val org_jetbrains_kotlin_jvm_gradle_plugin: String =
             "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:_"
 
+    const val kotlin_bom: String = "org.jetbrains.kotlin:kotlin-bom:_"
+
+    const val kotlin_reflect: String = "org.jetbrains.kotlin:kotlin-reflect"
+
     const val kotlin_scripting_compiler_embeddable: String =
             "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:_"
 
-    const val kotlin_stdlib_jdk8: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:_"
+    const val kotlin_stdlib_jdk8: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
     const val junit_jupiter: String = "org.junit.jupiter:junit-jupiter"
 

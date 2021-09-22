@@ -31,6 +31,12 @@ import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.handler.RoutingHandler
 import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.withSignedResponses
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.AUDIT_LOG_PREFIX
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.COUNTRIES_WHITELISTED
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.ISOLATION_PAYMENT_WEBSITE
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.ISOLATION_TOKEN_TABLE
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.TOKEN_CREATION_ENABLED
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentSettings.TOKEN_EXPIRY_IN_WEEKS
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateRequest
 
@@ -72,19 +78,13 @@ class IsolationPaymentOrderHandler @JvmOverloads constructor(
     override fun handler() = handler
 
     companion object {
-        private val ISOLATION_TOKEN_TABLE = EnvironmentKey.string("ISOLATION_PAYMENT_TOKENS_TABLE")
-        private val ISOLATION_PAYMENT_WEBSITE = EnvironmentKey.string("ISOLATION_PAYMENT_WEBSITE")
-        private val TOKEN_EXPIRY_IN_WEEKS = EnvironmentKey.integer("TOKEN_EXPIRY_IN_WEEKS")
-        private val COUNTRIES_WHITELISTED = EnvironmentKey.strings("COUNTRIES_WHITELISTED")
-        private val TOKEN_CREATION_ENABLED = EnvironmentKey.bool("TOKEN_CREATION_ENABLED")
-        private val AUDIT_LOG_PREFIX = EnvironmentKey.string("AUDIT_LOG_PREFIX")
-
         private fun isolationPaymentService(
             clock: Clock,
             environment: Environment,
             events: Events
         ) = IsolationPaymentMobileService(
-            clock, IpcTokenIdGenerator::getToken,
+            clock,
+            RandomIpcTokenIdGenerator(),
             IsolationPaymentPersistence(
                 AmazonDynamoDBClientBuilder.defaultClient(),
                 environment.access.required(ISOLATION_TOKEN_TABLE)

@@ -105,5 +105,6 @@
     "optedOutForContactIsolation": "int",
     "optedOutForContactIsolationBackgroundTick": "int",
     "appIsUsableBackgroundTick": "int",
-    "appIsContactTraceableBackgroundTick": "int"
+    "appIsContactTraceableBackgroundTick": "int",
+    "didAccessSelfIsolationNoteLink": "int"
 }

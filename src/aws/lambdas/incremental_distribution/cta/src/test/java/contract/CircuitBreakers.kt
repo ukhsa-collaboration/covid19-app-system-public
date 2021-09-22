@@ -9,13 +9,11 @@ import smoke.env.SmokeTests
 
 interface CircuitBreakers : BackendContractScenario {
     @Test
-    @JvmDefault
     fun `Mobile user checks exposure circuit breaker`() {
         MobileApp(mitmHttpClient(), envConfig).exposureCircuitBreaker.requestAndApproveCircuitBreak()
     }
 
     @Test
-    @JvmDefault
     fun `Mobile user checks venue circuit breaker`() {
         MobileApp(mitmHttpClient(), envConfig).venueCircuitBreaker.requestAndApproveCircuitBreak()
     }

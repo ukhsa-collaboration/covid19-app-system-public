@@ -16,16 +16,15 @@ import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationResponse.OK
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal
+import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal.INT_CREATED
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateRequest
 import uk.nhs.nhsx.isolationpayment.model.TokenUpdateResponse
-import uk.nhs.nhsx.domain.IpcTokenId
+import uk.nhs.nhsx.isolationpayment.model.isStateEqual
 import java.time.Period
-import java.util.Optional
-import java.util.function.Supplier
 
 class IsolationPaymentMobileService(
     private val systemClock: Clock,
-    private val tokenGenerator: Supplier<IpcTokenId>,
+    private val tokenGenerator: IpcTokenIdGenerator,
     private val persistence: IsolationPaymentPersistence,
     private val isolationPaymentWebsite: String,
     private val tokenExpiryInWeeks: Int,
@@ -43,8 +42,8 @@ class IsolationPaymentMobileService(
         }
 
         val isolationToken = IsolationToken(
-            tokenId = tokenGenerator.get(),
-            tokenStatus = TokenStateInternal.INT_CREATED.value,
+            tokenId = tokenGenerator.nextToken(),
+            tokenStatus = INT_CREATED.value,
             createdTimestamp = systemClock().epochSecond,
             expireAt = systemClock().plus(Period.ofWeeks(tokenExpiryInWeeks)).epochSecond
         )
@@ -61,72 +60,65 @@ class IsolationPaymentMobileService(
 
     fun handleIsolationPaymentUpdate(request: TokenUpdateRequest): TokenUpdateResponse {
         val websiteUrlWithQuery = isolationPaymentWebsite + request.ipcToken
+        val isolationToken = persistence.getIsolationToken(request.ipcToken)
 
-        val isolationToken: Optional<IsolationToken> = try {
-            persistence.getIsolationToken(request.ipcToken)
-        } catch (e: Exception) {
-            throw RuntimeException("$auditLogPrefix UpdateToken exception: ipcToken=${request.ipcToken}", e)
-        }
-
-        if (isolationToken.isEmpty) { //API contract: we don't report this back to the client
-            events(
+        when {
+            // API contract: we don't report this back to the client
+            isolationToken == null -> events(
                 UpdateIPCTokenFailed(
-                    auditLogPrefix,
-                    NotFound,
-                    request.ipcToken,
+                    auditPrefix = auditLogPrefix,
+                    reason = NotFound,
+                    tokenId = request.ipcToken,
                     redirectUrl = websiteUrlWithQuery
                 )
             )
-        } else if (TokenStateInternal.INT_CREATED.value == isolationToken.get().tokenStatus) {
-            val newIsolationPeriodEndDate = request.isolationPeriodEndDate.epochSecond
 
-            val updatedToken = isolationToken.get().copy(
-                riskyEncounterDate = request.riskyEncounterDate.epochSecond,
-                isolationPeriodEndDate = newIsolationPeriodEndDate,
-                updatedTimestamp = systemClock().epochSecond,
-                tokenStatus = TokenStateInternal.INT_UPDATED.value,
-                expireAt = newIsolationPeriodEndDate
-            )
+            isolationToken.isStateEqual(INT_CREATED) -> {
+                val newIsolationPeriodEndDate = request.isolationPeriodEndDate.epochSecond
 
-            try {
-                persistence.updateIsolationToken(updatedToken, TokenStateInternal.INT_CREATED)
-                events(
-                    UpdateIPCTokenSucceeded(
-                        auditLogPrefix,
-                        isolationToken.get(),
-                        updatedToken,
-                        websiteUrlWithQuery
+                val updatedToken = isolationToken.copy(
+                    riskyEncounterDate = request.riskyEncounterDate.epochSecond,
+                    isolationPeriodEndDate = newIsolationPeriodEndDate,
+                    updatedTimestamp = systemClock().epochSecond,
+                    tokenStatus = TokenStateInternal.INT_UPDATED.value,
+                    expireAt = newIsolationPeriodEndDate
+                )
+
+                try {
+                    persistence.updateIsolationToken(updatedToken, INT_CREATED)
+                    events(UpdateIPCTokenSucceeded(auditLogPrefix, isolationToken, updatedToken, websiteUrlWithQuery))
+                } catch (e: ConditionalCheckFailedException) {
+                    events(
+                        UpdateIPCTokenFailed(
+                            auditPrefix = auditLogPrefix,
+                            reason = ConditionalCheck,
+                            tokenId = request.ipcToken,
+                            isolationToken = isolationToken,
+                            updatedToken = updatedToken,
+                            redirectUrl = websiteUrlWithQuery,
+                            exception = e
+                        )
                     )
-                )
-            } catch (e: ConditionalCheckFailedException) {
-                events(
-                    UpdateIPCTokenFailed(
-                        auditLogPrefix,
-                        ConditionalCheck,
-                        request.ipcToken,
-                        isolationToken.orElse(null),
-                        updatedToken = updatedToken,
-                        redirectUrl = websiteUrlWithQuery,
-                        exception = e
+                } catch (e: Exception) {
+                    throw RuntimeException(
+                        "$auditLogPrefix UpdateToken exception: ipcToken=${isolationToken}, !updated.ipcToken=$updatedToken",
+                        e
                     )
-                )
-            } catch (e: Exception) {
-                throw RuntimeException(
-                    "$auditLogPrefix UpdateToken exception: ipcToken=${isolationToken.get()}, !updated.ipcToken=$updatedToken",
-                    e
-                )
+                }
             }
-        } else { //API contract: we don't report this back to the client
-            events(
+
+            // API contract: we don't report this back to the client
+            else -> events(
                 UpdateIPCTokenFailed(
-                    auditLogPrefix,
-                    WrongState,
-                    request.ipcToken,
-                    isolationToken.orElse(null),
+                    auditPrefix = auditLogPrefix,
+                    reason = WrongState,
+                    tokenId = request.ipcToken,
+                    isolationToken = isolationToken,
                     redirectUrl = websiteUrlWithQuery
                 )
             )
         }
+
         return TokenUpdateResponse(websiteUrlWithQuery)
     }
 }

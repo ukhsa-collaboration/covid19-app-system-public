@@ -8,15 +8,13 @@ import uk.nhs.nhsx.core.events.TokenFailureReason.NotFound
 import uk.nhs.nhsx.core.events.TokenFailureReason.WrongState
 import uk.nhs.nhsx.core.events.UpdateIsolationTokenSucceeded
 import uk.nhs.nhsx.core.events.VerifyIsolationTokenFailed
+import uk.nhs.nhsx.domain.IpcTokenId
 import uk.nhs.nhsx.isolationpayment.model.IsolationResponse
-import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal.EXT_CONSUMED
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal.EXT_INVALID
 import uk.nhs.nhsx.isolationpayment.model.TokenStateExternal.EXT_VALID
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal.INT_UPDATED
-import uk.nhs.nhsx.domain.IpcTokenId
-import java.time.Instant.ofEpochSecond
-import java.util.Optional
+import uk.nhs.nhsx.isolationpayment.model.isStateNotEqual
 
 class IsolationPaymentGatewayService(
     private val systemClock: Clock,
@@ -26,105 +24,49 @@ class IsolationPaymentGatewayService(
 ) {
 
     fun verifyIsolationToken(ipcToken: IpcTokenId): IsolationResponse {
-        val isolationToken: Optional<IsolationToken> = try {
-            persistence.getIsolationToken(ipcToken)
-        } catch (e: Exception) {
-            throw RuntimeException("$auditLogPrefix VerifyToken exception: tokenId=$ipcToken", e)
-        }
+        val isolationToken = persistence.getIsolationToken(ipcToken)
 
-        if (isolationToken.isEmpty) {
-            events(
-                VerifyIsolationTokenFailed(
-                    auditLogPrefix,
-                    NotFound,
-                    ipcToken
-                )
-            )
-            return IsolationResponse(ipcToken, EXT_INVALID.value)
-        }
-
-        if (INT_UPDATED.value != isolationToken.get().tokenStatus) {
-            events(
-                VerifyIsolationTokenFailed(
-                    auditLogPrefix,
-                    WrongState,
-                    ipcToken,
-                    isolationToken.get()
-                )
-            )
-
-            return IsolationResponse(ipcToken, EXT_INVALID.value)
-        }
-
-        val updatedToken = isolationToken.get().copy(validatedTimestamp = systemClock().epochSecond)
-
-        return try {
-            persistence.updateIsolationToken(updatedToken, INT_UPDATED)
-            events(
-                UpdateIsolationTokenSucceeded(
-                    auditLogPrefix,
-                    isolationToken.get(),
-                    updatedToken
-                )
-            )
-
-            IsolationResponse(
-                ipcToken,
-                EXT_VALID.value,
-                updatedToken.riskyEncounterDate?.let(::ofEpochSecond),
-                updatedToken.isolationPeriodEndDate?.let(::ofEpochSecond),
-                ofEpochSecond(updatedToken.createdTimestamp),
-                updatedToken.updatedTimestamp?.let(::ofEpochSecond),
-            )
-        } catch (e: Exception) {
-            throw RuntimeException("$auditLogPrefix VerifyToken exception: existing.ipcToken${isolationToken.get()} !updated.ipcToken=$updatedToken")
+        return when {
+            isolationToken == null -> {
+                events(VerifyIsolationTokenFailed(auditLogPrefix, NotFound, ipcToken))
+                IsolationResponse.of(ipcToken, EXT_INVALID)
+            }
+            isolationToken.isStateNotEqual(INT_UPDATED) -> {
+                events(VerifyIsolationTokenFailed(auditLogPrefix, WrongState, ipcToken, isolationToken))
+                IsolationResponse.of(ipcToken, EXT_INVALID)
+            }
+            else -> {
+                val updatedToken = isolationToken.copy(validatedTimestamp = systemClock().epochSecond)
+                try {
+                    persistence.updateIsolationToken(updatedToken, INT_UPDATED)
+                    events(UpdateIsolationTokenSucceeded(auditLogPrefix, isolationToken, updatedToken))
+                    IsolationResponse.of(ipcToken, EXT_VALID, updatedToken)
+                } catch (e: Exception) {
+                    throw RuntimeException("$auditLogPrefix VerifyToken exception: existing.ipcToken${isolationToken} !updated.ipcToken=$updatedToken")
+                }
+            }
         }
     }
 
     fun consumeIsolationToken(ipcToken: IpcTokenId): IsolationResponse {
-        val isolationToken: Optional<IsolationToken> = try {
-            persistence.getIsolationToken(ipcToken)
-        } catch (e: Exception) {
-            throw RuntimeException("$auditLogPrefix ConsumeToken exception: tokenId=$ipcToken", e)
-        }
+        val isolationToken = persistence.getIsolationToken(ipcToken)
 
-        if (isolationToken.isEmpty) {
-            events(
-                ConsumeIsolationTokenFailed(
-                    auditLogPrefix,
-                    NotFound,
-                    ipcToken
-                )
-            )
-
-            return IsolationResponse(ipcToken, EXT_INVALID.value)
-        }
-
-        if (INT_UPDATED.value != isolationToken.get().tokenStatus) {
-            events(
-                ConsumeIsolationTokenFailed(
-                    auditLogPrefix,
-                    reason = WrongState,
-                    ipcToken,
-                    isolationToken.get()
-                )
-            )
-
-            return IsolationResponse(ipcToken, EXT_INVALID.value)
-        }
-
-        return try {
-            persistence.deleteIsolationToken(ipcToken, INT_UPDATED)
-            events(
-                ConsumeIsolationTokenSucceeded(
-                    auditLogPrefix,
-                    ipcToken,
-                    isolationToken.get()
-                )
-            )
-            IsolationResponse(ipcToken, EXT_CONSUMED.value)
-        } catch (e: Exception) {
-            throw RuntimeException("$auditLogPrefix ConsumeToken exception: ipcToken=${isolationToken.get()}", e)
+        return when {
+            isolationToken == null -> {
+                events(ConsumeIsolationTokenFailed(auditLogPrefix, NotFound, ipcToken))
+                IsolationResponse.of(ipcToken, EXT_INVALID)
+            }
+            isolationToken.isStateNotEqual(INT_UPDATED) -> {
+                events(ConsumeIsolationTokenFailed(auditLogPrefix, reason = WrongState, ipcToken, isolationToken))
+                IsolationResponse.of(ipcToken, EXT_INVALID)
+            }
+            else -> try {
+                persistence.deleteIsolationToken(ipcToken, INT_UPDATED)
+                events(ConsumeIsolationTokenSucceeded(auditLogPrefix, ipcToken, isolationToken))
+                IsolationResponse.of(ipcToken, EXT_CONSUMED)
+            } catch (e: Exception) {
+                throw RuntimeException("$auditLogPrefix ConsumeToken exception: ipcToken=${isolationToken}", e)
+            }
         }
     }
 }

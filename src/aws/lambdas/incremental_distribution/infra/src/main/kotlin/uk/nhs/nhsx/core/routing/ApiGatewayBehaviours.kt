@@ -96,7 +96,7 @@ fun filteringWhileMaintenanceModeEnabled(
     delegate: ApiGatewayHandler
 ): ApiGatewayHandler =
     when {
-        environment.access.required(MAINTENANCE_MODE).toLowerCase().toBoolean() ->
+        environment.access.required(MAINTENANCE_MODE).lowercase(Locale.getDefault()).toBoolean() ->
             ApiGatewayHandler { _, _ ->
                 events(RequestRejected("MAINTENANCE_MODE"))
                 HttpResponses.serviceUnavailable()

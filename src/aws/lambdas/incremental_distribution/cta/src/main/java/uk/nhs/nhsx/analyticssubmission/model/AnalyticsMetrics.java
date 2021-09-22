@@ -101,6 +101,7 @@ public class AnalyticsMetrics {
     public Integer optedOutForContactIsolationBackgroundTick;
     public Integer appIsUsableBackgroundTick;
     public Integer appIsContactTraceableBackgroundTick;
+    public Integer didAccessSelfIsolationNoteLink;
 
     public AnalyticsMetrics() {
     }

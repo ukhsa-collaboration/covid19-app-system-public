@@ -48,7 +48,7 @@ class IsolationPaymentUploadHandlerTest {
 
     @Test
     fun `consuming token returns isolation payment response with given token`() {
-        every { service.consumeIsolationToken(any()) } returns IsolationResponse(ipcToken, EXT_CONSUMED.value)
+        every { service.consumeIsolationToken(any()) } returns IsolationResponse.of(ipcToken, EXT_CONSUMED)
 
         val requestEvent = request()
             .withMethod(POST)
@@ -76,7 +76,7 @@ class IsolationPaymentUploadHandlerTest {
 
     @Test
     fun `verifying token returns isolation payment response with given token`() {
-        every { service.verifyIsolationToken(any()) } returns IsolationResponse(ipcToken, EXT_VALID.value)
+        every { service.verifyIsolationToken(any()) } returns IsolationResponse.of(ipcToken, EXT_VALID)
 
         val requestEvent = request()
             .withMethod(POST)

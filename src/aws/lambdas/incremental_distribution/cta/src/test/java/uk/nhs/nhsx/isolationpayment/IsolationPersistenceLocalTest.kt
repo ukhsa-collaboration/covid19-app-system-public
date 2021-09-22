@@ -23,11 +23,12 @@ import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.isEqualTo
 import strikt.assertions.isGreaterThan
-import strikt.java.isAbsent
-import strikt.java.isPresent
+import strikt.assertions.isNull
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericNullableAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
+import uk.nhs.nhsx.core.aws.dynamodb.TableName
+import uk.nhs.nhsx.core.aws.dynamodb.withTableName
 import uk.nhs.nhsx.domain.IpcTokenId
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal.INT_CREATED
@@ -36,7 +37,7 @@ import java.time.Instant
 import java.time.Period
 
 class IsolationPersistenceLocalTest {
-    private val tableName = "isolation_tokens_payment_table"
+    private val tableName = TableName.of("isolation_tokens_payment_table")
     private val clock = { Instant.parse("2020-12-01T00:00:00Z") }
 
     private lateinit var persistence: IsolationPaymentPersistence
@@ -86,12 +87,12 @@ class IsolationPersistenceLocalTest {
 
         persistence = IsolationPaymentPersistence(dbClient, tableName)
         dynamoDB = DynamoDB(dbClient)
-        isolationTokenTable = dynamoDB.getTable(tableName)
+        isolationTokenTable = dynamoDB.getTable(tableName.value)
     }
 
     @AfterEach
     fun destroy() {
-        dbClient.deleteTable(tableName)
+        dbClient.deleteTable(tableName.value)
     }
 
     @Test
@@ -106,7 +107,7 @@ class IsolationPersistenceLocalTest {
 
         val response = persistence.getIsolationToken(token.tokenId)
 
-        expectThat(response).isPresent().isEqualTo(token)
+        expectThat(response).isEqualTo(token)
     }
 
     @Test
@@ -136,7 +137,7 @@ class IsolationPersistenceLocalTest {
 
         val isolationToken = persistence.getIsolationToken(updatedToken.tokenId)
 
-        expectThat(isolationToken).isPresent().isEqualTo(updatedToken)
+        expectThat(isolationToken).isEqualTo(updatedToken)
     }
 
     @Test
@@ -177,7 +178,7 @@ class IsolationPersistenceLocalTest {
             persistence.deleteIsolationToken(it.tokenId, INT_CREATED)
         }
 
-        expectThat(persistence.getIsolationToken(token.tokenId)).isAbsent()
+        expectThat(persistence.getIsolationToken(token.tokenId)).isNull()
     }
 
     @Test

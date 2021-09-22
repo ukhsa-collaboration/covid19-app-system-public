@@ -129,7 +129,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "optedOutForContactIsolation": 1,
     "optedOutForContactIsolationBackgroundTick": 1,
     "appIsUsableBackgroundTick": 1,
-    "appIsContactTraceableBackgroundTick": 1
+    "appIsContactTraceableBackgroundTick": 1,
+    "didAccessSelfIsolationNoteLink": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -242,7 +243,8 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
     "optedOutForContactIsolation": 1,
     "optedOutForContactIsolationBackgroundTick": 1,
     "appIsUsableBackgroundTick": 1,
-    "appIsContactTraceableBackgroundTick": 1
+    "appIsContactTraceableBackgroundTick": 1,
+    "didAccessSelfIsolationNoteLink": 1
   },
   "includesMultipleApplicationVersions" : false
 }
@@ -333,6 +335,7 @@ Mobile clients collect and send app analytics periodically (roughly once per 24h
   * `optedOutForContactIsolationBackgroundTick`
   * `appIsUsableBackgroundTick` 
   * `appIsContactTraceableBackgroundTick`
+  * `didAccessSelfIsolationNoteLink`
 
 
 ### HTTP Response Codes
