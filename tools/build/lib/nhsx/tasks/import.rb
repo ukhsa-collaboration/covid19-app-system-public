@@ -15,6 +15,10 @@ namespace :import do
     validate_local_messages(la_message_mapping["las"], local_messages_metadata)
     voc_message_metadata = construct_local_messages_metadata(local_messages_metadata)
 
+    warnings = validate_local_messages_placeholders(voc_message_metadata)
+    puts "Finished with some warnings: " unless warnings.empty?
+    warnings.each { |k, v| puts "#{k} => #{v}" }
+
     json_message_metadata = File.join($configuration.base, "src/static/local-messages-metadata.json")
     write_file(json_message_metadata, JSON.pretty_generate(voc_message_metadata))
   end

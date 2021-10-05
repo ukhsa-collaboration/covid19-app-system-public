@@ -29,9 +29,11 @@ module "cloudwatch_analytics" {
     module.exposure_notification_circuit_breaker.gateway_id
   ]
 
+  analytics_events_function                        = module.analytics_events_submission.function
   analytics_ingest_submission_function             = module.analytics_submission_fast_ingest.submission_lambda_function_name
   analytics_ingest_processing_function             = module.analytics_submission_fast_ingest.processing_lambda_function_name
   diagnosis_keys_submission_function               = module.diagnosis_keys_submission.function
+  empty_submission_function                        = module.empty_submission.function
   federation_keys_processing_upload_function       = module.federation_keys_processing.upload_lambda_function
   federation_keys_processing_download_function     = module.federation_keys_processing.download_lambda_function
   exposure_notification_circuit_breaker_function   = module.exposure_notification_circuit_breaker.function

@@ -28,7 +28,7 @@ import uk.nhs.nhsx.testhelper.assertions.withCaptured
 class AnalyticsSubmissionQueuedHandlerTest {
 
     private val events = RecordingEvents()
-    private val analyticsSubmissionHandler = mockk<AnalyticsSubmissionHandler>()
+    private val analyticsSubmissionHandler = mockk<AnalyticsSubmissionQueuedHandler.AnalyticsSubmissionDelegate>()
 
     private val queuedHandler = AnalyticsSubmissionQueuedHandler(
         TestEnvironments.TEST.apply(

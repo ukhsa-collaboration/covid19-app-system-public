@@ -38,8 +38,6 @@ dependencies {
     implementation(Libs.zip4j)
     implementation(Libs.commons_csv)
 
-    testImplementation(Libs.dynamodblocal)
-
     testImplementation(platform(Libs.bom))
     testImplementation(Libs.lambda)
     testImplementation(Libs.athena)
@@ -53,27 +51,20 @@ dependencies {
     testApi project(path: ":infra", configuration: 'testArtifacts')
 }
 
-task copyNativeDependencies(type: Copy) {
-    from(configurations.testImplementation) {
-        include '*.dll'
-        include '*.dylib'
-        include '*.so'
-    }
-    into 'build/libs'
-}
-
 test {
     filter {
         includeTestsMatching "*Test"
         excludeTestsMatching "smoke.*"
         excludeTestsMatching "contract.*"
-        excludeTestsMatching "db.*"
+        excludeTestsMatching "integration.*"
     }
+}
 
-    dependsOn copyNativeDependencies
+task testIntegration(type: Test) {
+    useJUnitPlatform()
 
-    test.doFirst {
-        systemProperty "java.library.path", 'build/libs'
+    filter {
+        includeTestsMatching "integration.*"
     }
 }
 

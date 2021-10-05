@@ -116,3 +116,16 @@ resource "aws_cloudwatch_dashboard" "virology_api_response_dashboard" {
     virology_upload_api_gateway_id     = var.virology_upload_api_gateway_id
   })
 }
+
+resource "aws_cloudwatch_dashboard" "high_traffic_api_dashboard" {
+  dashboard_name = "${var.env}-high-traffic-api-dashboard"
+  dashboard_body = templatefile("${path.module}/templates/high_traffic_api_dashboard.tmpl", {
+    cloudfront_submission_id             = var.cloudfront_submission_id
+    analytics_events_function            = var.analytics_events_function
+    analytics_ingest_submission_function = var.analytics_ingest_submission_function
+    empty_submission_function            = var.empty_submission_function
+    analytics_events_api_gateway_id      = var.analytics_events_submission_gateway_id
+    analytics_ingest_api_gateway_id      = var.analytics_submission_fast_ingest_gateway_id
+    empty_submission_api_gateway_id      = var.empty_submission_gateway_id
+  })
+}

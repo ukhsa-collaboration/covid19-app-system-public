@@ -1,5 +1,12 @@
 version: 0.2
 phases:
+  install:
+    runtime-versions:
+      ruby: 2.6
+    commands:
+      - cd tools/build
+      - gem install bundler
+      - bundle install
   build:
     commands:
       - rake test:build_system

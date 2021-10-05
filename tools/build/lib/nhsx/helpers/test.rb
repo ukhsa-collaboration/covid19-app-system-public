@@ -14,6 +14,13 @@ module NHSx
       run_tee("Runs JVM smoke tests", cmdline, $configuration)
     end
 
+    def run_target_environment_integration_tests(target_environment)
+      java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
+      gradlew = File.join(java_project_path, "gradlew")
+      cmdline = "INTEGRATION_TEST_ENV=te-#{target_environment} #{gradlew} --console plain -p #{java_project_path} testIntegration"
+      run_tee("Runs JVM integration tests", cmdline, $configuration)
+    end
+
     def run_target_environment_sanity_tests(test_task, target_environment, account_name, system_config)
       test_config = generate_test_config(target_environment, account_name, system_config)
       java_project_path = File.join($configuration.base, "test/sanitybot")

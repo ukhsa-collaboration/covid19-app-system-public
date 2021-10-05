@@ -17,8 +17,6 @@ object Libs {
     const val com_adarshr_test_logger_gradle_plugin: String =
             "com.adarshr.test-logger:com.adarshr.test-logger.gradle.plugin:_"
 
-    const val dynamodblocal: String = "com.amazonaws:DynamoDBLocal:_"
-
     const val aws_java_sdk_athena: String = "com.amazonaws:aws-java-sdk-athena"
 
     const val aws_java_sdk_bom: String = "com.amazonaws:aws-java-sdk-bom:_"

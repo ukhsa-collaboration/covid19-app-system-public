@@ -1,27 +1,15 @@
-@file:Suppress("unused")
-
-package uk.nhs.nhsx.virology.persistence
+package integration.dynamo
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
-import com.amazonaws.services.dynamodbv2.document.DynamoDB
 import com.amazonaws.services.dynamodbv2.document.Item
-import com.amazonaws.services.dynamodbv2.document.Table
-import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded
-import com.amazonaws.services.dynamodbv2.local.shared.access.AmazonDynamoDBLocal
-import com.amazonaws.services.dynamodbv2.model.AttributeDefinition
-import com.amazonaws.services.dynamodbv2.model.CreateTableRequest
+import com.amazonaws.services.dynamodbv2.document.ItemUtils
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest
-import com.amazonaws.services.dynamodbv2.model.GlobalSecondaryIndex
-import com.amazonaws.services.dynamodbv2.model.KeySchemaElement
-import com.amazonaws.services.dynamodbv2.model.KeyType.HASH
-import com.amazonaws.services.dynamodbv2.model.Projection
-import com.amazonaws.services.dynamodbv2.model.ProjectionType.INCLUDE
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest
+import com.amazonaws.services.dynamodbv2.model.GetItemResult
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import strikt.api.Assertion
@@ -34,6 +22,7 @@ import strikt.assertions.isFailure
 import strikt.assertions.isNotNull
 import strikt.assertions.message
 import strikt.java.isAbsent
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.IndexName
@@ -53,9 +42,14 @@ import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.virology.VirologyConfig
 import uk.nhs.nhsx.virology.order.TokensGenerator
+import uk.nhs.nhsx.virology.persistence.TestOrder
+import uk.nhs.nhsx.virology.persistence.TestResultAvailability
 import uk.nhs.nhsx.virology.persistence.TestResultAvailability.AVAILABLE
+import uk.nhs.nhsx.virology.persistence.TestState
 import uk.nhs.nhsx.virology.persistence.TestState.AvailableTestResult
 import uk.nhs.nhsx.virology.persistence.TestState.PendingTestResult
+import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
+import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.OrderNotFound
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.Success
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.TransactionFailed
@@ -65,23 +59,16 @@ import java.time.LocalDateTime
 import java.time.Period
 import java.util.function.Supplier
 
-class VirologyPersistenceLocalTest {
-
-    private lateinit var dbLocal: AmazonDynamoDBLocal
-    private lateinit var dbClient: AmazonDynamoDB
-    private lateinit var dynamoDB: DynamoDB
+class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
     private val virologyConfig = VirologyConfig(
-        TableName.of("virology-ordertokens"),
-        TableName.of("virology-testresults"),
-        TableName.of("virology-submissiontokens"),
-        IndexName.of("virology-ordertokens-index")
+        TableName.of("${tgtEnv}-virology-ordertokens"),
+        TableName.of("${tgtEnv}-virology-testresults"),
+        TableName.of("${tgtEnv}-virology-submissiontokens"),
+        IndexName.of("${tgtEnv}-virology-ordertokens-index")
     )
 
-    private lateinit var orderTable: Table
-    private lateinit var resultTable: Table
-    private lateinit var submissionTable: Table
-    private lateinit var persistence: VirologyPersistenceService
+    private val persistence = VirologyPersistenceService(dbClient, virologyConfig, RecordingEvents())
 
     private val nowString = "2020-12-01T00:00:00Z"
     private val clock = { nowString.asInstant() }
@@ -94,36 +81,11 @@ class VirologyPersistenceLocalTest {
         LocalDateTime.now().plusWeeks(4)
     )
 
-    private val pendingTestResult = PendingTestResult(
-        testOrder.testResultPollingToken,
-        LAB_RESULT
-    )
+    private val pendingTestResult = PendingTestResult(testOrder.testResultPollingToken, LAB_RESULT)
 
     @BeforeEach
-    fun setup() {
-        dbLocal = DynamoDBEmbedded.create()
-        dbClient = dbLocal.amazonDynamoDB()
-        dynamoDB = DynamoDB(dbClient)
-
-        createOrderTable(virologyConfig)
-        createResultTable(virologyConfig)
-        createSubmissionTable(virologyConfig)
-
-        orderTable = dynamoDB.getTable(virologyConfig.testOrdersTable)
-        resultTable = dynamoDB.getTable(virologyConfig.testResultsTable)
-        submissionTable = dynamoDB.getTable(virologyConfig.submissionTokensTable)
-        persistence = VirologyPersistenceService(dbClient, virologyConfig, RecordingEvents())
-    }
-
-    @AfterEach
-    fun destroy() {
-        try {
-            dbClient.deleteTable(virologyConfig.testOrdersTable)
-            dbClient.deleteTable(virologyConfig.testResultsTable)
-            dbClient.deleteTable(virologyConfig.submissionTokensTable)
-        } finally {
-            dbLocal.shutdownNow()
-        }
+    fun deleteItems() {
+        dbClient.deleteTestTokens(testOrder)
     }
 
     @Test
@@ -294,12 +256,16 @@ class VirologyPersistenceLocalTest {
 
         val tokensSupplier = mockk<Supplier<TestOrder>>()
         every { tokensSupplier.get() } returns tokensWithCollision andThen tokensWithCollision andThen tokensNoCollision
+
         persistence.persistTestOrder({ tokens }, fourWeeksTtl)
         expectThat(tokens).testOrderIsPresent().testResultIsPresent(pendingTestResult)
 
         val persistedTokens = persistence.persistTestOrder(tokensSupplier, fourWeeksTtl)
         expectThat(persistedTokens).testOrderIsPresent().testResultIsPresent(pendingTestResult)
+
         verify(exactly = 3) { tokensSupplier.get() }
+        dbClient.deleteTestTokens(tokens)
+        dbClient.deleteTestTokens(tokensNoCollision)
     }
 
     @Test
@@ -317,6 +283,8 @@ class VirologyPersistenceLocalTest {
         expectThat(tokens).testOrderIsPresent().testResultIsPresent(pendingTestResult)
         expectCatching { persistence.persistTestOrder({ tokensWithCollision }, fourWeeksTtl) }
             .isFailure()
+
+        dbClient.deleteTestTokens(tokens)
     }
 
     @Test
@@ -352,6 +320,8 @@ class VirologyPersistenceLocalTest {
         expectThat(testOrder)
             .testOrderIsPresent()
             .testResultIsPresent(testResult)
+
+        expectThat(testOrder)
             .not().hasSubmission()
     }
 
@@ -424,7 +394,7 @@ class VirologyPersistenceLocalTest {
             fourWeeksTtl
         )
 
-        submissionTable.deleteItem("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken.value)
+        dbClient.deleteDiagnosisSubmissionToken(this.testOrder.diagnosisKeySubmissionToken)
 
         expectThat(testOrder).not().hasSubmission()
         expectThrows<TransactionException> { persistence.markForDeletion(testResult, virologyDataTimeToLive) }
@@ -455,13 +425,13 @@ class VirologyPersistenceLocalTest {
     @Test
     fun `persists positive test result for all test kits`() {
         TestKit.values().forEach {
-            val testOrder = TokensGenerator.generateVirologyTokens()
-            persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
+            val tokens = TokensGenerator.generateVirologyTokens()
+            persistence.persistTestOrder({ tokens }, fourWeeksTtl)
 
             val testResult = this.testOrder.positiveTestResult(it)
 
             val virologyResultRequest = VirologyResultRequestV2(
-                testOrder.ctaToken,
+                tokens.ctaToken,
                 testResult.testEndDate,
                 testResult.testResult,
                 it
@@ -471,72 +441,41 @@ class VirologyPersistenceLocalTest {
                 fourWeeksTtl
             )
 
-            expectThat(testOrder)
+            expectThat(tokens)
                 .testOrderIsPresent()
                 .testResultIsPresent(testResult)
                 .submissionIsPresent(it)
 
             expectThat(result).isA<Success>()
+
+            dbClient.deleteTestTokens(tokens)
         }
     }
 
     @Test
-    fun `persists positive test result in db`() {
-        persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
-
-        val testResult = testOrder.positiveTestResult()
-
-        val virologyResultRequest = VirologyResultRequestV2(
-            testOrder.ctaToken,
-            testResult.testEndDate,
-            testResult.testResult,
-            testResult.testKit
-        )
-
-        persistence.persistTestResultWithKeySubmission(
-            virologyResultRequest,
-            fourWeeksTtl
-        )
-
-        val result = resultTable.getItem("testResultPollingToken", testOrder.testResultPollingToken.value)
-        val resultMap = result.asMap()
-
-        expectThat(resultMap).isEqualTo(
-            mapOf(
-                "testResultPollingToken" to testOrder.testResultPollingToken.value,
-                "status" to AVAILABLE.text,
-                "testEndDate" to nowString,
-                "testResult" to testResult.testResult.wireValue,
-                "expireAt" to fourWeeksTtl.epochSecond.toBigDecimal(),
-                "testKit" to testResult.testKit.name
-            )
-        )
-    }
-
-    @Test
     fun `persists void test result for Lab test kit`() {
-        val testOrder = TokensGenerator.generateVirologyTokens()
-        persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
+        val tokens = TokensGenerator.generateVirologyTokens()
+        persistence.persistTestOrder({ tokens }, fourWeeksTtl)
 
-        val testResult = this.testOrder.voidTestResult(LAB_RESULT)
+        val testResult = tokens.voidTestResult(LAB_RESULT)
 
         val virologyResultRequest = VirologyResultRequestV2(
-            testOrder.ctaToken,
+            tokens.ctaToken,
             testResult.testEndDate,
             testResult.testResult,
             testResult.testKit
         )
 
-        val result = persistence.persistTestResultWithoutKeySubmission(
-            virologyResultRequest
-        )
+        val result = persistence.persistTestResultWithoutKeySubmission(virologyResultRequest)
 
-        expectThat(testOrder)
+        expectThat(tokens)
             .testOrderIsPresent()
             .testResultIsPresent(testResult)
             .not().hasSubmission()
 
         expectThat(result).isA<Success>()
+
+        dbClient.deleteTestTokens(tokens)
     }
 
     @Test
@@ -730,95 +669,25 @@ class VirologyPersistenceLocalTest {
             testKit = testKit
         )
 
-    private fun createOrderTable(config: VirologyConfig) {
-        val attributeDefinitions = listOf(
-            AttributeDefinition().withAttributeName("ctaToken").withAttributeType("S"),
-            AttributeDefinition().withAttributeName("testResultPollingToken").withAttributeType("S")
-        )
-
-        val keySchema = listOf(
-            KeySchemaElement().withAttributeName("ctaToken").withKeyType(HASH)
-        )
-
-        val globalSecondaryIndex = GlobalSecondaryIndex()
-            .withIndexName(config.testOrdersIndex.value)
-            .withKeySchema(
-                listOf(
-                    KeySchemaElement().withAttributeName("testResultPollingToken").withKeyType(HASH)
-                )
-            )
-            .withProjection(
-                Projection()
-                    .withProjectionType(INCLUDE)
-                    .withNonKeyAttributes(listOf("diagnosisKeySubmissionToken", "ctaToken"))
-            )
-            .withProvisionedThroughput(ProvisionedThroughput(100L, 100L))
-
-        val request = CreateTableRequest()
-            .withTableName(config.testOrdersTable.value)
-            .withKeySchema(keySchema)
-            .withAttributeDefinitions(attributeDefinitions)
-            .withProvisionedThroughput(ProvisionedThroughput(100L, 100L))
-            .withGlobalSecondaryIndexes(globalSecondaryIndex)
-
-        dbClient.createTable(request)
-    }
-
-    private fun createResultTable(config: VirologyConfig) {
-        val attributeDefinitions = listOf(
-            AttributeDefinition().withAttributeName("testResultPollingToken").withAttributeType("S")
-        )
-
-        val keySchema = listOf(
-            KeySchemaElement().withAttributeName("testResultPollingToken").withKeyType(HASH)
-        )
-
-        val request = CreateTableRequest()
-            .withTableName(config.testResultsTable.value)
-            .withKeySchema(keySchema)
-            .withAttributeDefinitions(attributeDefinitions)
-            .withProvisionedThroughput(ProvisionedThroughput(100L, 100L))
-
-        dbClient.createTable(request)
-    }
-
-    private fun createSubmissionTable(config: VirologyConfig) {
-        val attributeDefinitions = listOf(
-            AttributeDefinition().withAttributeName("diagnosisKeySubmissionToken").withAttributeType("S")
-        )
-
-        val keySchema = listOf(
-            KeySchemaElement().withAttributeName("diagnosisKeySubmissionToken").withKeyType(HASH)
-        )
-
-        val request = CreateTableRequest()
-            .withTableName(config.submissionTokensTable.value)
-            .withKeySchema(keySchema)
-            .withAttributeDefinitions(attributeDefinitions)
-            .withProvisionedThroughput(ProvisionedThroughput(100L, 100L))
-
-        dbClient.createTable(request)
-    }
-
-    private fun Assertion.Builder<TestOrder>.hasOrder() =
+    private fun Assertion.Builder<TestOrder>.hasOrder(): Assertion.Builder<Item> =
         get(TestOrder::ctaToken)
-            .get("persisted order") { orderTable.getItem("ctaToken", this.value) }
+            .get("persisted order") { dbClient.getTestOrder(this) }
             .isNotNull()
 
     private fun Assertion.Builder<TestOrder>.hasTestResult() =
         get(TestOrder::testResultPollingToken)
-            .get("persisted test result") { resultTable.getItem("testResultPollingToken", this.value) }
+            .get("persisted test result") { dbClient.getTestResult(this) }
             .isNotNull()
 
     private fun Assertion.Builder<TestOrder>.hasSubmission() =
         get(TestOrder::diagnosisKeySubmissionToken)
-            .get("persisted submission") { submissionTable.getItem("diagnosisKeySubmissionToken", this.value) }
+            .get("persisted submission") { dbClient.getDiagnosisKeySubmissionToken(this) }
             .isNotNull()
 
     private fun Assertion.Builder<TestOrder>.testOrderIsPresent(
         expireAt: Instant = fourWeeksTtl,
         downloadCount: Int? = null
-    ) = assert("test oder is present") { order ->
+    ) = assert("test order is present") { order ->
         val ctaToken = order.ctaToken.value
 
         val expected = mutableMapOf(
@@ -870,7 +739,58 @@ class VirologyPersistenceLocalTest {
             )
         )
     }
+
+    private fun AmazonDynamoDB.getTestOrder(ctaToken: CtaToken): Item? =
+        getItem(
+            GetItemRequest()
+                .withTableName(virologyConfig.testOrdersTable.value)
+                .withKey(attributeMap("ctaToken", ctaToken))
+        ).toItemMaybe()
+
+    private fun AmazonDynamoDB.getTestResult(testResultPollingToken: TestResultPollingToken): Item? =
+        getItem(
+            GetItemRequest()
+                .withTableName(virologyConfig.testResultsTable.value)
+                .withKey(attributeMap("testResultPollingToken", testResultPollingToken))
+        ).toItemMaybe()
+
+    private fun AmazonDynamoDB.getDiagnosisKeySubmissionToken(submissionToken: DiagnosisKeySubmissionToken): Item? =
+        getItem(
+            GetItemRequest()
+                .withTableName(virologyConfig.submissionTokensTable.value)
+                .withKey(attributeMap("diagnosisKeySubmissionToken", submissionToken))
+        ).toItemMaybe()
+
+    private fun AmazonDynamoDB.deleteTestTokens(testOrder: TestOrder) {
+        deleteTestOrder(testOrder.ctaToken)
+        deleteTestPollingToken(testOrder.testResultPollingToken)
+        deleteDiagnosisSubmissionToken(testOrder.diagnosisKeySubmissionToken)
+    }
+
+    private fun AmazonDynamoDB.deleteTestOrder(ctaToken: CtaToken) {
+        val deleteTestOrder = DeleteItemRequest()
+            .withTableName(virologyConfig.testOrdersTable.value)
+            .withKey(attributeMap("ctaToken", ctaToken))
+        dbClient.deleteItem(deleteTestOrder)
+    }
+
+    private fun AmazonDynamoDB.deleteTestPollingToken(testResultPollingToken: TestResultPollingToken) {
+        val deletePollingToken = DeleteItemRequest()
+            .withTableName(virologyConfig.testResultsTable.value)
+            .withKey(attributeMap("testResultPollingToken", testResultPollingToken))
+        dbClient.deleteItem(deletePollingToken)
+    }
+
+    private fun AmazonDynamoDB.deleteDiagnosisSubmissionToken(submissionToken: DiagnosisKeySubmissionToken) {
+        val deletePollingToken = DeleteItemRequest()
+            .withTableName(virologyConfig.submissionTokensTable.value)
+            .withKey(attributeMap("diagnosisKeySubmissionToken", submissionToken))
+        dbClient.deleteItem(deletePollingToken)
+    }
+
+    private fun GetItemResult.toItemMaybe(): Item? =
+        Item.fromMap(ItemUtils.toSimpleMapValue(item))
 }
 
-private fun DynamoDB.getTable(name: TableName) = getTable(name.value)
-private fun AmazonDynamoDB.deleteTable(name: TableName) = deleteTable(name.value)
+
+

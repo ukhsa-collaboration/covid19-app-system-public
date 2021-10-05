@@ -34,13 +34,13 @@ import uk.nhs.nhsx.testhelper.withJson
 import uk.nhs.nhsx.testhelper.withMethod
 import uk.nhs.nhsx.testhelper.withRequestId
 
-class AnalyticsSubmissionHandlerTest {
+class AnalyticsSubmissionDelegateTest {
 
     private val events = RecordingEvents()
     private val kinesisFirehose = mockk<AmazonKinesisFirehose>()
     private val config = AnalyticsConfig("firehoseStreamName", firehoseIngestEnabled = true)
     private val service = mockk<AnalyticsSubmissionService>()
-    private val handler = AnalyticsSubmissionHandler(
+    private val handler = AnalyticsSubmissionQueuedHandler.AnalyticsSubmissionDelegate(
         environment = TEST.apply(
             mapOf(
                 "MAINTENANCE_MODE" to "false",

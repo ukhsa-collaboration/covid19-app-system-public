@@ -1,0 +1,285 @@
+{
+    "widgets": [
+        {
+            "height": 6,
+            "width": 9,
+            "y": 12,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5xx", "ApiId", "${analytics_events_api_gateway_id}" ],
+                    [ ".", "Count", ".", ".", { "yAxis": "right" } ],
+                    [ ".", "4xx", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "apigw analytics-events-http-api (sum/5m)",
+                "start": "-P1D",
+                "end": "P0D",
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 18,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "ApiId", "${analytics_ingest_api_gateway_id}", { "yAxis": "right" } ],
+                    [ ".", "5xx", ".", "." ],
+                    [ ".", "4xx", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "apigw analytics-ingest-http-api (sum/5m)",
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 6,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5xx", "ApiId", "${empty_submission_api_gateway_id}" ],
+                    [ ".", "4xx", ".", "." ],
+                    [ ".", "Count", ".", ".", { "yAxis": "right" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "apigw empty-submission-http-api (sum/5m)",
+                "start": "-P1D",
+                "end": "P0D",
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 24,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/CloudFront", "5xxErrorRate", "Region", "Global", "DistributionId", "${cloudfront_submission_id}", { "region": "us-east-1", "yAxis": "right" } ],
+                    [ ".", "4xxErrorRate", ".", ".", ".", ".", { "region": "us-east-1", "yAxis": "right" } ],
+                    [ ".", "Requests", ".", ".", ".", ".", { "region": "us-east-1", "stat": "Sum", "yAxis": "left" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "CloudFront Submission APIs (avg error/5m) (sum requests/5m)",
+                "stat": "Average",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 12,
+            "x": 9,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "Throttles", "FunctionName", "${analytics_events_function}", { "visible": false } ],
+                    [ ".", "Errors", ".", ".", { "visible": false } ],
+                    [ ".", "Duration", ".", ".", { "yAxis": "right", "stat": "Maximum" } ],
+                    [ ".", "ConcurrentExecutions", ".", ".", { "stat": "Maximum" } ],
+                    [ ".", "Duration", ".", ".", { "yAxis": "right", "stat": "Average" } ],
+                    [ "...", { "yAxis": "right", "stat": "Minimum" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "lambda ${analytics_events_function} (.../5m)",
+                "start": "-P1D",
+                "end": "P0D",
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 12,
+            "x": 18,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "Throttles", "FunctionName", "${analytics_events_function}" ],
+                    [ ".", "Errors", ".", "." ],
+                    [ ".", "Duration", ".", ".", { "yAxis": "right", "stat": "Maximum", "visible": false } ],
+                    [ ".", "ConcurrentExecutions", ".", ".", { "stat": "Maximum", "visible": false } ],
+                    [ ".", "Duration", ".", ".", { "yAxis": "right", "stat": "Average", "visible": false } ],
+                    [ "...", { "yAxis": "right", "stat": "Minimum", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "lambda ${analytics_events_function} (.../5m)",
+                "start": "-P1D",
+                "end": "P0D",
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 18,
+            "x": 9,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "ConcurrentExecutions", "FunctionName", "${analytics_ingest_submission_function}" ],
+                    [ ".", "Duration", ".", ".", { "stat": "Average", "yAxis": "right" } ],
+                    [ "...", { "stat": "Minimum", "yAxis": "right" } ],
+                    [ "...", { "yAxis": "right" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "lambda ${analytics_ingest_submission_function} (.../5m)",
+                "stat": "Maximum",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 18,
+            "x": 18,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "Throttles", "FunctionName", "${analytics_ingest_submission_function}" ],
+                    [ ".", "Errors", ".", "${analytics_ingest_submission_function}" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "title": "lambda ${analytics_ingest_submission_function} (.../5m)",
+                "stat": "Sum",
+                "period": 300
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 6,
+            "x": 9,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "Duration", "FunctionName", "${empty_submission_function}", { "yAxis": "right", "stat": "Average" } ],
+                    [ ".", "Errors", ".", ".", { "stat": "Sum", "visible": false } ],
+                    [ ".", "ConcurrentExecutions", ".", ".", { "yAxis": "left" } ],
+                    [ ".", "Throttles", ".", ".", { "stat": "Sum", "visible": false } ],
+                    [ ".", "Duration", ".", ".", { "yAxis": "right", "stat": "Minimum" } ],
+                    [ "...", { "yAxis": "right" } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Maximum",
+                "period": 300,
+                "title": "lambda ${empty_submission_function} (.../5m)"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 6,
+            "x": 18,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/Lambda", "Duration", "FunctionName", "${empty_submission_function}", { "yAxis": "right", "stat": "Average", "visible": false } ],
+                    [ ".", "Errors", ".", ".", { "stat": "Sum" } ],
+                    [ ".", "ConcurrentExecutions", ".", ".", { "yAxis": "left", "visible": false } ],
+                    [ ".", "Throttles", ".", ".", { "stat": "Sum" } ],
+                    [ ".", "Duration", ".", ".", { "yAxis": "right", "stat": "Minimum", "visible": false } ],
+                    [ "...", { "yAxis": "right", "visible": false } ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Maximum",
+                "period": 300,
+                "title": "lambda ${empty_submission_function} (.../5m)"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 24,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Latency", "ApiId", "${analytics_ingest_api_gateway_id}" ],
+                    [ ".", "IntegrationLatency", ".", "." ],
+                    [ "AWS/Lambda", "Duration", "FunctionName", "${analytics_ingest_submission_function}" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Average",
+                "period": 3600,
+                "title": "Analytics Submissions - Latency and Duration"
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 24,
+            "x": 9,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "Count", "Stage", "$default", "ApiId", "${analytics_ingest_api_gateway_id}", { "yAxis": "right" } ],
+                    [ "AWS/Lambda", "Invocations", "FunctionName", "${analytics_ingest_submission_function}", { "yAxis": "right" } ],
+                    [ ".", "ConcurrentExecutions", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 3600,
+                "title": "Analytics Submissions - Invocations"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 24,
+            "x": 18,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ApiGateway", "5xx", "ApiId", "${analytics_ingest_api_gateway_id}" ],
+                    [ ".", "4xx", ".", "." ],
+                    [ "AWS/Lambda", "Throttles", "FunctionName", "${analytics_ingest_submission_function}" ],
+                    [ ".", "Errors", ".", "." ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-2",
+                "stat": "Sum",
+                "period": 3600,
+                "title": "Analytics Submissions - Errors"
+            }
+        }
+    ]
+}

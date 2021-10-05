@@ -21,10 +21,6 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven {
-            name "amazonaws:DynamoDBLocal Release Repo"
-            url "https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/release"
-        }
     }
 
     java {

@@ -1,4 +1,5 @@
 require_relative "../../gaudi/helpers/errors"
+require 'levenshtein'
 
 module NHSx
   # Helpers for facilitating format validation checks in static content
@@ -155,6 +156,51 @@ module NHSx
       end
 
       raise GaudiError, "Invalid fields found: #{invalid_fields}" unless invalid_fields.empty?
+    end
+
+    def close_word_matches(text, regex, word, max_distance = 0.3)
+      matches = []
+      if text == nil or text.empty?
+        return matches
+      end
+
+      regex_matches = text.scan(regex).flatten
+      regex_matches.each do |e|
+        distance = Levenshtein.normalized_distance(word, e.downcase)
+        if distance > 0 && distance <= max_distance
+          matches.push(e)
+        end
+      end
+
+      matches
+    end
+
+    def validate_local_messages_placeholders(voc_message_metadata)
+      warnings = []
+      regex = /([^a-zA-Z ][a-zA-Z]+[^a-zA-Z ])/
+      word = "[postcode]"
+
+      voc_message_metadata["messages"].each do |k1, v1|
+        v1["translations"].each do |k2, v2|
+          msg_prefix = "#{k1}.translations.#{k2}"
+
+          matches = close_word_matches(v2["head"], regex, word)
+          warnings.push({ "#{msg_prefix}.head" => matches.flatten }) unless matches.empty?
+
+          matches = close_word_matches(v2["body"], regex, word)
+          warnings.push({ "#{msg_prefix}.body" => matches.flatten }) unless matches.empty?
+
+          v2["content"].each_with_index do |e, index|
+            matches = close_word_matches(e["text"], regex, word)
+            warnings.push({ "#{msg_prefix}.content.#{index}.text" => matches.flatten }) unless matches.empty?
+
+            matches = close_word_matches(e["linkText"], regex, word)
+            warnings.push({ "#{msg_prefix}.content.#{index}.linkText" => matches.flatten }) unless matches.empty?
+          end
+        end
+      end
+
+      warnings
     end
   end
 end

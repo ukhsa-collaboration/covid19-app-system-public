@@ -20,6 +20,10 @@ variable "gateways" {
   type = list(string)
 }
 
+variable "analytics_events_function" {
+  description = "name of lambda function"
+}
+
 variable "analytics_ingest_submission_function" {
   description = "name of lambda function"
 }
@@ -29,6 +33,10 @@ variable "analytics_ingest_processing_function" {
 }
 
 variable "diagnosis_keys_submission_function" {
+  description = "name of lambda function"
+}
+
+variable "empty_submission_function" {
   description = "name of lambda function"
 }
 

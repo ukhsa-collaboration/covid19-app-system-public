@@ -7,6 +7,14 @@ namespace :test do
     end
   end
 
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+    desc "Runs all integration tests against the #{tgt_env} target environment"
+    task :"integration:#{tgt_env}" do
+      include NHSx::Test
+      run_target_environment_integration_tests(tgt_env)
+    end
+  end
+
   desc "Runs all java unit tests"
   task :"java:unit" do
     include NHSx::Test

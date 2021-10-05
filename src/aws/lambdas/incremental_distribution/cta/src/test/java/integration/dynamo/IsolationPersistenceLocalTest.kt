@@ -1,98 +1,46 @@
-@file:Suppress("unused")
+package integration.dynamo
 
-package uk.nhs.nhsx.isolationpayment
-
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
-import com.amazonaws.services.dynamodbv2.document.DynamoDB
-import com.amazonaws.services.dynamodbv2.document.Table
-import com.amazonaws.services.dynamodbv2.local.embedded.DynamoDBEmbedded
-import com.amazonaws.services.dynamodbv2.local.shared.access.AmazonDynamoDBLocal
-import com.amazonaws.services.dynamodbv2.model.AttributeDefinition
+import com.amazonaws.services.dynamodbv2.document.Item
+import com.amazonaws.services.dynamodbv2.document.ItemUtils
 import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException
-import com.amazonaws.services.dynamodbv2.model.CreateTableRequest
-import com.amazonaws.services.dynamodbv2.model.KeySchemaElement
-import com.amazonaws.services.dynamodbv2.model.KeyType.HASH
-import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest
+import com.amazonaws.services.dynamodbv2.model.GetItemResult
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.api.expectThrows
 import strikt.assertions.isEqualTo
 import strikt.assertions.isGreaterThan
+import strikt.assertions.isNotNull
 import strikt.assertions.isNull
+import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericNullableAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.TableName
 import uk.nhs.nhsx.core.aws.dynamodb.withTableName
 import uk.nhs.nhsx.domain.IpcTokenId
+import uk.nhs.nhsx.isolationpayment.IsolationPaymentPersistence
 import uk.nhs.nhsx.isolationpayment.model.IsolationToken
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal.INT_CREATED
 import uk.nhs.nhsx.isolationpayment.model.TokenStateInternal.INT_UPDATED
 import java.time.Instant
 import java.time.Period
 
-class IsolationPersistenceLocalTest {
-    private val tableName = TableName.of("isolation_tokens_payment_table")
-    private val clock = { Instant.parse("2020-12-01T00:00:00Z") }
+class IsolationPersistenceLocalTest : DynamoIntegrationTest() {
 
-    private lateinit var persistence: IsolationPaymentPersistence
-    private lateinit var isolationTokenTable: Table
-
-    companion object {
-        private lateinit var dbLocal: AmazonDynamoDBLocal
-        private lateinit var dbClient: AmazonDynamoDB
-        private lateinit var dynamoDB: DynamoDB
-
-        @JvmStatic
-        @BeforeAll
-        fun setupLocalDynamo() {
-            dbLocal = DynamoDBEmbedded.create()
-            dbClient = dbLocal.amazonDynamoDB()
-            dynamoDB = DynamoDB(dbClient)
-        }
-
-        @JvmStatic
-        @AfterAll
-        fun destroyLocalDynamo() {
-            dbLocal.shutdownNow()
-        }
-    }
+    private val tableName = TableName.of("${tgtEnv}-isolation-payment-tokens")
+    private val persistence = IsolationPaymentPersistence(dbClient, tableName)
 
     @BeforeEach
-    fun setup() {
-        val attributeDefinitions = listOf(
-            AttributeDefinition()
-                .withAttributeName("tokenId")
-                .withAttributeType("S")
+    fun deleteItems() {
+        dbClient.deleteItem(
+            DeleteItemRequest()
+                .withTableName(tableName.value)
+                .withKey(attributeMap("tokenId", getIsolationToken().tokenId))
         )
-
-        val keySchema = listOf(
-            KeySchemaElement()
-                .withAttributeName("tokenId")
-                .withKeyType(HASH)
-        )
-
-        val request = CreateTableRequest()
-            .withTableName(tableName)
-            .withKeySchema(keySchema)
-            .withAttributeDefinitions(attributeDefinitions)
-            .withProvisionedThroughput(ProvisionedThroughput(100L, 100L))
-
-        dbClient.createTable(request)
-
-        persistence = IsolationPaymentPersistence(dbClient, tableName)
-        dynamoDB = DynamoDB(dbClient)
-        isolationTokenTable = dynamoDB.getTable(tableName.value)
-    }
-
-    @AfterEach
-    fun destroy() {
-        dbClient.deleteTable(tableName.value)
     }
 
     @Test
@@ -116,12 +64,16 @@ class IsolationPersistenceLocalTest {
             persistence.insertIsolationToken(it)
         }
 
-        val item = isolationTokenTable.getItem("tokenId", token.tokenId.value)
+        val item = dbClient.getItem(
+            GetItemRequest()
+                .withTableName(tableName)
+                .withKey(attributeMap("tokenId", token.tokenId.value))
+        ).toItemMaybe()
 
         expectThat(item) {
-            get { getString("tokenStatus") }.isEqualTo(INT_CREATED.value)
-            get { getLong("expireAt") }.isEqualTo(token.expireAt)
-            get { getLong("createdTimestamp") }.isGreaterThan(0)
+            get { this?.getString("tokenStatus") }.isEqualTo(INT_CREATED.value)
+            get { this?.getLong("expireAt") }.isEqualTo(token.expireAt)
+            get { this?.getLong("createdTimestamp") }.isNotNull().isGreaterThan(0)
         }
     }
 
@@ -206,6 +158,7 @@ class IsolationPersistenceLocalTest {
     }
 
     private fun getIsolationToken(): IsolationToken {
+        val clock = { Instant.parse("2020-12-01T00:00:00Z") }
         val tokenId = IpcTokenId.of("1".repeat(64))
         val createdDate = clock().epochSecond
         val ttl = clock().plus(Period.ofWeeks(4)).epochSecond
@@ -233,4 +186,7 @@ class IsolationPersistenceLocalTest {
         "consumedTimestamp" to numericNullableAttribute(token.consumedTimestamp),
         "expireAt" to numericAttribute(token.expireAt)
     )
+
+    private fun GetItemResult.toItemMaybe(): Item? =
+        Item.fromMap(ItemUtils.toSimpleMapValue(item))
 }
