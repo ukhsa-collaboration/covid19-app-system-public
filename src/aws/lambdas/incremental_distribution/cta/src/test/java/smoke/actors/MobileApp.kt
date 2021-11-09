@@ -262,13 +262,13 @@ class MobileApp(
 
         return when (response.status.code) {
             200 -> when (version) {
-                V1 -> VirologyLookupResult.Available(response.requireSignatureHeaders().deserializeOrThrow())
+                V1 -> VirologyLookupResult.AvailableV1(response.requireSignatureHeaders().deserializeOrThrow())
                 V2 -> VirologyLookupResult.AvailableV2(
                     response.requireSignatureHeaders().deserializeWithNullCreatorsOrThrow()
                 )
             }
-            204 -> VirologyLookupResult.Pending()
-            404 -> VirologyLookupResult.NotFound()
+            204 -> VirologyLookupResult.Pending
+            404 -> VirologyLookupResult.NotFound
             else -> throw RuntimeException("Unhandled response")
         }
     }
@@ -310,10 +310,10 @@ class MobileApp(
 
         return when (response.status.code) {
             200 -> when (version) {
-                V1 -> CtaExchangeResult.Available(response.deserializeOrThrow())
+                V1 -> CtaExchangeResult.AvailableV1(response.deserializeOrThrow())
                 V2 -> CtaExchangeResult.AvailableV2(response.deserializeWithNullCreatorsOrThrow())
             }
-            404 -> CtaExchangeResult.NotFound()
+            404 -> CtaExchangeResult.NotFound(ctaToken)
             else -> throw RuntimeException("Unhandled response")
         }
     }

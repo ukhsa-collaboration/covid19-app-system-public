@@ -36,6 +36,30 @@ resource "aws_cloudwatch_dashboard" "lambda_warning_dashboard" {
   })
 }
 
+resource "aws_cloudwatch_dashboard" "lambda_init_duration_dashboard" {
+  dashboard_name = "${var.env}-lambda-init-duration"
+  dashboard_body = templatefile("${path.module}/templates/lambda_init_duration_dashboard.tmpl", {
+    all_lambdas = [
+      var.analytics_events_function,
+      var.analytics_ingest_submission_function,
+      var.analytics_ingest_processing_function,
+      var.diagnosis_keys_submission_function,
+      var.exposure_notification_circuit_breaker_function,
+      var.diagnosis_keys_processing_function,
+      var.federation_keys_processing_upload_function,
+      var.federation_keys_processing_download_function,
+      var.risky_post_districts_upload_function,
+      var.risky_venues_circuit_breaker_function,
+      var.risky_venues_upload_function,
+      var.virology_submission_function,
+      var.virology_upload_function,
+      var.isolation_payment_order_function,
+      var.isolation_payment_verify_function,
+      var.isolation_payment_consume_function
+    ]
+  })
+}
+
 resource "aws_cloudwatch_dashboard" "diagnosis_keys_dashboard" {
   dashboard_name = "${var.env}-diagnosis-keys-dashboard"
   dashboard_body = templatefile("${path.module}/templates/diagnosis_keys_dashboard.tmpl", {

@@ -24,7 +24,7 @@ The circuit breaker is polled following a risky venue notification to get a deci
 
 ```json
 {
-  "approval_token": "QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg",
+  "approvalToken": "QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg",
   "approval": "yes"|"no"|"pending"  
 }
 ```

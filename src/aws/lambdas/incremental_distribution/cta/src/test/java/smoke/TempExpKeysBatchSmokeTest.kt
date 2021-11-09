@@ -49,7 +49,7 @@ import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
-import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.Available
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.AvailableV1
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.AvailableV2
 import java.nio.ByteBuffer
 import java.time.Instant
@@ -309,7 +309,7 @@ class TempExpKeysBatchSmokeTest {
             val exchange = mobileApp.exchange(ctaToken, apiVersion)
 
             val diagnosisKeySubmissionToken = when (apiVersion) {
-                V1 -> (exchange as CtaExchangeResult.Available)
+                V1 -> (exchange as CtaExchangeResult.AvailableV1)
                     .ctaExchangeResponse
                     .diagnosisKeySubmissionToken
                 V2 -> (exchange as CtaExchangeResult.AvailableV2)
@@ -341,8 +341,8 @@ class TempExpKeysBatchSmokeTest {
             when (apiVersion) {
                 V1 -> {
                     expectThat(token)
-                        .isA<Available>()
-                        .get(Available::response)
+                        .isA<AvailableV1>()
+                        .get(AvailableV1::response)
                         .testResult
                         .isEqualTo(testResult)
                 }

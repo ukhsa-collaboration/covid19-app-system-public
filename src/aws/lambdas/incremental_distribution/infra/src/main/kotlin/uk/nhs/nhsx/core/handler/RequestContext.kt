@@ -4,4 +4,5 @@ object RequestContext {
     private val REQUEST_ID = ThreadLocal<String>()
     fun assignAwsRequestId(requestId: String?) = REQUEST_ID.set(requestId)
     fun awsRequestId() = REQUEST_ID.get() ?: "unknown"
+    fun removeAwsRequestId() = REQUEST_ID.remove()
 }

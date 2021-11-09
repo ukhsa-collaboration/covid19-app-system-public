@@ -1,7 +1,7 @@
 namespace :test do
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
     desc "Runs all smoke tests against the #{tgt_env} target environment"
-    task :"smoke:#{tgt_env}" do
+    task :"smoke:#{tgt_env}" => [:"login:dev"] do
       include NHSx::Test
       run_target_environment_smoke_tests(tgt_env, "dev", $configuration)
     end
@@ -9,7 +9,7 @@ namespace :test do
 
   NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
     desc "Runs all integration tests against the #{tgt_env} target environment"
-    task :"integration:#{tgt_env}" do
+    task :"integration:#{tgt_env}" => [:"login:dev"] do
       include NHSx::Test
       run_target_environment_integration_tests(tgt_env)
     end

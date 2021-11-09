@@ -12,16 +12,19 @@ class PrintingJsonEvents @JvmOverloads constructor(
     override fun invoke(event: Event) = print(
         Json.toJson(
             EventEnvelope(
-                listOfNotNull<Pair<String, Any>>(
+                setOfNotNull<Pair<String, Any>>(
                     "category" to event.category(),
                     "name" to event.javaClass.simpleName,
                     "timestamp" to clock(),
-                    "awsRequestId" to RequestContext.awsRequestId()
+                    "awsRequestId" to RequestContext.awsRequestId(),
+                    *event.metadata().toTypedArray()
                 ).toMap(), event
             )
         )
     )
 }
 
-data class EventEnvelope(val metadata: Map<String, Any>, val event: Event) : Event(event.category())
-
+data class EventEnvelope(
+    val metadata: Map<String, Any>,
+    val event: Event
+) : Event(event.category(), event.metadata())

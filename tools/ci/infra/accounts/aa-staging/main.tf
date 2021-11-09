@@ -7,7 +7,7 @@ module "app-system-ci" {
     Criticality = "Tier 3"
     Revision    = var.ci-infra-revision
   }
-  service_role                 = "arn:aws:iam::074634264982:role/ApplicationDeploymentCodeBuild"
+  service_role                 = "arn:aws:iam::123456789012:role/ApplicationDeploymentCodeBuild"
   build_failure_events_sns_arn = data.terraform_remote_state.core_infra.outputs.cicd_build_events_sns_arn
   deploy_events_sns_arn        = data.terraform_remote_state.core_infra.outputs.cicd_deploy_events_sns_arn
   account                      = "aa-staging"

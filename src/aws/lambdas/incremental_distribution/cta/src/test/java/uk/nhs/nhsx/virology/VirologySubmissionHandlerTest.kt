@@ -4,11 +4,11 @@ package uk.nhs.nhsx.virology
 
 import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.kms.model.SigningAlgorithmSpec
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
+import io.mockk.slot
 import io.mockk.verify
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.NOT_FOUND
@@ -35,6 +35,7 @@ import uk.nhs.nhsx.core.events.VirologyOrder
 import uk.nhs.nhsx.core.events.VirologyRegister
 import uk.nhs.nhsx.core.events.VirologyResults
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.core.headers.MobileAppVersion.Unknown
 import uk.nhs.nhsx.core.headers.MobileOS
 import uk.nhs.nhsx.core.signature.KeyId
 import uk.nhs.nhsx.core.signature.RFC2616DatedSigner
@@ -64,6 +65,7 @@ import uk.nhs.nhsx.testhelper.withHeader
 import uk.nhs.nhsx.testhelper.withJson
 import uk.nhs.nhsx.testhelper.withMethod
 import uk.nhs.nhsx.testhelper.withRequestId
+import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.UnprocessableVirologyCtaExchange
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V1
 import uk.nhs.nhsx.virology.VirologySubmissionHandlerTest.ApiVersion.V2
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
@@ -71,6 +73,7 @@ import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResponseV1
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResponseV2
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
+import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.NotFound
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
@@ -81,7 +84,6 @@ import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import java.time.Duration
 import java.time.LocalDateTime
-import java.util.*
 
 class VirologySubmissionHandlerTest {
 
@@ -114,11 +116,11 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request success`() {
-        every { persistence.getTestResult(any()) } returns Optional.of(TestData.positiveLabResult)
+        every { persistence.getTestResult(any()) } returns TestData.positiveLabResult
         every { persistence.markForDeletion(any(), any()) } just runs
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns false
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -142,11 +144,11 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle pending test result request success no content`() {
-        every { persistence.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
+        every { persistence.getTestResult(any()) } returns TestData.pendingTestResult
         every { persistence.markForDeletion(any(), any()) } just runs
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns false
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -169,10 +171,10 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request missing token`() {
-        every { persistence.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
+        every { persistence.getTestResult(any()) } returns TestData.pendingTestResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -195,10 +197,10 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request null token`() {
-        every { persistence.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
+        every { persistence.getTestResult(any()) } returns TestData.pendingTestResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -221,9 +223,9 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request that does not exist`() {
-        every { persistence.getTestResult(any()) } returns Optional.empty()
+        every { persistence.getTestResult(any()) } returns null
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -246,7 +248,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request for incorrect request json`() {
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -269,7 +271,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle test result request for missing body`() {
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -299,7 +301,7 @@ class VirologySubmissionHandlerTest {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -338,7 +340,7 @@ class VirologySubmissionHandlerTest {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -370,7 +372,7 @@ class VirologySubmissionHandlerTest {
 
     @Test
     fun `handle unknown path`() {
-        val virology = virologyService(mockk())
+        val virology = VirologyService(mockk())
 
         val requestEvent = request()
             .withMethod(POST)
@@ -407,13 +409,15 @@ class VirologySubmissionHandlerTest {
             headers.containsKey("x-amz-meta-signature")
             body.isNull()
         }
+
+        expectThat(events).contains(UnprocessableVirologyCtaExchange::class)
     }
 
     @Test
     fun `exchange cta token for available test result`() {
         val virology = mockk<VirologyService> {
             every { exchangeCtaTokenForV1(any(), any(), any()) } returns
-                CtaExchangeResult.Available(
+                CtaExchangeResult.AvailableV1(
                     CtaExchangeResponseV1(
                         DiagnosisKeySubmissionToken.of("sub-token"),
                         Positive,
@@ -458,7 +462,7 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token handling test result not available yet`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any(), any(), any()) } returns CtaExchangeResult.Pending()
+            every { exchangeCtaTokenForV1(any(), any(), any()) } returns CtaExchangeResult.Pending
         }
 
         val requestEvent = request()
@@ -487,7 +491,12 @@ class VirologySubmissionHandlerTest {
     @Test
     fun `exchange cta token handling cta token not found`() {
         val virology = mockk<VirologyService> {
-            every { exchangeCtaTokenForV1(any(), any(), any()) } returns CtaExchangeResult.NotFound()
+            val request = slot<CtaExchangeRequestV1>()
+            every {
+                exchangeCtaTokenForV1(capture(request), any(), any())
+            } answers {
+                NotFound(request.captured.ctaToken)
+            }
         }
 
         val requestEvent = request()
@@ -509,8 +518,6 @@ class VirologySubmissionHandlerTest {
         verify(exactly = 1) {
             virology.exchangeCtaTokenForV1(CtaExchangeRequestV1(CtaToken.of("cc8f0b6z")), any(), any())
         }
-
-        expectThat(events).contains(VirologyCtaExchange::class)
     }
 
     @Test
@@ -651,7 +658,7 @@ class VirologySubmissionHandlerTest {
 
         expectThat(response).status.isSameAs(OK)
 
-        verify { lookup.lookup(any(), MobileAppVersion.Unknown) }
+        verify { lookup.lookup(any(), Unknown) }
     }
 
     @ParameterizedTest
@@ -801,11 +808,46 @@ class VirologySubmissionHandlerTest {
     }
 
     @Test
+    fun `exchange v2 cta token handling cta token not found`() {
+        val virology = mockk<VirologyService> {
+            val request = slot<CtaExchangeRequestV2>()
+            every {
+                exchangeCtaTokenForV2(capture(request), any(), any())
+            } answers {
+                NotFound(request.captured.ctaToken)
+            }
+        }
+
+        val requestEvent = request()
+            .withMethod(POST)
+            .withCustomOai("OAI")
+            .withRequestId()
+            .withHeader("User-Agent", "p=Android,o=29,v=4.3.5,b=138")
+            .withPath("/virology-test/v2/cta-exchange")
+            .withBearerToken("anything")
+            .withJson(ctaExchangePayload(V2))
+
+        val response = VirologySubmissionHandler(virology).handleRequest(requestEvent, aContext())
+
+        expectThat(response) {
+            status.isSameAs(NOT_FOUND)
+            headers.containsKey("x-amz-meta-signature")
+            body.isNull()
+        }
+
+        verify(exactly = 1) {
+            virology.exchangeCtaTokenForV2(
+                CtaExchangeRequestV2(CtaToken.of("cc8f0b6z"), country), any(), any()
+            )
+        }
+    }
+
+    @Test
     fun `polling v1 test result returns pending when lab uploads positive RAPID_RESULT result via v2`() {
-        every { persistence.getTestResult(any()) } returns Optional.of(TestData.positiveRapidResult)
+        every { persistence.getTestResult(any()) } returns TestData.positiveRapidResult
         every { virologyPolicyConfig.shouldBlockV1TestResultQueries(any()) } returns true
 
-        val virology = virologyService()
+        val virology = VirologyService()
 
         val requestEvent = request()
             .withMethod(POST)
@@ -826,14 +868,11 @@ class VirologySubmissionHandlerTest {
         expectThat(events).contains(VirologyResults::class)
     }
 
-    private fun virologyService(persistence: VirologyPersistenceService = this.persistence) =
-        VirologyService(persistence, tokenGenerator, CLOCK, virologyPolicyConfig, events)
+    private fun VirologyService(persistenceService: VirologyPersistenceService = persistence) =
+        VirologyService(persistenceService, tokenGenerator, CLOCK, virologyPolicyConfig, events)
 
-    private fun lookupService(persistence: VirologyPersistenceService = this.persistence) =
-        VirologyLookupService(persistence, CLOCK, virologyPolicyConfig, events)
-
-    private fun headersOrEmpty(response: APIGatewayProxyResponseEvent) =
-        Optional.ofNullable(response.headers).orElse(emptyMap())
+    private fun VirologyLookupService(persistenceService: VirologyPersistenceService = persistence) =
+        VirologyLookupService(persistenceService, CLOCK, virologyPolicyConfig, events)
 
     private fun lookupPayload(apiVersion: ApiVersion) = when (apiVersion) {
         V1 -> """{"testResultPollingToken":"98cff3dd-882c-417b-a00a-350a205378c7"}"""
@@ -879,8 +918,8 @@ class VirologySubmissionHandlerTest {
     )
 
     private fun VirologySubmissionHandler(
-        virology: VirologyService = virologyService(persistence),
-        lookup: VirologyLookupService = lookupService(persistence),
+        virology: VirologyService = VirologyService(persistence),
+        lookup: VirologyLookupService = VirologyLookupService(persistence),
         env: Environment = environment
     ) = VirologySubmissionHandler(
         environment = env,

@@ -26,7 +26,6 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 import java.time.temporal.ChronoUnit.DAYS
 
 class ScheduledCtaTokenGenerationHandlerTest {

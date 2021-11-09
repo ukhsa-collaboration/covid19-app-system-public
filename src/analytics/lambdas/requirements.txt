@@ -1,6 +1,6 @@
 # boto - refer to https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
-boto3==1.17.14
-botocore==1.20.14
+boto3==1.17.100
+botocore==1.20.100
 
 # pytest
 pytest==6.0.1

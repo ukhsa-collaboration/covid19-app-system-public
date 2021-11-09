@@ -7,14 +7,18 @@ import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.domain.TestJourney.Lookup
 import uk.nhs.nhsx.virology.TestResultMarkForDeletionFailure
-import uk.nhs.nhsx.virology.policy.VirologyCriteria
-import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.AvailableV1
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.AvailableV2
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.NotFound
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult.Pending
 import uk.nhs.nhsx.virology.persistence.TestState
 import uk.nhs.nhsx.virology.persistence.TestState.AvailableTestResult
 import uk.nhs.nhsx.virology.persistence.TestState.PendingTestResult
 import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLive
-import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLiveCalculator
+import uk.nhs.nhsx.virology.persistence.VirologyDataTimeToLiveCalculator.Companion.DEFAULT_TTL
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
+import uk.nhs.nhsx.virology.policy.VirologyCriteria
+import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 
 class VirologyLookupService(
     private val persistence: VirologyPersistenceService,
@@ -22,29 +26,17 @@ class VirologyLookupService(
     private val policyConfig: VirologyPolicyConfig,
     private val events: Events
 ) {
-    fun lookup(request: VirologyLookupRequestV1): VirologyLookupResult = persistence
+    fun lookup(request: VirologyLookupRequestV1) = persistence
         .getTestResult(request.testResultPollingToken)
-        .map { lookupV1(it) }
-        .orElseGet { VirologyLookupResult.NotFound() }
+        ?.let(::lookupV1)
+        ?: NotFound
 
     private fun lookupV1(testState: TestState) = when (testState) {
-        is PendingTestResult -> VirologyLookupResult.Pending()
+        is PendingTestResult -> Pending
         is AvailableTestResult -> {
-            when {
-                policyConfig.shouldBlockV1TestResultQueries(testState.testKit) -> VirologyLookupResult.Pending()
-                else -> {
-                    markTestDataForDeletion(
-                        testState,
-                        VirologyDataTimeToLiveCalculator.DEFAULT_TTL(clock)
-                    )
-                    VirologyLookupResult.Available(
-                        VirologyLookupResponseV1(
-                            testState.testEndDate,
-                            testState.testResult,
-                            testState.testKit
-                        )
-                    )
-                }
+            if (policyConfig.shouldBlockV1TestResultQueries(testState.testKit)) Pending else {
+                markTestDataForDeletion(testState, DEFAULT_TTL(clock))
+                with(testState) { AvailableV1(VirologyLookupResponseV1(testEndDate, testResult, testKit)) }
             }
         }
     }
@@ -52,39 +44,37 @@ class VirologyLookupService(
     fun lookup(
         request: VirologyLookupRequestV2,
         mobileAppVersion: MobileAppVersion
-    ): VirologyLookupResult = persistence
+    ) = persistence
         .getTestResult(request.testResultPollingToken)
-        .map { lookupV2(it, request.country, mobileAppVersion) }
-        .orElseGet { VirologyLookupResult.NotFound() }
+        ?.let { lookupV2(it, request.country, mobileAppVersion) }
+        ?: NotFound
 
     private fun lookupV2(
         testState: TestState,
         country: Country,
         mobileAppVersion: MobileAppVersion
     ) = when (testState) {
-        is PendingTestResult -> VirologyLookupResult.Pending()
+        is PendingTestResult -> Pending
         is AvailableTestResult -> {
             val virologyCriteria = VirologyCriteria(Lookup, country, testState.testKit, testState.testResult)
             when {
                 policyConfig.shouldBlockV2TestResultQueries(
                     virologyCriteria,
                     mobileAppVersion
-                ) -> VirologyLookupResult.Pending()
+                ) -> Pending
                 else -> {
-                    markTestDataForDeletion(
-                        testState,
-                        VirologyDataTimeToLiveCalculator.DEFAULT_TTL(clock)
-                    )
-                    VirologyLookupResult.AvailableV2(
+                    markTestDataForDeletion(testState, DEFAULT_TTL(clock))
+                    val response = with(testState) {
                         VirologyLookupResponseV2(
-                            testState.testEndDate,
-                            testState.testResult,
-                            testState.testKit,
+                            testEndDate,
+                            testResult,
+                            testKit,
                             policyConfig.isDiagnosisKeysSubmissionSupported(virologyCriteria),
                             policyConfig.isConfirmatoryTestRequired(virologyCriteria, mobileAppVersion),
                             policyConfig.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)
                         )
-                    )
+                    }
+                    AvailableV2(response)
                 }
             }
         }
@@ -94,12 +84,7 @@ class VirologyLookupService(
         try {
             persistence.markForDeletion(testResult, timeToLive)
         } catch (e: TransactionException) {
-            events(
-                TestResultMarkForDeletionFailure(
-                    testResult.testResultPollingToken,
-                    e.message!!
-                )
-            )
+            events(TestResultMarkForDeletionFailure(testResult.testResultPollingToken, e.message))
         }
     }
 }

@@ -6,7 +6,7 @@ namespace :publish do
         include NHSx::Publish
         include NHSx::Git
         publish_doreto_website("dev", "src/documentation_reporting_tool/dist", "doreto_website_s3", tgt_env, $configuration)
-        push_git_tag("#{tgt_env}-doreto", "Published doreto on #{tgt_env}", $configuration) if tgt_env != "branch"
+        tag("#{tgt_env}-doreto", "Published doreto on #{tgt_env}", $configuration) if tgt_env != "branch"
       end
     end
   end

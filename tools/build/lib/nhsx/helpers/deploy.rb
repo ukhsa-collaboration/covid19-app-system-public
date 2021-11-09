@@ -13,7 +13,6 @@ module NHSx
       deploy_to_workspace(tgt_env, terraform_configuration, [], system_config)
       if tgt_env != "branch"
         tag(pointer_tag_name("backend", tgt_env), "CTA deployed on #{tgt_env}", system_config)
-        tag(pointer_tag_name("tiers", tgt_env), "Tiers deployed on #{tgt_env}", system_config)
         tag(pointer_tag_name("availability", tgt_env), "Availability deployed on #{tgt_env}", system_config)
       end
     end

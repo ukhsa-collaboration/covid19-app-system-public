@@ -2,7 +2,6 @@ package uk.nhs.nhsx.virology
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder
 import com.amazonaws.services.kms.AWSKMSClientBuilder
-import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
@@ -26,7 +25,6 @@ import uk.nhs.nhsx.core.events.VirologyRegister
 import uk.nhs.nhsx.core.events.VirologyResults
 import uk.nhs.nhsx.core.handler.RoutingHandler
 import uk.nhs.nhsx.core.readJsonOrNull
-import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
@@ -35,11 +33,16 @@ import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.mobileAppVersionFrom
 import uk.nhs.nhsx.core.routing.mobileOSFrom
 import uk.nhs.nhsx.core.routing.withSignedResponses
+import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.UnprocessableVirologyCtaExchange
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV1
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
+import uk.nhs.nhsx.virology.exchange.CtaExchangeResult
+import uk.nhs.nhsx.virology.exchange.toHttpResponse
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequestV1
 import uk.nhs.nhsx.virology.lookup.VirologyLookupRequestV2
+import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.lookup.VirologyLookupService
+import uk.nhs.nhsx.virology.lookup.toHttpResponse
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.order.VirologyRequestType
 import uk.nhs.nhsx.virology.order.VirologyRequestType.ORDER
@@ -65,8 +68,8 @@ class VirologySubmissionHandler @JvmOverloads constructor(
         VirologyConfig.fromEnvironment(environment),
         events
     ),
-    virology: VirologyService = virologyService(clock, events, persistence),
-    virologyLookup: VirologyLookupService = virologyLookup(clock, events, persistence),
+    virology: VirologyService = VirologyService(clock, events, persistence),
+    virologyLookup: VirologyLookupService = VirologyLookupService(clock, events, persistence),
     websiteConfig: VirologyWebsiteConfig = VirologyWebsiteConfig.fromEnvironment(environment),
     healthAuthenticator: Authenticator = awsAuthentication(Health, events)
 ) : RoutingHandler() {
@@ -94,27 +97,21 @@ class VirologySubmissionHandler @JvmOverloads constructor(
                 }),
             authorisedBy(
                 mobileAuthenticator,
-                path(POST, "/virology-test/results") { r: APIGatewayProxyRequestEvent, _ ->
+                path(POST, "/virology-test/results") { r, _ ->
                     events(VirologyResults())
-                    Json.readJsonOrNull<VirologyLookupRequestV1>(r.body) { e ->
-                        events(
-                            UnprocessableJson(e)
-                        )
-                    }
-                        ?.let { virologyLookup.lookup(it).toHttpResponse() }
+                    Json.readJsonOrNull<VirologyLookupRequestV1>(r.body) { events(UnprocessableJson(it)) }
+                        ?.let(virologyLookup::lookup)
+                        ?.let(VirologyLookupResult::toHttpResponse)
                         ?: HttpResponses.unprocessableEntity()
                 }),
             authorisedBy(
                 mobileAuthenticator,
-                path(POST, "/virology-test/cta-exchange") { r: APIGatewayProxyRequestEvent, _ ->
+                path(POST, "/virology-test/cta-exchange") { r, _ ->
                     events(VirologyCtaExchange())
                     throttlingResponse(delayDuration) {
-                        Json.readJsonOrNull<CtaExchangeRequestV1>(r.body) {
-                            events(
-                                UnprocessableVirologyCtaExchange(it)
-                            )
-                        }
-                            ?.let { virology.exchangeCtaTokenForV1(it, mobileOSFrom(r), mobileAppVersionFrom(r)).toHttpResponse() }
+                        Json.readJsonOrNull<CtaExchangeRequestV1>(r.body) { events(UnprocessableVirologyCtaExchange(it)) }
+                            ?.let { virology.exchangeCtaTokenForV1(it, mobileOSFrom(r), mobileAppVersionFrom(r)) }
+                            ?.let(CtaExchangeResult::toHttpResponse)
                             ?: HttpResponses.badRequest()
                     }
                 }
@@ -128,26 +125,23 @@ class VirologySubmissionHandler @JvmOverloads constructor(
             ),
             authorisedBy(
                 mobileAuthenticator,
-                path(POST, "/virology-test/v2/results") { r: APIGatewayProxyRequestEvent, _ ->
+                path(POST, "/virology-test/v2/results") { r, _ ->
                     events(VirologyResults())
-                    Json.readJsonOrNull<VirologyLookupRequestV2>(r.body) { e -> events(UnprocessableJson(e)) }
-                        ?.let { virologyLookup.lookup(it, mobileAppVersionFrom(r)).toHttpResponse() }
+                    Json.readJsonOrNull<VirologyLookupRequestV2>(r.body) { events(UnprocessableJson(it)) }
+                        ?.let { virologyLookup.lookup(it, mobileAppVersionFrom(r)) }
+                        ?.let(VirologyLookupResult::toHttpResponse)
                         ?: HttpResponses.unprocessableEntity()
                 }
             ),
             authorisedBy(
                 mobileAuthenticator,
-                path(POST, "/virology-test/v2/cta-exchange") { r: APIGatewayProxyRequestEvent, _ ->
+                path(POST, "/virology-test/v2/cta-exchange") { r, _ ->
                     events(VirologyCtaExchange())
                     throttlingResponse(delayDuration) {
-                        Json.readJsonOrNull<CtaExchangeRequestV2>(r.body) { e: Exception ->
-                            events(UnprocessableVirologyCtaExchange(e))
-                        }
-                            ?.let {
-                                virology.exchangeCtaTokenForV2(
-                                    it, mobileAppVersionFrom(r), mobileOSFrom(r)
-                                ).toHttpResponse()
-                            } ?: HttpResponses.badRequest()
+                        Json.readJsonOrNull<CtaExchangeRequestV2>(r.body) { events(UnprocessableVirologyCtaExchange(it)) }
+                            ?.let { virology.exchangeCtaTokenForV2(it, mobileAppVersionFrom(r), mobileOSFrom(r)) }
+                            ?.let(CtaExchangeResult::toHttpResponse)
+                            ?: HttpResponses.badRequest()
                     }
                 }
             )
@@ -159,40 +153,34 @@ class VirologySubmissionHandler @JvmOverloads constructor(
         order: VirologyRequestType
     ): APIGatewayProxyResponseEvent {
         val response = service.handleTestOrderRequest(websiteConfig, order)
-        events(
-            InfoEvent("Virology order created ctaToken: ${response.tokenParameterValue}, testResultToken: ${response.testResultPollingToken}")
-        )
+        events(InfoEvent("Virology order created ctaToken: ${response.tokenParameterValue}, testResultToken: ${response.testResultPollingToken}"))
         return HttpResponses.ok(Json.toJson(response))
     }
 
-    override fun handler(): ApiGatewayHandler = handler
+    override fun handler() = handler
 
     companion object {
-        private fun virologyService(
+        private fun VirologyService(
             clock: Clock,
             events: Events,
             persistence: VirologyPersistenceService
-        ): VirologyService {
-            return VirologyService(
-                persistence,
-                TokensGenerator,
-                clock,
-                VirologyPolicyConfig(),
-                events
-            )
-        }
+        ) = VirologyService(
+            persistence,
+            TokensGenerator,
+            clock,
+            VirologyPolicyConfig(),
+            events
+        )
 
-        private fun virologyLookup(
+        private fun VirologyLookupService(
             clock: Clock,
             events: Events,
             persistence: VirologyPersistenceService
-        ): VirologyLookupService {
-            return VirologyLookupService(
-                persistence,
-                clock,
-                VirologyPolicyConfig(),
-                events
-            )
-        }
+        ) = VirologyLookupService(
+            persistence,
+            clock,
+            VirologyPolicyConfig(),
+            events
+        )
     }
 }

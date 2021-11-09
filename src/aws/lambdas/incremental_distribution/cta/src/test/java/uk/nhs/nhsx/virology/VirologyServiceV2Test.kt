@@ -34,7 +34,12 @@ import uk.nhs.nhsx.domain.TestResult.Plod
 import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.domain.TestResult.Void
 import uk.nhs.nhsx.domain.TestResultPollingToken
+import uk.nhs.nhsx.testhelper.assertions.contains
 import uk.nhs.nhsx.testhelper.data.TestData
+import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.DownloadCountExceeded
+import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.PolicyRejectionV2
+import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.TestOrderNotFound
+import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.TestResultNotFound
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
 import uk.nhs.nhsx.virology.exchange.CtaExchangeRequestV2
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResponseV2
@@ -46,9 +51,9 @@ import uk.nhs.nhsx.virology.order.VirologyOrderResponse
 import uk.nhs.nhsx.virology.order.VirologyRequestType.ORDER
 import uk.nhs.nhsx.virology.order.VirologyWebsiteConfig
 import uk.nhs.nhsx.virology.persistence.TestOrder
-import uk.nhs.nhsx.virology.persistence.TestState
+import uk.nhs.nhsx.virology.persistence.TestState.AvailableTestResult
 import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
-import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation
+import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.Success
 import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
@@ -58,17 +63,17 @@ import uk.nhs.nhsx.virology.result.VirologyTokenStatusResponse
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.Period
-import java.util.*
 
 class VirologyServiceV2Test {
 
+    private val events = RecordingEvents()
     private val now = Instant.EPOCH
     private val clock = { now }
     private val persistence = mockk<VirologyPersistenceService>()
     private val tokensGenerator = TokensGenerator
     private val fourWeeksExpireAt = now.plus(Period.ofWeeks(4))
     private val ctaToken = CtaToken.of("cc8f0b6z")
-    private val ctaTokenAsString = "cc8f0b6z"
+    private val ctaTokenAsString = ctaToken.value
     private val pollingToken = TestResultPollingToken.of("98cff3dd-882c-417b-a00a-350a205378c7")
     private val country = England
     private val virologyPolicyConfig = VirologyPolicyConfig()
@@ -84,7 +89,7 @@ class VirologyServiceV2Test {
         val tokenGenerator = mockk<TokensGenerator>()
 
         every { persistence.persistTestOrder(any(), any()) } returns TestOrder(
-            CtaToken.of("cc8f0b6z"),
+            ctaToken,
             TestResultPollingToken.of("poll-token"),
             DiagnosisKeySubmissionToken.of("submission-token"),
             LocalDateTime.now().plusWeeks(4)
@@ -95,7 +100,7 @@ class VirologyServiceV2Test {
         expectThat(response) {
             get(VirologyOrderResponse::diagnosisKeySubmissionToken).isEqualTo(DiagnosisKeySubmissionToken.of("submission-token"))
             get(VirologyOrderResponse::testResultPollingToken).isEqualTo(TestResultPollingToken.of("poll-token"))
-            get(VirologyOrderResponse::tokenParameterValue).isEqualTo(CtaToken.of("cc8f0b6z"))
+            get(VirologyOrderResponse::tokenParameterValue).isEqualTo(ctaToken)
             get(VirologyOrderResponse::websiteUrlWithQuery).isEqualTo("https://example.order-a-test.uk?ctaToken=cc8f0b6z")
         }
 
@@ -117,8 +122,8 @@ class VirologyServiceV2Test {
 
         val testResult = TestData.positiveResultFor(testOrder.testResultPollingToken)
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
-        every { persistence.getTestResult(testResultPollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(testResultPollingToken) } returns testResult
         every { persistence.updateOnCtaExchange(any(), any(), any()) } just runs
 
         val result = VirologyService(TokensGenerator).exchangeCtaTokenForV2(
@@ -143,6 +148,8 @@ class VirologyServiceV2Test {
             persistence.getTestResult(testResultPollingToken)
             persistence.updateOnCtaExchange(testOrder, testResult, any())
         }
+
+        expectThat(events).contains(SuccessfulCtaExchange::class, CtaExchangeCompleted::class)
     }
 
     @ParameterizedTest
@@ -157,8 +164,8 @@ class VirologyServiceV2Test {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
-        every { persistence.getTestResult(pollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(pollingToken) } returns testResult
         every { persistence.updateOnCtaExchange(any(), any(), any()) } just runs
 
         val request = CtaExchangeRequestV2(ctaToken, country)
@@ -174,6 +181,8 @@ class VirologyServiceV2Test {
                 get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported).isFalse()
                 get(CtaExchangeResponseV2::requiresConfirmatoryTest).isFalse()
             }
+
+        expectThat(events).contains(CtaExchangeCompleted::class)
     }
 
     @ParameterizedTest
@@ -188,8 +197,8 @@ class VirologyServiceV2Test {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
-        every { persistence.getTestResult(pollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(pollingToken) } returns testResult
         every { persistence.updateOnCtaExchange(any(), any(), any()) } just runs
 
         val request = CtaExchangeRequestV2(ctaToken, country)
@@ -205,6 +214,8 @@ class VirologyServiceV2Test {
                 get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported).isFalse()
                 get(CtaExchangeResponseV2::requiresConfirmatoryTest).isFalse()
             }
+
+        expectThat(events).contains(CtaExchangeCompleted::class)
     }
 
     @ParameterizedTest
@@ -221,8 +232,8 @@ class VirologyServiceV2Test {
         )
         val testResult = TestData.positiveResultFor(testOrder.testResultPollingToken)
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
-        every { persistence.getTestResult(pollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(pollingToken) } returns testResult
         every { persistence.updateOnCtaExchange(any(), any(), any()) } just runs
 
         val request = CtaExchangeRequestV2(ctaToken, Country.of(country))
@@ -237,6 +248,8 @@ class VirologyServiceV2Test {
             .get(AvailableV2::ctaExchangeResponse).and {
                 get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported).isEqualTo(expectedFlag)
             }
+
+        expectThat(events).contains(SuccessfulCtaExchange::class, CtaExchangeCompleted::class)
     }
 
     @ParameterizedTest
@@ -251,8 +264,8 @@ class VirologyServiceV2Test {
 
         val testResult = TestData.positiveResultFor(testOrder.testResultPollingToken, RAPID_SELF_REPORTED)
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
-        every { persistence.getTestResult(pollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(pollingToken) } returns testResult
         every { persistence.updateOnCtaExchange(any(), any(), any()) } just runs
 
         val request = CtaExchangeRequestV2(ctaToken, Country.of(country))
@@ -267,6 +280,8 @@ class VirologyServiceV2Test {
             .get(AvailableV2::ctaExchangeResponse).and {
                 get(CtaExchangeResponseV2::requiresConfirmatoryTest).isEqualTo(expectedFlag)
             }
+
+        expectThat(events).contains(SuccessfulCtaExchange::class, CtaExchangeCompleted::class)
     }
 
     @Test
@@ -281,8 +296,8 @@ class VirologyServiceV2Test {
 
         val testResult = TestData.pendingTestResult
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testTokens)
-        every { persistence.getTestResult(testResultPollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testTokens
+        every { persistence.getTestResult(testResultPollingToken) } returns testResult
 
         val result = VirologyService(TokensGenerator).exchangeCtaTokenForV2(
             CtaExchangeRequestV2(ctaToken, country),
@@ -296,11 +311,13 @@ class VirologyServiceV2Test {
             persistence.getTestOrder(ctaToken)
             persistence.getTestResult(testResultPollingToken)
         }
+
+        expectThat(events).contains(VirologyResultPending::class)
     }
 
     @Test
     fun `exchanges cta token pending when mobile version is considered old and confirmatory test required`() {
-        val testTokens = TestOrder(
+        val testOrder = TestOrder(
             ctaToken,
             pollingToken,
             DiagnosisKeySubmissionToken.of("sub-token"),
@@ -308,8 +325,8 @@ class VirologyServiceV2Test {
         )
         val testResult = TestData.positiveResultFor(pollingToken, RAPID_SELF_REPORTED)
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testTokens)
-        every { persistence.getTestResult(pollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(pollingToken) } returns testResult
 
         val result = VirologyService(TokensGenerator).exchangeCtaTokenForV2(
             CtaExchangeRequestV2(ctaToken, country),
@@ -318,11 +335,13 @@ class VirologyServiceV2Test {
         )
 
         expectThat(result).isA<NotFound>()
+
+        expectThat(events).contains(PolicyRejectionV2::class)
     }
 
     @Test
     fun `exchanges cta token and does not find match`() {
-        every { persistence.getTestOrder(ctaToken) } returns Optional.empty()
+        every { persistence.getTestOrder(ctaToken) } returns null
 
         val result = VirologyService(TokensGenerator).exchangeCtaTokenForV2(
             CtaExchangeRequestV2(ctaToken, country),
@@ -333,6 +352,8 @@ class VirologyServiceV2Test {
         expectThat(result).isA<NotFound>()
 
         verifySequence { persistence.getTestOrder(ctaToken) }
+
+        expectThat(events).contains(TestOrderNotFound::class)
     }
 
     @Test
@@ -345,8 +366,8 @@ class VirologyServiceV2Test {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
-        every { persistence.getTestResult(testResultPollingToken) } returns Optional.empty()
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(testResultPollingToken) } returns null
 
         val result = VirologyService(TokensGenerator).exchangeCtaTokenForV2(
             CtaExchangeRequestV2(ctaToken, country),
@@ -360,12 +381,14 @@ class VirologyServiceV2Test {
             persistence.getTestOrder(ctaToken)
             persistence.getTestResult(testResultPollingToken)
         }
+
+        expectThat(events).contains(TestResultNotFound::class)
     }
 
     @Test
     fun `when download counter is 2, return not found`() {
         val testResultPollingToken = TestResultPollingToken.of("poll-token")
-        val testTokensCounter = TestOrder(
+        val testOrder = TestOrder(
             ctaToken,
             2,
             testResultPollingToken,
@@ -373,10 +396,10 @@ class VirologyServiceV2Test {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        val testResult = TestData.positiveResultFor(testTokensCounter.testResultPollingToken)
+        val testResult = TestData.positiveResultFor(testOrder.testResultPollingToken)
 
-        every { persistence.getTestOrder(ctaToken) }.returns(Optional.of(testTokensCounter))
-        every { persistence.getTestResult(testResultPollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(testResultPollingToken) } returns testResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
         val result = VirologyService(TokensGenerator).exchangeCtaTokenForV2(
@@ -388,16 +411,15 @@ class VirologyServiceV2Test {
         expectThat(result).isA<NotFound>()
 
         verify(exactly = 1) { persistence.getTestOrder(ctaToken) }
+
+        expectThat(events).contains(DownloadCountExceeded::class)
     }
 
     @Test
     fun `persists positive result`() {
         every {
-            persistence.persistTestResultWithKeySubmission(
-                any(),
-                any()
-            )
-        } returns VirologyResultPersistOperation.Success()
+            persistence.persistTestResultWithKeySubmission(any(), any())
+        } returns Success()
 
         val testResult = NPEXTestResultWith(Positive)
 
@@ -410,7 +432,7 @@ class VirologyServiceV2Test {
 
     @Test
     fun `persists negative result`() {
-        every { persistence.persistTestResultWithoutKeySubmission(any()) } returns VirologyResultPersistOperation.Success()
+        every { persistence.persistTestResultWithoutKeySubmission(any()) } returns Success()
 
         val testResult = NPEXTestResultWith(Negative)
 
@@ -423,7 +445,7 @@ class VirologyServiceV2Test {
 
     @Test
     fun `persists void result`() {
-        every { persistence.persistTestResultWithoutKeySubmission(any()) } returns VirologyResultPersistOperation.Success()
+        every { persistence.persistTestResultWithoutKeySubmission(any()) } returns Success()
 
         val testResult = NPEXTestResultWith(Void)
 
@@ -436,7 +458,7 @@ class VirologyServiceV2Test {
 
     @Test
     fun `persists plod result`() {
-        every { persistence.persistTestResultWithoutKeySubmission(any()) } returns VirologyResultPersistOperation.Success()
+        every { persistence.persistTestResultWithoutKeySubmission(any()) } returns Success()
 
         val testResult = NPEXTestResultWith(Plod)
 
@@ -469,7 +491,7 @@ class VirologyServiceV2Test {
 
         verify(exactly = 1) {
             persistence.persistTestOrderAndResult(
-                testOrderSupplier = any(),
+                testOrderFn = any(),
                 expireAt = fourWeeksExpireAt,
                 testResult = Positive,
                 testEndDate = TestEndDate.of(2020, 8, 7),
@@ -529,7 +551,7 @@ class VirologyServiceV2Test {
 
         verify(exactly = 1) {
             persistence.persistTestOrderAndResult(
-                testOrderSupplier = any(),
+                testOrderFn = any(),
                 expireAt = fourWeeksExpireAt,
                 testResult = Void,
                 testEndDate = TestEndDate.of(2020, 8, 7),
@@ -561,7 +583,7 @@ class VirologyServiceV2Test {
 
         verify(exactly = 1) {
             persistence.persistTestOrderAndResult(
-                testOrderSupplier = any(),
+                testOrderFn = any(),
                 expireAt = fourWeeksExpireAt,
                 testResult = Plod,
                 testEndDate = TestEndDate.of(2020, 8, 7),
@@ -580,14 +602,12 @@ class VirologyServiceV2Test {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
-        every { persistence.getTestResult(testResultPollingToken) } returns Optional.of(
-            TestState.AvailableTestResult(
-                testResultPollingToken,
-                TestEndDate.Companion.of(2020, 5, 4),
-                Positive,
-                RAPID_SELF_REPORTED
-            )
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
+        every { persistence.getTestResult(testResultPollingToken) } returns AvailableTestResult(
+            testResultPollingToken,
+            TestEndDate.of(2020, 5, 4),
+            Positive,
+            RAPID_SELF_REPORTED
         )
 
         val request = VirologyTokenStatusRequest(ctaTokenAsString)
@@ -612,7 +632,7 @@ class VirologyServiceV2Test {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        every { persistence.getTestOrder(ctaToken) } returns Optional.of(testOrder)
+        every { persistence.getTestOrder(ctaToken) } returns testOrder
 
         val request = VirologyTokenStatusRequest(ctaTokenAsString)
         val result = VirologyService(TokensGenerator).checkStatusOfToken(request, Eng)
@@ -626,7 +646,7 @@ class VirologyServiceV2Test {
 
     @Test
     fun `check token returns other when ctaToken is not in the database`() {
-        every { persistence.getTestOrder(ctaToken) } returns Optional.empty()
+        every { persistence.getTestOrder(ctaToken) } returns null
 
         val request = VirologyTokenStatusRequest(ctaTokenAsString)
         val result = VirologyService(TokensGenerator).checkStatusOfToken(request, Eng)
@@ -656,7 +676,7 @@ class VirologyServiceV2Test {
         tokensGenerator = tokenGenerator,
         clock = clock,
         policyConfig = virologyPolicyConfig,
-        events = RecordingEvents()
+        events = events
     )
 
     private fun NPEXTestResultWith(testResult: TestResult) = VirologyResultRequestV2(

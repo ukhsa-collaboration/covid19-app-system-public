@@ -36,7 +36,6 @@ import uk.nhs.nhsx.virology.persistence.VirologyPersistenceService
 import uk.nhs.nhsx.virology.policy.VirologyPolicyConfig
 import java.time.Duration
 import java.time.Instant
-import java.util.*
 
 class VirologyLookupServiceV2Test {
 
@@ -51,7 +50,7 @@ class VirologyLookupServiceV2Test {
     @Test
     fun `lookup with result available`() {
         val testResult = TestData.positiveLabResult
-        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
+        every { persistence.getTestResult(any()) } returns testResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
         val service = VirologyLookupService()
@@ -84,7 +83,7 @@ class VirologyLookupServiceV2Test {
     fun `lookup negative lab result returns correct response flags`(testKit: TestKit) {
         val testResult = TestData.negativeResultFor(testKit)
 
-        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
+        every { persistence.getTestResult(any()) } returns testResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
         val service = VirologyLookupService()
@@ -104,7 +103,7 @@ class VirologyLookupServiceV2Test {
     fun `lookup void lab result returns correct response flags`(testKit: TestKit) {
         val testResult = TestData.voidResultFor(testKit)
 
-        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
+        every { persistence.getTestResult(any()) } returns testResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
         val service = VirologyLookupService()
@@ -124,7 +123,7 @@ class VirologyLookupServiceV2Test {
     fun `lookup supporting diagnosis keys submission for each country`(country: String, expectedFlag: Boolean) {
         val testResult = TestData.positiveLabResult
 
-        every { persistence.getTestResult(any()) } returns Optional.of(testResult)
+        every { persistence.getTestResult(any()) } returns testResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
         val service = VirologyLookupService()
@@ -143,7 +142,7 @@ class VirologyLookupServiceV2Test {
     fun `lookup requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testResult = TestData.positiveResultFor(pollingToken, RAPID_SELF_REPORTED)
 
-        every { persistence.getTestResult(pollingToken) } returns Optional.of(testResult)
+        every { persistence.getTestResult(pollingToken) } returns testResult
         every { persistence.markForDeletion(any(), any()) } just runs
 
         val service = VirologyLookupService()
@@ -159,7 +158,7 @@ class VirologyLookupServiceV2Test {
 
     @Test
     fun `lookup with result pending`() {
-        every { persistence.getTestResult(any()) } returns Optional.of(TestData.pendingTestResult)
+        every { persistence.getTestResult(any()) } returns TestData.pendingTestResult
 
         val service = VirologyLookupService()
         val request = VirologyLookupRequestV2(pollingToken, country)
@@ -170,7 +169,7 @@ class VirologyLookupServiceV2Test {
 
     @Test
     fun `lookup with no match`() {
-        every { persistence.getTestResult(any()) } returns Optional.empty()
+        every { persistence.getTestResult(any()) } returns null
 
         val service = VirologyLookupService()
         val request = VirologyLookupRequestV2(pollingToken, country)

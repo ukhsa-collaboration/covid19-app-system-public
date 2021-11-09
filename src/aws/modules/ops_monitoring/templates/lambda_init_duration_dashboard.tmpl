@@ -1,0 +1,16 @@
+${jsonencode({
+  "widgets": [for lambda_name in all_lambdas : {
+      "height": 6,
+      "width": 24,
+      "y": 0,
+      "x": 0,
+      "type": "log",
+      "properties": {
+          "query": "SOURCE '/aws/lambda/${lambda_name}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration) by bin(2h)",
+          "region": "eu-west-2",
+          "stacked": false,
+          "title": "${lambda_name}",
+          "view": "timeSeries"
+      }
+  }]
+})}

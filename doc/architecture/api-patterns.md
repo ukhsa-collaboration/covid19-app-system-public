@@ -88,7 +88,7 @@ After receiving the token the mobile client polls the backend until it receives 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
 | Exposure Notification Circuit Breaker | Circuit Breaker | [exposure-notification-circuit-breaker.md](api-contracts/mobile-facing/circuit-breaker/exposure-notification-circuit-breaker.md) | Manual circuit breaker to stop exposure notification alerts in mobile clients following a recent contact match with distributed diagnosis keys. |
-| Risk Venues Circuit Breaker | Circuit Breaker | [risky-venue-circuit-breaker.md](api-contracts/mobile-facing/circuit-breaker/exposure-notification-circuit-breaker.md) | Manual circuit breaker to stop user notification alerts in mobile clients, following a check-in match on the mobile client with a venue identified as risky. |
+| Risk Venues Circuit Breaker | Circuit Breaker | [risky-venue-circuit-breaker.md](api-contracts/mobile-facing/circuit-breaker/risky-venue-circuit-breaker.md) | Manual circuit breaker to stop user notification alerts in mobile clients, following a check-in match on the mobile client with a venue identified as risky. |
 
 ### Connector
 

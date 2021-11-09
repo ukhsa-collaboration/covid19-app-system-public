@@ -94,8 +94,8 @@ class VirologyMixSmokeTest {
         val response = mobileApp.pollForTestResult(pollingToken, V1)
 
         expectThat(response)
-            .isA<VirologyLookupResult.Available>()
-            .get(VirologyLookupResult.Available::response).and {
+            .isA<VirologyLookupResult.AvailableV1>()
+            .get(VirologyLookupResult.AvailableV1::response).and {
                 testResult.isEqualTo(Positive)
                 testKit.isEqualTo(input)
                 testEndDate.isEqualTo(TestEndDate.of(2020, 4, 23))
@@ -163,8 +163,8 @@ class VirologyMixSmokeTest {
         val exchangeResponse = mobileApp.exchange(ctaToken, V1)
 
         expectThat(exchangeResponse)
-            .isA<CtaExchangeResult.Available>()
-            .get(CtaExchangeResult.Available::ctaExchangeResponse).and {
+            .isA<CtaExchangeResult.AvailableV1>()
+            .get(CtaExchangeResult.AvailableV1::ctaExchangeResponse).and {
                 testResult.isEqualTo(Positive)
                 testKit.isEqualTo(input)
                 testEndDate.isEqualTo(TestEndDate.of(2020, 11, 19))
@@ -205,7 +205,7 @@ class VirologyMixSmokeTest {
         val pollingToken = orderResponse.testResultPollingToken
 
         val response1 = mobileApp.pollForTestResult(pollingToken, V1)
-        expectThat(response1).isA<VirologyLookupResult.Available>()
+        expectThat(response1).isA<VirologyLookupResult.AvailableV1>()
 
         val response2 = mobileApp.pollForTestResult(pollingToken, V2, England)
         expectThat(response2).isA<VirologyLookupResult.AvailableV2>()

@@ -1,10 +1,10 @@
 package uk.nhs.nhsx.virology.persistence
 
-import uk.nhs.nhsx.domain.TestKit
-import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.domain.TestResult.Positive
+import uk.nhs.nhsx.domain.TestResultPollingToken
 
 sealed class TestState {
     abstract val testResultPollingToken: TestResultPollingToken

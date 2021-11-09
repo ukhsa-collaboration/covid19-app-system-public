@@ -9,18 +9,16 @@ module NHSx
   # Methods to facilitate logging in to different AWS accounts
   module Login
     include NHSx::TargetEnvironment
-    # Accounts using MFA for authentication
-    MFA_ACCOUNTS = ["prod", "staging"].freeze
     # Accounts using SSO for authentication
-    SSO_ACCOUNTS = ["aa-prod", "aa-staging", "aa-dev"].freeze
+    SSO_ACCOUNTS = ["prod", "staging", "dev", "aa-prod", "aa-staging", "aa-dev"].freeze
     # The ARNs for the deployment roles per account
     AWS_DEPLOYMENT_ROLES = {
-      "dev" => "arn:aws:iam::123456789012:role/dev-ApplicationDeploymentUser",
-      "staging" => "arn:aws:iam::123456789012:role/staging-ApplicationDeploymentUser",
-      "prod" => "arn:aws:iam::123456789012:role/prod-ApplicationDeploymentUser",
-      "aa-dev" => "arn:aws:iam::181706652550:role/ApplicationDeploymentUser",
-      "aa-staging" => "arn:aws:iam::074634264982:role/ApplicationDeploymentUser",
-      "aa-prod" => "arn:aws:iam::353189165293:role/ApplicationDeploymentUser",
+      "dev" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
+      "staging" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
+      "prod" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
+      "aa-dev" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
+      "aa-staging" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
+      "aa-prod" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
     }.freeze
     # The AWS profile to use when authenticating with MFA
     AWS_AUTH_PROFILE = "nhs-auth".freeze
@@ -32,6 +30,11 @@ module NHSx
           "aa-staging" => "WlAlyticStgApplicationDeployer",
           "aa-prod" => "WlAlyticProdApplicationDeployer",
         },
+        "cta" => {
+          "dev" => "ApplicationDeploymentUser",
+          "staging" => "ApplicationDeploymentUser",
+          "prod" => "ApplicationDeploymentUser"
+        }
       },
     }.freeze
 
@@ -116,7 +119,8 @@ module NHSx
     end
 
     def update_aws_settings(file_type, section_key, info)
-      config = IniFile.load(NHSx::AWS::AWS_CONFIG_PATHS[file_type])
+      config_file = NHSx::AWS::AWS_CONFIG_PATHS[file_type]
+      config = IniFile.load(config_file) || IniFile.new( :filename => config_file, :encoding => 'UTF-8' )
       config[section_key] = info
       config.save
     end
@@ -171,16 +175,10 @@ module NHSx
     end
 
     def login_to_aws_account(account, domain, use_prompt)
-      if MFA_ACCOUNTS.include?(account)
-        login_to_mfa_account(account, use_prompt)
-      elsif SSO_ACCOUNTS.include?(account)
+      if SSO_ACCOUNTS.include?(account)
         login_to_sso_account(account, domain, use_prompt)
       else
-        raise GaudiError, "Unauthorized account #{account}" unless account == "dev"
-
-        ENV.delete("AWS_PROFILE")
-        ENV["AWS_REGION"] = NHSx::AWS::AWS_REGION
-        ENV["ACCOUNT"] = account
+        raise GaudiError, "Unauthorized account #{account}"
       end
     end
 

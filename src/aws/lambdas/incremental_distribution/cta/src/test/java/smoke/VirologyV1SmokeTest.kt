@@ -25,7 +25,7 @@ import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyResultSource.Npex
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource
-import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.Available
+import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.AvailableV1
 import uk.nhs.nhsx.virology.exchange.CtaExchangeResult.NotFound
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 
@@ -52,8 +52,8 @@ class VirologyV1SmokeTest {
         val testResponse = mobileApp.pollForTestResult(pollingToken, V1)
 
         expectThat(testResponse)
-            .isA<VirologyLookupResult.Available>()
-            .get(VirologyLookupResult.Available::response).and {
+            .isA<VirologyLookupResult.AvailableV1>()
+            .get(VirologyLookupResult.AvailableV1::response).and {
                 testResult.isEqualTo(Positive)
                 testEndDate.isEqualTo(TestEndDate.of(2020, 4, 23))
                 testKit.isEqualTo(LAB_RESULT)
@@ -74,8 +74,8 @@ class VirologyV1SmokeTest {
         val exchangeResponse = mobileApp.exchange(ctaToken, V1)
 
         expectThat(exchangeResponse)
-            .isA<Available>()
-            .get(Available::ctaExchangeResponse).and {
+            .isA<AvailableV1>()
+            .get(AvailableV1::ctaExchangeResponse).and {
                 testResult.isEqualTo(Positive)
                 testEndDate.isEqualTo(TestEndDate.of(2020, 11, 19))
                 testKit.isEqualTo(LAB_RESULT)
@@ -98,8 +98,8 @@ class VirologyV1SmokeTest {
             val testResponse = mobileApp.pollForTestResult(pollingToken, V1)
 
             expectThat(testResponse)
-                .isA<VirologyLookupResult.Available>()
-                .get(VirologyLookupResult.Available::response)
+                .isA<VirologyLookupResult.AvailableV1>()
+                .get(VirologyLookupResult.AvailableV1::response)
                 .testResult
                 .isEqualTo(Positive)
         }
@@ -116,10 +116,10 @@ class VirologyV1SmokeTest {
         )
 
         val firstCall = mobileApp.exchange(ctaToken, V1)
-        expectThat(firstCall).isA<Available>()
+        expectThat(firstCall).isA<AvailableV1>()
 
         val secondCall = mobileApp.exchange(ctaToken, V1)
-        expectThat(secondCall).isA<Available>()
+        expectThat(secondCall).isA<AvailableV1>()
 
         val thirdCall = mobileApp.exchange(ctaToken, V1)
         expectThat(thirdCall).isA<NotFound>()

@@ -17,7 +17,7 @@ module NHSx
     def run_target_environment_integration_tests(target_environment)
       java_project_path = File.join($configuration.base, "src/aws/lambdas/incremental_distribution")
       gradlew = File.join(java_project_path, "gradlew")
-      cmdline = "INTEGRATION_TEST_ENV=te-#{target_environment} #{gradlew} --console plain -p #{java_project_path} testIntegration"
+      cmdline = "INTEGRATION_TEST_ENV=te-#{target_environment} #{gradlew} --console plain -p #{java_project_path} cta:testIntegration"
       run_tee("Runs JVM integration tests", cmdline, $configuration)
     end
 

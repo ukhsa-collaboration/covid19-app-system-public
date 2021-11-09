@@ -5,4 +5,20 @@ dependencies {
     implementation(Libs.aws_java_sdk_sqs)
 
     testApi project(path: ":infra", configuration: 'testArtifacts')
+    testImplementation(Libs.commons_csv)
+}
+
+test {
+    filter {
+        includeTestsMatching "uk.nhs.nhsx.pubdash.*"
+        excludeTestsMatching "integration.pubdash.*"
+    }
+}
+
+task testIntegration(type: Test) {
+    useJUnitPlatform()
+
+    filter {
+        includeTestsMatching "integration.pubdash.*"
+    }
 }

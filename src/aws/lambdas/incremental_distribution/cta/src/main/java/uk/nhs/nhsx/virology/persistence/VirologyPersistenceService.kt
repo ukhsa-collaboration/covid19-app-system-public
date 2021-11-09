@@ -1,7 +1,13 @@
 package uk.nhs.nhsx.virology.persistence
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB
-import com.amazonaws.services.dynamodbv2.model.*
+import com.amazonaws.services.dynamodbv2.model.GetItemRequest
+import com.amazonaws.services.dynamodbv2.model.Put
+import com.amazonaws.services.dynamodbv2.model.QueryRequest
+import com.amazonaws.services.dynamodbv2.model.TransactWriteItem
+import com.amazonaws.services.dynamodbv2.model.TransactWriteItemsRequest
+import com.amazonaws.services.dynamodbv2.model.TransactionCanceledException
+import com.amazonaws.services.dynamodbv2.model.Update
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemIntegerValueOrNull
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.itemLongValueOrThrow
@@ -11,13 +17,24 @@ import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions.executeTransaction
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoTransactions.reasons
+import uk.nhs.nhsx.core.aws.dynamodb.withIndexName
+import uk.nhs.nhsx.core.aws.dynamodb.withTableName
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.exceptions.TransactionException
-import uk.nhs.nhsx.domain.*
+import uk.nhs.nhsx.domain.CtaToken
+import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.domain.TestResult.Positive
-import uk.nhs.nhsx.virology.*
+import uk.nhs.nhsx.domain.TestResultPollingToken
+import uk.nhs.nhsx.virology.CtaUpdateOnExchangeFailure
+import uk.nhs.nhsx.virology.TestResultMarkForDeletionFailure
+import uk.nhs.nhsx.virology.TestResultPersistenceFailure
+import uk.nhs.nhsx.virology.VirologyConfig
+import uk.nhs.nhsx.virology.VirologyOrderNotFound
 import uk.nhs.nhsx.virology.persistence.TestResultAvailability.AVAILABLE
 import uk.nhs.nhsx.virology.persistence.TestResultAvailability.PENDING
 import uk.nhs.nhsx.virology.persistence.TestState.AvailableTestResult
@@ -27,67 +44,59 @@ import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.Transacti
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
 import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.time.ZoneOffset.UTC
-import java.util.*
-import java.util.function.Function
-import java.util.function.Supplier
 
 class VirologyPersistenceService(
     private val dynamoDbClient: AmazonDynamoDB,
     private val config: VirologyConfig,
     private val events: Events
 ) {
-    fun getTestResult(pollingToken: TestResultPollingToken): Optional<TestState> {
-        val itemResult = dynamoDbClient.getItem(
-            GetItemRequest(
-                config.testResultsTable.value,
-                attributeMap("testResultPollingToken", pollingToken)
-            )
-        )
-        return Optional.ofNullable(itemResult.item)
-            .map {
-                val status = itemValueOrThrow(it, "status")
-                if (AVAILABLE.text == status) {
+    fun getTestResult(pollingToken: TestResultPollingToken): TestState? {
+        val request = GetItemRequest()
+            .withTableName(config.testResultsTable)
+            .withKey(attributeMap("testResultPollingToken", pollingToken))
+
+        return dynamoDbClient.getItem(request)?.item?.let {
+            val testKit = itemValueOrNull(it, "testKit")?.let(TestKit::valueOf) ?: LAB_RESULT
+            val testResultPollingToken = itemValueOrThrow(it, "testResultPollingToken")
+                .let(TestResultPollingToken::of)
+
+            when (itemValueOrThrow(it, "status")) {
+                AVAILABLE.text -> {
+                    val testEndDate = itemValueOrThrow(it, "testEndDate").let(TestEndDate::parse)
+                    val testResult = itemValueOrThrow(it, "testResult").let(TestResult::from)
                     AvailableTestResult(
-                        TestResultPollingToken.of(itemValueOrThrow(it, "testResultPollingToken")),
-                        itemValueOrThrow(it, "testEndDate").let(TestEndDate.Companion::parse),
-                        TestResult.from(itemValueOrThrow(it, "testResult")),
-                        itemValueOrNull(it, "testKit")?.let { k -> TestKit.valueOf(k) } ?: LAB_RESULT
-                    )
-                } else {
-                    PendingTestResult(
-                        TestResultPollingToken.of(itemValueOrThrow(it, "testResultPollingToken")),
-                        itemValueOrNull(it, "testKit")?.let { k -> TestKit.valueOf(k) } ?: LAB_RESULT
+                        testResultPollingToken,
+                        testEndDate,
+                        testResult,
+                        testKit
                     )
                 }
+                else -> PendingTestResult(testResultPollingToken, testKit)
             }
+        }
     }
 
-    fun getTestOrder(ctaToken: CtaToken): Optional<TestOrder> {
-        val itemResult = dynamoDbClient.getItem(
-            GetItemRequest(
-                config.testOrdersTable.value,
-                attributeMap("ctaToken", ctaToken)
-            )
-        )
+    fun getTestOrder(ctaToken: CtaToken): TestOrder? {
+        val request = GetItemRequest()
+            .withTableName(config.testOrdersTable)
+            .withKey(attributeMap("ctaToken", ctaToken))
 
-        return Optional.ofNullable(itemResult.item)
-            .map {
-                TestOrder(
-                    itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
-                    itemIntegerValueOrNull(it, "downloadCount") ?: 0,
-                    itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken.Companion::of),
-                    itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken.Companion::of),
-                    itemLongValueOrThrow(it, "expireAt").let { LocalDateTime.ofEpochSecond(it, 0, UTC) }
-                )
-            }
+        return dynamoDbClient.getItem(request)?.item?.let {
+            TestOrder(
+                itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
+                itemIntegerValueOrNull(it, "downloadCount") ?: 0,
+                itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
+                itemValueOrThrow(it, "diagnosisKeySubmissionToken").let(DiagnosisKeySubmissionToken::of),
+                itemLongValueOrThrow(it, "expireAt").let { e -> LocalDateTime.ofEpochSecond(e, 0, UTC) }
+            )
+        }
     }
 
     fun persistTestOrder(
-        testOrderSupplier: Supplier<TestOrder>,
+        testOrderFn: () -> TestOrder,
         expireAt: Instant
-    ) = persistTestOrderTransactItems(testOrderSupplier) { testOrder: TestOrder ->
+    ) = persistTestOrderTransactItems(testOrderFn) { testOrder ->
         listOf(
             testOrderCreateOp(testOrder, expireAt),
             testResultPendingCreateOp(testOrder, expireAt)
@@ -95,34 +104,34 @@ class VirologyPersistenceService(
     }
 
     fun persistTestOrderAndResult(
-        testOrderSupplier: Supplier<TestOrder>,
+        testOrderFn: () -> TestOrder,
         expireAt: Instant,
         testResult: TestResult,
         testEndDate: TestEndDate,
         testKit: TestKit
-    ) = persistTestOrderTransactItems(testOrderSupplier) { testOrder: TestOrder ->
-        if (Positive == testResult) {
-            listOf(
+    ) = persistTestOrderTransactItems(testOrderFn) { testOrder ->
+        when (testResult) {
+            Positive -> listOf(
                 testOrderCreateOp(testOrder, expireAt),
                 testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit),
                 submissionTokenCreateOp(testOrder, expireAt, testKit)
             )
-        } else
-            listOf(
+            else -> listOf(
                 testOrderCreateOp(testOrder, expireAt),
                 testResultAvailableCreateOp(testOrder, expireAt, testResult, testEndDate, testKit)
             )
+        }
     }
 
     private fun persistTestOrderTransactItems(
-        testOrderSupplier: Supplier<TestOrder>,
-        transactWriteItems: Function<TestOrder, List<TransactWriteItem>>
+        testOrderFn: () -> TestOrder,
+        transactWriteItems: (TestOrder) -> List<TransactWriteItem>
     ): TestOrder {
         var numberOfTries = 0
         do {
             try {
-                val testOrder = testOrderSupplier.get()
-                val transactItems = transactWriteItems.apply(testOrder)
+                val testOrder = testOrderFn()
+                val transactItems = transactWriteItems(testOrder)
                 dynamoDbClient.transactWriteItems(TransactWriteItemsRequest().withTransactItems(transactItems))
                 return testOrder
             } catch (e: TransactionCanceledException) {
@@ -142,10 +151,9 @@ class VirologyPersistenceService(
         testResult: AvailableTestResult,
         virologyTimeToLive: VirologyDataTimeToLive
     ) {
-        queryTestOrderFor(testResult)
-            .ifPresentOrElse(
-                { testOrder: TestOrder -> markTestResultForDeletion(testResult, virologyTimeToLive, testOrder) }
-            ) { events(TestResultMarkForDeletionFailure(testResult.testResultPollingToken, "")) }
+        val testOrder = queryTestOrderFor(testResult)
+        if (testOrder != null) markTestResultForDeletion(testResult, virologyTimeToLive, testOrder)
+        else events(TestResultMarkForDeletionFailure(testResult.testResultPollingToken, ""))
     }
 
     private fun markTestResultForDeletion(
@@ -154,8 +162,8 @@ class VirologyPersistenceService(
         testOrder: TestOrder
     ) {
         val testDataExpireAt = virologyTimeToLive.testDataExpireAt
-        if (testResult.isPositive()) {
-            executeTransaction(
+        when {
+            testResult.isPositive() -> executeTransaction(
                 dynamoDbClient,
                 listOf(
                     testOrderTtlUpdateOp(testOrder.ctaToken, testDataExpireAt),
@@ -166,8 +174,7 @@ class VirologyPersistenceService(
                     )
                 )
             )
-        } else {
-            executeTransaction(
+            else -> executeTransaction(
                 dynamoDbClient,
                 listOf(
                     testOrderTtlUpdateOp(testOrder.ctaToken, testDataExpireAt),
@@ -200,8 +207,8 @@ class VirologyPersistenceService(
         testResult: AvailableTestResult,
         virologyTimeToLive: VirologyDataTimeToLive
     ) {
-        if (testResult.isPositive() && submissionTokenPresent(testOrder)) {
-            executeTransaction(
+        when {
+            testResult.isPositive() && submissionTokenPresent(testOrder) -> executeTransaction(
                 dynamoDbClient,
                 listOf(
                     testOrderTtlAndCounterUpdateOp(testOrder.ctaToken, virologyTimeToLive.testDataExpireAt),
@@ -212,8 +219,7 @@ class VirologyPersistenceService(
                     )
                 )
             )
-        } else {
-            executeTransaction(
+            else -> executeTransaction(
                 dynamoDbClient,
                 listOf(
                     testOrderTtlAndCounterUpdateOp(testOrder.ctaToken, virologyTimeToLive.testDataExpireAt),
@@ -223,15 +229,15 @@ class VirologyPersistenceService(
         }
     }
 
-    private fun submissionTokenPresent(testOrder: TestOrder): Boolean = dynamoDbClient.getItem(
+    private fun submissionTokenPresent(testOrder: TestOrder) = dynamoDbClient.getItem(
         config.submissionTokensTable.value,
         attributeMap("diagnosisKeySubmissionToken", testOrder.diagnosisKeySubmissionToken)
     ).item != null
 
-    private fun queryTestOrderFor(testState: TestState): Optional<TestOrder> {
+    private fun queryTestOrderFor(testState: TestState): TestOrder? {
         val request = QueryRequest()
-            .withTableName(config.testOrdersTable.value)
-            .withIndexName(config.testOrdersIndex.value)
+            .withTableName(config.testOrdersTable)
+            .withIndexName(config.testOrdersIndex)
             .withKeyConditionExpression("testResultPollingToken = :pollingToken")
             .withExpressionAttributeValues(
                 attributeMap(
@@ -240,8 +246,10 @@ class VirologyPersistenceService(
                 )
             )
 
-        return dynamoDbClient.query(request).items.stream().findFirst()
-            .map {
+        return dynamoDbClient.query(request)
+            ?.items
+            ?.firstOrNull()
+            ?.let {
                 TestOrder(
                     itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
                     itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
@@ -256,7 +264,7 @@ class VirologyPersistenceService(
         expireAt: Instant
     ) = TransactWriteItem().withPut(
         Put()
-            .withTableName(config.testOrdersTable.value)
+            .withTableName(config.testOrdersTable)
             .withItem(
                 mapOf(
                     "ctaToken" to stringAttribute(testOrder.ctaToken),
@@ -273,7 +281,7 @@ class VirologyPersistenceService(
         expireAt: Instant
     ) = TransactWriteItem().withPut(
         Put()
-            .withTableName(config.testResultsTable.value)
+            .withTableName(config.testResultsTable)
             .withItem(
                 mapOf(
                     "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
@@ -291,7 +299,7 @@ class VirologyPersistenceService(
         testKit: TestKit
     ) = TransactWriteItem().withPut(
         Put()
-            .withTableName(config.testResultsTable.value)
+            .withTableName(config.testResultsTable)
             .withItem(
                 mapOf(
                     "testResultPollingToken" to stringAttribute(testOrder.testResultPollingToken),
@@ -309,7 +317,7 @@ class VirologyPersistenceService(
         testDataExpireAt: Instant
     ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.testOrdersTable.value)
+            .withTableName(config.testOrdersTable)
             .withKey(attributeMap("ctaToken", ctaToken))
             .withUpdateExpression("set expireAt = :expireAt")
             .withExpressionAttributeValues(attributeMap(":expireAt", testDataExpireAt.epochSecond))
@@ -320,7 +328,7 @@ class VirologyPersistenceService(
         testDataExpireAt: Instant
     ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.testOrdersTable.value)
+            .withTableName(config.testOrdersTable)
             .withKey(attributeMap("ctaToken", ctaToken))
             .withUpdateExpression("set expireAt = :expireAt add downloadCount :dc")
             .withExpressionAttributeValues(
@@ -336,7 +344,7 @@ class VirologyPersistenceService(
         testDataExpireAt: Instant
     ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.testResultsTable.value)
+            .withTableName(config.testResultsTable)
             .withKey(attributeMap("testResultPollingToken", testResultPollingToken))
             .withUpdateExpression("set expireAt = :expireAt")
             .withExpressionAttributeValues(attributeMap(":expireAt", testDataExpireAt.epochSecond))
@@ -347,7 +355,7 @@ class VirologyPersistenceService(
         submissionDataExpireAt: Instant
     ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.submissionTokensTable.value)
+            .withTableName(config.submissionTokensTable)
             .withKey(attributeMap("diagnosisKeySubmissionToken", diagnosisKeySubmissionToken))
             .withConditionExpression("attribute_exists(diagnosisKeySubmissionToken)")
             .withUpdateExpression("set expireAt = :expireAt")
@@ -357,44 +365,46 @@ class VirologyPersistenceService(
     fun persistTestResultWithKeySubmission(
         testResult: VirologyResultRequestV2,
         expireAt: Instant
-    ): VirologyResultPersistOperation =
-        persistTestResult(testResult) { order: TestOrder ->
-            listOf(
-                resultPollingTokenUpdateOp(order, testResult),
-                submissionTokenCreateOp(order, expireAt, testResult.testKit)
-            )
-        }
+    ): VirologyResultPersistOperation = persistTestResult(testResult) { testOrder ->
+        listOf(
+            resultPollingTokenUpdateOp(testOrder, testResult),
+            submissionTokenCreateOp(testOrder, expireAt, testResult.testKit)
+        )
+    }
 
     fun persistTestResultWithoutKeySubmission(testResult: VirologyResultRequestV2): VirologyResultPersistOperation =
-        persistTestResult(testResult) { order: TestOrder ->
+        persistTestResult(testResult) { testOrder ->
             listOf(
-                resultPollingTokenUpdateOp(order, testResult)
+                resultPollingTokenUpdateOp(testOrder, testResult)
             )
         }
 
     private fun persistTestResult(
         testResult: VirologyResultRequestV2,
-        transactWriteItems: Function<TestOrder, List<TransactWriteItem>>
+        transactWriteItems: (TestOrder) -> List<TransactWriteItem>
     ) = getOrder(testResult.ctaToken)
-        .map { order: TestOrder ->
+        ?.let { testOrder ->
             try {
-                executeTransaction(dynamoDbClient, transactWriteItems.apply(order))
+                executeTransaction(dynamoDbClient, transactWriteItems(testOrder))
                 VirologyResultPersistOperation.Success()
             } catch (e: TransactionException) {
-                events(TestResultPersistenceFailure(order.ctaToken, e))
+                events(TestResultPersistenceFailure(testOrder.ctaToken, e))
                 TransactionFailed()
             }
         }
-        .orElseGet {
+        ?: run {
             events(VirologyOrderNotFound(testResult.ctaToken))
             OrderNotFound()
         }
 
-    private fun getOrder(ctaToken: CtaToken): Optional<TestOrder> {
-        val itemResult = dynamoDbClient.getItem(config.testOrdersTable.value, attributeMap("ctaToken", ctaToken.value))
+    private fun getOrder(ctaToken: CtaToken): TestOrder? {
+        val request = GetItemRequest()
+            .withTableName(config.testOrdersTable)
+            .withKey(attributeMap("ctaToken", ctaToken.value))
 
-        return Optional.ofNullable(itemResult.item)
-            .map {
+        return dynamoDbClient.getItem(request)
+            ?.item
+            ?.let {
                 TestOrder(
                     itemValueOrThrow(it, "ctaToken").let(CtaToken::of),
                     itemValueOrThrow(it, "testResultPollingToken").let(TestResultPollingToken::of),
@@ -409,13 +419,8 @@ class VirologyPersistenceService(
         testResult: VirologyResultRequestV2
     ) = TransactWriteItem().withUpdate(
         Update()
-            .withTableName(config.testResultsTable.value)
-            .withKey(
-                attributeMap(
-                    "testResultPollingToken",
-                    testOrder.testResultPollingToken
-                )
-            )
+            .withTableName(config.testResultsTable)
+            .withKey(attributeMap("testResultPollingToken", testOrder.testResultPollingToken))
             .withUpdateExpression("set #s = :status, testEndDate = :testEndDate, testResult = :testResult, testKit = :testKit")
             .withConditionExpression("#s = :pendingStatus")
             .withExpressionAttributeValues(
@@ -436,7 +441,7 @@ class VirologyPersistenceService(
         testKit: TestKit
     ) = TransactWriteItem().withPut(
         Put()
-            .withTableName(config.submissionTokensTable.value)
+            .withTableName(config.submissionTokensTable)
             .withItem(
                 mapOf(
                     "diagnosisKeySubmissionToken" to stringAttribute(testOrder.diagnosisKeySubmissionToken),

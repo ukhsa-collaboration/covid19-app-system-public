@@ -12,6 +12,7 @@ import strikt.assertions.isNotEqualTo
 import strikt.assertions.isTrue
 import strikt.assertions.matches
 import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator.Companion.checksum
+import uk.nhs.nhsx.domain.CtaToken
 import java.security.SecureRandom
 import java.util.*
 import java.util.function.Function

@@ -2,29 +2,29 @@
     "widgets": [
         {
             "height": 6,
-            "width": 12,
+            "width": 9,
             "y": 6,
-            "x": 12,
+            "x": 6,
             "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/home-kit/order' or event.uri = '/virology-test/v2/order' or event.uri = '/virology-test/home-kit/register'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.uri, event.status",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Order Test Kit (Errors)",
+                "title": "Order Test Kit (Errors Total)",
                 "view": "table"
             }
         },
         {
             "height": 6,
-            "width": 12,
+            "width": 9,
             "y": 12,
-            "x": 12,
+            "x": 6,
             "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/v2/results' or event.uri = '/virology-test/results'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.uri, event.status",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Poll Test Result (Errors)",
+                "title": "Poll Test Result (Errors Total)",
                 "view": "table"
             }
         },
@@ -100,30 +100,30 @@
         },
         {
             "height": 6,
-            "width": 6,
+            "width": 9,
             "y": 6,
-            "x": 6,
+            "x": 15,
             "type": "log",
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/home-kit/order' or event.uri = '/virology-test/v2/order' or event.uri = '/virology-test/home-kit/register'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.status",
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/home-kit/order' or event.uri = '/virology-test/v2/order' or event.uri = '/virology-test/home-kit/register'\n| stats sum(event.status > 399 and event.status < 500) as errors_4xx, sum(event.status > 499 and event.status < 600) as errors_5xx by bin(1d)",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Order Test Kit (Errors)",
-                "view": "bar"
+                "title": "Order Test Kit (Errors Per Day)",
+                "view": "timeSeries"
             }
         },
         {
             "height": 6,
-            "width": 6,
+            "width": 9,
             "y": 12,
-            "x": 6,
+            "x": 15,
             "type": "log",
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/v2/results' or event.uri = '/virology-test/results'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.status",
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/v2/results' or event.uri = '/virology-test/results'\n| stats sum(event.status > 399 and event.status < 500) as errors_4xx, sum(event.status > 499 and event.status < 600) as errors_5xx by bin(1d)",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Poll Test Result (Errors)",
-                "view": "bar"
+                "title": "Poll Test Result (Errors Per Day)",
+                "view": "timeSeries"
             }
         },
         {
@@ -162,30 +162,30 @@
         },
         {
             "height": 6,
-            "width": 12,
+            "width": 9,
             "y": 18,
-            "x": 12,
+            "x": 6,
             "type": "log",
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_submission_function}' |  filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/cta-exchange' or event.uri = '/virology-test/v2/cta-exchange'\n| stats count() as numberOfRequests by event.uri, event.status",
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' |  filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/cta-exchange' or event.uri = '/virology-test/v2/cta-exchange'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.uri, event.status",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Mobile - CTA exchange",
+                "title": "CTA Exchange (Errors Total)",
                 "view": "table"
             }
         },
         {
             "height": 6,
-            "width": 6,
+            "width": 9,
             "y": 18,
-            "x": 6,
+            "x": 15,
             "type": "log",
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_submission_function}' |  filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/cta-exchange' or event.uri = '/virology-test/v2/cta-exchange'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.status",
+                "query": "SOURCE '/aws/lambda/${virology_submission_function}' |  filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/virology-test/cta-exchange' or event.uri = '/virology-test/v2/cta-exchange'\n| stats sum(event.status > 399 and event.status < 500) as errors_4xx, sum(event.status > 499 and event.status < 600) as errors_5xx by bin(1d)",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "CTA Exchange (Errors)",
-                "view": "bar"
+                "title": "CTA Exchange (Errors Per Day)",
+                "view": "timeSeries"
             }
         },
         {
@@ -210,85 +210,85 @@
         },
         {
             "height": 6,
-            "width": 6,
+            "width": 9,
             "y": 30,
-            "x": 6,
+            "x": 15,
             "type": "log",
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/npex-result' or event.uri = '/upload/virology-test/fiorano-result'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.status",
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/npex-result' or event.uri = '/upload/virology-test/fiorano-result'\n| stats sum(event.status > 399 and event.status < 500) as errors_4xx, sum(event.status > 499 and event.status < 600) as errors_5xx by bin(1d)",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Test Result Upload (Errors)",
-                "view": "bar"
+                "title": "Test Result Upload (Errors Per Day)",
+                "view": "timeSeries"
             }
         },
         {
             "height": 6,
-            "width": 12,
+            "width": 9,
             "y": 30,
-            "x": 12,
+            "x": 6,
             "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/npex-result' or event.uri = '/upload/virology-test/fiorano-result'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.uri, event.status",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Test Result Upload (Errors)",
+                "title": "Test Result Upload (Errors Total)",
                 "view": "table"
             }
         },
         {
             "height": 6,
-            "width": 12,
+            "width": 9,
             "y": 36,
-            "x": 12,
+            "x": 6,
             "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/eng-result-tokengen' or event.uri = '/upload/virology-test/wls-result-tokengen' or event.uri = '/upload/virology-test/v2/eng-result-tokengen' or event.uri = '/upload/virology-test/v2/wls-result-tokengen'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.uri, event.status\n",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Token Generation (Errors)",
+                "title": "Token Generation (Errors Total)",
                 "view": "table"
             }
         },
         {
             "height": 6,
-            "width": 6,
+            "width": 9,
             "y": 36,
-            "x": 6,
+            "x": 15,
             "type": "log",
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/eng-result-tokengen' or event.uri = '/upload/virology-test/wls-result-tokengen' or event.uri = '/upload/virology-test/v2/eng-result-tokengen' or event.uri = '/upload/virology-test/v2/wls-result-tokengen'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.status\n",
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/eng-result-tokengen' or event.uri = '/upload/virology-test/wls-result-tokengen' or event.uri = '/upload/virology-test/v2/eng-result-tokengen' or event.uri = '/upload/virology-test/v2/wls-result-tokengen'\n| stats sum(event.status > 399 and event.status < 500) as errors_4xx, sum(event.status > 499 and event.status < 600) as errors_5xx by bin(1d)",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Token Generation (Errors)",
-                "view": "bar"
+                "title": "Token Generation (Errors Per Day)",
+                "view": "timeSeries"
             }
         },
         {
             "height": 6,
-            "width": 6,
+            "width": 9,
             "y": 42,
-            "x": 6,
+            "x": 15,
             "type": "log",
             "properties": {
-                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/v2/eng-result-tokenstatus' or event.uri = '/upload/virology-test/v2/wls-result-tokenstatus'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.status\n",
+                "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/v2/eng-result-tokenstatus' or event.uri = '/upload/virology-test/v2/wls-result-tokenstatus'\n| stats sum(event.status > 399 and event.status < 500) as errors_4xx, sum(event.status > 499 and event.status < 600) as errors_5xx by bin(1d)\n",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Token Status (Errors)",
-                "view": "bar"
+                "title": "Token Status (Errors Per Day)",
+                "view": "timeSeries"
             }
         },
         {
             "height": 6,
-            "width": 12,
+            "width": 9,
             "y": 42,
-            "x": 12,
+            "x": 6,
             "type": "log",
             "properties": {
                 "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter metadata.name = 'IncomingHttpRequest'\n| filter event.uri = '/upload/virology-test/v2/eng-result-tokenstatus' or event.uri = '/upload/virology-test/v2/wls-result-tokenstatus'\n| filter event.status > 399\n| stats count() as numberOfRequests by event.uri, event.status\n",
                 "region": "eu-west-2",
                 "stacked": false,
-                "title": "Token Status (Errors)",
+                "title": "Token Status (Errors Total)",
                 "view": "table"
             }
         }

@@ -5,8 +5,7 @@
 The dockerized development environment is a container, created via a Dockerfile, that contains all the tools required for building, deploying and testing the COVID-19 App System locally.
 
 ## Usage notes
-The root of your repository clone is mapped into `/workspace` within the container,
-and your `~/.aws` folder to `/root/.aws` within the container .
+The root of your cloned repository is mapped into `/workspace` within the container, and your `~/.aws` folder to `/root/.aws` within the container.
 
 Changes made to files/folders anywhere else in the container's filespace are not
 persisted when the container is exited.
@@ -35,23 +34,6 @@ Run the docker image
 ```bash
 rake devenv
 ```
-
-### AWS CLI with Multi-Factor Authentication (MFA)
-
-The Dockerfile contains a tool for switching to different environments
-by using the `aws-mfa` command. 
-
-You can use Rake to log on to the different accounts:
-```
-rake login:staging
-```
-or
-```
-rake login:prod
-```
-By default, the role you are logged into is `ApplicationDeploymentUser`.
-You can control the choice of role by setting the environment variable
-`AWS_ROLE` to either `read` or `deploy` before running the above command.
 
 ## Notes for Docker for Windows
 

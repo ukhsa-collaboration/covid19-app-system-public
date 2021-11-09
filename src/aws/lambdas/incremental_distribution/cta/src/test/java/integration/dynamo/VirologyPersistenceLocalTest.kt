@@ -10,8 +10,10 @@ import com.amazonaws.services.dynamodbv2.model.PutItemRequest
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
+import org.awaitility.Awaitility
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
+import org.opentest4j.AssertionFailedError
 import strikt.api.Assertion
 import strikt.api.expectCatching
 import strikt.api.expectThat
@@ -20,8 +22,8 @@ import strikt.assertions.isA
 import strikt.assertions.isEqualTo
 import strikt.assertions.isFailure
 import strikt.assertions.isNotNull
+import strikt.assertions.isNull
 import strikt.assertions.message
-import strikt.java.isAbsent
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.attributeMap
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.numericAttribute
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoAttributes.stringAttribute
@@ -39,8 +41,10 @@ import uk.nhs.nhsx.domain.TestResult.Negative
 import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.domain.TestResult.Void
 import uk.nhs.nhsx.domain.TestResultPollingToken
+import uk.nhs.nhsx.testhelper.assertions.contains
 import uk.nhs.nhsx.testhelper.data.asInstant
 import uk.nhs.nhsx.virology.VirologyConfig
+import uk.nhs.nhsx.virology.VirologyOrderNotFound
 import uk.nhs.nhsx.virology.order.TokensGenerator
 import uk.nhs.nhsx.virology.persistence.TestOrder
 import uk.nhs.nhsx.virology.persistence.TestResultAvailability
@@ -54,10 +58,10 @@ import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.OrderNotF
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.Success
 import uk.nhs.nhsx.virology.persistence.VirologyResultPersistOperation.TransactionFailed
 import uk.nhs.nhsx.virology.result.VirologyResultRequestV2
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.Period
-import java.util.function.Supplier
 
 class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
@@ -68,22 +72,17 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
         IndexName.of("${tgtEnv}-virology-ordertokens-index")
     )
 
-    private val persistence = VirologyPersistenceService(dbClient, virologyConfig, RecordingEvents())
+    private val events = RecordingEvents()
+    private val persistence = VirologyPersistenceService(dbClient, virologyConfig, events)
 
     private val nowString = "2020-12-01T00:00:00Z"
     private val clock = { nowString.asInstant() }
     private val fourWeeksTtl = clock().plus(Period.ofWeeks(4))
 
-    private val testOrder = TestOrder(
-        CtaToken.of("cc8f0b6z"),
-        TestResultPollingToken.of("09657719-fe58-46a3-a3a3-a8db82d48043"),
-        DiagnosisKeySubmissionToken.of("9dd3a549-2db0-4ba4-aadb-b32e235d4cc0"),
-        LocalDateTime.now().plusWeeks(4)
-    )
-
+    private val testOrder = TokensGenerator.generateVirologyTokens()
     private val pendingTestResult = PendingTestResult(testOrder.testResultPollingToken, LAB_RESULT)
 
-    @BeforeEach
+    @AfterEach
     fun deleteItems() {
         dbClient.deleteTestTokens(testOrder)
     }
@@ -103,9 +102,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
         dbClient.putItem(request)
 
-        val order = persistence
-            .getTestOrder(testOrder.ctaToken)
-            .orElse(null)
+        val order = persistence.getTestOrder(testOrder.ctaToken)
 
         expectThat(order).isNotNull().and {
             get(TestOrder::ctaToken).isEqualTo(testOrder.ctaToken)
@@ -116,7 +113,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
     @Test
     fun `gets empty for order not found`() {
-        expectThat(persistence.getTestOrder(testOrder.ctaToken)).isAbsent()
+        expectThat(persistence.getTestOrder(testOrder.ctaToken)).isNull()
     }
 
     @Test
@@ -137,9 +134,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
         dbClient.putItem(request)
 
-        val result = persistence
-            .getTestResult(testResult.testResultPollingToken)
-            .orElse(null)
+        val result = persistence.getTestResult(testResult.testResultPollingToken)
 
         expectThat(result).isNotNull().isA<AvailableTestResult>().and {
             get(AvailableTestResult::testResultPollingToken).isEqualTo(testResult.testResultPollingToken)
@@ -163,9 +158,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
         dbClient.putItem(request)
 
-        val result = persistence
-            .getTestResult(pendingTestResult.testResultPollingToken)
-            .orElse(null)
+        val result = persistence.getTestResult(pendingTestResult.testResultPollingToken)
 
         expectThat(result).isNotNull().isA<PendingTestResult>().and {
             get(PendingTestResult::testResultPollingToken).isEqualTo(pendingTestResult.testResultPollingToken)
@@ -186,9 +179,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
         dbClient.putItem(request)
 
-        val result = persistence
-            .getTestResult(pendingTestResult.testResultPollingToken)
-            .orElse(null)
+        val result = persistence.getTestResult(pendingTestResult.testResultPollingToken)
 
         expectThat(result).isNotNull().isA<PendingTestResult>().and {
             get(PendingTestResult::testResultPollingToken).isEqualTo(pendingTestResult.testResultPollingToken)
@@ -198,7 +189,8 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
     @Test
     fun `gets empty for result not found`() {
-        expectThat(persistence.getTestResult(TestResultPollingToken.of("some token"))).isAbsent()
+        val pollingToken = TestResultPollingToken.of("some token")
+        expectThat(persistence.getTestResult(pollingToken)).isNull()
     }
 
     @Test
@@ -254,8 +246,8 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
             LocalDateTime.now().plusWeeks(4)
         )
 
-        val tokensSupplier = mockk<Supplier<TestOrder>>()
-        every { tokensSupplier.get() } returns tokensWithCollision andThen tokensWithCollision andThen tokensNoCollision
+        val tokensSupplier = mockk<() -> TestOrder>()
+        every { tokensSupplier() } returns tokensWithCollision andThen tokensWithCollision andThen tokensNoCollision
 
         persistence.persistTestOrder({ tokens }, fourWeeksTtl)
         expectThat(tokens).testOrderIsPresent().testResultIsPresent(pendingTestResult)
@@ -263,7 +255,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
         val persistedTokens = persistence.persistTestOrder(tokensSupplier, fourWeeksTtl)
         expectThat(persistedTokens).testOrderIsPresent().testResultIsPresent(pendingTestResult)
 
-        verify(exactly = 3) { tokensSupplier.get() }
+        verify(exactly = 3) { tokensSupplier() }
         dbClient.deleteTestTokens(tokens)
         dbClient.deleteTestTokens(tokensNoCollision)
     }
@@ -536,6 +528,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
         )
 
         expectThat(result).isA<OrderNotFound>()
+        expectThat(events).contains(VirologyOrderNotFound::class)
     }
 
     @Test
@@ -669,7 +662,7 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
             testKit = testKit
         )
 
-    private fun Assertion.Builder<TestOrder>.hasOrder(): Assertion.Builder<Item> =
+    private fun Assertion.Builder<TestOrder>.hasOrder() =
         get(TestOrder::ctaToken)
             .get("persisted order") { dbClient.getTestOrder(this) }
             .isNotNull()
@@ -690,16 +683,30 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
     ) = assert("test order is present") { order ->
         val ctaToken = order.ctaToken.value
 
-        val expected = mutableMapOf(
+        val expected: Map<String, Any> = mutableMapOf(
             "ctaToken" to ctaToken,
             "diagnosisKeySubmissionToken" to order.diagnosisKeySubmissionToken.value,
             "testResultPollingToken" to order.testResultPollingToken.value,
             "expireAt" to expireAt.epochSecond.toBigDecimal()
         ).apply {
             if (downloadCount != null) this["downloadCount"] = downloadCount.toBigDecimal()
-        }
+        }.toMap()
 
-        hasOrder().get(Item::asMap).isEqualTo(expected.toMap())
+        eventually(hasOrder(), expectedAttributes = expected)
+    }
+
+    private fun eventually(assertionBuilder: Assertion.Builder<Item>, expectedAttributes: Map<String, Any>) {
+        Awaitility.await()
+            .pollInterval(Duration.ofSeconds(1))
+            .atMost(Duration.ofSeconds(10))
+            .until {
+                try {
+                    assertionBuilder.get(Item::asMap).isEqualTo(expectedAttributes)
+                    true
+                } catch (e: AssertionFailedError) {
+                    false
+                }
+            }
     }
 
     private fun Assertion.Builder<TestOrder>.testResultIsPresent(
@@ -724,37 +731,37 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
             )
         }
 
-        hasTestResult().get(Item::asMap).isEqualTo(expected)
+        eventually(hasTestResult(), expectedAttributes = expected)
     }
 
     private fun Assertion.Builder<TestOrder>.submissionIsPresent(
         testKit: TestKit,
         expireAt: Instant = fourWeeksTtl
     ) = assert("submission is present") { order ->
-        hasSubmission().get(Item::asMap).isEqualTo(
-            mapOf<String, Any>(
-                "diagnosisKeySubmissionToken" to order.diagnosisKeySubmissionToken.value,
-                "expireAt" to expireAt.epochSecond.toBigDecimal(),
-                "testKit" to testKit.name
-            )
+        val expected = mapOf<String, Any>(
+            "diagnosisKeySubmissionToken" to order.diagnosisKeySubmissionToken.value,
+            "expireAt" to expireAt.epochSecond.toBigDecimal(),
+            "testKit" to testKit.name
         )
+
+        eventually(hasSubmission(), expectedAttributes = expected)
     }
 
-    private fun AmazonDynamoDB.getTestOrder(ctaToken: CtaToken): Item? =
+    private fun AmazonDynamoDB.getTestOrder(ctaToken: CtaToken) =
         getItem(
             GetItemRequest()
                 .withTableName(virologyConfig.testOrdersTable.value)
                 .withKey(attributeMap("ctaToken", ctaToken))
         ).toItemMaybe()
 
-    private fun AmazonDynamoDB.getTestResult(testResultPollingToken: TestResultPollingToken): Item? =
+    private fun AmazonDynamoDB.getTestResult(testResultPollingToken: TestResultPollingToken) =
         getItem(
             GetItemRequest()
                 .withTableName(virologyConfig.testResultsTable.value)
                 .withKey(attributeMap("testResultPollingToken", testResultPollingToken))
         ).toItemMaybe()
 
-    private fun AmazonDynamoDB.getDiagnosisKeySubmissionToken(submissionToken: DiagnosisKeySubmissionToken): Item? =
+    private fun AmazonDynamoDB.getDiagnosisKeySubmissionToken(submissionToken: DiagnosisKeySubmissionToken) =
         getItem(
             GetItemRequest()
                 .withTableName(virologyConfig.submissionTokensTable.value)
@@ -771,25 +778,24 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
         val deleteTestOrder = DeleteItemRequest()
             .withTableName(virologyConfig.testOrdersTable.value)
             .withKey(attributeMap("ctaToken", ctaToken))
-        dbClient.deleteItem(deleteTestOrder)
+        deleteItem(deleteTestOrder)
     }
 
     private fun AmazonDynamoDB.deleteTestPollingToken(testResultPollingToken: TestResultPollingToken) {
         val deletePollingToken = DeleteItemRequest()
             .withTableName(virologyConfig.testResultsTable.value)
             .withKey(attributeMap("testResultPollingToken", testResultPollingToken))
-        dbClient.deleteItem(deletePollingToken)
+        deleteItem(deletePollingToken)
     }
 
     private fun AmazonDynamoDB.deleteDiagnosisSubmissionToken(submissionToken: DiagnosisKeySubmissionToken) {
         val deletePollingToken = DeleteItemRequest()
             .withTableName(virologyConfig.submissionTokensTable.value)
             .withKey(attributeMap("diagnosisKeySubmissionToken", submissionToken))
-        dbClient.deleteItem(deletePollingToken)
+        deleteItem(deletePollingToken)
     }
 
-    private fun GetItemResult.toItemMaybe(): Item? =
-        Item.fromMap(ItemUtils.toSimpleMapValue(item))
+    private fun GetItemResult.toItemMaybe() = Item.fromMap(ItemUtils.toSimpleMapValue(item))
 }
 
 

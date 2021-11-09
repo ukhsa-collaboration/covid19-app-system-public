@@ -14,7 +14,6 @@ namespace :deploy do
           Rake::Task["clean:test:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["gen:secrets:#{account}"].invoke unless account == "dev"
           Rake::Task["deploy:#{tgt_env}"].invoke
-          Rake::Task["publish:tier_metadata:#{tgt_env}"].invoke #TODO: remove once 2.21 goes live
           Rake::Task["test:sanity_check:#{tgt_env}"].invoke
           Rake::Task["report:changes"].invoke
         ensure

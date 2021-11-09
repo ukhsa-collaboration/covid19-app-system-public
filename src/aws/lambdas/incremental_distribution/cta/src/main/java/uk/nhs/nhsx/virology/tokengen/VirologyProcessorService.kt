@@ -4,11 +4,11 @@ import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.ExceptionThrown
 import uk.nhs.nhsx.domain.CtaToken
-import uk.nhs.nhsx.virology.CtaTokensAndUrlGenerationFailed
-import uk.nhs.nhsx.domain.TestKit
-import uk.nhs.nhsx.virology.VirologyService
 import uk.nhs.nhsx.domain.TestEndDate
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestResult
+import uk.nhs.nhsx.virology.CtaTokensAndUrlGenerationFailed
+import uk.nhs.nhsx.virology.VirologyService
 import uk.nhs.nhsx.virology.result.VirologyTokenGenRequestV2
 import uk.nhs.nhsx.virology.result.VirologyTokenGenResponse
 import uk.nhs.nhsx.virology.tokengen.CtaProcessorResult.Error
@@ -16,8 +16,7 @@ import uk.nhs.nhsx.virology.tokengen.CtaProcessorResult.Success
 import java.time.Duration
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.Date
-import java.util.Objects
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import java.util.stream.Collectors

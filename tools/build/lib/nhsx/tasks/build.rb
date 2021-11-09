@@ -3,6 +3,7 @@ namespace :build do
   task :devenv do
     include Zuehlke::Execution
     include NHSx::Docker
+    include NHSx::Login
     docker_out = File.join($configuration.out, "docker")
 
     mkdir_p(docker_out)
@@ -12,6 +13,7 @@ namespace :build do
 
     begin
       content_tag = full_tag(content_version($configuration))
+      login_to_aws_account("dev", "cta", false)
       pull_repository_image($configuration, content_tag)
       tag_content_version_as_latest($configuration, content_tag)
     rescue GaudiError

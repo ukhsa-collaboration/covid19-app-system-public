@@ -9,4 +9,6 @@ interface AnalyticsSource {
     fun startAgnosticDatasetQueryAsync(): QueryId
     fun startCountryDatasetQueryAsync(): QueryId
     fun startLocalAuthorityDatasetQueryAsync(): QueryId
+    fun startAppUsageDataByLocalAuthorityDatasetQueryAsync(): QueryId
+    fun startAppUsageDataByCountryDatasetQueryAsync(): QueryId
 }

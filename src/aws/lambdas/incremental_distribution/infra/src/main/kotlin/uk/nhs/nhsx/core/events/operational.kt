@@ -55,4 +55,3 @@ data class UnprocessableJson(val e: Exception) : Event(Warning)
 data class InfoEvent(val message: String) : Event(Info)
 
 data class RequestRejected(val reason: String) : Event(Info)
-data class SuccessfulCtaExchange(val ctaToken: String, val country: Country, val testKit: TestKit, val mobileOS: MobileOS, val tokenAgeRange: TokenAgeRange, val appVersion: MobileAppVersion) : Event(Info)
