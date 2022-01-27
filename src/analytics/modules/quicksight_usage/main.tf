@@ -55,5 +55,21 @@ resource "aws_glue_catalog_table" "this" {
       name = "assumed_role"
       type = "string"
     }
+
+    columns {
+      name = "aws_region"
+      type = "string"
+    }
+
+    columns {
+      name = "object_id"
+      type = "string"
+    }
+
+    columns {
+      name = "object_name"
+      type = "string"
+    }
+
   }
 }

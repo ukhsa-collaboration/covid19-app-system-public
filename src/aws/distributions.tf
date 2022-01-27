@@ -131,6 +131,17 @@ module "local_messages_distribution" {
   tags                     = var.tags
 }
 
+module "local_stats_distribution" {
+  source                   = "./modules/distribution"
+  name                     = "local-covid-stats-daily"
+  default_payload          = null
+  logs_bucket_id           = var.logs_bucket_id
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  s3_versioning            = var.s3_versioning
+  policy_document          = module.local_stats_distribution_access.policy_document
+  tags                     = var.tags
+}
+
 module "distribution_apis" {
   source = "./libraries/cloudfront_distribution_facade"
 
@@ -178,6 +189,10 @@ module "distribution_apis" {
   local_messages_payload                     = module.local_messages_distribution.name
   local_messages_origin_access_identity_path = module.local_messages_distribution.origin_access_identity_path
 
+  local_stats_bucket_regional_domain_name = module.local_stats_distribution.store.bucket_regional_domain_name
+  local_stats_payload                     = module.local_stats_distribution.name
+  local_stats_origin_access_identity_path = module.local_stats_distribution.origin_access_identity_path
+
   domain                   = var.base_domain
   web_acl_arn              = var.waf_arn
   enable_shield_protection = var.enable_shield_protection
@@ -222,6 +237,9 @@ output "risky_venue_configuration_distribution_endpoint" {
 output "local_messages_distribution_endpoint" {
   value = "https://${module.distribution_apis.distribution_domain_name}/distribution/${module.local_messages_distribution.name}"
 }
+output "local_stats_distribution_v1_endpoint" {
+  value = "https://${module.distribution_apis.distribution_domain_name}/distribution/v1/${module.local_stats_distribution.name}"
+}
 
 output "exposure_configuration_distribution_store" {
   value = module.exposure_configuration_distribution.store.bucket
@@ -252,4 +270,7 @@ output "risky_venue_configuration_distribution_store" {
 }
 output "local_messages_distribution_store" {
   value = module.local_messages_distribution.store.bucket
+}
+output "local_stats_distribution_store" {
+  value = module.local_stats_distribution.store.bucket
 }

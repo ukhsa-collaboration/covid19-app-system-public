@@ -1,0 +1,52 @@
+GET https://api.coronavirus.data.gov.uk/v1/data?filters=date=2021-11-17;areaType=ltla;areaCode=E06000003&structure={"date":"date","newCases":"uniqueCasePositivityBySpecimenDateRollingSum","newCasesByPublishDate":"newCasesByPublishDate"}
+Accept: application/json
+
+###
+### Get local authorities data for metrics:
+#newCasesByPublishDate,
+#newCasesByPublishDateChangePercentage,
+#newCasesByPublishDateChange,
+#newCasesByPublishDateRollingSum,
+#newCasesByPublishDateDirection
+GET https://api.coronavirus.data.gov.uk/v2/data?areaType=utla&metric=cumCasesByPublishDate&metric=newCasesByPublishDateChange&metric=newCasesByPublishDateChangePercentage&metric=newCasesByPublishDateRollingSum&metric=newCasesByPublishDateDirection&format=csv
+
+### Get local authorities data for metrics:
+#newCasesByPublishDateRollingRate
+GET https://api.coronavirus.data.gov.uk/v2/data?areaType=utla&metric=newCasesByPublishDateRollingRate&format=csv
+
+### lower tier
+GET https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=newCasesByPublishDateRollingRate&format=csv
+###
+GET https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=newWeeklyNsoDeathsByRegDate&metric=newPeopleVaccinatedSecondDoseByVaccinationDate&format=csv
+###
+GET https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=uniqueCasePositivityBySpecimenDateRollingSum&format=csv
+###
+GET https://api.coronavirus.data.gov.uk/v2/data?areaType=ltla&metric=newCasesByPublishDateRollingRate&format=json
+
+
+
+### Change logs
+GET https://api.coronavirus.data.gov.uk/generic/change_logs?page=1
+Accept: application/json
+
+# link in the app: https://coronavirus.data.gov.uk/details/whats-new/record/6e2ddf27-91b9-4d66-8878-5e6082271cc0
+
+### Change log by id
+GET https://api.coronavirus.data.gov.uk/generic/change_logs/log/6e2ddf27-91b9-4d66-8878-5e6082271cc0
+Accept: application/json
+
+### Metrics updates utla
+GET https://api.coronavirus.data.gov.uk/generic/metric_availability/utla
+
+### Announcements
+GET https://api.coronavirus.data.gov.uk/generic/announcements
+Accept: application/json
+
+### Announcement by id
+GET https://api.coronavirus.data.gov.uk/generic/announcements/39f050e1-7ff5-4596-a040-8a9c1eb414d2
+Accept: application/json
+
+### Latest announcements
+GET https://api.coronavirus.data.gov.uk/generic/announcements/latest
+Accept: application/json
+

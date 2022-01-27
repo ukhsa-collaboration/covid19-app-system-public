@@ -18,9 +18,9 @@ import uk.nhs.nhsx.core.auth.ResponseSigner
 import uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient
 import uk.nhs.nhsx.core.aws.dynamodb.DynamoDBUtils
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.aws.s3.UniqueObjectKeyNameProvider
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.events.DiagnosisKeySubmission
@@ -48,7 +48,7 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
         AwsSsmParameters(),
         AWSKMSClientBuilder.defaultClient()
     ).signResponseWithKeyGivenInSsm(environment, events),
-    s3Storage: S3Storage = AwsS3Client(events),
+    awsS3: AwsS3 = AwsS3Client(events),
     awsDynamoClient: AwsDynamoClient = DynamoDBUtils(AmazonDynamoDBClientBuilder.defaultClient()),
     objectKeyNameProvider: ObjectKeyNameProvider = UniqueObjectKeyNameProvider(clock, ID)
 ) : RoutingHandler() {
@@ -57,11 +57,11 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
         environment: Environment,
         events: Events,
         clock: Clock,
-        s3Storage: S3Storage,
+        awsS3: AwsS3,
         awsDynamoClient: AwsDynamoClient,
         objectKeyNameProvider: ObjectKeyNameProvider
     ) = DiagnosisKeysSubmissionService(
-        s3Storage,
+        awsS3,
         awsDynamoClient,
         objectKeyNameProvider,
         environment.access.required(SUBMISSIONS_TOKENS_TABLE),
@@ -82,7 +82,7 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
             environment,
             events,
             clock,
-            s3Storage,
+            awsS3,
             awsDynamoClient,
             objectKeyNameProvider
         )

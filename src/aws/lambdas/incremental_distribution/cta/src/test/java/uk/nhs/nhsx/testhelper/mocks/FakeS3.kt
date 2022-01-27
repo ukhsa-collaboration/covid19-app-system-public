@@ -5,12 +5,8 @@ import com.amazonaws.services.s3.model.S3Object
 import com.amazonaws.services.s3.model.S3ObjectInputStream
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import strikt.api.Assertion
-import strikt.assertions.containsKey
-import strikt.assertions.filter
 import strikt.assertions.first
 import strikt.assertions.getValue
-import strikt.assertions.isEmpty
-import strikt.assertions.isTrue
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.Json
@@ -20,13 +16,15 @@ import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.MetaHeader
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
+import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
 import java.io.ByteArrayInputStream
 import java.net.URL
+import java.time.Instant
 import java.util.*
 
 open class FakeS3(val clock: Clock = { java.time.Clock.systemUTC().instant() }) : AwsS3 {
 
-    val summaries: MutableMap<BucketName, MutableList<S3ObjectSummary>> = mutableMapOf()
+    private val summaries: MutableMap<BucketName, MutableList<S3ObjectSummary>> = mutableMapOf()
     val objects: MutableMap<BucketName, MutableList<S3Object>> = mutableMapOf()
 
     override fun getObjectSummaries(bucketName: BucketName) =
@@ -78,11 +76,27 @@ open class FakeS3(val clock: Clock = { java.time.Clock.systemUTC().instant() }) 
 
     override fun getSignedURL(locator: Locator, expiration: Date) = Optional.of(URL("https://example.com"))
 
-    fun addS3Object(bucketName: BucketName, s3Object: S3Object) = apply {
+    fun add(s3Object: S3Object, lastModifiedDate: Instant? = null) {
+        val bucketName = BucketName.of(s3Object.bucketName)
+        addS3Object(
+            bucketName = bucketName,
+            s3Object = s3Object
+        )
+        addS3ObjectSummary(
+            bucketName = bucketName,
+            summary = S3ObjectSummary(
+                key = s3Object.key,
+                bucket = bucketName.value,
+                lastModified = lastModifiedDate
+            )
+        )
+    }
+
+    private fun addS3Object(bucketName: BucketName, s3Object: S3Object) = apply {
         objects.merge(bucketName, mutableListOf(s3Object)) { a, b -> (a + b).toMutableList() }
     }
 
-    fun addS3ObjectSummary(bucketName: BucketName, summary: S3ObjectSummary) = apply {
+    private fun addS3ObjectSummary(bucketName: BucketName, summary: S3ObjectSummary) = apply {
         summaries.merge(bucketName, mutableListOf(summary)) { a, b -> (a + b).toMutableList() }
     }
 
@@ -91,8 +105,6 @@ open class FakeS3(val clock: Clock = { java.time.Clock.systemUTC().instant() }) 
 
     override fun toString() = "FakeS3(summaries=$summaries)"
 }
-
-inline fun <reified T : FakeS3> Assertion.Builder<T>.getBucket(name: String) = getBucket(BucketName.of(name))
 
 inline fun <reified T : FakeS3> Assertion.Builder<T>.getBucket(bucketName: BucketName) =
     get(FakeS3::objects).getValue(bucketName)

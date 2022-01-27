@@ -5,14 +5,16 @@ import strikt.api.expectThat
 import strikt.assertions.containsExactly
 import strikt.assertions.flatMap
 import uk.nhs.nhsx.core.SystemClock
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.Submission
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
-import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
-import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
-import java.time.Instant
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
+import uk.nhs.nhsx.testhelper.mocks.exposureS3Object
+import java.time.Duration
+import java.time.Instant.ofEpochMilli
 
 class SubmissionFromS3RepositoryTest {
 
@@ -20,16 +22,16 @@ class SubmissionFromS3RepositoryTest {
     private val now = clock()
     private val nowMinus5Sec = now.minusSeconds(5)
     private val nowMinus1Sec = now.minusSeconds(1)
+    private val bucketName = BucketName.of("SUBMISSION_BUCKET")
+    private val fakeS3 = FakeS3()
 
     @Test
     fun `submissions from s3 accept all filter`() {
-        val fakeS3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
-            S3ObjectSummary("my-prefix-def", lastModified = now),
-            S3ObjectSummary("abcdef", lastModified = nowMinus1Sec)
-        )
+        fakeS3.add(exposureS3Object("my-prefix-abc", bucketName), nowMinus5Sec)
+        fakeS3.add(exposureS3Object("my-prefix-def", bucketName), now)
+        fakeS3.add(exposureS3Object("abcdef", bucketName), nowMinus1Sec)
 
-        val submissions = SubmissionFromS3Repository(fakeS3).loadAllSubmissions()
+        val submissions = submissionFromS3Repository(fakeS3).loadAllSubmissions()
 
         expectThat(submissions)
             .flatMap(::keys)
@@ -38,13 +40,11 @@ class SubmissionFromS3RepositoryTest {
 
     @Test
     fun `submissions from s3 has PCR as test type`() {
-        val fakeS3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("mobile/LAB_RESULT/abc.json", lastModified = nowMinus5Sec),
-            S3ObjectSummary("mobile/RAPID_RESULT/def.json", lastModified = now),
-            S3ObjectSummary("mobile/RAPID_SELF_REPORTED/ghi.json", lastModified = nowMinus1Sec)
-        )
+        fakeS3.add(exposureS3Object("mobile/LAB_RESULT/abc.json", bucketName), nowMinus5Sec)
+        fakeS3.add(exposureS3Object("mobile/RAPID_RESULT/def.json", bucketName), now)
+        fakeS3.add(exposureS3Object("mobile/RAPID_SELF_REPORTED/ghi.json", bucketName), nowMinus1Sec)
 
-        val submissions = SubmissionFromS3Repository(fakeS3).loadAllSubmissions()
+        val submissions = submissionFromS3Repository(fakeS3).loadAllSubmissions()
 
         expectThat(submissions)
             .flatMap(::keys)
@@ -59,14 +59,12 @@ class SubmissionFromS3RepositoryTest {
     fun `submissions from s3 submission time filter`() {
         val nowEpoch = now.toEpochMilli()
 
-        val fakeS3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("veryold", lastModified = Instant.ofEpochMilli(nowEpoch - 2 * 60000)),
-            S3ObjectSummary("old", lastModified = Instant.ofEpochMilli(nowEpoch - 60000)),
-            S3ObjectSummary("now", lastModified = Instant.ofEpochMilli(nowEpoch)),
-            S3ObjectSummary("young", lastModified = Instant.ofEpochMilli(nowEpoch + 60000))
-        )
+        fakeS3.add(exposureS3Object("veryold", bucketName), ofEpochMilli(nowEpoch - 2 * 60000))
+        fakeS3.add(exposureS3Object("old", bucketName), ofEpochMilli(nowEpoch - 60000))
+        fakeS3.add(exposureS3Object("now", bucketName), ofEpochMilli(nowEpoch))
+        fakeS3.add(exposureS3Object("young", bucketName), ofEpochMilli(nowEpoch + 60000))
 
-        val submissions = SubmissionFromS3Repository(fakeS3)
+        val submissions = submissionFromS3Repository(fakeS3)
             .loadAllSubmissions(nowEpoch, 100, 100)
 
         expectThat(submissions)
@@ -78,15 +76,13 @@ class SubmissionFromS3RepositoryTest {
     fun `submissions from s3 max results`() {
         val nowEpoch = now.toEpochMilli()
 
-        val fakeS3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("A", lastModified = Instant.ofEpochMilli(nowEpoch + 4 * 60000)),
-            S3ObjectSummary("B", lastModified = Instant.ofEpochMilli(nowEpoch + 3 * 60000)),
-            S3ObjectSummary("C", lastModified = Instant.ofEpochMilli(nowEpoch + 2 * 60000)),
-            S3ObjectSummary("D", lastModified = Instant.ofEpochMilli(nowEpoch + 60000)),
-            S3ObjectSummary("D", lastModified = Instant.ofEpochMilli(nowEpoch - 60000))
-        )
+        fakeS3.add(exposureS3Object("A", bucketName), ofEpochMilli(nowEpoch + 4 * 60000))
+        fakeS3.add(exposureS3Object("B", bucketName), ofEpochMilli(nowEpoch + 3 * 60000))
+        fakeS3.add(exposureS3Object("C", bucketName), ofEpochMilli(nowEpoch + 2 * 60000))
+        fakeS3.add(exposureS3Object("D", bucketName), ofEpochMilli(nowEpoch + 60000))
+        fakeS3.add(exposureS3Object("D", bucketName), ofEpochMilli(nowEpoch - 60000))
 
-        val submissions = SubmissionFromS3Repository(fakeS3)
+        val submissions = submissionFromS3Repository(fakeS3)
             .loadAllSubmissions(nowEpoch, 3, 3)
 
         expectThat(submissions)
@@ -96,15 +92,11 @@ class SubmissionFromS3RepositoryTest {
 
     @Test
     fun `filter submissions from s3`() {
-        val fakeS3 = FakeDiagnosisKeysS3(
-            listOf(
-                S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
-                S3ObjectSummary("my-prefix-def", lastModified = now),
-                S3ObjectSummary("abcdef", lastModified = nowMinus1Sec)
-            )
-        )
+        fakeS3.add(exposureS3Object("my-prefix-abc", bucketName), nowMinus5Sec)
+        fakeS3.add(exposureS3Object("my-prefix-def", bucketName), now)
+        fakeS3.add(exposureS3Object("abcdef", bucketName), nowMinus1Sec)
 
-        val submissions = SubmissionFromS3Repository(fakeS3) { objectKey ->
+        val submissions = submissionFromS3Repository(fakeS3) { objectKey ->
             !objectKey.value.startsWith("my-prefix")
         }.loadAllSubmissions()
 
@@ -115,13 +107,11 @@ class SubmissionFromS3RepositoryTest {
 
     @Test
     fun `filter submissions from s3 by prefix`() {
-        val fakeS3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
-            S3ObjectSummary("/bla/my-prefix-def", lastModified = now),
-            S3ObjectSummary("/mobile/abc", lastModified = nowMinus1Sec)
-        )
+        fakeS3.add(exposureS3Object("my-prefix-abc", bucketName), nowMinus5Sec)
+        fakeS3.add(exposureS3Object("/bla/my-prefix-def", bucketName), now)
+        fakeS3.add(exposureS3Object("/mobile/abc", bucketName), nowMinus1Sec)
 
-        val submissions = SubmissionFromS3Repository(fakeS3) { objectKey ->
+        val submissions = submissionFromS3Repository(fakeS3) { objectKey ->
             listOf("/nearform/IE", "/nearform/NIR", "/mobile").any { objectKey.value.startsWith(it) }
         }.loadAllSubmissions()
 
@@ -131,31 +121,30 @@ class SubmissionFromS3RepositoryTest {
     }
 
     @Test
-    fun `skip deleted submissions from s3`() {
-        val fakeS3 = FakeDiagnosisKeysS3(
-            listOf(
-                S3ObjectSummary("my-prefix-abc", lastModified = nowMinus5Sec),
-                S3ObjectSummary("/bla/my-prefix-def", lastModified = now),
-                S3ObjectSummary("/mobile/abc", lastModified = nowMinus1Sec)
-            ), listOf("my-prefix-abc")
-        )
+    fun `skips submissions from s3`() {
+        fakeS3.add(exposureS3Object("my-prefix-abc", bucketName), nowMinus5Sec)
+        fakeS3.add(exposureS3Object("/bla/my-prefix-def", bucketName), now)
+        fakeS3.add(exposureS3Object("/mobile/abc", bucketName), nowMinus1Sec)
 
-        val submissions = SubmissionFromS3Repository(fakeS3).loadAllSubmissions()
+        val submissions = submissionFromS3Repository(fakeS3) {
+            !it.value.startsWith("my-prefix-abc")
+        }.loadAllSubmissions()
 
         expectThat(submissions)
             .flatMap(::keys)
             .containsExactly("/mobile/abc", "/bla/my-prefix-def")
     }
 
-    @Suppress("TestFunctionName")
-    private fun SubmissionFromS3Repository(
-        fakeS3: FakeDiagnosisKeysS3,
+    private fun submissionFromS3Repository(
+        fakeS3: AwsS3,
         predicate: (ObjectKey) -> Boolean = { true }
     ) = SubmissionFromS3Repository(
-        fakeS3,
-        predicate,
-        BucketName.of("SUBMISSION_BUCKET"),
-        RecordingEvents()
+        awsS3 = fakeS3,
+        objectKeyFilter = predicate,
+        submissionBucketName = bucketName,
+        loadSubmissionsTimeout = Duration.ofMinutes(12),
+        loadSubmissionsThreadPoolSize = 15,
+        events = RecordingEvents()
     ) { now }
 
     private fun keys(submission: Submission) = submission

@@ -59,6 +59,11 @@ interface Distributions : BackendContractScenario {
         MobileApp(mitmHttpClient(), envConfig).pollSelfIsolation()
     }
 
+    @Test
+    fun `Mobile app polls for local stats`() {
+        control.addNote("Mobile app polls for local stats")
+        MobileApp(mitmHttpClient(), envConfig).pollLocalStats()
+    }
 }
 
 class RecordingDistributionsTest : RecordingTest(), Distributions {

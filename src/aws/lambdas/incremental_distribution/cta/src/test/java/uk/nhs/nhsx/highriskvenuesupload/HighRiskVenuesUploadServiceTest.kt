@@ -34,7 +34,7 @@ class HighRiskVenuesUploadServiceTest {
     private val cloudFrontDistId = UUID.randomUUID().toString()
     private val cloudFrontInvPattern = UUID.randomUUID().toString()
 
-    private val s3 = FakeS3()
+    private val awsS3 = FakeS3()
     private val awsCloudFront = mockk<AwsCloudFront> {
         every { invalidateCache(any(), any()) } just runs
     }
@@ -50,7 +50,7 @@ class HighRiskVenuesUploadServiceTest {
     private val service = HighRiskVenuesUploadService(
         config = config,
         signer = testSigner,
-        s3Client = s3,
+        awsS3 = awsS3,
         awsCloudFront = awsCloudFront,
         parser = parser
     )
@@ -77,7 +77,7 @@ class HighRiskVenuesUploadServiceTest {
     fun `validation error if empty body`() {
         val result = service.upload("")
 
-        expectThat(s3).isEmpty()
+        expectThat(awsS3).isEmpty()
         expectThat(result)
             .isA<ValidationError>()
             .get(ValidationError::message)
@@ -88,7 +88,7 @@ class HighRiskVenuesUploadServiceTest {
     fun `validation error if whitespace body`() {
         val result = service.upload("    ")
 
-        expectThat(s3).isEmpty()
+        expectThat(awsS3).isEmpty()
         expectThat(result)
             .isA<ValidationError>()
             .get(ValidationError::message)
@@ -99,7 +99,7 @@ class HighRiskVenuesUploadServiceTest {
     fun `validation error if invalid header`() {
         val result = service.upload("# start_time, venue_id, end_time")
 
-        expectThat(s3).isEmpty()
+        expectThat(awsS3).isEmpty()
         expectThat(result)
             .isA<ValidationError>()
             .get(ValidationError::message)
@@ -107,7 +107,7 @@ class HighRiskVenuesUploadServiceTest {
     }
 
     private fun verifyHappyPath(payload: String) {
-        expectThat(s3)
+        expectThat(awsS3)
             .getBucket(s3BucketName)
             .getObject(s3ObjKeyName)
             .and { content.asString().isEqualTo(payload) }

@@ -17,7 +17,7 @@ module "processing_lambda" {
   lambda_execution_role_arn      = module.processor_role.arn
   lambda_timeout                 = 30
   lambda_memory                  = 512
-  reserved_concurrent_executions = 10
+  reserved_concurrent_executions = 100
   lambda_environment_variables = {
     AAE_URL_PREFIX                = var.aae_url_prefix
     AAE_URL_SUFFIX                = var.aae_url_suffix
@@ -54,6 +54,22 @@ resource "aws_sqs_queue" "dlq" {
   message_retention_seconds  = 1209600
   receive_wait_time_seconds  = 20
   tags                       = var.tags
+}
+
+resource "aws_cloudwatch_metric_alarm" "age_of_oldest_message_alarm" {
+  alarm_name          = "${local.identifier_prefix}-age_of_oldest_message"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "ApproximateAgeOfOldestMessage"
+  namespace           = "AWS/SQS"
+  period              = "60"
+  statistic           = "Maximum"
+  threshold           = "3600" # one hour
+  alarm_description   = "This metric monitors age of oldest message in the queue. In case it's one hour or more, it goes in ALARM state."
+  alarm_actions       = [var.alarm_topic_arn]
+  treat_missing_data  = "notBreaching"
+  tags                = var.tags
+  dimensions          = { QueueName = aws_sqs_queue.this.name }
 }
 
 resource "aws_cloudwatch_metric_alarm" "dlq" {

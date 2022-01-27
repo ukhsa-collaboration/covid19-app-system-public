@@ -28,7 +28,6 @@ module "federation_keys_processing" {
   tags                                = var.tags
 }
 
-
 module "virology_tokens_processing" {
   source                              = "./modules/virology_tokens_processor"
   lambda_repository_bucket            = module.artifact_repository.bucket_name
@@ -44,6 +43,16 @@ module "virology_tokens_processing" {
   tags                                = var.tags
 }
 
+module "local_stats_processing" {
+  source                   = "./modules/local_stats_processor"
+  is_enabled               = false
+  distribution_bucket_name = module.local_stats_distribution.store.bucket
+  lambda_repository_bucket = module.artifact_repository.bucket_name
+  lambda_object_key        = module.artifact_repository.lambda_object_key
+  log_retention_in_days    = var.log_retention_in_days
+  alarm_topic_arn          = var.alarm_topic_arn
+  tags                     = var.tags
+}
 
 output "diagnosis_keys_processing_function" {
   value = module.diagnosis_keys_processing.function
@@ -75,4 +84,8 @@ output "virology_tokens_processing_sms_topic_arn" {
 
 output "virology_tokens_processing_email_topic_arn" {
   value = module.virology_tokens_processing.email_topic_arn
+}
+
+output "local_stats_processing_function" {
+  value = module.local_stats_processing.local_stats_processing_function
 }

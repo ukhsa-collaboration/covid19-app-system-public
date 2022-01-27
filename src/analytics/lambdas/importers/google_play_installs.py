@@ -38,7 +38,6 @@ def get_months_covering_data(year, month):
 
 
 def handler(event, context):
-
     # Get secret key
     secret_id = os.environ['secret_id']
 

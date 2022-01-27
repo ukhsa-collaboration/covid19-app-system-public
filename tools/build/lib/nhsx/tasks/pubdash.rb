@@ -70,20 +70,3 @@ namespace :download do
     end
   end
 end
-
-namespace :invoke do
-  namespace :pubdash do
-    namespace :trigger_export do
-      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
-        tgt_envs.each do |tgt_env|
-          desc "Triggers lambda export which will extract latest analytics datasets from athena"
-          task :"#{tgt_env}" => [:"login:#{account}"] do
-            target_config = pubdash_target_environment_configuration(tgt_env, account, $configuration)
-            lambda_function = target_config["pubdash_trigger_export_lambda_function_name"]
-            NHSx::AWS::invoke_lambda(lambda_function, "", $configuration)
-          end
-        end
-      end
-    end
-  end
-end

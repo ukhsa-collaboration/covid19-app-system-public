@@ -48,7 +48,7 @@ module NHSx
       "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
       "staging" => ["staging"],
       "prod" => ["prod"],
-      "aa-dev" => ["aa-ci"],
+      "aa-dev" => ["aa-dev", "aa-ci"],
       "aa-staging" => ["aa-staging"],
       "aa-prod" => ["aa-prod"],
     }.freeze
@@ -80,13 +80,13 @@ module NHSx
     CONTENT_SIGNING_KEY_PARAMETER = "/app/kms/ContentSigningKeyArn".freeze
     # The name of the secret that contains the API authentication headers used by the tests
     TEST_API_KEY_HEADERS_SECRET = "AuthenticationHeadersForTests".freeze
+
     # Retrieves the target environment configuration
     def target_environment_configuration(environment_name, account_name, system_config)
       terraform_configuration = File.join(system_config.base, APP_SYSTEM_ACCOUNTS, account_name)
       target_config = parse_terraform_output(terraform_output(environment_name, terraform_configuration, system_config))
       target_config["auth_headers"] = authentication_headers_for_test(system_config)
       target_config["target_environment_name"] = environment_name
-
       return target_config
     end
 

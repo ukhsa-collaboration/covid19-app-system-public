@@ -11,11 +11,11 @@ import org.junit.jupiter.api.io.TempDir
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.core.ContentType
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.testhelper.assertions.asString
 import uk.nhs.nhsx.testhelper.assertions.captured
 import uk.nhs.nhsx.testhelper.assertions.withCaptured
@@ -29,7 +29,7 @@ class VirologyProcessorStoreTest {
     private val locator = slot<Locator>()
     private val contentType = slot<ContentType>()
     private val bytes = slot<ByteArraySource>()
-    private val s3Storage = mockk<S3Storage> {
+    private val awsS3 = mockk<AwsS3> {
         every {
             upload(
                 capture(locator),
@@ -38,13 +38,13 @@ class VirologyProcessorStoreTest {
             )
         } just runs
     }
-    private val store = VirologyProcessorStore(s3Storage, bucketName)
+    private val store = VirologyProcessorStore(awsS3, bucketName)
 
     @Test
     fun `stores csv file`() {
         store.storeCsv(CtaTokensCsv("file.csv", "file-content"))
 
-        verify(exactly = 1) { s3Storage.upload(any(), any(), any()) }
+        verify(exactly = 1) { awsS3.upload(any(), any(), any()) }
 
         expectThat(locator).withCaptured {
             get(Locator::bucket).isEqualTo(BucketName.of("bucket"))
@@ -63,7 +63,7 @@ class VirologyProcessorStoreTest {
 
         store.storeZip(CtaTokensZip("file.zip", zipFile))
 
-        verify(exactly = 1) { s3Storage.upload(any(), any(), any()) }
+        verify(exactly = 1) { awsS3.upload(any(), any(), any()) }
 
         expectThat(locator).withCaptured {
             get(Locator::bucket).isEqualTo(BucketName.of("bucket"))

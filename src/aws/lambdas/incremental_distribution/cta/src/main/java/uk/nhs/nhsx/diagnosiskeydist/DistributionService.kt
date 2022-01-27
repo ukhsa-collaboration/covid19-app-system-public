@@ -8,7 +8,6 @@ import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.signature.Signer
-import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.Companion.SYSTEM_EXIT_ERROR_HANDLER
 import uk.nhs.nhsx.diagnosiskeydist.agspec.ENIntervalNumber
 import uk.nhs.nhsx.diagnosiskeydist.apispec.DailyZIPSubmissionPeriod
 import uk.nhs.nhsx.diagnosiskeydist.apispec.DailyZIPSubmissionPeriod.Companion.DAILY_PATH_PREFIX
@@ -22,7 +21,6 @@ import java.io.File
 import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit.DAYS
-import java.util.*
 import java.util.Collections.synchronizedList
 
 /**
@@ -61,11 +59,10 @@ class DistributionService(
         val twoHourly = TwoHourlyZIPSubmissionPeriod.periodForSubmissionDate(now)
         for (lastZipPeriod in listOf(daily, twoHourly)) {
             ConcurrentExecution(
-                "Distribution: ${lastZipPeriod.javaClass.simpleName}",
-                Duration.ofMinutes(MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES.toLong()),
-                events,
-                clock,
-                SYSTEM_EXIT_ERROR_HANDLER
+                name = "Distribution: ${lastZipPeriod.javaClass.simpleName}",
+                timeout = config.maximalZipSignS3PutTime,
+                events = events,
+                clock = clock,
             ).use { pool ->
                 for (zipPeriod in lastZipPeriod.allPeriodsToGenerate()) {
                     pool.execute { distributeSubmissions(allSubmissions, window, zipPeriod) }
@@ -195,7 +192,6 @@ class DistributionService(
             .toByteArray()
 
     companion object {
-        private const val MAXIMAL_ZIP_SIGN_S3_PUT_TIME_MINUTES = 6
         const val EK_EXPORT_V1_HEADER = "EK Export v1    "
     }
 }

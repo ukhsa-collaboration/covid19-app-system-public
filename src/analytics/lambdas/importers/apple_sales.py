@@ -14,6 +14,7 @@ DATE_FORMAT = "%Y-%m-%d"
 FILE_KEY_PREFIX = "apple-sales-"
 FORCE_DOWNLOAD_DAYS = 7
 
+
 def get_secrets():
     secrets_manager = boto3.client('secretsmanager')
     auth_secret = secrets_manager.get_secret_value(SecretId="/apple_sales/auth_key")
@@ -23,6 +24,7 @@ def get_secrets():
     issuer_secret = secrets_manager.get_secret_value(SecretId="/apple_sales/issuer_id")
     issuer_id = loads(issuer_secret["SecretString"])["/apple_sales/issuer_id"]
     return {"auth_key": auth_key, "key_id": key_id, "issuer_id": issuer_id}
+
 
 def generate_jwt_token():
     secrets = get_secrets()
@@ -44,6 +46,7 @@ def generate_jwt_token():
     encoded_jwt = jwt.encode(payload, private_key, ALGORITHM, header_fields)
     return encoded_jwt
 
+
 def upload(date, bucket, headers):
     endpoint = "https://api.appstoreconnect.apple.com/v1/salesReports?filter[frequency]=DAILY&filter[reportDate]=" + date + "&filter[reportType]=SALES&filter[reportSubType]=SUMMARY&filter[vendorNumber]=89811168"
 
@@ -57,7 +60,7 @@ def upload(date, bucket, headers):
         text_file.write(data)
         text_file.close()
 
-        in_txt = csv.reader(open(tab_file_name, "r"), delimiter = '\t')
+        in_txt = csv.reader(open(tab_file_name, "r"), delimiter='\t')
         out_csv = csv.writer(open(csv_file_name, 'w'))
         out_csv.writerows(in_txt)
 
@@ -72,11 +75,13 @@ def upload(date, bucket, headers):
     else:
         print("Request failed for " + date + " with " + str(response.status_code))
 
+
 def request():
     start_date = datetime.date(2020, 9, 18)
     today = datetime.date.today()
-    last_week = (today - datetime.timedelta(days=FORCE_DOWNLOAD_DAYS)).strftime(DATE_FORMAT);
-    report_dates = [(start_date + datetime.timedelta(days=x)).strftime(DATE_FORMAT) for x in range(0, (today - start_date).days)]
+    last_week = (today - datetime.timedelta(days=FORCE_DOWNLOAD_DAYS)).strftime(DATE_FORMAT)
+    report_dates = [(start_date + datetime.timedelta(days=x)).strftime(DATE_FORMAT) for x in
+                    range(0, (today - start_date).days)]
 
     s3 = boto3.resource("s3")
     env_name = os.environ["env"]
@@ -90,6 +95,7 @@ def request():
     headers = {"Authorization": "Bearer " + generate_jwt_token()}
     for date in report_dates:
         upload(date, bucket, headers)
+
 
 def handler(event, context):
     request()

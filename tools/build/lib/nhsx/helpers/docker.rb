@@ -67,7 +67,7 @@ module NHSx
     def pull_devenv_image(system_config)
       # doing it like this avoids leaking the login token in the logs
       registry_login(system_config)
-      tag = full_tag(content_version($configuration))
+      tag = full_tag(content_version(system_config))
       cmdline = Commandlines.pull_image(tag)
       run_command("Pull #{tag.split(":").last}", cmdline, system_config)
       tag_content_version_as_latest(system_config, tag)
@@ -82,7 +82,7 @@ module NHSx
     # Publish the docker container image to the ECR registry
     def publish_devenv_image(system_config)
       registry_login(system_config)
-      [content_version($configuration), DEFAULT_VERSION].map { |t| full_tag(t) }.each do |tag|
+      [content_version(system_config), DEFAULT_VERSION].map { |t| full_tag(t) }.each do |tag|
         cmdline = Commandlines.push_image(tag)
         run_command("Publish #{tag.split(":").last}", cmdline, system_config)
       end

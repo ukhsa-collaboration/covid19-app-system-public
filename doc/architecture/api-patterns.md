@@ -1,13 +1,13 @@
-
 ## API Patterns
 
 There are several general patterns of APIs in use:
-* [Submission](#submission)
-* [Distribution](#distribution)
-* [Upload](#upload)
-* [Circuit Breaker](#circuit-breaker)
-* [Connector](#connector)
-* [Exporter](#exporter)
+
+- [Submission](#submission)
+- [Distribution](#distribution)
+- [Upload](#upload)
+- [Circuit Breaker](#circuit-breaker)
+- [Connector](#connector)
+- [Exporter](#exporter)
 
 Details of specific APIs can be found using the links provided or, for the fuller list, in [API contracts](api-contracts/README.md).
 
@@ -15,9 +15,9 @@ Details of specific APIs can be found using the links provided or, for the fulle
 
 Submission APIs are used by the App to submit data to the backend.
 
-* Endpoint schema: ```https://<FQDN>/submission/<payload type>```
-* Payload content-type: application/json
-* Authentication: ```Authorization: Bearer <API KEY>``` (see [API Security](api-security.md))
+- Endpoint schema: `https://<FQDN>/submission/<payload type>`
+- Payload content-type: application/json
+- Authentication: `Authorization: Bearer <API KEY>` (see [API Security](api-security.md))
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
@@ -34,12 +34,11 @@ Submission APIs are used by the App to submit data to the backend.
 
 Distribution APIs are used by the App to ensure datasets and configurations are kept up-to-date, by polling periodically.
 
-* Endpoint schema: ```https://<FQDN>/distribution/<payload specific>```
-* `FQDN`: One (CDN-) hostname for all distribute APIs
-* HTTP verb: GET
-* Payload content-type: payload specific
-* Authentication: none (see [API Security](api-security.md))
-
+- Endpoint schema: `https://<FQDN>/distribution/<payload specific>`
+- `FQDN`: One (CDN-) hostname for all distribute APIs
+- HTTP verb: GET
+- Payload content-type: payload specific
+- Authentication: none (see [API Security](api-security.md))
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
@@ -52,18 +51,19 @@ Distribution APIs are used by the App to ensure datasets and configurations are 
 | Exposure Risk Configuration | Distribution | [exposure-risk-configuration.md](api-contracts/mobile-facing/configuration/exposure-risk-configuration.md) | Gets the latest configuration for exposure risk analysis. |
 | Identified Risk Venues Configuration | Distribution | [risky-venue-configuration.md](api-contracts/mobile-facing/configuration/risky-venue-configuration.md) | Gets the latest configuration for venue risk notification e.g. how long a user can book a test after visiting a risky venue. |
 | Self Isolation Configuration | Distribution | [self-isolation-configuration.md](api-contracts/mobile-facing/configuration/self-isolation-configuration.md) | Gets the latest configuration for self isolation e.g. how long a user needs to isolate for. |
+| Local Covid Statistics | Distribution | [local-covid-stats-distribution.md](api-contracts/mobile-facing/distribution/local-covid-stats-distribution.md) | Gets the latest Covid statistics. |
 
 ### Upload
 
 Upload APIs are used by external systems to submit data (files, json) to the backend, usually for subsequent distribution.
 
-* Endpoint schema: ```https://<FQDN>/upload/<payload type>```
-* Payload content type (HTTP header): application/json or text/csv
-* Payload size restriction: < 6MB
-* Authentication: ```Authorization: Bearer <API KEY>``` (see [API Security](api-security.md))
-* All-or-nothing: No partial processing (no row-by-row processing)
-* Fast-fail: stop processing after first validation exception
-* API GW Rate limit (can be periodically adjusted): 100-150 RPS, max concurrency of 10
+- Endpoint schema: `https://<FQDN>/upload/<payload type>`
+- Payload content type (HTTP header): application/json or text/csv
+- Payload size restriction: \< 6MB
+- Authentication: `Authorization: Bearer <API KEY>` (see [API Security](api-security.md))
+- All-or-nothing: No partial processing (no row-by-row processing)
+- Fast-fail: stop processing after first validation exception
+- API GW Rate limit (can be periodically adjusted): 100-150 RPS, max concurrency of 10
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
@@ -75,13 +75,13 @@ Upload APIs are used by external systems to submit data (files, json) to the bac
 
 ### Circuit Breaker
 
-Circuit breaker APIs delegate the decision for a risk-based action e.g. to advise self-isolation on exposure notification. 
+Circuit breaker APIs delegate the decision for a risk-based action e.g. to advise self-isolation on exposure notification.
 
-* Endpoint schema: ```https://<FQDN>/circuit-breaker/<risk type specific>```
-* HTTP verb: POST
-* Payload content-type: application/json
-* Payload: related context information (a simple JSON dictionary, i.e. key-value pairs)
-* Authentication: ```Authorization: Bearer <API KEY>``` (see [API Security](api-security.md))
+- Endpoint schema: `https://<FQDN>/circuit-breaker/<risk type specific>`
+- HTTP verb: POST
+- Payload content-type: application/json
+- Payload: related context information (a simple JSON dictionary, i.e. key-value pairs)
+- Authentication: `Authorization: Bearer <API KEY>` (see [API Security](api-security.md))
 
 After receiving the token the mobile client polls the backend until it receives a resolution result from the backend.
 
@@ -95,7 +95,8 @@ After receiving the token the mobile client polls the backend until it receives 
 Connectors integrate with external systems, with data flowing both ways.
 
 The external systems include:
-* NearForm Federation API - for exchanging diagnosis keys with other GAEN-compatible systems
+
+- NearForm Federation API - for exchanging diagnosis keys with other GAEN-compatible systems
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
@@ -106,10 +107,10 @@ The external systems include:
 Exporters integrate with external systems, with data flowing out only.
 
 The external systems include:
-* AAE - Advanced Analytics Environment
+
+- AAE - Advanced Analytics Environment
 
 | API Name | API Group | API Contract | User/Client impact |
 | --- | --- | --- | --- |
 | Analytics to AAE | Exporter | [analytics-aae-exporter.md](api-contracts/service-facing/exporter/analytics-aae-exporter.md) | Export of mobile analytics data to AAE. |
 | Epidemiological Event to AAE | Exporter | [analytics-event-aae-exporter.md](api-contracts/service-facing/exporter/analytics-event-aae-exporter.md) | Export of mobile epidemiological events to AAE. |
-

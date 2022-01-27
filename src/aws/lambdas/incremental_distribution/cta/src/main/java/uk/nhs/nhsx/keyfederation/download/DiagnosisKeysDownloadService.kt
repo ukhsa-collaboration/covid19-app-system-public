@@ -27,16 +27,22 @@ class DiagnosisKeysDownloadService(
     private val events: Events
 ) {
 
-    fun downloadFromFederatedServerAndStoreKeys(): Int = batchTagService.latestFederationBatch()
-        .map { downloadKeysAndProcess(it.batchDate, it.batchTag, maxSubsequentBatchDownloadCount, context) }
-        .orElseGet {
+    fun downloadFromFederatedServerAndStoreKeys() = batchTagService
+        .latestFederationBatch()
+        ?.let {
             downloadKeysAndProcess(
-                dateNow().minusDays(initialDownloadHistoryDays.toLong()),
-                null,
+                it.batchDate,
+                it.batchTag,
                 maxSubsequentBatchDownloadCount,
                 context
             )
         }
+        ?: downloadKeysAndProcess(
+            dateNow().minusDays(initialDownloadHistoryDays.toLong()),
+            null,
+            maxSubsequentBatchDownloadCount,
+            context
+        )
 
     private fun downloadKeysAndProcess(
         date: LocalDate,

@@ -10,8 +10,8 @@ import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Handler
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock.CLOCK
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.aws.secretsmanager.AwsSecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
@@ -39,11 +39,12 @@ class KeyFederationDownloadHandler @JvmOverloads constructor(
     private val config: KeyFederationDownloadConfig = KeyFederationDownloadConfig.fromEnvironment(Environment.fromSystem()),
     private val batchTagService: BatchTagService = BatchTagDynamoDBService(
         config.stateTableName,
-        AmazonDynamoDBClientBuilder.defaultClient()
+        AmazonDynamoDBClientBuilder.defaultClient(),
+        events
     ),
     private val secretManager: SecretManager = AwsSecretManager(AWSSecretsManagerClientBuilder.defaultClient()),
     private val interopClient: InteropClient = buildInteropClient(config, secretManager, events, CLOCK),
-    private val awsS3Client: S3Storage = AwsS3Client(events)
+    private val awsS3: AwsS3 = AwsS3Client(events)
 ) : SchedulingHandler(events) {
 
     private fun downloadFromFederatedServerAndStoreKeys(context: Context) =
@@ -53,7 +54,7 @@ class KeyFederationDownloadHandler @JvmOverloads constructor(
                     clock,
                     interopClient,
                     FederatedKeyUploader(
-                        awsS3Client,
+                        awsS3,
                         config.submissionBucketName,
                         config.federatedKeyDownloadPrefix,
                         clock,

@@ -1,46 +1,166 @@
 {
-    "widgets": [
-        {
-            "type": "log",
-            "x": 0,
-            "y": 0,
-            "width": 24,
-            "height": 9,
-            "properties": {
-                "query": "SOURCE '/aws/lambda/${federation_keys_processing_upload_function}' | fields @message, metadata, event\n| filter metadata.name=\"UploadedDiagnosisKeys\"\n| stats sum(event.insertedExposures) by bin(30s)",
-                "region": "eu-west-2",
-                "stacked": false,
-                "title": "Keys uploaded to federation server",
-                "view": "timeSeries"
-            }
-        },
-        {
-            "type": "log",
-            "x": 0,
-            "y": 9,
-            "width": 24,
-            "height": 6,
-            "properties": {
-                "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @message, metadata, event\n| filter metadata.name=\"DownloadedExposures\"\n| stats sum(event.downloadedExposures) by bin(30s)",
-                "region": "eu-west-2",
-                "stacked": false,
-                "title": "Keys downloaded from federation server",
-                "view": "timeSeries"
-            }
-        },
-        {
-            "type": "log",
-            "x": 0,
-            "y": 15,
-            "width": 24,
-            "height": 6,
-            "properties": {
-                "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @message, metadata, event\n| filter metadata.name=\"DownloadedFederatedDiagnosisKeys\"\n| stats sum(event.validKeys),sum(event.invalidKeys) by event.origin",
-                "region": "eu-west-2",
-                "stacked": false,
-                "title": "Valid/Invalid keys downloaded from federation server",
-                "view": "bar"
-            }
-        }
-    ]
+  "widgets": [
+    {
+      "height": 9,
+      "width": 24,
+      "y": 2,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${federation_keys_processing_upload_function}' | fields @message, metadata, event\n| filter metadata.name=\"UploadedDiagnosisKeys\"\n| stats sum(event.insertedExposures) as sum_exposure_keys by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Keys uploaded to federation server",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 9,
+      "width": 24,
+      "y": 25,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @message, metadata, event\n| filter metadata.name=\"DownloadedExposures\"\n| stats sum(event.downloadedExposures) as sum_exposure_keys by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Keys downloaded from federation server",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 9,
+      "width": 24,
+      "y": 46,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @message, metadata, event\n| filter metadata.name=\"DownloadedFederatedDiagnosisKeys\"\n| stats sum(event.validKeys),sum(event.invalidKeys) by event.origin",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Valid/Invalid keys downloaded from federation server",
+        "view": "bar"
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 11,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/Lambda", "Invocations", "FunctionName", "${federation_keys_processing_download_function}" ],
+          [ ".", "Errors", ".", ".", { "yAxis": "right" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "eu-west-2",
+        "stat": "Sum",
+        "period": 300,
+        "title": "Key Federation Upload Lambda"
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 34,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/Lambda", "Errors", "FunctionName", "${federation_keys_processing_download_function}", "Resource", "${federation_keys_processing_download_function}", { "yAxis": "right" } ],
+          [ ".", "Invocations", ".", ".", ".", ".", { "yAxis": "left" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "eu-west-2",
+        "stat": "Sum",
+        "period": 300,
+        "title": "Key Federation Download Lambda"
+      }
+    },
+    {
+      "height": 2,
+      "width": 24,
+      "y": 0,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown": "# Key Federation Upload\nExposure keys uploaded to Interop server"
+      }
+    },
+    {
+      "height": 2,
+      "width": 24,
+      "y": 23,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown": "# Key Federation Download\nExposure keys downloaded from Interop server"
+      }
+    },
+    {
+      "height": 6,
+      "width": 24,
+      "y": 17,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${federation_keys_processing_upload_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| limit 20",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Key Federation Upload - Recent Logs",
+        "view": "table"
+      }
+    },
+    {
+      "height": 6,
+      "width": 24,
+      "y": 40,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${federation_keys_processing_download_function}' | fields @timestamp, @message\n| sort @timestamp desc\n| limit 20",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Key Federation Download - Recent Logs",
+        "view": "table"
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 34,
+      "x": 12,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/Lambda", "Duration", "FunctionName", "${federation_keys_processing_download_function}", "Resource", "${federation_keys_processing_download_function}" ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "eu-west-2",
+        "period": 3600,
+        "stat": "Average"
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 11,
+      "x": 12,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/Lambda", "Duration", "FunctionName", "${federation_keys_processing_upload_function}", "Resource", "${federation_keys_processing_upload_function}" ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "eu-west-2",
+        "period": 3600,
+        "stat": "Average"
+      }
+    }
+  ]
 }

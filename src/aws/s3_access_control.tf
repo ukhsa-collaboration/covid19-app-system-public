@@ -25,6 +25,13 @@ module "local_messages_distribution_access" {
   origin_access_identity_arn = module.local_messages_distribution.origin_access_identity_arn
 }
 
+module "local_stats_distribution_access" {
+  source                     = "./modules/s3_access_policies"
+  policy_type                = "secure_origin_access"
+  s3_bucket_arn              = module.local_stats_distribution.store.arn
+  origin_access_identity_arn = module.local_stats_distribution.origin_access_identity_arn
+}
+
 module "risky_venues_distribution_access" {
   source                     = "./modules/s3_access_policies"
   policy_type                = "secure_origin_access"

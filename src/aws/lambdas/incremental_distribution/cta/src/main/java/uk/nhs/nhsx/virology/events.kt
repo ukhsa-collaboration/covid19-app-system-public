@@ -107,7 +107,7 @@ object CtaExchangeRejectionEvent {
         val mobileOS: MobileOS
     ) : Event(Info, label)
 
-    data class UnprocessableVirologyCtaExchange(val e: Exception) : Event(Error, label)
+    data class UnprocessableVirologyCtaExchange(val e: Exception) : Event(Info, label)
 }
 
 // used by analytics

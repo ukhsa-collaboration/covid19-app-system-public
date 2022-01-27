@@ -27,7 +27,7 @@ class AnalyticsEventsSubmissionServiceTest {
         val bucketName = BucketName.of("bucket")
 
         AnalyticsEventsSubmissionService(
-            s3Storage = fakeS3,
+            awsS3 = fakeS3,
             objectKeyNameProvider = { ObjectKey.of("key") },
             bucketName = bucketName,
             events = events
@@ -71,7 +71,7 @@ class AnalyticsEventsSubmissionServiceTest {
         val bucketName = BucketName.of("bucket")
 
         AnalyticsEventsSubmissionService(
-            s3Storage = fakeS3,
+            awsS3 = fakeS3,
             objectKeyNameProvider = { ObjectKey.of("key") },
             bucketName = bucketName,
             events = events

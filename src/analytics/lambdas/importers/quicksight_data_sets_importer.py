@@ -54,6 +54,7 @@ USER_ARN = "user_arn"
 USERS_FOR_DATA_SETS_COLUMNS = [USER_ARN,
                                DATA_SET_ID]
 
+
 def get_data_sets(account_id):
     quicksight = boto3.client("quicksight")
     response = quicksight.list_data_sets(AwsAccountId=account_id)
@@ -62,6 +63,7 @@ def get_data_sets(account_id):
         response = quicksight.list_data_sets(AwsAccountId=account_id, NextToken=response["NextToken"])
         data_sets = data_sets + response["DataSetSummaries"]
     return data_sets
+
 
 def get_dashboards(account_id):
     quicksight = boto3.client("quicksight")
@@ -72,6 +74,7 @@ def get_dashboards(account_id):
         dashboards = dashboards + response["DashboardSummaryList"]
     return dashboards
 
+
 def get_data_sources(account_id):
     quicksight = boto3.client("quicksight")
     response = quicksight.list_data_sources(AwsAccountId=account_id)
@@ -80,6 +83,7 @@ def get_data_sources(account_id):
         response = quicksight.list_data_sources(AwsAccountId=account_id, NextToken=response["NextToken"])
         data_sources = data_sources + response["DataSources"]
     return data_sources
+
 
 def get_analyses(account_id):
     quicksight = boto3.client("quicksight")
@@ -90,6 +94,7 @@ def get_analyses(account_id):
         analyses = analyses + response["AnalysisSummaryList"]
     return analyses
 
+
 def get_users(account_id):
     quicksight = boto3.client("quicksight")
     response = quicksight.list_users(AwsAccountId=account_id, Namespace="default")
@@ -98,6 +103,7 @@ def get_users(account_id):
         response = quicksight.list_users(AwsAccountId=account_id, Namespace="default", NextToken=response["NextToken"])
         users = users + response["UserList"]
     return users
+
 
 def get_data_set_descriptions(account_id, data_sets):
     quicksight = boto3.client("quicksight")
@@ -108,8 +114,10 @@ def get_data_set_descriptions(account_id, data_sets):
             data_set_description = quicksight.describe_data_set(AwsAccountId=account_id, DataSetId=data_set_id)
             data_set_descriptions[data_set_id] = data_set_description["DataSet"]
         except Exception as error:
-            print("Describe dataset for DataSetId=" + data_set_id + " Name=\"" + data_set["Name"] + "\" returns error " + str(error))
+            print("Describe dataset for DataSetId=" + data_set_id + " Name=\"" + data_set[
+                "Name"] + "\" returns error " + str(error))
     return data_set_descriptions
+
 
 def get_dashboard_descriptions(account_id, dashboards):
     quicksight = boto3.client("quicksight")
@@ -120,8 +128,10 @@ def get_dashboard_descriptions(account_id, dashboards):
             dashboard_description = quicksight.describe_dashboard(AwsAccountId=account_id, DashboardId=dashboard_id)
             dashboard_descriptions[dashboard_id] = dashboard_description["Dashboard"]
         except Exception as error:
-            print("Describe dashboard for DashboardId=" + dashboard_id + " Name=\"" + dashboard["Name"] + "\" returns error " + str(error))
+            print("Describe dashboard for DashboardId=" + dashboard_id + " Name=\"" + dashboard[
+                "Name"] + "\" returns error " + str(error))
     return dashboard_descriptions
+
 
 def get_analysis_descriptions(account_id, analyses):
     quicksight = boto3.client("quicksight")
@@ -132,8 +142,10 @@ def get_analysis_descriptions(account_id, analyses):
             analysis_description = quicksight.describe_analysis(AwsAccountId=account_id, AnalysisId=analysis_id)
             analysis_descriptions[analysis_id] = analysis_description["Analysis"]
         except Exception as error:
-            print("Describe analysis for AnalysisId=" + analysis_id + " Name=\"" + analysis["Name"] + "\" returns error " + str(error))
+            print("Describe analysis for AnalysisId=" + analysis_id + " Name=\"" + analysis[
+                "Name"] + "\" returns error " + str(error))
     return analysis_descriptions
+
 
 def get_data_set_permissions(account_id, data_sets):
     quicksight = boto3.client("quicksight")
@@ -141,11 +153,14 @@ def get_data_set_permissions(account_id, data_sets):
     for data_set in data_sets:
         data_set_id = data_set["DataSetId"]
         try:
-            data_set_permission = quicksight.describe_data_set_permissions(AwsAccountId=account_id, DataSetId=data_set["DataSetId"])
+            data_set_permission = quicksight.describe_data_set_permissions(AwsAccountId=account_id,
+                                                                           DataSetId=data_set["DataSetId"])
             data_set_permissions[data_set_id] = data_set_permission
         except Exception as error:
-            print("Describe dataset permissions for DataSetId=" + data_set_id + " Name=\"" + data_set["Name"] + "\" returns error " + str(error))
+            print("Describe dataset permissions for DataSetId=" + data_set_id + " Name=\"" + data_set[
+                "Name"] + "\" returns error " + str(error))
     return data_set_permissions
+
 
 def get_data_set_ingestions(account_id, data_sets):
     quicksight = boto3.client("quicksight")
@@ -156,12 +171,15 @@ def get_data_set_ingestions(account_id, data_sets):
             response = quicksight.list_ingestions(AwsAccountId=account_id, DataSetId=data_set_id)
             ingestions_for_data_set = response["Ingestions"]
             while response.get("NextToken", None) is not None:
-                response = quicksight.list_ingestions(AwsAccountId=account_id, DataSetId=data_set_id, NextToken=response["NextToken"])
+                response = quicksight.list_ingestions(AwsAccountId=account_id, DataSetId=data_set_id,
+                                                      NextToken=response["NextToken"])
                 ingestions_for_data_set = ingestions_for_data_set + response["Ingestions"]
             ingestions[data_set_id] = ingestions_for_data_set
         except Exception as error:
-            print("List ingestions for DataSetId=" + data_set_id + " Name=\"" + data_set["Name"] + "\" returns error " + str(error))
+            print("List ingestions for DataSetId=" + data_set_id + " Name=\"" + data_set[
+                "Name"] + "\" returns error " + str(error))
     return ingestions
+
 
 def convert_data_sets(data_sets, data_set_descriptions, data_sources):
     data_source_id_by_arn = {}
@@ -184,20 +202,26 @@ def convert_data_sets(data_sets, data_set_descriptions, data_sources):
                         if data_source_arn in data_source_id_by_arn:
                             relational_table_data_source_id = data_source_id_by_arn[data_source_arn]
                         else:
-                            print("Data set DataSetId=" + data_set_id + " Name=\"" + data_set["Name"] + "\" has reference to non-existent relational table data source " + str(data_source_arn))
+                            print("Data set DataSetId=" + data_set_id + " Name=\"" + data_set[
+                                "Name"] + "\" has reference to non-existent relational table data source " + str(
+                                data_source_arn))
                     if "CustomSql" in physical_table:
                         data_source_arn = physical_table["CustomSql"]["DataSourceArn"]
                         if data_source_arn in data_source_id_by_arn:
                             custom_sql_data_source_id = data_source_id_by_arn[data_source_arn]
-                            custom_sql_query = physical_table["CustomSql"]["SqlQuery"].replace('\n', ' ')
+                            custom_sql_query = physical_table["CustomSql"]["SqlQuery"].replace('\n', ' ').replace('\r',
+                                                                                                                  ' ')
                         else:
-                            print("Data set DataSetId=" + data_set_id + " Name=\"" + data_set["Name"] + "\" has reference to non-existent custom SQL data source " + str(data_source_arn))
+                            print("Data set DataSetId=" + data_set_id + " Name=\"" + data_set[
+                                "Name"] + "\" has reference to non-existent custom SQL data source " + str(
+                                data_source_arn))
                     if "S3Source" in physical_table:
                         data_source_arn = physical_table["S3Source"]["DataSourceArn"]
                         if data_source_arn in data_source_id_by_arn:
                             s3_source_data_source_id = data_source_id_by_arn[data_source_arn]
                         else:
-                            print("Data set DataSetId=" + data_set_id + " Name=\"" + data_set["Name"] + "\" has reference to non-existent S3 data source " + str(data_source_arn))
+                            print("Data set DataSetId=" + data_set_id + " Name=\"" + data_set[
+                                "Name"] + "\" has reference to non-existent S3 data source " + str(data_source_arn))
             converted_data_set = {DATA_SET_ID: data_set_id,
                                   DATA_SET_NAME: data_set.get("Name", None),
                                   DATA_SET_LAST_REFRESH: data_set_description.get("LastUpdatedTime", None),
@@ -207,6 +231,7 @@ def convert_data_sets(data_sets, data_set_descriptions, data_sources):
                                   DATA_SET_S3_DATA_SOURCE_ID: s3_source_data_source_id}
             converted_data_sets.append(converted_data_set)
     return converted_data_sets
+
 
 def convert_ingestions(data_sets, ingestions):
     converted_ingestions = []
@@ -222,6 +247,7 @@ def convert_ingestions(data_sets, ingestions):
             converted_ingestions.append(converted_ingestion)
     return converted_ingestions
 
+
 def convert_dashboards(dashboards, dashboard_descriptions):
     converted_dashboards = []
     for dashboard in dashboards:
@@ -231,6 +257,7 @@ def convert_dashboards(dashboards, dashboard_descriptions):
                                    DASHBOARD_NAME: dashboard.get("Name", None)}
             converted_dashboards.append(converted_dashboard)
     return converted_dashboards
+
 
 def convert_dashboards_for_data_sets(data_sets, dashboard_descriptions):
     data_set_id_by_arn = {}
@@ -246,8 +273,10 @@ def convert_dashboards_for_data_sets(data_sets, dashboard_descriptions):
                                                     DASHBOARD_ID: dashboard_id}
                 converted_dashboards_for_data_sets.append(converted_dashboard_for_data_set)
             else:
-                print("Dashboard DashboardId=" + dashboard_id + " Name=\"" + dashboard_description["Name"] + "\" has reference to non-existent data set " + str(data_set_arn))
+                print("Dashboard DashboardId=" + dashboard_id + " Name=\"" + dashboard_description[
+                    "Name"] + "\" has reference to non-existent data set " + str(data_set_arn))
     return converted_dashboards_for_data_sets
+
 
 def convert_data_sources(data_sources):
     converted_data_sources = []
@@ -257,6 +286,7 @@ def convert_data_sources(data_sources):
         converted_data_sources.append(converted_data_source)
     return converted_data_sources
 
+
 def convert_analyses(analyses):
     converted_analyses = []
     for analysis in analyses:
@@ -264,6 +294,7 @@ def convert_analyses(analyses):
                               ANALYSIS_NAME: analysis.get("Name", None)}
         converted_analyses.append(converted_analysis)
     return converted_analyses
+
 
 def convert_analyses_for_data_sets(data_sets, analysis_descriptions):
     data_set_id_by_arn = {}
@@ -279,8 +310,10 @@ def convert_analyses_for_data_sets(data_sets, analysis_descriptions):
                                                    ANALYSIS_ID: analysis_id}
                 converted_analyses_for_data_sets.append(converted_analysis_for_data_set)
             else:
-                print("Analysis AnalysisId=" + analysis_id + " Name=\"" + analysis_description["Name"] + "\" has reference to non-existent data set " + str(data_set_arn))
+                print("Analysis AnalysisId=" + analysis_id + " Name=\"" + analysis_description[
+                    "Name"] + "\" has reference to non-existent data set " + str(data_set_arn))
     return converted_analyses_for_data_sets
+
 
 def convert_users_for_data_sets(data_set_permissions, users):
     user_by_arn = {}
@@ -297,8 +330,11 @@ def convert_users_for_data_sets(data_set_permissions, users):
                                                USER_ARN: principal}
                 converted_users_for_data_sets.append(converted_user_for_data_set)
             else:
-                print("Data set permission DataSetId=" + data_set_id + " has reference to non-existent principal " + str(principal))
+                print(
+                    "Data set permission DataSetId=" + data_set_id + " has reference to non-existent principal " + str(
+                        principal))
     return converted_users_for_data_sets
+
 
 def write_data(type, columns, rows):
     csv_file_name = "analytics-quicksight-" + type + ".csv"
@@ -326,6 +362,7 @@ def write_data(type, columns, rows):
 
     except IOError as error:
         print(error)
+
 
 def handler(event, context):
     sts = boto3.client('sts')
@@ -361,4 +398,6 @@ def handler(event, context):
     write_data("analyses-for-data-sets", ANALYSES_FOR_DATA_SETS_COLUMNS, converted_analyses_for_data_sets)
     write_data("users-for-data-sets", USERS_FOR_DATA_SETS_COLUMNS, converted_users_for_data_sets)
 
-handler("", "")
+
+if __name__ == "__main__":
+    handler("", "")

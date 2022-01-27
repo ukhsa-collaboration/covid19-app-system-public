@@ -11,153 +11,159 @@ import kotlin.String
  *
  * See https://github.com/jmfayard/refreshVersions
  */
-object Libs {
-    const val bcrypt: String = "at.favre.lib:bcrypt:_"
+public object Libs {
+    public const val bcrypt: String = "at.favre.lib:bcrypt:_"
 
-    const val com_adarshr_test_logger_gradle_plugin: String =
+    public const val com_adarshr_test_logger_gradle_plugin: String =
             "com.adarshr.test-logger:com.adarshr.test-logger.gradle.plugin:_"
 
-    const val aws_java_sdk_athena: String = "com.amazonaws:aws-java-sdk-athena"
+    public const val aws_java_sdk_athena: String = "com.amazonaws:aws-java-sdk-athena"
 
-    const val aws_java_sdk_bom: String = "com.amazonaws:aws-java-sdk-bom:_"
+    public const val aws_java_sdk_bom: String = "com.amazonaws:aws-java-sdk-bom:_"
 
-    const val aws_java_sdk_cloudfront: String = "com.amazonaws:aws-java-sdk-cloudfront"
+    public const val aws_java_sdk_cloudfront: String = "com.amazonaws:aws-java-sdk-cloudfront"
 
-    const val aws_java_sdk_dynamodb: String = "com.amazonaws:aws-java-sdk-dynamodb"
+    public const val aws_java_sdk_dynamodb: String = "com.amazonaws:aws-java-sdk-dynamodb"
 
-    const val aws_java_sdk_kinesis: String = "com.amazonaws:aws-java-sdk-kinesis"
+    public const val aws_java_sdk_kinesis: String = "com.amazonaws:aws-java-sdk-kinesis"
 
-    const val aws_java_sdk_kms: String = "com.amazonaws:aws-java-sdk-kms"
+    public const val aws_java_sdk_kms: String = "com.amazonaws:aws-java-sdk-kms"
 
-    const val aws_java_sdk_logs: String = "com.amazonaws:aws-java-sdk-logs"
+    public const val aws_java_sdk_logs: String = "com.amazonaws:aws-java-sdk-logs"
 
-    const val aws_java_sdk_s3: String = "com.amazonaws:aws-java-sdk-s3"
+    public const val aws_java_sdk_s3: String = "com.amazonaws:aws-java-sdk-s3"
 
-    const val aws_java_sdk_secretsmanager: String = "com.amazonaws:aws-java-sdk-secretsmanager"
+    public const val aws_java_sdk_secretsmanager: String =
+            "com.amazonaws:aws-java-sdk-secretsmanager"
 
-    const val aws_java_sdk_sns: String = "com.amazonaws:aws-java-sdk-sns"
+    public const val aws_java_sdk_sns: String = "com.amazonaws:aws-java-sdk-sns"
 
-    const val aws_java_sdk_sqs: String = "com.amazonaws:aws-java-sdk-sqs"
+    public const val aws_java_sdk_sqs: String = "com.amazonaws:aws-java-sdk-sqs"
 
-    const val aws_java_sdk_ssm: String = "com.amazonaws:aws-java-sdk-ssm"
+    public const val aws_java_sdk_ssm: String = "com.amazonaws:aws-java-sdk-ssm"
 
-    const val aws_lambda_java_core: String = "com.amazonaws:aws-lambda-java-core:_"
+    public const val aws_lambda_java_core: String = "com.amazonaws:aws-lambda-java-core:_"
 
-    const val aws_lambda_java_events: String = "com.amazonaws:aws-lambda-java-events:_"
+    public const val aws_lambda_java_events: String = "com.amazonaws:aws-lambda-java-events:_"
 
-    const val aws_xray_recorder_sdk_aws_sdk: String = "com.amazonaws:aws-xray-recorder-sdk-aws-sdk"
+    public const val aws_xray_recorder_sdk_aws_sdk: String =
+            "com.amazonaws:aws-xray-recorder-sdk-aws-sdk"
 
-    const val aws_xray_recorder_sdk_aws_sdk_core: String =
+    public const val aws_xray_recorder_sdk_aws_sdk_core: String =
             "com.amazonaws:aws-xray-recorder-sdk-aws-sdk-core"
 
-    const val aws_xray_recorder_sdk_aws_sdk_instrumentor: String =
+    public const val aws_xray_recorder_sdk_aws_sdk_instrumentor: String =
             "com.amazonaws:aws-xray-recorder-sdk-aws-sdk-instrumentor"
 
-    const val aws_xray_recorder_sdk_bom: String = "com.amazonaws:aws-xray-recorder-sdk-bom:_"
+    public const val aws_xray_recorder_sdk_bom: String = "com.amazonaws:aws-xray-recorder-sdk-bom:_"
 
-    const val aws_xray_recorder_sdk_core: String = "com.amazonaws:aws-xray-recorder-sdk-core"
+    public const val aws_xray_recorder_sdk_core: String = "com.amazonaws:aws-xray-recorder-sdk-core"
 
-    const val jcommander: String = "com.beust:jcommander:_"
+    public const val jcommander: String = "com.beust:jcommander:_"
 
-    const val jackson_databind: String = "com.fasterxml.jackson.core:jackson-databind"
+    public const val jackson_databind: String = "com.fasterxml.jackson.core:jackson-databind"
 
-    const val jackson_dataformat_xml: String =
+    public const val jackson_dataformat_xml: String =
             "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
 
-    const val jackson_datatype_jdk8: String = "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
+    public const val jackson_datatype_jdk8: String =
+            "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
 
-    const val jackson_datatype_jsr310: String =
+    public const val jackson_datatype_jsr310: String =
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
-    const val jackson_module_kotlin: String = "com.fasterxml.jackson.module:jackson-module-kotlin"
+    public const val jackson_module_kotlin: String =
+            "com.fasterxml.jackson.module:jackson-module-kotlin"
 
-    const val jackson_module_parameter_names: String =
+    public const val jackson_module_parameter_names: String =
             "com.fasterxml.jackson.module:jackson-module-parameter-names"
 
-    const val jackson_bom: String = "com.fasterxml.jackson:jackson-bom:_"
+    public const val jackson_bom: String = "com.fasterxml.jackson:jackson-bom:_"
 
-    const val caffeine: String = "com.github.ben-manes.caffeine:caffeine:_"
+    public const val caffeine: String = "com.github.ben-manes.caffeine:caffeine:_"
 
-    const val javafaker: String = "com.github.javafaker:javafaker:_"
+    public const val javafaker: String = "com.github.javafaker:javafaker:_"
 
-    const val wiremock_jre8: String = "com.github.tomakehurst:wiremock-jre8:_"
+    public const val wiremock_jre8: String = "com.github.tomakehurst:wiremock-jre8:_"
 
-    const val protobuf_bom: String = "com.google.protobuf:protobuf-bom:_"
+    public const val protobuf_bom: String = "com.google.protobuf:protobuf-bom:_"
 
-    const val protobuf_java: String = "com.google.protobuf:protobuf-java"
+    public const val protobuf_java: String = "com.google.protobuf:protobuf-java"
 
-    const val snodge: String = "com.natpryce:snodge:_"
+    public const val snodge: String = "com.natpryce:snodge:_"
 
-    const val commons_codec: String = "commons-codec:commons-codec:_"
+    public const val commons_codec: String = "commons-codec:commons-codec:_"
 
-    const val de_fayard_buildsrclibs_gradle_plugin: String =
+    public const val de_fayard_buildsrclibs_gradle_plugin: String =
             "de.fayard.buildSrcLibs:de.fayard.buildSrcLibs.gradle.plugin:_"
 
-    const val forkhandles_bom: String = "dev.forkhandles:forkhandles-bom:_"
+    public const val forkhandles_bom: String = "dev.forkhandles:forkhandles-bom:_"
 
-    const val values4k: String = "dev.forkhandles:values4k"
+    public const val values4k: String = "dev.forkhandles:values4k"
 
-    const val mockk: String = "io.mockk:mockk:_"
+    public const val mockk: String = "io.mockk:mockk:_"
 
-    const val strikt_jvm: String = "io.strikt:strikt-jvm:_"
+    public const val strikt_jvm: String = "io.strikt:strikt-jvm:_"
 
-    const val jaxb_api: String = "javax.xml.bind:jaxb-api:_"
+    public const val jaxb_api: String = "javax.xml.bind:jaxb-api:_"
 
-    const val zip4j: String = "net.lingala.zip4j:zip4j:_"
+    public const val zip4j: String = "net.lingala.zip4j:zip4j:_"
 
-    const val commons_csv: String = "org.apache.commons:commons-csv:_"
+    public const val commons_csv: String = "org.apache.commons:commons-csv:_"
 
-    const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
+    public const val commons_lang3: String = "org.apache.commons:commons-lang3:_"
 
-    const val awaitility: String = "org.awaitility:awaitility:_"
+    public const val awaitility: String = "org.awaitility:awaitility:_"
 
-    const val jose4j: String = "org.bitbucket.b_c:jose4j:_"
+    public const val jose4j: String = "org.bitbucket.b_c:jose4j:_"
 
-    const val bcpkix_jdk15on: String = "org.bouncycastle:bcpkix-jdk15on:_"
+    public const val bcpkix_jdk15on: String = "org.bouncycastle:bcpkix-jdk15on:_"
 
-    const val bcprov_ext_jdk15on: String = "org.bouncycastle:bcprov-ext-jdk15on:_"
+    public const val bcprov_ext_jdk15on: String = "org.bouncycastle:bcprov-ext-jdk15on:_"
 
-    const val javax_json: String = "org.glassfish:javax.json:_"
+    public const val javax_json: String = "org.glassfish:javax.json:_"
 
-    const val http4k_aws: String = "org.http4k:http4k-aws"
+    public const val http4k_aws: String = "org.http4k:http4k-aws"
 
-    const val http4k_bom: String = "org.http4k:http4k-bom:_"
+    public const val http4k_bom: String = "org.http4k:http4k-bom:_"
 
-    const val http4k_format_jackson: String = "org.http4k:http4k-format-jackson"
+    public const val http4k_format_jackson: String = "org.http4k:http4k-format-jackson"
 
-    const val http4k_format_moshi: String = "org.http4k:http4k-format-moshi"
+    public const val http4k_format_moshi: String = "org.http4k:http4k-format-moshi"
 
-    const val http4k_resilience4j: String = "org.http4k:http4k-resilience4j"
+    public const val http4k_resilience4j: String = "org.http4k:http4k-resilience4j"
 
-    const val http4k_testing_approval: String = "org.http4k:http4k-testing-approval"
+    public const val http4k_testing_approval: String = "org.http4k:http4k-testing-approval"
 
-    const val http4k_testing_servirtium: String = "org.http4k:http4k-testing-servirtium"
+    public const val http4k_testing_chaos: String = "org.http4k:http4k-testing-chaos"
 
-    const val http4k_testing_strikt: String = "org.http4k:http4k-testing-strikt"
+    public const val http4k_testing_servirtium: String = "org.http4k:http4k-testing-servirtium"
 
-    const val org_jetbrains_kotlin_jvm_gradle_plugin: String =
+    public const val http4k_testing_strikt: String = "org.http4k:http4k-testing-strikt"
+
+    public const val org_jetbrains_kotlin_jvm_gradle_plugin: String =
             "org.jetbrains.kotlin.jvm:org.jetbrains.kotlin.jvm.gradle.plugin:_"
 
-    const val kotlin_bom: String = "org.jetbrains.kotlin:kotlin-bom:_"
+    public const val kotlin_bom: String = "org.jetbrains.kotlin:kotlin-bom:_"
 
-    const val kotlin_reflect: String = "org.jetbrains.kotlin:kotlin-reflect"
+    public const val kotlin_reflect: String = "org.jetbrains.kotlin:kotlin-reflect"
 
-    const val kotlin_scripting_compiler_embeddable: String =
+    public const val kotlin_scripting_compiler_embeddable: String =
             "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:_"
 
-    const val kotlin_stdlib_jdk8: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    public const val kotlin_stdlib_jdk8: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    const val junit_jupiter: String = "org.junit.jupiter:junit-jupiter"
+    public const val junit_jupiter: String = "org.junit.jupiter:junit-jupiter"
 
-    const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params"
+    public const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params"
 
-    const val junit_bom: String = "org.junit:junit-bom:_"
+    public const val junit_bom: String = "org.junit:junit-bom:_"
 
-    const val jsonassert: String = "org.skyscreamer:jsonassert:_"
+    public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
 
-    const val athena: String = "software.amazon.awssdk:athena"
+    public const val athena: String = "software.amazon.awssdk:athena"
 
-    const val bom: String = "software.amazon.awssdk:bom:_"
+    public const val bom: String = "software.amazon.awssdk:bom:_"
 
-    const val lambda: String = "software.amazon.awssdk:lambda"
+    public const val lambda: String = "software.amazon.awssdk:lambda"
 }

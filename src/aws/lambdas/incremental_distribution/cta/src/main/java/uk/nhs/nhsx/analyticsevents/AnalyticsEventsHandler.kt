@@ -15,10 +15,10 @@ import uk.nhs.nhsx.core.auth.ApiName.Mobile
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.ResponseSigner
 import uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
 import uk.nhs.nhsx.core.aws.s3.PartitionedObjectKeyNameProvider
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
@@ -40,7 +40,7 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
         AwsSsmParameters(),
         AWSKMSClientBuilder.defaultClient()
     ).signResponseWithKeyGivenInSsm(environment, events),
-    s3Storage: S3Storage = AwsS3Client(events),
+    awsS3: AwsS3 = AwsS3Client(events),
     objectKeyNameProvider: ObjectKeyNameProvider = PartitionedObjectKeyNameProvider(clock, UniqueId.ID),
     healthAuthenticator: Authenticator = awsAuthentication(Health, events)
 ) : RoutingHandler() {
@@ -59,7 +59,7 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
                                 val payload = PayloadValidator().maybeValidPayload(request.body)
                                 payload?.let {
                                     AnalyticsEventsSubmissionService(
-                                        s3Storage,
+                                        awsS3,
                                         objectKeyNameProvider,
                                         environment.access.required(EnvironmentKeys.SUBMISSION_STORE),
                                         events

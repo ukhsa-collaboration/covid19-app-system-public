@@ -81,11 +81,22 @@ fun distributionService(
     awsKmsClient: AWSKMS
 ): DistributionService {
     val batchProcessingConfig = BatchProcessingConfig.fromEnvironment(environment)
-
+    val loadSubmissionsTimeout = batchProcessingConfig.loadSubmissionsTimeout
+    val submissionsThreadPoolSize = batchProcessingConfig.loadSubmissionsThreadPoolSize
     val allowedPrefixes = environment.access.required(EnvironmentKey.strings("DIAGNOSIS_KEY_SUBMISSION_PREFIXES"))
     val submissionBucket = environment.access.required(EnvironmentKeys.SUBMISSION_BUCKET_NAME)
     val objectKeyFilter = ObjectKeyFilters.batched().withPrefixes(allowedPrefixes)
-    val submissionRepository = SubmissionFromS3Repository(awsS3Client, objectKeyFilter, submissionBucket, events, clock)
+
+    val submissionRepository = SubmissionFromS3Repository(
+        awsS3Client,
+        objectKeyFilter,
+        submissionBucket,
+        loadSubmissionsTimeout,
+        submissionsThreadPoolSize,
+        events,
+        clock
+    )
+
     val standardSigningFactory = StandardSigningFactory(clock, parameters, awsKmsClient)
 
     return DistributionService(

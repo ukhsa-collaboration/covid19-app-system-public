@@ -20,8 +20,9 @@ import strikt.assertions.hasSize
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotNull
 import strikt.assertions.map
+import uk.nhs.nhsx.core.aws.dynamodb.TableName
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
 import uk.nhs.nhsx.core.events.RecordingEvents
@@ -37,12 +38,11 @@ import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.content
 import uk.nhs.nhsx.testhelper.data.asInstant
-import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
+import uk.nhs.nhsx.testhelper.mocks.exposureS3Object
 import uk.nhs.nhsx.testhelper.mocks.getBucket
 import uk.nhs.nhsx.testhelper.mocks.isEmpty
 import uk.nhs.nhsx.testhelper.mocks.withReadJsonOrThrows
-import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Instant
 import java.time.LocalDate
@@ -65,17 +65,18 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                 )
         )
 
-        val s3 = FakeS3().addS3ObjectSummary(bucketName, S3ObjectSummary("foo", lastModified = Instant.now()))
+        val s3 = FakeS3()
+        s3.add(exposureS3Object("foo", bucketName), Instant.now())
 
-        val config = KeyFederationDownloadConfig(
+        val config = keyFederationDownloadConfig(
             wireMockServer = wireMock,
             bucketName = bucketName
         )
 
-        KeyFederationDownloadHandler(
+        keyFederationDownloadHandler(
             wireMockServer = wireMock,
             keyFederationDownloadConfig = config,
-            s3Storage = s3
+            awsS3 = s3
         ).handleRequest(ScheduledEvent(), aContext())
 
         wireMock.verify(1, getRequestedFor(urlEqualTo("/diagnosiskeys/download/2020-08-01")))
@@ -92,9 +93,9 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                 )
         )
 
-        val config = KeyFederationDownloadConfig(wireMock, bucketName = bucketName) { false }
+        val config = keyFederationDownloadConfig(wireMock, bucketName = bucketName) { false }
 
-        KeyFederationDownloadHandler(
+        keyFederationDownloadHandler(
             wireMockServer = wireMock,
             keyFederationDownloadConfig = config
         ).handleRequest(ScheduledEvent(), aContext())
@@ -124,10 +125,10 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
 
         val fakeS3 = FakeS3()
 
-        KeyFederationDownloadHandler(
+        keyFederationDownloadHandler(
             wireMockServer = wireMock,
-            keyFederationDownloadConfig = KeyFederationDownloadConfig(wireMock),
-            s3Storage = fakeS3,
+            keyFederationDownloadConfig = keyFederationDownloadConfig(wireMock),
+            awsS3 = fakeS3,
             batchTagService = batchTagService
         ).handleRequest(ScheduledEvent(), aContext())
 
@@ -244,10 +245,10 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
 
         val clock = { "2021-02-11T00:00:00.000Z".asInstant() }
 
-        KeyFederationDownloadHandler(
+        keyFederationDownloadHandler(
             wireMockServer = wireMock,
-            keyFederationDownloadConfig = KeyFederationDownloadConfig(wireMock, bucketName = bucketName),
-            s3Storage = fakeS3,
+            keyFederationDownloadConfig = keyFederationDownloadConfig(wireMock, bucketName = bucketName),
+            awsS3 = fakeS3,
             batchTagService = batchTagService,
             clock = clock
         ).handleRequest(ScheduledEvent(), aContext())
@@ -301,10 +302,10 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
         val batchTagService = InMemoryBatchTagService()
         val fakeS3 = FakeS3()
 
-        KeyFederationDownloadHandler(
+        keyFederationDownloadHandler(
             wireMockServer = wireMock,
-            keyFederationDownloadConfig = KeyFederationDownloadConfig(wireMock, bucketName = bucketName),
-            s3Storage = fakeS3,
+            keyFederationDownloadConfig = keyFederationDownloadConfig(wireMock, bucketName = bucketName),
+            awsS3 = fakeS3,
             batchTagService = batchTagService,
         ).handleRequest(ScheduledEvent(), aContext())
 
@@ -320,7 +321,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
         wireMock.verify(2, getRequestedFor(urlPathEqualTo("/diagnosiskeys/download/2020-08-01")))
     }
 
-    private fun KeyFederationDownloadConfig(
+    private fun keyFederationDownloadConfig(
         wireMockServer: WireMockServer,
         bucketName: BucketName = BucketName.of("foo"),
         featureFlag: () -> Boolean = { true },
@@ -335,14 +336,14 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
         interopAuthTokenSecretName = SecretName.of("authToken"),
         signingKeyParameterName = ParameterName.of("parameter"),
         federatedKeyDownloadPrefix = "federatedKeyDownloadPrefix",
-        stateTableName = "DUMMY_TABLE",
+        stateTableName = TableName.of("DUMMY_TABLE"),
         validOrigins = listOf("GB-EAW", "GB-NIR")
     )
 
-    private fun KeyFederationDownloadHandler(
+    private fun keyFederationDownloadHandler(
         wireMockServer: WireMockServer,
         keyFederationDownloadConfig: KeyFederationDownloadConfig,
-        s3Storage: S3Storage = FakeDiagnosisKeysS3(emptyList()),
+        awsS3: AwsS3 = FakeS3(),
         batchTagService: BatchTagService = InMemoryBatchTagService(),
         clock: () -> Instant = { "2020-08-15T00:00:00.000Z".asInstant() }
     ): KeyFederationDownloadHandler {
@@ -359,7 +360,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
             config = keyFederationDownloadConfig,
             batchTagService = batchTagService,
             interopClient = interopClient,
-            awsS3Client = s3Storage
+            awsS3 = awsS3
         )
     }
 }

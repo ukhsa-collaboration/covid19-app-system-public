@@ -11,7 +11,12 @@ import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.ApiKeyExtractor
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.ResponseSigner
-import uk.nhs.nhsx.core.events.*
+import uk.nhs.nhsx.core.events.ApiHandleFailed
+import uk.nhs.nhsx.core.events.Events
+import uk.nhs.nhsx.core.events.ExceptionThrown
+import uk.nhs.nhsx.core.events.IncomingHttpRequest
+import uk.nhs.nhsx.core.events.OAINotSet
+import uk.nhs.nhsx.core.events.RequestRejected
 import uk.nhs.nhsx.core.exceptions.ApiResponseException
 import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.headers.MobileAppVersion
@@ -96,7 +101,7 @@ fun filteringWhileMaintenanceModeEnabled(
     delegate: ApiGatewayHandler
 ): ApiGatewayHandler =
     when {
-        environment.access.required(MAINTENANCE_MODE).lowercase(Locale.getDefault()).toBoolean() ->
+        environment.isMaintenanceModeEnabled() ->
             ApiGatewayHandler { _, _ ->
                 events(RequestRejected("MAINTENANCE_MODE"))
                 HttpResponses.serviceUnavailable()
@@ -104,6 +109,10 @@ fun filteringWhileMaintenanceModeEnabled(
         else -> delegate
     }
 
+fun Environment.isMaintenanceModeEnabled(): Boolean =
+    access.required(MAINTENANCE_MODE)
+        .lowercase(Locale.getDefault())
+        .toBoolean()
 
 fun requiringAuthorizationHeader(delegate: ApiGatewayHandler): ApiGatewayHandler =
     ApiGatewayHandler { r: APIGatewayProxyRequestEvent, context ->

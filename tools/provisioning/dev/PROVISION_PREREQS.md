@@ -7,7 +7,9 @@ There are a limited number of tools required for installation on the developers 
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
   * Before installing, please uninstall Docker Toolchain, if you have it on your machine, and remove all Docker-related environment variables.
 * [AWS CLI v2](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-  * After installing, create an [AWS access key](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) in your IAM account and configure the AWS CLI using [aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html)
+  * After installing, configure the AWS CLI using [aws configure](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html).
+  * Note that all access to AWS accounts is via SSO,
+    so there is no need to obtain an IAM API key.
 
 ## Build system setup
 

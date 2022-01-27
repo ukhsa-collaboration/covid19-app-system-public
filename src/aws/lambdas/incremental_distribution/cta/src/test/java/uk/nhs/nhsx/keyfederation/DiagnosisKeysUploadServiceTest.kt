@@ -3,7 +3,6 @@
 package uk.nhs.nhsx.keyfederation
 
 import com.amazonaws.services.lambda.runtime.Context
-import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
@@ -45,11 +44,12 @@ import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.FederatedExposureUploadFactory
 import uk.nhs.nhsx.testhelper.assertions.containsExactly
 import uk.nhs.nhsx.testhelper.assertions.withCaptured
-import uk.nhs.nhsx.testhelper.mocks.FakeInteropDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
 import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
-import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
+import uk.nhs.nhsx.testhelper.mocks.exposureS3Object
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.Clock
+import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset.UTC
 
@@ -59,6 +59,8 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
     private val events = RecordingEvents()
     private val clock = Clock.fixed(Instant.parse("2021-02-02T11:13:00.000Z"), UTC)
     private val now = Instant.now(clock)
+    private val submissionBucketName = BucketName.of("SUBMISSION_BUCKET")
+    private val fakeS3 = FakeS3()
 
     @BeforeEach
     fun disableXrayLogging() = Tracing.disableXRayComplaintsForMainClasses()
@@ -139,12 +141,10 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             every { uploadKeys(capture(payload)) } answers { callOriginal() }
         }
 
-        val submissionRepository = SubmissionFromS3Repository(
-            FakeInteropDiagnosisKeysS3(
-                S3ObjectSummary("mobile/LAB_RESULT/abc", lastModified = now),
-                S3ObjectSummary("mobile/RAPID_RESULT/def", lastModified = now)
-            )
-        )
+        fakeS3.add(exposureS3Object("mobile/LAB_RESULT/abc", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="), now)
+        fakeS3.add(exposureS3Object("mobile/RAPID_RESULT/def", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="), now)
+
+        val submissionRepository = SubmissionFromS3Repository(fakeS3)
 
         val service = DiagnosisKeysUploadService(
             interopClient = interopClient,
@@ -183,11 +183,13 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
             every { uploadKeys(capture(payload)) } answers { callOriginal() }
         }
 
-        val awsS3 = FakeInteropDiagnosisKeysS3(
-            S3ObjectSummary("mobile/RAPID_RESULT/abc.json", lastModified = now),
-            S3ObjectSummary("bar", lastModified = now)
+        fakeS3.add(
+            exposureS3Object("mobile/RAPID_RESULT/abc.json", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            now
         )
-        val submissionRepository = SubmissionFromS3Repository(awsS3) { it.value.startsWith("mobile") }
+        fakeS3.add(exposureS3Object("bar", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="), now)
+
+        val submissionRepository = SubmissionFromS3Repository(fakeS3) { it.value.startsWith("mobile") }
 
         val service = DiagnosisKeysUploadService(
             interopClient = interopClient,
@@ -256,15 +258,25 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         val lastModifiedDateBatchOne = now.minusSeconds(4)
         val lastModifiedDateBatchTwo = now
 
-        val interopClient = InteropClient(wireMock)
-        val submissionRepository = SubmissionFromS3Repository(
-            FakeInteropDiagnosisKeysS3(
-                S3ObjectSummary("mobile/LAB_RESULT/foo", lastModified = lastModifiedDateBatchOne),
-                S3ObjectSummary("mobile/LAB_RESULT/bar", lastModified = lastModifiedDateBatchOne),
-                S3ObjectSummary("mobile/LAB_RESULT/abc", lastModified = lastModifiedDateBatchOne),
-                S3ObjectSummary("mobile/LAB_RESULT/def", lastModified = lastModifiedDateBatchTwo)
-            )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/foo", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDateBatchOne
         )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/bar", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDateBatchOne
+        )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/abc", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDateBatchOne
+        )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/def", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDateBatchTwo
+        )
+
+        val interopClient = InteropClient(wireMock)
+        val submissionRepository = SubmissionFromS3Repository(fakeS3)
 
         val service = DiagnosisKeysUploadService(
             interopClient = interopClient,
@@ -295,14 +307,24 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
 
         val interopClient = InteropClient(wireMock)
 
-        val submissionRepository = SubmissionFromS3Repository(
-            FakeInteropDiagnosisKeysS3(
-                S3ObjectSummary("mobile/LAB_RESULT/foo", lastModified = lastModifiedDate),
-                S3ObjectSummary("mobile/LAB_RESULT/bar", lastModified = lastModifiedDate),
-                S3ObjectSummary("mobile/LAB_RESULT/abc", lastModified = lastModifiedDate),
-                S3ObjectSummary("mobile/LAB_RESULT/def", lastModified = lastModifiedDate)
-            )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/foo", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDate
         )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/bar", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDate
+        )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/abc", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDate
+        )
+        fakeS3.add(
+            exposureS3Object("mobile/LAB_RESULT/def", submissionBucketName, "3/TzKOK2u0O/eHeK4R0VSg=="),
+            lastModifiedDate
+        )
+
+        val submissionRepository = SubmissionFromS3Repository(fakeS3)
 
         val service = DiagnosisKeysUploadService(
             interopClient = interopClient,
@@ -360,16 +382,15 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         events = events
     )
 
-    private fun FakeInteropDiagnosisKeysS3(vararg summaries: S3ObjectSummary) =
-        FakeInteropDiagnosisKeysS3(summaries.toList())
-
     private fun SubmissionFromS3Repository(
         awsS3: AwsS3,
         keyFilter: (ObjectKey) -> Boolean = { true }
     ) = SubmissionFromS3Repository(
         awsS3 = awsS3,
         objectKeyFilter = keyFilter,
-        submissionBucketName = BucketName.of("SUBMISSION_BUCKET"),
+        submissionBucketName = submissionBucketName,
+        loadSubmissionsTimeout = Duration.ofMinutes(12),
+        loadSubmissionsThreadPoolSize = 15,
         events = events,
         clock = SystemClock.CLOCK
     )

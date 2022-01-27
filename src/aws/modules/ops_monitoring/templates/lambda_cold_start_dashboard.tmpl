@@ -1,0 +1,454 @@
+{
+  "widgets": [
+    {
+      "height": 6,
+      "width": 6,
+      "y": 22,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields replace(replace(ispresent(@initDuration), \"0\", \"warm\"), \"1\", \"cold\") as startType\n| filter @type = \"REPORT\"\n| stats count(*) as numberOfInvocations by startType\n| sort by startType",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${virology_submission_function}]",
+        "view": "pie"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 22,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter @type = \"REPORT\"\n| stats sum(strcontains(@message, \"Init Duration\"))/count(*) * 100 as coldStartPct\nby bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Cold Start Percentage [${virology_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 22,
+      "x": 6,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_submission_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts by bin (1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "view": "timeSeries",
+        "title": "Number Of Invocations [${virology_submission_function}]"
+      }
+    },
+    {
+      "height": 2,
+      "width": 24,
+      "y": 6,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown": "# Diagnosis Keys Lambdas"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 28,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields replace(replace(ispresent(@initDuration), \"0\", \"warm\"), \"1\", \"cold\") as startType\n| filter @type = \"REPORT\"\n| stats count(*) as numberOfInvocations by startType\n| sort by startType",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${virology_upload_function}]",
+        "view": "pie"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 28,
+      "x": 6,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts by bin (1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${virology_upload_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 28,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_upload_function}' | filter @type = \"REPORT\"\n| stats sum(strcontains(@message, \"Init Duration\"))/count(*) * 100 as coldStartPct\nby bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Cold Start Percentage [${virology_upload_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 36,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_submission_function}' | fields replace(replace(ispresent(@initDuration), \"0\", \"warm\"), \"1\", \"cold\") as startType\n| filter @type = \"REPORT\"\n| stats count(*) as numberOfInvocations by startType\n| sort by startType",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${analytics_ingest_submission_function}]",
+        "view": "pie"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 36,
+      "x": 6,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_submission_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts by bin (1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${analytics_ingest_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 36,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_submission_function}' | filter @type = \"REPORT\"\n| stats sum(strcontains(@message, \"Init Duration\"))/count(*) * 100 as coldStartPct\nby bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Cold Start Percentage [${analytics_ingest_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 48,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_events_function}' | fields replace(replace(ispresent(@initDuration), \"0\", \"warm\"), \"1\", \"cold\") as startType\n| filter @type = \"REPORT\"\n| stats count(*) as numberOfInvocations by startType\n| sort by startType",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${analytics_events_function}]",
+        "view": "pie"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 48,
+      "x": 6,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_events_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts by bin (1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${analytics_events_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 48,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_events_function}' | filter @type = \"REPORT\"\n| stats sum(strcontains(@message, \"Init Duration\"))/count(*) * 100 as coldStartPct\nby bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Cold Start Percentage [${analytics_events_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 8,
+      "x": 18,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration), min(@initDuration), max(@initDuration) by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Init Time (ms) [${diagnosis_keys_processing_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 28,
+      "x": 18,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_upload_function}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration), min(@initDuration), max(@initDuration) by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Init Time (ms) [${virology_upload_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 36,
+      "x": 18,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_submission_function}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration), min(@initDuration), max(@initDuration) by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Init Time (ms) [${analytics_ingest_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 48,
+      "x": 18,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_events_function}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration), min(@initDuration), max(@initDuration) by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Init Time (ms) [${analytics_events_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 2,
+      "width": 24,
+      "y": 20,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown": "# Virology Lambdas"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 8,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | fields replace(replace(ispresent(@initDuration), \"0\", \"warm\"), \"1\", \"cold\") as startType\n| filter @type = \"REPORT\"\n| stats count(*) as numberOfInvocations by startType\n| sort by startType",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${diagnosis_keys_processing_function}]",
+        "view": "pie"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 8,
+      "x": 6,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts by bin (1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${diagnosis_keys_processing_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 8,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_processing_function}' | filter @type = \"REPORT\"\n| stats sum(strcontains(@message, \"Init Duration\"))/count(*) * 100 as coldStartPct\nby bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Cold Start Percentage [${diagnosis_keys_processing_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 22,
+      "x": 18,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_submission_function}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration), min(@initDuration), max(@initDuration) by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Init Time (ms) [${virology_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 14,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields replace(replace(ispresent(@initDuration), \"0\", \"warm\"), \"1\", \"cold\") as startType\n| filter @type = \"REPORT\"\n| stats count(*) as numberOfInvocations by startType\n| sort by startType",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${diagnosis_keys_submission_function}]",
+        "view": "pie"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 14,
+      "x": 6,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts by bin (1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${diagnosis_keys_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 14,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | filter @type = \"REPORT\"\n| stats sum(strcontains(@message, \"Init Duration\"))/count(*) * 100 as coldStartPct\nby bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Cold Start Percentage [${diagnosis_keys_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 14,
+      "x": 18,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration), min(@initDuration), max(@initDuration) by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Init Time (ms) [${diagnosis_keys_submission_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 42,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_processing_function}' | fields replace(replace(ispresent(@initDuration), \"0\", \"warm\"), \"1\", \"cold\") as startType\n| filter @type = \"REPORT\"\n| stats count(*) as numberOfInvocations by startType\n| sort by startType",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${analytics_ingest_processing_function}]",
+        "view": "pie"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 42,
+      "x": 6,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_processing_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts by bin (1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Number Of Invocations [${analytics_ingest_processing_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 42,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_processing_function}' | filter @type = \"REPORT\"\n| stats sum(strcontains(@message, \"Init Duration\"))/count(*) * 100 as coldStartPct\nby bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Cold Start Percentage [${analytics_ingest_processing_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 42,
+      "x": 18,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${analytics_ingest_processing_function}' | fields @initDuration\n| filter @type = \"REPORT\" and ispresent(@initDuration)\n| stats avg(@initDuration), min(@initDuration), max(@initDuration) by bin(1h)",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Init Time (ms) [${analytics_ingest_processing_function}]",
+        "view": "timeSeries"
+      }
+    },
+    {
+      "height": 2,
+      "width": 24,
+      "y": 34,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown": "# Analytics Lambdas"
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 0,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${diagnosis_keys_submission_function}' | SOURCE '/aws/lambda/${virology_submission_function}' | SOURCE '/aws/lambda/${empty_submission_function}' | SOURCE '/aws/lambda/${analytics_events_function}' | SOURCE '/aws/lambda/${analytics_ingest_submission_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts, (sum(ispresent(@initDuration))/count(*))*100 as percentageColdStarts by @log\n| sort by percentageColdStarts desc",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Summary - Submission Lambdas",
+        "view": "table"
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 0,
+      "x": 12,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE '/aws/lambda/${virology_upload_function}' | SOURCE '/aws/lambda/${risky_post_districts_upload_function}' | SOURCE '/aws/lambda/${risky_venues_upload_function}' | filter @type = \"REPORT\"\n| stats sum(ispresent(@initDuration)) as coldStarts, sum(not(ispresent(@initDuration))) as warmStarts, (sum(ispresent(@initDuration))/count(*))*100 as percentageColdStarts by @log\n| sort by percentageColdStarts desc",
+        "region": "eu-west-2",
+        "stacked": false,
+        "title": "Summary - Upload Lambdas",
+        "view": "table"
+      }
+    }
+  ]
+}

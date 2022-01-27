@@ -38,13 +38,15 @@ dependencies {
     implementation(Libs.zip4j)
     implementation(Libs.commons_csv)
 
+    implementation(Libs.http4k_resilience4j)
+
     testImplementation(platform(Libs.bom))
     testImplementation(Libs.lambda)
     testImplementation(Libs.athena)
 
     testImplementation(Libs.http4k_aws)
     testImplementation(Libs.http4k_testing_servirtium)
-    testImplementation(Libs.http4k_resilience4j)
+    testImplementation(Libs.http4k_testing_chaos)
 
     testImplementation(Libs.jackson_dataformat_xml)
 
@@ -69,7 +71,7 @@ task testIntegration(type: Test) {
 }
 
 task testSmokeParallel(type: Test) {
-    useJUnitPlatform{
+    useJUnitPlatform {
         excludeTags 'serial'
     }
 
@@ -82,12 +84,12 @@ task testSmokeParallel(type: Test) {
         includeTestsMatching "smoke.*Test"
     }
 
-    reports.html.destination = file("$projectDir/../../../../../out/reports/testSmokeParallel")
-    reports.junitXml.destination = file("$projectDir/../../../../../out/reports/testSmokeParallel")
+    reports.html.outputLocation = file("$projectDir/../../../../../out/reports/testSmokeParallel")
+    reports.junitXml.outputLocation = file("$projectDir/../../../../../out/reports/testSmokeParallel")
 }
 
 task testSmokeSerial(type: Test) {
-    useJUnitPlatform{
+    useJUnitPlatform {
         includeTags 'serial'
     }
 
@@ -101,8 +103,8 @@ task testSmokeSerial(type: Test) {
     // include serial tags
     mustRunAfter(testSmokeParallel)
 
-    reports.html.destination = file("$projectDir/../../../../../out/reports/testSmokeSerial")
-    reports.junitXml.destination = file("$projectDir/../../../../../out/reports/testSmokeSerial")
+    reports.html.outputLocation = file("$projectDir/../../../../../out/reports/testSmokeSerial")
+    reports.junitXml.outputLocation = file("$projectDir/../../../../../out/reports/testSmokeSerial")
 }
 
 task testSmoke(type: Test) {
@@ -114,7 +116,7 @@ task generateSignature(type: JavaExec) {
     group = "Execution"
     description = "Generate signature for some file"
     classpath = sourceSets.main.runtimeClasspath
-    main = "uk.nhs.nhsx.core.signature.DistributionSignatureMain"
+    mainClass = "uk.nhs.nhsx.core.signature.DistributionSignatureMain"
     args System.getProperty("sign.args", "").split()
 }
 
@@ -122,6 +124,14 @@ task exploreExportFile(type: JavaExec) {
     group = "Execution"
     description = "Explore export.bin in working directory"
     classpath = sourceSets.main.runtimeClasspath
-    main = "uk.nhs.nhsx.diagnosiskeydist.ExportFileExplorer"
+    mainClass = "uk.nhs.nhsx.diagnosiskeydist.ExportFileExplorer"
     args System.getProperty("explore.args", "").split()
+}
+
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: 'batchZipCreation/**')
+        }))
+    }
 }

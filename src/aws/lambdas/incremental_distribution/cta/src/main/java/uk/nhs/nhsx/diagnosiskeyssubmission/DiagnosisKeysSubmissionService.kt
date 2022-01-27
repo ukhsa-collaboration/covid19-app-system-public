@@ -6,11 +6,11 @@ import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.dynamodb.AwsDynamoClient
 import uk.nhs.nhsx.core.aws.dynamodb.TableName
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator.Companion.of
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.diagnosiskeydist.agspec.RollingStartNumber.isRollingStartNumberValid
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
@@ -27,7 +27,7 @@ import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
 import java.util.*
 
 class DiagnosisKeysSubmissionService(
-    private val s3Storage: S3Storage,
+    private val awsS3: AwsS3,
     private val awsDynamoClient: AwsDynamoClient,
     private val objectKeyNameProvider: ObjectKeyNameProvider,
     private val tableName: TableName,
@@ -141,7 +141,7 @@ class DiagnosisKeysSubmissionService(
         val uploadPayload = StoredTemporaryExposureKeyPayload(payload.temporaryExposureKeys)
         val provider = TestKitAwareObjectKeyNameProvider(objectKeyNameProvider, testKit)
         val objectKey = provider.generateObjectKeyName().append(".json")
-        s3Storage.upload(
+        awsS3.upload(
             of(bucketName, objectKey),
             APPLICATION_JSON,
             fromUtf8String(toJson(uploadPayload))

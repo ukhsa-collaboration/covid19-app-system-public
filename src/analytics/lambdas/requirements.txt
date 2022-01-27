@@ -1,15 +1,15 @@
 # boto - refer to https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
-boto3==1.17.100
-botocore==1.20.100
+boto3==1.18.55
+botocore==1.21.55
 
 # pytest
-pytest==6.0.1
+pytest==6.2.5
 pytest-forked==1.3.0
-pytest-mock==3.3.1
-pytest-xdist==2.1.0
+pytest-mock==3.6.1
+pytest-xdist==2.4.0
 
-requests
+requests==2.26.0
 
-google-cloud-storage
-cryptography
-pyjwt
+google-cloud-storage==1.42.3
+cryptography==35.0.0
+PyJWT==2.3.0

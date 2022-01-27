@@ -106,5 +106,6 @@
     "optedOutForContactIsolationBackgroundTick": "int",
     "appIsUsableBackgroundTick": "int",
     "appIsContactTraceableBackgroundTick": "int",
-    "didAccessSelfIsolationNoteLink": "int"
+    "didAccessSelfIsolationNoteLink": "int",
+    "appIsUsableBluetoothOffBackgroundTick": "int"
 }

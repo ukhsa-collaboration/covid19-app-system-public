@@ -139,6 +139,7 @@ variable "tags" {
 variable "distribution_cache_ttl" {
   description = "Time to live for the cloudfront distribution cache"
 }
+
 variable "local_messages_bucket_regional_domain_name" {
   description = "The S3 bucket regional domain name used to construct the URLs for local messages data"
 }
@@ -149,4 +150,16 @@ variable "local_messages_payload" {
 
 variable "local_messages_origin_access_identity_path" {
   description = "The origin access controlling access to the store"
+}
+
+variable "local_stats_bucket_regional_domain_name" {
+  description = "The S3 bucket regional domain name used to construct the URLs for local stats data"
+}
+
+variable "local_stats_payload" {
+  description = "The path (i.e. route) to the local stats payload"
+}
+
+variable "local_stats_origin_access_identity_path" {
+  description = "The origin access controlling access to the local stats store"
 }

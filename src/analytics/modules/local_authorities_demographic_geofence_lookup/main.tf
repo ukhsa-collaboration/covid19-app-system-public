@@ -1,6 +1,6 @@
 locals {
   table_name                                                = "${terraform.workspace}_analytics_local_authorities_demographic_geographic_lookup"
-  analytics_local_authorities_demographic_geographic_lookup = abspath("../../../static/analytics-local-authorities-demographic-geographic-lookup.csv")
+  analytics_local_authorities_demographic_geographic_lookup = abspath("../../../static/analytics-local-authorities-demographic-geographic-lookup-20211105.csv")
 }
 
 module "local_authorities_demographic_geographic_lookup" {

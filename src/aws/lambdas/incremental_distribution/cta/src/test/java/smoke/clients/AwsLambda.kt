@@ -1,8 +1,11 @@
 package smoke.clients
 
+import org.awaitility.Awaitility.await
 import org.http4k.aws.AwsSdkClient
 import org.http4k.client.JavaHttpClient
 import org.http4k.filter.debug
+import smoke.clients.AwsLambda.MaintenanceModeFlag.DISABLED
+import smoke.clients.AwsLambda.MaintenanceModeFlag.ENABLED
 import software.amazon.awssdk.core.SdkBytes
 import software.amazon.awssdk.services.lambda.LambdaClient
 import software.amazon.awssdk.services.lambda.model.Environment
@@ -11,106 +14,78 @@ import software.amazon.awssdk.services.lambda.model.InvokeRequest
 import software.amazon.awssdk.services.lambda.model.InvokeResponse
 import software.amazon.awssdk.services.lambda.model.UpdateFunctionConfigurationRequest
 import software.amazon.awssdk.services.lambda.model.UpdateFunctionConfigurationResponse
-import java.nio.charset.Charset
-
+import java.time.Duration
+import kotlin.text.Charsets.UTF_8
 
 object AwsLambda {
 
-    private val client = LambdaClient.builder().httpClient(AwsSdkClient(JavaHttpClient().debug())).build()
-
-    fun updateLambdaEnvVar(functionName: String, envVar: Pair<String, String>): UpdateFunctionConfigurationResponse {
-        val awsLambdaClient = client
-
-        val configurationResponse = awsLambdaClient.getFunctionConfiguration(
-            GetFunctionConfigurationRequest.builder().functionName(functionName).build()
-        )
-
-        val environment = configurationResponse.environment()
-
-        val variables = Environment.builder()
-            .variables(environment.variables() + (envVar.first to envVar.second))
-        val updateRequest = UpdateFunctionConfigurationRequest.builder()
-            .functionName(functionName)
-            .environment(variables.build()).build()
-
-        return awsLambdaClient.updateFunctionConfiguration(updateRequest)
-    }
-
-    fun readLambdaEnvVar(functionName: String, envVar: String): String {
-        val awsLambdaClient = client
-
-        val configurationResponse = awsLambdaClient.getFunctionConfiguration(
-            GetFunctionConfigurationRequest.builder().functionName(functionName).build()
-        )
-
-        return configurationResponse.environment().variables()[envVar]!!
-    }
-
-    fun invokeFunction(functionName: String, payload: String? = null): InvokeResponse {
-        val awsLambdaClient = client
-        val invokeRequest = InvokeRequest.builder().functionName(functionName)
-        return if (payload == null) {
-            awsLambdaClient.invoke(invokeRequest.build())
-        } else {
-            awsLambdaClient.invoke(
-                invokeRequest.payload(SdkBytes.fromString(payload, Charset.defaultCharset())).build()
-            )
-        }
-    }
+    private val client = LambdaClient.builder()
+        .httpClient(AwsSdkClient(JavaHttpClient().debug()))
+        .build()
 
     fun enableMaintenanceMode(lambdaFunctionName: String) {
-        setMaintenanceMode(lambdaFunctionName, true)
+        setMaintenanceMode(lambdaFunctionName, ENABLED)
     }
 
     fun disableMaintenanceMode(lambdaFunctionName: String) {
-        setMaintenanceMode(lambdaFunctionName, false)
+        setMaintenanceMode(lambdaFunctionName, DISABLED)
     }
 
-    private fun setMaintenanceMode(lambdaFunctionName: String, value: Boolean) {
-        val envVarName = "MAINTENANCE_MODE"
-        val result = updateLambdaEnvVar(
-            lambdaFunctionName,
-            envVarName to "$value"
+    fun updateLambdaEnvVar(
+        functionName: String,
+        envVar: Pair<String, String>
+    ): UpdateFunctionConfigurationResponse {
+        val environment = client.getFunctionConfiguration(
+            GetFunctionConfigurationRequest.builder()
+                .functionName(functionName)
+                .build()
+        ).environment()
+
+        val variables = Environment.builder()
+            .variables(environment.variables() + (envVar.first to envVar.second))
+
+        return client.updateFunctionConfiguration(
+            UpdateFunctionConfigurationRequest.builder()
+                .functionName(functionName)
+                .environment(variables.build())
+                .build()
         )
-        val updatedEnvVar = result.environment().variables()[envVarName]
-        if (updatedEnvVar != "$value")
-            throw IllegalStateException("Expected env var: $envVarName to be updated but it was not.")
     }
 
-    private fun setTokenCreationEnabled(lambdaFunctionName: String, value: Boolean) {
-        val envVarName = "TOKEN_CREATION_ENABLED"
-        val result = updateLambdaEnvVar(
-            lambdaFunctionName,
-            envVarName to "$value"
+    fun invokeFunction(
+        functionName: String,
+        payload: String? = null
+    ): InvokeResponse = when (payload) {
+        null -> client.invoke(
+            InvokeRequest.builder()
+                .functionName(functionName)
+                .build()
         )
-        val updatedEnvVar = result.environment().variables()[envVarName]
-        if (updatedEnvVar != "$value")
-            throw IllegalStateException("Expected env var: $envVarName to be updated but it was not.")
+        else -> client.invoke(
+            InvokeRequest.builder()
+                .functionName(functionName)
+                .payload(SdkBytes.fromString(payload, UTF_8))
+                .build()
+        )
     }
 
-    fun getTokenCreationEnabled(lambdaFunctionName: String): Boolean {
-        val envVarName = "TOKEN_CREATION_ENABLED"
-        return readLambdaEnvVar(
-            lambdaFunctionName,
-            envVarName
-        ).toBoolean()
+    private enum class MaintenanceModeFlag {
+        ENABLED, DISABLED
     }
 
-    fun flipTokenCreationEnabled(lambdaFunctionName: String) {
-        if (getTokenCreationEnabled(lambdaFunctionName)) {
-            disableTokenCreationEnabled(lambdaFunctionName)
-        } else {
-            enableTokenCreationEnabled(lambdaFunctionName)
-
-        }
+    private fun setMaintenanceMode(
+        lambdaFunctionName: String,
+        flag: MaintenanceModeFlag
+    ) {
+        await()
+            .atMost(Duration.ofMinutes(1))
+            .pollInterval(Duration.ofSeconds(1))
+            .ignoreExceptions()
+            .untilAsserted {
+                val value = flag == ENABLED
+                val result = updateLambdaEnvVar(lambdaFunctionName, "MAINTENANCE_MODE" to "$value")
+                val updatedEnvVar = result.environment().variables()["MAINTENANCE_MODE"]
+                if (updatedEnvVar != "$value") error("Expected env var: MAINTENANCE_MODE to be updated but it was not.")
+            }
     }
-
-    fun enableTokenCreationEnabled(lambdaFunctionName: String) {
-        setTokenCreationEnabled(lambdaFunctionName, true)
-    }
-
-    fun disableTokenCreationEnabled(lambdaFunctionName: String) {
-        setTokenCreationEnabled(lambdaFunctionName, false)
-    }
-
 }

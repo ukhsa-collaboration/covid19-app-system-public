@@ -9,13 +9,14 @@ provider "aws" {
 }
 
 resource "aws_cloudfront_distribution" "this" {
-  enabled         = true
-  is_ipv6_enabled = true
-  aliases         = [local.fqdn]
-  price_class     = "PriceClass_100"
-  web_acl_id      = var.web_acl_arn
-  tags            = var.tags
-  comment         = "Distribution APIs for ${terraform.workspace}"
+  enabled             = true
+  is_ipv6_enabled     = true
+  aliases             = [local.fqdn]
+  price_class         = "PriceClass_100"
+  web_acl_id          = var.web_acl_arn
+  tags                = var.tags
+  comment             = "Distribution APIs for ${terraform.workspace}"
+  default_root_object = "index.html"
 
   default_cache_behavior {
     target_origin_id       = var.exposure_configuration_bucket_regional_domain_name
@@ -355,6 +356,34 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.local_messages_bucket_regional_domain_name
+    compress         = true
+    min_ttl          = var.distribution_cache_ttl
+    max_ttl          = var.distribution_cache_ttl
+    default_ttl      = var.distribution_cache_ttl
+
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "https-only"
+  }
+
+  origin {
+    domain_name = var.local_stats_bucket_regional_domain_name
+    origin_id   = var.local_stats_bucket_regional_domain_name
+
+    s3_origin_config {
+      origin_access_identity = var.local_stats_origin_access_identity_path
+    }
+  }
+  ordered_cache_behavior {
+    path_pattern     = "/${var.name}/v1/${var.local_stats_payload}"
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = var.local_stats_bucket_regional_domain_name
     compress         = true
     min_ttl          = var.distribution_cache_ttl
     max_ttl          = var.distribution_cache_ttl

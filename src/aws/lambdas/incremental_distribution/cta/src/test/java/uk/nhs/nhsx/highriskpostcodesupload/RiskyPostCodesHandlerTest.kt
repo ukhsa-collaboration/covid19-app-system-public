@@ -5,6 +5,7 @@ package uk.nhs.nhsx.highriskpostcodesupload
 import com.amazonaws.HttpMethod.GET
 import com.amazonaws.HttpMethod.POST
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent
+import com.amazonaws.services.s3.model.S3Object
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -17,17 +18,17 @@ import org.http4k.core.Status.Companion.UNPROCESSABLE_ENTITY
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.first
-import strikt.assertions.getValue
 import strikt.assertions.hasSize
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNull
-import uk.nhs.nhsx.core.Environment
-import uk.nhs.nhsx.core.Environment.Access.Companion.TEST
+import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.SystemClock.CLOCK
+import uk.nhs.nhsx.core.TestEnvironments
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.core.events.RiskyPostDistrictUpload
+import uk.nhs.nhsx.highriskpostcodesupload.RiskyPostCodeTestData.tierMetadata
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.ProxyRequestBuilder.request
 import uk.nhs.nhsx.testhelper.TestDatedSigner
@@ -35,7 +36,7 @@ import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.body
 import uk.nhs.nhsx.testhelper.assertions.AwsRuntimeAssertions.ProxyResponse.status
 import uk.nhs.nhsx.testhelper.assertions.contains
 import uk.nhs.nhsx.testhelper.assertions.isSameAs
-import uk.nhs.nhsx.testhelper.mocks.FakeCsvUploadServiceS3
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
 import uk.nhs.nhsx.testhelper.mocks.getBucket
 import uk.nhs.nhsx.testhelper.withBearerToken
 import uk.nhs.nhsx.testhelper.withCsv
@@ -43,6 +44,7 @@ import uk.nhs.nhsx.testhelper.withCustomOai
 import uk.nhs.nhsx.testhelper.withJson
 import uk.nhs.nhsx.testhelper.withMethod
 import uk.nhs.nhsx.testhelper.withRequestId
+import java.io.ByteArrayInputStream
 
 class RiskyPostCodesHandlerTest {
 
@@ -73,18 +75,25 @@ class RiskyPostCodesHandlerTest {
         }
       }
     }""".trimIndent()
-
+    private val bucket = BucketName.of("my-bucket")
     private val environmentSettings = mapOf(
-        "BUCKET_NAME" to "my-bucket",
+        "BUCKET_NAME" to bucket.value,
         "DISTRIBUTION_ID" to "my-distribution",
         "DISTRIBUTION_INVALIDATION_PATTERN" to "invalidation-pattern",
         "MAINTENANCE_MODE" to "FALSE",
         "custom_oai" to "OAI"
     )
 
-    private val environment = Environment.fromName("test", TEST.apply(environmentSettings))
+    private val environment = TestEnvironments.TEST.apply(environmentSettings)
     private val awsCloudFront = mockk<AwsCloudFront>()
-    private val s3Storage = FakeCsvUploadServiceS3()
+    private val fakeS3 = FakeS3().apply {
+        val tierMetadataObject = S3Object().apply {
+            bucketName = bucket.value
+            key = "tier-metadata"
+            setObjectContent(ByteArrayInputStream(toJson(tierMetadata).toByteArray()))
+        }
+        add(tierMetadataObject)
+    }
     private val datedSigner = TestDatedSigner("date")
     private val events = RecordingEvents()
     private val handler = HighRiskPostcodesUploadHandler(
@@ -93,7 +102,7 @@ class RiskyPostCodesHandlerTest {
         events = events,
         authenticator = { true },
         signer = datedSigner,
-        s3Storage = s3Storage,
+        s3Storage = fakeS3,
         awsCloudFront = awsCloudFront,
         healthAuthenticator = { true })
 
@@ -124,8 +133,8 @@ class RiskyPostCodesHandlerTest {
                 .isEqualTo("date:".toByteArray() + contentToStore.toByteArray())
         }
 
-        expectThat(s3Storage) {
-            getBucket("my-bucket").hasSize(4)
+        expectThat(fakeS3) {
+            getBucket(bucket).hasSize(5)
         }
 
         expectThat(events).contains(RiskyPostDistrictUpload::class)

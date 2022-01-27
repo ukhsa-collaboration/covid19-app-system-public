@@ -2,32 +2,32 @@
   "symptoms": [
     {
       "title": {
-        "ar": "ارتفاع درجة الحرارة (الحمى)",
-        "bn": "উচ্চ তাপমাত্রা (জ্বর)",
-        "cy": "Tymheredd uchel (twymyn)",
-        "en": "A high temperature (fever)",
-        "gu": "ઉંચુ તાપમાન (તાવ)",
-        "pa": "ਉੱਚ ਤਾਪਮਾਨ (ਬੁਖ਼ਾਰ)",
-        "pl": "Wysoka temperatura (gorączka)",
-        "ro": "O temperatură ridicată (febră)",
-        "so": "Heerkuleel oo sareeya (qandho)",
-        "tr": "Yüksek vücut sıcaklığı (ateş)",
-        "ur": "زیادہ درجہ حرارت (بخار)",
-        "zh": "体温高（发烧）"
+        "ar": "درجة حرارة مرتفعة",
+        "bn": "একটি উচ্চ তাপমাত্রা",
+        "cy": "Tymheredd uchel",
+        "en": "A high temperature",
+        "gu": "તાવ",
+        "pa": "ਤੇਜ਼ ਬੁਖ਼ਾਰ",
+        "pl": "Wysoka temperatura",
+        "ro": "Temperatură ridicată",
+        "so": "Heerkul sare",
+        "tr": "Yüksek ateş",
+        "ur": "تیز درجۂ حرارت",
+        "zh": "发烧"
       },
       "description": {
-        "ar": "يعني ذلك الشعور بسخونة عند ملامسة صدرك أو ظهرك - لا تحتاج إلى قياس درجة حرارتك باستخدام مقياس الحرارة.",
-        "bn": "এর অর্থ আপনার বুক বা পিঠে স্পর্শ করলে উষ্ণ বোধ হয় - আপনাকে থার্মোমিটার দিয়ে আপনার তাপমাত্রা মাপতে হবে না।",
-        "cy": "Mae hyn yn golygu eich bod yn teimlo'n boeth i'ch cyffwrdd ar eich brest neu'ch cefn - nid oes angen i chi fesur eich tymheredd gyda thermomedr.",
-        "en": "This means that you feel hot to touch on your chest or back - you don’t need to measure your temperature with a thermometer.",
-        "gu": "આનો મતલબ કે તમને છાતી કે પીઠ પર સ્પર્શ કરતા ગરમ અનુભવાય – તમારે થર્મોમીટરથી તાપમાન માપવાની જરુર નથી.",
-        "pa": "ਇਸਦਾ ਮਤਲਬ ਹੁੰਦਾ ਹੈ ਕਿ ਆਪਣੀ ਛਾਤੀ ਜਾਂ ਪਿੱਠ ਨੂੰ ਛੂਹਣ 'ਤੇ ਤੁਸੀਂ ਗਰਮ ਮਹਿਸੂਸ ਹੁੰਦੇ ਹੋ - ਤੁਹਾਨੂੰ ਆਪਣੇ ਤਾਪਮਾਨ ਨੂੰ ਥਰਮਾਮੀਟਰ ਨਾਲ ਮਾਪਣ ਦੀ ਜ਼ਰੂਰਤ ਨਹੀਂ ਹੈ।",
-        "pl": "Oznacza to, że Twoja klatka piersiowa lub plecy są gorące w dotyku – nie musisz mierzyć temperatury termometrem.",
-        "ro": "Aceasta înseamnă că vă simțiți fierbinte la atingerea zonei toracice sau  a spatelui - nu trebuie să vă măsurați temperatura cu un termometru.",
-        "so": "Tan macnaheedu waa inaad dareento kuleyl inaad taabato feerahaaga ama dhabarkaaga - uma baahnid inaad ku cabbirto heerkulkaaga heerkulbeegga.",
-        "tr": "Bu, göğsünüz veya sırtınıza dokunulunca sıcaklık hissi duyulmasıdır; bir termometre ile vücut sıcaklığınızı ölçmeniz gerekmez.",
-        "ur": "اس کا مطلب یہ ہے کہ آپ کو اپنے سینے یا پیٹھ کو چھونے پر گرم محسوس ہوتا ہے - آپ کو اپنے درجہ حرارت کی پیمائش تھرمامیٹر سے کرنے کی ضرورت نہیں ہے۔",
-        "zh": "这意味着您的胸部或背部感到发烫，无需用温度计测量温度。"
+        "ar": "هذا يعني أنك تشعر بالحرارة عند لمسك صدرك أو ظهرك. أنت لست في حاجة الي قياس درجة حرارتك بالترمومتر.",
+        "bn": "এর মানে হল আপনার বুকে বা পিঠে স্পর্শ করলে গরম অনুভূত হয়। থার্মোমিটার দিয়ে আপনার তাপমাত্রা মাপার প্রয়োজন নেই।",
+        "cy": "Mae hyn yn golygu eich bod yn teimlo'n boeth i'ch cyffwrdd ar eich brest neu'ch cefn. Nid oes angen i chi fesur eich tymheredd â thermomedr.",
+        "en": "This means that you feel hot to touch on your chest or back. You don’t need to measure your temperature with a thermometer.",
+        "gu": "આનો અર્થ છે કે તમને તમારી છાતી અને પીઠ અડવાથી ગરમ લાગશે. તમારે થર્મોમીટર વડે તમારું તાપમાન માપવાની જરૂર નથી.",
+        "pa": "ਇਸਦਾ ਅਰਥ ਹੈ ਕਿ ਤੁਸੀਂ ਆਪਣੀ ਛਾਤੀ ਜਾਂ ਪਿੱਠ ਨੂੰ ਛੂਹਣ 'ਤੇ ਗਰਮ ਮਹਿਸੂਸ ਕਰਦੇ ਹੋ। ਤੁਹਾਨੂੰ ਕਿਸੇ ਥਰਮਾਮੀਟਰ ਨਾਲ ਆਪਣਾ ਤਾਪਮਾਨ ਮਾਪਣ ਦੀ ਲੋੜ ਨਹੀਂ ਹੁੰਦੀ।",
+        "pl": "Oznacza to, że czujesz gorąco dotykając klatkę piersiową lub plecy. Nie musisz mierzyć temperatury termometrem.",
+        "ro": "Înseamnă că sunteți cald(ă) atunci când vă atingeți pieptul sau spatele. Nu este necesară măsurarea temperaturii cu un termometru.",
+        "so": "Tani waxay ka dhigan tahay inaad dareemayso kuleel si aad u taabato laabtaada ama dhabarkaaga. Uma baahnid inaad heerkulkaaga ku cabbirto heerkulbeeg.",
+        "tr": "Yani göğsünüze ya da sırtınıza dokunduğunuzda sıcaklık hissediyorsunuz. Derece ile ateşinizi ölçmenize gerek yoktur.",
+        "ur": "اس کا مطلب یہ ہے کہ آپ اپنی چھاتی یا پیٹھ پر چھونے پر گرم محسوس کرتے ہیں۔ آپ کو اپنے درجۂ حرارت کی پیمائش تھرما میٹر سے کرنے کی ضرورت نہیں ہے۔",
+        "zh": "胸部或背部摸起来很热，无需使用温度计测量体温。"
       },
       "riskWeight": 1
     },
@@ -55,10 +55,10 @@
         "pa": "ਇਸਦਾ ਮਤਲਬ ਹੈ ਇੱਕ ਘੰਟੇ ਤੋਂ ਵੱਧ ਸਮੇਂ ਲਈ ਖੰਘ ਆਉਣਾ, ਜਾਂ 24 ਘੰਟਿਆਂ ਵਿੱਚ 3 ਜਾਂ ਵਧੇਰੇ ਖੰਘ ਦੇ ਦੌਰ ਆਉਣਾ (ਜੇ ਤੁਹਾਨੂੰ ਆਮ ਤੌਰ 'ਤੇ ਖੰਘ ਹੁੰਦੀ ਹੈ, ਤਾਂ ਇਹ ਆਮ ਨਾਲੋਂ ਬਦਤਰ ਹੋ ਸਕਦੀ ਹੈ)।",
         "pl": "Oznacza to, że dużo kaszlesz przez dłużej niż jedną godzinę lub w ciągu ostatnich 24 godzin miałeś(-aś) trzy lub więcej ataków kaszlu (jeżeli zazwyczaj kaszlesz, atak kaszlu może być poważniejszy).",
         "ro": "Aceasta înseamnă că tușiți mai mult  pentru o perioadă mai mare de o oră, sau trei sau mai multe episoade de tuse în 24 de ore (dacă de obicei tușiți, poate fi mai rău decât de obicei).",
-        "so": "Tan macnaheedu waa qufac badan in ka badan saacad, ama seddex ama in kabadan oo qufac 24 saac gudahood (haddii aad qufac leedahay, way ka xumaan kartaa sidii caadiga ahayd).",
+        "so": "Tan macnaheedu waa qufac badan in ka badan saacad, ama saddex ama in kabadan oo qufac 24 saac gudahood (haddii aad qufac leedahay, way ka xumaan kartaa sidii caadiga ahayd).",
         "tr": "Bu, bir saatten daha uzun süreyle öksürme ya da 24 saat içinde üç veya daha fazla öksürük nöbeti geçirme anlamına gelir (normalde sık öksürüyorsanız, öksürüğünüz olağandan daha kötü olabilir).",
         "ur": "اس کا مطلب یہ ہے کہ آپ ایک گھنٹے سے زیادہ دیر تک بہت زیادہ کھانستے ہیں یا 24 گھنٹے میں کھانسنے کا سلسلہ 3 یا اس سے زائد بار پیش آتا ہے (اگر آپ کو عموماً کھانسی رہتی ہے تو یہ معمول سے زیادہ بدتر ہو سکتی ہے)۔",
-        "zh": "这意味着长时间咳嗽一个多小时，或者在24小时内三次咳嗽发作（如果您通常咳嗽，则可能比平时咳得厉害）。"
+        "zh": "这意味着咳嗽超过一个小时，或者 24 个小时内咳嗽三次或更多（如果您经常咳嗽，则可能比平时咳得更严重）。"
       },
       "riskWeight": 1
     },
@@ -86,7 +86,7 @@
         "pa": "ਇਸ ਦਾ ਅਰਥ ਹੈ ਕਿ ਤੁਸੀਂ ਨੋਟ ਕੀਤਾ ਹੈ ਕਿ ਤੁਸੀਂ ਕਿਸੇ ਚੀਜ਼ ਦੀ ਗੰਧ ਜਾਂ ਸਵਾਦ ਨਹੀਂ ਲੈ ਸਕਦੇ, ਜਾਂ ਚੀਜ਼ਾਂ ਸੁੰਘਣ 'ਤੇ ਜਾਂ ਗੰਧ ਵਿੱਚ ਆਮ ਨਾਲੋਂ ਵੱਖ ਹੁੰਦੀਆਂ ਹਨ।",
         "pl": "Oznacza to, że zauważyłeś(-aś) brak możliwości odczuwania zapachu lub smaku jakiejkolwiek rzeczy lub też rzeczy pachną lub smakują inaczej niż normalnie.",
         "ro": "Acest lucru înseamnă că ați observat că nu puteți mirosi sau gusta nimic, sau că lucrurile au un miros sau un gust diferit de normal.",
-        "so": "Tani waxay ka dhigan tahay inaad dareentay inaadan urin karin ama wax dhadhamin karin, ama in waxyaaboho urta ama dhadhan ahaan ay yihiin wax ka duwaan sida caadiga ah.",
+        "so": "Tani waxay ka dhigan tahay inaad dareentay inaadan urin karin ama wax dhadhamin karin, ama in waxyaabaha urta ama dhadhan ahaan ay yihiin wax ka duwaan sida caadiga ah.",
         "tr": "Bu, herhangi bir şeyin kokusu veya tadını alamadığınız ya da tat veya kokuların normalden farklı olduğu anlamını taşır.",
         "ur": "اس کا مطلب ہے کہ آپ کو یہ محسوس ہوا ہے کہ آپ کوئی چیز سونگھ نہیں سکتے یا کسی چیز کا ذائقہ معلوم نہیں ہو رہا ہے یا پھر چیزوں کی بو یا ذائقہ معمول سے الگ معلوم ہو رہا ہے۔",
         "zh": "这意味着您已经注意到自己无法闻到或尝到任何东西，或者闻到或尝到的东西与平时不同。"

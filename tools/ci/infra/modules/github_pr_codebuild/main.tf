@@ -79,6 +79,10 @@ resource "aws_codebuild_webhook" "this" {
       type    = "EVENT"
       pattern = "PULL_REQUEST_CREATED"
     }
+    filter {
+      type    = "FILE_PATH"
+      pattern = var.file_path
+    }
   }
 
   filter_group {
@@ -86,7 +90,12 @@ resource "aws_codebuild_webhook" "this" {
       type    = "EVENT"
       pattern = "PULL_REQUEST_UPDATED"
     }
+    filter {
+      type    = "FILE_PATH"
+      pattern = var.file_path
+    }
   }
+
   filter_group {
     filter {
       type    = "EVENT"
@@ -94,7 +103,11 @@ resource "aws_codebuild_webhook" "this" {
     }
     filter {
       type    = "HEAD_REF"
-      pattern = "pr/*"
+      pattern = "pr/"
+    }
+    filter {
+      type    = "FILE_PATH"
+      pattern = var.file_path
     }
   }
 }

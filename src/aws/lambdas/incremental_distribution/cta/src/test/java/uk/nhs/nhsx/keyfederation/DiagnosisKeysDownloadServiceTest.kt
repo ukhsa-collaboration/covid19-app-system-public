@@ -12,8 +12,8 @@ import strikt.assertions.elementAt
 import strikt.assertions.first
 import strikt.assertions.hasSize
 import strikt.assertions.isEqualTo
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.domain.BatchTag
@@ -438,7 +438,7 @@ class DiagnosisKeysDownloadServiceTest {
         val batchTag = BatchTag.of("xyz")
         val batchTagService = InMemoryBatchTagService(batchTag, sep15)
         val keyUploader1 = FederatedKeyUploader(
-            s3Storage = fakeS3,
+            awsS3 = fakeS3,
             bucketName = bucketName,
             validOrigins = listOf("GB-EAW", "GB-SCO"),
         )
@@ -679,11 +679,11 @@ class DiagnosisKeysDownloadServiceTest {
     }
 
     private fun FederatedKeyUploader(
-        s3Storage: S3Storage,
+        awsS3: AwsS3,
         validOrigins: List<String> = listOf("GB-EAW"),
         bucketName: BucketName = BucketName.of(UUID.randomUUID().toString())
     ) = FederatedKeyUploader(
-        s3Storage = s3Storage,
+        awsS3 = awsS3,
         bucketName = bucketName,
         federatedKeySourcePrefix = "federatedKeyPrefix",
         validOrigins = validOrigins,

@@ -14,12 +14,14 @@ platform_dict = {
     "android": "https://api.appbot.co/api/v2/apps/2411517/ratings/historical?end=" + datetime.today().strftime(
         '%Y-%m-%d') + "&start=2020-09-19"}
 
+
 def get_secrets():
     secretsmanager = boto3.client('secretsmanager')
     api_key = secretsmanager.get_secret_value(SecretId="/appbot/api_key")
     api_password = secretsmanager.get_secret_value(SecretId="/appbot/api_password")
 
     return {"api_key": api_key, "api_password": api_password}
+
 
 def flatten(d):
     items = []
@@ -30,10 +32,12 @@ def flatten(d):
             items.append((k, v))
     return dict(items)
 
+
 def request_data(platform):
     secrets = get_secrets()
     r = requests.get(platform_dict[platform],
-                     auth=HTTPBasicAuth(loads(secrets["api_key"]["SecretString"])["/appbot/api_key"],loads(secrets["api_password"]["SecretString"])["/appbot/api_password"]))
+                     auth=HTTPBasicAuth(loads(secrets["api_key"]["SecretString"])["/appbot/api_key"],
+                                        loads(secrets["api_password"]["SecretString"])["/appbot/api_password"]))
 
     body = loads(r.content.decode())["all_time"]
     csv_columns = [key for key in flatten(body[0])]
@@ -68,4 +72,6 @@ def handler(event, context):
     request_data("android")
     request_data("ios")
 
-handler("","")
+
+if __name__ == "__main__":
+    handler("", "")

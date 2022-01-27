@@ -9,11 +9,9 @@ import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution
-import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.Companion.SYSTEM_EXIT_ERROR_HANDLER
 import uk.nhs.nhsx.diagnosiskeydist.Submission
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository.Companion.getTemporaryExposureKeys
-import uk.nhs.nhsx.domain.TestType
 import java.time.Duration
 import java.util.*
 import java.util.Collections.synchronizedList
@@ -23,13 +21,11 @@ class SubmissionFromS3Repository(
     private val awsS3: AwsS3,
     private val objectKeyFilter: Predicate<ObjectKey>,
     private val submissionBucketName: BucketName,
+    private val loadSubmissionsTimeout: Duration,
+    private val loadSubmissionsThreadPoolSize: Int,
     private val events: Events,
     private val clock: Clock
 ) : SubmissionRepository {
-
-    companion object {
-        private val LOAD_SUBMISSIONS_TIMEOUT = Duration.ofMinutes(6)
-    }
 
     override fun loadAllSubmissions(
         minimalSubmissionTimeEpochMillisExclusive: Long,
@@ -56,11 +52,11 @@ class SubmissionFromS3Repository(
         val submissions = synchronizedList(ArrayList<Submission>())
 
         ConcurrentExecution(
-            "LoadSubmissions",
-            LOAD_SUBMISSIONS_TIMEOUT,
-            events,
-            clock,
-            SYSTEM_EXIT_ERROR_HANDLER
+            name = "LoadSubmissions",
+            timeout = loadSubmissionsTimeout,
+            threadPoolSize = loadSubmissionsThreadPoolSize,
+            events = events,
+            clock = clock,
         ).use { pool ->
             for (objectSummary in summaries) {
                 pool.execute {
@@ -83,10 +79,8 @@ class SubmissionFromS3Repository(
             }
         }
 
-        return submissions.sortedBy { it.submissionDate }
+        return submissions.sortedBy(Submission::submissionDate)
     }
-  
-
 }
 
 fun List<S3ObjectSummary>.limit(limit: Int, maxResults: Int): List<S3ObjectSummary> {

@@ -102,6 +102,7 @@ class MobileApp(
     fun pollSelfIsolation() = getStaticContent(envConfig.self_isolation_distribution_endpoint)
     fun pollSymptomaticQuestionnaire() = getStaticContent(envConfig.symptomatic_questionnaire_distribution_endpoint)
     fun pollRiskyVenueConfiguration() = getStaticContent(envConfig.risky_venue_configuration_distribution_endpoint)
+    fun pollLocalStats() = getStaticContent(envConfig.local_stats_distribution_v1_endpoint)
 
     fun submitAnalyticsKeys(startDate: Instant, endDate: Instant): Status {
         val json = when (os) {

@@ -71,7 +71,7 @@ namespace :queue do
       release_version = $configuration.release_version(version_metadata)
       build_parameters = {
         "project_name" => "release-pubdash-aa-prod",
-        "source_version" => "te-staging-pubdash",
+        "source_version" => "te-aa-staging-pubdash",
         "target_environment" => "aa-prod",
         "account" => "aa-prod",
         "release_version" => release_version

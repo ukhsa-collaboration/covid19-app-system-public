@@ -16,7 +16,6 @@ import uk.nhs.nhsx.core.handler.RoutingHandler
 import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.withoutSignedResponses
 
-@Suppress("unused")
 class EmptySubmissionHandler @JvmOverloads constructor(
     environment: Environment = Environment.fromSystem(),
     events: Events = PrintingJsonEvents(SystemClock.CLOCK),

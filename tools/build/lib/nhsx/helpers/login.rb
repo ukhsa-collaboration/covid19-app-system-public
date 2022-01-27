@@ -10,12 +10,13 @@ module NHSx
   module Login
     include NHSx::TargetEnvironment
     # Accounts using SSO for authentication
-    SSO_ACCOUNTS = ["prod", "staging", "dev", "aa-prod", "aa-staging", "aa-dev"].freeze
+    SSO_ACCOUNTS = ["prod", "prod-support", "staging", "dev", "aa-prod", "aa-staging", "aa-dev"].freeze
     # The ARNs for the deployment roles per account
     AWS_DEPLOYMENT_ROLES = {
       "dev" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
       "staging" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
       "prod" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
+      "prod-support" => "arn:aws:iam::123456789012:role/ApplicationSupport",
       "aa-dev" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
       "aa-staging" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
       "aa-prod" => "arn:aws:iam::123456789012:role/ApplicationDeploymentUser",
@@ -24,6 +25,11 @@ module NHSx
     AWS_AUTH_PROFILE = "nhs-auth".freeze
     # Mapping for AWS_DEPLOYMENT_ROLES to Halo provided roles to switch from
     DOMAIN_HALO_ROLES = {
+      "ApplicationSupport" => {
+        "cta" => {
+          "prod-support" => "ApplicationSupport"
+        }
+      },
       "ApplicationDeploymentUser" => {
         "analytics" => {
           "aa-dev" => "WlAlyticDevApplicationDeployer",

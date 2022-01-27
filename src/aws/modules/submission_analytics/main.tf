@@ -22,7 +22,7 @@ resource "aws_lambda_function" "ingest" {
   role             = module.ingest_role.arn
   handler          = "handler.ingest"
   source_code_hash = data.archive_file.ingest.output_sha
-  runtime          = "nodejs12.x"
+  runtime          = "nodejs14.x"
   timeout          = local.ingest_to_sqs_timeout_seconds
   memory_size      = 512
   environment {

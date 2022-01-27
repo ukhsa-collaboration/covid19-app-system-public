@@ -16,15 +16,16 @@ module "processing_lambda" {
   lambda_handler_class      = "uk.nhs.nhsx.diagnosiskeydist.DiagnosisKeyDistributionHandler"
   lambda_execution_role_arn = module.processor_role.arn
   lambda_timeout            = 900
-  lambda_memory             = 3008
+  lambda_memory             = 10240
   lambda_environment_variables = {
     ABORT_OUTSIDE_TIME_WINDOW = true
+
+    LOAD_SUBMISSIONS_THREAD_POOL_SIZE = 60
 
     SSM_AG_SIGNING_KEY_ID_PARAMETER_NAME       = "/app/kms/SigningKeyArn"
     SSM_METADATA_SIGNING_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
 
-    SUBMISSION_BUCKET_NAME = var.submission_bucket_name
-
+    SUBMISSION_BUCKET_NAME            = var.submission_bucket_name
     DISTRIBUTION_BUCKET_NAME          = var.distribution_bucket_name
     DISTRIBUTION_ID                   = var.distribution_id
     DISTRIBUTION_PATTERN_DAILY        = var.distribution_pattern_daily
@@ -70,7 +71,7 @@ resource "aws_cloudwatch_metric_alarm" "duration" {
   namespace           = "AWS/Lambda"
   period              = "900"
   statistic           = "Maximum"
-  threshold           = "720000"
+  threshold           = "360000"
   alarm_description   = "Alarm if lambda processor is running longer than expected"
   treat_missing_data  = "notBreaching"
   alarm_actions       = [var.alarm_topic_arn]

@@ -6,6 +6,7 @@ namespace :build do
     include NHSx::Login
     docker_out = File.join($configuration.out, "docker")
 
+    rm_rf(docker_out, :secure=>true)
     mkdir_p(docker_out)
     docker_image_sourcefiles($configuration).each do |f|
       cp_r(f, docker_out)
@@ -20,8 +21,8 @@ namespace :build do
       # image doesn't exist, build it
       tags = [DEFAULT_VERSION, content_version($configuration)].map { |x| full_tag(x) }
       tag_cmds = tags.map { |label| "-t #{label}" }.join(" ")
-      cmdline = "docker build \"#{docker_out}\" #{tag_cmds}"
-      run_command("Build #{tags} container image", cmdline, $configuration)
+      cmdline = "docker build --no-cache --progress=plain #{tag_cmds} '#{docker_out}'"
+      run_tee("Build #{tags} container image", cmdline, $configuration)
     end
   end
 

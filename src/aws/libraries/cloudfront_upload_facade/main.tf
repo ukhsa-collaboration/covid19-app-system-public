@@ -9,14 +9,14 @@ provider "aws" {
 }
 
 resource "aws_cloudfront_distribution" "this" {
-  enabled         = true
-  is_ipv6_enabled = true
-  aliases         = [local.fqdn]
-  price_class     = "PriceClass_100"
-  web_acl_id      = var.web_acl_arn
-  tags            = var.tags
-  comment         = "Upload APIs for ${terraform.workspace}"
-
+  enabled             = true
+  is_ipv6_enabled     = true
+  aliases             = [local.fqdn]
+  price_class         = "PriceClass_100"
+  web_acl_id          = var.web_acl_arn
+  tags                = var.tags
+  comment             = "Upload APIs for ${terraform.workspace}"
+  default_root_object = "index.html"
 
   default_cache_behavior {
     target_origin_id       = var.risky-post-districts-upload-endpoint

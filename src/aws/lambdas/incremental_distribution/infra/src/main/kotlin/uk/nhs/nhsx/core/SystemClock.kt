@@ -6,5 +6,5 @@ import java.time.Instant
 typealias Clock = () -> Instant
 
 object SystemClock {
-    val CLOCK = Clock.systemUTC()::instant
+    val CLOCK: () -> Instant = Clock.systemUTC()::instant
 }

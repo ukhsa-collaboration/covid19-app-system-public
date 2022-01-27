@@ -1,5 +1,6 @@
 package smoke
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.http4k.cloudnative.env.Environment
 import org.http4k.core.Status.Companion.OK
 import org.junit.jupiter.api.Disabled
@@ -11,6 +12,7 @@ import smoke.env.SmokeTests
 import smoke.env.SmokeTests.loadStaticContent
 import strikt.api.expectThat
 import strikt.assertions.all
+import strikt.assertions.containsKeys
 import strikt.assertions.isA
 import strikt.assertions.isEmpty
 import strikt.assertions.isGreaterThanOrEqualTo
@@ -19,6 +21,9 @@ import strikt.assertions.matches
 import uk.nhs.nhsx.core.headers.MobileOS.Android
 import uk.nhs.nhsx.core.headers.MobileOS.iOS
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
+import uk.nhs.nhsx.localstats.LocalStatsJson
+import uk.nhs.nhsx.localstats.domain.AreaCode
+import uk.nhs.nhsx.localstats.domain.DailyLocalStatsDocument
 import uk.nhs.nhsx.testhelper.assertions.bodyString
 import uk.nhs.nhsx.testhelper.assertions.hasStatus
 import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
@@ -29,7 +34,6 @@ class MobileAppPollingSmokeTest {
 
     private val config = SmokeTests.loadConfig()
     private val client = createHandler(Environment.ENV)
-
     private val mobileApp = MobileApp(client, config)
 
     @Test
@@ -93,6 +97,18 @@ class MobileAppPollingSmokeTest {
         val json = mobileApp.pollRiskyVenueConfiguration()
 
         expectThat(json).isEqualToJson(loadStaticContent("risky-venue-configuration.json"))
+    }
+
+    @Test
+    fun `mobile app polls local stats`() {
+        val json = mobileApp.pollLocalStats()
+        val document: DailyLocalStatsDocument = LocalStatsJson.mapper.readValue(json)
+
+        expectThat(document.lowerTierLocalAuthorities)
+            .containsKeys(
+                AreaCode.of("E06000001"),
+                AreaCode.of("E06000002"),
+            )
     }
 
     @Test

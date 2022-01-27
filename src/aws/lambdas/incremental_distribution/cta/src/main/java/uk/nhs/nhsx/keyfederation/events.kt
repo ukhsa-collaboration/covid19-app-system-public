@@ -6,6 +6,7 @@ import uk.nhs.nhsx.core.events.EventCategory.Warning
 import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.domain.TestType
 import java.time.Instant
+import java.time.LocalDate
 
 data class UploadedDiagnosisKeys(
     val testType: TestType,
@@ -48,3 +49,7 @@ data class InvalidRollingStartNumber(
     val rollingStartNumber: Long,
     val rollingPeriod: Int
 ) : Event(Info)
+
+data class FederationDownloadStateUpdated(val federationBatch: FederationBatch) : Event(Info)
+
+data class FederationUploadStateUpdated(val time: Instant) : Event(Info)

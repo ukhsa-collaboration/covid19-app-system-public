@@ -69,12 +69,14 @@ class VirologyV2SmokeTest {
         val supported = setOf(
             VirologyCriteria(Lookup, England, LAB_RESULT, Positive),
             VirologyCriteria(Lookup, England, RAPID_RESULT, Positive),
+            VirologyCriteria(Lookup, England, RAPID_SELF_REPORTED, Positive),
             VirologyCriteria(Lookup, Wales, LAB_RESULT, Positive),
             VirologyCriteria(Lookup, Wales, RAPID_RESULT, Positive),
             VirologyCriteria(Lookup, Wales, RAPID_SELF_REPORTED, Positive),
 
             VirologyCriteria(CtaExchange, England, LAB_RESULT, Positive),
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
+            VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive),
             VirologyCriteria(CtaExchange, Wales, LAB_RESULT, Positive),
             VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
             VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
@@ -89,9 +91,7 @@ class VirologyV2SmokeTest {
         testKit: TestKit,
         testResult: TestResult
     ): Boolean {
-        val required = setOf(
-            VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive)
-        )
+        val required = setOf<VirologyCriteria>()
         return required.contains(VirologyCriteria(testJourney, country, testKit, testResult))
     }
 
@@ -320,7 +320,7 @@ class VirologyV2SmokeTest {
     }
 
     @Test
-    fun `cta exchange not found for old app versions and criteria that requires confirmatory test`() {
+    fun `cta exchange available for old app versions in England that does not require a confirmatory test`() {
         val ctaToken = testLab.generateCtaTokenFor(
             testResult = Positive,
             testEndDate = TestEndDate.of(2020, 11, 19),
@@ -332,7 +332,7 @@ class VirologyV2SmokeTest {
         val mobileApp = MobileApp(client, config, appVersion = MobileAppVersion.Version(4, 3))
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
 
-        expectThat(exchangeResponse).isA<CtaExchangeResult.NotFound>()
+        expectThat(exchangeResponse).isA<CtaExchangeResult.AvailableV2>()
     }
 
     @Test
@@ -351,8 +351,8 @@ class VirologyV2SmokeTest {
         expectThat(exchangeResponse)
             .isA<CtaExchangeResult.AvailableV2>()
             .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
-                confirmatoryDayLimit.isEqualTo(2)
-                requiresConfirmatoryTest.isTrue()
+                confirmatoryDayLimit.isNull()
+                requiresConfirmatoryTest.isFalse()
             }
     }
 
@@ -372,8 +372,8 @@ class VirologyV2SmokeTest {
         expectThat(exchangeResponse)
             .isA<CtaExchangeResult.AvailableV2>()
             .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
-                confirmatoryDayLimit.isEqualTo(1)
-                requiresConfirmatoryTest.isTrue()
+                confirmatoryDayLimit.isNull()
+                requiresConfirmatoryTest.isFalse()
             }
     }
 

@@ -42,7 +42,8 @@ class KeyFederationUploadHandler @JvmOverloads constructor(
     secretManager: SecretManager = AwsSecretManager(AWSSecretsManagerClientBuilder.defaultClient()),
     private val batchTagService: BatchTagService = BatchTagDynamoDBService(
         config.stateTableName,
-        AmazonDynamoDBClientBuilder.defaultClient()
+        AmazonDynamoDBClientBuilder.defaultClient(),
+        events
     ),
     private val interopClient: InteropClient = buildInteropClient(config, secretManager, events),
     private val awsS3Client: AwsS3 = AwsS3Client(events)
@@ -59,7 +60,15 @@ class KeyFederationUploadHandler @JvmOverloads constructor(
                 config.federatedKeyUploadPrefixes
             )
 
-            val submissionRepository = SubmissionFromS3Repository(awsS3Client, filter, submissionBucket, events, clock)
+            val submissionRepository = SubmissionFromS3Repository(
+                awsS3Client,
+                filter,
+                submissionBucket,
+                config.loadSubmissionsTimeout,
+                config.loadSubmissionsThreadPoolSize,
+                events,
+                clock
+            )
 
             DiagnosisKeysUploadService(
                 clock,

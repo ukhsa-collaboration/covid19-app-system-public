@@ -15,6 +15,7 @@ import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
 import uk.nhs.nhsx.testhelper.ContextBuilder
 import uk.nhs.nhsx.testhelper.mocks.FakeSubmissionRepository
+import java.time.Duration
 import java.time.Instant
 
 @Disabled
@@ -31,44 +32,45 @@ class SmokeUploadTest {
 
     @Test
     fun `upload keys from s3 repository`() {
-
         DiagnosisKeysUploadService(
-            SystemClock.CLOCK,
-            InteropClient(interopBaseUrl, authToken, JWS(KmsCompatibleSigner(ecPrime256r1.private)), recordingEvents),
-            SubmissionFromS3Repository(
-                AwsS3Client(recordingEvents),
-                { true },
-                BucketName.of("te-qa-diagnosis-keys-submission"),
-                recordingEvents,
-                SystemClock.CLOCK
+            clock = SystemClock.CLOCK,
+            interopClient = InteropClient(interopBaseUrl, authToken, JWS(KmsCompatibleSigner(ecPrime256r1.private)), recordingEvents),
+            submissionRepository = SubmissionFromS3Repository(
+                awsS3 = AwsS3Client(events = recordingEvents),
+                objectKeyFilter = { true },
+                submissionBucketName = BucketName.of("te-qa-diagnosis-keys-submission"),
+                loadSubmissionsTimeout = Duration.ofMinutes(12),
+                loadSubmissionsThreadPoolSize = 15,
+                events = recordingEvents,
+                clock = SystemClock.CLOCK
             ),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            0,
-            100,
-            ContextBuilder.aContext(),
-            recordingEvents
+            batchTagService = InMemoryBatchTagService(),
+            exposureUploadFactory = FederatedExposureUploadFactory("GB-EAW"),
+            uploadRiskLevelDefaultEnabled = false,
+            uploadRiskLevelDefault = -1,
+            initialUploadHistoryDays = 14,
+            maxUploadBatchSize = 0,
+            maxSubsequentBatchUploadCount = 100,
+            context = ContextBuilder.aContext(),
+            events = recordingEvents
         ).loadKeysAndUploadToFederatedServer()
     }
 
     @Test
     fun `upload keys from s3 mock`() {
         DiagnosisKeysUploadService(
-            SystemClock.CLOCK,
-            InteropClient(interopBaseUrl, authToken, JWS(KmsCompatibleSigner(ecPrime256r1.private)), recordingEvents),
-            FakeSubmissionRepository(listOf(Instant.now())),
-            InMemoryBatchTagService(),
-            FederatedExposureUploadFactory("GB-EAW"),
-            false,
-            -1,
-            14,
-            0,
-            100,
-            ContextBuilder.aContext(),
-            recordingEvents
+            clock = SystemClock.CLOCK,
+            interopClient = InteropClient(interopBaseUrl, authToken, JWS(KmsCompatibleSigner(ecPrime256r1.private)), recordingEvents),
+            submissionRepository = FakeSubmissionRepository(listOf(Instant.now())),
+            batchTagService = InMemoryBatchTagService(),
+            exposureUploadFactory = FederatedExposureUploadFactory("GB-EAW"),
+            uploadRiskLevelDefaultEnabled = false,
+            uploadRiskLevelDefault = -1,
+            initialUploadHistoryDays = 14,
+            maxUploadBatchSize = 0,
+            maxSubsequentBatchUploadCount = 100,
+            context = ContextBuilder.aContext(),
+            events = recordingEvents
         ).loadKeysAndUploadToFederatedServer()
     }
 }

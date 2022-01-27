@@ -13,31 +13,6 @@ module NHSx
     include Zuehlke::Execution
     include NHSx::Versions
 
-    # Invokes terraform in the correct context
-    #
-    # It changes to the tf_config directory and first executes 'terraform init'.
-    # It then scans for any .tfvars files in the current directory and adds them to the command line.
-    #
-    # tf_varfiles is an Array (or Rake::FileList) of paths to additional .tfvars files to be added.
-    # Use it to pass generated variable files.
-    #
-    # The user can pass additional options with tf_command_options, which are then added at the end of the commandline
-    #
-    # Expects the terraform command to be in the PATH
-    #
-    # Auto approval and state locking are added to the command line automatically
-    def run_terraform(tf_command, tf_config, tf_varfiles = [], tf_command_options = "", system_config = $configuration)
-      Dir.chdir(tf_config) do
-        init_terraform(system_config)
-        cmdline = "terraform #{tf_command} -no-color"
-        cmdline += " -var-file=#{Rake::FileList["*.tfvars"].join(" -var-file=")}" unless Rake::FileList["*.tfvars"].empty?
-        cmdline += " -var-file=#{tf_varfiles.join(" -var-file=")}" unless tf_varfiles.empty?
-        cmdline += " #{tf_command_options}" unless tf_command_options.empty?
-
-        run_tee("Running terraform #{tf_command} on #{tf_config}", cmdline, system_config)
-      end
-    end
-
     # Runs terraform output for the given configuration and workspace, parses it and returns a Hash
     def terraform_output(terraform_workspace, terraform_configuration, system_config)
       Dir.chdir(terraform_configuration) do
@@ -68,6 +43,22 @@ module NHSx
     # Invokes 'terraform init'
     def init_terraform(system_config)
       run_command("Terraform initialisation", "terraform init", system_config)
+    end
+
+    # Invokes 'terraform init' in a given workspace
+    # 
+    # Terraform has the notion of a "default" workspace, and if you run
+    # terraform init without specifying a workspace, it will initialize
+    # based on this workspace.
+    #
+    # We do not use the default workspace anymore, yet there is still
+    # some ancient state file on S3 which then gets read by TF.
+    #
+    # This old statefile is not compatible with 0.14.
+    #
+    # To work around this issue we'll always run tf init with a given workspace    
+    def init_terraform_with_workspace(workspace_name, system_config)
+      run_command("Terraform initialisation", "TF_WORKSPACE=#{workspace_name} terraform init", system_config)
     end
 
     # Codifies the naming convention for terraform workspaces related to the target environment
@@ -105,7 +96,7 @@ module NHSx
       account_name = File.basename(terraform_configuration)
       target_environment = target_environment_name(workspace_name, account_name, system_config)
       Dir.chdir(terraform_configuration) do
-        init_terraform(system_config)
+        target_environment.start_with?("te-") ? init_terraform_with_workspace(target_environment, system_config) : init_terraform(system_config)
         begin
           run_command("Create #{target_environment} workspace for #{account_name}", "terraform workspace new #{target_environment}", system_config)
         rescue GaudiError

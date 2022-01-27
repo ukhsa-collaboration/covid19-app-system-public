@@ -13,8 +13,12 @@ phases:
 reports:
   sanity:
     files:
-      - "out/reports/**/*.xml"
+      - "out/reports/**/TEST-*.xml"
     file-format: "JUNITXML"
+  jacoco-report:
+    files:
+      - "out/reports/**/jacocoTestReport.xml"
+    file-format: "JACOCOXML"
 artifacts:
   name: $(date +%Y%m%d%H%M%S)-ci-app-system.zip
   files:

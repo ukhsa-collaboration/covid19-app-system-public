@@ -1,0 +1,258 @@
+[
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumCasesByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumCasesByPublishDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumCasesBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumCasesBySpecimenDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths28DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths28DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths28DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths28DaysByPublishDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths60DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths60DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths60DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths60DaysByPublishDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumLFDTests"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "cumOnsDeathsByRegistrationDate"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "cumOnsDeathsByRegistrationDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedFirstDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedFirstDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedSecondDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedSecondDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationFirstDoseUptakeByPublishDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationFirstDoseUptakeByVaccinationDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationSecondDoseUptakeByPublishDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationSecondDoseUptakeByVaccinationDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinesGivenByPublishDate"
+    },
+    {
+        "last_update": "2021-11-07",
+        "metric": "cumWeeklyNsoDeathsByRegDate"
+    },
+    {
+        "last_update": "2021-11-07",
+        "metric": "cumWeeklyNsoDeathsByRegDateRate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateChange"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateChangePercentage"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateDirection"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newCasesBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateAgeDemographics"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateChange"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateChangePercentage"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateDirection"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths28DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths28DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths28DaysByDeathDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths28DaysByDeathDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateChange"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateChangePercentage"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateDirection"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths60DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths60DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths60DaysByDeathDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths60DaysByDeathDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths60DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newLFDTests"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "newOnsDeathsByRegistrationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedFirstDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedFirstDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedSecondDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedSecondDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-07",
+        "metric": "newWeeklyNsoDeathsByRegDate"
+    },
+    {
+        "last_update": "2021-11-09",
+        "metric": "uniqueCasePositivityBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-09",
+        "metric": "uniquePeopleTestedBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "vaccinationsAgeDemographics"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "VaccineRegisterPopulationByVaccinationDate"
+    }
+]

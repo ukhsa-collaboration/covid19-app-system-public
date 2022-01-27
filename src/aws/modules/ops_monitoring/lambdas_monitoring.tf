@@ -60,6 +60,22 @@ resource "aws_cloudwatch_dashboard" "lambda_init_duration_dashboard" {
   })
 }
 
+resource "aws_cloudwatch_dashboard" "lambda_cold_start_dashboard" {
+  dashboard_name = "${var.env}-lambda-cold-start-duration"
+  dashboard_body = templatefile("${path.module}/templates/lambda_cold_start_dashboard.tmpl", {
+    analytics_ingest_submission_function = var.analytics_ingest_submission_function,
+    analytics_ingest_processing_function = var.analytics_ingest_processing_function,
+    analytics_events_function            = var.analytics_events_function,
+    diagnosis_keys_submission_function   = var.diagnosis_keys_submission_function,
+    diagnosis_keys_processing_function   = var.diagnosis_keys_processing_function,
+    risky_post_districts_upload_function = var.risky_post_districts_upload_function,
+    risky_venues_upload_function         = var.risky_venues_upload_function,
+    virology_submission_function         = var.virology_submission_function,
+    virology_upload_function             = var.virology_upload_function,
+    empty_submission_function            = var.empty_submission_function,
+  })
+}
+
 resource "aws_cloudwatch_dashboard" "diagnosis_keys_dashboard" {
   dashboard_name = "${var.env}-diagnosis-keys-dashboard"
   dashboard_body = templatefile("${path.module}/templates/diagnosis_keys_dashboard.tmpl", {

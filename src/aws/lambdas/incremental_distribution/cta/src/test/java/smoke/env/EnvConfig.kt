@@ -84,6 +84,7 @@ data class EnvConfig(
     val empty_submission_endpoint: String,
     val empty_submission_v2_endpoint: String,
     val crash_reports_submission_endpoint: String,
+    val local_stats_distribution_v1_endpoint: String,
 )
 
 data class AuthHeaders(

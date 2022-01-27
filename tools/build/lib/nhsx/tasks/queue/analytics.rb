@@ -67,5 +67,25 @@ namespace :queue do
         puts "Job queued. Download logs with \n\trake download:codebuild:prod JOB_ID=#{build_info.build_id}"
       end
     end
+    desc "Queue a release to the aa-prod and target environment in CodeBuild"
+    task :"analytics:aa-prod" => [:"login:aa-prod"] do
+      include NHSx::Queue
+      version_metadata = subsystem_version_metadata("analytics", $configuration)
+      release_version = $configuration.release_version(version_metadata)
+      build_parameters = {
+        "project_name" => "release-analytics-aa-prod",
+        "source_version" => "te-aa-staging-analytics",
+        "target_environment" => "aa-prod",
+        "account" => "aa-prod",
+        "release_version" => release_version
+      }
+      build_info = queue(build_parameters, $configuration)
+      if $configuration.print_logs
+        pipe_logs(build_info)
+        puts "Download the full logs with \n\trake download:codebuild:aa-prod JOB_ID=#{build_info.build_id}"
+      else
+        puts "Job queued. Download logs with \n\trake download:codebuild:aa-prod JOB_ID=#{build_info.build_id}"
+      end
+    end
   end
 end

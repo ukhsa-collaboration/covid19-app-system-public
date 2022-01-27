@@ -1,0 +1,526 @@
+[
+    {
+        "last_update": "2021-11-15",
+        "metric": "changeInNewCasesBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "covidOccupiedMVBeds"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumAdmissions"
+    },
+    {
+        "last_update": "2021-11-14",
+        "metric": "cumAdmissionsByAge"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumAntibodyTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumCasesByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumCasesByPublishDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumCasesBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumCasesBySpecimenDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumCasesLFDConfirmedPCRBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumCasesLFDOnlyBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumCasesPCROnlyBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "cumDailyNsoDeathsByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths28DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths28DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths28DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths28DaysByPublishDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths60DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumDeaths60DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths60DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumDeaths60DaysByPublishDateRate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "cumLFDTests"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "cumOnsDeathsByRegistrationDate"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "cumOnsDeathsByRegistrationDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPCRTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedBoosterDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedFirstDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedFirstDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedSecondDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedSecondDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedThirdDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPeopleVaccinatedThirdInjectionByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPillarOneTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPillarOneTwoTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPillarThreeTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumPillarTwoTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationBoosterDoseUptakeByPublishDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationFirstDoseUptakeByPublishDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationFirstDoseUptakeByVaccinationDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationSecondDoseUptakeByPublishDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationSecondDoseUptakeByVaccinationDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinationThirdInjectionUptakeByPublishDatePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVaccinesGivenByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "cumVirusTests"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "cumWeeklyNsoDeathsByRegDate"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "cumWeeklyNsoDeathsByRegDateRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "femaleCases"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "femaleDeaths28Days"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "hospitalCases"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "maleCases"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "maleDeaths28Days"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newAdmissions"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newAdmissionsChange"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newAdmissionsChangePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newAdmissionsDirection"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newAdmissionsRollingRate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newAdmissionsRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newAntibodyTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateChange"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateChangePercentage"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateDirection"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newCasesByPublishDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newCasesBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateAgeDemographics"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateChange"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateChangePercentage"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateDirection"
+    },
+    {
+        "last_update": "2021-11-10",
+        "metric": "newCasesBySpecimenDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newCasesLFDConfirmedPCRBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesLFDConfirmedPCRBySpecimenDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesLFDConfirmedPCRBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newCasesLFDOnlyBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesLFDOnlyBySpecimenDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesLFDOnlyBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newCasesPCROnlyBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesPCROnlyBySpecimenDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newCasesPCROnlyBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "newDailyNsoDeathsByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths28DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths28DaysByDeathDateAgeDemographics"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths28DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths28DaysByDeathDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths28DaysByDeathDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateChange"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateChangePercentage"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateDirection"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths28DaysByPublishDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths60DaysByDeathDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newDeaths60DaysByDeathDateRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths60DaysByDeathDateRollingRate"
+    },
+    {
+        "last_update": "2021-11-11",
+        "metric": "newDeaths60DaysByDeathDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newDeaths60DaysByPublishDate"
+    },
+    {
+        "last_update": "2021-11-16",
+        "metric": "newLFDTests"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "newOnsDeathsByRegistrationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPCRTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPCRTestsByPublishDateChange"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPCRTestsByPublishDateChangePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPCRTestsByPublishDateDirection"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPCRTestsByPublishDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedBoosterDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedFirstDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedFirstDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedSecondDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedSecondDoseByVaccinationDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedThirdDoseByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPeopleVaccinatedThirdInjectionByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPillarOneTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPillarOneTwoTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPillarThreeTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newPillarTwoTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newTestsByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newVaccinesGivenByPublishDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newVirusTests"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newVirusTestsChange"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newVirusTestsChangePercentage"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newVirusTestsDirection"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "newVirusTestsRollingSum"
+    },
+    {
+        "last_update": "2021-11-05",
+        "metric": "newWeeklyNsoDeathsByRegDate"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "previouslyReportedNewCasesBySpecimenDate"
+    },
+    {
+        "last_update": "2021-11-12",
+        "metric": "transmissionRateGrowthRateMax"
+    },
+    {
+        "last_update": "2021-11-12",
+        "metric": "transmissionRateGrowthRateMin"
+    },
+    {
+        "last_update": "2021-11-12",
+        "metric": "transmissionRateMax"
+    },
+    {
+        "last_update": "2021-11-12",
+        "metric": "transmissionRateMin"
+    },
+    {
+        "last_update": "2021-11-09",
+        "metric": "uniqueCasePositivityBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-09",
+        "metric": "uniquePeopleTestedBySpecimenDateRollingSum"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "vaccinationsAgeDemographics"
+    },
+    {
+        "last_update": "2021-11-15",
+        "metric": "VaccineRegisterPopulationByVaccinationDate"
+    }
+]

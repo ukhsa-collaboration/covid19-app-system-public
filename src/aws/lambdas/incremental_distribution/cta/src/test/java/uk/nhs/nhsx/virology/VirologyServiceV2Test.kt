@@ -253,7 +253,7 @@ class VirologyServiceV2Test {
     }
 
     @ParameterizedTest
-    @CsvSource("England,true", "Wales,true", "random,false")
+    @CsvSource("England,false", "Wales,false", "random,false")
     fun `exchanges cta token requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testOrder = TestOrder(
             ctaToken,
@@ -313,30 +313,6 @@ class VirologyServiceV2Test {
         }
 
         expectThat(events).contains(VirologyResultPending::class)
-    }
-
-    @Test
-    fun `exchanges cta token pending when mobile version is considered old and confirmatory test required`() {
-        val testOrder = TestOrder(
-            ctaToken,
-            pollingToken,
-            DiagnosisKeySubmissionToken.of("sub-token"),
-            LocalDateTime.now().plusWeeks(4)
-        )
-        val testResult = TestData.positiveResultFor(pollingToken, RAPID_SELF_REPORTED)
-
-        every { persistence.getTestOrder(ctaToken) } returns testOrder
-        every { persistence.getTestResult(pollingToken) } returns testResult
-
-        val result = VirologyService(TokensGenerator).exchangeCtaTokenForV2(
-            CtaExchangeRequestV2(ctaToken, country),
-            MobileAppVersion.Version(4, 3),
-            mobileOS
-        )
-
-        expectThat(result).isA<NotFound>()
-
-        expectThat(events).contains(PolicyRejectionV2::class)
     }
 
     @Test

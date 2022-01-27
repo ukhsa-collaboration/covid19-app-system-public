@@ -533,7 +533,7 @@ class TestSetup(
 
     val keyNameProvider = TestKitAwareObjectKeyNameProvider(
         UniqueObjectKeyNameProvider(
-            { clock.instant() },
+            clock::instant,
             UniqueId.ID
         ), TestKit.LAB_RESULT
     )
@@ -555,7 +555,7 @@ class TestSetup(
 
     val keyDistributor = UploadToS3KeyDistributor(
         awsS3Client,
-        RFC2616DatedSigner({ clock.instant() }, signer)
+        RFC2616DatedSigner(clock::instant, signer)
     )
 
     val awsCloudFront = mockk<AwsCloudFront>().also {
@@ -565,22 +565,28 @@ class TestSetup(
     val exposureProtobuf = ExposureProtobuf("uk.nhs.covid19.internal")
 
     val config = BatchProcessingConfig(
-        true,
-        distributionBucketName,
-        "dis-id",
-        "dist-pattern-daily",
-        "dist-pattern-2hourly",
-        ParameterName.of("ssmKeyIdParameterName"),
-        ParameterName.of("ssmContentKeyIdParameterName"),
-        Duration.ofMinutes(-15)
+        shouldAbortOutsideTimeWindow = true,
+        zipBucketName = distributionBucketName,
+        cloudFrontDistributionId = "dis-id",
+        distributionPatternDaily = "dist-pattern-daily",
+        distributionPattern2Hourly = "dist-pattern-2hourly",
+        ssmAGSigningKeyParameterName = ParameterName.of("ssmKeyIdParameterName"),
+        ssmMetaDataSigningKeyParameterName = ParameterName.of("ssmContentKeyIdParameterName"),
+        zipSubmissionPeriodOffset = Duration.ofMinutes(-15),
+        loadSubmissionsThreadPoolSize = 15,
+        loadSubmissionsTimeout = Duration.ofMinutes(12),
+        maximalZipSignS3PutTime = Duration.ofMinutes(6)
     ).let(configOverride)
 
     val submissionRepository = SubmissionFromS3Repository(
         awsS3 = awsS3Client,
         objectKeyFilter = ObjectKeyFilters.batched().withPrefixes(listOf("LAB_RESULT")),
         submissionBucketName = submissionBucketName,
-        events = events
-    ) { clock.instant() }
+        loadSubmissionsThreadPoolSize = 15,
+        loadSubmissionsTimeout = Duration.ofMinutes(12),
+        events = events,
+        clock = clock::instant
+    )
 
     val distributionService = DistributionService(
         submissionRepository = submissionRepository,
@@ -590,8 +596,9 @@ class TestSetup(
         awsCloudFront = awsCloudFront,
         awsS3 = awsS3Client,
         config = config,
-        events = events
-    ) { clock.instant() }
+        events = events,
+        clock = clock::instant
+    )
 }
 
 class DistributionBucket(

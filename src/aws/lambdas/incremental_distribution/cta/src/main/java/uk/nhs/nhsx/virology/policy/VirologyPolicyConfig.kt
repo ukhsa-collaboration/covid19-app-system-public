@@ -8,42 +8,30 @@ import uk.nhs.nhsx.domain.Country.Companion.Wales
 import uk.nhs.nhsx.domain.TestJourney.CtaExchange
 import uk.nhs.nhsx.domain.TestJourney.Lookup
 import uk.nhs.nhsx.domain.TestKit
-import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
-import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
-import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.domain.TestKit.*
 import uk.nhs.nhsx.domain.TestResult.Positive
 
 class VirologyPolicyConfig(
     private val requireConfirmatoryTest: Map<VirologyCriteria, MobileVersionChecker> =
-        mapOf(
-            VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive) to AllVersions,
-            VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive) to FromMinimumInclusive(Version(4, 11)),
-            VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive) to FromMinimumInclusive(Version(4, 11)),
-            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive) to FromMinimumInclusive(Version(4, 11))
-        ),
+        mapOf(),
     private val diagnosisKeySubmissionSupported: Set<VirologyCriteria> =
         setOf(
             VirologyCriteria(Lookup, England, LAB_RESULT, Positive),
             VirologyCriteria(Lookup, England, RAPID_RESULT, Positive),
+            VirologyCriteria(Lookup, England, RAPID_SELF_REPORTED, Positive),
             VirologyCriteria(Lookup, Wales, LAB_RESULT, Positive),
             VirologyCriteria(Lookup, Wales, RAPID_RESULT, Positive),
             VirologyCriteria(Lookup, Wales, RAPID_SELF_REPORTED, Positive),
 
             VirologyCriteria(CtaExchange, England, LAB_RESULT, Positive),
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
+            VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive),
             VirologyCriteria(CtaExchange, Wales, LAB_RESULT, Positive),
             VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
             VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
         ),
     private val confirmatoryDayLimit: Map<VirologyCriteria, ConfirmatoryDayLimit> =
-        mapOf(
-            VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive) to
-                ConfirmatoryDayLimit(FromMinimumInclusive(Version(4, 11)), 2),
-            VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive) to
-                ConfirmatoryDayLimit(FromMinimumInclusive(Version(4, 11)), 1),
-            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive) to
-                ConfirmatoryDayLimit(FromMinimumInclusive(Version(4, 11)), 1)
-        ),
+        mapOf(),
     private val blockedV1TestKitQueries: Set<TestKit> =
         setOf(
             RAPID_SELF_REPORTED

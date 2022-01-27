@@ -11,12 +11,12 @@ class InMemoryBatchTagService(
     var batchDate: LocalDate? = null
 ) : BatchTagService {
 
-    override fun lastUploadState(): Optional<UploadKeysResult> = Optional.empty()
+    override fun lastUploadState(): UploadKeysResult? = null
     override fun updateLastUploadState(lastUploadTimestamp: Instant) = Unit
 
     override fun latestFederationBatch() = when {
-        batchTag != null && batchDate != null -> Optional.of(FederationBatch(batchTag!!, batchDate!!))
-        else -> Optional.empty()
+        batchTag != null && batchDate != null -> FederationBatch(batchTag!!, batchDate!!)
+        else -> null
     }
 
     override fun updateLatestFederationBatch(batch: FederationBatch) {

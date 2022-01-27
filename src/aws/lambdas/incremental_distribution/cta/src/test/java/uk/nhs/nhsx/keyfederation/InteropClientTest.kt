@@ -192,6 +192,24 @@ class InteropClientTest(private val wireMock: WireMockServer) {
     }
 
     @Test
+    fun `download diagnosis keys and handle unknown server payload`() {
+        wireMock.stubFor(
+            get("/diagnosiskeys/download/2020-08-19")
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json; charset=utf-8")
+                        .withBody("")
+                )
+        )
+
+        val client = InteropClient(wireMock)
+
+        expectCatching { client.downloadKeys(localDate) }
+            .isFailure()
+    }
+
+    @Test
     fun `download diagnosis keys and receive extra unknown payload fields`() {
         with(wireMock) {
             stubFor(
@@ -259,12 +277,16 @@ class InteropClientTest(private val wireMock: WireMockServer) {
         wireMock.stubFor(
             post("/diagnosiskeys/upload")
                 .withHeader("Authorization", equalTo("""Bearer DUMMY_TOKEN"""))
-                .withRequestBody(equalToJson("""
-                    {
-                        "batchTag": "d6826d4b-d30f-47c5-ab21-932a874ad7fb",
-                        "payload": "eyJhbGciOiJFUzI1NiJ9.W3sia2V5RGF0YSI6ImtleSIsInJvbGxpbmdTdGFydE51bWJlciI6MCwidHJhbnNtaXNzaW9uUmlza0xldmVsIjo0LCJyb2xsaW5nUGVyaW9kIjoxNDQsInJlZ2lvbnMiOltdLCJ0ZXN0VHlwZSI6MSwicmVwb3J0VHlwZSI6MSwiZGF5c1NpbmNlT25zZXQiOjB9XQ==."
-                    }
-                """.trimIndent()))
+                .withRequestBody(
+                    equalToJson(
+                        """
+                        {
+                            "batchTag": "d6826d4b-d30f-47c5-ab21-932a874ad7fb",
+                            "payload": "eyJhbGciOiJFUzI1NiJ9.W3sia2V5RGF0YSI6ImtleSIsInJvbGxpbmdTdGFydE51bWJlciI6MCwidHJhbnNtaXNzaW9uUmlza0xldmVsIjo0LCJyb2xsaW5nUGVyaW9kIjoxNDQsInJlZ2lvbnMiOltdLCJ0ZXN0VHlwZSI6MSwicmVwb3J0VHlwZSI6MSwiZGF5c1NpbmNlT25zZXQiOjB9XQ==."
+                        }
+                        """.trimIndent()
+                    )
+                )
                 .willReturn(
                     aResponse()
                         .withStatus(200)
@@ -299,6 +321,86 @@ class InteropClientTest(private val wireMock: WireMockServer) {
         )
 
         wireMock.verify(postRequestedFor(urlEqualTo("/diagnosiskeys/upload")))
+    }
+
+    @Test
+    fun `throws exception when uploading keys fails`() {
+        wireMock.stubFor(
+            post("/diagnosiskeys/upload")
+                .willReturn(
+                    aResponse()
+                        .withStatus(500)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("""{ "message": "this failed" }""")
+                )
+        )
+
+        val jws = JWS {
+            mockk {
+                every { asJWSCompatible() } returns ByteArray(0)
+            }
+        }
+
+        val client = InteropClient(wireMock, jws) {
+            UUID.fromString("d6826d4b-d30f-47c5-ab21-932a874ad7fb")
+        }
+
+        expectCatching {
+            client.uploadKeys(
+                listOf(
+                    ExposureUpload(
+                        keyData = "key",
+                        rollingStartNumber = 0,
+                        transmissionRiskLevel = 4,
+                        rollingPeriod = 144,
+                        regions = emptyList(),
+                        testType = LAB_RESULT,
+                        reportType = CONFIRMED_TEST,
+                        daysSinceOnset = 0
+                    )
+                )
+            )
+        }.isFailure()
+    }
+
+    @Test
+    fun `throws exception when uploading keys fails with unexpected response`() {
+        wireMock.stubFor(
+            post("/diagnosiskeys/upload")
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody("""{ "message": "this failed" }""")
+                )
+        )
+
+        val jws = JWS {
+            mockk {
+                every { asJWSCompatible() } returns ByteArray(0)
+            }
+        }
+
+        val client = InteropClient(wireMock, jws) {
+            UUID.fromString("d6826d4b-d30f-47c5-ab21-932a874ad7fb")
+        }
+
+        expectCatching {
+            client.uploadKeys(
+                listOf(
+                    ExposureUpload(
+                        keyData = "key",
+                        rollingStartNumber = 0,
+                        transmissionRiskLevel = 4,
+                        rollingPeriod = 144,
+                        regions = emptyList(),
+                        testType = LAB_RESULT,
+                        reportType = CONFIRMED_TEST,
+                        daysSinceOnset = 0
+                    )
+                )
+            )
+        }.isFailure()
     }
 
     private val interopDownloadPayload =

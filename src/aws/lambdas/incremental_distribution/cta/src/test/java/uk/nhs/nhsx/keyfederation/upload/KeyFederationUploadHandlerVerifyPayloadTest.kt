@@ -3,7 +3,6 @@
 package uk.nhs.nhsx.keyfederation.upload
 
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
-import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -19,6 +18,8 @@ import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder
 import strikt.assertions.map
 import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.aws.dynamodb.TableName
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
@@ -33,9 +34,10 @@ import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.assertions.captured
-import uk.nhs.nhsx.testhelper.mocks.FakeInteropDiagnosisKeysS3
-import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
+import uk.nhs.nhsx.testhelper.mocks.exposureS3Object
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
+import java.time.Duration
 import java.time.Instant
 
 @ExtendWith(WireMockExtension::class)
@@ -44,6 +46,8 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
     private val events = RecordingEvents()
     private val now = Instant.parse("2020-02-05T10:00:00.000Z")
     private val submissionDate = Instant.parse("2020-02-04T10:00:00.000Z")
+    private val bucketName = BucketName.of("SUBMISSION_BUCKET")
+    private val fakeS3 = FakeS3()
 
     @Test
     fun `upload exposure keys uses correct test type and report type`() {
@@ -64,11 +68,9 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
                 )
         )
 
-        val fakeS3 = FakeInteropDiagnosisKeysS3(
-            S3ObjectSummary("mobile/LAB_RESULT/abc", "SUBMISSION_BUCKET", submissionDate),
-            S3ObjectSummary("mobile/RAPID_RESULT/def", "SUBMISSION_BUCKET", submissionDate),
-            S3ObjectSummary("mobile/RAPID_SELF_REPORTED/ghi", "SUBMISSION_BUCKET", submissionDate)
-        )
+        fakeS3.add(exposureS3Object("mobile/LAB_RESULT/abc", bucketName, "3/TzKOK2u0O/eHeK4R0VSg=="), submissionDate)
+        fakeS3.add(exposureS3Object("mobile/RAPID_RESULT/def", bucketName, "3/TzKOK2u0O/eHeK4R0VSg=="), submissionDate)
+        fakeS3.add(exposureS3Object("mobile/RAPID_SELF_REPORTED/ghi", bucketName, "3/TzKOK2u0O/eHeK4R0VSg=="), submissionDate)
 
         val payload = slot<List<ExposureUpload>>()
         val interopClient = spyk(InteropClient(wireMock)) {
@@ -84,7 +86,7 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
             .map { it.copy(rollingStartNumber = 1) } // ignore
             .containsExactlyInAnyOrder(
             ExposureUpload(
-                keyData = fakeS3.getEncodedKeyData(),
+                keyData = "3/TzKOK2u0O/eHeK4R0VSg==",
                 rollingStartNumber = 1,
                 transmissionRiskLevel = 7,
                 rollingPeriod = 144,
@@ -93,7 +95,7 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
                 reportType = CONFIRMED_TEST,
                 daysSinceOnset = 0
             ), ExposureUpload(
-                keyData = fakeS3.getEncodedKeyData(),
+                keyData = "3/TzKOK2u0O/eHeK4R0VSg==",
                 rollingStartNumber = 1,
                 transmissionRiskLevel = 7,
                 rollingPeriod = 144,
@@ -102,7 +104,7 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
                 reportType = UNKNOWN,
                 daysSinceOnset = 0
             ), ExposureUpload(
-                keyData = fakeS3.getEncodedKeyData(),
+                keyData = "3/TzKOK2u0O/eHeK4R0VSg==",
                 rollingStartNumber = 1,
                 transmissionRiskLevel = 7,
                 rollingPeriod = 144,
@@ -116,7 +118,7 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
 
     private fun KeyFederationUploadHandler(
         wireMockServer: WireMockServer,
-        fakeS3: FakeInteropDiagnosisKeysS3,
+        fakeS3: AwsS3,
         interopClient: InteropClient
     ) = KeyFederationUploadHandler(
         environment = TestEnvironments.environmentWith(),
@@ -147,11 +149,10 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
             interopBaseUrl = wireMockServer.baseUrl(),
             interopAuthTokenSecretName = SecretName.of("authToken"),
             signingKeyParameterName = ParameterName.of("parameter"),
-            stateTableName = "DUMMY_TABLE",
+            stateTableName = TableName.of("DUMMY_TABLE"),
             region = "GB-EAW",
-            federatedKeyUploadPrefixes = emptyList()
+            federatedKeyUploadPrefixes = emptyList(),
+            loadSubmissionsTimeout = Duration.ofMinutes(12),
+            loadSubmissionsThreadPoolSize = 15
         )
-
-    private fun FakeInteropDiagnosisKeysS3(vararg summaries: S3ObjectSummary) =
-        FakeInteropDiagnosisKeysS3(summaries.toList())
 }

@@ -1,26 +1,34 @@
-FROM ruby:2.7.1-buster AS ruby
+FROM ruby:3.1-slim-bullseye AS ruby
 
-ENV TERRAFORM_VERSION=0.13.7
+ENV TERRAFORM_VERSION=0.14.11
 ENV TERRAFORM_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ENV TERRAFORM_ARCHIVE=terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-ENV GITVERSION_VERSION=5.3.6
-ENV GITVERSION_URL=https://github.com/GitTools/GitVersion/releases/download/${GITVERSION_VERSION}/gitversion-ubuntu.18.04-x64-${GITVERSION_VERSION}.tar.gz
-ENV PYTHON_VERSION=3.8.3
-ENV PYTHON_URL=https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz
+ENV GITVERSION_VERSION=5.8.1
+ENV GITVERSION_URL=https://github.com/GitTools/GitVersion/releases/download/${GITVERSION_VERSION}/gitversion-linux-x64-${GITVERSION_VERSION}.tar.gz
+ENV PANDOC_VERSION=2.11.3.2
+ENV PANDOC_URL=https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz
+ENV PANDOC_CROSSREF_VERSION=v0.3.9.0a
+ENV PANDOC_CROSSREF_URL=https://github.com/lierdakil/pandoc-crossref/releases/download/${PANDOC_CROSSREF_VERSION}/pandoc-crossref-Linux.tar.xz
 ENV AWSCLI_URL=https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
 
 # Things needed to install the various languages. See later for additional required packages
-
-RUN apt-get update && apt-get -qq -y install \
+RUN echo 'deb http://http.us.debian.org/debian/ testing non-free contrib main' >> /etc/apt/sources.list && \
+  apt-get update && apt-get -qq -y install \
   autoconf \
   automake \
+  apt-transport-https \
+  bash-completion \
   build-essential \
   curl \
   dos2unix \
   git \
+  gnuplot \
   graphviz \
+  gpg \
+  groff \
   iputils-ping \
   jq \
+  less \
   libffi-dev \
   libgdbm-dev \
   libncurses5-dev \
@@ -28,48 +36,60 @@ RUN apt-get update && apt-get -qq -y install \
   libreadline-dev \
   libssl-dev \
   libtool \
+  nano \
+  openjdk-11-jdk-headless \
   protobuf-compiler \
+  python3 \
+  python3-pip \
+  python3-venv \
   ruby-google-protobuf \
   sudo \
+  texlive-latex-base \
+  texlive-fonts-recommended \
+  texlive-fonts-extra \
+  texlive-latex-extra \
+  texlive-xetex \
   wget \
-  zlib1g-dev\ 
-  gnuplot
+  zlib1g-dev && \
+  apt autoremove -y && \
+  ln -s /usr/bin/python3 /usr/bin/python
 
 WORKDIR /work
 
 # Gitversion installation
 RUN wget ${GITVERSION_URL} && \
-  tar -xf gitversion-ubuntu.18.04-x64-${GITVERSION_VERSION}.tar.gz && \
+  tar -xf gitversion-*-x64-${GITVERSION_VERSION}.tar.gz && \
   cp gitversion /usr/local/bin && \
   chmod a+rx /usr/local/bin/gitversion
 
+RUN wget ${PANDOC_URL} && \
+  tar -xf pandoc-${PANDOC_VERSION}-linux-amd64.tar.gz && \
+  cp pandoc-${PANDOC_VERSION}/bin/pandoc /usr/local/bin && \
+  chmod a+rx /usr/local/bin/pandoc
 
-# Python installation
-RUN wget ${PYTHON_URL} && tar -xf Python-${PYTHON_VERSION}.tgz
-WORKDIR /work/Python-${PYTHON_VERSION}
-RUN ./configure --enable-optimizations && \
-  make -j 4 && \
-  make altinstall && \
-  ln -s /usr/local/bin/python3.8 /usr/local/bin/python && \
-  ln -s /usr/local/bin/python3.8 /usr/local/bin/python3 && \
-  ln -s /usr/local/bin/pip3.8 /usr/local/bin/pip3 && \
-  ln -s /usr/local/bin/pip3.8 /usr/local/bin/pip && \
-  pip install --upgrade pip==20.3.3
+RUN wget ${PANDOC_CROSSREF_URL} && \
+  tar -xf pandoc-crossref-Linux.tar.xz && \
+  cp pandoc-crossref /usr/local/bin && \
+  chmod a+rx /usr/local/bin/pandoc-crossref
 
 # AWS installation
 RUN wget ${AWSCLI_URL} && \
   unzip awscli-exe-linux-x86_64.zip && \
-  ./aws/install
+  ./aws/install && \
+  curl \
+  "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" \
+  -o "session-manager-plugin.deb" && \
+  dpkg -i session-manager-plugin.deb
 
-# nodejs installation
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+# nodejs installation -- version must match definition of "runtime" in any "aws_lambda_function" resource
+RUN curl -fsSLO https://deb.nodesource.com/setup_14.x && \
+  bash setup_*.x && \
+  apt-cache policy nodejs && \
   apt-get install -y nodejs chromium
 
-# Java installation
-RUN apt-get update && apt-get install -y openjdk-11-jdk-headless
-
-# Additional packages (may be installed by default, but listed here to be obvious that there is a dependency)
-RUN  apt-get -qq -y install gpg groff less
+# yarn v2 and gulp installation
+RUN npm install --global corepack && \
+  npm i -g gulp
 
 # Terraform installation - later in the dockerfile, as version bumps regularly
 RUN wget -q ${TERRAFORM_URL} && \
@@ -81,13 +101,13 @@ RUN wget -q ${TERRAFORM_URL} && \
 
 # Ruby gems installation
 COPY Gemfile .
-RUN dos2unix Gemfile
-RUN bundle install
+RUN dos2unix Gemfile && \
+  bundle install
 
 # Python packages
 COPY requirements.txt .
-RUN dos2unix requirements.txt
-RUN pip install -r requirements.txt
+RUN dos2unix requirements.txt && \
+  pip install -r requirements.txt
 
 COPY profile-*.sh /etc/profile.d/
 COPY useradd-init /usr/local/bin

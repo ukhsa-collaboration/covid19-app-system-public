@@ -57,7 +57,7 @@ class DiagnosisKeysUploadService(
         return submissionCount
     }
 
-    fun loadKeysAndUploadOneBatchToFederatedServer(
+    private fun loadKeysAndUploadOneBatchToFederatedServer(
         lastUploadedSubmissionTime: Instant,
         batchNumber: Int
     ): BatchUploadResult {
@@ -70,7 +70,7 @@ class DiagnosisKeysUploadService(
         )
 
         val exposures = getUploadRequestRawPayload(newSubmissions)
-            .filter{ isKeyValid(it.keyData)}
+            .filter { isKeyValid(it.keyData) }
             .map { updateRiskLevelIfDefaultEnabled(it) }
 
         events(
@@ -164,12 +164,13 @@ class DiagnosisKeysUploadService(
     private fun getUploadRequestRawPayload(submissions: List<Submission>): List<ExposureUpload> = submissions
         .flatMap { exposureUploadFactory.create(it) }
 
-    private fun getLastUploadedTime(): Instant = batchTagService.lastUploadState()
-        .map {
+    private fun getLastUploadedTime() = batchTagService
+        .lastUploadState()
+        ?.let {
             events(InfoEvent("Last uploaded timestamp from db ${it.lastUploadedTimeStamp}"))
             Instant.ofEpochSecond(it.lastUploadedTimeStamp)
         }
-        .orElse(clock().minus(Duration.ofDays(initialUploadHistoryDays.toLong())))
+        ?: clock().minus(Duration.ofDays(initialUploadHistoryDays.toLong()))
 
     companion object {
         private const val NO_BATCH_SIZE_LIMIT_LEGACY_BATCH_SIZE = 0

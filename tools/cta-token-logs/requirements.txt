@@ -1,0 +1,7 @@
+arrow==1.2.1
+boto3==1.20.16
+boto3-stubs==1.20.16
+mypy==0.910
+waiting==1.4.1
+mypy-boto3-logs==1.20.1
+marshmallow-dataclass==8.5.3

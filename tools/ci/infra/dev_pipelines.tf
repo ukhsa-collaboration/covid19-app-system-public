@@ -42,6 +42,7 @@ module "doreto_pull_request" {
   image_pull_credentials_type = "CODEBUILD"
   privileged_mode             = true
   github_api_token            = data.aws_secretsmanager_secret_version.github.secret_string
+  file_path                   = "src/documentation_reporting_tool/"
 }
 
 module "devenv_ci" {

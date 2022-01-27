@@ -10,7 +10,7 @@ module "python_lambda" {
   lambda_handler_class               = var.lambda_handler_class
   lambda_log_group_retention_in_days = var.log_retention_in_days
   lambda_memory                      = "256"
-  lambda_runtime                     = "python3.8"
+  lambda_runtime                     = "python3.9"
   lambda_timeout                     = var.lambda_timeout
   tags                               = var.tags
   app_alarms_topic                   = var.app_alarms_topic

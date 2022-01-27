@@ -5,16 +5,15 @@
 The Venue QR system allows a venue operator to create a poster for display in their premises. Some
 venue types are required to create a poster and display it, while others may create a poster if they wish and are encouraged to do so.
 
-The poster creation website lives at https://create-qr-code-poster.service.gov.uk. 
+The poster creation website lives at https://create-qr-code-poster.service.gov.uk.
 
 During this journey, minimal information
 is collected from a venue operator allowing them to receive a PDF venue poster, any updates made to the poster, and enable health teams to contact them
 if required.
 
->
->**Privacy of App users** is a key concern while developing this system. It makes no sense to take a privacy preserving EN system
-and couple it to a venue system that allows tracking of individuals. This would disincentivise the download and active use of the
-App, which has been significant in reducing chains of transmission of COVID-19.
+> **Privacy of App users** is a key concern while developing this system. It makes no sense to take a privacy preserving EN system
+> and couple it to a venue system that allows tracking of individuals. This would disincentivise the download and active use of the
+> App, which has been significant in reducing chains of transmission of COVID-19.
 
 ### Venue Check-in
 
@@ -40,12 +39,11 @@ should be communicated to user devices.
 
 In this regard, the Covid-19 app system acts only as a distributor of this information.
 
-
 #### Determining if a user has visited a venue with identified risk
 
 A list of venues with identified risk is made available on a Content Delivery Network (CDN).  This list contains venue IDs,
 the date(s) and time(s) for which the venue is of interest, and information regarding the severity of warning that should be
-presented to the user. 
+presented to the user.
 
 As per the principles discussed in [the guidebook](guidebook.md), CDN access logging is disabled so the system operator has as little
 information as possible regarding the users download the file. See [cloudfront_distribution_facade/main.tf](../../src/aws/libraries/cloudfront_distribution_facade/main.tf) for configuration

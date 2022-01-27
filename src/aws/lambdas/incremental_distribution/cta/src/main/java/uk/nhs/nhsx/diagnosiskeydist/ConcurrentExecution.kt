@@ -8,7 +8,6 @@ import uk.nhs.nhsx.core.handler.RequestContext
 import uk.nhs.nhsx.diagnosiskeydist.ConcurrentExecution.OnErrorHandler
 import java.time.Duration
 import java.time.Instant
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -19,23 +18,22 @@ class ConcurrentExecution(
     private val timeout: Duration,
     private val events: Events,
     private val clock: Clock,
-    private val onErrorHandler: OnErrorHandler
+    private val onErrorHandler: OnErrorHandler = SYSTEM_EXIT_ERROR_HANDLER,
+    threadPoolSize: Int = 15
 ) : AutoCloseable {
-    private val counter: AtomicInteger = AtomicInteger()
+    private val counter = AtomicInteger()
     private val start: Instant = clock()
-    private val pool: ExecutorService = Executors.newFixedThreadPool(15)
-    private val existingRequestId: String = RequestContext.awsRequestId()
+    private val pool = Executors.newFixedThreadPool(threadPoolSize)
+    private val existingRequestId = RequestContext.awsRequestId()
 
-    fun execute(c: Runnable) {
+    fun execute(runnable: Runnable) {
         pool.execute {
             try {
                 RequestContext.assignAwsRequestId(existingRequestId)
-                c.run()
+                runnable.run()
                 counter.incrementAndGet()
             } catch (e: Exception) {
-                events(
-                    ExceptionThrown(e, "Error: $name. Terminating lambda (System.exit).")
-                )
+                events(ExceptionThrown(e, "Error: $name. Terminating lambda (System.exit)."))
                 onErrorHandler.handle()
             }
         }
@@ -49,9 +47,7 @@ class ConcurrentExecution(
             pool.shutdownNow()
             throw IllegalStateException("Timed-out while waiting for executor service to shutdown")
         } else {
-            events(
-                InfoEvent("Success: $name. Count=${counter.get()}. Duration=${Duration.between(start, clock())}")
-            )
+            events(InfoEvent("Success: $name. Count=${counter.get()}. Duration=${Duration.between(start, clock())}"))
         }
     }
 

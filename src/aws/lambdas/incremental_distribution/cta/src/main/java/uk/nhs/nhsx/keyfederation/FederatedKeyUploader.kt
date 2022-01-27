@@ -3,11 +3,11 @@ package uk.nhs.nhsx.keyfederation
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Json.toJson
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.diagnosiskeydist.agspec.RollingStartNumber.isRollingStartNumberValid
@@ -24,7 +24,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class FederatedKeyUploader(
-    private val s3Storage: S3Storage,
+    private val awsS3: AwsS3,
     private val bucketName: BucketName,
     private val federatedKeySourcePrefix: String,
     private val clock: Clock,
@@ -135,7 +135,7 @@ class FederatedKeyUploader(
         val objectKey =
             ObjectKey.of("""$federatedKeySourcePrefix/${exposureKeysPayload.origin}/${dateStringProvider()}/${exposureKeysPayload.batchTag}.json""")
 
-        s3Storage.upload(
+        awsS3.upload(
             Locator.of(bucketName, objectKey),
             APPLICATION_JSON,
             fromUtf8String(toJson(payload))

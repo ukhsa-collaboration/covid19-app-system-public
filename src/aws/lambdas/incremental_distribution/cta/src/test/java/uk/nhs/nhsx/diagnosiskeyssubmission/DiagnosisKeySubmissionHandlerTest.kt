@@ -88,7 +88,7 @@ class DiagnosisKeySubmissionHandlerTest {
         mobileAuthenticator = { true },
         healthAuthenticator = { true },
         signer = signer,
-        s3Storage = s3Storage,
+        awsS3 = s3Storage,
         awsDynamoClient = awsDynamoClient,
         objectKeyNameProvider = objectKeyNameProvider
     )

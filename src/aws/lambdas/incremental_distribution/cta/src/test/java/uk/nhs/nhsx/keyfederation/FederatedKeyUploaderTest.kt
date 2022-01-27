@@ -40,13 +40,13 @@ import java.util.*
 class FederatedKeyUploaderTest {
 
     private val bucketName = BucketName.of(UUID.randomUUID().toString())
-    private val s3Storage = FakeS3()
+    private val awsS3 = FakeS3()
     private val clock = { Instant.parse("2020-09-15T00:00:00Z") }
     private val validOrigins = listOf("NI", "IE")
     private val events = RecordingEvents()
 
     private val uploader = FederatedKeyUploader(
-        s3Storage = s3Storage,
+        awsS3 = awsS3,
         bucketName = bucketName,
         federatedKeySourcePrefix = "federatedKeyPrefix",
         clock = clock,
@@ -202,7 +202,7 @@ class FederatedKeyUploaderTest {
         val objectKeyIE = ObjectKey.of("nearform/IE/20200915/batchTag.json")
         val objectKeyNI = ObjectKey.of("nearform/NI/20200915/batchTag.json")
         val keyUploader = FederatedKeyUploader(
-            s3Storage = s3Storage,
+            awsS3 = awsS3,
             bucketName = bucketName,
             federatedKeySourcePrefix = "nearform",
             clock = clock,
@@ -254,7 +254,7 @@ class FederatedKeyUploaderTest {
             DownloadedFederatedDiagnosisKeys::class
         )
 
-        expectThat(s3Storage)
+        expectThat(awsS3)
             .getBucket(bucketName)
             .hasSize(2)
             .and {
@@ -301,7 +301,7 @@ class FederatedKeyUploaderTest {
 
         uploader.acceptKeysFromFederatedServer(payload)
 
-        expectThat(s3Storage).getBucket(bucketName).hasSize(1)
+        expectThat(awsS3).getBucket(bucketName).hasSize(1)
     }
 
     @Test
@@ -338,7 +338,7 @@ class FederatedKeyUploaderTest {
 
         uploader.acceptKeysFromFederatedServer(payload)
 
-        expectThat(s3Storage).isEmpty(bucketName)
+        expectThat(awsS3).isEmpty(bucketName)
     }
 
     @Test
@@ -375,7 +375,7 @@ class FederatedKeyUploaderTest {
 
         uploader.acceptKeysFromFederatedServer(payload)
 
-        expectThat(s3Storage).isEmpty(bucketName)
+        expectThat(awsS3).isEmpty(bucketName)
     }
 
     @Test
@@ -421,7 +421,7 @@ class FederatedKeyUploaderTest {
 
         uploader.acceptKeysFromFederatedServer(payload)
 
-        expectThat(s3Storage).getBucket(bucketName).hasSize(1)
+        expectThat(awsS3).getBucket(bucketName).hasSize(1)
     }
 
     @Test
@@ -467,7 +467,7 @@ class FederatedKeyUploaderTest {
 
         uploader.acceptKeysFromFederatedServer(payload)
 
-        expectThat(s3Storage).getBucket(bucketName).hasSize(1)
+        expectThat(awsS3).getBucket(bucketName).hasSize(1)
     }
 }
 

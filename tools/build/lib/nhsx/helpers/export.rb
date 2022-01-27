@@ -33,7 +33,7 @@ module NHSx
 
     # Trigger the export batch lambda to update with latest keys
     def trigger_batch(batch_zip_lambda_name, system_config)
-      output_file = NHSx::AWS::Commandlines.new_lambda_output_file(batch_zip_lambda_name, $configuration)
+      output_file = NHSx::AWS::Commandlines.new_lambda_output_file(batch_zip_lambda_name, system_config)
       run_command("Trigger export batch", NHSx::AWS::Commandlines.invoke_lambda(batch_zip_lambda_name, "", output_file), system_config)
     end
 

@@ -1,3 +1,1012 @@
 {
-    "las": {}
+    "las": {
+        "E07000034": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000063": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000006": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000078": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000092": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000035": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000112": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000007": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000141": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000021": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000127": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000156": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000170": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000009": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000023": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000234": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000038": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000052": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000039": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000010": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000068": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000082": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000025": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000102": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000117": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000011": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000131": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000146": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000026": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000175": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000013": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000224": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000239": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000042": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000057": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000029": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000043": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000072": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000015": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000087": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000107": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000121": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000001": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000016": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000150": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000030": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000136": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000165": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000194": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000003": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000214": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000229": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000032": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000018": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000047": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000243": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000033": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000062": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000077": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000091": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000005": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000034": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000111": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000006": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000140": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000126": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000020": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000155": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000199": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000008": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000219": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000022": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000037": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000051": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000009": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000038": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000067": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000081": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000024": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000096": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000116": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000130": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000010": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000145": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000025": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000174": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000189": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000209": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000012": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000223": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000027": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000041": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000238": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000056": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000028": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000042": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000071": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000014": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000086": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000029": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000106": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000120": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000135": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000015": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000164": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000179": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000193": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000213": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000002": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000017": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000031": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000242": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000046": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000060": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000228": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000032": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000047": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000061": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000004": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000076": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000019": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000033": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000090": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000110": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000125": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000005": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000154": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000169": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000198": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000203": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000218": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000007": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000021": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000036": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000050": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000008": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000037": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000066": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000080": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000023": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000009": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000095": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000115": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000024": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000144": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000173": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000188": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000208": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000222": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000011": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000237": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000040": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000026": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000055": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000012": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000027": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000041": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000070": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000013": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000085": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000028": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000105": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000014": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000134": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000149": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000163": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000029": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000178": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000192": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000212": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000001": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000016": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000241": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000227": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000030": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000045": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000031": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000046": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000003": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000075": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000032": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000018": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000124": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000004": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000139": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000019": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000153": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000033": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000168": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000197": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000202": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000217": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000020": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000006": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000035": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000246": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000036": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000008": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000022": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000065": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000094": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000037": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000114": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000129": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000143": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000023": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000009": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000172": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000187": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000207": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000010": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000221": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000236": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000025": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000054": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000011": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000026": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000040": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000012": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000084": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000027": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000099": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000119": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000013": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000133": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000028": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000148": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000177": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000211": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000226": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000015": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000240": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000044": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000059": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000030": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000045": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000002": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000017": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000031": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000089": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000074": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000109": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000003": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000123": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000138": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000152": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000032": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000018": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000167": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000181": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000196": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000005": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000216": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000034": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000245": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000049": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000035": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000064": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000007": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000021": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000079": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000093": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000036": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000113": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000128": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000008": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000142": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000022": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000171": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000220": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000024": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000235": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000039": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000010": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000053": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000011": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000069": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000083": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000026": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000103": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000098": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000118": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000132": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000012": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000147": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000027": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000176": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000210": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000014": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000225": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000043": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000058": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000044": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000001": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000073": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000016": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E08000030": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000088": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000108": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000122": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000002": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000017": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000151": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E09000031": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000137": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000166": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000180": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000200": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000195": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000004": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000215": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000019": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E06000033": [
+            "Notification.England.SelfIsolation"
+        ],
+        "E07000244": [
+            "Notification.England.SelfIsolation"
+        ],
+        "W06000018": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000008": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000022": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000012": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000002": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000021": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000011": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000001": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000016": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000006": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000020": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000010": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000015": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000005": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000024": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000014": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000004": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000019": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000009": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000023": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000013": [
+            "Notification.Wales.SelfIsolation"
+        ],
+        "W06000003": [
+            "Notification.Wales.SelfIsolation"
+        ]
+    }
 }

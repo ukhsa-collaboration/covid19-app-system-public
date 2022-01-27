@@ -34,30 +34,6 @@ class VirologyPolicyConfigTest {
     }
 
     @ParameterizedTest
-    @MethodSource("requiresConfirmatoryTest")
-    fun `confirmatory test is required`(criteria: VirologyCriteria) {
-        expectThat(config.isConfirmatoryTestRequired(criteria, mobileAppVersion)).isTrue()
-    }
-
-    @ParameterizedTest
-    @MethodSource("requiresConfirmatoryTestForCertainCases")
-    fun `confirmatory test is required for RAPID_RESULT, RAPID_SELF_REPORTED test kit on specific mobile versions`(
-        criteria: VirologyCriteria
-    ) {
-        val mobileAppVersion = MobileAppVersion.Version(4, 11)
-        expectThat(config.isConfirmatoryTestRequired(criteria, mobileAppVersion)).isTrue()
-    }
-
-    @ParameterizedTest
-    @MethodSource("doesNotRequireConfirmatoryTestForCertainCases")
-    fun `confirmatory test is not required for RAPID_RESULT, RAPID_SELF_REPORTED test kit on specific mobile versions`(
-        criteria: VirologyCriteria
-    ) {
-        val mobileAppVersion = MobileAppVersion.Version(4, 10)
-        expectThat(config.isConfirmatoryTestRequired(criteria, mobileAppVersion)).isFalse()
-    }
-
-    @ParameterizedTest
     @MethodSource("supportsDiagnosisKeySubmission")
     fun `supports diagnosis key submission`(criteria: VirologyCriteria) {
         expectThat(config.isDiagnosisKeysSubmissionSupported(criteria)).isTrue()
@@ -92,20 +68,6 @@ class VirologyPolicyConfigTest {
     }
 
     @ParameterizedTest
-    @MethodSource("requiresConfirmatoryTest")
-    fun `blocks v2 for old versions if criteria requires confirmatory test`(criteria: VirologyCriteria) {
-        val oldVersion = MobileAppVersion.Version(4, 3)
-        expectThat(config.shouldBlockV2TestResultQueries(criteria, oldVersion)).isTrue()
-    }
-
-    @ParameterizedTest
-    @MethodSource("requiresConfirmatoryTest")
-    fun `does not block v2 for new app versions if criteria requires confirmatory test`(criteria: VirologyCriteria) {
-        val newVersion = MobileAppVersion.Version(4, 4)
-        expectThat(config.shouldBlockV2TestResultQueries(criteria, newVersion)).isFalse()
-    }
-
-    @ParameterizedTest
     @MethodSource("doesNotRequireConfirmatoryTest")
     fun `does not block v2 for old app versions if criteria does not require confirmatory test`(criteria: VirologyCriteria) {
         val oldVersion = MobileAppVersion.Version(4, 3)
@@ -119,12 +81,6 @@ class VirologyPolicyConfigTest {
         expectThat(config.shouldBlockV2TestResultQueries(criteria, version)).isFalse()
     }
 
-    @ParameterizedTest
-    @MethodSource("requiresConfirmatoryTest")
-    fun `does not block v2 for unknown app versions even if criteria requires confirmatory test`(criteria: VirologyCriteria) {
-        expectThat(config.shouldBlockV2TestResultQueries(criteria, MobileAppVersion.Unknown)).isFalse()
-    }
-
     @Test
     fun `current state for blocking v1 test result queries`() {
         expectThat(config.shouldBlockV1TestResultQueries(LAB_RESULT)).isFalse()
@@ -136,7 +92,7 @@ class VirologyPolicyConfigTest {
     fun `confirmatory day limit on cta exchange for England for new app versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 11)
         val virologyCriteria = VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive)
-        expectThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)).isEqualTo(2)
+        expectThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)).isNull()
     }
 
     @Test
@@ -164,7 +120,7 @@ class VirologyPolicyConfigTest {
     fun `confirmatory day limit on cta exchange for Wales RAPID_RESULT for new app versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 11)
         val virologyCriteria = VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive)
-        expectThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)).isEqualTo(1)
+        expectThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)).isNull()
     }
 
     @Test
@@ -192,7 +148,7 @@ class VirologyPolicyConfigTest {
     fun `confirmatory day limit on cta exchange for Wales RAPID_SELF_REPORTED for new app versions`() {
         val mobileAppVersion = MobileAppVersion.Version(4, 11)
         val virologyCriteria = VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
-        expectThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)).isEqualTo(1)
+        expectThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)).isNull()
     }
 
     @Test
@@ -244,6 +200,7 @@ class VirologyPolicyConfigTest {
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Negative),
             VirologyCriteria(CtaExchange, England, RAPID_RESULT, Void),
+            VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive),
             VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Negative),
             VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Void),
             VirologyCriteria(CtaExchange, Wales, LAB_RESULT, Positive),
@@ -257,22 +214,12 @@ class VirologyPolicyConfigTest {
             VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Void),
         )
 
-        @JvmStatic
-        fun requiresConfirmatoryTest() = setOf(
-            VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive)
-        )
 
-        @JvmStatic
-        fun requiresConfirmatoryTestForCertainCases() = setOf(
-            VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
-            VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
-            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
-        )
+
+
 
         @JvmStatic
         fun doesNotRequireConfirmatoryTestForCertainCases() = setOf(
-            VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
-            VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
             VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive),
         )
 

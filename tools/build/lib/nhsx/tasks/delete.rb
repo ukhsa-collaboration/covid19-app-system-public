@@ -28,4 +28,17 @@ namespace :delete do
       end
     end
   end
+  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS.each do |account, tgt_envs|
+    tgt_envs.each do |tgt_env|
+      prerequisites = [:"login:#{account}"]
+      desc "Delete the local stats v1 file in the S3 bucket of the #{tgt_env} target environment"
+      task :"local_stats:#{tgt_env}" => prerequisites do
+        include NHSx::TargetEnvironment
+        target_config = target_environment_configuration(tgt_env, account, $configuration)
+        object_name = "#{target_config["local_stats_distribution_store"]}/distribution/v1/local-covid-stats-daily"
+        cmdline = NHSx::AWS::Commandlines.delete_from_s3(object_name)
+        run_command("Delete v1 local stats file", cmdline, $configuration)
+      end
+    end
+  end
 end

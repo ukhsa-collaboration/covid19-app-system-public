@@ -1193,30 +1193,78 @@
       "contentVersion": 1,
       "translations": {
         "en": {
-          "head": "Change in self-isolation advice in Wales from 7 August",
-          "body": "Open this message for more information",
+          "head": "Reminder of self-isolation and testing changes",
+          "body": "Self-isolation and testing guidance has changed if you test positive for COVID-19.",
           "content": [
             {
               "type": "para",
-              "text": "In Wales, those who are fully vaccinated (full course of vaccine plus 14 days) or under 18 are no longer advised to self-isolate if they are contact of a confirmed case. You are still advised to book a test on day 2 and day 8."
+              "text": "Self-isolation and testing guidance has changed if you test positive for COVID-19."
             },
             {
               "type": "para",
-              "text": "The app will be updated soon to reflect these changes, but right now you will see a self-isolation countdown clock telling you to self-isolate if you’re a close contact. You are not required to follow this advice if you’re fully vaccinated, but please remember to book a test and continue to follow the latest advice to help stop the spread of COVID-19."
+              "text": "If you get a positive rapid lateral flow test result, you no longer need to take a follow-up PCR test. There are some exceptions to this. You should take a follow-up PCR test if you have been advised to do so because you are in a clinically vulnerable group, or as part of a research or surveillance programme."
+            },
+            {
+              "type": "para",
+              "text": "Self-isolate if you test positive for COVID-19, to make sure you do not spread the virus."
+            },
+            {
+              "type": "para",
+              "text": "However, you can now leave self-isolation after 7 full days. Before you stop self-isolating, you should take 2 daily rapid lateral flow tests 24 hours apart, to check you are not still infectious. The first daily rapid lateral flow test should not be taken before day 6."
+            },
+            {
+              "type": "para",
+              "text": "If you get negative daily rapid lateral flow test results on day 6 and day 7, it is likely that you were not infectious at the time the tests were taken."
+            },
+            {
+              "type": "para",
+              "text": "If either test is positive, you should continue to self-isolate until you get 2 negative daily rapid lateral flow results taken 24 hours apart, or until day 10. A positive result means you are likely to still be infectious and at risk of passing on COVID-19 to other people."
+            },
+            {
+              "type": "para",
+              "text": "Once you leave self-isolation you no longer need to continue taking daily rapid lateral flow tests."
+            },
+            {
+              "type": "para",
+              "text": "If you stop self-isolation after day 7, the app will continue to countdown 10 days, but you do not need to self-isolate for the remaining days. It is still a useful reminder for you to continue to take extra care during that period. For example, you are strongly advised to:\n-Work from home if you can.\n-Limit close contact with other people in shops, on public transport and in crowded places or where there is not much fresh air.\n-Limit contact with people at higher risk of serious illness from COVID-19.\n-Pay extra attention to hand washing and wearing a face covering.\n"
             }
           ]
         },
         "cy": {
-          "head": "Nodyn pwysig am y newid i’r cyngor hunanynysu yng Nghymru o 7 Awst",
-          "body": "Agorwch y neges yma i gael rhagor o wybodaeth.",
+          "head": "Nodyn atgoffa ynghylch newidiadau i hunanynysu a phrofi",
+          "body": "Mae’r canllaw ar hunanynysu wedi newid os ydych wedi derbyn prawf positif ar gyfer COVID-19.",
           "content": [
             {
               "type": "para",
-              "text": "Yng Nghymru, os ydych wedi’ch brechu’n llawn (h.y. cwrs llawn y brechlyn + 14 diwrnod) neu dan 18 oed, nid oes rhaid ichi hunanynysu os ydych yn gyswllt agos i rywun positif.  Ond dylech gymryd prawf ar ddiwrnod 2 a diwrnod 8."
+              "text": "Mae’r canllaw ar hunanynysu wedi newid os ydych wedi derbyn prawf positif ar gyfer COVID-19."
             },
             {
               "type": "para",
-              "text": "Caiff yr ap ei ddiweddaru cyn bo hir i adlewyrchu’r newid hwn. Am y tro, fe welwch gloc yn cyfri’r dyddiau hunanynysu os ydych yn gyswllt agos. Cewch anwybyddu hyn os ydych wedi’ch brechu’n llawn. Ond cofiwch drefnu prawf a dal ati i ddilyn y cyngor diweddaraf i atal lledaeniad COVID-19."
+              "text": "Os cewch ganlyniad positif i brawf llif unffordd fydd dim rhaid gwneud prawf PCR dilynol mwyach. Ond mae rhai eithriadau. Dylech wneud prawf PCR dilynol os ydych mewn grŵp clinigol fregus neu’n rhan o raglen ymchwil neu oruchwylio."
+            },
+            {
+              "type": "para",
+              "text": "Cofiwch hunanynysu bob tro ar ôl profi’n bositif am COVID-19, rhag pasio’r feriws i eraill."
+            },
+            {
+              "type": "para",
+              "text": "Fodd bynnag, gallwch nawr adael eich cyfnod hunanynysu wedi 7 niwrnod llawn. Cyn i chi stopio hunanynysu, dylech gymryd 2 brawf llif unffordd cyflym dyddiol 24 awr ar wahân, i sicrhau nad ydych yn dal yn heintus. Ni ddylid cymryd y prawf llif unffordd cyflym dyddiol cyn diwrnod 6."
+            },
+            {
+              "type": "para",
+              "text": "Os byddwch yn cael canlyniadau prawf llif unffordd cyflym dyddiol negatif ar ddiwrnod 6 a diwrnod 7, mae’n debygol nad oeddech chi'n heintus ar yr adeg pan gymerwyd y profion."
+            },
+            {
+              "type": "para",
+              "text": "Os yw'r naill brawf neu’r llall yn bositif, dylech ddal i hunanynysu nes i chi gael 2 brawf llif unffordd cyflym dyddiol negatif wedi eu cymryd 24 awr ar wahân, neu tan ddiwrnod 10. Mae canlyniad positif yn golygu eich bod yn debygol o fod yn heintus o hyd, a bod perygl y byddwch yn pasio COVID-19 ymlaen i bobl eraill."
+            },
+            {
+              "type": "para",
+              "text": "Unwaith y byddwch yn gorffen hunanynysu, ni fyddwch angen cymryd profion llif unffordd cyflym dyddiol mwyach."
+            },
+            {
+              "type": "para",
+              "text": "Os byddwch chi'n stopio hunanynysu ar neu wedi diwrnod 7, bydd yr ap yn dal i gyfrif i lawr i 10 niwrnod, ond nid oes angen i chi hunanynysu am y dyddiau sy'n weddill. Mae’n dal i fod yn rhywbeth defnyddiol i’ch atgoffa i gymryd gofal ychwanegol yn ystod y cyfnod hwnnw. Er enghraifft, fe’ch cynghorir yn gryf i:\n-Weithio o gartref os gallwch.\n-Cyfyngu cyswllt agos gyda phobl eraill mewn siopau, ar drafnidiaeth gyhoeddus ac mewn llefydd torfol neu ble nad oes llawer o awyr iach.\n-Cyfyngu cyswllt gyda phobl sydd â risg uwch o salwch difrifol o COVID-19.\n-Talwch sylw penodol wrth olchi'ch dwylo a gwisgwch orchudd wyneb.\n"
             }
           ]
         }
@@ -1575,6 +1623,372 @@
               "text": "مزید معلومات کے لیے اپنی مقامی اتھارٹی سے معلوم کریں۔.",
               "link": "https://www.gov.uk/find-local-council",
               "linkText": "اپنی لوکل اتھارٹی کی ویب سائٹ تلاش کریں"
+            }
+          ]
+        }
+      }
+    },
+    "Notification.England.SelfIsolation": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "zh": {
+          "head": "检测与自我隔离建议已经变更",
+          "body": "若COVID-19检测呈阳性，相关指南已经变更。点击此处了解更多详情。",
+          "content": [
+            {
+              "type": "para",
+              "text": "若COVID-19检测结果呈阳性，您只需在第5 天和第6天的每日快速侧流检测均为阴性，且无体温升高，您就可以在5天整后停止自我隔离。"
+            },
+            {
+              "type": "para",
+              "text": "若其中一次检测呈阳性，则您必须继续自我隔离，直到两次（间隔一天）快速侧流检测结果均为阴性，或已完成整整10天自我隔离为止。"
+            },
+            {
+              "type": "para",
+              "text": "自我隔离期的第1天从出现症状的当天开始计算，若无症状，则从检测呈阳性的当天开始计算。"
+            },
+            {
+              "type": "para",
+              "text": "若您停止自我隔离，该应用将继续倒计时至10天整为止。这将作为有用的提醒，让您继续加倍注意。在10天倒计时结束之前，您不会收到任何密切联系通知。"
+            },
+            {
+              "type": "para",
+              "text": "若COVID-19快速侧流检测呈阳性，您无需接受后续PCR检测，除非："
+            },
+            {
+              "type": "para",
+              "text": "\n-希望申请检测和追踪援助金 (Test and Trace Support Payment)\n-存在健康状况，可能适合接受新的COVID-19 治疗\n-正在参加需要PCR检测的研究或监测计划\n-抵达英国后，第2天的快速侧流检测结果为阳性"
+            }
+          ]
+        },
+        "en": {
+          "head": "Testing and self-isolation advice has changed",
+          "body": "If you test positive for COVID-19, the guidance has changed. Tap here for more details.",
+          "content": [
+            {
+              "type": "para",
+              "text": "If you have tested positive for COVID-19, you can end self-isolation after 5 full days, provided you get negative rapid lateral flow tests on day 5 and day 6 and you do not have a high temperature."
+            },
+            {
+              "type": "para",
+              "text": "If either test is positive, it is important to continue to self-isolate until you get 2 negative rapid lateral flow tests a day apart, or you have completed 10 full days of self-isolation."
+            },
+            {
+              "type": "para",
+              "text": "Day 1 of your self-isolation is the day after your symptoms started, or the day after you had the positive test if you did not have symptoms."
+            },
+            {
+              "type": "para",
+              "text": "If you stop self-isolating, the app will continue to count down until 10 full days. This is as a useful reminder to continue taking extra care. You will not receive any close contact notifications until your 10-day count down timer ends."
+            },
+            {
+              "type": "para",
+              "text": "If you test positive for COVID-19 from a rapid lateral flow test, you do not need to take a follow-up PCR test unless you:"
+            },
+            {
+              "type": "para",
+              "text": "\n-want to apply for the Test and Trace Support Payment\n-have a health condition that means you may be suitable for new COVID-19 treatment\n-are taking part in a research or surveillance programme that requires a PCR test\n-have received a positive day 2 rapid lateral flow test result after arriving in the UK"
+            }
+          ]
+        },
+        "ar": {
+          "head": "تم تغيير نصائح الاختبار والعزل الذاتي",
+          "body": "إذا ثبتت أصابتك بـ COVID-19 ، فقد تغيرت الإرشادات. اضغط هنا لمزيد من التفاصيل.",
+          "content": [
+            {
+              "type": "para",
+              "text": "إذا كانت نتيجة اختبار COVID-19 الخاصة بك إيجابية، يمكنك إنهاء العزل الذاتي بعد 5 أيام كاملة، بشرط أن تحصل على اختبارات تدفق جانبي سريعة سلبية في اليوم 5 واليوم 6 ولا تكون لديك درجة حرارة عالية."
+            },
+            {
+              "type": "para",
+              "text": " إذا كان أي من الاختبارين إيجابيا، من المهم الاستمرار في العزل الذاتي حتى تحصل على اختبارين سلبيين للتدفق الجانبي السريع بفارق يوم بينهما، أو تكون قد أكملت 10 أيام كاملة من العزلة الذاتية. "
+            },
+            {
+              "type": "para",
+              "text": "اليوم الأول من فترة العزل الذاتي هو اليوم الذي يلي بدء ظهور الأعراض، أو اليوم التالي للاختبار الإيجابي إذا لم تكن لديك أعراض."
+            },
+            {
+              "type": "para",
+              "text": "في حالة توقفك عن العزل الذاتي، سوف يستمر التطبيق في العد التنازلي حتى مرور 10 أيام كاملة. يعتبر هذا بمثابة تذكير مفيد لمواصلة اتخاذ مزيد من الحذر. لن تتلقى أي إشعارات تتعلق بالاتصال الوثيق حتى ينتهي مؤقت العد التنازلي لمدة 10 أيام. "
+            },
+            {
+              "type": "para",
+              "text": "إذا كانت نتيجة اختبار COVID-19 من اختبار التدفق الجانبي السريع إيجابية، لن تحتاج الي إجراء اختبار PCR للمتابعة إلا إذا كنت:  "
+            },
+            {
+              "type": "para",
+              "text": "\n-تريد التقدم بطلب للحصول على مبلغ دعم من الاختبار والتتبع (Test and Trace Support Payment)\n-لديك حالة صحية تعني إنك قد تكون متوافق مع علاج COVID-19 جديد.\n-تشارك في برنامج بحث أو مراقبة يتطلب اختبار PCR \n-قد حصلت على نتيجة إيجابية لاختبار تدفق جانبي سريع في اليوم 2 بعد وصولك الي المملكة المتحدة "
+            }
+          ]
+        },
+        "tr": {
+          "head": "Test ve karantina yönergesinde değişiklik yapılmıştır",
+          "body": "COVID-19 testinizin pozitif çıkması halinde uymanız gereken yönergelerde değişiklik yapılmıştır. Ayrıntılar için tıklayın.",
+          "content": [
+            {
+              "type": "para",
+              "text": "COVID-19 testiniz pozitif çıktıysa, karantinanın 5'inci ve 6'ıncı günlerinde yapacağınız hızlı antijen testlerinin negatif çıkması ve ateşinizin olmaması durumunda 5 tam günün ardından karantinayı sona erdirebilirsiniz."
+            },
+            {
+              "type": "para",
+              "text": "İki testten birinin pozitif çıkması halinde, bir gün arayla yapacağınız 2 hızlı antijen testinin sonuçları negatif çıkıncaya ya da 10 günlük karantina süresi doluncaya kadar karantinada kalmaya devam etmeniz önemlidir."
+            },
+            {
+              "type": "para",
+              "text": "Karantinanın 1'inci günü, belirtileriniz başladıktan sonraki ya da belirtilerinizin olmaması durumunda testi yaptıktan sonraki gündür."
+            },
+            {
+              "type": "para",
+              "text": "Karantinayı sona erdirmeniz halinde uygulama 10 gün dolana kadar geri sayıma devam edecek olup bunun amacı, bu süre boyunca ekstra tedbirli olmaya devam etmeniz konusunda size hatırlatmada bulunmaktır. On günlük geri sayım bitene kadar yakın temaslı bildirimi yapılmayacaktır."
+            },
+            {
+              "type": "para",
+              "text": "COVID-19 hızlı antijen testinin sonucu pozitif çıkarsa, aşağıdaki durumlar haricinde, ayrıca PCR testi yaptırmanıza gerek yoktur:"
+            },
+            {
+              "type": "para",
+              "text": "\n-Test and Trace Destek Ödemesi (Test and Trace Support Payment) için başvuruda bulunmak istemiyorsanız\n-yeni bir COVID-19 tedavisi için uygun olabileceğiniz anlamına gelen bir rahatsızlığınız yoksa\n-PCR testini şart koşan bir araştırma veya gözetim programında değilseniz\n-İngiltere’ye vardıktan sonra yaptığınız hızlı antijen testinin sonucu 2’nci gün pozitif çıkmadıysa"
+            }
+          ]
+        },
+        "pl": {
+          "head": "Zmieniły się wytyczne dotyczące testowania i samoizolacji",
+          "body": "Zmieniły się wytyczne dla osób, które uzyskują pozytywny wynik testu na COVID-19. Stuknij tutaj, aby uzyskać więcej informacji.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Jeżeli miałeś(-aś) pozytywny wynik testu na COVID-19, możesz teraz zakończyć samoizolację po 5 pełnych dniach, jeśli w 5 i 6 dniu uzyskasz ujemny wynik szybkiego testu przepływu bocznego i nie będziesz mieć podniesionej temperatury."
+            },
+            {
+              "type": "para",
+              "text": "Jeśli wynik któregoś z tych testów będzie pozytywny, należy kontynuować samoizolację, aż do uzyskania 2 negatywnych szybkich testów przepływu bocznego, wykonywanych w odstępie jednego dnia lub do ukończenia 10 pełnych dni samoizolacji."
+            },
+            {
+              "type": "para",
+              "text": "Pierwszym dniem samoizolacji jest dzień po wystąpieniu objawów lub dzień po wykonaniu testu, jeśli objawy nie wystąpiły."
+            },
+            {
+              "type": "para",
+              "text": "Po zakończeniu samoizolacji, aplikacja będzie nadal odliczać do 10 pełnych dni. Jest to przydatne przypomnienie, aby utrzymać szczególną ostrożność. Nie otrzymasz żadnych powiadomień o kontakcie z zarażonymi, do czasu zakończenia 10-dniowego odliczania."
+            },
+            {
+              "type": "para",
+              "text": "W razie pozytywnego wyniku szybkiego testu przepływu bocznego na COVID-19, nie trzeba wykonywać kontrolnego testu PCR, chyba że:"
+            },
+            {
+              "type": "para",
+              "text": "\n-chce się wystąpić o zasiłek dla osób w izolacji (Test and Trace Support Payment)\n-stan zdrowia, może kwalifikować Cię do nowego leczenia COVID-19\n-bierze się udział w programie badawczym lub nadzorczym, który wymaga testu PCR.\n-ma się pozytywny wynik szybkiego testu przepływu bocznego w 2 dni po przybyciu do Wielkiej Brytanii"
+            }
+          ]
+        },
+        "ro": {
+          "head": "Directivele privind testarea și autoizolarea au fost modificate",
+          "body": "Directivele au fost modificate pentru cazul în care ați fost testat(ă) pozitiv pentru COVID-19. Atingeți aici pentru detalii suplimentare.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Dacă ați avut un test COVID-19 pozitiv, puteți ieși din autoizolare după 5 zile complete dacă obțineți rezultate negative la testele rapide cu flux lateral din zilele 5 și 6 și dacă nu aveți febră."
+            },
+            {
+              "type": "para",
+              "text": "Dacă unul dintre teste este pozitiv, este important să vă autoizolați în continuare până veți obține 2 teste rapide cu flux lateral negative la distanță de o zi unul față de celălalt, sau până la finalizarea celor 10 zile complete de autoizolare."
+            },
+            {
+              "type": "para",
+              "text": "Ziua 1 din perioada de autoizolare este ziua următoare debutului simptomelor, sau ziua următoare testării, dacă nu prezentați simptome"
+            },
+            {
+              "type": "para",
+              "text": "Dacă ieșiți din autoizolare, aplicația va continua numărătoarea inversă până la terminarea celor 10 zile complete. Acest lucru reprezintă un memento util pentru a fi în continuare precaut(ă). Nu veți primi notificări de contact direct până la terminarea numărătorii inverse a celor 10 zile."
+            },
+            {
+              "type": "para",
+              "text": "Dacă aveți un test rapid cu flux lateral pozitiv pentru COVID-19, nu este necesar să mai efectuați un PCR decât dacă:"
+            },
+            {
+              "type": "para",
+              "text": "\n-doriți să aplicați pentru Asistența Financiară Testare și Urmărire (Test and Trace Support Payment)\n-din cauza stării de sănătate, ați putea fi eligibil(ă) pentru un nou tratament COVID-19\n-participați la un program de studiu sau de monitorizare care necesită un test PCR\n-aveți un rezultat pozitiv la un test rapid cu flux lateral în ziua 2 după ce ați ajuns în Regatul Unit"
+            }
+          ]
+        },
+        "pa": {
+          "head": "ਟੈਸਟ ਕਰਾਉਣ ਅਤੇ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਬਾਰੇ ਮਾਰਗਦਰਸ਼ਨ ਬਦਲ ਗਿਆ ਹੈ",
+          "body": "ਜੇਕਰ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ, ਤਾਂ ਮਾਰਗਦਰਸ਼ਨ ਬਦਲ ਗਿਆ ਹੈ। ਹੋਰ ਵੇਰਵਿਆਂ ਲਈ ਇੱਥੇ ਟੈਪ ਕਰੋ।",
+          "content": [
+            {
+              "type": "para",
+              "text": "ਜੇ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ ਤਾਂ ਤੁਸੀਂ ਪੂਰੇ 5 ਦਿਨਾਂ ਬਾਅਦ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਬੰਦ ਕਰ ਸਕਦੇ ਹੋ, ਬਸ਼ਰਤੇ 5ਵੇਂ ਅਤੇ 6ਵੇਂ ਦਿਨ ਤੁਹਾਡਾ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਨੈਗੇਟਿਵ ਆਉਂਦਾ ਹੈ ਅਤੇ ਤੁਹਾਨੂੰ ਤੇਜ਼ ਬੁਖ਼ਾਰ ਨਹੀਂ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਜੇਕਰ ਦੋਵਾਂ ਵਿੱਚੋਂ ਕੋਈ ਵੀ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਹੈ, ਤਾਂ ਇਹ ਮਹੱਤਵਪੂਰਨ ਹੈ ਕਿ ਜਦੋਂ ਤੱਕ ਤੁਹਾਡੇ ਇੱਕ ਦਿਨ ਦੇ ਅੰਤਰਾਲ 'ਤੇ ਲਏ ਗਏ 2 ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਨੈਗੇਟਿਵ ਨਹੀਂ ਆਉਂਦੇ ਹਨ, ਜਾਂ ਤੁਸੀਂ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਦੇ ਪੂਰੇ 10 ਦਿਨ ਪੂਰੇ ਨਹੀਂ ਕਰ ਲੈਂਦੇ ਹੋ, ਤੁਸੀਂ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਜਾਰੀ ਰੱਖੋ।"
+            },
+            {
+              "type": "para",
+              "text": "ਤੁਹਾਡੀ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਦੀ ਮਿਆਦ ਦਾ ਪਹਿਲਾ ਦਿਨ ਤੁਹਾਡੇ ਲੱਛਣਾਂ ਦੇ ਸ਼ੁਰੂ ਹੋਣ ਤੋਂ ਅਗਲਾ ਦਿਨ, ਜਾਂ ਜੇਕਰ ਤੁਹਾਡੇ ਵਿੱਚ ਲੱਛਣ ਨਹੀਂ ਹਨ ਤਾਂ ਤੁਹਾਡੇ ਪਾਜ਼ਿਟਿਵ ਟੈਸਟ ਆਉਣ ਤੋਂ ਅਗਲਾ ਦਿਨ ਹੁੰਦਾ ਹੈ"
+            },
+            {
+              "type": "para",
+              "text": "ਜੇਕਰ ਤੁਸੀਂ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਬੰਦ ਕਰ ਦਿੰਦੇ ਹੋ, ਤਾਂ ਐਪ ਪੂਰੇ 10 ਦਿਨਾਂ ਤੱਕ ਉਲਟੀ ਗਿਣਤੀ ਕਰਨਾ ਜਾਰੀ ਰੱਖੇਗੀ। ਇਹ ਵਾਧੂ ਦੇਖਭਾਲ ਜਾਰੀ ਰੱਖਣ ਲਈ ਇੱਕ ਉਪਯੋਗੀ ਯਾਦਦਹਾਨੀ ਹੈ। ਜਦੋਂ ਤੱਕ ਤੁਹਾਡਾ 10-ਦਿਨ ਦਾ ਉਲਟੀ ਗਿਣਤੀ ਟਾਈਮਰ ਖਤਮ ਨਹੀਂ ਹੁੰਦਾ, ਤੁਹਾਨੂੰ ਕੋਈ ਨੇੜਲੇ ਸੰਪਰਕ ਦੀਆਂ ਸੂਚਨਾਵਾਂ ਪ੍ਰਾਪਤ ਨਹੀਂ ਹੋਣਗੀਆਂ।"
+            },
+            {
+              "type": "para",
+              "text": "ਜੇਕਰ ਤੁਹਾਡਾ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਤੋਂ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ, ਤਾਂ ਤੁਹਾਨੂੰ ਫਾਲੋ-ਅੱਪ PCR ਟੈਸਟ ਕਰਵਾਉਣ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ ਜਦੋਂ ਤੱਕ ਇਹ ਲਾਗੂ ਨਹੀਂ ਹੁੰਦਾ ਹੈ:"
+            },
+            {
+              "type": "para",
+              "text": "\n-ਤੁਸੀਂ ਟੈਸਟ ਐਂਡ ਟ੍ਰੇਸ ਸਹਾਇਤਾ ਭੁਗਤਾਨ (Test and Trace Support Payment) ਲਈ ਅਰਜ਼ੀ ਦੇਣੀ ਚਾਹੁੰਦੇ ਹੋ\n-ਤੁਹਾਨੂੰ ਕੋਈ ਸਿਹਤ ਸਮੱਸਿਆ ਹੈ ਜਿਸਦਾ ਮਤਲਬ ਹੈ ਕਿ ਤੁਸੀਂ ਨਵੇਂ COVID-19 ਇਲਾਜ ਲਈ ਯੋਗ ਹੋ ਸਕਦੇ ਹੋ\n-ਤੁਸੀਂ ਕਿਸੇ ਖੋਜ ਜਾਂ ਨਿਗਰਾਨੀ ਪ੍ਰੋਗਰਾਮ ਵਿੱਚ ਹਿੱਸਾ ਲੈ ਰਹੇ ਹੋ ਜਿਸ ਲਈ PCR ਟੈਸਟ ਦੀ ਲੋੜ ਹੈ\n-ਯੂਕੇ ਵਿੱਚ ਪਹੁੰਚਣ ਤੋਂ ਬਾਅਦ ਤੁਹਾਡਾ ਦਿਨ 2 ਦੇ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ"
+            }
+          ]
+        },
+        "bn": {
+          "head": "পরীক্ষা করা এবং নিজেকে আলাদা রাখার পরামর্শ পরিবর্তিত হয়েছে",
+          "body": "আপনার COVID-19 এর পরীক্ষার ফল যদি পজিটিভ হয়, সেই ক্ষেত্রে নির্দেশনাটি পরিবর্তিত হয়েছে। আরো বিস্তারিত জানার জন্য এখানে ট্যাপ করুন।",
+          "content": [
+            {
+              "type": "para",
+              "text": "যদি আপনার COVID-19-এর জন্য পরীক্ষায় পজিটিভ ফলাফল এসে থাকে, তাহলে আপনি 5টি পূর্ণ দিন পরে নিজেকে আলাদা রাখা শেষ করতে পারেন, যদি আপনি দিন 5 এবং 6 এ দ্রুত ল্যাটারাল ফ্লো পরীক্ষায় নেগেটিভ ফলাফল পান এবং আপনার উচ্চ তাপমাত্রা না থাকে।"
+            },
+            {
+              "type": "para",
+              "text": "যদি যে কোনও একটি পরীক্ষার ফল পজিটিভ হয়, তাহলে আপনি এক দিনের ব্যবধানে 2টি দ্রুত ল্যাটারাল ফ্লো পরীক্ষায় নেগেটিভ ফল না পাওয়া পর্যন্ত, অথবা নিজেকে বিচ্ছিন্ন রাখার পুরো 10 দিন সম্পূর্ণ না হওয়া পর্যন্ত নিজেকে বিচ্ছিন্ন রাখা চালিয়ে যাওয়া জরুরি।"
+            },
+            {
+              "type": "para",
+              "text": "আপনার নিজেকে আলাদা রাখার সময়কালের 1ম দিন হল আপনার লক্ষণগুলি শুরু হওয়ার পরের দিন, অথবা আপনার যদি কোনও লক্ষণ না থাকে সেই ক্ষেত্রে পরীক্ষায় পজিটিভ ফল পাওয়ার পরের দিন।"
+            },
+            {
+              "type": "para",
+              "text": "আপনি নিজেকে আলাদা রাখা বন্ধ করলে, অ্যাপটি 10টি পূর্ণ দিন পর্যন্ত গণনা করা চালিয়ে যাবে। এটি অতিরিক্ত যত্ন নেওয়া চালিয়ে যাওয়ার জন্য একটি সহায়ক রিমাইন্ডার। আপনার 10-দিনের কাউন্ট ডাউন টাইমার শেষ না হওয়া পর্যন্ত আপনি কোনো ঘনিষ্ঠ যোগাযোগের বিজ্ঞপ্তি পাবেন না।"
+            },
+            {
+              "type": "para",
+              "text": "আপনি যদি একটি দ্রুত ল্যাটারাল ফ্লো পরীক্ষায় COVID-19 এর জন্য পজিটিভ ফলাফল পান, তাহলে আপনার ফলো-আপ PCR পরীক্ষা করার প্রয়োজন নেই যদি না:"
+            },
+            {
+              "type": "para",
+              "text": "\n-আপনি টেস্ট এবং ট্রেস সাপোর্ট পেমেন্টের (Test and Trace Support Payment) জন্য আবেদন করতে চান\n-আপনার এমন একটি স্বাস্থ্যগত অবস্থা থাকে যার মানে হল আপনি নতুন COVID-19 চিকিৎসার জন্য উপযুক্ত হতে পারেন\n-আপনি একটি গবেষণা বা নজরদারি কর্মসূচিতে অংশ নিচ্ছেন যার জন্য একটি PCR পরীক্ষার প্রয়োজন হয়\n-আপনি যুক্তরাজ্যে আসার পর 2য় দিনে দ্রুত ল্যাটারাল ফ্লো পরীক্ষায় পজিটিভ ফলাফল পেয়েছেন"
+            }
+          ]
+        },
+        "gu": {
+          "head": "ટેસ્ટિંગ અને સૅલ્ફ-આઇસોલેશન માટેના નિર્દેશો બદલાયા છે",
+          "body": "જો તમારો COVID-19 માટેનો ટેસ્ટ પૉઝિટિવ આવે તો નિર્દેશો બદલાયા છે. વધુ વિગતો માટે અહીં ટેપ કરો.",
+          "content": [
+            {
+              "type": "para",
+              "text": "જો COVID-19 માટે તમારો ટેસ્ટ પૉઝિટિવ આવ્યો હોય તો દિવસ 5 અને દિવસ 6ના રોજ તમને નકારાત્મક રૅપિડ લેટરલ ફ્લો ટેસ્ટ મળે અને તમારું તાપમાન વધારે ન હોય તો તમે પૂરા 5 દિવસો બાદ સૅલ્ફ-આઇસોલેશન બંધ કરી શકો છો."
+            },
+            {
+              "type": "para",
+              "text": "જો કોઈ એક ટેસ્ટ પૉઝિટિવ આવે તો એક દિવસના ગાળા સાથે કરાયેલ તમારા 2 નકારાત્મક રૅપિડ લેટરલ ફ્લો ટેસ્ટ ન આવે ત્યાં સુધી અથવા તમે સૅલ્ફ-આઇસોલેશનના 10 સંપૂર્ણ દિવસો પૂરા ન કરો ત્યાં સુધી સૅલ્ફ-આઇસોલેટ થવાનું ચાલુ રાખો તે અગત્યનું છે."
+            },
+            {
+              "type": "para",
+              "text": "તમારા સૅલ્ફ-આઇસોલેશનના સમયગાળાનો દિવસ 1 એ તમારાં લક્ષણો શરૂ થયા બાદનો દિવસ છે અથવા તમને કોઈ લક્ષણો ન હોય તો તમારો પૉઝિટિવ ટેસ્ટ આવ્યા બાદનો દિવસ છે."
+            },
+            {
+              "type": "para",
+              "text": "જો તમે સૅલ્ફ-આઇસોલેટ થવાનું બંધ કરો તો 10 પૂરા દિવસો ન થાય ત્યાં સુધી ઍપ કાઉન્ટ ડાઉન કરવાનું ચાલુ રાખશે. વધારાની સંભાળ લેવાનું ચાલુ રાખવા માટે આ એક ઉપયોગી રિમાઇન્ડર તરીકે છે. તમારું 10 દિવસોનું કાઉન્ટ ડાઉન ટાઇમર પૂરું ન થાય ત્યાં સુધી તમે નજીકના સંપર્કની કોઈ અધિસૂચનાઓ મેળવશો નહિ."
+            },
+            {
+              "type": "para",
+              "text": "રૅપિડ લેટરલ ફ્લો ટેસ્ટમાંથી COVID-19 માટે તમારો ટેસ્ટ પૉઝિટિવ આવે તો તમારે નીચેની સ્થિતિઓ સિવાય ફૉલો-અપ PCR ટેસ્ટ કરાવવાની જરૂર નથી:"
+            },
+            {
+              "type": "para",
+              "text": "\n-ટેસ્ટ ઍન્ડ ટ્રેસ સપોર્ટ પેમેન્ટ (Test and Trace Support Payment) માટે અરજી કરવા માટે તમે અરજી કરવા માંગતા હો\n-તમને સ્વાસ્થ્યની એવી સ્થિતિ હોય જેનો અર્થ એવો હોય કે તમે નવી COVID-19 સારવાર માટે લાયક હોઈ શકો છો \n-તમે એવા સંશોધન અથવા સર્વેલન્સ કાર્યક્રમમાં ભાગ લઈ રહ્યા હો જેમાં PCR ટેસ્ટ કરાવવો આવશ્યક હોય\n-UKમાં આવ્યા બાદ તમને દિવસ 2ના રૅપિડ લેટરલ ફ્લો ટેસ્ટનું પરિણામ પૉઝિટિવ મળ્યું હોય"
+            }
+          ]
+        },
+        "cy": {
+          "head": "Mae’r canllawiau profi a hunanynysu wedi newid",
+          "body": "Os byddwch yn derbyn prawf positif ar gyfer COVID-19, mae’r canllawiau wedi newid. Tapiwch yma am ragor o fanylion.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Os ydych chi wedi cael prawf positif ar gyfer COVID-19, gallwch orffen hunanynysu wedi 5 niwrnod llawn, ar yr amod eich bod yn cael profion llif unffordd negatif ar ddiwrnod 5 a diwrnod 6 ac nad oes gennych chi dymheredd uchel."
+            },
+            {
+              "type": "para",
+              "text": "Os yw'r naill brawf neu’r llall yn bositif, mae’n bwysig dal i hunanynysu nes i chi gael 2 brawf llif unffordd cyflym negatif ddiwrnod ar wahân, neu nes byddwch wedi cwblhau 10 niwrnod llawn o hunanynysu."
+            },
+            {
+              "type": "para",
+              "text": "Diwrnod 1 o’ch cyfnod hunanynysu yw’r diwrnod wedi i'ch symptomau gychwyn, neu'r diwrnod wedi i chi gael y prawf positif os nad oedd gennych chi symptomau."
+            },
+            {
+              "type": "para",
+              "text": "Os byddwch yn stopio hunanynysu, bydd yr ap yn dal i gyfrif i lawr am 10 niwrnod llawn. Mae hyn yn ddefnyddiol i’ch atgoffa i barhau i gymryd gofal. Ni fyddwch yn derbyn unrhyw hysbysiadau cyswllt agos nes bydd eich amserydd cyfri'n ôl 10 niwrnod yn dod i ben."
+            },
+            {
+              "type": "para",
+              "text": "Os byddwch yn cael canlyniad positif ar gyfer COVID-19 o brawf llif unffordd cyflym positif, nid oes angen i chi gael prawf PCR dilynol oni bai eich bod:"
+            },
+            {
+              "type": "para",
+              "text": "\n-eisiau ymgeisio am y Taliad Cymorth Profi ac Olrhain (Test and Trace Support Payment)\n-â chyflwr iechyd sy'n golygu y gallech fod yn addas ar gyfer triniaeth COVID-19 newydd\n-yn cymryd rhan mewn ymchwil neu raglen wyliadwriaeth sy'n gofyn am brawf PCR\n-wedi cael canlyniad prawf llif unffordd cyflym diwrnod 2 positif ar ôl dychwelyd i’r Deyrnas Unedig"
+            }
+          ]
+        },
+        "so": {
+          "head": "Baaritaanka iyo hagida iskarantiilida ayaa isbeddeshay",
+          "body": "Haddii lagaa helo COVID-19, hagitaanku wuu is beddelay. Taabo halkan wixii faahfaahin dheeraad ah.",
+          "content": [
+            {
+              "type": "para",
+              "text": "Haddii lagaa helay COVID-19, waxaad joojin kartaa karantiilkaaga ka dib 5 maalmood oo buuxa, waase haddii aad hesho natiijooyin ah inaadan qabin xanuunka baaritaannada xiriirka ah ee degdegga ah maalinta 5 iyo maalinta 6 oo aadan qabin heerkul sare."
+            },
+            {
+              "type": "para",
+              "text": "Haddii mid ka mid ah baaritaanka uu yahay togan, waa muhiim inaad sii wado inaad is-karantiisho ilaa aad ka helayso 2 baaritaano socdaal isdabajooga oo degdeg ah ee taban maalin kasta, ama aad dhammaystirtay 10 maalmood oo buuxda oo is-karantiilid ah."
+            },
+            {
+              "type": "para",
+              "text": "Maalinta 1-aad ee muddadaada is-karantiilida waa maalinta astaamahaaga ay bilaabmeen ka dib, ama maalinta ku xigta ee lagugu sameeyay baaritaanka haddii aadan lahayn astaamo."
+            },
+            {
+              "type": "para",
+              "text": "Haddii aad joojiso inaad karantiil gasho, abka wuxuu sii wadi doonaa inuu tiriyo ilaa 10 maalmood oo buuxa. Tani waa xasuusin faa'iido leh si aad u sii wado daryeelka dheeraadka ah. Ma heli doontid wax ogeysiis ah oo ku xiriirradaada dhow ilaa 10-ka maalmood ee tirinta saacaddaadu ka dhammaanayso."
+            },
+            {
+              "type": "para",
+              "text": "Haddii lagaa helay COVID-19 baaritaanka socdaalka isdabajooga ee degdega ah, uma baahnid inaad samayso baaritaan PCR oo dabagal ah ilaa aad:"
+            },
+            {
+              "type": "para",
+              "text": "\n-rabto inaad codsato Lacag bixinta Taageerada baaritaanka iyo Raadraaca (Test and Trace Support Payment)\n-qabto xaalad caafimaad taas oo ay macnaheedu tahay inaad ku habboon tahay daawaynta cusub ee COVID-19\n-aad ka qayb qaadanayso cilmi-baaris ama barnaamij dabagal oo u baahan baaritaanka PCR\n-oo lagaa helay cudurka maalinta 2-aad natiijada baaritaanka socdaalka isdabajooga ee degdega ah ka dib markay yimaadeen UK"
+            }
+          ]
+        },
+        "ur": {
+          "head": "جانچ کرنے اور خود کو الگ تھلگ رکھنے سے متعلق رہنمائی تبدیل ہو گئی ہے۔",
+          "body": "اگر آپ کی COVID-19 کی جانچ مثبت آتی ہے تو رہنمائی تبدیل ہو گئی ہے۔ مزید تفصیلات کے لیے یہاں ٹیپ کریں۔",
+          "content": [
+            {
+              "type": "para",
+              "text": "اگر COVID-19 کے لیے آپ کی جانچ مثبت آتی ہے تو آپ پورے 5 دن کے بعد خود کو الگ تھلگ رکھنا بند کر سکتے ہیں، بشرطیکہ دن 5 اور دن 6 کو آپ کے ریپڈ لیٹرل فلو ٹیسٹس منفی آئیں اور آپ کا درجۂ حرارت بڑھا ہوا نہ ہو۔"
+            },
+            {
+              "type": "para",
+              "text": "اگر دونوں میں سے کوئی بھی جانچ مثبت آتی ہے تو اس وقت تک خود کو الگ تھلگ رکھنا جاری رکھنا اہم ہے جب تک کہ آپ کے ایک دن کے وقفہ سے کیے گئے 2 ریپڈ لیٹرل فلو ٹیسٹ منفی نہ آجائیں، یا آپ نے خود کو الگ تھلگ رکھنے کے پورے 10 دن مکمل نہ کر لیے ہوں۔"
+            },
+            {
+              "type": "para",
+              "text": "آپ کے خود کو الگ تھلگ رکھنے کی مدت کا دن 1 اس کے بعد کا دن ہے جب آپ کی علامات شروع ہوئی تھیں، یا اس کے بعد کا دن ہے جب آپ کی جانچ مثبت آئی تھی، اگر آپ میں علامات نہیں پائی جاتی تھیں۔"
+            },
+            {
+              "type": "para",
+              "text": "اگر آپ خود کو الگ تھلگ رکھنا بند کر دیتے ہیں تو یہ ایپ پورے 10 دن تک کاؤنٹ ڈاؤن جاری رکھے گا۔ یہ اضافی نگہداشت جاری رکھنے کے لیے ایک کارآمد یاددہانی کے طور پر ہے۔ آپ کو قریبی رابطہ سے متعلق اس وقت تک کوئی اطلاعات نہیں موصول ہوں گی جب تک کہ آپ کا 10 دن کا کاؤنٹ ڈاؤن ٹائمر ختم نہ ہو جائے۔"
+            },
+            {
+              "type": "para",
+              "text": "اگر ریپڈ لیٹرل فلو ٹیسٹ سے COVID-19 کے لیے آپ کی جانچ مثبت آتی ہے تو آپ کو متابعتی PCR ٹیسٹ کرانے کی ضرورت نہیں ہے سوائے اس کے کہ:"
+            },
+            {
+              "type": "para",
+              "text": "\n-آپ ٹیسٹ اینڈ ٹریس سپورٹ پیمنٹ (Test and Trace Support Payment) کے لیے درخواست دینا چاہتے ہوں\n-آپ کو کوئی ایسا طبی عارضہ لاحق ہو جس کا مطلب ہو کہ آپ نئے COVID-19 کے علاج کے لیے مناسب ہو سکتے ہیں\n-آپ کسی ایسے تحقیقی یا نگرانی والے پروگرام میں حصہ لے رہے ہوں جس کے لیے PCR ٹیسٹ ضروری ہو\n-یوکے میں آنے کے بعد آپ کا دن 2 کے ریپڈ لیٹرل فلو ٹیسٹ کا نتیجہ مثبت آیا ہو"
             }
           ]
         }

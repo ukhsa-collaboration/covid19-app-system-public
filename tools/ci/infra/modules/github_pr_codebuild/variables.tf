@@ -55,3 +55,9 @@ variable "github_api_token" {
   type        = string
   default     = "FIXME"
 }
+
+variable "file_path" {
+  description = "The regular expression to match against file path in the source to run codebuild jobs for"
+  type        = string
+  default     = ""
+}

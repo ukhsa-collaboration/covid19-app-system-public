@@ -4,17 +4,17 @@ import boto3
 
 COLUMNS = ["Active", "Arn", "CustomPermissionsName", "Email", "IdentityType", "PrincipalId", "Role", "UserName"]
 
-def request_data():
 
+def request_data():
     sts = boto3.client('sts')
     accountId = sts.get_caller_identity().get('Account')
 
     quicksight = boto3.client("quicksight")
     response = quicksight.list_users(AwsAccountId=accountId, Namespace="default")
-    userList = response["UserList"]
-    while (response.get("NextToken", None) is not None):
+    user_list = response["UserList"]
+    while response.get("NextToken", None) is not None:
         response = quicksight.list_users(AwsAccountId=accountId, Namespace="default", NextToken=response["NextToken"])
-        userList = userList + response["UserList"]
+        user_list = user_list + response["UserList"]
 
     csv_file = "analytics-quicksight-users.csv"
     lambda_path = "/tmp/" + csv_file
@@ -23,10 +23,10 @@ def request_data():
         with open(lambda_path, 'w') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=COLUMNS)
             writer.writeheader()
-            for user in userList:
+            for user in user_list:
                 data = {}
                 for column in COLUMNS:
-                    data[column] = user.get(column,"")
+                    data[column] = user.get(column, "")
                 writer.writerow(data)
 
         with open(lambda_path) as f:
@@ -41,6 +41,7 @@ def request_data():
 
     except IOError:
         print("I/O error")
+
 
 def handler(event, context):
     request_data()

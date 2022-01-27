@@ -244,7 +244,8 @@ class AnalyticsSubmissionServiceTest {
                 optedOutForContactIsolationBackgroundTick = counter++.toInt(),
                 appIsUsableBackgroundTick = counter++.toInt(),
                 appIsContactTraceableBackgroundTick = counter++.toInt(),
-                didAccessSelfIsolationNoteLink = counter.toInt()
+                didAccessSelfIsolationNoteLink = counter++.toInt(),
+                appIsUsableBluetoothOffBackgroundTick = counter.toInt()
             )
         )
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)

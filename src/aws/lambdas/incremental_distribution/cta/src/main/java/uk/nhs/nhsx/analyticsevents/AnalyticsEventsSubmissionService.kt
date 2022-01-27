@@ -3,16 +3,16 @@ package uk.nhs.nhsx.analyticsevents
 import uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer.replacePostDistrictLA
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Json.toJson
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.Events
 import java.util.*
 
 class AnalyticsEventsSubmissionService(
-    private val s3Storage: S3Storage,
+    private val awsS3: AwsS3,
     private val objectKeyNameProvider: ObjectKeyNameProvider,
     private val bucketName: BucketName,
     private val events: Events
@@ -43,7 +43,7 @@ class AnalyticsEventsSubmissionService(
     }
 
     private fun uploadToS3(json: String) {
-        s3Storage.upload(
+        awsS3.upload(
             Locator.of(bucketName, objectKeyNameProvider.generateObjectKeyName().append(".json")),
             APPLICATION_JSON,
             fromUtf8String(json)

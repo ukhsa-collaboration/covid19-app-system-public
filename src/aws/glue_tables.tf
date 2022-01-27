@@ -462,6 +462,10 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "didAccessSelfIsolationNoteLink"
       type = "int"
     }
+    columns {
+      name = "appIsUsableBluetoothOffBackgroundTick"
+      type = "int"
+    }
   }
 }
 
@@ -921,6 +925,10 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "didAccessSelfIsolationNoteLink"
+      type = "int"
+    }
+    columns {
+      name = "appIsUsableBluetoothOffBackgroundTick"
       type = "int"
     }
   }

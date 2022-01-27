@@ -19,6 +19,7 @@ The following API contacts are in in use within the COVID-19 App System:
      - [postal-district-risk-level-distribution.md](mobile-facing/distribution/postal-district-risk-level-distribution.md)
      - [risky-venue-distribution.md](mobile-facing/distribution/risky-venue-distribution.md)
      - [symptoms-questionnaire-distribution.md](mobile-facing/distribution/symptoms-questionnaire-distribution.md)
+     - [local-covid-stats-distribution.md](mobile-facing/distribution/local-covid-stats-distribution.md)
    - __submission__
      - [analytics-event-submission.md](mobile-facing/submission/analytics-event-submission.md)
      - [analytics-submission.md](mobile-facing/submission/analytics-submission.md)

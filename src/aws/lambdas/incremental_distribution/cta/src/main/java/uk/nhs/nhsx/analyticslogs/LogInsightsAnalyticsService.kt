@@ -10,12 +10,12 @@ import uk.nhs.nhsx.analyticslogs.LogInsightsAnalyticsService.CloudWatchQueryStat
 import uk.nhs.nhsx.analyticslogs.LogInsightsAnalyticsService.CloudWatchQueryStatus.Scheduled
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.s3.ByteArraySource.Companion.fromUtf8String
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
-import uk.nhs.nhsx.core.aws.s3.S3Storage
 import uk.nhs.nhsx.core.events.Events
 import java.time.Duration
 import java.time.Instant
@@ -28,7 +28,7 @@ import java.time.temporal.ChronoUnit
 class LogInsightsAnalyticsService(
     private val client: AWSLogs,
     private val logGroup: String,
-    private val s3Storage: S3Storage,
+    private val awsS3: AwsS3,
     private val bucketName: String,
     private val objectKeyNameProvider: ObjectKeyNameProvider,
     private val shouldAbortIfOutsideWindow: Boolean,
@@ -104,7 +104,7 @@ class LogInsightsAnalyticsService(
             .append(objectKeyNameProvider.generateObjectKeyName().toString())
             .append(".json")
 
-        s3Storage.upload(
+        awsS3.upload(
             locator = Locator.of(BucketName.of(bucketName), fullObjectKey),
             contentType = APPLICATION_JSON,
             bytes = fromUtf8String(json)

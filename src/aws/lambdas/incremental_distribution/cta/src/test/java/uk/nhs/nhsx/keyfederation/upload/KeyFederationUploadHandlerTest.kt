@@ -3,7 +3,6 @@
 package uk.nhs.nhsx.keyfederation.upload
 
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent
-import com.amazonaws.services.s3.model.S3ObjectSummary
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import com.github.tomakehurst.wiremock.client.WireMock.equalTo
@@ -22,6 +21,8 @@ import strikt.api.expectThat
 import strikt.assertions.containsExactlyInAnyOrder
 import strikt.assertions.map
 import uk.nhs.nhsx.core.TestEnvironments
+import uk.nhs.nhsx.core.aws.dynamodb.TableName
+import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
@@ -31,10 +32,11 @@ import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.assertions.captured
-import uk.nhs.nhsx.testhelper.mocks.FakeDiagnosisKeysS3
+import uk.nhs.nhsx.testhelper.mocks.FakeS3
 import uk.nhs.nhsx.testhelper.mocks.Md5TemporaryExposureKeyGenerator
-import uk.nhs.nhsx.testhelper.s3.S3ObjectSummary
+import uk.nhs.nhsx.testhelper.mocks.exposureS3Object
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
+import java.time.Duration
 import java.time.Instant
 
 @ExtendWith(WireMockExtension::class)
@@ -42,6 +44,8 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
 
     private val events = RecordingEvents()
     private val now = Instant.parse("2020-02-05T10:00:00.000Z")
+    private val bucketName = BucketName.of("SUBMISSION_BUCKET")
+    private val fakeS3 = FakeS3()
 
     @Test
     fun `enable upload should call interop`() {
@@ -56,17 +60,21 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
         )
 
         val payload = slot<List<ExposureUpload>>()
-        val interopClient = spyk(InteropClient(wireMock)) {
+        val interopClient = spyk(interopClient(wireMock)) {
             every { uploadKeys(capture(payload)) } answers { callOriginal() }
         }
 
-        val s3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("mobile/LAB_RESULT/foobar", lastModified = now)
+        fakeS3.add(
+            exposureS3Object(
+                "mobile/LAB_RESULT/foobar",
+                bucketName,
+                Md5TemporaryExposureKeyGenerator("mobile/LAB_RESULT/foobar")
+            ), now
         )
 
-        KeyFederationUploadHandler(
-            KeyFederationUploadConfig(wireMock),
-            s3,
+        keyFederationUploadHandler(
+            keyFederationUploadConfig(wireMock),
+            fakeS3,
             interopClient
         ).handleRequest(ScheduledEvent(), aContext())
 
@@ -79,15 +87,19 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
 
     @Test
     fun `disable upload should not call interop`() {
-        val interopClient = spyk(InteropClient(wireMock))
+        val interopClient = spyk(interopClient(wireMock))
 
-        val s3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("mobile/LAB_RESULT/foobar", lastModified = now),
+        fakeS3.add(
+            exposureS3Object(
+                "mobile/LAB_RESULT/foobar",
+                bucketName,
+                Md5TemporaryExposureKeyGenerator("mobile/LAB_RESULT/foobar")
+            ), now
         )
 
-        KeyFederationUploadHandler(
-            KeyFederationUploadConfig(wireMock, { false }),
-            s3,
+        keyFederationUploadHandler(
+            keyFederationUploadConfig(wireMock, { false }),
+            fakeS3,
             interopClient
         ).handleRequest(ScheduledEvent(), aContext())
 
@@ -107,30 +119,51 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
         )
 
         // broken because of FederatedExposureUploadFactory -> testType != null
-
-        val s3 = FakeDiagnosisKeysS3(
-            S3ObjectSummary("foo", lastModified = now),
-            S3ObjectSummary("bar", lastModified = now),
-            S3ObjectSummary("foobar", lastModified = now),
-            S3ObjectSummary("federatedKeyPrefix/foo", lastModified = now),
-            S3ObjectSummary("nearform/GB-EAW/bar", lastModified = now),
-            S3ObjectSummary("mobile/LAB_RESULT/foobar", lastModified = now),
-            S3ObjectSummary("mobile/RAPID_RESULT/foobar", lastModified = now)
+        fakeS3.add(exposureS3Object("foo", bucketName, Md5TemporaryExposureKeyGenerator("foo")), now)
+        fakeS3.add(exposureS3Object("bar", bucketName, Md5TemporaryExposureKeyGenerator("bar")), now)
+        fakeS3.add(exposureS3Object("foobar", bucketName, Md5TemporaryExposureKeyGenerator("foobar")), now)
+        fakeS3.add(
+            exposureS3Object(
+                "federatedKeyPrefix/foo",
+                bucketName,
+                Md5TemporaryExposureKeyGenerator("federatedKeyPrefix/foo")
+            ), now
+        )
+        fakeS3.add(
+            exposureS3Object(
+                "nearform/GB-EAW/bar",
+                bucketName,
+                Md5TemporaryExposureKeyGenerator("nearform/GB-EAW/bar")
+            ), now
+        )
+        fakeS3.add(
+            exposureS3Object(
+                "mobile/LAB_RESULT/foobar",
+                bucketName,
+                Md5TemporaryExposureKeyGenerator("mobile/LAB_RESULT/foobar")
+            ), now
+        )
+        fakeS3.add(
+            exposureS3Object(
+                "mobile/RAPID_RESULT/foobar",
+                bucketName,
+                Md5TemporaryExposureKeyGenerator("mobile/RAPID_RESULT/foobar")
+            ), now
         )
 
-        val config = KeyFederationUploadConfig(
+        val config = keyFederationUploadConfig(
             wireMock = wireMock,
             federatedKeyUploadPrefixes = listOf("nearform/GB-EAW", "nearform/NI", "nearform/JE")
         )
 
         val payload = slot<List<ExposureUpload>>()
-        val interopClient = spyk(InteropClient(wireMock)) {
+        val interopClient = spyk(interopClient(wireMock)) {
             every { uploadKeys(capture(payload)) } answers { callOriginal() }
         }
 
-        KeyFederationUploadHandler(
+        keyFederationUploadHandler(
             config,
-            s3,
+            fakeS3,
             interopClient
         ).handleRequest(ScheduledEvent(), aContext())
 
@@ -144,7 +177,7 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
             )
     }
 
-    private fun KeyFederationUploadConfig(
+    private fun keyFederationUploadConfig(
         wireMock: WireMockServer,
         uploadFeatureFlag: () -> Boolean = { true },
         federatedKeyUploadPrefixes: List<String> = emptyList()
@@ -158,30 +191,29 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
         interopBaseUrl = wireMock.baseUrl(),
         interopAuthTokenSecretName = SecretName.of("authToken"),
         signingKeyParameterName = ParameterName.of("parameter"),
-        stateTableName = "DUMMY_TABLE",
+        stateTableName = TableName.of("DUMMY_TABLE"),
         region = "GB-EAW",
         federatedKeyUploadPrefixes = federatedKeyUploadPrefixes,
+        loadSubmissionsTimeout = Duration.ofMinutes(12),
+        loadSubmissionsThreadPoolSize = 15
     )
 
-    private fun KeyFederationUploadHandler(
+    private fun keyFederationUploadHandler(
         config: KeyFederationUploadConfig,
-        awsS3Client: FakeDiagnosisKeysS3,
+        awsS3Client: AwsS3,
         interopClient: InteropClient
     ) = KeyFederationUploadHandler(
         environment = TestEnvironments.environmentWith(),
         clock = { now },
         events = events,
-        submissionBucket = BucketName.of("SUBMISSION_BUCKET"),
+        submissionBucket = bucketName,
         config = config,
         batchTagService = InMemoryBatchTagService(),
         interopClient = interopClient,
         awsS3Client = awsS3Client
     )
 
-    private fun FakeDiagnosisKeysS3(vararg summaries: S3ObjectSummary) =
-        FakeDiagnosisKeysS3(summaries.toList(), keyGenerator = Md5TemporaryExposureKeyGenerator)
-
-    private fun InteropClient(wireMock: WireMockServer) = InteropClient(
+    private fun interopClient(wireMock: WireMockServer) = InteropClient(
         interopBaseUrl = wireMock.baseUrl(),
         authToken = "DUMMY_TOKEN",
         jws = JWS(KmsCompatibleSigner(ecPrime256r1.private)),

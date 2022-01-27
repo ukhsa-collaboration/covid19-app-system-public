@@ -102,6 +102,7 @@ public class AnalyticsMetrics {
     public Integer appIsUsableBackgroundTick;
     public Integer appIsContactTraceableBackgroundTick;
     public Integer didAccessSelfIsolationNoteLink;
+    public Integer appIsUsableBluetoothOffBackgroundTick;
 
     public AnalyticsMetrics() {
     }

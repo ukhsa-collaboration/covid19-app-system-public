@@ -46,12 +46,12 @@ class DiagnosisKeysSubmissionServiceTest {
     private val events = RecordingEvents()
     private val tableName = TableName.of(UUID.randomUUID().toString())
     private val bucketName = BucketName.of(UUID.randomUUID().toString())
-    private val s3Storage = FakeS3()
+    private val awsS3 = FakeS3()
     private val awsDynamoClient = mockk<AwsDynamoClient>()
     private val objectKeyNameProvider = { ObjectKey.of("my-object-key") }
 
     private val service = DiagnosisKeysSubmissionService(
-        s3Storage = s3Storage,
+        awsS3 = awsS3,
         awsDynamoClient = awsDynamoClient,
         objectKeyNameProvider = objectKeyNameProvider,
         tableName = tableName,
@@ -81,7 +81,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         expect {
             that(awsDynamoClient).hasBeenCalledWith(payload)
-            that(s3Storage)
+            that(awsS3)
                 .getBucket(bucketName)
                 .getObject("mobile/LAB_RESULT/my-object-key.json")
                 .content
@@ -112,7 +112,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         expect {
             that(awsDynamoClient).hasBeenCalledWith(payload)
-            that(s3Storage)
+            that(awsS3)
                 .getBucket(bucketName)
                 .getObject("mobile/${testKit}/my-object-key.json")
                 .content
@@ -142,7 +142,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         expect {
             that(awsDynamoClient).hasBeenCalledWith(payload)
-            that(s3Storage)
+            that(awsS3)
                 .getBucket(bucketName)
                 .getObject("mobile/LAB_RESULT/my-object-key.json")
                 .content
@@ -166,7 +166,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -189,7 +189,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         expect {
             that(awsDynamoClient).hasBeenCalledWith(payload)
-            that(s3Storage)
+            that(awsS3)
                 .getBucket(bucketName)
                 .getObject("mobile/LAB_RESULT/my-object-key.json")
                 .content
@@ -210,7 +210,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -232,7 +232,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -247,7 +247,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -262,7 +262,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -277,7 +277,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -292,7 +292,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -312,7 +312,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -327,7 +327,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -342,7 +342,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -359,7 +359,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     @Test
@@ -376,7 +376,7 @@ class DiagnosisKeysSubmissionServiceTest {
 
         service.acceptTemporaryExposureKeys(payload)
 
-        expectThat(s3Storage).isEmpty()
+        expectThat(awsS3).isEmpty()
     }
 
     private fun AwsDynamoClient.willReturnVirologyRecord(testKit: TestKit? = null) = apply {
