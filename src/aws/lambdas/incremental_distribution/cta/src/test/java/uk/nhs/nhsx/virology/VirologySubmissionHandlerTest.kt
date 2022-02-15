@@ -548,6 +548,7 @@ class VirologySubmissionHandlerTest {
         val lookup = mockk<VirologyLookupService> {
             every { lookup(any(), any()) } returns VirologyLookupResult(
                 testKit = RAPID_RESULT,
+                confirmatoryTest = true,
                 confirmatoryDayLimit = 2
             )
         }
@@ -572,9 +573,10 @@ class VirologySubmissionHandlerTest {
                     "testResult":"POSITIVE",
                     "testKit":"${RAPID_RESULT.name}",
                     "diagnosisKeySubmissionSupported": true,
-                    "requiresConfirmatoryTest": false,
+                    "requiresConfirmatoryTest": true,
                     "confirmatoryDayLimit": 2,
-                    "venueHistorySharingSupported": false
+                    "venueHistorySharingSupported": false,
+                    "shouldOfferFollowUpTest": false
                 }
                 """
             )
@@ -610,7 +612,8 @@ class VirologySubmissionHandlerTest {
                     "diagnosisKeySubmissionSupported": true,
                     "requiresConfirmatoryTest": false,
                     "confirmatoryDayLimit": null,
-                    "venueHistorySharingSupported": false
+                    "venueHistorySharingSupported": false,
+                    "shouldOfferFollowUpTest": false
                 }
                 """
             )
@@ -692,11 +695,12 @@ class VirologySubmissionHandlerTest {
                     "testEndDate":"2020-04-23T00:00:00Z", 
                     "testResult":"POSITIVE", 
                     "diagnosisKeySubmissionToken":"sub-token",
-                    "testKit":${testKit.name},
+                    "testKit":"${testKit.name}",
                     "diagnosisKeySubmissionSupported": false,
                     "requiresConfirmatoryTest": true,
                     "confirmatoryDayLimit": null,
-                    "venueHistorySharingSupported": false
+                    "venueHistorySharingSupported": false,
+                    "shouldOfferFollowUpTest": false
                 }"""
             )
         }
@@ -714,6 +718,7 @@ class VirologySubmissionHandlerTest {
             every { exchangeCtaTokenForV2(any(), any(), any()) } returns
                 CtaExchangeResult(
                     testKit = RAPID_RESULT,
+                    confirmatoryTest = true,
                     confirmatoryDayLimit = 1
                 )
         }
@@ -737,11 +742,12 @@ class VirologySubmissionHandlerTest {
                     "testEndDate":"2020-04-23T00:00:00Z", 
                     "testResult":"POSITIVE", 
                     "diagnosisKeySubmissionToken":"sub-token",
-                    "testKit":${RAPID_RESULT.name},
+                    "testKit":"${RAPID_RESULT.name}",
                     "diagnosisKeySubmissionSupported": true,
-                    "requiresConfirmatoryTest": false,
+                    "requiresConfirmatoryTest": true,
                     "confirmatoryDayLimit": 1,
-                    "venueHistorySharingSupported": false
+                    "venueHistorySharingSupported": false,
+                    "shouldOfferFollowUpTest": false
                 }"""
             )
         }
@@ -888,15 +894,17 @@ class VirologySubmissionHandlerTest {
         testKit: TestKit = LAB_RESULT,
         submissionSupported: Boolean = true,
         confirmatoryTest: Boolean = false,
-        confirmatoryDayLimit: Int? = null
+        confirmatoryDayLimit: Int? = null,
+        shouldOfferFollowUpTest: Boolean = false
     ) = VirologyLookupResult.AvailableV2(
         VirologyLookupResponseV2(
-            TestEndDate.of(2020, 4, 23),
-            Positive,
-            testKit,
-            submissionSupported,
-            confirmatoryTest,
-            confirmatoryDayLimit
+            testEndDate = TestEndDate.of(2020, 4, 23),
+            testResult = Positive,
+            testKit = testKit,
+            diagnosisKeySubmissionSupported = submissionSupported,
+            requiresConfirmatoryTest = confirmatoryTest,
+            confirmatoryDayLimit = confirmatoryDayLimit,
+            shouldOfferFollowUpTest = shouldOfferFollowUpTest
         )
     )
 
@@ -904,7 +912,8 @@ class VirologySubmissionHandlerTest {
         testKit: TestKit = LAB_RESULT,
         submissionSupported: Boolean = true,
         confirmatoryTest: Boolean = false,
-        confirmatoryDayLimit: Int? = null
+        confirmatoryDayLimit: Int? = null,
+        shouldOfferFollowUpTest: Boolean = false
     ) = CtaExchangeResult.AvailableV2(
         CtaExchangeResponseV2(
             diagnosisKeySubmissionToken = DiagnosisKeySubmissionToken.of("sub-token"),
@@ -913,7 +922,8 @@ class VirologySubmissionHandlerTest {
             testKit = testKit,
             diagnosisKeySubmissionSupported = submissionSupported,
             requiresConfirmatoryTest = confirmatoryTest,
-            confirmatoryDayLimit = confirmatoryDayLimit
+            confirmatoryDayLimit = confirmatoryDayLimit,
+            shouldOfferFollowUpTest = shouldOfferFollowUpTest
         )
     )
 

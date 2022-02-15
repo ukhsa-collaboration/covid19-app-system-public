@@ -1,3 +1,5 @@
+import com.github.jk1.license.render.*
+
 buildscript {
     repositories {
         mavenCentral()
@@ -6,6 +8,7 @@ buildscript {
     dependencies {
         classpath Libs.org_jetbrains_kotlin_jvm_gradle_plugin
         classpath Libs.com_adarshr_test_logger_gradle_plugin
+        classpath Libs.gradle_license_report
     }
 }
 
@@ -14,6 +17,7 @@ allprojects {
     apply plugin: 'kotlin'
     apply plugin: 'com.adarshr.test-logger'
     apply plugin: 'jacoco'
+    apply plugin: "com.github.jk1.dependency-license-report"
 
     group = 'com.demo'
     version = '0.0.1-SNAPSHOT'
@@ -97,6 +101,11 @@ allprojects {
         from sourceSets.test.output
     }
 
+    licenseReport {
+        outputDir = "$projectDir/../../../../../out/reports/licenses_${project.name}"
+        renderers = [new CsvReportRenderer()]
+    }
+
     configurations {
         testArtifacts.extendsFrom testRuntime
     }
@@ -107,7 +116,7 @@ allprojects {
 
     dependencies {
         testApi(platform(Libs.junit_bom))
-        testApi(Libs.junit_jupiter)
+        testApi(Libs.org_junit_jupiter_junit_jupiter)
         testApi(Libs.junit_jupiter_params)
 
         testApi(platform(Libs.http4k_bom))
@@ -128,6 +137,10 @@ allprojects {
         testApi(Libs.wiremock_jre8)
         testApi(Libs.bcpkix_jdk15on)
         testApi(Libs.bcprov_ext_jdk15on)
+
+        testApi(platform(Libs.testcontainers_bom))
+        testApi(Libs.org_testcontainers_junit_jupiter)
+        testApi(Libs.localstack)
 
         testRuntimeOnly(Libs.javax_json)
     }

@@ -15,7 +15,7 @@ data "template_file" "buildspec" {
 resource "aws_codebuild_project" "this" {
   name           = var.name
   description    = "Deployment pipeline"
-  build_timeout  = "30"
+  build_timeout  = "60"
   service_role   = var.service_role
   source_version = "master"
 

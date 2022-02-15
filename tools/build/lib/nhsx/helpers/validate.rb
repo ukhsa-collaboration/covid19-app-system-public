@@ -11,7 +11,7 @@ module NHSx
     POLICY_COLOURS_V2 = %w[black maroon green yellow red amber neutral].freeze
     TIERS_WITH_POLICIES = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4].freeze
     VALID_TIERS = %w[EN.Tier1 EN.Tier2 EN.Tier3 EN.Tier4 EN.Tier4.MassTest EN.Border.Tier1 WA.Tier1 WA.Tier2 WA.Tier3 WA.Tier4
-                     EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh EN.NationalRestrictions EN.VariantTier EN.EasingStep1 EN.EasingStep2 EN.VariantTier2 EN.EasingStep3 WA.Easing1 EN.EasingStep4 WA.Easing0 WA.Easing2 EN.Variant.Omicron WA.Variant.Omicron].freeze
+                     EN.HighVHigh EN.MedHigh EN.GenericNeutral EN.MedVHigh EN.NationalRestrictions EN.VariantTier EN.EasingStep1 EN.EasingStep2 EN.VariantTier2 EN.EasingStep3 WA.Easing1 EN.EasingStep4 WA.Easing0 WA.Easing2 EN.Variant.Omicron WA.Variant.Omicron EN.PlanA].freeze
     LANGUAGES = %w[ar bn cy en gu pa pl ro so tr ur zh]
 
     # Validate the given key is present in file_content, raise GaudiError otherwise
@@ -107,6 +107,7 @@ module NHSx
     end
 
     def validate_tiers(tier_metadata)
+      puts VALID_TIERS
       unexpected_tiers = tier_metadata.keys - VALID_TIERS
       raise GaudiError, "Tier metadata contains unexpected tiers: #{unexpected_tiers.join(",")}" unless unexpected_tiers.empty?
 

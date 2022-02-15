@@ -4,6 +4,7 @@ import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
 import uk.nhs.nhsx.domain.TestEndDate
 import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestResult
+import uk.nhs.nhsx.virology.domain.TestInstructionsValidator.validateOrThrow
 
 data class CtaExchangeResponseV2(
     val diagnosisKeySubmissionToken: DiagnosisKeySubmissionToken,
@@ -13,5 +14,10 @@ data class CtaExchangeResponseV2(
     val diagnosisKeySubmissionSupported: Boolean,
     val requiresConfirmatoryTest: Boolean,
     val confirmatoryDayLimit: Int?,
+    val shouldOfferFollowUpTest: Boolean,
     val venueHistorySharingSupported: Boolean = false
-)
+) {
+    init {
+        validateOrThrow(this)
+    }
+}

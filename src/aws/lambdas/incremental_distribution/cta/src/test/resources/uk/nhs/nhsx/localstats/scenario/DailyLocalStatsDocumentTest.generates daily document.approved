@@ -1,1 +1,52 @@
-{"lastFetch":"2021-11-16T17:00:00Z","metadata":{"england":{"newCasesBySpecimenDateRollingRate":{"lastUpdate":"2021-11-10"}},"wales":{"newCasesBySpecimenDateRollingRate":{"lastUpdate":"2021-11-10"}},"lowerTierLocalAuthorities":{"newCasesByPublishDate":{"lastUpdate":"2021-11-16"},"newCasesByPublishDateChange":{"lastUpdate":"2021-11-16"},"newCasesByPublishDateDirection":{"lastUpdate":"2021-11-16"},"newCasesByPublishDateRollingSum":{"lastUpdate":"2021-11-16"},"newCasesBySpecimenDateRollingRate":{"lastUpdate":"2021-11-11"},"newCasesByPublishDateChangePercentage":{"lastUpdate":"2021-11-16"}}},"england":{"newCasesBySpecimenDateRollingRate":353},"wales":{"newCasesBySpecimenDateRollingRate":491.9},"lowerTierLocalAuthorities":{"E09000014":{"name":"Haringey","newCasesByPublishDate":105,"newCasesByPublishDateChange":207,"newCasesByPublishDateDirection":"UP","newCasesByPublishDateRollingSum":771,"newCasesBySpecimenDateRollingRate":255.3,"newCasesByPublishDateChangePercentage":36.7}}}
+{
+    "lastFetch": "2021-11-16T17:00:00Z",
+    "metadata": {
+        "england": {
+            "newCasesBySpecimenDateRollingRate": {
+                "lastUpdate": "2021-11-10"
+            }
+        },
+        "wales": {
+            "newCasesBySpecimenDateRollingRate": {
+                "lastUpdate": "2021-11-10"
+            }
+        },
+        "lowerTierLocalAuthorities": {
+            "newCasesByPublishDate": {
+                "lastUpdate": "2021-11-16"
+            },
+            "newCasesByPublishDateChange": {
+                "lastUpdate": "2021-11-16"
+            },
+            "newCasesByPublishDateDirection": {
+                "lastUpdate": "2021-11-16"
+            },
+            "newCasesByPublishDateRollingSum": {
+                "lastUpdate": "2021-11-16"
+            },
+            "newCasesBySpecimenDateRollingRate": {
+                "lastUpdate": "2021-11-11"
+            },
+            "newCasesByPublishDateChangePercentage": {
+                "lastUpdate": "2021-11-16"
+            }
+        }
+    },
+    "england": {
+        "newCasesBySpecimenDateRollingRate": 353
+    },
+    "wales": {
+        "newCasesBySpecimenDateRollingRate": 491.9
+    },
+    "lowerTierLocalAuthorities": {
+        "E09000014": {
+            "name": "Haringey",
+            "newCasesByPublishDate": 105,
+            "newCasesByPublishDateChange": 207,
+            "newCasesByPublishDateDirection": "UP",
+            "newCasesByPublishDateRollingSum": 771,
+            "newCasesBySpecimenDateRollingRate": 255.3,
+            "newCasesByPublishDateChangePercentage": 36.7
+        }
+    }
+}

@@ -8,57 +8,73 @@ import uk.nhs.nhsx.domain.Country.Companion.Wales
 import uk.nhs.nhsx.domain.TestJourney.CtaExchange
 import uk.nhs.nhsx.domain.TestJourney.Lookup
 import uk.nhs.nhsx.domain.TestKit
-import uk.nhs.nhsx.domain.TestKit.*
+import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.domain.TestResult.Positive
 
 class VirologyPolicyConfig(
-    private val requireConfirmatoryTest: Map<VirologyCriteria, MobileVersionChecker> =
-        mapOf(),
-    private val diagnosisKeySubmissionSupported: Set<VirologyCriteria> =
-        setOf(
-            VirologyCriteria(Lookup, England, LAB_RESULT, Positive),
-            VirologyCriteria(Lookup, England, RAPID_RESULT, Positive),
-            VirologyCriteria(Lookup, England, RAPID_SELF_REPORTED, Positive),
-            VirologyCriteria(Lookup, Wales, LAB_RESULT, Positive),
-            VirologyCriteria(Lookup, Wales, RAPID_RESULT, Positive),
-            VirologyCriteria(Lookup, Wales, RAPID_SELF_REPORTED, Positive),
 
-            VirologyCriteria(CtaExchange, England, LAB_RESULT, Positive),
-            VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
-            VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive),
-            VirologyCriteria(CtaExchange, Wales, LAB_RESULT, Positive),
-            VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
-            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
-        ),
-    private val confirmatoryDayLimit: Map<VirologyCriteria, ConfirmatoryDayLimit> =
-        mapOf(),
-    private val blockedV1TestKitQueries: Set<TestKit> =
-        setOf(
-            RAPID_SELF_REPORTED
-        )
+    private val shouldOfferFollowUpTest: Map<VirologyCriteria, MobileVersionChecker> = mapOf(),
+
+    private val requireConfirmatoryTest: Map<VirologyCriteria, MobileVersionChecker> = mapOf(
+        VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive) to FromMinimumInclusive(Version(4, 26)),
+        VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive) to FromMinimumInclusive(Version(4, 26)),
+    ),
+
+    private val diagnosisKeySubmissionSupported: Set<VirologyCriteria> = setOf(
+        VirologyCriteria(Lookup, England, LAB_RESULT, Positive),
+        VirologyCriteria(Lookup, England, RAPID_RESULT, Positive),
+        VirologyCriteria(Lookup, England, RAPID_SELF_REPORTED, Positive),
+        VirologyCriteria(Lookup, Wales, LAB_RESULT, Positive),
+        VirologyCriteria(Lookup, Wales, RAPID_RESULT, Positive),
+        VirologyCriteria(Lookup, Wales, RAPID_SELF_REPORTED, Positive),
+
+        VirologyCriteria(CtaExchange, England, LAB_RESULT, Positive),
+        VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
+        VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive),
+        VirologyCriteria(CtaExchange, Wales, LAB_RESULT, Positive),
+        VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
+        VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive)
+    ),
+
+    private val confirmatoryDayLimit: Map<VirologyCriteria, ConfirmatoryDayLimit> = mapOf(),
+
+    private val blockedV1TestKitQueries: Set<TestKit> = setOf(RAPID_SELF_REPORTED)
 ) {
 
-    data class ConfirmatoryDayLimit(val mobileVersionChecker: MobileVersionChecker, val confirmatoryDayLimit: Int)
+    data class ConfirmatoryDayLimit(
+        val mobileVersionChecker: MobileVersionChecker,
+        val confirmatoryDayLimit: Int
+    )
 
-    fun isConfirmatoryTestRequired(virologyCriteria: VirologyCriteria, version: MobileAppVersion): Boolean {
-        val mobileVersionChecker = requireConfirmatoryTest[virologyCriteria]
-        return if (mobileVersionChecker != null) mobileVersionChecker(version) else false
-    }
+    fun isConfirmatoryTestRequired(
+        virologyCriteria: VirologyCriteria,
+        version: MobileAppVersion
+    ) = requireConfirmatoryTest[virologyCriteria]?.invoke(version) ?: false
 
-    fun isDiagnosisKeysSubmissionSupported(virologyCriteria: VirologyCriteria): Boolean =
+    fun isDiagnosisKeysSubmissionSupported(virologyCriteria: VirologyCriteria) =
         diagnosisKeySubmissionSupported.contains(virologyCriteria)
 
-    fun confirmatoryDayLimit(virologyCriteria: VirologyCriteria, version: MobileAppVersion): Int? {
-        val policy = confirmatoryDayLimit[virologyCriteria]
-        return if (policy != null && policy.mobileVersionChecker(version)) policy.confirmatoryDayLimit else null
+    fun confirmatoryDayLimit(
+        virologyCriteria: VirologyCriteria,
+        version: MobileAppVersion
+    ) = confirmatoryDayLimit[virologyCriteria]
+        ?.takeIf { it.mobileVersionChecker(version) }
+        ?.let(ConfirmatoryDayLimit::confirmatoryDayLimit)
+
+    fun shouldBlockV1TestResultQueries(testKit: TestKit) = blockedV1TestKitQueries.contains(testKit)
+
+    fun shouldBlockV2TestResultQueries(
+        virologyCriteria: VirologyCriteria,
+        version: MobileAppVersion
+    ) = when (version) {
+        is Version -> version <= Version(4, 3) && isConfirmatoryTestRequired(virologyCriteria, version)
+        Unknown -> false
     }
 
-    fun shouldBlockV1TestResultQueries(testKit: TestKit): Boolean =
-        blockedV1TestKitQueries.contains(testKit)
-
-    fun shouldBlockV2TestResultQueries(virologyCriteria: VirologyCriteria, version: MobileAppVersion): Boolean =
-        when (version) {
-            is Version -> version <= Version(4, 3) && isConfirmatoryTestRequired(virologyCriteria, version)
-            Unknown -> false
-        }
+    fun shouldOfferFollowUpTest(
+        virologyCriteria: VirologyCriteria,
+        version: MobileAppVersion
+    ) = shouldOfferFollowUpTest[virologyCriteria]?.invoke(version) ?: false
 }

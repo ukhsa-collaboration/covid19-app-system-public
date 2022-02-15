@@ -3,18 +3,21 @@ package smoke
 import assertions.CtaExchangeAssertionsV2.confirmatoryDayLimit
 import assertions.CtaExchangeAssertionsV2.diagnosisKeySubmissionSupported
 import assertions.CtaExchangeAssertionsV2.requiresConfirmatoryTest
+import assertions.CtaExchangeAssertionsV2.shouldOfferFollowUpTest
 import assertions.CtaExchangeAssertionsV2.testEndDate
 import assertions.CtaExchangeAssertionsV2.testKit
 import assertions.CtaExchangeAssertionsV2.testResult
 import assertions.VirologyAssertionsV2.confirmatoryDayLimit
 import assertions.VirologyAssertionsV2.diagnosisKeySubmissionSupported
 import assertions.VirologyAssertionsV2.requiresConfirmatoryTest
+import assertions.VirologyAssertionsV2.shouldOfferFollowUpTest
 import assertions.VirologyAssertionsV2.testEndDate
 import assertions.VirologyAssertionsV2.testKit
 import assertions.VirologyAssertionsV2.testResult
 import org.http4k.cloudnative.env.Environment
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.EnumSource
 import smoke.actors.ApiVersion.V2
 import smoke.actors.MobileApp
@@ -26,7 +29,6 @@ import strikt.assertions.isA
 import strikt.assertions.isEqualTo
 import strikt.assertions.isFalse
 import strikt.assertions.isNull
-import strikt.assertions.isTrue
 import uk.nhs.nhsx.core.headers.MobileAppVersion
 import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.domain.Country.Companion.England
@@ -52,6 +54,7 @@ import uk.nhs.nhsx.virology.lookup.VirologyLookupResponseV2
 import uk.nhs.nhsx.virology.lookup.VirologyLookupResult
 import uk.nhs.nhsx.virology.order.VirologyOrderResponse
 import uk.nhs.nhsx.virology.policy.VirologyCriteria
+import uk.nhs.nhsx.virology.result.VirologyTokenStatusResponse
 
 class VirologyV2SmokeTest {
 
@@ -126,6 +129,7 @@ class VirologyV2SmokeTest {
                 expectedRequiredFlagFor(Lookup, England, input, Positive)
             )
             confirmatoryDayLimit.isNull()
+            shouldOfferFollowUpTest.isFalse()
         }
     }
 
@@ -150,6 +154,7 @@ class VirologyV2SmokeTest {
             diagnosisKeySubmissionSupported.isFalse()
             requiresConfirmatoryTest.isFalse()
             confirmatoryDayLimit.isNull()
+            shouldOfferFollowUpTest.isFalse()
         }
     }
 
@@ -179,6 +184,7 @@ class VirologyV2SmokeTest {
                 expectedRequiredFlagFor(Lookup, Wales, input, Positive)
             )
             confirmatoryDayLimit.isNull()
+            shouldOfferFollowUpTest.isFalse()
         }
     }
 
@@ -234,6 +240,7 @@ class VirologyV2SmokeTest {
                 expectedRequiredFlagFor(Lookup, England, LAB_RESULT, Negative)
             )
             confirmatoryDayLimit.isNull()
+            shouldOfferFollowUpTest.isFalse()
         }
     }
 
@@ -263,6 +270,7 @@ class VirologyV2SmokeTest {
                     expectedRequiredFlagFor(CtaExchange, England, input, Positive)
                 )
                 confirmatoryDayLimit.isNull()
+                shouldOfferFollowUpTest.isFalse()
             }
     }
 
@@ -287,6 +295,7 @@ class VirologyV2SmokeTest {
                 diagnosisKeySubmissionSupported.isFalse()
                 requiresConfirmatoryTest.isFalse()
                 confirmatoryDayLimit.isNull()
+                shouldOfferFollowUpTest.isFalse()
             }
     }
 
@@ -316,11 +325,17 @@ class VirologyV2SmokeTest {
                     expectedRequiredFlagFor(CtaExchange, Wales, input, Positive)
                 )
                 confirmatoryDayLimit.isNull()
+                shouldOfferFollowUpTest.isFalse()
             }
     }
 
-    @Test
-    fun `cta exchange available for old app versions in England that does not require a confirmatory test`() {
+    @ParameterizedTest
+    @CsvSource(value = ["4, 26, true", "4, 25, false"])
+    fun `cta exchange available for specific app versions which require confirmatory test`(
+        majorAppVersion: Int,
+        minorAppVersion: Int,
+        confirmatoryTestRequired: Boolean
+    ) {
         val ctaToken = testLab.generateCtaTokenFor(
             testResult = Positive,
             testEndDate = TestEndDate.of(2020, 11, 19),
@@ -329,10 +344,15 @@ class VirologyV2SmokeTest {
             testKit = RAPID_SELF_REPORTED
         )
 
-        val mobileApp = MobileApp(client, config, appVersion = MobileAppVersion.Version(4, 3))
+        val appVersion = MobileAppVersion.Version(majorAppVersion, minorAppVersion)
+        val mobileApp = MobileApp(client, config, appVersion = appVersion)
         val exchangeResponse = mobileApp.exchange(ctaToken, V2, England)
 
         expectThat(exchangeResponse).isA<CtaExchangeResult.AvailableV2>()
+            .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
+                requiresConfirmatoryTest.isEqualTo(confirmatoryTestRequired)
+                shouldOfferFollowUpTest.isFalse()
+            }
     }
 
     @Test
@@ -353,6 +373,7 @@ class VirologyV2SmokeTest {
             .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
                 confirmatoryDayLimit.isNull()
                 requiresConfirmatoryTest.isFalse()
+                shouldOfferFollowUpTest.isFalse()
             }
     }
 
@@ -374,6 +395,7 @@ class VirologyV2SmokeTest {
             .get(CtaExchangeResult.AvailableV2::ctaExchangeResponse).and {
                 confirmatoryDayLimit.isNull()
                 requiresConfirmatoryTest.isFalse()
+                shouldOfferFollowUpTest.isFalse()
             }
     }
 
@@ -391,7 +413,9 @@ class VirologyV2SmokeTest {
         )
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Eng)
 
-        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
+        expectThat(tokenCheckResponse)
+            .get(VirologyTokenStatusResponse::tokenStatus)
+            .isEqualTo("consumable")
     }
 
     @ParameterizedTest
@@ -408,7 +432,9 @@ class VirologyV2SmokeTest {
         )
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Wls)
 
-        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("consumable")
+        expectThat(tokenCheckResponse)
+            .get(VirologyTokenStatusResponse::tokenStatus)
+            .isEqualTo("consumable")
     }
 
     @ParameterizedTest
@@ -424,7 +450,9 @@ class VirologyV2SmokeTest {
         mobileApp.exchange(ctaToken, V2, England)
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Eng)
 
-        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
+        expectThat(tokenCheckResponse)
+            .get(VirologyTokenStatusResponse::tokenStatus)
+            .isEqualTo("other")
     }
 
     @ParameterizedTest
@@ -440,6 +468,8 @@ class VirologyV2SmokeTest {
         mobileApp.exchange(ctaToken, V2, Wales)
         val tokenCheckResponse = testLab.checkToken(ctaToken, VirologyTokenExchangeSource.Wls)
 
-        expectThat(tokenCheckResponse.tokenStatus).isEqualTo("other")
+        expectThat(tokenCheckResponse)
+            .get(VirologyTokenStatusResponse::tokenStatus)
+            .isEqualTo("other")
     }
 }

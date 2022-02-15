@@ -33,6 +33,11 @@ task testSanity(type: Test) {
 }
 
 dependencies {
+    testImplementation("com.amazonaws:aws-java-sdk-athena:1.12.150")
+    testImplementation("com.amazonaws:aws-java-sdk-s3:1.12.150")
+    testImplementation("org.apache.commons:commons-csv:1.9.0")
+    testImplementation("io.strikt:strikt-jvm:0.31.0")
+
     testImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlin_version}"
 
     testImplementation platform("org.http4k:http4k-bom:${http4k_version}")
@@ -51,5 +56,4 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.junit.jupiter:junit-jupiter-params"
-
 }

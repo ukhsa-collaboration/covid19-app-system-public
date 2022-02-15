@@ -229,13 +229,14 @@ class VirologyService(
                 else -> {
                     persistence.updateOnCtaExchange(testOrder, testState, DEFAULT_TTL(clock))
                     val response = CtaExchangeResponseV2(
-                        testOrder.diagnosisKeySubmissionToken,
-                        testState.testResult,
-                        testState.testEndDate,
-                        testState.testKit,
-                        policyConfig.isDiagnosisKeysSubmissionSupported(virologyCriteria),
-                        policyConfig.isConfirmatoryTestRequired(virologyCriteria, appVersion),
-                        policyConfig.confirmatoryDayLimit(virologyCriteria, appVersion)
+                        diagnosisKeySubmissionToken = testOrder.diagnosisKeySubmissionToken,
+                        testResult = testState.testResult,
+                        testEndDate = testState.testEndDate,
+                        testKit = testState.testKit,
+                        diagnosisKeySubmissionSupported = policyConfig.isDiagnosisKeysSubmissionSupported(virologyCriteria),
+                        requiresConfirmatoryTest = policyConfig.isConfirmatoryTestRequired(virologyCriteria, appVersion),
+                        confirmatoryDayLimit = policyConfig.confirmatoryDayLimit(virologyCriteria, appVersion),
+                        shouldOfferFollowUpTest = policyConfig.shouldOfferFollowUpTest(virologyCriteria, appVersion)
                     )
 
                     if (testOrder.downloadCounter == 0 && testState.isPositive()) {

@@ -5,6 +5,7 @@ import assertions.CtaExchangeAssertionsV1.testKit
 import assertions.CtaExchangeAssertionsV1.testResult
 import assertions.CtaExchangeAssertionsV2.diagnosisKeySubmissionSupported
 import assertions.CtaExchangeAssertionsV2.requiresConfirmatoryTest
+import assertions.CtaExchangeAssertionsV2.shouldOfferFollowUpTest
 import assertions.CtaExchangeAssertionsV2.testEndDate
 import assertions.CtaExchangeAssertionsV2.testKit
 import assertions.CtaExchangeAssertionsV2.testResult
@@ -13,6 +14,7 @@ import assertions.VirologyAssertionsV1.testKit
 import assertions.VirologyAssertionsV1.testResult
 import assertions.VirologyAssertionsV2.diagnosisKeySubmissionSupported
 import assertions.VirologyAssertionsV2.requiresConfirmatoryTest
+import assertions.VirologyAssertionsV2.shouldOfferFollowUpTest
 import assertions.VirologyAssertionsV2.testEndDate
 import assertions.VirologyAssertionsV2.testKit
 import assertions.VirologyAssertionsV2.testResult
@@ -74,6 +76,7 @@ class VirologyMixSmokeTest {
                 testEndDate.isEqualTo(TestEndDate.of(2020, 4, 23))
                 diagnosisKeySubmissionSupported.isTrue()
                 requiresConfirmatoryTest.isFalse()
+                shouldOfferFollowUpTest.isFalse()
             }
     }
 
@@ -146,6 +149,7 @@ class VirologyMixSmokeTest {
                 testKit.isEqualTo(TestKit.LAB_RESULT)
                 diagnosisKeySubmissionSupported.isTrue()
                 requiresConfirmatoryTest.isFalse()
+                shouldOfferFollowUpTest.isFalse()
             }
     }
 

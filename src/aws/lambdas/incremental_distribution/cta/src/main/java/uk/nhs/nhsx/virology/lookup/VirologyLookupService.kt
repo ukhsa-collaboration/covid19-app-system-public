@@ -66,12 +66,13 @@ class VirologyLookupService(
                     markTestDataForDeletion(testState, DEFAULT_TTL(clock))
                     val response = with(testState) {
                         VirologyLookupResponseV2(
-                            testEndDate,
-                            testResult,
-                            testKit,
-                            policyConfig.isDiagnosisKeysSubmissionSupported(virologyCriteria),
-                            policyConfig.isConfirmatoryTestRequired(virologyCriteria, mobileAppVersion),
-                            policyConfig.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)
+                            testEndDate = testEndDate,
+                            testResult = testResult,
+                            testKit = testKit,
+                            diagnosisKeySubmissionSupported = policyConfig.isDiagnosisKeysSubmissionSupported(virologyCriteria),
+                            requiresConfirmatoryTest = policyConfig.isConfirmatoryTestRequired(virologyCriteria, mobileAppVersion),
+                            confirmatoryDayLimit = policyConfig.confirmatoryDayLimit(virologyCriteria, mobileAppVersion),
+                            shouldOfferFollowUpTest = policyConfig.shouldOfferFollowUpTest(virologyCriteria, mobileAppVersion)
                         )
                     }
                     AvailableV2(response)

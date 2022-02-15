@@ -98,11 +98,19 @@ empty
     "testKit": "LAB_RESULT"|"RAPID_RESULT"|"RAPID_SELF_REPORTED",
     "diagnosisKeySubmissionSupported": true|false,
     "requiresConfirmatoryTest": true|false,
-    "confirmatoryDayLimit": null|-1|0|>=1
+    "confirmatoryDayLimit": null|-1|0|>=1,
+    "shouldOfferFollowUpTest": true|false
 }
 ```
 - `requiresConfirmatoryTest` indicates whether the user should be taken through the confirmatory test journey or not.
-- `confirmatoryDayLimit` the value can be null (it does not apply to the current journey), a number equal to -1 (no window), 0 (window is 0 days), or >=1 (non-zero day window). Note: confirmatoryDayLimit value must be null if requiresConfirmatoryTest is false.
+- `confirmatoryDayLimit` the value can be:
+  - `null`: it does not apply to the current journey
+  - `-1`: no window
+  - `0`: window is 0 days
+  - `>=1`: non-zero day window
+  - **Note**: `confirmatoryDayLimit` value must be `null` if `requiresConfirmatoryTest` is equal to `false`
+- `shouldOfferFollowUpTest` indicates whether the user should be offered a follow-up test
+  - **Note:**: `requiresConfirmatoryTest` value can not be `false` when `shouldOfferFollowUpTest` is equal to `true`
 
 ### HTTP Response Codes
 

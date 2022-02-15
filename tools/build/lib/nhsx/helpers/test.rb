@@ -33,7 +33,7 @@ module NHSx
       test_config = generate_analytics_test_config(target_environment, account_name, system_config)
       java_project_path = File.join(system_config.base, "test/analytics-sanitybot")
       gradlew = File.join(java_project_path, "gradlew")
-      cmdline = "SANITY_TEST_CONFIG=#{test_config} #{gradlew} --console plain -p #{java_project_path} #{test_task}"
+      cmdline = "ACCOUNT=#{account_name} TARGET_WORKSPACE=#{target_environment} SANITY_TEST_CONFIG=#{test_config} #{gradlew} --console plain -p #{java_project_path} #{test_task}"
       run_tee("Runs JVM #{test_task} tests", cmdline, system_config)
     end
 

@@ -84,6 +84,8 @@ public object Libs {
 
     public const val javafaker: String = "com.github.javafaker:javafaker:_"
 
+    public const val gradle_license_report: String = "com.github.jk1:gradle-license-report:_"
+
     public const val wiremock_jre8: String = "com.github.tomakehurst:wiremock-jre8:_"
 
     public const val protobuf_bom: String = "com.google.protobuf:protobuf-bom:_"
@@ -153,13 +155,19 @@ public object Libs {
 
     public const val kotlin_stdlib_jdk8: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    public const val junit_jupiter: String = "org.junit.jupiter:junit-jupiter"
+    public const val org_junit_jupiter_junit_jupiter: String = "org.junit.jupiter:junit-jupiter"
 
     public const val junit_jupiter_params: String = "org.junit.jupiter:junit-jupiter-params"
 
     public const val junit_bom: String = "org.junit:junit-bom:_"
 
     public const val jsonassert: String = "org.skyscreamer:jsonassert:_"
+
+    public const val org_testcontainers_junit_jupiter: String = "org.testcontainers:junit-jupiter"
+
+    public const val localstack: String = "org.testcontainers:localstack"
+
+    public const val testcontainers_bom: String = "org.testcontainers:testcontainers-bom:_"
 
     public const val athena: String = "software.amazon.awssdk:athena"
 

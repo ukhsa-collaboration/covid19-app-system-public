@@ -2,22 +2,25 @@ package uk.nhs.nhsx.virology.policy
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.MethodSource
 import strikt.api.expectThat
-import strikt.assertions.isEqualTo
 import strikt.assertions.isFalse
 import strikt.assertions.isNull
 import strikt.assertions.isTrue
 import uk.nhs.nhsx.core.headers.MobileAppVersion
+import uk.nhs.nhsx.domain.Country
 import uk.nhs.nhsx.domain.Country.Companion.England
 import uk.nhs.nhsx.domain.Country.Companion.Wales
+import uk.nhs.nhsx.domain.TestJourney
 import uk.nhs.nhsx.domain.TestJourney.CtaExchange
 import uk.nhs.nhsx.domain.TestJourney.Lookup
 import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
 import uk.nhs.nhsx.domain.TestKit.RAPID_RESULT
 import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.domain.TestResult
 import uk.nhs.nhsx.domain.TestResult.Negative
 import uk.nhs.nhsx.domain.TestResult.Positive
 import uk.nhs.nhsx.domain.TestResult.Void
@@ -79,6 +82,24 @@ class VirologyPolicyConfigTest {
     fun `does not block v2 for new app versions and criteria does not require confirmatory test`(criteria: VirologyCriteria) {
         val version = MobileAppVersion.Version(4, 4)
         expectThat(config.shouldBlockV2TestResultQueries(criteria, version)).isFalse()
+    }
+
+    @ParameterizedTest
+    @MethodSource("requiresConfirmatoryTestForCertainCases")
+    fun `confirmatory test is required for RAPID_RESULT, RAPID_SELF_REPORTED test kit on specific mobile versions`(
+        criteria: VirologyCriteria,
+        version: MobileAppVersion
+    ) {
+        expectThat(config.isConfirmatoryTestRequired(criteria, version)).isTrue()
+    }
+
+    @ParameterizedTest
+    @MethodSource("doesNotRequireConfirmatoryTestForCertainCases")
+    fun `confirmatory test is not required for RAPID_RESULT, RAPID_SELF_REPORTED test kit on specific mobile versions`(
+        criteria: VirologyCriteria,
+        version: MobileAppVersion
+    ) {
+        expectThat(config.isConfirmatoryTestRequired(criteria, version)).isFalse()
     }
 
     @Test
@@ -172,7 +193,30 @@ class VirologyPolicyConfigTest {
         expectThat(config.confirmatoryDayLimit(virologyCriteria, mobileAppVersion)).isNull()
     }
 
+    @ParameterizedTest
+    @MethodSource("shouldNotOfferFollowUpTest")
+    fun `should offer follow up test`(
+        virologyCriteria: VirologyCriteria
+    ) {
+        expectThat(config.shouldOfferFollowUpTest(virologyCriteria, MobileAppVersion.Version(4, 25))).isFalse()
+    }
+
     companion object {
+        @JvmStatic
+        fun shouldNotOfferFollowUpTest() = cartesianProduct(
+            TestJourney.values().toSet(),
+            setOf(England, Wales),
+            TestKit.values().toSet(),
+            TestResult.values().toSet()
+        ).map { (a, b, c, d) ->
+            VirologyCriteria(
+                testJourney = a as TestJourney,
+                country = b as Country,
+                testKit = c as TestKit,
+                testResult = d as TestResult
+            )
+        }
+
         @JvmStatic
         fun doesNotRequireConfirmatoryTest() = setOf(
             VirologyCriteria(Lookup, England, LAB_RESULT, Positive),
@@ -214,13 +258,36 @@ class VirologyPolicyConfigTest {
             VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Void),
         )
 
-
-
-
+        @JvmStatic
+        fun requiresConfirmatoryTestForCertainCases() = setOf(
+            Arguments.of(
+                VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
+                MobileAppVersion.Version(4, 26)
+            ),
+            Arguments.of(
+                VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive),
+                MobileAppVersion.Version(4, 26)
+            ),
+        )
 
         @JvmStatic
         fun doesNotRequireConfirmatoryTestForCertainCases() = setOf(
-            VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive),
+            Arguments.of(
+                VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive),
+                MobileAppVersion.Version(4, 25)
+            ),
+            Arguments.of(
+                VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive),
+                MobileAppVersion.Version(4, 25)
+            ),
+            Arguments.of(
+                VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Positive),
+                MobileAppVersion.Version(4, 26)
+            ),
+            Arguments.of(
+                VirologyCriteria(CtaExchange, Wales, RAPID_SELF_REPORTED, Positive),
+                MobileAppVersion.Version(4, 26)
+            ),
         )
 
         @JvmStatic
@@ -248,5 +315,13 @@ class VirologyPolicyConfigTest {
             VirologyCriteria(CtaExchange, Wales, RAPID_RESULT, Void),
             VirologyCriteria(CtaExchange, Wales, LAB_RESULT, Void)
         )
+
+        private fun cartesianProduct(
+            a: Set<*>,
+            b: Set<*>,
+            vararg sets: Set<*>
+        ): Set<List<*>> = (setOf(a, b).plus(sets))
+            .fold(listOf(listOf<Any?>())) { acc, set -> acc.flatMap { list -> set.map { element -> list + element } } }
+            .toSet()
     }
 }

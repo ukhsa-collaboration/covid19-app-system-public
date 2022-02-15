@@ -1,6 +1,7 @@
 package assertions
 
 import assertions.DomainAssertions.isValid
+import assertions.VirologyAssertionsV2.shouldOfferFollowUpTest
 import batchZipCreation.Exposure.TemporaryExposureKey
 import batchZipCreation.Exposure.TemporaryExposureKeyExport
 import strikt.api.Assertion
@@ -34,6 +35,7 @@ object VirologyAssertionsV2 {
     val Assertion.Builder<VirologyLookupResponseV2>.diagnosisKeySubmissionSupported get() = get(VirologyLookupResponseV2::diagnosisKeySubmissionSupported)
     val Assertion.Builder<VirologyLookupResponseV2>.requiresConfirmatoryTest get() = get(VirologyLookupResponseV2::requiresConfirmatoryTest)
     val Assertion.Builder<VirologyLookupResponseV2>.confirmatoryDayLimit get() = get(VirologyLookupResponseV2::confirmatoryDayLimit)
+    val Assertion.Builder<VirologyLookupResponseV2>.shouldOfferFollowUpTest get() = get(VirologyLookupResponseV2::shouldOfferFollowUpTest)
 }
 
 object CtaExchangeAssertionsV1 {
@@ -49,6 +51,7 @@ object CtaExchangeAssertionsV2 {
     val Assertion.Builder<CtaExchangeResponseV2>.diagnosisKeySubmissionSupported get() = get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported)
     val Assertion.Builder<CtaExchangeResponseV2>.requiresConfirmatoryTest get() = get(CtaExchangeResponseV2::requiresConfirmatoryTest)
     val Assertion.Builder<CtaExchangeResponseV2>.confirmatoryDayLimit get() = get(CtaExchangeResponseV2::confirmatoryDayLimit)
+    val Assertion.Builder<CtaExchangeResponseV2>.shouldOfferFollowUpTest get() = get(CtaExchangeResponseV2::shouldOfferFollowUpTest)
 }
 
 object CircuitBreakersAssertions {

@@ -467,59 +467,63 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
     fun `transaction fails when persisting test result that is already available`() {
         persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
 
-        val positiveTestResult = testOrder.positiveTestResult()
-        val positiveResult = VirologyResultRequestV2(
-            testOrder.ctaToken,
-            positiveTestResult.testEndDate,
-            positiveTestResult.testResult,
-            positiveTestResult.testKit
-        )
+        with(testOrder.positiveTestResult()) {
+            persistence.persistTestResultWithKeySubmission(
+                testResult = VirologyResultRequestV2(
+                    ctaToken = testOrder.ctaToken,
+                    testEndDate = testEndDate,
+                    testResult = testResult,
+                    testKit = testKit
+                ),
+                expireAt = fourWeeksTtl
+            )
 
-        persistence.persistTestResultWithKeySubmission(
-            positiveResult,
-            fourWeeksTtl
-        )
+            expectThat(testOrder)
+                .testOrderIsPresent()
+                .testResultIsPresent(this)
+        }
 
-        val negativeTestResult = testOrder.negativeTestResult()
-        val negativeResult = VirologyResultRequestV2(
-            testOrder.ctaToken,
-            negativeTestResult.testEndDate,
-            negativeTestResult.testResult,
-            negativeTestResult.testKit
-        )
-        val result = persistence.persistTestResultWithoutKeySubmission(
-            negativeResult
-        )
+
+        val result = with(testOrder.negativeTestResult()) {
+            persistence.persistTestResultWithoutKeySubmission(
+                testResult = VirologyResultRequestV2(
+                    ctaToken = testOrder.ctaToken,
+                    testEndDate = testEndDate,
+                    testResult = testResult,
+                    testKit = testKit
+                )
+            )
+
+        }
 
         expectThat(result).isA<TransactionFailed>()
     }
 
     @Test
     fun `order not found when persisting a result for a order that does not exist`() {
-        val positiveTestResult = testOrder.positiveTestResult()
-        val positiveResult = VirologyResultRequestV2(
-            testOrder.ctaToken,
-            positiveTestResult.testEndDate,
-            positiveTestResult.testResult,
-            positiveTestResult.testKit
-        )
+        with(testOrder.positiveTestResult()) {
+            persistence.persistTestResultWithKeySubmission(
+                testResult = VirologyResultRequestV2(
+                    ctaToken = testOrder.ctaToken,
+                    testEndDate = testEndDate,
+                    testResult = testResult,
+                    testKit = testKit
+                ),
+                expireAt = fourWeeksTtl
+            )
+        }
 
-        persistence.persistTestResultWithKeySubmission(
-            positiveResult,
-            fourWeeksTtl
-        )
+        val result = with(testOrder.negativeTestResult()) {
+            persistence.persistTestResultWithoutKeySubmission(
+                testResult = VirologyResultRequestV2(
+                    ctaToken = testOrder.ctaToken,
+                    testEndDate = testEndDate,
+                    testResult = testResult,
+                    testKit = testKit
+                )
+            )
 
-        val negativeTestResult = testOrder.negativeTestResult()
-        val negativeResult = VirologyResultRequestV2(
-            testOrder.ctaToken,
-            negativeTestResult.testEndDate,
-            negativeTestResult.testResult,
-            negativeTestResult.testKit
-        )
-
-        val result = persistence.persistTestResultWithoutKeySubmission(
-            negativeResult
-        )
+        }
 
         expectThat(result).isA<OrderNotFound>()
         expectThat(events).contains(VirologyOrderNotFound::class)

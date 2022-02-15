@@ -37,7 +37,6 @@ import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.testhelper.assertions.contains
 import uk.nhs.nhsx.testhelper.data.TestData
 import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.DownloadCountExceeded
-import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.PolicyRejectionV2
 import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.TestOrderNotFound
 import uk.nhs.nhsx.virology.CtaExchangeRejectionEvent.TestResultNotFound
 import uk.nhs.nhsx.virology.VirologyUploadHandler.VirologyTokenExchangeSource.Eng
@@ -141,6 +140,7 @@ class VirologyServiceV2Test {
                 get(CtaExchangeResponseV2::testKit).isEqualTo(LAB_RESULT)
                 get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported).isTrue()
                 get(CtaExchangeResponseV2::requiresConfirmatoryTest).isFalse()
+                get(CtaExchangeResponseV2::shouldOfferFollowUpTest).isFalse()
             }
 
         verifySequence {
@@ -180,6 +180,7 @@ class VirologyServiceV2Test {
             .get(AvailableV2::ctaExchangeResponse).and {
                 get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported).isFalse()
                 get(CtaExchangeResponseV2::requiresConfirmatoryTest).isFalse()
+                get(CtaExchangeResponseV2::shouldOfferFollowUpTest).isFalse()
             }
 
         expectThat(events).contains(CtaExchangeCompleted::class)
@@ -213,6 +214,7 @@ class VirologyServiceV2Test {
             .get(AvailableV2::ctaExchangeResponse).and {
                 get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported).isFalse()
                 get(CtaExchangeResponseV2::requiresConfirmatoryTest).isFalse()
+                get(CtaExchangeResponseV2::shouldOfferFollowUpTest).isFalse()
             }
 
         expectThat(events).contains(CtaExchangeCompleted::class)
@@ -247,13 +249,15 @@ class VirologyServiceV2Test {
             .isA<AvailableV2>()
             .get(AvailableV2::ctaExchangeResponse).and {
                 get(CtaExchangeResponseV2::diagnosisKeySubmissionSupported).isEqualTo(expectedFlag)
+                get(CtaExchangeResponseV2::requiresConfirmatoryTest).isFalse()
+                get(CtaExchangeResponseV2::shouldOfferFollowUpTest).isFalse()
             }
 
         expectThat(events).contains(SuccessfulCtaExchange::class, CtaExchangeCompleted::class)
     }
 
     @ParameterizedTest
-    @CsvSource("England,false", "Wales,false", "random,false")
+    @CsvSource("England,true", "Wales,false", "random,false")
     fun `exchanges cta token requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testOrder = TestOrder(
             ctaToken,
@@ -279,6 +283,7 @@ class VirologyServiceV2Test {
             .isA<AvailableV2>()
             .get(AvailableV2::ctaExchangeResponse).and {
                 get(CtaExchangeResponseV2::requiresConfirmatoryTest).isEqualTo(expectedFlag)
+                get(CtaExchangeResponseV2::shouldOfferFollowUpTest).isFalse()
             }
 
         expectThat(events).contains(SuccessfulCtaExchange::class, CtaExchangeCompleted::class)

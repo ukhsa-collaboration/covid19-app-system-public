@@ -104,7 +104,7 @@ module NHSx
         "testKit" => system_config.test_kit,
         "numberOfTokens" => system_config.number_of_tokens
       }
-      payload_json = "'#{JSON.dump(payload)}'"
+      payload_json = "#{JSON.dump(payload)}"
 
       # blocking invoke lambda
       output_log_file = NHSx::AWS::Commandlines.new_lambda_output_file(lambda_function, system_config)
