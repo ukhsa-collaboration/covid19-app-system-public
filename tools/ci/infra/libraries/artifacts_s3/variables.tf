@@ -7,3 +7,14 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "lifecycle_rules" {
+  description = "Lifecycle rules"
+  type = list(object({
+    id      = string,
+    prefix  = string,
+    enabled = bool,
+    days    = number
+  }))
+  default = []
+}

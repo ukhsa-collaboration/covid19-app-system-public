@@ -26,17 +26,23 @@ resource "aws_s3_bucket" "this" {
       }
     }
   }
+
   website {
     index_document = "index.html"
     error_document = "error.html"
   }
 
-  lifecycle_rule {
-    enabled = true
-    id      = "${var.name}-clean-up"
-    prefix  = "public/query-results/"
-    expiration {
-      days = 45
+  dynamic "lifecycle_rule" {
+    for_each = var.lifecycle_rules
+    content {
+      id                                     = lifecycle_rule.value.id
+      prefix                                 = lifecycle_rule.value.prefix
+      enabled                                = lifecycle_rule.value.enabled
+      abort_incomplete_multipart_upload_days = 1
+
+      expiration {
+        days = lifecycle_rule.value.days
+      }
     }
   }
 }

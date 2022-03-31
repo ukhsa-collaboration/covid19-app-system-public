@@ -2,28 +2,38 @@ package uk.nhs.nhsx.analyticslogs
 
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.SystemClock
+import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 
-
-data class CircuitBreakerStats(val startOfHour: String, val exposureNotificationCBCount: Int, val iosExposureNotificationCBCount: Int, val androidExposureNotificationCBCount: Int, val uniqueRequestIds: Int, val appVersion: String)
+data class CircuitBreakerStats(
+    val startOfHour: String,
+    val exposureNotificationCBCount: Int,
+    val iosExposureNotificationCBCount: Int,
+    val androidExposureNotificationCBCount: Int,
+    val uniqueRequestIds: Int,
+    val appVersion: String
+)
 
 class CircuitBreakerStatsConverter : Converter<CircuitBreakerStats>() {
-
-    override fun convert(map: Map<String, String>): CircuitBreakerStats {
-        return CircuitBreakerStats(
-            startOfHour = map["start_of_hour"] ?: error("missing start_of_hour field from cloudwatch log insights"),
-            exposureNotificationCBCount = map["exposure_notification_cb_count"]?.toInt() ?: 0,
-            iosExposureNotificationCBCount = map["iOS_exposure_notification_cb_count"]?.toInt() ?: 0,
-            androidExposureNotificationCBCount = map["android_exposure_notification_cb_count"]?.toInt() ?: 0,
-            uniqueRequestIds = map["unique_request_ids"]?.toInt() ?: 0,
-            appVersion = map["app_version"] ?: "UNKNOWN"
-        )
-    }
+    override fun convert(map: Map<String, String>) = CircuitBreakerStats(
+        startOfHour = map.getValue("start_of_hour"),
+        exposureNotificationCBCount = map.getOrDefault("exposure_notification_cb_count", "0").toInt(),
+        iosExposureNotificationCBCount = map.getOrDefault("iOS_exposure_notification_cb_count", "0").toInt(),
+        androidExposureNotificationCBCount = map.getOrDefault("android_exposure_notification_cb_count", "0").toInt(),
+        uniqueRequestIds = map.getOrDefault("unique_request_ids", "0").toInt(),
+        appVersion = map.getOrDefault("app_version", "UNKNOWN")
+    )
 }
 
 class CircuitBreakerAnalyticsHandler : LogInsightsAnalyticsHandler(
-    logAnalyticsService(Environment.fromSystem(), SystemClock.CLOCK, PrintingJsonEvents(SystemClock.CLOCK), circuitBreakerQueryString, CircuitBreakerStatsConverter()),
-    PrintingJsonEvents(SystemClock.CLOCK)
+    service = logAnalyticsService(
+        environment = Environment.fromSystem(),
+        clock = CLOCK,
+        events = PrintingJsonEvents(CLOCK),
+        queryString = circuitBreakerQueryString,
+        converter = CircuitBreakerStatsConverter()
+    ),
+    events = PrintingJsonEvents(CLOCK)
 )
 
 private const val circuitBreakerQueryString = """fields @timestamp, @message

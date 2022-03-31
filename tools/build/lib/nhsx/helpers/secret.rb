@@ -33,6 +33,7 @@ module NHSx
           puts("Failed to create secret: #{name}\nAttempting to update it")
           cmdline = "#{put_secret} #{name} --secret-binary '#{secret}' --region #{aws_region}"
           run_quiet('Update aws secret', cmdline, system_config)
+          puts "Secret updated successfully"
           puts "\n"
         else
           raise failure # re-throw - nothing we can do
@@ -51,6 +52,7 @@ module NHSx
           puts("Failed to create secret: #{name}\nAttempting to update it")
           cmdline = "#{put_secret} #{name} --secret-string '#{secret}' --region #{aws_region}"
           run_quiet('Update aws secret', cmdline, system_config)
+          puts "Secret updated successfully"
           puts "\n"
         else
           raise failure # re-throw - nothing we can do
@@ -217,8 +219,8 @@ module NHSx
       certificate_key_path = aae_config['certificate_key_path']
       public_key_name = aae_config['public_key_name']
       public_key_path = aae_config['public_key_path']
-      password = aae_config['password']
       password_name = aae_config['password_name']
+      password = read_file_content_in(aae_config['password_path'])
 
       puts "Password Value: #{password}"
 

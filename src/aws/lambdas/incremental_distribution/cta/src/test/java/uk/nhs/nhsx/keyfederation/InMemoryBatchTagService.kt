@@ -1,10 +1,11 @@
 package uk.nhs.nhsx.keyfederation
 
 import uk.nhs.nhsx.domain.BatchTag
-import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult
+import uk.nhs.nhsx.keyfederation.domain.FederationBatch
+import uk.nhs.nhsx.keyfederation.storage.BatchTagService
+import uk.nhs.nhsx.keyfederation.storage.UploadKeysResult
 import java.time.Instant
 import java.time.LocalDate
-import java.util.*
 
 class InMemoryBatchTagService(
     var batchTag: BatchTag? = null,

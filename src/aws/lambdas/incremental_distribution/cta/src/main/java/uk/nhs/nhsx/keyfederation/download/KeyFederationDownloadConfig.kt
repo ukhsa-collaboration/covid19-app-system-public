@@ -39,18 +39,18 @@ class KeyFederationDownloadConfig(
         private val VALID_DOWNLOAD_ORIGINS = EnvironmentKey.strings("VALID_DOWNLOAD_ORIGINS")
 
         fun fromEnvironment(e: Environment) = KeyFederationDownloadConfig(
-            e.access.required(MAX_SUBSEQUENT_BATCH_DOWNLOAD_COUNT),
-            e.access.required(INITIAL_DOWNLOAD_HISTORY_DAYS),
-            WorkspaceFeatureFlag(e.access.required(WORKSPACE), e.access.required(DOWNLOAD_ENABLED_WORKSPACES)),
-            e.access.required(DOWNLOAD_RISK_LEVEL_DEFAULT_ENABLED),
-            e.access.required(DOWNLOAD_RISK_LEVEL_DEFAULT),
-            e.access.required(SUBMISSION_BUCKET_NAME),
-            e.access.required(INTEROP_BASE_URL),
-            e.access.required(INTEROP_AUTH_TOKEN_SECRET_NAME),
-            e.access.required(StandardSigning.SSM_KEY_ID_PARAMETER_NAME),
-            e.access.required(FEDERATED_KEY_DOWNLOAD_PREFIX),
-            e.access.required(PROCESSOR_STATE_TABLE),
-            e.access.required(VALID_DOWNLOAD_ORIGINS),
+            maxSubsequentBatchDownloadCount = e.access.required(MAX_SUBSEQUENT_BATCH_DOWNLOAD_COUNT),
+            initialDownloadHistoryDays = e.access.required(INITIAL_DOWNLOAD_HISTORY_DAYS),
+            downloadFeatureFlag = WorkspaceFeatureFlag(e.access.required(WORKSPACE), e.access.required(DOWNLOAD_ENABLED_WORKSPACES)),
+            downloadRiskLevelDefaultEnabled = e.access.required(DOWNLOAD_RISK_LEVEL_DEFAULT_ENABLED),
+            downloadRiskLevelDefault = e.access.required(DOWNLOAD_RISK_LEVEL_DEFAULT),
+            submissionBucketName = e.access.required(SUBMISSION_BUCKET_NAME),
+            interopBaseUrl = e.access.required(INTEROP_BASE_URL),
+            interopAuthTokenSecretName = e.access.required(INTEROP_AUTH_TOKEN_SECRET_NAME),
+            signingKeyParameterName = e.access.required(StandardSigning.SSM_KEY_ID_PARAMETER_NAME),
+            federatedKeyDownloadPrefix = e.access.required(FEDERATED_KEY_DOWNLOAD_PREFIX),
+            stateTableName = e.access.required(PROCESSOR_STATE_TABLE),
+            validOrigins = e.access.required(VALID_DOWNLOAD_ORIGINS),
         )
     }
 }

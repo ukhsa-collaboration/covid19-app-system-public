@@ -8,14 +8,11 @@ public class AnalyticsMetrics {
     public Long cumulativeCellularUploadBytes;
     public Long cumulativeWifiDownloadBytes;
     public Long cumulativeWifiUploadBytes;
-    public int checkedIn;
-    public int canceledCheckIn;
     public int receivedVoidTestResult;
     public int isIsolatingBackgroundTick;
     public int hasHadRiskyContactBackgroundTick;
     public int receivedPositiveTestResult;
     public int receivedNegativeTestResult;
-    public int hasSelfDiagnosedPositiveBackgroundTick;
     public int completedQuestionnaireAndStartedIsolation;
     public int encounterDetectionPausedBackgroundTick;
     public int completedQuestionnaireButDidNotStartIsolation;
@@ -32,7 +29,6 @@ public class AnalyticsMetrics {
     public Integer hasTestedPositiveBackgroundTick;
     public Integer isIsolatingForSelfDiagnosedBackgroundTick;
     public Integer isIsolatingForTestedPositiveBackgroundTick;
-    public Integer isIsolatingForHadRiskyContactBackgroundTick;
     public Integer receivedRiskyContactNotification;
     public Integer startedIsolation;
     public Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
@@ -50,7 +46,6 @@ public class AnalyticsMetrics {
     public Integer isIsolatingForTestedLFDPositiveBackgroundTick;
     public Integer totalExposureWindowsNotConsideredRisky;
     public Integer totalExposureWindowsConsideredRisky;
-    public Integer acknowledgedStartOfIsolationDueToRiskyContact;
     public Integer hasRiskyContactNotificationsEnabledBackgroundTick;
     public Integer totalRiskyContactReminderNotifications;
     public Integer receivedUnconfirmedPositiveTestResult;
@@ -68,9 +63,6 @@ public class AnalyticsMetrics {
     public Integer receivedVoidSelfRapidTestResultEnteredManually;
     public Integer isIsolatingForTestedSelfRapidPositiveBackgroundTick;
     public Integer hasTestedSelfRapidPositiveBackgroundTick;
-    public Integer receivedRiskyVenueM1Warning;
-    public Integer receivedRiskyVenueM2Warning;
-    public Integer hasReceivedRiskyVenueM2WarningBackgroundTick;
     public Integer totalAlarmManagerBackgroundTasks;
     public Integer missingPacketsLast7Days;
     public Integer consentedToShareVenueHistory;
@@ -90,18 +82,10 @@ public class AnalyticsMetrics {
     public Integer positiveLabResultAfterPositiveSelfRapidTest;
     public Integer negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit;
     public Integer negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit;
-    public Integer didAccessRiskyVenueM2Notification;
-    public Integer selectedTakeTestM2Journey;
-    public Integer selectedTakeTestLaterM2Journey;
-    public Integer selectedHasSymptomsM2Journey;
-    public Integer selectedHasNoSymptomsM2Journey;
-    public Integer selectedLFDTestOrderingM2Journey;
-    public Integer selectedHasLFDTestM2Journey;
     public Integer optedOutForContactIsolation;
     public Integer optedOutForContactIsolationBackgroundTick;
     public Integer appIsUsableBackgroundTick;
     public Integer appIsContactTraceableBackgroundTick;
-    public Integer didAccessSelfIsolationNoteLink;
     public Integer appIsUsableBluetoothOffBackgroundTick;
 
     public AnalyticsMetrics() {

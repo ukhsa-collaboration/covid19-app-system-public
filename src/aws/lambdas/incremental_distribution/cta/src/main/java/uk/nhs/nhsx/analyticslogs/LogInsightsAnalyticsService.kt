@@ -38,7 +38,6 @@ class LogInsightsAnalyticsService(
     private val bucketPrefix: String,
     private val queryPollingDuration: Duration = Duration.ofSeconds(1)
 ) {
-
     private enum class CloudWatchQueryStatus { Cancelled, Complete, Failed, Running, Scheduled, Timeout, Unknown }
 
     fun generateStatisticsAndUploadToS3(currentTime: Instant) {

@@ -3,6 +3,7 @@ package uk.nhs.nhsx.analyticssubmission
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
+import uk.nhs.nhsx.analyticssubmission.AnalyticsMapFlattener.flattenRecursively
 
 class AnalyticsMapFlattenerTest {
 
@@ -25,7 +26,7 @@ class AnalyticsMapFlattenerTest {
                 )
             )
         )
-        val result = AnalyticsMapFlattener.recFlatten(input)
+        val result = flattenRecursively(input)
         expectThat(result).isEqualTo(
             mapOf(
                 "name" to "John",
@@ -45,7 +46,7 @@ class AnalyticsMapFlattenerTest {
             "name" to "John",
             "age" to null
         )
-        val result = AnalyticsMapFlattener.recFlatten(input)
+        val result = flattenRecursively(input)
         expectThat(result).isEqualTo(
             mapOf(
                 "name" to "John",
@@ -57,7 +58,7 @@ class AnalyticsMapFlattenerTest {
     @Test
     fun `empty when map is already empty`() {
         val input = mapOf<String, Any>()
-        val result = AnalyticsMapFlattener.recFlatten(input)
+        val result = flattenRecursively(input)
         expectThat(result).isEqualTo(mapOf())
     }
 
@@ -67,7 +68,7 @@ class AnalyticsMapFlattenerTest {
     @Test
     fun `handles different types as input`() {
         val person = Person("John", Address("street 123"))
-        val result = AnalyticsMapFlattener.recFlatten(person)
+        val result = flattenRecursively(person)
         expectThat(result).isEqualTo(
             mapOf(
                 "name" to "John",

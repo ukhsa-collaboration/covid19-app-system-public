@@ -1,26 +1,34 @@
 package uk.nhs.nhsx.analyticslogs
 
 import uk.nhs.nhsx.core.Environment
-import uk.nhs.nhsx.core.SystemClock
+import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 
-data class KeyFederationUploadStats(val startOfHour: String, val testType: Int, val numberOfKeysUploaded: Int)
+data class KeyFederationUploadStats(
+    val startOfHour: String,
+    val testType: Int,
+    val numberOfKeysUploaded: Int
+)
 
 class KeyFederationUploadStatsConverter : Converter<KeyFederationUploadStats>() {
-
-    override fun convert(map: Map<String, String>): KeyFederationUploadStats {
-        return KeyFederationUploadStats(
-            startOfHour = map["start_of_hour"] ?: error("missing start_of_hour field from cloudwatch log insights"),
-            testType = map["test_type"]?.toInt() ?: 0,
-            numberOfKeysUploaded = map["number_of_keys_uploaded"]?.toInt() ?: 0
-        )
-    }
+    override fun convert(map: Map<String, String>) = KeyFederationUploadStats(
+        startOfHour = map.getValue("start_of_hour"),
+        testType = map.getOrDefault("test_type", "0").toInt(),
+        numberOfKeysUploaded = map.getOrDefault("number_of_keys_uploaded", "0").toInt()
+    )
 }
 
 class KeyFederationUploadAnalyticsHandler : LogInsightsAnalyticsHandler(
-    logAnalyticsService(Environment.fromSystem(), SystemClock.CLOCK, PrintingJsonEvents(SystemClock.CLOCK), keyFederationUploadQueryString, KeyFederationUploadStatsConverter()),
-    PrintingJsonEvents(SystemClock.CLOCK)
+    service = logAnalyticsService(
+        environment = Environment.fromSystem(),
+        clock = CLOCK,
+        events = PrintingJsonEvents(CLOCK),
+        queryString = keyFederationUploadQueryString,
+        converter = KeyFederationUploadStatsConverter()
+    ),
+    events = PrintingJsonEvents(CLOCK)
 )
+
 private const val keyFederationUploadQueryString = """fields @timestamp, @message
 | filter @message like /^\{/
 | filter metadata.name = 'UploadedDiagnosisKeys'

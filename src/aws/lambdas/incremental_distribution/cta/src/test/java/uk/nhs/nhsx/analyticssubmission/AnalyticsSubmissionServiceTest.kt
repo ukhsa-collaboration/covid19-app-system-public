@@ -11,18 +11,24 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.contains
+import strikt.assertions.hasEntry
 import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetadata
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsWindow
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
+import uk.nhs.nhsx.analyticssubmission.policy.PolicyConfig
+import uk.nhs.nhsx.analyticssubmission.policy.TTSPDiscontinuationPolicy
+import uk.nhs.nhsx.analyticssubmission.policy.TTSPDiscontinuationPolicy.Companion.default
 import uk.nhs.nhsx.core.AppServicesJson.mapper
+import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Json.readJsonOrThrow
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.testhelper.assertions.containsExactly
 import uk.nhs.nhsx.testhelper.assertions.events
 import java.nio.charset.Charset
 import java.time.Instant
+import java.time.OffsetDateTime
 
 class AnalyticsSubmissionServiceTest {
 
@@ -144,27 +150,24 @@ class AnalyticsSubmissionServiceTest {
                 operatingSystemVersion = "iPhone OS 13.5.1 (17F80)",
                 latestApplicationVersion = "3.0",
                 localAuthority = null,
-                includesMultipleApplicationVersions = false,
                 cumulativeDownloadBytes = counter++.toInt(),
                 cumulativeUploadBytes = counter++.toInt(),
                 cumulativeCellularDownloadBytes = counter++.toInt(),
                 cumulativeCellularUploadBytes = counter++.toInt(),
                 cumulativeWifiDownloadBytes = counter++.toInt(),
                 cumulativeWifiUploadBytes = counter++.toInt(),
-                checkedIn = counter++.toInt(),
-                canceledCheckIn = counter++.toInt(),
                 receivedVoidTestResult = counter++.toInt(),
                 isIsolatingBackgroundTick = counter++.toInt(),
                 hasHadRiskyContactBackgroundTick = counter++.toInt(),
                 receivedPositiveTestResult = counter++.toInt(),
                 receivedNegativeTestResult = counter++.toInt(),
-                hasSelfDiagnosedPositiveBackgroundTick = counter++.toInt(),
                 completedQuestionnaireAndStartedIsolation = counter++.toInt(),
                 encounterDetectionPausedBackgroundTick = counter++.toInt(),
                 completedQuestionnaireButDidNotStartIsolation = counter++.toInt(),
                 totalBackgroundTasks = counter++.toInt(),
                 runningNormallyBackgroundTick = counter++.toInt(),
                 completedOnboarding = counter++.toInt(),
+                includesMultipleApplicationVersions = false,
                 receivedVoidTestResultEnteredManually = counter++.toInt(),
                 receivedPositiveTestResultEnteredManually = counter++.toInt(),
                 receivedNegativeTestResultEnteredManually = counter++.toInt(),
@@ -175,7 +178,6 @@ class AnalyticsSubmissionServiceTest {
                 hasTestedPositiveBackgroundTick = counter++.toInt(),
                 isIsolatingForSelfDiagnosedBackgroundTick = counter++.toInt(),
                 isIsolatingForTestedPositiveBackgroundTick = counter++.toInt(),
-                isIsolatingForHadRiskyContactBackgroundTick = counter++.toInt(),
                 receivedRiskyContactNotification = counter++.toInt(),
                 startedIsolation = counter++.toInt(),
                 receivedPositiveTestResultWhenIsolatingDueToRiskyContact = counter++.toInt(),
@@ -193,7 +195,6 @@ class AnalyticsSubmissionServiceTest {
                 isIsolatingForTestedLFDPositiveBackgroundTick = counter++.toInt(),
                 totalExposureWindowsNotConsideredRisky = counter++.toInt(),
                 totalExposureWindowsConsideredRisky = counter++.toInt(),
-                acknowledgedStartOfIsolationDueToRiskyContact = counter++.toInt(),
                 hasRiskyContactNotificationsEnabledBackgroundTick = counter++.toInt(),
                 totalRiskyContactReminderNotifications = counter++.toInt(),
                 receivedUnconfirmedPositiveTestResult = counter++.toInt(),
@@ -211,9 +212,6 @@ class AnalyticsSubmissionServiceTest {
                 receivedVoidSelfRapidTestResultEnteredManually = counter++.toInt(),
                 isIsolatingForTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
                 hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
-                receivedRiskyVenueM1Warning = counter++.toInt(),
-                receivedRiskyVenueM2Warning = counter++.toInt(),
-                hasReceivedRiskyVenueM2WarningBackgroundTick = counter++.toInt(),
                 totalAlarmManagerBackgroundTasks = counter++.toInt(),
                 missingPacketsLast7Days = counter++.toInt(),
                 consentedToShareVenueHistory = counter++.toInt(),
@@ -233,18 +231,10 @@ class AnalyticsSubmissionServiceTest {
                 positiveLabResultAfterPositiveSelfRapidTest = counter++.toInt(),
                 negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = counter++.toInt(),
                 negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = counter++.toInt(),
-                didAccessRiskyVenueM2Notification = counter++.toInt(),
-                selectedTakeTestM2Journey = counter++.toInt(),
-                selectedTakeTestLaterM2Journey = counter++.toInt(),
-                selectedHasSymptomsM2Journey = counter++.toInt(),
-                selectedHasNoSymptomsM2Journey = counter++.toInt(),
-                selectedLFDTestOrderingM2Journey = counter++.toInt(),
-                selectedHasLFDTestM2Journey = counter++.toInt(),
                 optedOutForContactIsolation = counter++.toInt(),
                 optedOutForContactIsolationBackgroundTick = counter++.toInt(),
                 appIsUsableBackgroundTick = counter++.toInt(),
                 appIsContactTraceableBackgroundTick = counter++.toInt(),
-                didAccessSelfIsolationNoteLink = counter++.toInt(),
                 appIsUsableBluetoothOffBackgroundTick = counter.toInt()
             )
         )
@@ -384,14 +374,15 @@ class AnalyticsSubmissionServiceTest {
 
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
 
+        val expected = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "NOT SET",
+            localAuthority = null,
+            includesMultipleApplicationVersions = false
+        )
         expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "NOT SET",
-                localAuthority = null,
-                includesMultipleApplicationVersions = false
-            )
+            expected
         )
     }
 
@@ -451,33 +442,71 @@ class AnalyticsSubmissionServiceTest {
         )
     }
 
-    private fun invokeAndCaptureFirehosePayload(clientPayload: ClientAnalyticsSubmissionPayload): Map<String, Any?> {
+    @Test
+    fun `scrubs TTSP data after the policy becomes effective`() {
+        val clientPayload = ClientAnalyticsSubmissionPayload(
+            analyticsWindow = AnalyticsWindow(eventStartDate, eventEndDate),
+            metadata = AnalyticsMetadata(
+                postalDistrict = "F4KEP0STC0DE",
+                deviceModel = "",
+                operatingSystemVersion = "",
+                latestApplicationVersion = "",
+                localAuthority = null
+            ),
+            metrics = AnalyticsMetrics().apply {
+                receivedActiveIpcToken = 1
+                haveActiveIpcTokenBackgroundTick = 2
+                selectedIsolationPaymentsButton = 3
+                launchedIsolationPaymentsApplication = 4
+            },
+            includesMultipleApplicationVersions = false
+        )
+
+        val now = { OffsetDateTime.parse("2022-04-07T00:00+01:00").toInstant() }
+
+        val exportedMap = invokeAndCaptureFirehosePayload(clientPayload, now)
+
+        expectThat(exportedMap).and {
+            hasEntry("receivedActiveIpcToken", null)
+            hasEntry("haveActiveIpcTokenBackgroundTick", null)
+            hasEntry("selectedIsolationPaymentsButton", null)
+            hasEntry("launchedIsolationPaymentsApplication", null)
+        }
+    }
+
+    private fun invokeAndCaptureFirehosePayload(
+        clientPayload: ClientAnalyticsSubmissionPayload,
+        now: Clock = clock
+    ): Map<String, Any?> {
         val slot = slot<PutRecordRequest>()
         every { kinesisFirehose.putRecord(capture(slot)) } answers { PutRecordResult() }
 
-        val service = AnalyticsSubmissionService(firehoseConfig(enabled = true), kinesisFirehose, events, clock)
-        service.accept(clientPayload)
+        AnalyticsSubmissionService(
+            config = firehoseConfig(enabled = true),
+            kinesisFirehose = kinesisFirehose,
+            events = events,
+            clock = now
+        ).accept(clientPayload)
 
         val exportedJson = String(slot.captured.record.data.array(), Charset.forName("UTF-8"))
         return mapper.readValue(exportedJson)
     }
 
-    private fun firehoseConfig(enabled: Boolean) =
-        AnalyticsConfig(
-            firehoseStreamName = "firehoseStreamName",
-            firehoseIngestEnabled = enabled
-        )
+    private fun firehoseConfig(enabled: Boolean) = AnalyticsConfig(
+        firehoseStreamName = "firehoseStreamName",
+        firehoseIngestEnabled = enabled,
+        policyConfig = PolicyConfig(listOf(TTSPDiscontinuationPolicy(default)))
+    )
 
     private fun clientPayload(
         startDate: String = eventStartDate.toString(),
         endDate: String = eventEndDate.toString(),
         localAuthority: String? = "E06000051"
-    ) =
-        readJsonOrThrow<ClientAnalyticsSubmissionPayload>(
-            analyticsSubmissionIos(
-                startDate = startDate,
-                endDate = endDate,
-                localAuthority = localAuthority
-            )
+    ) = readJsonOrThrow<ClientAnalyticsSubmissionPayload>(
+        analyticsSubmissionIos(
+            startDate = startDate,
+            endDate = endDate,
+            localAuthority = localAuthority
         )
+    )
 }

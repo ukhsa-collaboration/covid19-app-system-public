@@ -71,4 +71,4 @@ configuration information relating to Circuit Breaker.
 
 ### Interactions for Check-In and Notifications
 
-![System flow: check in](diagrams/img/system-flow_check-in-2020-09-14.png "Figure: Venue check in, matching at risk venues and alert user")
+![System flow: check in](diagrams/img/system-flow_qr-code-2022-03-22.png "Figure: Venue check in, matching at risk venues and alert user")

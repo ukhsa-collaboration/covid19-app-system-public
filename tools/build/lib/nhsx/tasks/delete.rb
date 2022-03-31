@@ -16,7 +16,7 @@ namespace :delete do
         task :"#{tgt_env}" => [:"login:#{account}"] do
           prefix = target_environment_name(tgt_env, account, $configuration)
           job_name = "#{prefix}-parquet-consolidation"
-          s3_bucket = "#{prefix}-temporary-analytics-consolidated-submission-parquet"
+          s3_bucket = "#{prefix}-temp-analytics-consolidated-submission-parquet"
 
           cmdline = "aws glue delete-job --job-name #{job_name}"
           run_command("Deleting glue job", cmdline, $configuration)

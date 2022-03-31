@@ -7,14 +7,18 @@ import java.net.URL
 import java.util.*
 
 interface AwsS3 {
-    fun upload(locator: Locator, contentType: ContentType, bytes: ByteArraySource, metaHeaders: List<MetaHeader>)
-    fun upload(locator: Locator, contentType: ContentType, bytes: ByteArraySource) {
-        upload(locator, contentType, bytes, listOf())
-    }
-
+    fun upload(
+        locator: Locator,
+        contentType: ContentType,
+        bytes: ByteArraySource,
+        metaHeaders: List<MetaHeader> = listOf()
+    )
     fun getObjectSummaries(bucketName: BucketName): List<S3ObjectSummary>
-    fun getObject(locator: Locator): Optional<S3Object>
+    fun getObject(locator: Locator): S3Object?
     fun deleteObject(locator: Locator)
     fun copyObject(from: Locator, to: Locator)
-    fun getSignedURL(locator: Locator, expiration: Date): Optional<URL>
+    fun getSignedURL(
+        locator: Locator,
+        expiration: Date
+    ): URL?
 }

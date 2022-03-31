@@ -17,6 +17,10 @@ import org.http4k.core.Status.Companion.OK
 import org.junit.jupiter.api.Test
 import strikt.api.expect
 import strikt.assertions.isNull
+import uk.nhs.nhsx.analyticssubmission.AnalyticsSubmissionQueuedHandler.AnalyticsSubmissionDelegate
+import uk.nhs.nhsx.analyticssubmission.policy.PolicyConfig
+import uk.nhs.nhsx.analyticssubmission.policy.TTSPDiscontinuationPolicy
+import uk.nhs.nhsx.analyticssubmission.policy.TTSPDiscontinuationPolicy.Companion.default
 import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.TestEnvironments.TEST
 import uk.nhs.nhsx.core.events.MobileAnalyticsSubmission
@@ -38,9 +42,13 @@ class AnalyticsSubmissionDelegateTest {
 
     private val events = RecordingEvents()
     private val kinesisFirehose = mockk<AmazonKinesisFirehose>()
-    private val config = AnalyticsConfig("firehoseStreamName", firehoseIngestEnabled = true)
+    private val config = AnalyticsConfig(
+        firehoseStreamName = "firehoseStreamName",
+        firehoseIngestEnabled = true,
+        policyConfig = PolicyConfig(listOf(TTSPDiscontinuationPolicy(default)))
+    )
     private val service = mockk<AnalyticsSubmissionService>()
-    private val handler = AnalyticsSubmissionQueuedHandler.AnalyticsSubmissionDelegate(
+    private val handler = AnalyticsSubmissionDelegate(
         environment = TEST.apply(
             mapOf(
                 "MAINTENANCE_MODE" to "false",

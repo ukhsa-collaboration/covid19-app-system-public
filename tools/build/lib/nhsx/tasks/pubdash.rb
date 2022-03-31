@@ -18,7 +18,7 @@ namespace :download do
         tgt_envs.each do |tgt_env|
           desc "Copy app store data from remote #{tgt_env} into local pubdash analytics dir"
           task :"#{tgt_env}" => [:"login:#{account}"] do
-            s3_object_location = "te-#{tgt_env}-analytics-app-store-qr-posters/app-store/"
+            s3_object_location = "#{tgt_env}-analytics-app-store-qr-posters/app-store/"
             NHSx::Pubdash::download_recursively($configuration.pubdash_app_store_dir, s3_object_location)
           end
         end
@@ -29,7 +29,7 @@ namespace :download do
         tgt_envs.each do |tgt_env|
           desc "Copy qr posters data from remote #{tgt_env} into local pubdash analytics dir"
           task :"#{tgt_env}" => [:"login:#{account}"] do
-            s3_object_location = "te-#{tgt_env}-analytics-app-store-qr-posters/qr-posters/"
+            s3_object_location = "#{tgt_env}-analytics-app-store-qr-posters/qr-posters/"
             NHSx::Pubdash::download_recursively($configuration.pubdash_qr_posters_dir, s3_object_location)
           end
         end
@@ -40,7 +40,7 @@ namespace :download do
         tgt_envs.each do |tgt_env|
           desc "Copy postcode lookup data from remote #{tgt_env} into local pubdash analytics dir"
           task :"#{tgt_env}" => [:"login:#{account}"] do
-            s3_object_location = "te-#{tgt_env}-analytics-postcode-demographic-geographic-lookup"
+            s3_object_location = "#{tgt_env}-analytics-postcode-demographic-geographic-lookup"
             NHSx::Pubdash::download_recursively($configuration.pubdash_postcode_lookup_dir, s3_object_location)
           end
         end

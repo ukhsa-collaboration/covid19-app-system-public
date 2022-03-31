@@ -43,20 +43,20 @@ class KeyFederationUploadConfig(
         private val LOAD_SUBMISSIONS_THREAD_POOL_SIZE = EnvironmentKey.integer("LOAD_SUBMISSIONS_THREAD_POOL_SIZE")
 
         fun fromEnvironment(e: Environment) = KeyFederationUploadConfig(
-            e.access.required(MAX_SUBSEQUENT_BATCH_UPLOAD_COUNT),
-            e.access.required(INITIAL_UPLOAD_HISTORY_DAYS),
-            e.access.required(MAX_UPLOAD_BATCH_SIZE),
-            WorkspaceFeatureFlag(e.access.required(WORKSPACE), e.access.required(UPLOAD_ENABLED_WORKSPACES)),
-            e.access.required(UPLOAD_RISK_LEVEL_DEFAULT_ENABLED),
-            e.access.required(UPLOAD_RISK_LEVEL_DEFAULT),
-            e.access.required(INTEROP_BASE_URL),
-            e.access.required(INTEROP_AUTH_TOKEN_SECRET_NAME),
-            e.access.required(StandardSigning.SSM_KEY_ID_PARAMETER_NAME),
-            e.access.required(PROCESSOR_STATE_TABLE),
-            e.access.required(REGION),
-            e.access.required(FEDERATED_KEY_UPLOAD_PREFIXES),
-            e.access.defaulted(LOAD_SUBMISSIONS_TIMEOUT) { Duration.ofMinutes(12) },
-            e.access.defaulted(LOAD_SUBMISSIONS_THREAD_POOL_SIZE) { 15 },
+            maxSubsequentBatchUploadCount = e.access.required(MAX_SUBSEQUENT_BATCH_UPLOAD_COUNT),
+            initialUploadHistoryDays = e.access.required(INITIAL_UPLOAD_HISTORY_DAYS),
+            maxUploadBatchSize = e.access.required(MAX_UPLOAD_BATCH_SIZE),
+            uploadFeatureFlag = WorkspaceFeatureFlag(e.access.required(WORKSPACE), e.access.required(UPLOAD_ENABLED_WORKSPACES)),
+            uploadRiskLevelDefaultEnabled = e.access.required(UPLOAD_RISK_LEVEL_DEFAULT_ENABLED),
+            uploadRiskLevelDefault = e.access.required(UPLOAD_RISK_LEVEL_DEFAULT),
+            interopBaseUrl = e.access.required(INTEROP_BASE_URL),
+            interopAuthTokenSecretName = e.access.required(INTEROP_AUTH_TOKEN_SECRET_NAME),
+            signingKeyParameterName = e.access.required(StandardSigning.SSM_KEY_ID_PARAMETER_NAME),
+            stateTableName = e.access.required(PROCESSOR_STATE_TABLE),
+            region = e.access.required(REGION),
+            federatedKeyUploadPrefixes = e.access.required(FEDERATED_KEY_UPLOAD_PREFIXES),
+            loadSubmissionsTimeout = e.access.defaulted(LOAD_SUBMISSIONS_TIMEOUT) { Duration.ofMinutes(12) },
+            loadSubmissionsThreadPoolSize = e.access.defaulted(LOAD_SUBMISSIONS_THREAD_POOL_SIZE) { 15 },
         )
     }
 }

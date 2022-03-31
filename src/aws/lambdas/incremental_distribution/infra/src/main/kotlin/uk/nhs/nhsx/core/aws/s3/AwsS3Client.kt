@@ -11,7 +11,6 @@ import com.amazonaws.services.s3.model.S3ObjectSummary
 import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.events.Events
 import java.io.IOException
-import java.net.URL
 import java.util.*
 
 class AwsS3Client @JvmOverloads constructor(
@@ -60,19 +59,12 @@ class AwsS3Client @JvmOverloads constructor(
         return objectSummaries
     }
 
-    override fun getObject(locator: Locator): Optional<S3Object> {
-        return try {
-            Optional.ofNullable(client.getObject(locator.bucket.value, locator.key.value))
-        } catch (e: AmazonS3Exception) {
-            if (!e.is404()) {
-                events(S3Error(locator, e.statusCode, e.errorCode))
-            }
-            Optional.empty()
-        }
+    override fun getObject(locator: Locator) = try {
+        client.getObject(locator.bucket.value, locator.key.value)
+    } catch (e: AmazonS3Exception) {
+        if (e.isNot404()) events(S3Error(locator, e.statusCode, e.errorCode))
+        null
     }
-
-
-    private fun AmazonS3Exception.is404() = statusCode == 404 && errorCode == "NoSuchKey"
 
     override fun deleteObject(locator: Locator) = client.deleteObject(locator.bucket.value, locator.key.value)
 
@@ -80,14 +72,12 @@ class AwsS3Client @JvmOverloads constructor(
         client.copyObject(from.bucket.value, from.key.value, to.bucket.value, to.key.value)
     }
 
-    override fun getSignedURL(locator: Locator, expiration: Date): Optional<URL> {
-        return try {
-            Optional.ofNullable(client.generatePresignedUrl(locator.bucket.value, locator.key.value, expiration))
-        } catch (e: AmazonS3Exception) {
-            if (!e.is404()) {
-                events(S3Error(locator, e.statusCode, e.errorCode))
-            }
-            Optional.empty()
-        }
+    override fun getSignedURL(locator: Locator, expiration: Date) = try {
+        client.generatePresignedUrl(locator.bucket.value, locator.key.value, expiration)
+    } catch (e: AmazonS3Exception) {
+        if (e.isNot404()) events(S3Error(locator, e.statusCode, e.errorCode))
+        null
     }
+
+    private fun AmazonS3Exception.isNot404() = !(statusCode == 404 && errorCode == "NoSuchKey")
 }

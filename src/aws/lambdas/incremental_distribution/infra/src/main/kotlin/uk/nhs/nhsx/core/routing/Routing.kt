@@ -15,16 +15,27 @@ object Routing {
 
     fun routes(vararg routes: RoutingHandler): AggregateRoutingHttpHandler = routes(listOf(*routes), listOf())
 
-    fun routes(first: List<RoutingHandler>, second: List<RoutingHandler>) =
-        AggregateRoutingHttpHandler(first + second, routeNotFoundHandler, routeMethodNotAllowedHandler)
+    fun routes(
+        first: List<RoutingHandler>,
+        second: List<RoutingHandler>
+    ) = AggregateRoutingHttpHandler(first + second, routeNotFoundHandler, routeMethodNotAllowedHandler)
 
-    fun path(path: String, handler: ApiGatewayHandler): PathRoutingHandler = PathRoutingHandler(path, handler)
+    fun path(
+        path: String,
+        handler: ApiGatewayHandler
+    ) = PathRoutingHandler(path, handler)
 
-    fun path(method: Method, path: String, handler: ApiGatewayHandler): PathRoutingHandler =
-        PathRoutingHandler(path, Optional.of(method), handler)
+    fun path(
+        method: Method,
+        path: String,
+        handler: ApiGatewayHandler
+    ) = PathRoutingHandler(path, Optional.of(method), handler)
 
-    fun path(method: Method, pathMatcher: Predicate<String>, handler: ApiGatewayHandler): PathRoutingHandler =
-        PathRoutingHandler(pathMatcher, Optional.of(method), handler)
+    fun path(
+        method: Method,
+        pathMatcher: Predicate<String>,
+        handler: ApiGatewayHandler
+    ) = PathRoutingHandler(pathMatcher, Optional.of(method), handler)
 
     fun throttlingResponse(
         throttleDuration: Duration,
@@ -60,15 +71,15 @@ object Routing {
 
     sealed class RouterMatch(protected val matchType: Match) : Comparable<RouterMatch> {
         data class Matched(val handler: ApiGatewayHandler) : RouterMatch(Matched) {
-            override fun compareTo(other: RouterMatch): Int = matchType.compareTo(other.matchType)
+            override fun compareTo(other: RouterMatch) = matchType.compareTo(other.matchType)
         }
 
         object UnMatched : RouterMatch(Match.UnMatched) {
-            override fun compareTo(other: RouterMatch): Int = matchType.compareTo(other.matchType)
+            override fun compareTo(other: RouterMatch) = matchType.compareTo(other.matchType)
         }
 
         object MethodUnMatched : RouterMatch(Match.MethodUnMatched) {
-            override fun compareTo(other: RouterMatch): Int = matchType.compareTo(other.matchType)
+            override fun compareTo(other: RouterMatch) = matchType.compareTo(other.matchType)
         }
     }
 
@@ -77,19 +88,19 @@ object Routing {
         private val routeNotFoundHandler: ApiGatewayHandler,
         private val methodNotMatchedHandler: ApiGatewayHandler
     ) : RoutingHandler {
-        override fun invoke(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
+        override fun invoke(request: APIGatewayProxyRequestEvent, context: Context) =
             when (val match = match(request)) {
                 is RouterMatch.Matched -> match.handler
                 is RouterMatch.MethodUnMatched -> methodNotMatchedHandler
                 is RouterMatch.UnMatched -> routeNotFoundHandler
             }.invoke(request, context)
 
-        override fun match(request: APIGatewayProxyRequestEvent): RouterMatch {
-            return list.stream().map { r: RoutingHandler -> r.match(request) }
-                .sorted()
-                .findFirst()
-                .orElse(RouterMatch.UnMatched)
-        }
+        override fun match(request: APIGatewayProxyRequestEvent): RouterMatch = list
+            .stream()
+            .map { it.match(request) }
+            .sorted()
+            .findFirst()
+            .orElse(RouterMatch.UnMatched)
     }
 
     class PathRoutingHandler(
@@ -99,22 +110,26 @@ object Routing {
     ) : RoutingHandler {
 
         constructor(path: String, method: Optional<Method>, handler: ApiGatewayHandler) : this(
-            Predicate<String> { cs: String -> path.contentEquals(cs) }, method, handler
+            pathMatcher = Predicate<String>(path::contentEquals),
+            method = method,
+            handler = handler
         )
 
-        constructor(path: String, handler: ApiGatewayHandler) : this(Predicate<String> { cs: String ->
-            path.contentEquals(cs)
-        }, Optional.empty(), handler)
+        constructor(path: String, handler: ApiGatewayHandler) : this(
+            pathMatcher = Predicate<String>(path::contentEquals),
+            method = Optional.empty(),
+            handler = handler
+        )
 
-        override fun invoke(request: APIGatewayProxyRequestEvent, context: Context): APIGatewayProxyResponseEvent =
+        override fun invoke(request: APIGatewayProxyRequestEvent, context: Context) =
             when (val match = match(request)) {
                 is RouterMatch.Matched -> match.handler
                 is RouterMatch.MethodUnMatched -> routeMethodNotAllowedHandler
                 is RouterMatch.UnMatched -> routeNotFoundHandler
             }(request, context)
 
-        override fun match(request: APIGatewayProxyRequestEvent): RouterMatch {
-            return if (pathMatcher.test(request.path)) {
+        override fun match(request: APIGatewayProxyRequestEvent) =
+            if (pathMatcher.test(request.path)) {
                 if (method.isPresent) {
                     if (method.get().matches(request.httpMethod)) {
                         RouterMatch.Matched(handler)
@@ -123,6 +138,5 @@ object Routing {
                     }
                 } else RouterMatch.Matched(handler)
             } else RouterMatch.UnMatched
-        }
     }
 }

@@ -1,0 +1,56 @@
+@startuml system-flow_matching-diagnosis-keys-trigger-exposure-notification
+
+collections Apps order 1
+actor User order 2
+participant App order 3
+participant SubmissionAPI as "Submission API" order 4
+participant DistributionAPI as "Distribution API" order 6
+participant CircuitBreaker as "Circuit Breaker" order 6
+participant ParameterStore as "Parameter Store" order 7
+actor Operator as "Operator" order 8
+
+group Encounter detection
+  ...
+  Apps <-> App: encounter detection running
+  Apps -> Apps: store encounters locally
+  App -> App: store encounters locally
+  ...
+end
+
+Apps -> SubmissionAPI: uploaded diagnosis keys after pos test
+...
+
+group Match diagnosis keys
+  App -> DistributionAPI: poll diagnosis keys
+  App <- DistributionAPI:
+  ...
+  App -> App: risk analysis, match with encounters found
+  ...
+end
+
+group Circuit Breaker
+  App -> CircuitBreaker: confirm exposure notification
+  CircuitBreaker -> ParameterStore: Retrieve current state (""YES"", ""NO"", ""PENDING"")
+  CircuitBreaker <-- ParameterStore: ""PENDING"" 
+  App <- CircuitBreaker: wait (token)
+  ...
+  Operator -> ParameterStore: Open / Close Circuit Breaker (human decision)
+  ...
+  App -> CircuitBreaker: poll confirmation, at x time (token)
+  alt Circuit Breaker Open
+    CircuitBreaker -> ParameterStore: Retrieve current state (""YES"", ""NO"", ""PENDING"")
+    CircuitBreaker <-- ParameterStore: ""NO""
+    destroy User
+  else Circuit Breaker Closed
+    CircuitBreaker -> ParameterStore: Retrieve current state (""YES"", ""NO"", ""PENDING"")
+    CircuitBreaker <-- ParameterStore: ""YES""
+
+    group Trigger notification and advice
+      App -> User: trigger exposure notification for user
+      App -> User: isolation advice for exposed contact
+      ...
+    end
+  end
+end
+
+@enduml

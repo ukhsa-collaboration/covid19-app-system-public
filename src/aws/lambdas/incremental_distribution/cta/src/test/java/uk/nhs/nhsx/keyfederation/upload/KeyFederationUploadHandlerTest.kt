@@ -1,4 +1,4 @@
-@file:Suppress("TestFunctionName")
+@file:Suppress("TestFunctionName", "SameParameterValue")
 
 package uk.nhs.nhsx.keyfederation.upload
 
@@ -27,9 +27,11 @@ import uk.nhs.nhsx.core.aws.s3.BucketName
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretName
 import uk.nhs.nhsx.core.aws.ssm.ParameterName
 import uk.nhs.nhsx.core.events.RecordingEvents
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
-import uk.nhs.nhsx.keyfederation.InteropClient
+import uk.nhs.nhsx.keyfederation.client.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.assertions.captured
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
@@ -213,7 +215,7 @@ class KeyFederationUploadHandlerTest(private val wireMock: WireMockServer) {
         awsS3Client = awsS3Client
     )
 
-    private fun interopClient(wireMock: WireMockServer) = InteropClient(
+    private fun interopClient(wireMock: WireMockServer) = HttpInteropClient(
         interopBaseUrl = wireMock.baseUrl(),
         authToken = "DUMMY_TOKEN",
         jws = JWS(KmsCompatibleSigner(ecPrime256r1.private)),

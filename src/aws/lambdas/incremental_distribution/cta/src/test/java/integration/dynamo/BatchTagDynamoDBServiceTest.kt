@@ -16,9 +16,9 @@ import uk.nhs.nhsx.core.aws.dynamodb.TableName
 import uk.nhs.nhsx.core.aws.dynamodb.withTableName
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.domain.BatchTag
-import uk.nhs.nhsx.keyfederation.BatchTagDynamoDBService
-import uk.nhs.nhsx.keyfederation.FederationBatch
-import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult
+import uk.nhs.nhsx.keyfederation.domain.FederationBatch
+import uk.nhs.nhsx.keyfederation.storage.BatchTagDynamoDBService
+import uk.nhs.nhsx.keyfederation.storage.UploadKeysResult
 import java.time.Clock
 import java.time.Duration.ofMinutes
 import java.time.Instant.EPOCH

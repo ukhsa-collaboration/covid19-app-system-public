@@ -5,14 +5,16 @@ import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.domain.BatchTag
-import uk.nhs.nhsx.keyfederation.BatchTagService
 import uk.nhs.nhsx.keyfederation.DownloadedExposures
 import uk.nhs.nhsx.keyfederation.FederatedKeyUploader
-import uk.nhs.nhsx.keyfederation.FederationBatch
-import uk.nhs.nhsx.keyfederation.InteropClient
+import uk.nhs.nhsx.keyfederation.client.DiagnosisKeysDownloadResponse
+import uk.nhs.nhsx.keyfederation.client.InteropClient
+import uk.nhs.nhsx.keyfederation.client.InteropDownloadResponse
+import uk.nhs.nhsx.keyfederation.domain.FederationBatch
+import uk.nhs.nhsx.keyfederation.domain.RemainingTimeScheduler
+import uk.nhs.nhsx.keyfederation.storage.BatchTagService
 import java.time.LocalDate
-import java.time.ZoneId
-import kotlin.math.max
+import java.time.ZoneOffset
 
 class DiagnosisKeysDownloadService(
     private val clock: Clock,
@@ -27,65 +29,41 @@ class DiagnosisKeysDownloadService(
     private val events: Events
 ) {
 
-    fun downloadFromFederatedServerAndStoreKeys() = batchTagService
-        .latestFederationBatch()
-        ?.let {
-            downloadKeysAndProcess(
-                it.batchDate,
-                it.batchTag,
-                maxSubsequentBatchDownloadCount,
-                context
-            )
+    fun downloadFromFederatedServerAndStoreKeys(): Int {
+        val latestFederationBatch = batchTagService.latestFederationBatch()
+        val (date, batchTag) = when (latestFederationBatch) {
+            null -> dateNow().minusDays(initialDownloadHistoryDays.toLong()) to null
+            else -> latestFederationBatch.batchDate to latestFederationBatch.batchTag
         }
-        ?: downloadKeysAndProcess(
-            dateNow().minusDays(initialDownloadHistoryDays.toLong()),
-            null,
-            maxSubsequentBatchDownloadCount,
-            context
-        )
+        return downloadKeysAndProcess(date, batchTag)
+    }
 
     private fun downloadKeysAndProcess(
         date: LocalDate,
-        batchTag: BatchTag?,
-        maxBatchDownloadCount: Int,
-        context: Context
+        batchTag: BatchTag?
     ): Int {
+
+        val scheduler = RemainingTimeScheduler<InteropDownloadResponse>(context, clock)
+        var next: InteropDownloadResponse? = interopClient.downloadKeys(date, batchTag)
         var processedBatches = 0
 
-        var exposureKeysNextBatch = if (batchTag == null) {
-            interopClient.downloadKeys(date)
-        } else {
-            interopClient.downloadKeys(date, batchTag)
+        for (idx in 1..maxSubsequentBatchDownloadCount) {
+            if (next !is DiagnosisKeysDownloadResponse) break
+            val nextBatchTag = next.batchTag
+
+            convertAndSaveKeys(next)
+            events(DownloadedExposures(next.exposures.size, nextBatchTag, idx))
+            processedBatches++
+
+            next = scheduler.runMaybe { interopClient.downloadKeys(date, nextBatchTag) }
         }
 
-        var iterationDuration = 0L
-        var i = 1
-        while (i <= maxBatchDownloadCount && exposureKeysNextBatch is DiagnosisKeysDownloadResponse) {
-            val startTime = clock().toEpochMilli()
-            val diagnosisKeysDownloadResponse = exposureKeysNextBatch
-            convertAndSaveKeys(diagnosisKeysDownloadResponse)
-            events(
-                DownloadedExposures(
-                    diagnosisKeysDownloadResponse.exposures.size,
-                    diagnosisKeysDownloadResponse.batchTag,
-                    i
-                )
-            )
-            processedBatches++
-            iterationDuration = max(iterationDuration, clock().toEpochMilli() - startTime)
-            if (iterationDuration >= context.remainingTimeInMillis) {
-                break
-            }
-            exposureKeysNextBatch = interopClient.downloadKeys(date, diagnosisKeysDownloadResponse.batchTag)
-            i++
-        }
-        events(
-            InfoEvent("Downloaded keys from federated server finished, batchCount=$processedBatches")
-        )
+        events(InfoEvent("Downloaded keys from federated server finished, batchCount=$processedBatches"))
+
         return processedBatches
     }
 
-    private fun dateNow(): LocalDate = LocalDate.ofInstant(clock(), ZoneId.of("UTC"))
+    private fun dateNow() = LocalDate.ofInstant(clock(), ZoneOffset.UTC)
 
     private fun convertAndSaveKeys(diagnosisKeysDownloadResponse: DiagnosisKeysDownloadResponse) {
         val transformedResponse = DiagnosisKeysDownloadResponse(
@@ -93,24 +71,18 @@ class DiagnosisKeysDownloadService(
             diagnosisKeysDownloadResponse.exposures.map(::postDownloadTransformations)
         )
         keyUploader.acceptKeysFromFederatedServer(transformedResponse)
-        batchTagService.updateLatestFederationBatch(
-            FederationBatch(
-                transformedResponse.batchTag,
-                dateNow()
-            )
-        )
+        batchTagService.updateLatestFederationBatch(FederationBatch(transformedResponse.batchTag, dateNow()))
     }
 
-    fun postDownloadTransformations(downloaded: ExposureDownload): ExposureDownload =
-        ExposureDownload(
-            downloaded.keyData,
-            downloaded.rollingStartNumber,
-            if (downloadRiskLevelDefaultEnabled) downloadRiskLevelDefault else downloaded.transmissionRiskLevel,
-            downloaded.rollingPeriod,
-            downloaded.origin,
-            downloaded.regions,
-            downloaded.testType,
-            downloaded.reportType,
-            downloaded.daysSinceOnset
-        )
+    fun postDownloadTransformations(downloaded: ExposureDownload) = ExposureDownload(
+        keyData = downloaded.keyData,
+        rollingStartNumber = downloaded.rollingStartNumber,
+        transmissionRiskLevel = if (downloadRiskLevelDefaultEnabled) downloadRiskLevelDefault else downloaded.transmissionRiskLevel,
+        rollingPeriod = downloaded.rollingPeriod,
+        origin = downloaded.origin,
+        regions = downloaded.regions,
+        testType = downloaded.testType,
+        reportType = downloaded.reportType,
+        daysSinceOnset = downloaded.daysSinceOnset
+    )
 }

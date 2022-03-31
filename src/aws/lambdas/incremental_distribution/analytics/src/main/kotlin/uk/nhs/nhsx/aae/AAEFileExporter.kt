@@ -66,26 +66,23 @@ class AAEFileExporter constructor(
     private fun uploadToAAE(
         event: TransformedS3PutObjectCloudTrailEvent,
         sqsMessage: SQSEvent.SQSMessage
-    ): Event {
-        try {
-            val s3Object = s3Client.getObject(Locator.of(event.bucketName, event.key))
-            return when {
-                !s3Object.isEmpty -> {
-                    uploader.uploadFile(
-                        getFilename(s3Object.get()),
-                        getContent(s3Object.get()),
-                        s3Object.get().objectMetadata.contentType
-                    )
-                    DataUploadedToAAE(sqsMessage.messageId, event.bucketName, event.key)
-                }
-                else -> S3ObjectNotFound(sqsMessage.messageId, event.bucketName, event.key)
+    ) = try {
+        when (val s3Object = s3Client.getObject(Locator.of(event.bucketName, event.key))) {
+            null -> S3ObjectNotFound(sqsMessage.messageId, event.bucketName, event.key)
+            else -> {
+                uploader.uploadFile(
+                    getFilename(s3Object),
+                    getContent(s3Object),
+                    s3Object.objectMetadata.contentType
+                )
+                DataUploadedToAAE(sqsMessage.messageId, event.bucketName, event.key)
             }
-        } catch (e: Exception) { // -> retry o
-            throw RuntimeException(
-                """S3 object NOT uploaded (retry candidate): sqsMessage.id=${sqsMessage.messageId}, body=${sqsMessage.body}""",
-                e
-            ) // r DLQ
         }
+    } catch (e: Exception) { // -> retry o
+        val message = with(sqsMessage) {
+            """S3 object NOT uploaded (retry candidate): sqsMessage.id=${messageId}, body=${body}"""
+        }
+        throw RuntimeException(message, e) // r DLQ
     }
 
     private fun startsWithDisallowedPrefix(key: ObjectKey): Boolean {

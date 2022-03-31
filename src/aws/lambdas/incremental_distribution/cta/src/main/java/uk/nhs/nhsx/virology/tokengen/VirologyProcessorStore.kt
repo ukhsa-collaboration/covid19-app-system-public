@@ -31,8 +31,9 @@ class VirologyProcessorStore(
         )
     }
 
-    fun generateSignedURL(filename: String, expirationDate: Date): URL? = awsS3.getSignedURL(
-        Locator.of(bucketName, ObjectKey.of(filename)),
-        expirationDate
-    ).orElse(null)
+    fun generateSignedURL(filename: String, expirationDate: Date) = awsS3
+        .getSignedURL(
+            Locator.of(bucketName, ObjectKey.of(filename)),
+            expirationDate
+        )
 }

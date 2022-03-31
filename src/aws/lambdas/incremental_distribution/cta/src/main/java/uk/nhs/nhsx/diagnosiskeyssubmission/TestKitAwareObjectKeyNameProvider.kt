@@ -9,5 +9,5 @@ class TestKitAwareObjectKeyNameProvider(
     private val testKit: TestKit
 ) : ObjectKeyNameProvider {
     override fun generateObjectKeyName() =
-        ObjectKey.of("mobile/" + testKit.name + "/" + rootDelegate.generateObjectKeyName())
+        ObjectKey.of("""mobile/${testKit.name}/${rootDelegate.generateObjectKeyName()}""")
 }

@@ -13,3 +13,7 @@ artifacts:
   files:
     - "out/**/*"
   discard-paths: no
+cache:
+  paths:
+    - '/root/.gradle/caches/**/*'
+    - '/root/.gradle/wrapper/**/*'

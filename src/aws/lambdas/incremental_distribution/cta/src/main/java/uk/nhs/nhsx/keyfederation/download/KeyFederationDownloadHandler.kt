@@ -16,15 +16,16 @@ import uk.nhs.nhsx.core.aws.secretsmanager.AwsSecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.events.Event
-import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
-import uk.nhs.nhsx.core.handler.SchedulingHandler
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
-import uk.nhs.nhsx.keyfederation.BatchTagDynamoDBService
-import uk.nhs.nhsx.keyfederation.BatchTagService
+import uk.nhs.nhsx.core.handler.SchedulingHandler
+import uk.nhs.nhsx.keyfederation.storage.BatchTagDynamoDBService
+import uk.nhs.nhsx.keyfederation.storage.BatchTagService
 import uk.nhs.nhsx.keyfederation.FederatedKeyUploader
-import uk.nhs.nhsx.keyfederation.InteropClient
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
+import uk.nhs.nhsx.keyfederation.client.InteropClient
+import uk.nhs.nhsx.keyfederation.InteropConnectorDownloadStats
 import uk.nhs.nhsx.keyfederation.upload.JWS
 
 /**
@@ -47,42 +48,39 @@ class KeyFederationDownloadHandler @JvmOverloads constructor(
     private val awsS3: AwsS3 = AwsS3Client(events)
 ) : SchedulingHandler(events) {
 
-    private fun downloadFromFederatedServerAndStoreKeys(context: Context) =
-        if (config.downloadFeatureFlag.isEnabled()) {
-            try {
-                DiagnosisKeysDownloadService(
-                    clock,
-                    interopClient,
-                    FederatedKeyUploader(
-                        awsS3,
-                        config.submissionBucketName,
-                        config.federatedKeyDownloadPrefix,
-                        clock,
-                        config.validOrigins,
-                        events
-                    ),
-                    batchTagService,
-                    config.downloadRiskLevelDefaultEnabled,
-                    config.downloadRiskLevelDefault,
-                    config.initialDownloadHistoryDays,
-                    config.maxSubsequentBatchDownloadCount,
-                    context,
-                    events
-                ).downloadFromFederatedServerAndStoreKeys()
-            } catch (e: Exception) {
-                throw RuntimeException("Download keys failed with error", e)
-            }
-        } else {
+    private fun downloadFromFederatedServerAndStoreKeys(context: Context) = when {
+        config.downloadFeatureFlag.isEnabled() -> {
+
+            DiagnosisKeysDownloadService(
+                clock = clock,
+                interopClient = interopClient,
+                keyUploader = FederatedKeyUploader(
+                    awsS3 = awsS3,
+                    bucketName = config.submissionBucketName,
+                    federatedKeySourcePrefix = config.federatedKeyDownloadPrefix,
+                    clock = clock,
+                    validOrigins = config.validOrigins,
+                    events = events
+                ),
+                batchTagService = batchTagService,
+                downloadRiskLevelDefaultEnabled = config.downloadRiskLevelDefaultEnabled,
+                downloadRiskLevelDefault = config.downloadRiskLevelDefault,
+                initialDownloadHistoryDays = config.initialDownloadHistoryDays,
+                maxSubsequentBatchDownloadCount = config.maxSubsequentBatchDownloadCount,
+                context = context,
+                events = events
+            ).downloadFromFederatedServerAndStoreKeys()
+        }
+        else -> {
             events(InfoEvent("Download to interop has been disabled, skipping this step"))
             0
         }
+    }
 
     override fun handler() = Handler<ScheduledEvent, Event> { _, context ->
         InteropConnectorDownloadStats(downloadFromFederatedServerAndStoreKeys(context))
     }
 }
-
-data class InteropConnectorDownloadStats(val processedSubmissions: Int) : Event(EventCategory.Info)
 
 private fun buildInteropClient(
     config: KeyFederationDownloadConfig,
@@ -95,15 +93,15 @@ private fun buildInteropClient(
         .orElseThrow { RuntimeException("Unable to retrieve authorization token from secrets storage") }
 
     val signer = StandardSigningFactory(
-        clock,
-        AwsSsmParameters(),
-        AWSKMSClientBuilder.defaultClient()
+        clock = clock,
+        parameters = AwsSsmParameters(),
+        client = AWSKMSClientBuilder.defaultClient()
     ).signContentWithKeyFromParameter(config.signingKeyParameterName)
 
-    return InteropClient(
-        config.interopBaseUrl,
-        authTokenSecretValue.value,
-        JWS(signer),
-        events
+    return HttpInteropClient(
+        interopBaseUrl = config.interopBaseUrl,
+        authToken = authTokenSecretValue.value,
+        jws = JWS(signer),
+        events = events
     )
 }

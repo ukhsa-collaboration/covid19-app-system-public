@@ -14,11 +14,11 @@ import uk.nhs.nhsx.diagnosiskeydist.agspec.RollingStartNumber.isRollingStartNumb
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.domain.BatchTag
-import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
-import uk.nhs.nhsx.keyfederation.download.ExposureDownload
-import uk.nhs.nhsx.keyfederation.download.ExposureKeysPayload
 import uk.nhs.nhsx.domain.ReportType
 import uk.nhs.nhsx.domain.TestType
+import uk.nhs.nhsx.keyfederation.client.DiagnosisKeysDownloadResponse
+import uk.nhs.nhsx.keyfederation.download.ExposureDownload
+import uk.nhs.nhsx.keyfederation.download.ExposureKeysPayload
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -45,7 +45,8 @@ class FederatedKeyUploader(
     private fun handleOriginKeys(batchTag: BatchTag, origin: String, exposureDownloads: List<ExposureDownload>) {
         emitStatistics(exposureDownloads, origin)
 
-        val validKeys = exposureDownloads.filter { isValidExposure(it) }
+        val validKeys = exposureDownloads.filter(::isValidExposure)
+
         when {
             validOrigins.contains(origin) -> {
                 when {

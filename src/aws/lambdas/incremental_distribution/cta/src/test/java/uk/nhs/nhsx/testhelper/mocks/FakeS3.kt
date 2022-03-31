@@ -31,8 +31,8 @@ open class FakeS3(val clock: Clock = { java.time.Clock.systemUTC().instant() }) 
         summaries.getOrDefault(bucketName, mutableListOf())
 
     override fun getObject(locator: Locator) =
-        Optional.ofNullable(objects.getOrDefault(locator.bucket, mutableListOf())
-            .firstOrNull { it.key == locator.key.value })
+        objects.getOrDefault(locator.bucket, mutableListOf())
+            .firstOrNull { it.key == locator.key.value }
 
     override fun deleteObject(locator: Locator) {
         summaries[locator.bucket] = summaries.getOrDefault(locator.bucket, mutableListOf())
@@ -40,8 +40,7 @@ open class FakeS3(val clock: Clock = { java.time.Clock.systemUTC().instant() }) 
     }
 
     override fun copyObject(from: Locator, to: Locator) {
-        val fromObject: S3Object? = getObject(from).orElse(null)
-        if (fromObject != null) addS3Object(to.bucket, fromObject)
+        getObject(from)?.also { addS3Object(to.bucket, it) }
         getObjectSummaries(from.bucket).forEach { addS3ObjectSummary(to.bucket, it) }
     }
 
@@ -54,27 +53,27 @@ open class FakeS3(val clock: Clock = { java.time.Clock.systemUTC().instant() }) 
         val now = Date.from(clock())
 
         val s3Object = S3Object().apply {
-            this.key = locator.key.value
-            this.bucketName = locator.bucket.value
-            this.setObjectContent(ByteArrayInputStream(bytes.bytes))
-            this.objectMetadata = ObjectMetadata().apply {
+            key = locator.key.value
+            bucketName = locator.bucket.value
+            setObjectContent(ByteArrayInputStream(bytes.bytes))
+            objectMetadata = ObjectMetadata().apply {
+                lastModified = now
                 this.contentType = contentType.value
-                this.lastModified = now
                 metaHeaders.forEach { (k, v) -> this.addUserMetadata(k, v) }
             }
         }
 
         val summary = S3ObjectSummary().apply {
-            this.key = locator.key.value
-            this.bucketName = locator.bucket.value
-            this.lastModified = now
+            key = locator.key.value
+            bucketName = locator.bucket.value
+            lastModified = now
         }
 
         addS3Object(locator.bucket, s3Object)
         addS3ObjectSummary(locator.bucket, summary)
     }
 
-    override fun getSignedURL(locator: Locator, expiration: Date) = Optional.of(URL("https://example.com"))
+    override fun getSignedURL(locator: Locator, expiration: Date) = URL("https://example.com")
 
     fun add(s3Object: S3Object, lastModifiedDate: Instant? = null) {
         val bucketName = BucketName.of(s3Object.bucketName)

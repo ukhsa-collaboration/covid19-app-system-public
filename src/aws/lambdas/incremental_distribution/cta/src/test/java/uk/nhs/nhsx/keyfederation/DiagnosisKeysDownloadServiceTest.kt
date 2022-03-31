@@ -19,10 +19,11 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
-import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
+import uk.nhs.nhsx.keyfederation.client.InteropClient
+import uk.nhs.nhsx.keyfederation.client.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadService
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
-import uk.nhs.nhsx.keyfederation.download.NoContent
+import uk.nhs.nhsx.keyfederation.client.NoContent
 import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.asString
 import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.content
 import uk.nhs.nhsx.testhelper.assertions.containsExactly
@@ -128,8 +129,8 @@ class DiagnosisKeysDownloadServiceTest {
     @Test
     fun `download keys first time and emits event`() {
         val interopClient = mockk<InteropClient> {
-            every { downloadKeys(any()) } returns batch
-            every { downloadKeys(any(), any()) } returns NoContent
+            every { downloadKeys(any(), isNull()) } returns batch
+            every { downloadKeys(any(), isNull(inverse = true)) } returns NoContent
         }
 
         val batchTagService = InMemoryBatchTagService()

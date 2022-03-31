@@ -7,5 +7,23 @@
     "pendingTasksRetentionPeriod": 14,
     "indexCaseSinceTestResultEndDate": 11,
     "testResultPollingTokenRetentionPeriod": 28
+  },
+  "england": {
+    "indexCaseSinceSelfDiagnosisOnset": 6,
+    "indexCaseSinceSelfDiagnosisUnknownOnset": 4,
+    "contactCase": 11,
+    "maxIsolation": 16,
+    "pendingTasksRetentionPeriod": 14,
+    "indexCaseSinceTestResultEndDate": 6,
+    "testResultPollingTokenRetentionPeriod": 28
+  },
+  "wales": {
+    "indexCaseSinceSelfDiagnosisOnset": 6,
+    "indexCaseSinceSelfDiagnosisUnknownOnset": 4,
+    "contactCase": 11,
+    "maxIsolation": 16,
+    "pendingTasksRetentionPeriod": 14,
+    "indexCaseSinceTestResultEndDate": 6,
+    "testResultPollingTokenRetentionPeriod": 28
   }
 }

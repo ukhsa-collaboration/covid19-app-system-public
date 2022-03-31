@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.analyticssubmission.model.PostDistrictPair
-import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.RecordingEvents
-import uk.nhs.nhsx.testhelper.assertions.containsExactly
 import uk.nhs.nhsx.testhelper.assertions.isEmpty
 
 class PostDistrictLaReplacerTest {
@@ -15,7 +13,7 @@ class PostDistrictLaReplacerTest {
 
     @Test
     fun `looks up key with post district and local authority`() {
-        val result = PostDistrictLaReplacer.replacePostDistrictLA(
+        val result = PostDistrictLaReplacer(
             "CV23",
             "E07000151",
             events
@@ -27,7 +25,7 @@ class PostDistrictLaReplacerTest {
 
     @Test
     fun `looks up key with post district and null local authority`() {
-        val result = PostDistrictLaReplacer.replacePostDistrictLA(
+        val result = PostDistrictLaReplacer(
             "CV23",
             null,
             events
@@ -35,17 +33,5 @@ class PostDistrictLaReplacerTest {
 
         expectThat(result).isEqualTo(PostDistrictPair("CV23", null))
         expectThat(events).isEmpty()
-    }
-
-    @Test
-    fun `looks up key with post district null and null local authority`() {
-        val result = PostDistrictLaReplacer.replacePostDistrictLA(
-            null,
-            null,
-            events
-        )
-
-        expectThat(result).isEqualTo(PostDistrictPair("UNKNOWN", "UNKNOWN"))
-        expectThat(events).containsExactly(InfoEvent::class)
     }
 }

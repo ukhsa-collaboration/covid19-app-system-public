@@ -34,6 +34,11 @@ variable "artifacts_bucket_name" {
   type        = string
 }
 
+variable "cache_artifacts_bucket_name" {
+  description = "The name of the S3 bucket to store the build cache artifacts in"
+  type        = string
+}
+
 variable "service_role" {
   description = "The ARN of the service role used to run the builds"
   type        = string

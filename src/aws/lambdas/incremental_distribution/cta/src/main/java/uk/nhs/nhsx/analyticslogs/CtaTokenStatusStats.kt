@@ -8,29 +8,32 @@ import uk.nhs.nhsx.domain.TestKit
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
-data class CtaTokenStatusStats(val startDate: LocalDate, val testType: TestKit, val source: Country, val total: Int)
+data class CtaTokenStatusStats(
+    val startDate: LocalDate,
+    val testType: TestKit,
+    val source: Country,
+    val total: Int
+)
 
 class CtaTokenStatusStatsConverter : Converter<CtaTokenStatusStats>() {
     private val dateTimeFormatterPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-    override fun convert(map: Map<String, String>): CtaTokenStatusStats {
-        return CtaTokenStatusStats(
-            startDate = LocalDate.parse(map["start_date"] ?: error("missing start_date field from cloudwatch log insights"), dateTimeFormatterPattern),
-            testType = TestKit.valueOf(map["test_type"] ?: error("missing test_type field from cloudwatch log insights")),
-            source = Country.from(map["source"] ?: error("missing source field from cloudwatch log insights")),
-            total = map["total"]?.toInt() ?: 0
-        )
-    }
+    override fun convert(map: Map<String, String>) = CtaTokenStatusStats(
+        startDate = LocalDate.parse(map.getValue("start_date"), dateTimeFormatterPattern),
+        testType = TestKit.valueOf(map.getValue("test_type")),
+        source = Country.from(map.getValue("source")),
+        total = map.getOrDefault("total", "0").toInt()
+    )
 }
 
 class CtaTokenStatusAnalyticsHandler : LogInsightsAnalyticsHandler(
-    logAnalyticsService(
-        Environment.fromSystem(),
-        SystemClock.CLOCK,
-        PrintingJsonEvents(SystemClock.CLOCK),
-        ctaTokenStatusQueryString,
-        CtaTokenStatusStatsConverter()),
-    PrintingJsonEvents(SystemClock.CLOCK)
+    service = logAnalyticsService(
+        environment = Environment.fromSystem(),
+        clock = SystemClock.CLOCK,
+        events = PrintingJsonEvents(SystemClock.CLOCK),
+        queryString = ctaTokenStatusQueryString,
+        converter = CtaTokenStatusStatsConverter()
+    ),
+    events = PrintingJsonEvents(SystemClock.CLOCK)
 )
 
 private const val ctaTokenStatusQueryString = """fields @timestamp, @message

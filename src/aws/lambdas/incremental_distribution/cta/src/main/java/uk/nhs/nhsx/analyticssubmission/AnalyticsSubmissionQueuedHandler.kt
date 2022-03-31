@@ -5,15 +5,27 @@ import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent
 import com.amazonaws.services.lambda.runtime.events.SQSEvent
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
-import uk.nhs.nhsx.core.*
+import uk.nhs.nhsx.core.Clock
+import uk.nhs.nhsx.core.Environment
+import uk.nhs.nhsx.core.Handler
+import uk.nhs.nhsx.core.HttpResponses
+import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.SystemClock
 import uk.nhs.nhsx.core.auth.ApiName
 import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.StandardAuthentication
-import uk.nhs.nhsx.core.events.*
+import uk.nhs.nhsx.core.events.Event
+import uk.nhs.nhsx.core.events.Events
+import uk.nhs.nhsx.core.events.MobileAnalyticsSubmission
+import uk.nhs.nhsx.core.events.PrintingJsonEvents
+import uk.nhs.nhsx.core.events.UnprocessableJson
 import uk.nhs.nhsx.core.handler.ApiGatewayHandler
 import uk.nhs.nhsx.core.handler.QueuedHandler
 import uk.nhs.nhsx.core.handler.RoutingHandler
-import uk.nhs.nhsx.core.routing.Routing
+import uk.nhs.nhsx.core.readJsonOrNull
+import uk.nhs.nhsx.core.routing.Routing.Method.POST
+import uk.nhs.nhsx.core.routing.Routing.path
+import uk.nhs.nhsx.core.routing.Routing.routes
 import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.withoutSignedResponses
 
@@ -32,10 +44,7 @@ class AnalyticsSubmissionQueuedHandler constructor(
     override fun handler() = handler
 
     private fun extractRequestEventFrom(input: SQSEvent): APIGatewayProxyRequestEvent {
-        if (input.records.size != 1) {
-            throw IllegalStateException(".tf configuration error: batch_size != 1")
-        }
-
+        if (input.records.size != 1) throw IllegalStateException(".tf configuration error: batch_size != 1")
         return Json.readJsonOrThrow(input.records[0].body)
     }
 
@@ -46,51 +55,38 @@ class AnalyticsSubmissionQueuedHandler constructor(
         healthAuthenticator: Authenticator = StandardAuthentication.awsAuthentication(ApiName.Health, events),
         mobileAuthenticator: Authenticator = StandardAuthentication.awsAuthentication(ApiName.Mobile, events),
         kinesisFirehose: AmazonKinesisFirehose = AmazonKinesisFirehoseClientBuilder.defaultClient(),
-        analyticsConfig: AnalyticsConfig = analyticsConfig(environment),
+        analyticsConfig: AnalyticsConfig = AnalyticsConfig.from(environment),
         service: AnalyticsSubmissionService = AnalyticsSubmissionService(
-            analyticsConfig,
-            kinesisFirehose,
-            events,
-            clock
+            config = analyticsConfig,
+            kinesisFirehose = kinesisFirehose,
+            events = events,
+            clock = clock
         )
     ) : RoutingHandler() {
 
         override fun handler(): ApiGatewayHandler = handler
 
         private val handler = withoutSignedResponses(
-            events,
-            environment,
-            Routing.routes(
+            events = events,
+            environment = environment,
+            delegate = routes(
                 authorisedBy(
                     mobileAuthenticator,
-                    Routing.path(Routing.Method.POST, "/submission/mobile-analytics", ApiGatewayHandler { r, _ ->
+                    path(POST, "/submission/mobile-analytics") { r, _ ->
                         events(MobileAnalyticsSubmission())
                         Json.readJsonOrNull<ClientAnalyticsSubmissionPayload>(r.body) { events(UnprocessableJson(it)) }
                             ?.let {
                                 service.accept(it)
                                 HttpResponses.ok()
                             } ?: HttpResponses.badRequest()
-                    })
+                    }
                 ),
                 authorisedBy(
                     healthAuthenticator,
-                    Routing.path(
-                        Routing.Method.POST,
-                        "/submission/mobile-analytics/health",
-                        ApiGatewayHandler { _, _ -> HttpResponses.ok() })
+                    path(POST, "/submission/mobile-analytics/health") { _, _ -> HttpResponses.ok() }
                 )
             )
         )
-
-        companion object {
-            private val FIREHOSE_INGEST_ENABLED = Environment.EnvironmentKey.bool("firehose_ingest_enabled")
-            private val FIREHOSE_STREAM = Environment.EnvironmentKey.string("firehose_stream_name")
-
-            private fun analyticsConfig(environment: Environment) = AnalyticsConfig(
-                environment.access.required(FIREHOSE_STREAM),
-                environment.access.required(FIREHOSE_INGEST_ENABLED)
-            )
-        }
     }
 }
 

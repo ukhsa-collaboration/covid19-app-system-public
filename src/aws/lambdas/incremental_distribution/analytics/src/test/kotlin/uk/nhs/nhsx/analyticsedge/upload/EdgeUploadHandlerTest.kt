@@ -227,6 +227,5 @@ class FakeS3 : AwsS3 by proxy() {
         return this
     }
 
-    override fun getObject(locator: Locator): Optional<S3Object> =
-        Optional.ofNullable(objects[locator.key.value])
+    override fun getObject(locator: Locator) = objects[locator.key.value]
 }

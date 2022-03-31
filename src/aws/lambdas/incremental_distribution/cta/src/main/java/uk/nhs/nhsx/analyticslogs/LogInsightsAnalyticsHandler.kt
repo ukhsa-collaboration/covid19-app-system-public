@@ -6,8 +6,8 @@ import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey
 import uk.nhs.nhsx.core.Handler
+import uk.nhs.nhsx.core.RandomUUID
 import uk.nhs.nhsx.core.SystemClock.CLOCK
-import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.UniqueObjectKeyNameProvider
 import uk.nhs.nhsx.core.events.Event
@@ -21,7 +21,7 @@ abstract class LogInsightsAnalyticsHandler(
     events: Events
 ) : SchedulingHandler(events) {
     override fun handler() = Handler<ScheduledEvent, Event> { scheduledEvent, _ ->
-        service.generateStatisticsAndUploadToS3(Instant.ofEpochMilli( scheduledEvent.time.millis))
+        service.generateStatisticsAndUploadToS3(Instant.ofEpochMilli(scheduledEvent.time.millis))
         AnalyticsLogsFinished
     }
 }
@@ -40,15 +40,15 @@ fun logAnalyticsService(
     val shouldAbortIfOutsideWindow = environment.access.required(EnvironmentKey.bool("ABORT_OUTSIDE_TIME_WINDOW"))
 
     return LogInsightsAnalyticsService(
-        AWSLogsClientBuilder.defaultClient(),
-        logGroupName,
-        AwsS3Client(PrintingJsonEvents(CLOCK)),
-        bucketName,
-        UniqueObjectKeyNameProvider(clock, UniqueId.ID),
-        shouldAbortIfOutsideWindow,
-        events,
-        queryString,
-        converter,
-        bucketPrefix
+        client = AWSLogsClientBuilder.defaultClient(),
+        logGroup = logGroupName,
+        awsS3 = AwsS3Client(PrintingJsonEvents(CLOCK)),
+        bucketName = bucketName,
+        objectKeyNameProvider = UniqueObjectKeyNameProvider(clock, RandomUUID),
+        shouldAbortIfOutsideWindow = shouldAbortIfOutsideWindow,
+        events = events,
+        logInsightsQuery = queryString,
+        converter = converter,
+        bucketPrefix = bucketPrefix
     )
 }

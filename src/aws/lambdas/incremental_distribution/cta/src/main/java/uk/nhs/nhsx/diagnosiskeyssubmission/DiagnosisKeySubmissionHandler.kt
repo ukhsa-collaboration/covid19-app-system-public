@@ -8,9 +8,9 @@ import uk.nhs.nhsx.core.EnvironmentKeys.SUBMISSIONS_TOKENS_TABLE
 import uk.nhs.nhsx.core.EnvironmentKeys.SUBMISSION_STORE
 import uk.nhs.nhsx.core.HttpResponses.ok
 import uk.nhs.nhsx.core.Json
+import uk.nhs.nhsx.core.RandomUUID
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.UniqueId.Companion.ID
 import uk.nhs.nhsx.core.auth.ApiName.Health
 import uk.nhs.nhsx.core.auth.ApiName.Mobile
 import uk.nhs.nhsx.core.auth.Authenticator
@@ -50,7 +50,7 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
     ).signResponseWithKeyGivenInSsm(environment, events),
     awsS3: AwsS3 = AwsS3Client(events),
     awsDynamoClient: AwsDynamoClient = DynamoDBUtils(AmazonDynamoDBClientBuilder.defaultClient()),
-    objectKeyNameProvider: ObjectKeyNameProvider = UniqueObjectKeyNameProvider(clock, ID)
+    objectKeyNameProvider: ObjectKeyNameProvider = UniqueObjectKeyNameProvider(clock, RandomUUID)
 ) : RoutingHandler() {
 
     private fun diagnosisKeysSubmissionService(
@@ -61,30 +61,30 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
         awsDynamoClient: AwsDynamoClient,
         objectKeyNameProvider: ObjectKeyNameProvider
     ) = DiagnosisKeysSubmissionService(
-        awsS3,
-        awsDynamoClient,
-        objectKeyNameProvider,
-        environment.access.required(SUBMISSIONS_TOKENS_TABLE),
-        environment.access.required(SUBMISSION_STORE),
-        clock,
-        events
+        awsS3 = awsS3,
+        awsDynamoClient = awsDynamoClient,
+        objectKeyNameProvider = objectKeyNameProvider,
+        tableName = environment.access.required(SUBMISSIONS_TOKENS_TABLE),
+        bucketName = environment.access.required(SUBMISSION_STORE),
+        clock = clock,
+        events = events
     )
 
     override fun handler(): ApiGatewayHandler = handler
 
     private val handler = createHandler(
-        events,
-        environment,
-        signer,
-        mobileAuthenticator,
-        healthAuthenticator,
-        diagnosisKeysSubmissionService(
-            environment,
-            events,
-            clock,
-            awsS3,
-            awsDynamoClient,
-            objectKeyNameProvider
+        events = events,
+        environment = environment,
+        signer = signer,
+        mobileAuthenticator = mobileAuthenticator,
+        healthAuthenticator = healthAuthenticator,
+        diagnosisKeysSubmissionService = diagnosisKeysSubmissionService(
+            environment = environment,
+            events = events,
+            clock = clock,
+            awsS3 = awsS3,
+            awsDynamoClient = awsDynamoClient,
+            objectKeyNameProvider = objectKeyNameProvider
         )
     )
 
@@ -95,23 +95,23 @@ class DiagnosisKeySubmissionHandler @JvmOverloads constructor(
         mobileAuthenticator: Authenticator,
         healthAuthenticator: Authenticator,
         diagnosisKeysSubmissionService: DiagnosisKeysSubmissionService
-    ) = withSignedResponses(events,
-        environment,
-        signer,
-        routes(
+    ) = withSignedResponses(
+        events = events,
+        environment = environment,
+        signer = signer,
+        delegate = routes(
             authorisedBy(
                 mobileAuthenticator,
-                path(POST, "/submission/diagnosis-keys", ApiGatewayHandler { r, _ ->
+                path(POST, "/submission/diagnosis-keys") { r, _ ->
                     events(DiagnosisKeySubmission())
-                    Json.readJsonOrNull<ClientTemporaryExposureKeysPayload>(r.body) {
-                        events(UnprocessableJson(it))
-                    }?.also(diagnosisKeysSubmissionService::acceptTemporaryExposureKeys)
+                    Json.readJsonOrNull<ClientTemporaryExposureKeysPayload>(r.body) { events(UnprocessableJson(it)) }
+                        ?.also(diagnosisKeysSubmissionService::acceptTemporaryExposureKeys)
                     ok()
-                })
+                }
             ),
             authorisedBy(
                 healthAuthenticator,
-                path(POST, "/submission/diagnosis-keys/health", ApiGatewayHandler { _, _ -> ok() })
+                path(POST, "/submission/diagnosis-keys/health") { _, _ -> ok() }
             )
         )
     )

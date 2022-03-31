@@ -9,13 +9,12 @@ import strikt.api.expect
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import strikt.assertions.isNotEmpty
-import strikt.java.isAbsent
-import strikt.java.isPresent
+import strikt.assertions.isNotNull
+import strikt.assertions.isNull
 import uk.nhs.nhsx.circuitbreakers.ApprovalStatus.NO
 import uk.nhs.nhsx.circuitbreakers.ApprovalStatus.PENDING
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType.MissingPollingTokenError
 import uk.nhs.nhsx.circuitbreakers.CircuitBreakerResult.ResultType.Ok
-import uk.nhs.nhsx.circuitbreakers.CircuitBreakerService.Companion.extractPollingToken
 import uk.nhs.nhsx.core.Json
 
 class CircuitBreakerServiceTest {
@@ -41,7 +40,7 @@ class CircuitBreakerServiceTest {
     }
 
     @Test
-    fun `test get resolution with valid token for venues`() {
+    fun `get resolution with valid token for venues`() {
         val path = "/circuit-breaker/venue/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg"
         val responseEvent = circuitBreakerService.getResolution(path)
         val resolutionResponse = resolutionFromResponse(responseEvent)
@@ -53,7 +52,7 @@ class CircuitBreakerServiceTest {
     }
 
     @Test
-    fun testGetResolutionWithValidTokenForExposure() {
+    fun `get resolution with valid token for exposure`() {
         val path =
             "/circuit-breaker/exposure-notification/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg"
         val responseEvent = circuitBreakerService.getResolution(path)
@@ -66,7 +65,7 @@ class CircuitBreakerServiceTest {
     }
 
     @Test
-    fun `test get resolution with empty token for venues`() {
+    fun `get resolution with empty token for venues`() {
         val path = "/circuit-breaker/venue/resolution/"
         val responseEvent = circuitBreakerService.getResolution(path)
 
@@ -74,7 +73,7 @@ class CircuitBreakerServiceTest {
     }
 
     @Test
-    fun `test get resolution with empty token for exposure`() {
+    fun `get resolution with empty token for exposure`() {
         val path = "/circuit-breaker/exposure-notification/resolution/"
         val responseEvent = circuitBreakerService.getResolution(path)
 
@@ -82,7 +81,7 @@ class CircuitBreakerServiceTest {
     }
 
     @Test
-    fun `test get resolution with null token for venues`() {
+    fun `get resolution with null token for venues`() {
         val path = "/circuit-breaker/venue/resolution"
         val responseEvent = circuitBreakerService.getResolution(path)
 
@@ -90,7 +89,7 @@ class CircuitBreakerServiceTest {
     }
 
     @Test
-    fun `test get resolution with null token for exposure`() {
+    fun `get resolution with null token for exposure`() {
         val path = "/circuit-breaker/exposure-notification/resolution"
         val responseEvent = circuitBreakerService.getResolution(path)
 
@@ -99,16 +98,29 @@ class CircuitBreakerServiceTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(strings = ["token789", "", "/", "/circuit-breaker/exposure-notification/resolution/"])
+    @ValueSource(
+        strings = [
+            "token789",
+            "",
+            "/",
+            "/circuit-breaker/exposure-notification/resolution/",
+            "/circuit-breaker/exposure-notification/resolution/ddd/ff"
+        ]
+    )
     fun `extracts absent polling token`(input: String?) {
-        expectThat(extractPollingToken(input)).isAbsent()
+        expectThat(ApprovalTokenExtractor(input)).isNull()
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["/circuit-breaker/exposure-notification/resolution/token123", "/circuit-breaker/venue/resolution/token789"])
+    @ValueSource(
+        strings = [
+            "/circuit-breaker/exposure-notification/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg",
+            "/circuit-breaker/exposure-notification/resolution/sGJbXfXiT9vTsuynqtFYM2KDWu9wpTIrZxd9Hxtv7E2vadgPsH",
+        ]
+    )
     fun `extracts polling token`(input: String) {
-        expectThat(extractPollingToken(input))
-            .isPresent()
+        expectThat(ApprovalTokenExtractor(input))
+            .isNotNull()
             .isEqualTo(input.substringAfterLast("/"))
     }
 

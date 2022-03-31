@@ -18,15 +18,16 @@ import uk.nhs.nhsx.core.aws.secretsmanager.AwsSecretManager
 import uk.nhs.nhsx.core.aws.secretsmanager.SecretManager
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.events.Event
-import uk.nhs.nhsx.core.events.EventCategory
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.handler.SchedulingHandler
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
-import uk.nhs.nhsx.keyfederation.BatchTagDynamoDBService
-import uk.nhs.nhsx.keyfederation.BatchTagService
-import uk.nhs.nhsx.keyfederation.InteropClient
+import uk.nhs.nhsx.keyfederation.storage.BatchTagDynamoDBService
+import uk.nhs.nhsx.keyfederation.storage.BatchTagService
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
+import uk.nhs.nhsx.keyfederation.client.InteropClient
+import uk.nhs.nhsx.keyfederation.InteropConnectorUploadStats
 
 /**
  * Key Federation upload lambda
@@ -53,47 +54,44 @@ class KeyFederationUploadHandler @JvmOverloads constructor(
         InteropConnectorUploadStats(loadKeysAndUploadToFederatedServer(context))
     }
 
-    private fun loadKeysAndUploadToFederatedServer(context: Context) = if (config.uploadFeatureFlag.isEnabled()) {
-        try {
+    private fun loadKeysAndUploadToFederatedServer(context: Context) = when {
+        config.uploadFeatureFlag.isEnabled() -> {
             val (filter, factory) = FederatedExposureUploadConfig(
                 config.region,
                 config.federatedKeyUploadPrefixes
             )
 
             val submissionRepository = SubmissionFromS3Repository(
-                awsS3Client,
-                filter,
-                submissionBucket,
-                config.loadSubmissionsTimeout,
-                config.loadSubmissionsThreadPoolSize,
-                events,
-                clock
+                awsS3 = awsS3Client,
+                objectKeyFilter = filter,
+                submissionBucketName = submissionBucket,
+                loadSubmissionsTimeout = config.loadSubmissionsTimeout,
+                loadSubmissionsThreadPoolSize = config.loadSubmissionsThreadPoolSize,
+                events = events,
+                clock = clock
             )
 
             DiagnosisKeysUploadService(
-                clock,
-                interopClient,
-                submissionRepository,
-                batchTagService,
-                factory,
-                config.uploadRiskLevelDefaultEnabled,
-                config.uploadRiskLevelDefault,
-                config.initialUploadHistoryDays,
-                config.maxUploadBatchSize,
-                config.maxSubsequentBatchUploadCount,
-                context,
-                events
+                clock = clock,
+                interopClient = interopClient,
+                submissionRepository = submissionRepository,
+                batchTagService = batchTagService,
+                exposureUploadFactory = factory,
+                uploadRiskLevelDefaultEnabled = config.uploadRiskLevelDefaultEnabled,
+                uploadRiskLevelDefault = config.uploadRiskLevelDefault,
+                initialUploadHistoryDays = config.initialUploadHistoryDays,
+                maxUploadBatchSize = config.maxUploadBatchSize,
+                maxSubsequentBatchUploadCount = config.maxSubsequentBatchUploadCount,
+                context = context,
+                events = events
             ).loadKeysAndUploadToFederatedServer()
-        } catch (e: Exception) {
-            throw RuntimeException("Upload keys failed with error", e)
         }
-    } else {
-        events(InfoEvent("Upload to interop has been disabled, skipping this step"))
-        0
+        else -> {
+            events(InfoEvent("Upload to interop has been disabled, skipping this step"))
+            0
+        }
     }
 }
-
-data class InteropConnectorUploadStats(val processedSubmissions: Int) : Event(EventCategory.Info)
 
 private fun buildInteropClient(
     config: KeyFederationUploadConfig,
@@ -104,15 +102,15 @@ private fun buildInteropClient(
         .orElseThrow { RuntimeException("Unable to retrieve authorization token from secrets storage") }
 
     val signer = StandardSigningFactory(
-        CLOCK,
-        AwsSsmParameters(),
-        AWSKMSClientBuilder.defaultClient()
+        clock = CLOCK,
+        parameters = AwsSsmParameters(),
+        client = AWSKMSClientBuilder.defaultClient()
     ).signContentWithKeyFromParameter(config.signingKeyParameterName)
 
-    return InteropClient(
-        config.interopBaseUrl,
-        authTokenSecretValue.value,
-        JWS(signer),
-        events
+    return HttpInteropClient(
+        interopBaseUrl = config.interopBaseUrl,
+        authToken = authTokenSecretValue.value,
+        jws = JWS(signer),
+        events = events
     )
 }

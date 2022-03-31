@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.isA
 import uk.nhs.nhsx.core.aws.s3.AwsS3
-import java.util.*
 
 class AAEFileExporterTest {
 
@@ -46,7 +45,7 @@ class AAEFileExporterTest {
             objectContent = S3ObjectInputStream("dummyContent".byteInputStream(), null)
             objectMetadata = ObjectMetadata().apply { contentType = "dummyContentType" }
         }
-        every { s3.getObject(any()) } returns Optional.of(fakeS3Object)
+        every { s3.getObject(any()) } returns fakeS3Object
         val uploader = mockk<AAEUploader>()
         every { uploader.uploadFile(any(), any(), any()) } returns Unit
         val config = mockk<AAEUploadConfig>()
@@ -76,7 +75,7 @@ class AAEFileExporterTest {
             objectContent = S3ObjectInputStream("dummyContent".byteInputStream(), null)
             objectMetadata = ObjectMetadata().apply { contentType = "dummyContentType" }
         }
-        every { s3.getObject(any()) } returns Optional.of(fakeS3Object)
+        every { s3.getObject(any()) } returns fakeS3Object
         val uploader = mockk<AAEUploader>()
         every { uploader.uploadFile(any(), any(), any()) } returns Unit
         val config = mockk<AAEUploadConfig>()
@@ -106,7 +105,7 @@ class AAEFileExporterTest {
             objectContent = S3ObjectInputStream("dummyContent".byteInputStream(), null)
             objectMetadata = ObjectMetadata().apply { contentType = "dummyContentType" }
         }
-        every { s3.getObject(any()) } returns Optional.of(fakeS3Object)
+        every { s3.getObject(any()) } returns fakeS3Object
         val uploader = mockk<AAEUploader>()
         every { uploader.uploadFile(any(), any(), any()) } returns Unit
         val config = mockk<AAEUploadConfig>()
@@ -136,7 +135,7 @@ class AAEFileExporterTest {
             objectContent = S3ObjectInputStream("dummyContent".byteInputStream(), null)
             objectMetadata = ObjectMetadata().apply { contentType = "dummyContentType" }
         }
-        every { s3.getObject(any()) } returns Optional.of(fakeS3Object)
+        every { s3.getObject(any()) } returns fakeS3Object
         val uploader = mockk<AAEUploader>()
         every { uploader.uploadFile(any(), any(), any()) } returns Unit
         val config = mockk<AAEUploadConfig>()
@@ -211,7 +210,7 @@ class AAEFileExporterTest {
             objectContent = S3ObjectInputStream("dummyContent".byteInputStream(), null)
             objectMetadata = ObjectMetadata().apply { contentType = "dummyContentType" }
         }
-        every { s3.getObject(any()) } returns Optional.of(fakeS3Object)
+        every { s3.getObject(any()) } returns fakeS3Object
         val uploader = mockk<AAEUploader>()
         every { uploader.uploadFile(any(), any(), any()) } returns Unit
         val config = mockk<AAEUploadConfig>()

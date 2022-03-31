@@ -1,6 +1,6 @@
 package uk.nhs.nhsx.analyticsevents
 
-import uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer.replacePostDistrictLA
+import uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
 import uk.nhs.nhsx.core.Json.toJson
 import uk.nhs.nhsx.core.aws.s3.AwsS3
@@ -24,9 +24,9 @@ class AnalyticsEventsSubmissionService(
     private fun transformPayload(payload: Map<String, Any>): Map<String, Any> {
         val metadata = payload["metadata"] as? Map<*, *> ?: error("metadata must be a map")
 
-        val currentPostalDistrict = metadata["postalDistrict"] as String?
+        val currentPostalDistrict = metadata["postalDistrict"] as String
         val currentLocalAuthority = metadata["localAuthority"] as String?
-        val mappedPostDistrict = replacePostDistrictLA(
+        val mappedPostDistrict = PostDistrictLaReplacer(
             currentPostalDistrict,
             currentLocalAuthority,
             events

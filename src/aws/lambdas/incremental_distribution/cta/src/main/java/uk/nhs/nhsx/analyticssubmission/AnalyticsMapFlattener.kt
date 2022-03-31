@@ -1,25 +1,26 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package uk.nhs.nhsx.analyticssubmission
 
+import com.fasterxml.jackson.core.type.TypeReference
 import uk.nhs.nhsx.core.AppServicesJson
 
 object AnalyticsMapFlattener {
 
-    @Suppress("UNCHECKED_CAST")
-    fun recFlatten(input: Any): Map<String, Any?> {
-        val payloadMap = AppServicesJson.mapper.convertValue(input, Map::class.java) as Map<String, Any?>
-        return recFlattenMap(payloadMap)
-    }
+    private val mapReference = object : TypeReference<Map<String, Any?>>() {}
 
-    @Suppress("UNCHECKED_CAST")
-    private fun recFlattenMap(mapOfMaps: Map<String, *>): Map<String, Any?> {
-        val result = mutableMapOf<String, Any?>()
-        mapOfMaps.forEach {
-            if (it.value is Map<*, *>)
-                result.putAll(recFlattenMap(it.value as Map<String, Any?>))
-            else
-                result[it.key] = it.value
+    fun flattenRecursively(input: Any) = AppServicesJson.mapper.convertValue(input, mapReference).flatten()
+
+    private fun Map<String, Any?>.flatten(): Map<String, Any?> {
+        val target = mutableMapOf<String, Any?>()
+
+        for (entry in this) {
+            when (entry.value) {
+                is Map<*, *> -> (entry.value as Map<String, Any?>).flatten().let(target::putAll)
+                else -> target[entry.key] = entry.value
+            }
         }
-        return result
-    }
 
+        return target
+    }
 }

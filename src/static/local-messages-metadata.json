@@ -1193,458 +1193,494 @@
       "contentVersion": 1,
       "translations": {
         "zh": {
-          "head": "自我隔离和检测变更提醒",
-          "body": "若COVID-19检测呈阳性，相关指南已经变更。点击此处了解更多详情。",
+          "head": "自我隔离和检测建议已变更",
+          "body": "阅读更多",
           "content": [
             {
               "type": "para",
-              "text": "若COVID-19检测呈阳性，自我隔离与检测指南已经变更。"
+              "text": "从2022年3月28日起，相关法律不再要求自我隔离，适用对象为 COVID-19 检测呈阳性者或其接触者。"
             },
             {
               "type": "para",
-              "text": "若快速侧流检测结果为阳性，则您无需接受后续PCR检测。部分例外情况除外。若您因为属于临床易感人群，或正在参加研究或监测计划而被建议接受后续PCR检测，则应当进行检测。 "
+              "text": "然而，若检测结果呈阳性，则应该自我隔离；如有症状，则应该避免与他人接触。"
             },
             {
               "type": "para",
-              "text": "若COVID-19检测呈阳性，为确保不传播病毒，请自我隔离。"
+              "text": "若是无症状阳性者的接触者，但应用显示了倒计时，则可忽视此倒计时。"
             },
             {
               "type": "para",
-              "text": "但是，您现在可以在5天后结束自我隔离。停止自我隔离之前，您应当接受2次（间隔24小时）快速侧流检测，确认是否已不具有传染性。第一次每日快速侧流检测的时间不应早于第5天。"
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "如有相关症状，可网购侧流检测试剂盒"
             },
             {
               "type": "para",
-              "text": "若您在第5天和第6天的快速侧流检测结果均为阴性，说明在进行检测时，您可能没有传染性。"
+              "text": "若 COVID-19 检测呈阳性，请记住要居家隔离。"
             },
             {
               "type": "para",
-              "text": "若其中一次检测呈阳性，则您应当继续自我隔离，直到两次（间隔24小时）每日快速侧流检测结果均为阴性，或自我隔离至第10天为止。阳性结果表示您可能仍然具有传染性，并且存在将COVID-19传播给他人的风险。"
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "阅读最新的检测建议"
             },
             {
               "type": "para",
-              "text": "一旦您结束自我隔离，就无需继续接受每日快速侧流检测。"
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "阅读最新的自我隔离建议"
             },
             {
               "type": "para",
-              "text": "若在第5天或之后停止自我隔离，应用将继续倒计时10天，但您无需在剩余天数内自我隔离。这仍将作为有用的提醒，让您在该时间段内继续加倍注意。例如，强烈建议您：\n-居家工作（若可以）。\n-在商店、公共交通工具、拥挤的场所或新鲜空气不足的环境中，限制与他人的密切接触。\n-限制与可能出现重症的COVID-19高风险人群接触。\n-请特别注意洗手并佩戴面罩。"
+              "text": "请使用本应用的最新版本，以接收最新的 COVID-19 防疫指南。"
             }
           ]
         },
         "en": {
-          "head": "Reminder of self-isolation and testing changes",
-          "body": "If you test positive for COVID-19, the guidance has changed. Tap here for more details.",
+          "head": "Self-isolation and testing advice has changed",
+          "body": "Read more",
           "content": [
             {
               "type": "para",
-              "text": "Self-isolation and testing guidance has changed if you test positive for COVID-19."
+              "text": "From 28 March 2022 you are no longer legally required to self-isolate if you test positive for COVID-19 or are a contact of someone who tests positive."
             },
             {
               "type": "para",
-              "text": "If you get a positive rapid lateral flow test result, you no longer need to take a follow-up PCR test. There are some exceptions to this. You should take a follow-up PCR test if you have been advised to do so because you are in a clinically vulnerable group, or as part of a research or surveillance programme."
+              "text": "However, if you test positive you should self-isolate, and if you have symptoms, you should avoid contact with others."
             },
             {
               "type": "para",
-              "text": "Self-isolate if you test positive for COVID-19, to make sure you do not spread the virus."
+              "text": "If you are a contact of someone who tests positive and do not have symptoms, but your app is showing the countdown timer, you can ignore this."
             },
             {
               "type": "para",
-              "text": "However, you can now leave self-isolation after 5 full days. Before you stop self-isolating, you should take 2 rapid lateral flow tests 24 hours apart, to check you are not still infectious. The first rapid lateral flow test should not be taken before day 5."
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "You can order a pack of lateral flow tests online if you have symptoms"
             },
             {
               "type": "para",
-              "text": "If you get negative rapid lateral flow test results on day 5 and day 6, it is likely that you were not infectious at the time the tests were taken."
+              "text": "Remember to stay home if you test positive for COVID-19."
             },
             {
               "type": "para",
-              "text": "If either test is positive, you should continue to self-isolate until you get 2 negative daily rapid lateral flow results taken 24 hours apart, or until day 10. A positive result means you are likely to still be infectious and at risk of passing on COVID-19 to other people."
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "Read the latest testing advice"
             },
             {
               "type": "para",
-              "text": "Once you leave self-isolation you no longer need to continue taking daily rapid lateral flow tests."
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "Read the latest self-isolation advice"
             },
             {
               "type": "para",
-              "text": "If you stop self-isolation after day 5, the app will continue to countdown 10 days, but you do not need to self-isolate for the remaining days. It is still a useful reminder for you to continue to take extra care during that period. For example, you are strongly advised to:\n-Work from home if you can.\n-Limit close contact with other people in shops, on public transport and in crowded places or where there is not much fresh air.\n-Limit contact with people at higher risk of serious illness from COVID-19.\n-Pay extra attention to hand washing and wearing a face covering.\n"
+              "text": "Please keep this app updated to the latest version to receive the most recent COVID-19 guidance."
             }
           ]
         },
         "ar": {
-          "head": "تذكير بالعزل الذاتي وتغييرات الاختبار",
-          "body": "إذا ثبتت أصابتك بـ COVID-19 ، فقد تغيرت الإرشادات. اضغط هنا لمزيد من التفاصيل.",
+          "head": "تغيرت نصائح العزل الذاتي والأختبار",
+          "body": "اقرأ المزيد",
           "content": [
             {
               "type": "para",
-              "text": "تم تغيير إرشادات العزل الذاتي والاختبار إذا كانت نتيجة اختبار COVID-19 إيجابية. \n"
+              "text": "إعتبارا من 28 مارس 2022، لست ملزما قانونيا بالعزل الذاتي إذا كانت نتيجة اختبار COVID-19 الخاصة بك إيجابية أو كنت على اتصال بشخص ما كانت نتيجة اختباره إيجابية ."
             },
             {
               "type": "para",
-              "text": "إذا حصلت على نتيجة إيجابية لاختبار التدفق الجانبي السريع، لن تحتاج الى إجراء اختبار PCR للمتابعة. هناك بعض الاستثناءات لهذا. يجب عليك إجراء اختبار PCR للمتابعة إذا تم نصحك بالقيام بذلك لأنك في مجموعة معرضة لخطر الإصابة بالأمراض، أو إذا كنت جزء من برنامج بحثي أو مراقبة."
+              "text": "ومع ذلك ، إذا كانت نتيجة اختبارك إيجابية يجب أن تعزل نفسك، وإذا كانت لديك أعراض، يجب عليك تجنب الاتصال بالأخرين."
             },
             {
               "type": "para",
-              "text": "أعزل نفسك إذا كانت نتيجة اختبار COVID-19 إيجابية، للتأكد من أنك لا تنشر الفيروس. "
+              "text": "إذا كنت على اتصال بشخص ما كانت نتيجة اختباره إيجابية ولم تظهر عليه أعراض، ولكن تطبيقك يعرض مؤقت العد التنازلي، يمكنك تجاهل ذلك."
             },
             {
               "type": "para",
-              "text": "ومع ذلك، يمكنك الآن ترك العزل الذاتي بعد 5 أيام كاملة. يجب أن تجري اختبارين للتدفق الجانبي السريع بفاصل 24 ساعة، قبل التوقف عن العزل الذاتي، للتأكد من أنك لا تزال لست معديا. لا يجب إجراء اختبار التدفق الجانبي السريع الأول قبل اليوم 5."
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "يمكنك طلب مجموعة من اختبارات التدفق الجانبي عبر الإنترنت إذا كانت لديك أعراض"
             },
             {
               "type": "para",
-              "text": "إذا حصلت على نتائج سلبية لاختبار التدفق الجانبي السريع في اليوم 5 واليوم 6، من المحتمل أنك لم تكن معديا وقت إجراء الاختبارات."
+              "text": "تذكر أن تبقى في المنزل إذا كانت نتيجة اختبار COVID-19 الخاصة بك إيجابية."
             },
             {
               "type": "para",
-              "text": "إذا كان أحد الاختبارين إيجابيا، ينبغي أن تستمر في العزل الذاتي حتى تحصل على نتيجتين سلبيتين للتدفق الجانبي السريع اليومي بفاصل 24 ساعة، أو حتى اليوم 10. النتيجة الإيجابية تعني إنك من المحتمل أن تكون ما زلت معديا ومعرضا لخطر نقل COVID-19 الي أشخاص أخرين."
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "اقرأ أحدث النصائح المتعلقة بالاختبار"
             },
             {
               "type": "para",
-              "text": "بمجرد أن تغادر العزلة الذاتية، لن تكون في حاجة للاستمرار في إجراء اختبارات التدفق الجانبي السريع اليومي."
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "اقرأ أحدث النصائح المتعلقة بالعزل الذاتي"
             },
             {
               "type": "para",
-              "text": "إذا توقفت عن العزل الذاتي بعد اليوم 5، سيستمر التطبيق في العد التنازلي لمدة 10 أيام، ولكنك لست بحاجة الي العزلة الذاتية للأيام المتبقية. لا يزال تذكيرا مفيدا لك لمواصلة توخي المزيد من الحذر خلال تلك الفترة. علي سبيل المثال، يُنصح بشدة بالتالي: \n- العمل من المنزل عند الاستطاعة.\n- الحد من الاختلاط بالأشخاص الآخرين في المحلات التجارية، في وسائل المواصلات العامة والأماكن المزدحمة أو حيث لا يوجد الكثير من الهواء النقي.\n- الحد من الاختلاط بالأشخاص المعرضين لمخاطر كبيرة للإصابة بأمراض خطيرة من COVID-19.\nيجب أن تولي المزيد من الاهتمام إلى غسل اليدين وارتداء غطاء الوجه. "
+              "text": "رجاء تحديث هذا التطبيق إلى احدث اصدار لتلقي أحدث الإرشادات المتعلقة بـــــ COVID-19."
             }
           ]
         },
         "tr": {
-          "head": "Karantina ve test yönergesindeki değişikliklerle ilgili hatırlatma",
-          "body": "COVID-19 testinizin pozitif çıkması halinde uymanız gereken yönergelerde değişiklik yapılmıştır. Ayrıntılar için tıklayın.",
+          "head": "Karantina ve testlerle ile ilgili tavsiyelerde değişiklik yapılmıştır",
+          "body": "Daha fazla okuyun",
           "content": [
             {
               "type": "para",
-              "text": "COVID-19 testinizin pozitif çıkması halinde uymanız gereken karantina ve test yönergesinde değişiklik yapılmıştır. "
+              "text": "28 Mart 2022 itibariyle, COVID-19 testi pozitif çıkanların veya yakın temaslıların karantinaya  girme zorunluluğu yasal olarak kaldırılmıştır."
             },
             {
               "type": "para",
-              "text": "Hızlı antijen testinizin sonucu pozitif çıkarsa, ardından PCR testi yaptırmanıza artık gerek yoktur. Bununla birlikte bazı istisnai durumlarda test yaptırmanız gerekebilir. Klinik açıdan hassas bir grupta veya bir araştırma ya da gözetim programında yer almanız ve tavsiye edilmesi halinde PCR testi yaptırmalısınız. "
+              "text": "Bununla birlikte, test sonucunuz pozitif çıkarsa karantinaya girmeli; belirtilerinizin olması durumunda diğer insanlarla temastan kaçınmalısınız."
             },
             {
               "type": "para",
-              "text": "COVID-19 testiniz pozitif çıkarsa, virüsü yaymamak adına kendinizi karantinaya alın."
+              "text": "Test sonucu pozitif çıkan birinin temaslısı iseniz ve belirtileriniz yoksa, uygulamanın gerisayım sayacını dikkate almayabilirsiniz."
             },
             {
               "type": "para",
-              "text": "Bununla birlikte, artık 5 gün dolduktan sonra \nkarantinayı sona erdirebilirsiniz. Karantinayı sona erdirmeden önce, hastalığı bulaştırma riskinizin  \nkalmadığını kontrol etmek için 24 saat arayla iki adet hızlı antijen testi yapmanız gerekmektedir. \nİlk test 5’inci günden önce yapılmamalıdır. "
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "Belirtileriniz varsa internetten bir paket hızlı antijen testi sipariş edebilirsiniz"
             },
             {
               "type": "para",
-              "text": "Beşinci ve altıncı günlerde yapacağınız hızlı antijen testlerinin negatif çıkması, testlerin yapıldığı gün itibariyle hastalığı bulaştırma riskinizin büyük olasılıkla bulunmadığı anlamına gelir."
+              "text": " COVID-19 testinizin sonucu pozitif çıkarsa evde kalmayı unutmayın."
             },
             {
               "type": "para",
-              "text": "İki testten birinin pozitif çıkması halinde, 24 saat arayla yapacağınız iki hızlı antijen testinin her ikisi de negatif çıkıncaya ya da 10 günlük karantina süresi dolana kadar karantinada kalmaya devam etmelisiniz. Pozitif test sonucu, hastalığı başkalarına bulaştırma riskinizin büyük olasılıkla devam ettiği anlamına gelir."
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "Testlerle ilgili en son tavsiyeleri okuyun"
             },
             {
               "type": "para",
-              "text": "Karantina bittikten sonra artık günlük hızlı antijen testi yapmanıza gerek yoktur."
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "Karantinayla ilgili en son tavsiyeleri okuyun"
             },
             {
               "type": "para",
-              "text": "Beş günün ardından karantinayı sona erdirmeniz halinde uygulama 10'uncu güne kadar geri sayıma devam edecek olsa da sizin bu geri kalan günlerde karantinada kalmanıza gerek yoktur. Bununla beraber, bu süre tamamlanana kadar ekstra tedbirli olmaya devam etmelisiniz. Örneğin:\n-Mümkünse evden çalışmanız.\n-Alışveriş yerlerinde, toplu taşıma araçlarında, kalabalık alanlarda ve havalandırmanın iyi olmadığı yerlerde diğer insanlarla yakın teması sınırlandırmanız ve.\n-COVID-19'u ağır geçirme riski taşıyan kimselerle olan temasınızı kısıtlamanız önemle tavsiye olunur. \n-Ellerinizi yıkamaya ve maske takmaya özellikle dikkat edin."
+              "text": "En güncel COVID-19 yönergesine erişmek için uygulamayı düzenli olarak güncellediğinizden emin olun."
             }
           ]
         },
         "pl": {
-          "head": "Przypomnienie o zmianach w samoizolacji i testach",
-          "body": "Zmieniły się wytyczne dla osób, które uzyskują pozytywny wynik testu na COVID-19. Stuknij tutaj, aby uzyskać więcej informacji.",
+          "head": "Zmieniły się zalecenia dotyczące testów i samoizolacji",
+          "body": "Więcej informacji",
           "content": [
             {
               "type": "para",
-              "text": "Wskazówki dotyczące samoizolacji i testów dla osób z pozytywnym wynikiem testu na COVID-19 uległy zmianie."
+              "text": "Od 28 marca 2022 r. nie ma już obowiązku samoizolacji, w razie pozytywnego wyniku testu na COVID-19 lub kontaktu z kimś kto miał pozytywny wynik testu."
             },
             {
               "type": "para",
-              "text": "W razie pozytywnego wyniku szybkiego testu przepływu bocznego, nie trzeba już wykonywać kontrolnego testu PCR. Jest kilka wyjątków od tej zasady. Należy wykonać kontrolny test PCR, jeśli zalecono to, ze względu na przynależność do grupy klinicznie wrażliwej lub w ramach programu badawczego lub nadzorczego."
+              "text": "Jeśli w razie pozytywnego wyniku testu zaleca się izolację, a w razie wystąpienia objawów unikanie kontaktu z innymi."
             },
             {
               "type": "para",
-              "text": "W razie pozytywnego wyniku testu na COVID-19 należy rozpocząć samoizolację aby nie rozprzestrzeniać wirusa."
+              "text": "Jeżeli aplikacja wskazuje kontakt z kimś kto otrzymał pozytywny wynik testu i wyświetla licznik czasu, ale nie ma się objawów, można to zignorować."
             },
             {
               "type": "para",
-              "text": "Można jednak zakończyć samoizolację po 5 pełnych dniach. Przed zakończeniem samoizolacji należy wykonać 2 szybkie testy przepływu bocznego w odstępie 24 godzin, aby sprawdzić, czy jeszcze zaraża się innych. Pierwszego szybkiego testu przepływu bocznego nie należy wykonać przed 5 dniem izolacji."
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "Jeśli ma się objawy można zamówić zestaw testów przepływu bocznego online"
             },
             {
               "type": "para",
-              "text": "Negatywny wynik szybkich testów przepływu bocznego, w dniach 5 i 6 świadczy, że najprawdopodobniej nie zarażasz już innych."
+              "text": "Przypominamy, że zalecamy pozostanie w domu, w razie pozytywnego wyniku testu na COVID-19."
             },
             {
               "type": "para",
-              "text": "Jeśli wynik któregoś z tych testów będzie pozytywny, należy kontynuować samoizolację, aż do uzyskania 2 negatywnych testów szybkiego przepływu bocznego, wykonywanych w odstępie 24 godzin lub do 10 dni samoizolacji. Wynik pozytywny oznacza, że prawdopodobnie nadal możesz zarażać innych wirusem COVID-19."
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "Przeczytaj najnowsze porady w zakresie testów"
             },
             {
               "type": "para",
-              "text": "Po zakończeniu samoizolacji nie trzeba już wykonywać codziennych szybkich testów przepływu bocznego."
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "Przeczytaj najnowsze porady w zakresie samoizolacji"
             },
             {
               "type": "para",
-              "text": "Jeśli zakończysz samoizolację po 5 dniu, aplikacja będzie nadal odliczać 10 dni, ale nie musisz izolować się przez pozostałe dni. Odliczanie w tym okresie stanowi przydatne przypomnienie o potrzebie zachowania szczególnej ostrożności w tym okresie. Na przykład zdecydowanie zaleca się:\n-Świadczenie pracy z domu, jeśli to tylko możliwe.\n-Ograniczenie bliskiego kontaktu z innymi ludźmi w sklepach, w środkach komunikacji miejskiej oraz w miejscach zatłoczonych lub tam, gdzie jest mało świeżego powietrza.\n-Ograniczenie kontaktu z osobami, dla których zakażenie COVID-19 stanowi szczególne zagrożenie.\n-Zwracaj szczególną uwagę na mycie rąk i noszenie zakrycia twarzy."
+              "text": "Aktualizuj tę aplikację do najnowszej wersji, aby otrzymywać najnowsze wytyczne dotyczące COVID-19."
             }
           ]
         },
         "ro": {
-          "head": "Momento de autoizolare si modificari de testare",
-          "body": "Directivele au fost modificate pentru cazul în care ați fost testat(ă) pozitiv pentru COVID-19. Atingeți aici pentru detalii suplimentare.",
+          "head": "Instrucțiunile privind autoizolarea și testarea s-au modificat",
+          "body": "Citiți mai multe detalii",
           "content": [
             {
               "type": "para",
-              "text": "Regulile de autoizolare și testare pentru cazul în care sunteți pozitiv(ă) cu COVID-19 au fost modificate."
+              "text": "Începând cu 28 martie 2022, nu mai sunteți obligați prin lege să vă autoizolați dacă aveți un rezultat pozitiv la testul de COVID-19 sau dacă sunteți contactul cuiva care are un rezultat pozitiv."
             },
             {
               "type": "para",
-              "text": "Dacă aveți un test rapid cu flux lateral pozitiv, nu este necesar să mai faceți un PCR. Există și câteva excepții. Efectuați un PCR dacă vi s-a recomandat acest lucru deoarece faceți parte dintr-o categorie de risc sau participați la un program de studiu sau de monitorizare."
+              "text": "Totuși, dacă aveți un rezultat pozitiv trebuie să vă autoizolați, iar dacă aveți simptome trebuie să evitați contactul cu alte persoane."
             },
             {
               "type": "para",
-              "text": "Dacă sunteți pozitiv(ă) cu COVID-19, autoizolați-vă pentru a preveni răspândirea virusului."
+              "text": "Dacă sunteți contactul unei persoane care are un rezultat pozitiv iar dvs. nu prezentați simptome, însă aplicația vă arată contorul cu numărătoarea inversă, puteți să ignorați acest lucru."
             },
             {
               "type": "para",
-              "text": "Cu toate acestea, acum puteți ieși din autoizolare după 5 zile întregi. Înainte de a ieși din autoizolare, trebuie să efectuați 2 teste zilnice rapide de flux lateral, pentru a vă asigura că nu mai sunteți contagios(oasă). Nu efectuați primul test rapid de flux lateral mai devreme de ziua 5."
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "Dacă aveți simptome, puteți comanda online un pachet de teste cu flux lateral"
             },
             {
               "type": "para",
-              "text": "Dacă testele rapide de flux lateral din zilele 5 și 6 sunt negative, cel mai probabil nu erați contagios(oasă) când ați făcut testele."
+              "text": "Rețineți, dacă aveți un rezultat pozitiv la COVID-19, stați acasă."
             },
             {
               "type": "para",
-              "text": "Dacă unul din teste este pozitiv, continuați autoizolarea până când veți obține 2 teste rapide de flux lateral negative, efectuate la o distanță de 24 de ore, sau până în ziua 10. Rezultatul pozitiv indică posibilitatea de a fi contagios(oasă) și de a transmite infecția cu COVID-19 și altor persoane."
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "Citiți ultimele instrucțiuni privind testarea"
             },
             {
               "type": "para",
-              "text": "Odată ce ați ieșit din autoizolare, nu mai este nevoie să efectuați teste rapide de flux lateral zilnice."
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "Citiți ultimele instrucțiuni privind autoizolarea"
             },
             {
               "type": "para",
-              "text": "Dacă ieșiți din autoizolare în ziua 5, aplicația va continua numărătoarea până în ziua 10, dar nu este necesar să vă autoizolați în zilele rămase. Cu toate acestea, reprezintă un memento util pentru dvs. să luați măsuri de precauție suplimentare în acele zile. De exemplu, vi se recomandă cu tărie să:\n-Lucrați de acasă, dacă se poate.\n-Limitați contactul cu alte persoane în magazine, transportul în comun și în zone aglomerate sau care nu sunt bine ventilate.\n-Limitați contactul cu persoane aflate în categoriile de risc pentru forme severe de COVID-19.\n-Acordați atenție deosebită spălatului pe mâini și purtați o mască de protecție."
+              "text": "Actualizați întotdeauna această aplicația la cea mai recentă versiune a sa pentru a primi cele mai recente instrucțiuni privind COVID-19."
             }
           ]
         },
         "pa": {
-          "head": "ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਅਤੇ ਟੈਸਟਿੰਗ ਤਬਦੀਲੀਆਂ ਦੀ ਯਾਦਦਹਾਨੀ",
-          "body": "ਜੇਕਰ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ, ਤਾਂ ਮਾਰਗਦਰਸ਼ਨ ਬਦਲ ਗਿਆ ਹੈ। ਹੋਰ ਵੇਰਵਿਆਂ ਲਈ ਇੱਥੇ ਟੈਪ ਕਰੋ।",
+          "head": "ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਅਤੇ ਟੈਸਟ ਕਰਾਉਣ ਬਾਰੇ ਸਲਾਹ ਬਦਲ ਗਈ ਹੈ",
+          "body": "ਹੋਰ ਪੜ੍ਹੋ",
           "content": [
             {
               "type": "para",
-              "text": "ਜੇ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ ਤਾਂ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਅਤੇ ਟੈਸਟ ਕਰਾਉਣ ਬਾਰੇ ਮਾਰਗਦਰਸ਼ਨ ਬਦਲ ਗਿਆ ਹੈ।"
+              "text": "28 ਮਾਰਚ 2022 ਤੋਂ ਜੇਕਰ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ ਜਾਂ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਵਿਅਕਤੀ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਰਹੇ ਹੋ ਜੋ ਜਿਸਦਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ, ਤਾਂ ਤੁਹਾਨੂੰ ਕਾਨੂੰਨੀ ਤੌਰ 'ਤੇ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।"
             },
             {
               "type": "para",
-              "text": "ਜੇਕਰ ਤੁਹਾਡਾ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਦਾ ਨਤੀਜਾ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ, ਤਾਂ ਤੁਹਾਨੂੰ ਹੁਣ ਫਾਲੋ-ਅੱਪ PCR ਟੈਸਟ ਕਰਾਉਣ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ। ਇਸਦੇ ਲਈ ਕੁਝ ਅਪਵਾਦ ਹਨ। ਤੁਹਾਨੂੰ ਇੱਕ ਫਾਲੋ-ਅੱਪ PCR ਟੈਸਟ ਕਰਾਉਣਾ ਚਾਹੀਦਾ ਹੈ ਜੇਕਰ ਡਾਕਟਰੀ ਤੌਰ 'ਤੇ ਕਮਜ਼ੋਰ ਸਮੂਹ ਵਿੱਚ ਹੋਣ ਕਰਕੇ, ਜਾਂ ਖੋਜ ਜਾਂ ਨਿਗਰਾਨੀ ਪ੍ਰੋਗਰਾਮ ਦੇ ਹਿੱਸੇ ਵਜੋਂ ਤੁਹਾਨੂੰ ਅਜਿਹਾ ਕਰਨ ਲਈ ਕਿਹਾ ਗਿਆ ਹੈ।"
+              "text": "ਹਾਲਾਂਕਿ, ਜੇਕਰ ਤੁਹਾਡਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਤਾਂ ਤੁਹਾਨੂੰ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਚਾਹੀਦਾ ਹੈ, ਅਤੇ ਜੇਕਰ ਤੁਹਾਡੇ ਵਿੱਚ ਲੱਛਣ ਹਨ, ਤਾਂ ਤੁਹਾਨੂੰ ਦੂਜਿਆਂ ਨਾਲ ਸੰਪਰਕ ਕਰਨ ਤੋਂ ਬਚਣਾ ਚਾਹੀਦਾ ਹੈ।"
             },
             {
               "type": "para",
-              "text": "ਜੇਕਰ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ, ਤਾਂ ਇਹ ਯਕੀਨੀ ਬਣਾਉਣ ਲਈ ਕਿ ਤੁਸੀਂ ਵਾਇਰਸ ਨਾ ਫੈਲਾਓ, ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖੋ।"
+              "text": "ਜੇਕਰ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਵਿਅਕਤੀ ਦੇ ਸੰਪਰਕ ਹੋ ਜਿਸਦਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ ਅਤੇ ਲੱਛਣ ਨਹੀਂ ਹਨ, ਪਰ ਤੁਹਾਡੀ ਐਪ ਉਲਟੀ ਗਿਣਤੀ ਟਾਈਮਰ ਦਿਖਾ ਰਹੀ ਹੈ, ਤਾਂ ਤੁਸੀਂ ਇਸ ਨੂੰ ਨਜ਼ਰਅੰਦਾਜ਼ ਕਰ ਸਕਦੇ ਹੋ।"
             },
             {
               "type": "para",
-              "text": "ਹਾਲਾਂਕਿ, ਹੁਣ ਤੁਸੀਂ ਪੂਰੇ 5 ਦਿਨਾਂ ਬਾਅਦ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਬੰਦ ਕਰ ਸਕਦੇ ਹੋ। ਇਸ ਤੋਂ ਪਹਿਲਾਂ ਕਿ ਤੁਸੀਂ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਬੰਦ ਕਰੋ, ਇਹ ਜਾਂਚ ਕਰਨ ਲਈ ਕਿ ਤੁਸੀਂ ਹਾਲੇ ਵੀ ਛੂਤਕਾਰੀ ਨਹੀਂ ਹੋ, ਤੁਹਾਨੂੰ 24 ਘੰਟਿਆਂ ਦੇ ਅੰਤਰਾਲ 'ਤੇ 2 ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਕਰਵਾਉਣੇ ਚਾਹੀਦੇ ਹਨ। ਪਹਿਲਾ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ 5ਵੇਂ ਦਿਨ ਤੋਂ ਪਹਿਲਾਂ ਨਹੀਂ ਲਿਆ ਜਾਣਾ ਚਾਹੀਦਾ।"
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "ਜੇਕਰ ਤੁਹਾਨੂੰ ਲੱਛਣ ਹਨ ਤਾਂ ਤੁਸੀਂ ਲੇਟਰਲ ਫਲੋ ਟੈਸਟਾਂ ਦਾ ਇੱਕ ਪੈਕ ਆਨਲਾਈਨ ਆਰਡਰ ਕਰ ਸਕਦੇ ਹੋ"
             },
             {
               "type": "para",
-              "text": "ਜੇ ਤੁਹਾਡੇ 5ਵੇਂ ਅਤੇ 6ਵੇਂ ਦਿਨ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਦੇ ਨੈਗੇਟਿਵ ਨਤੀਜੇ ਆਉਂਦੇ ਹਨ, ਤਾਂ ਇਹ ਸੰਭਾਵਨਾ ਹੈ ਕਿ ਜਦੋਂ ਟੈਸਟ ਲਏ ਗਏ ਸਨ ਤਾਂ ਤੁਸੀਂ ਛੂਤਕਾਰੀ ਨਹੀਂ ਸੀ।"
+              "text": "ਜੇਕਰ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ ਤਾਂ ਘਰ ਰਹਿਣਾ ਯਾਦ ਰੱਖੋ।"
             },
             {
               "type": "para",
-              "text": "ਜੇਕਰ ਕੋਈ ਵੀ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਹੈ, ਤਾਂ ਤੁਹਾਨੂੰ, ਜਦੋਂ ਤੱਕ ਤੁਹਾਡੇ 24 ਘੰਟਿਆਂ ਦੇ ਅੰਤਰਾਲ 'ਤੇ ਲਏ ਗਏ 2 ਰੋਜ਼ਾਨਾ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟ ਨੈਗੇਟਿਵ ਨਹੀਂ ਆਉਂਦੇ ਹਨ, ਜਾਂ 10ਵੇਂ ਦਿਨ ਤਕ, ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਜਾਰੀ ਰੱਖਣਾ ਚਾਹੀਦਾ ਹੈ। ਪਾਜ਼ਿਟਿਵ ਨਤੀਜੇ ਦਾ ਮਤਲਬ ਹੈ ਕਿ ਤੁਹਾਡੀ ਹਾਲੇ ਵੀ ਛੂਤਕਾਰੀ ਹੋਣ ਦੀ ਸੰਭਾਵਨਾ ਹੈ ਅਤੇ ਤੁਸੀਂ COVID-19 ਨੂੰ ਦੂਜੇ ਲੋਕਾਂ ਤੱਕ ਪਹੁੰਚਾਉਣ ਦੇ ਜੋਖਮ ਵਿੱਚ ਹੋ।"
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "ਟੈਸਟਿੰਗ ਬਾਰੇ ਨਵੀਨਤਮ ਸਲਾਹ ਪੜ੍ਹੋ"
             },
             {
               "type": "para",
-              "text": "ਇੱਕ ਵਾਰ ਜਦੋਂ ਤੁਸੀਂ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਬੰਦ ਕਰ ਦਿੰਦੇ ਹੋ ਤਾਂ ਤੁਹਾਨੂੰ ਰੋਜ਼ਾਨਾ ਰੈਪਿਡ ਲੈਟਰਲ ਫਲੋ ਟੈਸਟਾਂ ਨੂੰ ਜਾਰੀ ਰੱਖਣ ਦੀ ਲੋੜ ਨਹੀਂ ਰਹਿੰਦੀ।"
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਬਾਰੇ ਨਵੀਨਤਮ ਸਲਾਹ ਪੜ੍ਹੋ"
             },
             {
               "type": "para",
-              "text": "ਜੇਕਰ ਤੁਸੀਂ 5ਵੇਂ ਦਿਨ ਤੋਂ ਬਾਅਦ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਬੰਦ ਕਰ ਦਿੰਦੇ ਹੋ, ਤਾਂ ਐਪ 10 ਦਿਨਾਂ ਦੀ ਉਲਟੀ ਗਿਣਤੀ ਜਾਰੀ ਰੱਖੇਗੀ, ਪਰ ਤੁਹਾਨੂੰ ਬਾਕੀ ਦਿਨਾਂ ਲਈ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ। ਇਹ ਹਾਲੇ ਵੀ ਉਸ ਮਿਆਦ ਦੇ ਦੌਰਾਨ ਵਾਧੂ ਦੇਖਭਾਲ ਕਰਨਾ ਜਾਰੀ ਰੱਖਣ ਦੀ ਇੱਕ ਉਪਯੋਗੀ ਯਾਦਦਹਾਨੀ ਹੈ। ਉਦਾਹਰਨ ਲਈ, ਤੁਹਾਨੂੰ ਜ਼ੋਰ ਦੇ ਕੇ ਸਲਾਹ ਦਿੱਤੀ ਜਾਂਦੀ ਹੈ:\n-ਜੇ ਤੁਸੀਂ ਕਰ ਸਕਦੇ ਹੋ ਤਾਂ ਘਰੋਂ ਕੰਮ ਕਰੋ।\n-ਦੁਕਾਨਾਂ, ਜਨਤਕ ਆਵਾਜਾਈ ਅਤੇ ਭੀੜ-ਭੜੱਕੇ ਵਾਲੀਆਂ ਥਾਵਾਂ 'ਤੇ ਜਾਂ ਜਿੱਥੇ ਜ਼ਿਆਦਾ ਤਾਜ਼ੀ ਹਵਾ ਨਾ ਹੋਵੇ, ਦੂਜੇ ਲੋਕਾਂ ਨਾਲ ਨਜ਼ਦੀਕੀ ਸੰਪਰਕ ਨੂੰ ਸੀਮਿਤ ਕਰੋ।\n-COVID-19 ਤੋਂ ਗੰਭੀਰ ਬਿਮਾਰੀ ਦੇ ਵੱਧ ਜੋਖਮ ਵਾਲੇ ਲੋਕਾਂ ਨਾਲ ਸੰਪਰਕ ਸੀਮਿਤ ਕਰੋ।\n-ਹੱਥ ਧੋਣ ਵੱਲ ਵਧੇਰੇ ਧਿਆਨ ਦਿਓ ਅਤੇ ਚਿਹਰੇ ਦੀ ਕਵਰਿੰਗ ਪਹਿਨੋ।"
+              "text": "COVID-19 ਬਾਰੇ ਸਭ ਤੋਂ ਤਾਜ਼ਾ ਸੇਧ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਐਪ ਨੂੰ ਨਵੀਨਤਮ ਸੰਸਕਰਣ 'ਤੇ ਅੱਪਡੇਟ ਰੱਖੋ।"
             }
           ]
         },
         "bn": {
-          "head": "নিজেকে আলাদা রাখা এবং পরীক্ষা করানোর পরিবর্তনগুলির রিমাইন্ডার খেয়াল রাখার জন্য",
-          "body": "আপনার COVID-19 এর পরীক্ষার ফল যদি পজিটিভ হয়, সেই ক্ষেত্রে নির্দেশনাটি পরিবর্তিত হয়েছে।",
+          "head": "নিজেকে আলাদা রাখা এবং পরীক্ষা করার পরামর্শ পরিবর্তিত হয়েছে",
+          "body": "আরও পড়ুন",
           "content": [
             {
               "type": "para",
-              "text": "আপনার COVID-19 পরীক্ষার ফলাফল পজিটিভ হলে স্ব-বিচ্ছিন্ন থাকার এবং পরীক্ষা করানোর নির্দেশিকার পরিবর্তন হয়েছে। "
+              "text": "যদি আপনার COVID-19 পরীক্ষার ফলাফল পজিটিভ হয় বা আপনি এমন কারও সংস্পর্শে আসেন যার পরীক্ষার ফলাফল পজিটিভ, তাহলে 28 মার্চ 2022 থেকে আপনার আর আইনত নিজেকে আলাদা রাখার আবশ্যকতা নেই।"
             },
             {
               "type": "para",
-              "text": "আপনার দ্রুত ল্যাটারাল ফ্লো পরীক্ষার ফলাফল পজিটিভ হলে, আপনাকে আর একটি ফলো-আপ PCR পরীক্ষা করাতে হবে না। এর কিছু ব্যতিক্রম আছে। আপনাকে একটি ফলো-আপ PCR পরীক্ষা করানোর পরামর্শ দেওয়া হয়ে থাকলে আপনারে তা করানো উচিৎ কারণ আপনি একটি নিদানিকভাবে অরক্ষিত দলে আছেন, অথবা একটি গবেষণার অংশ হিসাবে আছেন বা নজরদারী কর্মসূচির অধীন আছেন।"
+              "text": "তবে, আপনার পরীক্ষার ফলাফল পজিটিভ হলে আপনার নিজেকে আলাদা রাখা উচিত এবং আপনার লক্ষণ থাকলে অন্যদের সাথে সংস্পর্শ এড়ানো উচিত।"
             },
             {
               "type": "para",
-              "text": "আপনার COVID-19 পরীক্ষার ফলাফল পজিটিভ হলে স্ব-বিচ্ছিন্ন থাকুন, যাতে আপনার থেকে ভাইরাস না ছড়ায়।"
+              "text": "আপনি যদি এমন কারও সংস্পর্শে এসে থাকেন যার পরীক্ষার ফলাফল পজিটিভ এসেছে, এবং আপনার কোনও লক্ষণ না থাকে, কিন্তু আপনার অ্যাপটি কাউন্টডাউন টাইমার দেখায়, সেই ক্ষেত্রে আপনি এটি উপেক্ষা করতে পারেন।"
             },
             {
               "type": "para",
-              "text": "তথাপি, আপনি এখন পূর্ণ 5 দিন পরে নিজেকে আলাদা রাখা ছেড়ে বেরোতে পারেন। আপনি নিজেকে আলাদা রাখা বন্ধ করার আগে, আপনি এখনও সংক্রামক নন তা যাচাই করার জন্য 24 ঘন্টার ব্যবধানে আপনার 2টি দ্রুত ল্যাটারাল ফ্লো পরীক্ষা করা উচিত। প্রথম দ্রুত ল্যাটারাল ফ্লো পরীক্ষাটি 5 দিনের আগে করা উচিত নয়।"
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "আপনার লক্ষণ থাকলে, আপনি ল্যাটারাল ফ্লো পরীক্ষার একটি প্যাক অনলাইনে অর্ডার করতে পারেন"
             },
             {
               "type": "para",
-              "text": "আপনি যদি দিন 5 এবং দিন 6-এ দ্রুত ল্যাটারাল ফ্লো পরীক্ষায় নেগেটিভ ফলাফল পান, তাহলে পরীক্ষাগুলি করার সময় আপনি সম্ভবত সংক্রামক ছিলেন না।"
+              "text": "যদি আপনার COVID-19 পরীক্ষার ফলাফল পজিটিভ হয়, তাহলে বাসায় থাকার কথা মনে রাখুন।"
             },
             {
               "type": "para",
-              "text": "যদি যে কোনও একটি পরীক্ষা পজিটিভ হয়, তাহলে আপনার 24 ঘন্টার ব্যবধানে বা 10 দিন পর্যন্ত 2টি নেগেটিভ দৈনিক দ্রুত ল্যাটারাল ফ্লো পরীক্ষা না হওয়া পর্যন্ত নিজেকে আলাদা রাখা চালিয়ে যেতে হবে। পজিটিভ ফলাফলের অর্থ হল আপনি সম্ভবত এখনও সংক্রামক আছেন এবং আপনার থেকে অন্য লোকেদের মধ্যে COVID-19 ছড়িয়ে যাওয়ার ঝুঁকি আছে।"
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "পরীক্ষা সংক্রান্ত সর্বশেষ পরামর্শ পড়ুন"
             },
             {
               "type": "para",
-              "text": "আপনি নিজেকে আলাদা রাখা ছেড়ে বেরিয়ে যাওয়ার পরে আপনাকে আর দৈনিক দ্রুত ল্যাটারাল ফ্লো পরীক্ষা চালিয়ে যেতে হবে না।"
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "নিজেকে আলাদা রাখার বিষয়ে সাম্প্রতিকতম পরামর্শ পড়ুন"
             },
             {
               "type": "para",
-              "text": "আপনি যদি দিন 5-এর পরে নিজেকে আলাদা রাখা বন্ধ করেন, তাহলে অ্যাপটি 10 দিন গণনা চালিয়ে যাবে, তবে আপনাকে বাকি দিনগুলির জন্য নিজেকে আলাদা রাখার দরকার নেই। সেই সময়কালে অতিরিক্ত সতর্কতা নেওয়া চালিয়ে যাওয়ার জন্য এটি এখনও আপনার জন্য একটি উপযোগী রিমাইন্ডার হিসেবে কাজ করবে। উদাহরণস্বরূপ, আপনাকে দৃঢ়ভাবে পরামর্শ দেওয়া হচ্ছে:\n- পারলে বাড়ি থেকে কাজ করুন।\n- দোকানে, গণপরিবহনে এবং জনাকীর্ণ জায়গায় বা যেখানে খুব বেশি তাজা বাতাস নেই সেখানে অন্য লোকেদের সাথে ঘনিষ্ঠ যোগাযোগ সীমিত করুন।\n- COVID-19 থেকে গুরুতর অসুস্থতার উচ্চ ঝুঁকিতে থাকা লোকেদের সাথে যোগাযোগ সীমিত করুন।\nহাত ধোয়ার দিকে অতিরিক্ত মনোযোগ দিন এবং মুখ ঢেকে রাখুন।"
+              "text": "COVID-19 সংক্রান্ত সাম্প্রতিকতম নির্দেশিকা পেতে, অনুগ্রহ করে এই অ্যাপটিকে সর্বশেষ সংস্করণে আপডেট করে রাখুন।"
             }
           ]
         },
         "gu": {
-          "head": "સૅલ્ફ-આઇસોલેશન અને ટેસ્ટિંગ અંગેના ફેરફારો બાબતે રિમાઇન્ડર",
-          "body": "જો તમારો COVID-19 માટેનો ટેસ્ટ પૉઝિટિવ આવે તો નિર્દેશો બદલાયા છે.",
+          "head": "સેલ્ફ-આઇસોલેશન અને ટેસ્ટિંગ સલાહમાં ફેરબદલ થયા છે",
+          "body": "વધુ વાંચો",
           "content": [
             {
               "type": "para",
-              "text": "જો તમારો COVID-19 ટેસ્ટ પૉઝિટિવ આવે તો સૅલ્ફ-આઇસોલેશન અને ટેસ્ટિંગ માટેના નિર્દેશો બદલાયા છે."
+              "text": "28 માર્ચ 2022 થી જો COVID-19 માટે તમારો ટેસ્ટ પોઝિટિવ આવે અથવા પોઝિટિવ આવેલી કોઈ વ્યક્તિના સંપર્કમાં હોવ તો તમારે કાયદેસર રીતે સેલ્ફ-આઇસોલેટ થવું જરૂરી નથી."
             },
             {
               "type": "para",
-              "text": "જો તમારા રૅપિડ લેટરલ ફ્લો ટેસ્ટનું પરિણામ પૉઝિટિવ આવે તો તમારે ફૉલો-અપ PCR ટેસ્ટ કરાવવાની બિલકુલ જરૂર નથી. આમાં કેટલાક અપવાદો છે. જો તમે નૈદાનિક રીતે જોખમ હેઠળના સમૂહમાં હો તો અથવા સંશોધનના ભાગરૂપે અથવા સર્વેલન્સ કાર્યક્રમના ભાગરૂપે જરૂરી હોય તો તમારે ફૉલો-અપ PCR ટેસ્ટ કરાવવો જોઈએ."
+              "text": "જો કે, જો તમારો ટેસ્ટ પોઝિટિવ આવે, તો તમારે સેલ્ફ-આઇસોલેટ થવું જોઈએ, અને જો તમને લક્ષણો હોય, તો તમારે અન્ય લોકો સાથે સંપર્કમાં આવવાનું ટાળવું જોઈએ."
             },
             {
               "type": "para",
-              "text": "જો તમારો COVID-19 ટેસ્ટ પૉઝિટિવ આવે તો સૅલ્ફ-આઇસોલેટ થાઓ, જેથી ખાતરી કરી શકાય કે તમે વાઇરસનો ફેલાવો ન કરો."
+              "text": "જો તમે એવા કોઈ વ્યક્તિના સંપર્કમાં હોવ કે જેમનો ટેસ્ટ પોઝિટિવ આવ્યો છે અને તેમને લક્ષણો નથી, પરંતુ તમારી એપ્લિકેશન કાઉન્ટડાઉન ટાઈમર બતાવે છે, તો તમે આને અવગણી શકો છો."
             },
             {
               "type": "para",
-              "text": "જોકે, તમે 5 સંપૂર્ણ દિવસો બાદ સૅલ્ફ-આઇસોલેશન છોડી શકો છો. તમે સૅલ્ફ-આઇસોલેટ થવાનું બંધ કરો તે પહેલાં તમારે 2 રૅપિડ લેટરલ ફ્લો ટેસ્ટ્સ કરવાના રહેશે, જેની વચ્ચે 24 કલાકનો ગાળો હોવો જોઈએ,જેથી ચેક કરી શકાય તમે હજીયે ચેપગ્રસ્ત નથી. પ્રથમ રૅપિડ લેટરલ ફ્લો ટેસ્ટ દિવસ 5 પહેલાં ન કરવો જોઈએ."
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "જો તમને લક્ષણો હોય તો તમે લેટરલ ફ્લો ટેસ્ટ માટેનો પૅક ઑનલાઈન ઓર્ડર કરી શકો છો"
             },
             {
               "type": "para",
-              "text": "જો દિવસ 5 અને દિવસ 6ના રોજ તમારા રૅપિડ લેટરલ ફ્લો ટેસ્ટનાં પરિણામો નૅગેટિવ આવે તો સંભાવના છે કે ટેસ્ટ કરવામાં આવ્યાં તે સમયે તમે ચેપગ્રસ્ત ન હતા."
+              "text": "જો COVID-19 માટે તમારો ટેસ્ટ પોઝિટિવ આવે તો ઘરે જ રહેવાનું યાદ રાખો."
             },
             {
               "type": "para",
-              "text": "જો કોઈ એક ટેસ્ટ પૉઝિટિવ આવે તો 24 કલાકના ગાળા સાથે કરાયેલ તમારા 2 રોજિંદા રૅપિડ લેટરલ ફ્લો ટેસ્ટ નૅગેટિવ ન આવે ત્યાં સુધી અથવા દિવસ 10 દિવસ સુધી તમારે સૅલ્ફ-આઇસોલેટ થવાનું ચાલુ રાખવું જોઈએ. પૉઝિટિવ પરિણામનો અર્થ એ છે કે તમે હજીયે ચેપગ્રસ્ત હો અને અન્ય લોકોને COVID-19નો ચેપ લગાડો તેનું જોખમ છે."
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "નવીનતમ ટેસ્ટિંગ સલાહ વાંચો"
             },
             {
               "type": "para",
-              "text": "એક વખત તમે સૅલ્ફ-આઇસોલેશન છોડો ત્યારબાદ તમારી રોજિંદા રૅપિડ લેટરલ ફ્લો ટેસ્ટ્સ કરાવવાનું ચાલુ રાખવાની બિલકુલ જરૂર નથી."
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "નવીનતમ સેલ્ફ-આઇસોલેશન સલાહ વાંચો"
             },
             {
               "type": "para",
-              "text": "જો તમે દિવસ 5 બાદ સૅલ્ફ-આઇસોલેશન બંધ કરો તો ઍપ 10 દિવસોની ઊંધી ગણતરી ચાલુ રાખશે, પરંતુ તમારે બાકીના દિવસો માટે સેલ્ફ-આઇસોલેટ થવાની જરૂર નથી. તે સમયગાળા દરમિયાન તમે વધારાની સંભાળ લેવાનું ચાલુ રાખો તે હજીયે તમારા માટે એક ઉપયોગી રિમાઇન્ડર છે. દાખલા તરીકે, તમને નીચેનાં કામ કરવાની ભારપૂર્વક સલાહ આપવામાં આવે છે:\n-તમારાથી થઈ શકે તે માટે ઘરેથી કામ કરવું.\n-દુકાનોમાં, જાહેર પરિવહનમાં અને ભીડવાળી જગ્યાઓમાં અથવા જ્યાં બહુ તાજી હવા ન હોય એવી જગ્યાઓમાં અન્ય લોકો સાથે નજીકના સંપર્કને મર્યાદિત કરવો.\n-COVID-19ના કારણે જેઓને ગંભીર બિમારી થવાનું જોખમ વધારે હોય એવા લોકો સાથેનો સંપર્ક મર્યાદિત કરવો.\nહાથ ધોવા અને માસ્ક પહેરવા પર વિશેષ ધ્યાન આપો."
+              "text": "સૌથી તાજેતરનું COVID-19 માર્ગદર્શન મેળવવા માટે કૃપા કરીને આ એપ્લિકેશનને નવીનતમ સંસ્કરણ પર અપડેટ કરાયેલ રાખો."
             }
           ]
         },
         "cy": {
-          "head": "Nodyn atgoffa ynghylch newidiadau i hunanynysu a phrofi",
-          "body": "Os byddwch yn derbyn prawf positif ar gyfer COVID-19, mae’r canllawiau wedi newid. Tapiwch yma am ragor o fanylion.",
+          "head": "Mae’r cyngor hunanynysu a phrofi wedi newid",
+          "body": "Darllen mwy",
           "content": [
             {
               "type": "para",
-              "text": "Mae’r canllaw ar hunanynysu wedi newid os ydych wedi derbyn prawf positif ar gyfer COVID-19."
+              "text": "O 28 Mawrth 2022, nid oes gofyniad cyfreithiol arnoch i hunanynysu mwyach os byddwch yn derbyn prawf positif ar gyfer COVID-19 neu os ydych chi'n gyswllt i rywun sydd wedi cael positif."
             },
             {
               "type": "para",
-              "text": "Os cewch ganlyniad positif i brawf llif unffordd fydd dim rhaid gwneud prawf PCR dilynol mwyach. Ond mae rhai eithriadau. Dylech wneud prawf PCR dilynol os ydych mewn grŵp clinigol fregus neu’n rhan o raglen ymchwil neu oruchwylio."
+              "text": "Fodd bynnag, os byddwch yn cael prawf positif, dylech hunanynysu., ac os oes gennych chi symptomau, dylech osgoi cyswllt ag eraill."
             },
             {
               "type": "para",
-              "text": "Cofiwch hunanynysu bob tro ar ôl profi’n bositif am COVID-19, rhag pasio’r feriws i eraill."
+              "text": "Os ydych chi'n gyswllt i rywun sy'n profi'n bositif ac nad oes gennych chi symptomau, ond bod eich ap yn dangos y r amserydd cyfrif i lawr, gallwch anwybyddu hyn."
             },
             {
               "type": "para",
-              "text": "Fodd bynnag, gallwch nawr adael eich cyfnod hunanynysu wedi 5 niwrnod llawn. Cyn i chi stopio hunanynysu, dylech gymryd 2 brawf llif unffordd cyflym 24 awr ar wahân, i sicrhau nad ydych yn dal yn heintus. Ni ddylid cymryd y prawf llif unffordd cyflym cyn diwrnod 5."
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "Gallwch archebu pecyn o brofion llif unffordd ar-lein os oes gennych chi symptomau"
             },
             {
               "type": "para",
-              "text": "Os byddwch yn cael canlyniadau prawf llif unffordd cyflym negatif ar ddiwrnod 5 a diwrnod 6, mae’n debygol nad oeddech chi'n heintus ar yr adeg pan gymerwyd y profion."
+              "text": "Cofiwch aros gartref os ydych wedi derbyn prawf positif ar gyfer COVID-19."
             },
             {
               "type": "para",
-              "text": "Os yw'r naill brawf neu’r llall yn bositif, dylech ddal i hunanynysu nes i chi gael 2 brawf llif unffordd cyflym dyddiol negatif wedi eu cymryd 24 awr ar wahân, neu tan ddiwrnod 10. Mae canlyniad positif yn golygu eich bod yn debygol o fod yn heintus o hyd, a bod perygl y byddwch yn pasio COVID-19 ymlaen i bobl eraill."
+              "link": "https://llyw.cymru/profi-am-y-coronafeirws",
+              "linkText": "Darllenwch y cyngor diweddaraf ar brofion"
             },
             {
               "type": "para",
-              "text": "Unwaith y byddwch yn gorffen hunanynysu, ni fyddwch angen cymryd profion llif unffordd cyflym dyddiol mwyach."
+              "link": "https://llyw.cymru/canllawiau-hunanynysu",
+              "linkText": "Darllenwch y cyngor diweddaraf ar hunanynysu"
             },
             {
               "type": "para",
-              "text": "Os byddwch chi'n stopio hunanynysu wedi diwrnod 5, bydd yr ap yn dal i gyfrif i lawr i 10 niwrnod, ond nid oes angen i chi hunanynysu am y dyddiau sy'n weddill. Mae’n dal i fod yn rhywbeth defnyddiol i’ch atgoffa i gymryd gofal ychwanegol yn ystod y cyfnod hwnnw. Er enghraifft, fe’ch cynghorir yn gryf i:\n-Weithio o gartref os gallwch.\n-Cyfyngu cyswllt agos gyda phobl eraill mewn siopau, ar drafnidiaeth gyhoeddus ac mewn llefydd torfol neu ble nad oes llawer o awyr iach.\n-Cyfyngu cyswllt gyda phobl sydd â risg uwch o salwch difrifol o COVID-19.\n-Talwch sylw penodol wrth olchi'ch dwylo a gwisgwch orchudd wyneb.\n"
+              "text": "Cadwch yr ap yma wedi ei ddiweddaru i’r fersiwn ddiweddaraf er mwyn derbyn y canllawiau COVID-19 mwyaf diweddar."
             }
           ]
         },
         "so": {
-          "head": "Xasuusinta isbeddelada is-karantiilida iyo baaritaanka",
-          "body": "Haddii lagaa helo COVID-19, hagitaanku wuu is beddelay. Taabo halkan wixii faahfaahin dheeraad ah.",
+          "head": "Talada is-gooniyeelida iyo baaritaanka ayaa isbeddelay",
+          "body": "Akhri wax dheeraad ah",
           "content": [
             {
               "type": "para",
-              "text": "Tilmaamaha is-gooniyeelida iyo baaritaanka ayaa isbeddelay haddii lagaa helo COVID-19."
+              "text": "Laga bilaabo 28 ka Maarso 2022 si sharci ah lagagama baahna inaad is-gooniyeesho haddii lagaa helo COVID-19 ama aad taabato qof qaba cudurka."
             },
             {
               "type": "para",
-              "text": "Haddii aad hesho natiijada baaritaanka isdaba socda degdegga ah ee togan, Uma baahnid inaad qaadato baaritaanka PCR ee daba-galka ah. Waxaa jira waxyaabo ka reeban tan. Waa in aad qaadatqaa baaritaanka PCR ee daba-galka ah haddii lagugula taliyay inaad sidaas samayso sababtoo ah waxaad ku jirtaa koox caafimaad ahaan nugul, ama qayb ka mid ah barnaamij cilmi-baaris ama dabagal ah."
+              "text": "Si kastaba ha ahaatee, haddii lagaa helo cudurka waa inaad is-gooniyeeshaa, haddii aad leedahay astaamo, waa inaad ka fogaataa taabashada dadka kale."
             },
             {
               "type": "para",
-              "text": "Is-gooniyeel haddii lagaa helo COVID-19, si aad u xaqiijiso inaadan faafinayn caabuqa."
+              "text": "Haddii aad taabato qof qaba cudurka oo aadan lahayn calaamado, laakiin app-kaagu uu muujinaayo wakhtiga tirinta, waad iska indho tiri kartaa midaan."
             },
             {
               "type": "para",
-              "text": "Si kastaba ha ahaatee, hadda waad ka bixi kartaa iskarantiilida 5 maalmood oo buuxa ka dib. Kahor intaadan joojin is-karantiilida, waa inaad qaadataa 2 baaritaano isdaba socda ee degdegga ah 24 saac gudahood, si loo hubiyo inaadan wali caabuqsanayn. Baaritaanka isdaba socda degdegga ah ee ugu horreeya waa in aan la qaadin ka hor maalinta 5-aad."
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "Waxaad ka dalban kartaa xirmo baaritaanka natiijada qulqulka geeska ah onlayn ahaan haddii aad leedahay astaamo"
             },
             {
               "type": "para",
-              "text": "Haddii aad hesho natiijooyinka ee baaritaanka isdaba socda ee degdegga ah ee taban ee maalinta 5-aad iyo maalinta 6-aad, waxay u badan tahay inaadan caabuqsanayn wakhtiga baaritaanada la qaaday."
+              "text": "Xasuusnoow inaad guriga joogtid haddii lagaa helo cudurka COVID-19."
             },
             {
               "type": "para",
-              "text": "Haddii mid ka mid ah baaritaanka uu togan yahay, waa inaad sii waddaa inaad is-karantiisho ilaa aad ka helayso 2 baaritaan isdaba socda ee degdegga maalinlaha ah ee taban ah oo u dhexayso 24 saacadood, ama ilaa maalinta 10-aad. Natiijadu togan waxay ka dhigan tahay inaad weli u badan tahay inaad faafiso oo aad halis ugu jirto inaad u gudbiso COVID-19 dadka kale."
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "Akhri taladii ugu dambaysay ee baaritaanka"
             },
             {
               "type": "para",
-              "text": "Mar hadaad ka baxdo is-karantiilida uma baahnid inaad sii waddo qaadashada baaritaanka socodka ee isdaba jooga degdegga ee maalinlaha ah."
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "Akhri taladii is-gooniyeelka ee ugu dambeysay"
             },
             {
               "type": "para",
-              "text": "Haddii aad joojiso is-karantiilida maalinta 5-aad ka dib, app-ku wuxuu sii wadi doonaa inuu tiriyo 10 maalmood, laakiin uma baahnid inaad is-karantiisho maalmaha soo haray. Wali waxay kuu tahay xasuusin muhiim ah inaad sii wado taxadarka dheeraadka ah muddadaas. Tusaale ahaan, waxaa si adag lagula talinayaa inaad:\n-Ka soo shaqee guriga haddii aad awooddo.\n-Inaad xaddido xiriirka dhow ee lala yeesho dadka kale ee ku jira dukaamada, gaadiidka dadweynaha iyo meelaha dadku ku badan yahiin ama meelaha aanay hawo badan ka jirin.\n-Inaad xaddido xiriirka dhow ee lala yeesho dadka khatarta sare ugu jira xanuun halis ah oo ka imanaysa COVID-19.\n-Fiiro gaar ah u yeelo gacmo-dhaqashada oo xiro wejiga daboolaha."
+              "text": "Fadlan ku cusboonaysii app-kan noocii ugu dambeeyay si aad u hesho hagitaankii ugu dambeeyay ee COVID-19."
             }
           ]
         },
         "ur": {
-          "head": "خود کو الگ تھلگ رکھنا اور ٹیسٹنگ تبدیلیوں کی یاددہانی  ",
-          "body": "اگر آپ کی COVID-19 کی جانچ مثبت آتی ہے تو رہنمائی تبدیل ہو گئی ہے۔ مزید تفصیلات کے لیے یہاں ٹیپ کریں۔",
+          "head": "خود کو الگ تھلگ رکھنے اور جانچ سے متعلق صلاح تبدیل ہو گئی ہے",
+          "body": "مزید پڑھیں",
           "content": [
             {
               "type": "para",
-              "text": "اگر COVID-19 کے لیے آپ کا نتیجہ مثبت آتا ہے تو خود کو الگ تھلگ رکھنے اور جانچ کرنے سے متعلق رہنمائی تبدیل ہو گئی ہے۔"
+              "text": "28 مارچ 2022 سے آپ کے لیے قانونی طور پر اب خود کو الگ تھلگ رکھنے کی ضرورت نہیں ہے، اگر COVID-19 کے لیے آپ کی جانچ مثبت آتی ہے یا آپ کسی ایسے شخص کے رابطہ میں رہے ہیں جس کی جانچ مثبت آئی ہے۔"
             },
             {
               "type": "para",
-              "text": "اگر آپ کے ریپڈ لیٹرل فلو ٹیسٹ کا نتیجہ مثبت آتا ہے تو آپ کو متابعتی PCR ٹیسٹ کرنے کی کوئی ضرورت نہیں ہے۔ اس میں کچھ استثناءات بھی پائے جاتے ہیں۔ آپ کو متابعتی PCR ٹیسٹ کرنا چاہیے، اگر آپ کو اس لیے ایسا کرنے کی صلاح دی گئی ہے کیوں کہ آپ معالجاتی لحاظ سے کسی ضرر پذیر گروپ میں ہیں، یا اگر آپ کو کسی تحقیق یا نگرانی کے پروگرام کے حصہ کے طور پر ایسا کرنے کے لیے کہا گیا ہے۔"
+              "text": "تاہم، اگر آپ کی جانچ مثبت آتی ہے تو آپ کو چاہیے کہ خود کو الگ تھلگ رکھیں، اور اگر آپ میں علامات پائی جاتی ہیں تو آپ کو دوسروں سے رابطہ کرنے سے گریز کرنا چاہیے۔"
             },
             {
               "type": "para",
-              "text": "اگر COVID-19 کے لیے آپ کا نتیجہ مثبت آتا ہے تو خود کو الگ تھلگ رکھیں، تاکہ یقینی بنایا جا سکے کہ آپ یہ وائرس نہ پھیلائیں۔"
+              "text": "اگر آپ کسی ایسے شخص کے رابطہ میں رہے ہیں جس کی جانچ مثبت آئی ہے اور آپ میں علامات نہیں پائی جاتی ہیں، لیکن آپ کا ایپ کاؤنٹ ڈاؤن ٹائمر دکھا رہا ہے تو آپ اسے نظر انداز کر سکتے ہیں۔"
             },
             {
               "type": "para",
-              "text": "تاہم، اب آپ پورے 5 دنوں کے بعد خود کو الگ تھلگ رکھنا چھوڑ سکتے ہیں۔ اس سے پہلے کہ آپ خود کو الگ تھلگ رکھنا بند کریں، آپ کو چاہیے کہ 24 گھنٹوں کے وقفہ سے 2 ریپڈ لیٹرل فلو ٹیسٹ کریں، تاکہ یہ پتہ چل سکے کہ آپ ابھی بھی متعدی نہیں ہیں۔ پہلا ریپڈ لیٹرل فلو ٹیسٹ دن 5 سے پہلے نہیں کیا جانا چاہیے۔"
+              "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
+              "linkText": "اگر آپ میں علامات پائی جاتی ہیں تو آپ لیٹرل فلو ٹیسٹ کا ایک پیک آن لائن آرڈر کر سکتے ہیں"
             },
             {
               "type": "para",
-              "text": "اگر آپ دن 5 اور دن 6 کو ریپڈ لیٹرل فلو ٹیسٹ کے منفی نتائج پاتے ہیں تو ممکن ہے کہ آپ اس وقت متعدی نہ رہے ہوں جب جانچیں کی گئی تھیں۔"
+              "text": "اگر COVID-19 کے لیے آپ کی جانچ مثبت آتی ہے تو یاد رکھیں کہ گھر میں رہیں۔"
             },
             {
               "type": "para",
-              "text": "اگر کوئی بھی جانچ مثبت آتی ہے تو آپ کے لیے اس وقت تک خود کو الگ تھلگ رکھنا ضروری ہے جب تک کہ آپ کے 24 گھنٹے کے وقفہ سے لیے گئے 2 یومیہ ریپڈ لیٹرل فلو ٹیسٹ منفی نہ آ جائیں، یا دن 10 تک۔ مثبت نتیجہ کا مطلب ہے کہ آپ کے لیے متعدی ہونے کا امکان ابھی بھی پایا جاتا ہے اور آپ کے لیے ابھی بھی دوسرے لوگوں تک COVID-19 منتقل کرنے کا خطرہ ہے۔"
+              "link": "https://gov.wales/testing-coronavirus",
+              "linkText": "جانچ سے متعلق تازہ ترین صلاح پڑھیں"
             },
             {
               "type": "para",
-              "text": "جب آپ خود کو الگ تھلگ رکھنا چھوڑ دیں گے تو آپ کو یومیہ ریپڈ لیٹرل فلو ٹیسٹ کرتے رہنے کی مزید ضرورت نہیں ہوگی۔"
+              "link": "https://gov.wales/self-isolation",
+              "linkText": "خود کو الگ تھلگ رکھنے سے متعلق تازہ ترین صلاح پڑھیں"
             },
             {
               "type": "para",
-              "text": "اگر آپ دن 5 کے بعد خود کو الگ تھلگ رکھنا بند کر دیتے ہیں تو ایپ 10 دن تک کاؤنٹ ڈاؤن جاری رکھے گا، لیکن آپ کو بقیہ دنوں تک خود کو الگ تھلگ رکھنے کی ضرورت نہیں ہے۔ یہ آپ کے لیے ابھی بھی ایک فائدہ مند یاددہانی ہے تاکہ آپ اس مدت کے دوران اضافی دیکھ بھال جاری رکھیں۔ مثال کے طور پر، آپ کو تاکید کے ساتھ صلاح دی جاتی ہے کہ:\n-گھر سے کام کریں، اگر آپ کر سکتے ہیں۔\n-دوکانوں میں، پبلک ٹرانسپورٹ پر اور بھیڑ بھاڑ والی جگہوں میں یا جہاں زیادہ تازہ ہوا نہ پائی جاتی ہو وہاں دوسرے لوگوں سے قریبی رابطہ محدود کریں۔\n-ان لوگوں کے ساتھ رابطہ کو محدود کریں جو COVID-19 سے سنگین بیماری کے زیادہ خطرے میں ہیں۔\n-ہاتھ دھونے پر اضافی توجہ دیں اور فیس کورنگ پہنیں۔"
+              "text": "COVID-19 سے متعلق بالکل حالیہ رہنمائی وصول کرنے کے لیے برائے مہربانی اس ایپ کو تازہ ترین ورژن میں اپڈیٹ رکھیں۔ "
             }
           ]
         }
@@ -1927,12 +1963,12 @@
           ]
         },
         "gu": {
-          "head": "કૉવિડ-19 ના કિસ્સા આ [postcode] અરિયામાં વધે છે",
+          "head": "કૉવિડ-19 ના એરિયામાં [postcode] એરિયામાં વધે છે",
           "body": "વધુ માહિતી માટે અહીં ટેપ કરો.",
           "content": [
             {
               "type": "para",
-              "text": "કૉવિડ-19નાં કિસ્સા આ [postcode] એરિયામાં બહુ જ વધવા લાગ્યા છે.."
+              "text": "કૉવિડ-19નાં એરિયામાં [postcode] એરિયામાં બહુ જ વધવા લાગ્યા છે."
             },
             {
               "type": "para",
@@ -1987,7 +2023,7 @@
           ]
         },
         "ur": {
-          "head": "[postcode] میں COVID-19 کے واقعات میں اضافہ",
+          "head": " کے واقعات میں اضافہ COVID-19 میں [postcode]",
           "body": "مزید معلومات کے لیے یہاں ٹیپ کریں۔",
           "content": [
             {
@@ -2009,6 +2045,288 @@
       }
     },
     "Notification.England.SelfIsolation": {
+      "type": "notification",
+      "contentVersion": 1,
+      "translations": {
+        "zh": {
+          "head": "自我隔离和检测建议已变更",
+          "body": "阅读最新指示",
+          "content": [
+            {
+              "type": "para",
+              "text": "如有 COVID-19 症状或呼吸道感染，并伴有发烧或不适，请尽量居家隔离并避免与他人接触。请遵循针对 COVID-19 症状者的相关指南。"
+            },
+            {
+              "type": "para",
+              "text": "针对无症状阳性者，请尽量居家隔离，并避免 5 天内与他人接触。若在应用中输入阳性检测结果，该应用会显示倒计时，提醒应该遵循本指南的时间。"
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " COVID-19 安全生活指南"
+            },
+            {
+              "type": "para",
+              "text": "请使用本应用的最新版本，以接收最新的 COVID-19 防疫指南。"
+            }
+          ]
+        },
+        "en": {
+          "head": " Self-isolation and testing advice has changed ",
+          "body": "Read updated guidance",
+          "content": [
+            {
+              "type": "para",
+              "text": " If you have COVID-19 symptoms or a respiratory infection, and have a high temperature or feel unwell, try to stay at home and avoid contact with others. Follow the guidance for people who have COVID-19 symptoms."
+            },
+            {
+              "type": "para",
+              "text": " If you test positive and do not have symptoms you should try to stay at home and avoid contact with others for 5 days. If you enter a positive test result into the app, you will see the app countdown timer to remind you of the period you should follow this guidance for."
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19/",
+              "linkText": " Guidance on living safely with COVID-19"
+            },
+            {
+              "type": "para",
+              "text": "Please keep this app updated to the latest version to receive the most recent COVID-19 guidance."
+            }
+          ]
+        },
+        "ar": {
+          "head": " تغيرت نصائح العزل الذاتي والأختبار",
+          "body": "رجاء قراءة الإرشادات الحديثة",
+          "content": [
+            {
+              "type": "para",
+              "text": "إذا كانت لديك أعراض COVID-19 أو عدوى في الجهاز التنفسي، ودرجة حرارتك مرتفعة أو تشعر بالمرض، حاول البقاء في المنزل وتجنب الاختلاط بالأخرين. أتبع الإرشادات الخاصة بالأشخاص الذين لديهم أعراض COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "إذا كانت نتيجة اختبارك إيجابية ولكن ليس لديك أعراض، يجب أن تحاول البقاء في المنزل وتجنب الأختلاط بالأخرين لمدة 5 أيام. إذا أدخلت نتيجة اختبار إيجابية في التطبيق، سترى مؤقت العد التنازلي للتطبيق يعمل على تذكيرك بالمدة التي يجب عليك اتباع هذه الإرشادات خلالها."
+            },
+            {
+              "type": "para",
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " إرشادات حول التعايش بأمان مع COVID-19"
+            },
+            {
+              "type": "para",
+              "text": "رجاء تحديث هذا التطبيق إلى احدث اصدار لتلقي أحدث الإرشادات المتعلقة بـــــ COVID-19."
+            }
+          ]
+        },
+        "tr": {
+          "head": "Karantina ve testlerle ile ilgili tavsiyelerde değişiklik yapılmıştır.",
+          "body": "Güncellenmiş yönergeyi okuyun",
+          "content": [
+            {
+              "type": "para",
+              "text": "COVID-19 belirtileriniz veya solunum yolu enfeksiyonunuz varsa ve ateşiniz var ya da kendinizi iyi hissetmiyorsanız evde kalmaya çalışın ve başkalarıyla temastan kaçının. COVID-19 belirtileri taşıyanlara yönelik tavsiyeleri uygulayın."
+            },
+            {
+              "type": "para",
+              "text": "Test sonucunuz pozitif çıkarsa ve belirtileriniz yoksa, 5 gün boyunca evde kalmaya çalışmalı ve başkalarıyla temastan kaçınmalısınız. Pozitif test sonucunu uygulamaya girerseniz, uygulamanın geri sayım sayacının bu tavsiyeye uymanız gereken süreyi size hatırlattığını göreceksiniz."
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " COVID-19'la güvenli bir şekilde yaşama rehberi"
+            },
+            {
+              "type": "para",
+              "text": "En güncel COVID-19 yönergesine erişmek için uygulamayı düzenli olarak güncellediğinizden emin olun. "
+            }
+          ]
+        },
+        "pl": {
+          "head": "Zmieniły się zalecenia dotyczące testów i samoizolacji",
+          "body": "Przeczytaj zaktualizowane wytyczne",
+          "content": [
+            {
+              "type": "para",
+              "text": "Jeśli masz objawy COVID-19 lub infekcję dróg oddechowych i masz wysoką temperaturę lub źle się czujesz, staraj się zostać w domu i unikać kontaktu z innymi. Postępuj zgodnie ze wskazówkami dla osób, które mają objawy COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Jeśli wynik testu jest pozytywny i nie masz objawów, należy starać się pozostać w domu i unikać kontaktu z innymi przez 5 dni. Jeśli zgłosisz w aplikacji pozytywny wynik testu, zobaczysz licznik czasu, przypominający o okresie, w którym należy postępować zgodnie z tymi wskazówkami."
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " Wskazówki dotyczące bezpiecznego życia z COVID-19"
+            },
+            {
+              "type": "para",
+              "text": "Aktualizuj tę aplikację do najnowszej wersji, aby otrzymywać najnowsze wytyczne dotyczące COVID-19. "
+            }
+          ]
+        },
+        "ro": {
+          "head": "Instrucțiunile privind autoizolarea și testarea s-au modificat",
+          "body": "Citiți recomandările actualizate",
+          "content": [
+            {
+              "type": "para",
+              "text": "Dacă aveți simptome de COVID-19 sau o infecție respiratorie și faceți temperatură sau vă simțiți rău, încercați să stați acasă și să evitați contactul cu alte persoane. Respectați instrucțiunile privind persoanele care au simptome de COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Dacă sunteți testați pozitiv și nu aveți simptome, trebuie să încercați să stați acasă și să evitați contactul cu alte persoane timp de 5 zile. Dacă introduceți un rezultat de test pozitiv în aplicație, veți vedea contorul cu numărătoarea inversă care vă va reaminti perioada în care trebuie să urmați aceste instrucțiuni."
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " Instrucțiuni privind viața în condiții de siguranță cu COVID-19"
+            },
+            {
+              "type": "para",
+              "text": "Actualizați întotdeauna această aplicația la cea mai recentă versiune a sa pentru a primi cele mai recente instrucțiuni privind COVID-19. "
+            }
+          ]
+        },
+        "pa": {
+          "head": "ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਅਤੇ ਟੈਸਟ ਕਰਾਉਣ ਬਾਰੇ ਸਲਾਹ ਬਦਲ ਗਈ ਹੈ",
+          "body": "ਅੱਪਡੇਟ ਕੀਤੀ ਸੇਧ ਪੜ੍ਹੋ",
+          "content": [
+            {
+              "type": "para",
+              "text": "ਜੇਕਰ ਤੁਹਾਨੂੰ COVID-19 ਦੇ ਲੱਛਣ ਹਨ ਜਾਂ ਸਾਹ ਦੀ ਲਾਗ ਹੈ, ਅਤੇ ਤੁਹਾਨੂੰ ਤੇਜ਼ ਬੁਖ਼ਾਰ ਹੈ ਜਾਂ ਤੁਸੀਂ ਬਿਮਾਰ ਮਹਿਸੂਸ ਕਰਦੇ ਹੋ, ਤਾਂ ਘਰ ਵਿੱਚ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਅਤੇ ਦੂਜਿਆਂ ਨਾਲ ਸੰਪਰਕ ਤੋਂ ਬਚੋ। COVID-19 ਦੇ ਲੱਛਣਾਂ ਵਾਲੇ ਲੋਕਾਂ ਲਈ ਸੇਧ ਦੀ ਪਾਲਣਾ ਕਰੋ।"
+            },
+            {
+              "type": "para",
+              "text": "ਜੇਕਰ ਤੁਹਾਡਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ ਅਤੇ ਤੁਹਾਡੇ ਵਿੱਚ ਲੱਛਣ ਨਹੀਂ ਹਨ ਤਾਂ ਤੁਹਾਨੂੰ 5 ਦਿਨਾਂ ਲਈ ਘਰ ਵਿੱਚ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ ਅਤੇ ਦੂਜਿਆਂ ਨਾਲ ਸੰਪਰਕ ਤੋਂ ਬਚਣਾ ਚਾਹੀਦਾ ਹੈ। ਜੇਕਰ ਤੁਸੀਂ ਐਪ ਵਿੱਚ ਟੈਸਟ ਦਾ ਪਾਜ਼ਿਟਿਵ ਨਤੀਜਾ ਦਾਖਲ ਕਰਦੇ ਹੋ, ਤਾਂ ਤੁਹਾਨੂੰ ਐਪ ਵਿੱਚ ਉਲਟੀ ਗਿਣਤੀ ਟਾਈਮਰ ਦਿਖਾਈ ਦੇਵੇਗਾ ਜੋ ਤੁਹਾਨੂੰ ਉਸ ਸਮੇਂ ਦੀ ਯਾਦ ਦਿਵਾਉਂਦਾ ਹੈ ਜਿਸ ਦੌਰਾਨ ਤੁਹਾਨੂੰ ਇਸ ਸੇਧ ਦੀ ਪਾਲਣਾ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " COVID-19 ਨਾਲ ਸੁਰੱਖਿਅਤ ਢੰਗ ਨਾਲ ਰਹਿਣ ਬਾਰੇ ਸੇਧ"
+            },
+            {
+              "type": "para",
+              "text": "COVID-19 ਬਾਰੇ ਸਭ ਤੋਂ ਤਾਜ਼ਾ ਸੇਧ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਐਪ ਨੂੰ ਨਵੀਨਤਮ ਸੰਸਕਰਣ 'ਤੇ ਅੱਪਡੇਟ ਰੱਖੋ। "
+            }
+          ]
+        },
+        "bn": {
+          "head": "নিজেকে আলাদা রাখা এবং পরীক্ষা করার পরামর্শ পরিবর্তিত হয়েছে",
+          "body": "আপডেট করা নির্দেশনা পড়ুন",
+          "content": [
+            {
+              "type": "para",
+              "text": "আপনার যদি COVID-19 এর উপসর্গ বা শ্বাসযন্ত্রের কোনও সংক্রমণ থাকে এবং উচ্চ তাপমাত্রা থাকে বা অসুস্থ বোধ করেন, তাহলে বাসায় থাকার চেষ্টা করুন এবং অন্যদের সাথে সংস্পর্শ এড়িয়ে চলুন। যে ব্যক্তিদের COVID-19 এর উপসর্গ আছে তাদের জন্য নির্দেশনাটি অনুসরণ করুন।"
+            },
+            {
+              "type": "para",
+              "text": "যদি আপনার পরীক্ষার ফলাফল পজিটিভ হয় এবং উপসর্গ না থাকে, তাহলে আপনার বাসায় থাকার চেষ্টা করা উচিত এবং 5 দিনের জন্য অন্যদের সাথে সংস্পর্শ এড়িয়ে চলা উচিত। আপনি যদি অ্যাপটিতে একটি পরীক্ষার পজিটিভ ফলাফল প্রবেশ করান, তাহলে আপনি অ্যাপ কাউন্টডাউন টাইমার দেখতে পাবেন যা আপনাকে সেই সময়কালের কথা মনে করিয়ে দেবে যখন আপনার এই নির্দেশনাটি অনুসরণ করা উচিত।"
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " COVID-19 এর সাথে নিরাপদে জীবনযাপনের নির্দেশনা"
+            },
+            {
+              "type": "para",
+              "text": "COVID-19 সংক্রান্ত সাম্প্রতিকতম নির্দেশিকা পেতে, অনুগ্রহ করে এই অ্যাপটিকে সর্বশেষ সংস্করণে আপডেট করে রাখুন। "
+            }
+          ]
+        },
+        "gu": {
+          "head": "સેલ્ફ-આઇસોલેશન અને ટેસ્ટિંગ સલાહમાં ફેરબદલ થયા છે",
+          "body": "અપડેટ કરાયેલ માર્ગદર્શન વાંચો",
+          "content": [
+            {
+              "type": "para",
+              "text": "જો તમને COVID-19નાં લક્ષણો હોય અથવા શ્વસન સાથે સંબંધિત ચેપ હોય અને ભારે તાપમાન હોય કે અસુખ અનુભવાતું હોય તો ઘરે રહેવાનો પ્રયત્ન કરો અને અન્યો સાથેનો સંપર્ક ટાળો. જેઓને COVID-19નાં લક્ષણો હોય એવા લોકો માટેના નિર્દેશોનું પાલન કરો."
+            },
+            {
+              "type": "para",
+              "text": "જો તમારો ટેસ્ટ પૉઝિટિવ આવે અને તમને કોઈ લક્ષણો ન હોય તો તમારે ઘરે રહેવાનો પ્રયત્ન કરવો જોઈએ અને 5 દિવસો માટે અન્યો સાથેનો સંપર્ક ટાળવો જોઈએ. જો તમે ઍપમાં પૉઝિટિવ ટેસ્ટ પરિણામ ઍન્ટર કરો તો તમારે જેટલા સમયગાળા માટે આ નિર્દેશોનું પાલન કરવું જોઈએ તે અંગે તમને યાદ કરાવવા માટે તમે ઍપ કાઉન્ટડાઉન ટાઇમર જોશો."
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " COVID-19 સાથે સુરક્ષિત રીતે જીવવા અંગેના નિર્દેશો"
+            },
+            {
+              "type": "para",
+              "text": "સૌથી તાજેતરનું COVID-19 માર્ગદર્શન મેળવવા માટે કૃપા કરીને આ એપ્લિકેશનને નવીનતમ સંસ્કરણ પર અપડેટ કરાયેલ રાખો."
+            }
+          ]
+        },
+        "cy": {
+          "head": "Mae’r cyngor hunanynysu a phrofi wedi newid",
+          "body": "Darllenwch y canllawiau diweddaraf",
+          "content": [
+            {
+              "type": "para",
+              "text": "Os oes gennych chi symptomau COVID-19 neu haint resbiradol, a bod gennych chi dymheredd uchel neu'n teimlo'n sâl, ceisiwch aros gartref ac osgoi cyswllt gydag eraill. Dilynwch y canllawiau ar gyfer pobl sydd â symptomau COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Os byddwch yn profi'n bositif ac nad oes gennych symptomau, dylech geisio aros gartref ac osgoi cyswllt gydag eraill am 5 niwrnod. Os byddwch yn cofnodi canlyniad prawf positif yn yr ap, byddwch yn gweld amserydd cyfrif i lawr yr ap i’ch atgoffa am ba gyfnod ddylech chi ddilyn y canllaw hwn."
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " Canllaw ar fyw’n ddiogel gyda COVID-19"
+            },
+            {
+              "type": "para",
+              "text": "Cadwch yr ap yma wedi ei ddiweddaru i’r fersiwn ddiweddaraf er mwyn derbyn y canllawiau COVID-19 mwyaf diweddar. "
+            }
+          ]
+        },
+        "so": {
+          "head": "Talada is-gooniyeelida iyo baarit aanka ayaa isbedeshay",
+          "body": "Akhri tilmaanta la cusboonaysiiyay",
+          "content": [
+            {
+              "type": "para",
+              "text": "Haddii aad qabtid aastaamaha COVID-19 ama caabuqa neefta, oo aad qabtid heerkulka sareeyo ama aadan fiicneyn, isku day inaad guriga joogtid oo aad ka fogaatid taabashada dadka kale. Raac tilmaanta dadka qabo aastaamaha COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Haddii lagaa helo baaritaanka oo aadan laheyn aastaamaha waa inaad isku daydaa inaad guriga joogtid oo ka fagow taabashada dadka kale oo 5 maalmood. Haddii aad gelisid natiijada baaritaanka laga helay cudurka app-ka, waxaad arkeysaa xisaabiyaha waqtiga app-ka si ay kuu xasuusiyaan muddada waa inaad raacdaa tilmaantaan oo."
+            },
+            {
+              "type": "para",
+              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " Tilmaanta ula noolaanshaha si badqab ah COVID-19"
+            },
+            {
+              "type": "para",
+              "text": "Fadlan ku cusboonaysii app-kan noocii ugu dambeeyay si aad u hesho hagitaankii ugu dambeeyay ee COVID-19."
+            }
+          ]
+        },
+        "ur": {
+          "head": "خود کو الگ تھلگ رکھنے اور جانچ سے متعلق صلاح تبدیل ہو گئی ہے",
+          "body": "اپ ڈیٹ شدہ رہنمائی پڑھیں",
+          "content": [
+            {
+              "type": "para",
+              "text": "اگر آپ میں COVID-19 کی علامات پائی جاتی ہیں یا آپ کو تنفسی انفیکشن ہے، اور آپ کا درجۂ حرارت بڑھا ہوا ہے یا آپ بیمار محسوس کرتے ہیں تو گھر پر رہنے کی کوشش کریں اور دوسروں سے رابطہ کرنے سے گریز کریں۔ ان لوگوں کے لیے فراہم کردہ رہنمائی پر عمل کریں جن میں COVID-19 کی علامات پائی جاتی ہیں۔"
+            },
+            {
+              "type": "para",
+              "text": "اگر آپ کی جانچ مثبت آتی ہے اور علامات نہیں پائی جاتی ہیں تو آپ کو چاہیے کہ 5 دنوں تک گھر پر رہیں اور دوسروں سے رابطہ کرنے سے گریز کریں۔ اگر آپ جانچ کا مثبت نتیجہ اس ایپ میں داخل کرتے ہیں تو آپ دیکھیں گے کہ ایپ کا کاؤنٹ ڈاؤن ٹائمر آپ کو اس مدت کی یاددہانی کراتا ہے جب تک آپ کو اس رہنمائی پر عمل کرنا چاہیے۔"
+            },
+            {
+              "type": "para",
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": " COVID-19 کے ساتھ بحفاظت زندگی گزارنے سے متعلق رہنمائی"
+            },
+            {
+              "type": "para",
+              "text": "COVID-19 سے متعلق بالکل حالیہ رہنمائی وصول کرنے کے لیے برائے مہربانی اس ایپ کو تازہ ترین ورژن میں اپڈیٹ رکھیں۔ "
+            }
+          ]
+        }
+      }
+    },
+    "Notification.Wales.SelfIsolation2": {
       "type": "notification",
       "contentVersion": 1,
       "translations": {

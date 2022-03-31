@@ -44,3 +44,7 @@ virology-testing-flows-v2.rb
 stats.rb
 *-cols.txt
 /venv/
+
+.rake_tasks~
+
+*.bkp

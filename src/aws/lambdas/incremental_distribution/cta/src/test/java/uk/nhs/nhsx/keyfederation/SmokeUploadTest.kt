@@ -9,6 +9,7 @@ import uk.nhs.nhsx.core.aws.xray.Tracing
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
 import uk.nhs.nhsx.keyfederation.upload.FederatedExposureUploadFactory
 import uk.nhs.nhsx.keyfederation.upload.JWS
@@ -34,7 +35,12 @@ class SmokeUploadTest {
     fun `upload keys from s3 repository`() {
         DiagnosisKeysUploadService(
             clock = SystemClock.CLOCK,
-            interopClient = InteropClient(interopBaseUrl, authToken, JWS(KmsCompatibleSigner(ecPrime256r1.private)), recordingEvents),
+            interopClient = HttpInteropClient(
+                interopBaseUrl = interopBaseUrl,
+                authToken = authToken,
+                jws = JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+                events = recordingEvents
+            ),
             submissionRepository = SubmissionFromS3Repository(
                 awsS3 = AwsS3Client(events = recordingEvents),
                 objectKeyFilter = { true },
@@ -60,7 +66,12 @@ class SmokeUploadTest {
     fun `upload keys from s3 mock`() {
         DiagnosisKeysUploadService(
             clock = SystemClock.CLOCK,
-            interopClient = InteropClient(interopBaseUrl, authToken, JWS(KmsCompatibleSigner(ecPrime256r1.private)), recordingEvents),
+            interopClient = HttpInteropClient(
+                interopBaseUrl = interopBaseUrl,
+                authToken = authToken,
+                jws = JWS(KmsCompatibleSigner(ecPrime256r1.private)),
+                events = recordingEvents
+            ),
             submissionRepository = FakeSubmissionRepository(listOf(Instant.now())),
             batchTagService = InMemoryBatchTagService(),
             exposureUploadFactory = FederatedExposureUploadFactory("GB-EAW"),

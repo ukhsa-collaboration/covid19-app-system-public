@@ -4,23 +4,32 @@ import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 
-data class DiagnosisKeysSubmissionStats(val startOfHour: String, val platform: String, val version: String, val diagnosisKeysCount: Int)
+data class DiagnosisKeysSubmissionStats(
+    val startOfHour: String,
+    val platform: String,
+    val version: String,
+    val diagnosisKeysCount: Int
+)
 
 class DiagnosisKeysSubmissionStatsConverter : Converter<DiagnosisKeysSubmissionStats>() {
 
-    override fun convert(map: Map<String, String>): DiagnosisKeysSubmissionStats {
-        return DiagnosisKeysSubmissionStats(
-            startOfHour = map["start_of_hour"] ?: error("missing start_of_hour field from cloudwatch log insights"),
-            platform = map["platform"] ?: error("missing platform field from cloudwatch log insights"),
-            version = map["version"]?: error("missing version field from cloudwatch log insights"),
-            diagnosisKeysCount = map["num_of_diagnosis_keys"]?.toInt() ?: 0,
-        )
-    }
+    override fun convert(map: Map<String, String>) = DiagnosisKeysSubmissionStats(
+        startOfHour = map.getValue("start_of_hour"),
+        platform = map.getValue("platform"),
+        version = map.getValue("version"),
+        diagnosisKeysCount = map.getOrDefault("num_of_diagnosis_keys", "0").toInt()
+    )
 }
 
 class DiagnosisKeysSubmissionStatsAnalyticsHandler : LogInsightsAnalyticsHandler(
-    logAnalyticsService(Environment.fromSystem(), CLOCK, PrintingJsonEvents(CLOCK), DiagnosisKeysSubmissionStatsQueryString, DiagnosisKeysSubmissionStatsConverter()),
-    PrintingJsonEvents(CLOCK)
+    service = logAnalyticsService(
+        environment = Environment.fromSystem(),
+        clock = CLOCK,
+        events = PrintingJsonEvents(CLOCK),
+        queryString = DiagnosisKeysSubmissionStatsQueryString,
+        converter = DiagnosisKeysSubmissionStatsConverter()
+    ),
+    events = PrintingJsonEvents(CLOCK)
 )
 
 private const val DiagnosisKeysSubmissionStatsQueryString = """fields @timestamp, @message

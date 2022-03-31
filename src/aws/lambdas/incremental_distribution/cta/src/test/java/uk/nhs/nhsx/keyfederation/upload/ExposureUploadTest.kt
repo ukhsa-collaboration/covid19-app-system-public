@@ -5,6 +5,7 @@ import strikt.api.expectThat
 import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
 import uk.nhs.nhsx.testhelper.assertions.isEqualToJson
 
 class ExposureUploadTest {
@@ -12,7 +13,8 @@ class ExposureUploadTest {
     @Test
     fun `serializes to JSON`() {
 
-        val json = Json.toJson(ExposureUpload(
+        val json = Json.toJson(
+            ExposureUpload(
             keyData = "xnGNbiVKd7xarkv9Gbdi5w==",
             rollingStartNumber = 1,
             transmissionRiskLevel = 2,
@@ -21,7 +23,8 @@ class ExposureUploadTest {
             testType = LAB_RESULT,
             reportType = CONFIRMED_TEST,
             daysSinceOnset = 4
-        ))
+        )
+        )
 
         expectThat(json).isEqualToJson("""{"keyData":"xnGNbiVKd7xarkv9Gbdi5w==","rollingStartNumber":1,"transmissionRiskLevel":2,"rollingPeriod":3,"regions":["GB"],"testType":1,"reportType":1,"daysSinceOnset":4}""")
     }

@@ -25,7 +25,7 @@ import strikt.assertions.map
 import strikt.assertions.message
 import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.ObjectKeyFilters
-import uk.nhs.nhsx.core.UniqueId
+import uk.nhs.nhsx.core.RandomUUID
 import uk.nhs.nhsx.core.aws.cloudfront.AwsCloudFront
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.BucketName
@@ -534,7 +534,7 @@ class TestSetup(
     val keyNameProvider = TestKitAwareObjectKeyNameProvider(
         UniqueObjectKeyNameProvider(
             clock::instant,
-            UniqueId.ID
+            RandomUUID
         ), TestKit.LAB_RESULT
     )
 

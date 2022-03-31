@@ -1,3 +1,5 @@
+require_relative 'secret'
+
 module NHSx
   # Helper methods for creating api keys
   module Certificate
@@ -19,7 +21,7 @@ module NHSx
       puts '*' * 74
 
       puts 'Current Certificate Secrets Stored'
-      secret_manager_arns = list_aae_advanced_analytics_secrets(service_name, consumer_name, system_config)
+      secret_manager_arns = list_aae_advanced_analytics_secrets(aae_config['service_name'], aae_config['consumer_name'], system_config)
       puts secret_manager_arns
     end
 

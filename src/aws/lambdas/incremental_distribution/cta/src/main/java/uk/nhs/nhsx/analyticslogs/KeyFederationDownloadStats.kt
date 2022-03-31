@@ -4,24 +4,33 @@ import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.SystemClock.CLOCK
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 
-data class KeyFederationDownloadStats(val startOfHour: String, val origin: String, val testType: Int, val numberOfKeysDownloaded: Int, val numberOfKeysImported: Int)
+data class KeyFederationDownloadStats(
+    val startOfHour: String,
+    val origin: String,
+    val testType: Int,
+    val numberOfKeysDownloaded: Int,
+    val numberOfKeysImported: Int
+)
 
 class KeyFederationDownloadStatsConverter : Converter<KeyFederationDownloadStats>() {
-
-    override fun convert(map: Map<String, String>): KeyFederationDownloadStats {
-        return KeyFederationDownloadStats(
-            startOfHour = map["start_of_hour"] ?: error("missing start_of_hour field from cloudwatch log insights"),
-            origin = map["origin"] ?: error("missing origin field from cloudwatch log insights"),
-            testType = map["test_type"]?.toInt() ?: 0,
-            numberOfKeysDownloaded = map["number_of_keys_downloaded"]?.toInt() ?: 0,
-            numberOfKeysImported = map["number_of_keys_imported"]?.toInt() ?: 0
-        )
-    }
+    override fun convert(map: Map<String, String>) = KeyFederationDownloadStats(
+        startOfHour = map.getValue("start_of_hour"),
+        origin = map.getValue("origin"),
+        testType = map.getOrDefault("test_type", "0").toInt(),
+        numberOfKeysDownloaded = map.getOrDefault("number_of_keys_downloaded", "0").toInt(),
+        numberOfKeysImported = map.getOrDefault("number_of_keys_imported", "0").toInt()
+    )
 }
 
 class KeyFederationDownloadAnalyticsHandler : LogInsightsAnalyticsHandler(
-    logAnalyticsService(Environment.fromSystem(), CLOCK, PrintingJsonEvents(CLOCK), keyFederationDownloadQueryString, KeyFederationDownloadStatsConverter()),
-    PrintingJsonEvents(CLOCK)
+    service = logAnalyticsService(
+        environment = Environment.fromSystem(),
+        clock = CLOCK,
+        events = PrintingJsonEvents(CLOCK),
+        queryString = keyFederationDownloadQueryString,
+        converter = KeyFederationDownloadStatsConverter()
+    ),
+    events = PrintingJsonEvents(CLOCK)
 )
 
 private const val keyFederationDownloadQueryString = """fields @timestamp, @message

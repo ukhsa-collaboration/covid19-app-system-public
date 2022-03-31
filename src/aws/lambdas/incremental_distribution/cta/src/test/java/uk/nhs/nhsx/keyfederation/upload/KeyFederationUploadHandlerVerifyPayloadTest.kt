@@ -29,9 +29,11 @@ import uk.nhs.nhsx.domain.ReportType.UNKNOWN
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
 import uk.nhs.nhsx.domain.TestType.RAPID_RESULT
 import uk.nhs.nhsx.domain.TestType.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
-import uk.nhs.nhsx.keyfederation.InteropClient
+import uk.nhs.nhsx.keyfederation.client.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
 import uk.nhs.nhsx.testhelper.ContextBuilder.Companion.aContext
 import uk.nhs.nhsx.testhelper.assertions.captured
 import uk.nhs.nhsx.testhelper.mocks.FakeS3
@@ -131,7 +133,7 @@ class KeyFederationUploadHandlerVerifyPayloadTest(private val wireMock: WireMock
         awsS3Client = fakeS3
     )
 
-    private fun InteropClient(wireMockServer: WireMockServer) = InteropClient(
+    private fun InteropClient(wireMockServer: WireMockServer) = HttpInteropClient(
         interopBaseUrl = wireMockServer.baseUrl(),
         authToken = "DUMMY_TOKEN",
         jws = JWS(KmsCompatibleSigner(TestKeyPairs.ecPrime256r1.private)),

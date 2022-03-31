@@ -57,12 +57,10 @@ class RiskyPostCodesPersistence(
         )
     }
 
-    fun retrievePostDistrictRiskLevels(): Map<String, Map<String, Any>> = s3Client
+    fun retrievePostDistrictRiskLevels() = s3Client
         .getObject(Locator.of(bucketName, metaDataObjKeyName))
-        .map(::convertS3ObjectToRiskLevels)
-        .orElseThrow {
-            RuntimeException("Missing post district metadata. Bucket: ${bucketName.value} does not have key: ${metaDataObjKeyName.value}")
-        }
+        ?.let(::convertS3ObjectToRiskLevels)
+        ?: throw RuntimeException("Missing post district metadata. Bucket: $bucketName does not have key: $metaDataObjKeyName")
 
     private fun convertS3ObjectToRiskLevels(s3Object: S3Object): Map<String, Map<String, Any>> =
         s3Object.objectContent.use { readJsonOrThrow(it.reader().readText()) }

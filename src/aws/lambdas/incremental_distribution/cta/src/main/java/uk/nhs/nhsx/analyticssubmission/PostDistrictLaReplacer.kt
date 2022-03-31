@@ -7,15 +7,15 @@ import uk.nhs.nhsx.core.events.InfoEvent
 
 object PostDistrictLaReplacer {
 
-    private val postDistrictLAMapping =
-        javaClass.classLoader.getResource("analyticssubmission/PD_LA_to_MergedPD_LA.csv")
-            ?.readText()
-            ?.let { PostDistrictLaReplacerCsvParser.parse(it) }
-            ?: error("Failed to read csv file for postcode/LA tuple replacement")
+    private val postDistrictLAMapping = javaClass
+        .classLoader
+        .getResource("analyticssubmission/PD_LA_to_MergedPD_LA.csv")
+        ?.readText()
+        ?.let(PostDistrictLaReplacerCsvParser::parse)
+        ?: error("Failed to read csv file for postcode/LA tuple replacement")
 
-    @JvmStatic
-    fun replacePostDistrictLA(
-        postDistrict: String?,
+    operator fun invoke(
+        postDistrict: String,
         localAuthority: String?,
         events: Events
     ): PostDistrictPair {
@@ -23,11 +23,7 @@ object PostDistrictLaReplacer {
         val key2 = PostDistrictPair(postDistrict, UNKNOWN)
         val key3 = PostDistrictPair(UNKNOWN, UNKNOWN)
         val result = postDistrictLAMapping[key1] ?: postDistrictLAMapping[key2] ?: key3
-        if (result == key3) {
-            events(
-                InfoEvent("Post district LA tuple not found in mapping. Persisting post district and localAuthority as $UNKNOWN")
-            )
-        }
+        if (result == key3) events(InfoEvent("Post district LA tuple not found in mapping. Persisting post district and localAuthority as $UNKNOWN"))
         return result
     }
 }

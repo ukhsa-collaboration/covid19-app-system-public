@@ -5,6 +5,14 @@ namespace :deploy do
         desc "Deploy public dashboard backend and frontend to #{tgt_env}"
         desc "Deploys a public dashboard backend and frontend temporary environment for the current branch in the dev account" if tgt_env == "branch"
         task :"#{tgt_env}" => [:"login:#{account}", :"build:pubdash:backend"] do
+
+          if ["prod"].include?(account)
+            require "highline"
+            cli = HighLine.new
+            answer = cli.ask "\nDo you want to proceed? Type 'prod' to confirm"
+            raise GaudiError, "Aborted" unless ["prod"].include?(answer.downcase)
+          end
+
           include NHSx::Terraform
           terraform_configuration = File.join($configuration.base, "src/pubdash/infrastructure/accounts", account)
           deploy_to_workspace(tgt_env, terraform_configuration, [], $configuration)

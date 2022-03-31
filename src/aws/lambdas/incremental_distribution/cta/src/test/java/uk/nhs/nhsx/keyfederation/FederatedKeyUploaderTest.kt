@@ -20,7 +20,7 @@ import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.ReportType.UNKNOWN
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
 import uk.nhs.nhsx.domain.TestType.RAPID_RESULT
-import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
+import uk.nhs.nhsx.keyfederation.client.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.asString
 import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.content

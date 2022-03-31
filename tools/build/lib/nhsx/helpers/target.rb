@@ -67,8 +67,7 @@ module NHSx
     }.freeze
     # All the fixed (named) public dashboard target environments per account: {"account"=>[target_environments]}
     PUBDASH_TARGET_ENVIRONMENTS = {
-      "dev" => ["ci", "test", "qa", "fnctnl", "demo", "load-test", "extdev", "sit", "pentest", "branch"],
-      "staging" => ["staging"],
+      "dev" => ["ci"],
       "prod" => ["prod"],
       "aa-dev" => ["aa-ci"],
       "aa-staging" => ["aa-staging"],

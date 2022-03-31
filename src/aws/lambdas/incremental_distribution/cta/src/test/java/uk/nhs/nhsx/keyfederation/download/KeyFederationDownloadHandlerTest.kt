@@ -29,9 +29,9 @@ import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPayload
 import uk.nhs.nhsx.domain.BatchTag
-import uk.nhs.nhsx.keyfederation.BatchTagService
+import uk.nhs.nhsx.keyfederation.storage.BatchTagService
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
 import uk.nhs.nhsx.keyfederation.InMemoryBatchTagService
-import uk.nhs.nhsx.keyfederation.InteropClient
 import uk.nhs.nhsx.keyfederation.TestKeyPairs.ecPrime256r1
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.keyfederation.upload.KmsCompatibleSigner
@@ -347,7 +347,7 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
         batchTagService: BatchTagService = InMemoryBatchTagService(),
         clock: () -> Instant = { "2020-08-15T00:00:00.000Z".asInstant() }
     ): KeyFederationDownloadHandler {
-        val interopClient = InteropClient(
+        val interopClient = HttpInteropClient(
             interopBaseUrl = wireMockServer.baseUrl(),
             authToken = "DUMMY_TOKEN",
             jws = JWS(KmsCompatibleSigner(ecPrime256r1.private)),

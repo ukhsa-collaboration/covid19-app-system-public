@@ -7,6 +7,7 @@ import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.ReportType.UNKNOWN
 import uk.nhs.nhsx.domain.TestType
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
 
 fun interface ExposureUploadFactory {
     fun create(submission: Submission): List<ExposureUpload>

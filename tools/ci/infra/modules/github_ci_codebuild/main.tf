@@ -28,6 +28,11 @@ resource "aws_codebuild_project" "this" {
     override_artifact_name = true
   }
 
+  cache {
+    type     = "S3"
+    location = var.cache_artifacts_bucket_name
+  }
+
   environment {
     compute_type                = "BUILD_GENERAL1_MEDIUM"
     image                       = var.container

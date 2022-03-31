@@ -84,7 +84,7 @@ class RiskyVenueHandlerTest {
             headers.containsKey("x-amz-meta-signature")
             body.withReadJsonOrThrow<TokenResponse> {
                 get(TokenResponse::approval).isEqualTo(PENDING.statusName)
-                get(TokenResponse::approvalToken).matches(Regex("[a-zA-Z0-9]+"))
+                get(TokenResponse::approvalToken).matches(Regex("[a-zA-Z\\d]{50}"))
             }
         }
 
@@ -160,7 +160,7 @@ class RiskyVenueHandlerTest {
             .withMethod(GET)
             .withCustomOai("OAI")
             .withRequestId()
-            .withPath("/circuit-breaker/venue/resolution/abc123")
+            .withPath("/circuit-breaker/venue/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg")
             .withBearerToken("anything")
 
         val response = handler.handleRequest(requestEvent, aContext())

@@ -122,7 +122,7 @@ namespace :gen do
     generate_local_messages(mapping_file, metadata_file, $configuration)
   end
 
-  NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+  (NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["dev"] | NHSx::TargetEnvironment::CTA_TARGET_ENVIRONMENTS["staging"]).each do |tgt_env|
     desc "Generate synthetic analytics for #{tgt_env}"
     task :"analytics:#{tgt_env}" do
       include Zuehlke::Execution
@@ -132,7 +132,7 @@ namespace :gen do
       args = {
         'submission_parquet_bucket' => "te-#{tgt_env}-analytics-submission-parquet",
         'consolidated_submission_parquet_bucket' => "te-#{tgt_env}-analytics-consolidated-submission-parquet",
-        'app_store_data_bucket' => "te-#{tgt_env}-analytics-app-store-qr-posters"
+        'app_store_data_bucket' => "#{tgt_env}-analytics-app-store-qr-posters"
       }
       require "highline"
       cli = HighLine.new

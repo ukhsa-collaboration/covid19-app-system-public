@@ -5,6 +5,7 @@ import dev.forkhandles.values.ValueFactory
 import uk.nhs.nhsx.core.EnvironmentName.Companion.of
 import java.lang.Boolean.parseBoolean
 import java.time.Duration
+import java.time.LocalDate
 import java.util.Optional
 import java.util.function.Function
 import java.util.function.Supplier
@@ -45,11 +46,11 @@ class Environment private constructor(val name: EnvironmentName, val type: Envir
 
             fun integer(name: String) = define(name, String::toInt)
 
-            fun strings(name: String) =
-                define(name) { it.split(",").map(String::trim).filter(String::isNotBlank) }
+            fun strings(name: String) = define(name) { it.split(",").map(String::trim).filter(String::isNotBlank) }
 
-            fun <X: Any, T : Value<X>> value(name: String, fn: ValueFactory<T, X>) =
-                define(name, fn::parse)
+            fun localDate(name: String) = define(name, LocalDate::parse)
+
+            fun <X : Any, T : Value<X>> value(name: String, fn: ValueFactory<T, X>) = define(name, fn::parse)
         }
     }
 

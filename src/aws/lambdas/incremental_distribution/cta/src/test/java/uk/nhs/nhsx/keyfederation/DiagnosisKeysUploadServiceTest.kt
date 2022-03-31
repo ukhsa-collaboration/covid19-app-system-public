@@ -38,9 +38,12 @@ import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository
 import uk.nhs.nhsx.diagnosiskeydist.s3.SubmissionFromS3Repository
 import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
-import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadRequest
+import uk.nhs.nhsx.keyfederation.client.DiagnosisKeysUploadRequest
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
+import uk.nhs.nhsx.keyfederation.client.InteropClient
+import uk.nhs.nhsx.keyfederation.storage.BatchTagService
 import uk.nhs.nhsx.keyfederation.upload.DiagnosisKeysUploadService
-import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.FederatedExposureUploadFactory
 import uk.nhs.nhsx.testhelper.assertions.containsExactly
 import uk.nhs.nhsx.testhelper.assertions.withCaptured
@@ -344,7 +347,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         override fun match(value: String): MatchResult = readJsonOrNull<DiagnosisKeysUploadRequest>(value)
             ?.let {
                 when {
-                    it.batchTag.value.matches(Regex("[a-f0-9\\-]+")) && it.payload == "DUMMY_SIGNATURE" -> exactMatch()
+                    it.batchTag.value.matches(Regex("[a-f\\d\\-]+")) && it.payload == "DUMMY_SIGNATURE" -> exactMatch()
                     else -> noMatch()
                 }
             } ?: noMatch()
@@ -375,7 +378,7 @@ class DiagnosisKeysUploadServiceTest(private val wireMock: WireMockServer) {
         events = events
     )
 
-    private fun InteropClient(wireMock: WireMockServer) = InteropClient(
+    private fun InteropClient(wireMock: WireMockServer) = HttpInteropClient(
         interopBaseUrl = wireMock.baseUrl(),
         authToken = "DUMMY_TOKEN",
         jws = mockk { every { sign(any()) } returns "DUMMY_SIGNATURE" },

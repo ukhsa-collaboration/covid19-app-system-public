@@ -417,6 +417,9 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
     @EnumSource(TestKit::class)
     fun `persists positive test result for all test kits`(testKit: TestKit) {
         val testOrder = persistence.persistTestOrder(TokensGenerator::generateVirologyTokens, fourWeeksTtl)
+
+        expectThat(testOrder).testOrderIsPresent()
+
         val testResult = testOrder.positiveTestResult(testKit)
 
         val virologyResultRequest = VirologyResultRequestV2(
@@ -442,6 +445,8 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
     fun `persists void test result for Lab test kit`() {
         val testOrder = persistence.persistTestOrder(TokensGenerator::generateVirologyTokens, fourWeeksTtl)
 
+        expectThat(testOrder).testOrderIsPresent()
+
         val testResult = testOrder.voidTestResult(LAB_RESULT)
 
         val virologyResultRequest = VirologyResultRequestV2(
@@ -465,7 +470,9 @@ class VirologyPersistenceLocalTest : DynamoIntegrationTest() {
 
     @Test
     fun `transaction fails when persisting test result that is already available`() {
+        val testOrder = TokensGenerator.generateVirologyTokens()
         persistence.persistTestOrder({ testOrder }, fourWeeksTtl)
+            .also { expectThat(it).testOrderIsPresent() }
 
         with(testOrder.positiveTestResult()) {
             persistence.persistTestResultWithKeySubmission(

@@ -33,19 +33,20 @@ class EdgeFileExporter(
                 """SQS message parsing failed (no retry): sqsMessage.id=${sqsMessage.messageId}, body=${sqsMessage.body}"""
             )
 
-    private fun uploadToEdge(event: S3PutObjectEvent, sqsMessage: SQSEvent.SQSMessage): Event {
-        if (event.key.value.endsWith(".metadata"))
-            return DataUploadSkipped(sqsMessage.messageId, event.bucketName, event.key)
-
-        return s3Client
+    private fun uploadToEdge(
+        event: S3PutObjectEvent,
+        sqsMessage: SQSEvent.SQSMessage
+    ) = when {
+        event.key.value.endsWith(".metadata") -> DataUploadSkipped(sqsMessage.messageId, event.bucketName, event.key)
+        else -> s3Client
             .getObject(Locator.of(event.bucketName, event.key))
-            .map<Event> {
+            ?.let {
                 val prefix = it.key.split("/").first()
                 val filename = Dataset.valueOf(prefix).filename(workspace)
                 uploader.uploadFile(filename, getContent(it), it.objectMetadata.contentType)
                 DataUploadedToEdge(sqsMessage.messageId, event.bucketName, event.key)
             }
-            .orElse(S3ObjectNotFound(sqsMessage.messageId, event.bucketName, event.key))
+            ?: S3ObjectNotFound(sqsMessage.messageId, event.bucketName, event.key)
     }
 
     private fun getContent(obj: S3Object): ByteArray {

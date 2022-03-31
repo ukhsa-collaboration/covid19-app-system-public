@@ -35,10 +35,10 @@ namespace :create do
         task :"#{tgt_env}" => [:"login:#{account}"] do
           prefix = target_environment_name(tgt_env, account, $configuration)
           job_name = "#{prefix}-parquet-consolidation"
-          s3_bucket = "s3://#{prefix}-temporary-analytics-consolidated-submission-parquet"
+          s3_bucket = "s3://#{prefix}-temp-analytics-consolidated-submission-parquet"
           script_location = "tools/parquet-consolidation/SparkRead-v1.0.py"
           parquet_script = File.join($configuration.base, script_location)
-          object_name = "#{prefix}-temporary-analytics-consolidated-submission-parquet/SparkRead-v1.0.py"
+          object_name = "#{prefix}-temp-analytics-consolidated-submission-parquet/SparkRead-v1.0.py"
           destination_bucket = "s3://#{prefix}-analytics-consolidated-submission-parquet"
           source_bucket = "s3://#{prefix}-analytics-submission-parquet"
 

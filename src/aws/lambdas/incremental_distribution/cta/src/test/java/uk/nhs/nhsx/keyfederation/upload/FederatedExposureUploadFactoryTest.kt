@@ -13,6 +13,7 @@ import uk.nhs.nhsx.domain.ReportType.UNKNOWN
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
 import uk.nhs.nhsx.domain.TestType.RAPID_RESULT
 import uk.nhs.nhsx.domain.TestType.RAPID_SELF_REPORTED
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
 import java.time.Instant
 
 class FederatedExposureUploadFactoryTest {

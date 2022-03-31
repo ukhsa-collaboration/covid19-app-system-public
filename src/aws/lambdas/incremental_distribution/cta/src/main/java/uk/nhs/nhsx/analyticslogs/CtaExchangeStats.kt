@@ -10,32 +10,38 @@ import uk.nhs.nhsx.domain.TokenAgeRange
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
-data class CtaExchangeStats(val startDate: LocalDate, val testType: TestKit, val platform: MobileOS?, val tokenAgeRange : TokenAgeRange, val source: Country, val total: Int,  val appVersion: String)
+data class CtaExchangeStats(
+    val startDate: LocalDate,
+    val testType: TestKit,
+    val platform: MobileOS?,
+    val tokenAgeRange: TokenAgeRange,
+    val source: Country,
+    val total: Int,
+    val appVersion: String
+)
 
 class CtaExchangeStatsConverter : Converter<CtaExchangeStats>() {
     private val dateTimeFormatterPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
-    override fun convert(map: Map<String, String>): CtaExchangeStats {
-        return CtaExchangeStats(
-            startDate = LocalDate.parse(map["start_date"] ?: error("missing start_date field from cloudwatch log insights"),dateTimeFormatterPattern),
-            testType = TestKit.valueOf(map["test_type"] ?: error("missing test_type field from cloudwatch log insights")),
-            platform = MobileOS.valueOf(map["platform"] ?: error("missing platform field from cloudwatch log insights")),
-            tokenAgeRange = TokenAgeRange.valueOf(map["token_age_range"] ?: error("missing token_age_range field from cloudwatch log insights")),
-            source = Country.from(map["source"] ?: error("missing source field from cloudwatch log insights")),
-            total = map["total"]?.toInt() ?: 0,
-            appVersion = map["app_version"] ?: "UNKNOWN"
-        )
-    }
+    override fun convert(map: Map<String, String>) = CtaExchangeStats(
+        startDate = LocalDate.parse(map.getValue("start_date"), dateTimeFormatterPattern),
+        testType = TestKit.valueOf(map.getValue("test_type")),
+        platform = MobileOS.valueOf(map.getValue("platform")),
+        tokenAgeRange = TokenAgeRange.valueOf(map.getValue("token_age_range")),
+        source = Country.from(map.getValue("source")),
+        total = map.getOrDefault("total", "0").toInt(),
+        appVersion = map.getOrDefault("app_version", "UNKNOWN")
+    )
 }
 
 class CtaExchangeAnalyticsHandler : LogInsightsAnalyticsHandler(
-    logAnalyticsService(
-        Environment.fromSystem(),
-        SystemClock.CLOCK,
-        PrintingJsonEvents(SystemClock.CLOCK),
-        ctaExchangeQueryString,
-        CtaExchangeStatsConverter()),
-    PrintingJsonEvents(SystemClock.CLOCK)
+    service = logAnalyticsService(
+        environment = Environment.fromSystem(),
+        clock = SystemClock.CLOCK,
+        events = PrintingJsonEvents(SystemClock.CLOCK),
+        queryString = ctaExchangeQueryString,
+        converter = CtaExchangeStatsConverter()
+    ),
+    events = PrintingJsonEvents(SystemClock.CLOCK)
 )
 
 private const val ctaExchangeQueryString = """fields @timestamp, @message

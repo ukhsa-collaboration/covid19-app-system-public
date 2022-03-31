@@ -16,7 +16,7 @@ namespace :publish do
       end
     end
     namespace :all do
-      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["aa-dev"].each do |tgt_env|
         desc "Delete and publish new data from local default pubdash analytics dir to #{tgt_env}"
         task :"#{tgt_env}" do
           Rake::Task["publish:pubdash:app_store:#{tgt_env}"].invoke
@@ -27,37 +27,37 @@ namespace :publish do
       end
     end
     namespace :app_store do
-      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["aa-dev"].each do |tgt_env|
         desc "Delete s3 contents and publish new data from local default pubdash analytics dir to #{tgt_env}"
         task :"#{tgt_env}" do
-          s3_object_location = "te-#{tgt_env}-analytics-app-store-qr-posters/app-store/"
+          s3_object_location = "#{tgt_env}-analytics-app-store-qr-posters/app-store/"
           NHSx::AWS::empty_s3_bucket(s3_object_location, $configuration)
           NHSx::Pubdash::publish_single($configuration.pubdash_app_store_dir, s3_object_location)
         end
       end
     end
     namespace :qr_posters do
-      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["aa-dev"].each do |tgt_env|
         desc "Delete s3 contents and publish new data from local default pubdash analytics dir to #{tgt_env}"
         task :"#{tgt_env}" do
-          s3_object_location = "te-#{tgt_env}-analytics-app-store-qr-posters/qr-posters/"
+          s3_object_location = "#{tgt_env}-analytics-app-store-qr-posters/qr-posters/"
           NHSx::AWS::empty_s3_bucket(s3_object_location, $configuration)
           NHSx::Pubdash::publish_single($configuration.pubdash_qr_posters_dir, s3_object_location)
         end
       end
     end
     namespace :postcode_lookup do
-      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["aa-dev"].each do |tgt_env|
         desc "Delete s3 contents and publish new data from local default pubdash analytics dir to #{tgt_env}"
         task :"#{tgt_env}" do
-          s3_object_location = "te-#{tgt_env}-analytics-postcode-demographic-geographic-lookup"
+          s3_object_location = "#{tgt_env}-analytics-postcode-demographic-geographic-lookup"
           NHSx::AWS::empty_s3_bucket(s3_object_location, $configuration)
           NHSx::Pubdash::publish_single($configuration.pubdash_postcode_lookup_dir, s3_object_location)
         end
       end
     end
     namespace :mobile_analytics do
-      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["dev"].each do |tgt_env|
+      NHSx::TargetEnvironment::PUBDASH_TARGET_ENVIRONMENTS["aa-dev"].each do |tgt_env|
         desc "Delete s3 contents and publish new data from local default pubdash analytics dir to #{tgt_env}"
         task :"#{tgt_env}" do
           s3_object_location = "te-#{tgt_env}-analytics-submission-parquet"

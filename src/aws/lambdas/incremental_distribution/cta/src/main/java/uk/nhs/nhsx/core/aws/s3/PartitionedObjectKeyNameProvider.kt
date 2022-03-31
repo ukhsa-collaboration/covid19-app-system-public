@@ -1,20 +1,19 @@
 package uk.nhs.nhsx.core.aws.s3
 
 import uk.nhs.nhsx.core.Clock
-import java.time.ZoneOffset
+import uk.nhs.nhsx.core.UniqueId
+import java.time.ZoneOffset.UTC
 import java.time.format.DateTimeFormatter
-import java.util.UUID
-import java.util.function.Supplier
 
 class PartitionedObjectKeyNameProvider(
     private val systemClock: Clock,
-    private val uniqueId: Supplier<UUID>
+    private val uniqueId: UniqueId
 ) : ObjectKeyNameProvider {
 
     override fun generateObjectKeyName(): ObjectKey {
         val now = systemClock()
-        val prefix = DATE_TIME_FORMATTER.format(now.atZone(ZoneOffset.UTC))
-        return ObjectKey.of(prefix + systemClock().toEpochMilli() + "_" + uniqueId.get().toString())
+        val prefix = DATE_TIME_FORMATTER.format(now.atZone(UTC))
+        return ObjectKey.of("""$prefix${systemClock().toEpochMilli()}_${uniqueId()}""")
     }
 
     companion object {

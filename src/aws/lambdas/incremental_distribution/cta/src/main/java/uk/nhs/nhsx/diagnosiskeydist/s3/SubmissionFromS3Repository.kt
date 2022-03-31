@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary
 import uk.nhs.nhsx.core.Clock
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.BucketName
-import uk.nhs.nhsx.core.aws.s3.Locator.Companion.of
+import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
@@ -60,21 +60,22 @@ class SubmissionFromS3Repository(
         ).use { pool ->
             for (objectSummary in summaries) {
                 pool.execute {
-                    awsS3.getObject(of(submissionBucketName, ObjectKey.of(objectSummary.key)))
-                        .ifPresentOrElse(
-                            { o ->
-                                o.objectContent.use {
-                                    submissions.add(
-                                        Submission(
-                                            objectSummary.lastModified.toInstant(),
-                                            ObjectKey.of(objectSummary.key),
-                                            getTemporaryExposureKeys(it)
-                                        )
+                    val locator = Locator.of(submissionBucketName, ObjectKey.of(objectSummary.key))
+                    when (val s3Object = awsS3.getObject(locator)) {
+                        null -> events(SubmissionMissing(submissionBucketName, objectSummary.key))
+                        else -> {
+                            s3Object.objectContent.use {
+                                submissions.add(
+                                    Submission(
+                                        submissionDate = objectSummary.lastModified.toInstant(),
+                                        objectKey = ObjectKey.of(objectSummary.key),
+                                        payload = getTemporaryExposureKeys(it)
                                     )
-                                }
-                                events(SubmissionLoaded(submissionBucketName, objectSummary.key))
+                                )
                             }
-                        ) { events(SubmissionMissing(submissionBucketName, objectSummary.key)) }
+                            events(SubmissionLoaded(submissionBucketName, objectSummary.key))
+                        }
+                    }
                 }
             }
         }

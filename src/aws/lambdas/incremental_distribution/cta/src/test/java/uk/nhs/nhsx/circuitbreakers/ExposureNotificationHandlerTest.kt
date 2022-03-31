@@ -54,19 +54,19 @@ class ExposureNotificationHandlerTest {
 
     private val breaker = CircuitBreakerService(initial, poll)
     private val handler = ExposureNotificationHandler(
-        TestEnvironments.TEST.apply(
+        environment = TestEnvironments.TEST.apply(
             mapOf(
                 "MAINTENANCE_MODE" to "false",
                 "custom_oai" to "OAI"
             )
         ),
-        SystemClock.CLOCK,
-        events,
-        { true },
-        AwsSsmParameters(),
-        signer,
-        breaker,
-        { true }
+        clock = SystemClock.CLOCK,
+        events = events,
+        authenticator = { true },
+        parameters = AwsSsmParameters(),
+        signer = signer,
+        circuitBreakerService = breaker,
+        healthAuthenticator = { true }
     )
 
     @Test
@@ -127,7 +127,7 @@ class ExposureNotificationHandlerTest {
             headers.containsKey("x-amz-meta-signature")
             body.withReadJsonOrThrow<TokenResponse> {
                 get(TokenResponse::approval).isEqualTo(PENDING.statusName)
-                get(TokenResponse::approvalToken).matches(Regex("[a-zA-Z0-9]+"))
+                get(TokenResponse::approvalToken).matches(Regex("[a-zA-Z\\d]{50}"))
             }
         }
 
@@ -225,7 +225,7 @@ class ExposureNotificationHandlerTest {
             .withMethod(GET)
             .withCustomOai("OAI")
             .withRequestId()
-            .withPath("/circuit-breaker/exposure-notification/resolution/abc123")
+            .withPath("/circuit-breaker/exposure-notification/resolution/QkFDQzlBREUtN0ZBMC00RTFELUE3NUMtRTZBMUFGNkMyRjNECg")
             .withBearerToken("anything")
 
         val response = handler.handleRequest(requestEvent, aContext())

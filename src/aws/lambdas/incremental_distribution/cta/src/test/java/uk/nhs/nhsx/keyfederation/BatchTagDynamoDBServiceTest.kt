@@ -22,7 +22,9 @@ import strikt.assertions.isNotNull
 import strikt.assertions.isNull
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.domain.BatchTag
-import uk.nhs.nhsx.keyfederation.upload.lookup.UploadKeysResult
+import uk.nhs.nhsx.keyfederation.domain.FederationBatch
+import uk.nhs.nhsx.keyfederation.storage.BatchTagDynamoDBService
+import uk.nhs.nhsx.keyfederation.storage.UploadKeysResult
 import uk.nhs.nhsx.testhelper.assertions.contains
 import java.time.Instant
 import java.time.LocalDate

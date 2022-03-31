@@ -7,6 +7,7 @@ module "app_system_pull_request" {
   repository                  = var.repository_url
   container                   = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:devenv-latest"
   artifacts_bucket_name       = module.artifacts.bucket_name
+  cache_artifacts_bucket_name = module.cache_artifacts.bucket_name
   pipeline_definition_file    = abspath("${path.root}/../../../pipelines/pr.app-system.buildspec.yml")
   service_role                = var.service_role
   image_pull_credentials_type = "SERVICE_ROLE"
@@ -22,6 +23,7 @@ module "app_system_ci" {
   repository                  = var.repository_url
   container                   = "123456789012.dkr.ecr.eu-west-2.amazonaws.com/nhsx-covid19:devenv-latest"
   artifacts_bucket_name       = module.artifacts.bucket_name
+  cache_artifacts_bucket_name = module.cache_artifacts.bucket_name
   pipeline_definition_file    = abspath("${path.root}/../../../pipelines/continuous-integration.buildspec.yml")
   service_role                = var.service_role
   image_pull_credentials_type = "SERVICE_ROLE"
@@ -37,6 +39,7 @@ module "doreto_pull_request" {
   repository                  = var.repository_url
   container                   = "aws/codebuild/standard:5.0"
   artifacts_bucket_name       = module.artifacts.bucket_name
+  cache_artifacts_bucket_name = module.cache_artifacts.bucket_name
   pipeline_definition_file    = abspath("${path.root}/../../../pipelines/pr.doreto.buildspec.yml")
   service_role                = var.service_role
   image_pull_credentials_type = "CODEBUILD"
@@ -54,6 +57,7 @@ module "devenv_ci" {
   repository                  = var.repository_url
   container                   = "aws/codebuild/standard:5.0"
   artifacts_bucket_name       = module.artifacts.bucket_name
+  cache_artifacts_bucket_name = module.cache_artifacts.bucket_name
   pipeline_definition_file    = abspath("${path.root}/../../../pipelines/devenv.buildspec.yml")
   service_role                = var.service_role
   image_pull_credentials_type = "CODEBUILD"

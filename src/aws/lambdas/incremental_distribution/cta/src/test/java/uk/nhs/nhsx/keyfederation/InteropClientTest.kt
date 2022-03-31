@@ -26,20 +26,21 @@ import strikt.assertions.isA
 import strikt.assertions.isEqualTo
 import strikt.assertions.isFailure
 import strikt.assertions.message
+import uk.nhs.nhsx.core.RandomUUID
 import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.domain.BatchTag
 import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
-import uk.nhs.nhsx.keyfederation.download.DiagnosisKeysDownloadResponse
+import uk.nhs.nhsx.keyfederation.client.HttpInteropClient
+import uk.nhs.nhsx.keyfederation.client.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
-import uk.nhs.nhsx.keyfederation.download.NoContent
-import uk.nhs.nhsx.keyfederation.upload.ExposureUpload
+import uk.nhs.nhsx.keyfederation.client.NoContent
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
 import uk.nhs.nhsx.keyfederation.upload.JWS
 import uk.nhs.nhsx.testhelper.wiremock.WireMockExtension
 import java.time.LocalDate
 import java.util.*
-import java.util.function.Supplier
 
 @ExtendWith(WireMockExtension::class)
 class InteropClientTest(private val wireMock: WireMockServer) {
@@ -552,8 +553,8 @@ class InteropClientTest(private val wireMock: WireMockServer) {
     private fun InteropClient(
         wireMockServer: WireMockServer,
         jws: JWS = mockk { every { sign(any()) } returns "DUMMY_SIGNATURE" },
-        uniqueId: Supplier<UUID> = UniqueId.ID
-    ) = InteropClient(
+        uniqueId: UniqueId = RandomUUID
+    ) = HttpInteropClient(
         interopBaseUrl = wireMockServer.baseUrl(),
         authToken = "DUMMY_TOKEN",
         jws = jws,

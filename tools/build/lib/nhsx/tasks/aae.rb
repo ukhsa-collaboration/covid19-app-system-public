@@ -41,7 +41,7 @@ namespace :aae do
 
       if account == 'staging'
         Rake::Task['login:dev'].invoke
-        download_aae_secrets(service_name, consumer_name, aae_config, $configuration)
+        download_aae_secrets(aae_config, $configuration)
       end
 
       Rake::Task["login:#{account}"].invoke

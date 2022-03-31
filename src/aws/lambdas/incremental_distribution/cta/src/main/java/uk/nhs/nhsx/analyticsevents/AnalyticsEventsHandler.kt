@@ -7,9 +7,9 @@ import uk.nhs.nhsx.core.EnvironmentKeys
 import uk.nhs.nhsx.core.HttpResponses.badRequest
 import uk.nhs.nhsx.core.HttpResponses.ok
 import uk.nhs.nhsx.core.HttpResponses.serviceUnavailable
+import uk.nhs.nhsx.core.RandomUUID
 import uk.nhs.nhsx.core.StandardSigningFactory
 import uk.nhs.nhsx.core.SystemClock
-import uk.nhs.nhsx.core.UniqueId
 import uk.nhs.nhsx.core.auth.ApiName.Health
 import uk.nhs.nhsx.core.auth.ApiName.Mobile
 import uk.nhs.nhsx.core.auth.Authenticator
@@ -23,10 +23,10 @@ import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
 import uk.nhs.nhsx.core.handler.ApiGatewayHandler
+import uk.nhs.nhsx.core.handler.RoutingHandler
 import uk.nhs.nhsx.core.routing.Routing.Method.POST
 import uk.nhs.nhsx.core.routing.Routing.path
 import uk.nhs.nhsx.core.routing.Routing.routes
-import uk.nhs.nhsx.core.handler.RoutingHandler
 import uk.nhs.nhsx.core.routing.authorisedBy
 import uk.nhs.nhsx.core.routing.withSignedResponses
 
@@ -41,7 +41,7 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
         AWSKMSClientBuilder.defaultClient()
     ).signResponseWithKeyGivenInSsm(environment, events),
     awsS3: AwsS3 = AwsS3Client(events),
-    objectKeyNameProvider: ObjectKeyNameProvider = PartitionedObjectKeyNameProvider(clock, UniqueId.ID),
+    objectKeyNameProvider: ObjectKeyNameProvider = PartitionedObjectKeyNameProvider(clock, RandomUUID),
     healthAuthenticator: Authenticator = awsAuthentication(Health, events)
 ) : RoutingHandler() {
 

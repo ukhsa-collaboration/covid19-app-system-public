@@ -6,11 +6,12 @@ import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.InfoEvent
 import uk.nhs.nhsx.diagnosiskeydist.Submission
 import uk.nhs.nhsx.diagnosiskeydist.SubmissionRepository
-import uk.nhs.nhsx.keyfederation.BatchTagService
+import uk.nhs.nhsx.keyfederation.storage.BatchTagService
 import uk.nhs.nhsx.keyfederation.DiagnosisKeysUploadIncomplete
-import uk.nhs.nhsx.keyfederation.InteropClient
+import uk.nhs.nhsx.keyfederation.client.InteropClient
 import uk.nhs.nhsx.keyfederation.InvalidTemporaryExposureKey
 import uk.nhs.nhsx.keyfederation.UploadedDiagnosisKeys
+import uk.nhs.nhsx.keyfederation.client.ExposureUpload
 import java.time.Duration
 import java.time.Instant
 import java.util.*
