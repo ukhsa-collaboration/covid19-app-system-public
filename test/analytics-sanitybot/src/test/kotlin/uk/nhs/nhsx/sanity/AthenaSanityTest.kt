@@ -53,7 +53,7 @@ class AthenaSanityTest {
             }
         }
 
-        expectThat(athenaTables.count()).isEqualTo(39)
+        expectThat(athenaTables.count()).isEqualTo(40)
     }
 
     private fun waitForQueryToFinish(queryId: QueryId) {

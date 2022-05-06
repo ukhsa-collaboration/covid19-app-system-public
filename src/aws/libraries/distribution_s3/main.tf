@@ -20,6 +20,15 @@ resource "aws_s3_bucket" "this" {
     enabled = var.s3_versioning
   }
 
+  lifecycle_rule {
+    id      = "1DayLifecycleRule"
+    enabled = var.lifecycle_policy
+
+    noncurrent_version_expiration {
+      days = 1
+    }
+  }
+
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {

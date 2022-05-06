@@ -94,6 +94,52 @@
       "riskWeight": 1
     }
   ],
+  "cardinal": {
+    "title": {
+      "ar": "",
+      "bn": "",
+      "cy": "",
+      "en": "Do you have a high temperature?",
+      "gu": "",
+      "pa": "",
+      "pl": "",
+      "ro": "",
+      "so": "",
+      "tr": "",
+      "ur": "",
+      "zh": ""
+    }
+  },
+  "noncardinal": {
+    "title": {
+      "ar": "",
+      "bn": "",
+      "cy": "",
+      "en": "Do you have any of these symptoms?",
+      "gu": "",
+      "pa": "",
+      "pl": "",
+      "ro": "",
+      "so": "",
+      "tr": "",
+      "ur": "",
+      "zh": ""
+    },
+    "description": {
+      "ar": "",
+      "bn": "",
+      "cy": "",
+      "en": "-Shivering or chills\n\n-A new, continuous cough\n\n-A loss or change to your sense of smell or taste\n\n-Shortness of breath\n\n-Feeling tired or exhausted\n\n-An aching body\n\n-A headache\n\n-A sore throat\n\n-A blocked or runny nose\n\n-Loss of appetite\n\n-Diarrhoea\n\n-Feeling sick or being sick",
+      "gu": "",
+      "pa": "",
+      "pl": "",
+      "ro": "",
+      "so": "",
+      "tr": "",
+      "ur": "",
+      "zh": ""
+    }
+  },
   "riskThreshold": 0.5,
   "symptomsOnsetWindowDays": 6
 }

@@ -1206,10 +1206,6 @@
             },
             {
               "type": "para",
-              "text": "若是无症状阳性者的接触者，但应用显示了倒计时，则可忽视此倒计时。"
-            },
-            {
-              "type": "para",
               "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
               "linkText": "如有相关症状，可网购侧流检测试剂盒"
             },
@@ -1244,10 +1240,6 @@
             {
               "type": "para",
               "text": "However, if you test positive you should self-isolate, and if you have symptoms, you should avoid contact with others."
-            },
-            {
-              "type": "para",
-              "text": "If you are a contact of someone who tests positive and do not have symptoms, but your app is showing the countdown timer, you can ignore this."
             },
             {
               "type": "para",
@@ -1288,10 +1280,6 @@
             },
             {
               "type": "para",
-              "text": "إذا كنت على اتصال بشخص ما كانت نتيجة اختباره إيجابية ولم تظهر عليه أعراض، ولكن تطبيقك يعرض مؤقت العد التنازلي، يمكنك تجاهل ذلك."
-            },
-            {
-              "type": "para",
               "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
               "linkText": "يمكنك طلب مجموعة من اختبارات التدفق الجانبي عبر الإنترنت إذا كانت لديك أعراض"
             },
@@ -1329,10 +1317,6 @@
             },
             {
               "type": "para",
-              "text": "Test sonucu pozitif çıkan birinin temaslısı iseniz ve belirtileriniz yoksa, uygulamanın gerisayım sayacını dikkate almayabilirsiniz."
-            },
-            {
-              "type": "para",
               "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
               "linkText": "Belirtileriniz varsa internetten bir paket hızlı antijen testi sipariş edebilirsiniz"
             },
@@ -1366,11 +1350,7 @@
             },
             {
               "type": "para",
-              "text": "Jeśli w razie pozytywnego wyniku testu zaleca się izolację, a w razie wystąpienia objawów unikanie kontaktu z innymi."
-            },
-            {
-              "type": "para",
-              "text": "Jeżeli aplikacja wskazuje kontakt z kimś kto otrzymał pozytywny wynik testu i wyświetla licznik czasu, ale nie ma się objawów, można to zignorować."
+              "text": "Jednak w razie pozytywnego wyniku testu zaleca się izolację, a w razie wystąpienia objawów unikanie kontaktu z innymi."
             },
             {
               "type": "para",
@@ -1411,10 +1391,6 @@
             },
             {
               "type": "para",
-              "text": "Dacă sunteți contactul unei persoane care are un rezultat pozitiv iar dvs. nu prezentați simptome, însă aplicația vă arată contorul cu numărătoarea inversă, puteți să ignorați acest lucru."
-            },
-            {
-              "type": "para",
               "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
               "linkText": "Dacă aveți simptome, puteți comanda online un pachet de teste cu flux lateral"
             },
@@ -1444,15 +1420,11 @@
           "content": [
             {
               "type": "para",
-              "text": "28 ਮਾਰਚ 2022 ਤੋਂ ਜੇਕਰ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ ਜਾਂ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਵਿਅਕਤੀ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਰਹੇ ਹੋ ਜੋ ਜਿਸਦਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ, ਤਾਂ ਤੁਹਾਨੂੰ ਕਾਨੂੰਨੀ ਤੌਰ 'ਤੇ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।"
+              "text": "28 ਮਾਰਚ 2022 ਤੋਂ ਜੇਕਰ ਤੁਹਾਡਾ COVID-19 ਲਈ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ ਜਾਂ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਵਿਅਕਤੀ ਦੇ ਸੰਪਰਕ ਵਿੱਚ ਰਹੇ ਹੋ ਜਿਸਦਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ, ਤਾਂ ਤੁਹਾਨੂੰ ਕਾਨੂੰਨੀ ਤੌਰ 'ਤੇ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।"
             },
             {
               "type": "para",
               "text": "ਹਾਲਾਂਕਿ, ਜੇਕਰ ਤੁਹਾਡਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਤਾਂ ਤੁਹਾਨੂੰ ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣਾ ਚਾਹੀਦਾ ਹੈ, ਅਤੇ ਜੇਕਰ ਤੁਹਾਡੇ ਵਿੱਚ ਲੱਛਣ ਹਨ, ਤਾਂ ਤੁਹਾਨੂੰ ਦੂਜਿਆਂ ਨਾਲ ਸੰਪਰਕ ਕਰਨ ਤੋਂ ਬਚਣਾ ਚਾਹੀਦਾ ਹੈ।"
-            },
-            {
-              "type": "para",
-              "text": "ਜੇਕਰ ਤੁਸੀਂ ਕਿਸੇ ਅਜਿਹੇ ਵਿਅਕਤੀ ਦੇ ਸੰਪਰਕ ਹੋ ਜਿਸਦਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਇਆ ਹੈ ਅਤੇ ਲੱਛਣ ਨਹੀਂ ਹਨ, ਪਰ ਤੁਹਾਡੀ ਐਪ ਉਲਟੀ ਗਿਣਤੀ ਟਾਈਮਰ ਦਿਖਾ ਰਹੀ ਹੈ, ਤਾਂ ਤੁਸੀਂ ਇਸ ਨੂੰ ਨਜ਼ਰਅੰਦਾਜ਼ ਕਰ ਸਕਦੇ ਹੋ।"
             },
             {
               "type": "para",
@@ -1493,10 +1465,6 @@
             },
             {
               "type": "para",
-              "text": "আপনি যদি এমন কারও সংস্পর্শে এসে থাকেন যার পরীক্ষার ফলাফল পজিটিভ এসেছে, এবং আপনার কোনও লক্ষণ না থাকে, কিন্তু আপনার অ্যাপটি কাউন্টডাউন টাইমার দেখায়, সেই ক্ষেত্রে আপনি এটি উপেক্ষা করতে পারেন।"
-            },
-            {
-              "type": "para",
               "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
               "linkText": "আপনার লক্ষণ থাকলে, আপনি ল্যাটারাল ফ্লো পরীক্ষার একটি প্যাক অনলাইনে অর্ডার করতে পারেন"
             },
@@ -1531,10 +1499,6 @@
             {
               "type": "para",
               "text": "જો કે, જો તમારો ટેસ્ટ પોઝિટિવ આવે, તો તમારે સેલ્ફ-આઇસોલેટ થવું જોઈએ, અને જો તમને લક્ષણો હોય, તો તમારે અન્ય લોકો સાથે સંપર્કમાં આવવાનું ટાળવું જોઈએ."
-            },
-            {
-              "type": "para",
-              "text": "જો તમે એવા કોઈ વ્યક્તિના સંપર્કમાં હોવ કે જેમનો ટેસ્ટ પોઝિટિવ આવ્યો છે અને તેમને લક્ષણો નથી, પરંતુ તમારી એપ્લિકેશન કાઉન્ટડાઉન ટાઈમર બતાવે છે, તો તમે આને અવગણી શકો છો."
             },
             {
               "type": "para",
@@ -1575,10 +1539,6 @@
             },
             {
               "type": "para",
-              "text": "Os ydych chi'n gyswllt i rywun sy'n profi'n bositif ac nad oes gennych chi symptomau, ond bod eich ap yn dangos y r amserydd cyfrif i lawr, gallwch anwybyddu hyn."
-            },
-            {
-              "type": "para",
               "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
               "linkText": "Gallwch archebu pecyn o brofion llif unffordd ar-lein os oes gennych chi symptomau"
             },
@@ -1616,10 +1576,6 @@
             },
             {
               "type": "para",
-              "text": "Haddii aad taabato qof qaba cudurka oo aadan lahayn calaamado, laakiin app-kaagu uu muujinaayo wakhtiga tirinta, waad iska indho tiri kartaa midaan."
-            },
-            {
-              "type": "para",
               "link": "https://www.gov.uk/order-coronavirus-rapid-lateral-flow-tests",
               "linkText": "Waxaad ka dalban kartaa xirmo baaritaanka natiijada qulqulka geeska ah onlayn ahaan haddii aad leedahay astaamo"
             },
@@ -1654,10 +1610,6 @@
             {
               "type": "para",
               "text": "تاہم، اگر آپ کی جانچ مثبت آتی ہے تو آپ کو چاہیے کہ خود کو الگ تھلگ رکھیں، اور اگر آپ میں علامات پائی جاتی ہیں تو آپ کو دوسروں سے رابطہ کرنے سے گریز کرنا چاہیے۔"
-            },
-            {
-              "type": "para",
-              "text": "اگر آپ کسی ایسے شخص کے رابطہ میں رہے ہیں جس کی جانچ مثبت آئی ہے اور آپ میں علامات نہیں پائی جاتی ہیں، لیکن آپ کا ایپ کاؤنٹ ڈاؤن ٹائمر دکھا رہا ہے تو آپ اسے نظر انداز کر سکتے ہیں۔"
             },
             {
               "type": "para",
@@ -2062,8 +2014,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " COVID-19 安全生活指南"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "COVID-19 安全生活指南"
             },
             {
               "type": "para",
@@ -2085,8 +2037,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19/",
-              "linkText": " Guidance on living safely with COVID-19"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19/",
+              "linkText": "Guidance on living safely with COVID-19"
             },
             {
               "type": "para",
@@ -2131,8 +2083,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " COVID-19'la güvenli bir şekilde yaşama rehberi"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "COVID-19'la güvenli bir şekilde yaşama rehberi"
             },
             {
               "type": "para",
@@ -2154,8 +2106,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " Wskazówki dotyczące bezpiecznego życia z COVID-19"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "Wskazówki dotyczące bezpiecznego życia z COVID-19"
             },
             {
               "type": "para",
@@ -2177,8 +2129,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " Instrucțiuni privind viața în condiții de siguranță cu COVID-19"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "Instrucțiuni privind viața în condiții de siguranță cu COVID-19"
             },
             {
               "type": "para",
@@ -2200,7 +2152,7 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
               "linkText": " COVID-19 ਨਾਲ ਸੁਰੱਖਿਅਤ ਢੰਗ ਨਾਲ ਰਹਿਣ ਬਾਰੇ ਸੇਧ"
             },
             {
@@ -2223,8 +2175,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " COVID-19 এর সাথে নিরাপদে জীবনযাপনের নির্দেশনা"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "COVID-19 এর সাথে নিরাপদে জীবনযাপনের নির্দেশনা"
             },
             {
               "type": "para",
@@ -2246,8 +2198,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " COVID-19 સાથે સુરક્ષિત રીતે જીવવા અંગેના નિર્દેશો"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "COVID-19 સાથે સુરક્ષિત રીતે જીવવા અંગેના નિર્દેશો"
             },
             {
               "type": "para",
@@ -2269,8 +2221,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " Canllaw ar fyw’n ddiogel gyda COVID-19"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "Canllaw ar fyw’n ddiogel gyda COVID-19"
             },
             {
               "type": "para",
@@ -2279,7 +2231,7 @@
           ]
         },
         "so": {
-          "head": "Talada is-gooniyeelida iyo baarit aanka ayaa isbedeshay",
+          "head": "Talada is-gooniyeelida iyo baaritaanka ayaa isbedeshay",
           "body": "Akhri tilmaanta la cusboonaysiiyay",
           "content": [
             {
@@ -2292,8 +2244,8 @@
             },
             {
               "type": "para",
-              "link": " https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " Tilmaanta ula noolaanshaha si badqab ah COVID-19"
+              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
+              "linkText": "Tilmaanta ula noolaanshaha si badqab ah COVID-19"
             },
             {
               "type": "para",
@@ -2316,7 +2268,7 @@
             {
               "type": "para",
               "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " COVID-19 کے ساتھ بحفاظت زندگی گزارنے سے متعلق رہنمائی"
+              "linkText": "COVID-19 کے ساتھ بحفاظت زندگی گزارنے سے متعلق رہنمائی"
             },
             {
               "type": "para",

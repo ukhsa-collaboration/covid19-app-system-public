@@ -33,6 +33,12 @@ variable "s3_versioning" {
   default     = false
 }
 
+variable "lifecycle_policy" {
+  description = "Enable Lifecycle Policy if set to true"
+  type        = bool
+  default     = false
+}
+
 variable "policy_document" {
   description = "An aws_iam_policy_document to be attached to the s3 bucket"
 }

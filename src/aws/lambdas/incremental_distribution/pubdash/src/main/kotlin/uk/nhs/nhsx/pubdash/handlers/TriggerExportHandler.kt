@@ -17,13 +17,16 @@ class TriggerExportHandler(
     environment: Environment = Environment.fromSystem(),
     clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
-    private val service: DataExportService = dataExportService(environment, events)
+    private val service: DataExportService = dataExportService(environment, events, clock)
 ) : SchedulingHandler(events) {
 
     override fun handler() = Handler<ScheduledEvent, Event> { _, _ ->
-        service.triggerAllQueries()
+        service.triggerExport()
         ExportTriggered
     }
 }
 
 object ExportTriggered : Event(EventCategory.Info)
+object DueDateFileNotFound : Event(EventCategory.Info)
+object DueDateNotReached : Event(EventCategory.Info)
+object DueDateFileUpdated : Event(EventCategory.Info)

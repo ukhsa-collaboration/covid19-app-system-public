@@ -67,6 +67,12 @@ module NHS
         symptomatic_questionaire["symptoms"][idx]["title"] = translations["question#{idx + 1}.title"]
         symptomatic_questionaire["symptoms"][idx]["description"] = translations["question#{idx + 1}.description"]
       end
+
+      symptomatic_questionaire["cardinal"]["title"] = translations["question.cardinal.title"]
+
+      symptomatic_questionaire["noncardinal"]["title"] = translations["question.cardinalnon.title"]
+      symptomatic_questionaire["noncardinal"]["description"] = translations["question.cardinalnon.list"]
+
       write_file(questionaire_file, JSON.pretty_generate(symptomatic_questionaire))
     end
 

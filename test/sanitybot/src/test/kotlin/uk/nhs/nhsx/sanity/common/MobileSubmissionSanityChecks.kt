@@ -6,6 +6,7 @@ import org.http4k.core.Request
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.FORBIDDEN
 import org.http4k.core.Status.Companion.OK
+import org.http4k.core.Status.Companion.SERVICE_UNAVAILABLE
 import org.http4k.core.Uri
 import org.http4k.core.extend
 import org.http4k.hamkrest.hasStatus
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import uk.nhs.nhsx.sanity.LambdaSanityCheck
+import uk.nhs.nhsx.sanity.config.DeployedApiResource.IsolationPayment
 import uk.nhs.nhsx.sanity.config.DeployedApiResource.AnalyticsSubmission
 import uk.nhs.nhsx.sanity.config.DeployedApiResource.DiagnosisKeysSubmission
 import uk.nhs.nhsx.sanity.config.DeployedApiResource.VirologyKit
@@ -32,18 +34,30 @@ class MobileSubmissionSanityChecks : LambdaSanityCheck() {
 //    Exchange cta token endpoint - ${ENDPOINT}/cta-exchange gets 403✅
 
     @ParameterizedTest(name = "submission gets a 400 {arguments}")
-    @MethodSource("submissions")
+    @MethodSource("submissionsWithoutIsolationPayment")
     fun `submission gets a 400`(submission: Submission) {
         assertThat(submission.withSecureClient(Request(POST, submission.endpointUri)),
             hasStatus(BAD_REQUEST))
     }
 
+    @ParameterizedTest(name = "submission gets a 503 {arguments}")
+    @MethodSource("isolationPaymentSubmissions")
+    fun `submission gets a 503`(submission: Submission) {
+        assertThat(submission.withSecureClient(Request(POST, submission.endpointUri)),
+            hasStatus(SERVICE_UNAVAILABLE))
+    }
+
     @Suppress("unused")
     companion object {
         @JvmStatic
-        private fun submissions(): List<Any> = endpoints()
+        private fun submissionsWithoutIsolationPayment(): List<Any> = endpoints()
             .filterIsInstance<Submission>()
-            .filterNot { it.resource == Resource.DynamicUrl }
+            .filterNot { it.resource == Resource.DynamicUrl || it.name == IsolationPayment.name }
+
+        @JvmStatic
+        private fun isolationPaymentSubmissions(): List<Any> = endpoints()
+            .filterIsInstance<Submission>()
+            .filterNot { it.resource == Resource.DynamicUrl || it.name != IsolationPayment.name }
     }
 
     @Test

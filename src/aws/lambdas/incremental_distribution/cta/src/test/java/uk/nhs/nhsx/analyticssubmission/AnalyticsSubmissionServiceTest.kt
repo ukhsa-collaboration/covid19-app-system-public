@@ -11,7 +11,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import strikt.api.expectThat
 import strikt.assertions.contains
-import strikt.assertions.hasEntry
+import strikt.assertions.containsKey
 import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetadata
 import uk.nhs.nhsx.analyticssubmission.model.AnalyticsMetrics
@@ -29,6 +29,7 @@ import uk.nhs.nhsx.testhelper.assertions.events
 import java.nio.charset.Charset
 import java.time.Instant
 import java.time.OffsetDateTime
+import uk.nhs.nhsx.analyticssubmission.AnalyticsMapNullRemover.removeNullValues
 
 class AnalyticsSubmissionServiceTest {
 
@@ -141,103 +142,104 @@ class AnalyticsSubmissionServiceTest {
 
         var counter = 1L
 
-        expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "AB10",
-                deviceModel = "iPhone11,2",
-                operatingSystemVersion = "iPhone OS 13.5.1 (17F80)",
-                latestApplicationVersion = "3.0",
-                localAuthority = null,
-                cumulativeDownloadBytes = counter++.toInt(),
-                cumulativeUploadBytes = counter++.toInt(),
-                cumulativeCellularDownloadBytes = counter++.toInt(),
-                cumulativeCellularUploadBytes = counter++.toInt(),
-                cumulativeWifiDownloadBytes = counter++.toInt(),
-                cumulativeWifiUploadBytes = counter++.toInt(),
-                receivedVoidTestResult = counter++.toInt(),
-                isIsolatingBackgroundTick = counter++.toInt(),
-                hasHadRiskyContactBackgroundTick = counter++.toInt(),
-                receivedPositiveTestResult = counter++.toInt(),
-                receivedNegativeTestResult = counter++.toInt(),
-                completedQuestionnaireAndStartedIsolation = counter++.toInt(),
-                encounterDetectionPausedBackgroundTick = counter++.toInt(),
-                completedQuestionnaireButDidNotStartIsolation = counter++.toInt(),
-                totalBackgroundTasks = counter++.toInt(),
-                runningNormallyBackgroundTick = counter++.toInt(),
-                completedOnboarding = counter++.toInt(),
-                includesMultipleApplicationVersions = false,
-                receivedVoidTestResultEnteredManually = counter++.toInt(),
-                receivedPositiveTestResultEnteredManually = counter++.toInt(),
-                receivedNegativeTestResultEnteredManually = counter++.toInt(),
-                receivedVoidTestResultViaPolling = counter++.toInt(),
-                receivedPositiveTestResultViaPolling = counter++.toInt(),
-                receivedNegativeTestResultViaPolling = counter++.toInt(),
-                hasSelfDiagnosedBackgroundTick = counter++.toInt(),
-                hasTestedPositiveBackgroundTick = counter++.toInt(),
-                isIsolatingForSelfDiagnosedBackgroundTick = counter++.toInt(),
-                isIsolatingForTestedPositiveBackgroundTick = counter++.toInt(),
-                receivedRiskyContactNotification = counter++.toInt(),
-                startedIsolation = counter++.toInt(),
-                receivedPositiveTestResultWhenIsolatingDueToRiskyContact = counter++.toInt(),
-                receivedActiveIpcToken = counter++.toInt(),
-                haveActiveIpcTokenBackgroundTick = counter++.toInt(),
-                selectedIsolationPaymentsButton = counter++.toInt(),
-                launchedIsolationPaymentsApplication = counter++.toInt(),
-                receivedPositiveLFDTestResultViaPolling = counter++.toInt(),
-                receivedNegativeLFDTestResultViaPolling = counter++.toInt(),
-                receivedVoidLFDTestResultViaPolling = counter++.toInt(),
-                receivedPositiveLFDTestResultEnteredManually = counter++.toInt(),
-                receivedNegativeLFDTestResultEnteredManually = counter++.toInt(),
-                receivedVoidLFDTestResultEnteredManually = counter++.toInt(),
-                hasTestedLFDPositiveBackgroundTick = counter++.toInt(),
-                isIsolatingForTestedLFDPositiveBackgroundTick = counter++.toInt(),
-                totalExposureWindowsNotConsideredRisky = counter++.toInt(),
-                totalExposureWindowsConsideredRisky = counter++.toInt(),
-                hasRiskyContactNotificationsEnabledBackgroundTick = counter++.toInt(),
-                totalRiskyContactReminderNotifications = counter++.toInt(),
-                receivedUnconfirmedPositiveTestResult = counter++.toInt(),
-                isIsolatingForUnconfirmedTestBackgroundTick = counter++.toInt(),
-                launchedTestOrdering = counter++.toInt(),
-                didHaveSymptomsBeforeReceivedTestResult = counter++.toInt(),
-                didRememberOnsetSymptomsDateBeforeReceivedTestResult = counter++.toInt(),
-                didAskForSymptomsOnPositiveTestEntry = counter++.toInt(),
-                declaredNegativeResultFromDCT = counter++.toInt(),
-                receivedPositiveSelfRapidTestResultViaPolling = counter++.toInt(),
-                receivedNegativeSelfRapidTestResultViaPolling = counter++.toInt(),
-                receivedVoidSelfRapidTestResultViaPolling = counter++.toInt(),
-                receivedPositiveSelfRapidTestResultEnteredManually = counter++.toInt(),
-                receivedNegativeSelfRapidTestResultEnteredManually = counter++.toInt(),
-                receivedVoidSelfRapidTestResultEnteredManually = counter++.toInt(),
-                isIsolatingForTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
-                hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
-                totalAlarmManagerBackgroundTasks = counter++.toInt(),
-                missingPacketsLast7Days = counter++.toInt(),
-                consentedToShareVenueHistory = counter++.toInt(),
-                askedToShareVenueHistory = counter++.toInt(),
-                askedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
-                consentedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
-                totalShareExposureKeysReminderNotifications = counter++.toInt(),
-                consentedToShareExposureKeysInReminderScreen = counter++.toInt(),
-                successfullySharedExposureKeys = counter++.toInt(),
-                didSendLocalInfoNotification = counter++.toInt(),
-                didAccessLocalInfoScreenViaNotification = counter++.toInt(),
-                didAccessLocalInfoScreenViaBanner = counter++.toInt(),
-                isDisplayingLocalInfoBackgroundTick = counter++.toInt(),
-                positiveLabResultAfterPositiveLFD = counter++.toInt(),
-                negativeLabResultAfterPositiveLFDWithinTimeLimit = counter++.toInt(),
-                negativeLabResultAfterPositiveLFDOutsideTimeLimit = counter++.toInt(),
-                positiveLabResultAfterPositiveSelfRapidTest = counter++.toInt(),
-                negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = counter++.toInt(),
-                negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = counter++.toInt(),
-                optedOutForContactIsolation = counter++.toInt(),
-                optedOutForContactIsolationBackgroundTick = counter++.toInt(),
-                appIsUsableBackgroundTick = counter++.toInt(),
-                appIsContactTraceableBackgroundTick = counter++.toInt(),
-                appIsUsableBluetoothOffBackgroundTick = counter.toInt()
-            )
+        val analyticsPayload = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "AB10",
+            deviceModel = "iPhone11,2",
+            operatingSystemVersion = "iPhone OS 13.5.1 (17F80)",
+            latestApplicationVersion = "3.0",
+            localAuthority = null,
+            cumulativeDownloadBytes = counter++.toInt(),
+            cumulativeUploadBytes = counter++.toInt(),
+            cumulativeCellularDownloadBytes = counter++.toInt(),
+            cumulativeCellularUploadBytes = counter++.toInt(),
+            cumulativeWifiDownloadBytes = counter++.toInt(),
+            cumulativeWifiUploadBytes = counter++.toInt(),
+            receivedVoidTestResult = counter++.toInt(),
+            isIsolatingBackgroundTick = counter++.toInt(),
+            hasHadRiskyContactBackgroundTick = counter++.toInt(),
+            receivedPositiveTestResult = counter++.toInt(),
+            receivedNegativeTestResult = counter++.toInt(),
+            completedQuestionnaireAndStartedIsolation = counter++.toInt(),
+            encounterDetectionPausedBackgroundTick = counter++.toInt(),
+            completedQuestionnaireButDidNotStartIsolation = counter++.toInt(),
+            totalBackgroundTasks = counter++.toInt(),
+            runningNormallyBackgroundTick = counter++.toInt(),
+            completedOnboarding = counter++.toInt(),
+            includesMultipleApplicationVersions = false,
+            receivedVoidTestResultEnteredManually = counter++.toInt(),
+            receivedPositiveTestResultEnteredManually = counter++.toInt(),
+            receivedNegativeTestResultEnteredManually = counter++.toInt(),
+            receivedVoidTestResultViaPolling = counter++.toInt(),
+            receivedPositiveTestResultViaPolling = counter++.toInt(),
+            receivedNegativeTestResultViaPolling = counter++.toInt(),
+            hasSelfDiagnosedBackgroundTick = counter++.toInt(),
+            hasTestedPositiveBackgroundTick = counter++.toInt(),
+            isIsolatingForSelfDiagnosedBackgroundTick = counter++.toInt(),
+            isIsolatingForTestedPositiveBackgroundTick = counter++.toInt(),
+            receivedRiskyContactNotification = counter++.toInt(),
+            startedIsolation = counter++.toInt(),
+            receivedPositiveTestResultWhenIsolatingDueToRiskyContact = counter++.toInt(),
+            receivedActiveIpcToken = counter++.toInt(),
+            haveActiveIpcTokenBackgroundTick = counter++.toInt(),
+            selectedIsolationPaymentsButton = counter++.toInt(),
+            launchedIsolationPaymentsApplication = counter++.toInt(),
+            receivedPositiveLFDTestResultViaPolling = counter++.toInt(),
+            receivedNegativeLFDTestResultViaPolling = counter++.toInt(),
+            receivedVoidLFDTestResultViaPolling = counter++.toInt(),
+            receivedPositiveLFDTestResultEnteredManually = counter++.toInt(),
+            receivedNegativeLFDTestResultEnteredManually = counter++.toInt(),
+            receivedVoidLFDTestResultEnteredManually = counter++.toInt(),
+            hasTestedLFDPositiveBackgroundTick = counter++.toInt(),
+            isIsolatingForTestedLFDPositiveBackgroundTick = counter++.toInt(),
+            totalExposureWindowsNotConsideredRisky = counter++.toInt(),
+            totalExposureWindowsConsideredRisky = counter++.toInt(),
+            hasRiskyContactNotificationsEnabledBackgroundTick = counter++.toInt(),
+            totalRiskyContactReminderNotifications = counter++.toInt(),
+            receivedUnconfirmedPositiveTestResult = counter++.toInt(),
+            isIsolatingForUnconfirmedTestBackgroundTick = counter++.toInt(),
+            launchedTestOrdering = counter++.toInt(),
+            didHaveSymptomsBeforeReceivedTestResult = counter++.toInt(),
+            didRememberOnsetSymptomsDateBeforeReceivedTestResult = counter++.toInt(),
+            didAskForSymptomsOnPositiveTestEntry = counter++.toInt(),
+            declaredNegativeResultFromDCT = counter++.toInt(),
+            receivedPositiveSelfRapidTestResultViaPolling = counter++.toInt(),
+            receivedNegativeSelfRapidTestResultViaPolling = counter++.toInt(),
+            receivedVoidSelfRapidTestResultViaPolling = counter++.toInt(),
+            receivedPositiveSelfRapidTestResultEnteredManually = counter++.toInt(),
+            receivedNegativeSelfRapidTestResultEnteredManually = counter++.toInt(),
+            receivedVoidSelfRapidTestResultEnteredManually = counter++.toInt(),
+            isIsolatingForTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
+            hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
+            totalAlarmManagerBackgroundTasks = counter++.toInt(),
+            missingPacketsLast7Days = counter++.toInt(),
+            consentedToShareVenueHistory = counter++.toInt(),
+            askedToShareVenueHistory = counter++.toInt(),
+            askedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
+            consentedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
+            totalShareExposureKeysReminderNotifications = counter++.toInt(),
+            consentedToShareExposureKeysInReminderScreen = counter++.toInt(),
+            successfullySharedExposureKeys = counter++.toInt(),
+            didSendLocalInfoNotification = counter++.toInt(),
+            didAccessLocalInfoScreenViaNotification = counter++.toInt(),
+            didAccessLocalInfoScreenViaBanner = counter++.toInt(),
+            isDisplayingLocalInfoBackgroundTick = counter++.toInt(),
+            positiveLabResultAfterPositiveLFD = counter++.toInt(),
+            negativeLabResultAfterPositiveLFDWithinTimeLimit = counter++.toInt(),
+            negativeLabResultAfterPositiveLFDOutsideTimeLimit = counter++.toInt(),
+            positiveLabResultAfterPositiveSelfRapidTest = counter++.toInt(),
+            negativeLabResultAfterPositiveSelfRapidTestWithinTimeLimit = counter++.toInt(),
+            negativeLabResultAfterPositiveSelfRapidTestOutsideTimeLimit = counter++.toInt(),
+            optedOutForContactIsolation = counter++.toInt(),
+            optedOutForContactIsolationBackgroundTick = counter++.toInt(),
+            appIsUsableBackgroundTick = counter++.toInt(),
+            appIsContactTraceableBackgroundTick = counter++.toInt(),
+            appIsUsableBluetoothOffBackgroundTick = counter.toInt()
         )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
@@ -257,16 +259,16 @@ class AnalyticsSubmissionServiceTest {
         )
 
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
-
-        expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "AL2_AL4_WD7",
-                localAuthority = "E07000098",
-                includesMultipleApplicationVersions = false
-            )
+        val analyticsPayload = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "AL2_AL4_WD7",
+            localAuthority = "E07000098",
+            includesMultipleApplicationVersions = false
         )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
@@ -286,16 +288,16 @@ class AnalyticsSubmissionServiceTest {
         )
 
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
-
-        expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "AB13_AB14",
-                localAuthority = null,
-                includesMultipleApplicationVersions = false
-            )
+        val analyticsPayload = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "AB13_AB14",
+            localAuthority = null,
+            includesMultipleApplicationVersions = false
         )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
@@ -315,16 +317,16 @@ class AnalyticsSubmissionServiceTest {
         )
 
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
-
-        expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "YO60_YO62",
-                localAuthority = null,
-                includesMultipleApplicationVersions = false
-            )
+        val analyticsPayload = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "YO60_YO62",
+            localAuthority = null,
+            includesMultipleApplicationVersions = false
         )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
@@ -342,18 +344,17 @@ class AnalyticsSubmissionServiceTest {
             metrics = AnalyticsMetrics(),
             includesMultipleApplicationVersions = false
         )
-
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
-
-        expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "YO60_YO62",
-                localAuthority = null,
-                includesMultipleApplicationVersions = false
-            )
+        val analyticsPayload = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "YO60_YO62",
+            localAuthority = null,
+            includesMultipleApplicationVersions = false
         )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }
 
@@ -371,19 +372,17 @@ class AnalyticsSubmissionServiceTest {
             metrics = AnalyticsMetrics(),
             includesMultipleApplicationVersions = false
         )
-
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
-
-        val expected = analyticsStoredPayload(
+        val analyticsPayload = analyticsStoredPayload(
             eventStartDate = eventStartDate,
             eventEndDate = eventEndDate,
             postalDistrict = "NOT SET",
             localAuthority = null,
             includesMultipleApplicationVersions = false
         )
-        expectThat(exportedMap).isEqualTo(
-            expected
-        )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
     }
 
     @Test
@@ -400,18 +399,16 @@ class AnalyticsSubmissionServiceTest {
             metrics = AnalyticsMetrics(),
             includesMultipleApplicationVersions = false
         )
-
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
-
-        expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "UNKNOWN",
-                localAuthority = "UNKNOWN",
-                includesMultipleApplicationVersions = false
-            )
+        val analyticsPayload = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "UNKNOWN",
+            localAuthority = "UNKNOWN",
+            includesMultipleApplicationVersions = false
         )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
     }
 
     @Test
@@ -431,15 +428,15 @@ class AnalyticsSubmissionServiceTest {
 
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload)
 
-        expectThat(exportedMap).isEqualTo(
-            analyticsStoredPayload(
-                eventStartDate = eventStartDate,
-                eventEndDate = eventEndDate,
-                postalDistrict = "UNKNOWN",
-                localAuthority = "UNKNOWN",
-                includesMultipleApplicationVersions = false
-            )
+        val analyticsPayload = analyticsStoredPayload(
+            eventStartDate = eventStartDate,
+            eventEndDate = eventEndDate,
+            postalDistrict = "UNKNOWN",
+            localAuthority = "UNKNOWN",
+            includesMultipleApplicationVersions = false
         )
+        val flattenedNonNull = removeNullValues(analyticsPayload)
+        expectThat(exportedMap).isEqualTo(flattenedNonNull)
     }
 
     @Test
@@ -467,12 +464,14 @@ class AnalyticsSubmissionServiceTest {
         val exportedMap = invokeAndCaptureFirehosePayload(clientPayload, now)
 
         expectThat(exportedMap).and {
-            hasEntry("receivedActiveIpcToken", null)
-            hasEntry("haveActiveIpcTokenBackgroundTick", null)
-            hasEntry("selectedIsolationPaymentsButton", null)
-            hasEntry("launchedIsolationPaymentsApplication", null)
+            not().containsKey("receivedActiveIpcToken")
+            not().containsKey("haveActiveIpcTokenBackgroundTick")
+            not().containsKey("selectedIsolationPaymentsButton")
+            not().containsKey("launchedIsolationPaymentsApplication")
         }
     }
+
+
 
     private fun invokeAndCaptureFirehosePayload(
         clientPayload: ClientAnalyticsSubmissionPayload,

@@ -4,6 +4,7 @@ import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose
 import com.amazonaws.services.kinesisfirehose.model.PutRecordRequest
 import com.amazonaws.services.kinesisfirehose.model.Record
 import uk.nhs.nhsx.analyticssubmission.AnalyticsMapFlattener.flattenRecursively
+import uk.nhs.nhsx.analyticssubmission.AnalyticsMapNullRemover.removeNullValues
 import uk.nhs.nhsx.analyticssubmission.UploadType.Firehose
 import uk.nhs.nhsx.analyticssubmission.model.ClientAnalyticsSubmissionPayload
 import uk.nhs.nhsx.core.Clock
@@ -35,7 +36,8 @@ class AnalyticsSubmissionService(
             config.firehoseIngestEnabled -> {
                 val scrubbed = MetricsScrubber(events, clock, config.policyConfig).scrub(payload)
                 val flattened = flattenRecursively(scrubbed)
-                val json = toJson(flattened)
+                val flattenedNonNull = removeNullValues(flattened)
+                val json = toJson(flattenedNonNull)
                 uploadToFirehose(json)
                 events(AnalyticsSubmissionUploaded(Firehose, config.firehoseStreamName))
             }

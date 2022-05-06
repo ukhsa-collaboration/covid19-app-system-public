@@ -116,6 +116,8 @@ module "diagnosis_keys_distribution_store" {
   origin_access_identity_path = aws_cloudfront_origin_access_identity.diagnosis_keys.iam_arn
   logs_bucket_id              = var.logs_bucket_id
   force_destroy_s3_buckets    = var.force_destroy_s3_buckets
+  s3_versioning               = true # to enable backup of s3 buckets
+  lifecycle_policy            = true # to enable lifecycle policy
   policy_document             = module.diagnosis_keys_distribution_store_access.policy_document
   tags                        = var.tags
 }

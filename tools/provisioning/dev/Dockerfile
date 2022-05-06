@@ -1,6 +1,6 @@
 FROM ruby:3.1-slim-bullseye AS ruby
 
-ENV TERRAFORM_VERSION=0.14.11
+ENV TERRAFORM_VERSION=1.1.9
 ENV TERRAFORM_URL=https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ENV TERRAFORM_ARCHIVE=terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 ENV GITVERSION_VERSION=5.8.1
@@ -10,6 +10,7 @@ ENV PANDOC_URL=https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}
 ENV PANDOC_CROSSREF_VERSION=v0.3.9.0a
 ENV PANDOC_CROSSREF_URL=https://github.com/lierdakil/pandoc-crossref/releases/download/${PANDOC_CROSSREF_VERSION}/pandoc-crossref-Linux.tar.xz
 ENV AWSCLI_URL=https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+ENV NODE_VERSION=14
 
 # Things needed to install the various languages. See later for additional required packages
 RUN echo 'deb http://http.us.debian.org/debian/ testing non-free contrib main' >> /etc/apt/sources.list && \
@@ -82,10 +83,9 @@ RUN wget ${AWSCLI_URL} && \
   dpkg -i session-manager-plugin.deb
 
 # nodejs installation -- version must match definition of "runtime" in any "aws_lambda_function" resource
-RUN curl -fsSLO https://deb.nodesource.com/setup_14.x && \
-  bash setup_*.x && \
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
   apt-cache policy nodejs && \
-  apt-get install -y nodejs chromium
+  apt-get install -y nodejs npm chromium
 
 # yarn v2 and gulp installation
 RUN npm install --global corepack && \

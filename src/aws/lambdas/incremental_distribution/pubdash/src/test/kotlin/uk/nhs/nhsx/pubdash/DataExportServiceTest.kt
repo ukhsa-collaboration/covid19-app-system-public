@@ -1,5 +1,8 @@
 package uk.nhs.nhsx.pubdash
 
+import com.amazonaws.services.s3.model.ObjectMetadata
+import com.amazonaws.services.s3.model.S3Object
+import com.amazonaws.services.s3.model.S3ObjectInputStream
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -13,7 +16,11 @@ import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.RecordingEvents
 import uk.nhs.nhsx.pubdash.datasets.AnalyticsSource
+import uk.nhs.nhsx.pubdash.handlers.DueDateFileUpdated
+import uk.nhs.nhsx.pubdash.handlers.DueDateNotReached
+import uk.nhs.nhsx.pubdash.handlers.DueDateFileNotFound
 import uk.nhs.nhsx.testhelper.assertions.containsExactly
+import java.time.Instant
 
 class DataExportServiceTest {
 
@@ -22,6 +29,7 @@ class DataExportServiceTest {
     private val athenaOutputBucket = BucketName.of("athena-output-bucket")
     private val events = RecordingEvents()
     private val queueClient = mockk<QueueClient> { every { sendMessage(any()) } just Runs }
+    private val clock = { Instant.parse("2022-04-21T00:00:00.000Z") }
 
     private fun allFinishedSource(queryId: String) = object : AnalyticsSource {
         override fun checkQueryState(queryId: QueryId): QueryResult<Unit> = QueryResult.Finished(Unit)
@@ -47,6 +55,77 @@ class DataExportServiceTest {
     private fun queueMessage(queryId: String, dataset: Dataset) = QueueMessage(QueryId(queryId), dataset)
 
     @Test
+    fun `should not run export`() {
+        val s3test = mockk<AwsS3>()
+        val updateObject = S3Object().apply {
+            key = "due_date_export_test.json"
+            objectContent = S3ObjectInputStream("{\"nextUpdate\":\"2022-04-28T00:00:00.000Z\", \"lastUpdated\": \"2022-04-14T00:00:00.000Z\"}".byteInputStream(), null)
+            objectMetadata = ObjectMetadata().apply { contentType = "application/json" }
+        }
+        every { s3test.getObject(any()) } returns updateObject
+        every { s3test.copyObject(any(), any()) } just Runs
+        every { s3test.upload(any(), any(), any()) } just Runs
+        val service = DataExportService(
+            exportBucket,
+            athenaOutputBucket,
+            s3test,
+            allFinishedSource("agnostic"),
+            queueClient,
+            events,
+            clock
+        )
+
+        service.triggerExport()
+        expectThat(events).containsExactly(DueDateNotReached::class)
+    }
+
+    @Test
+    fun `trigger export should run`() {
+        val s3test = mockk<AwsS3>()
+        val updateObject = S3Object().apply {
+            key = "due_date_export_test.json"
+            objectContent = S3ObjectInputStream("{\"nextUpdate\":\"2022-04-21T00:00:00.000Z\", \"lastUpdated\": \"2022-04-14T00:00:00.000Z\"}".byteInputStream(), null)
+            objectMetadata = ObjectMetadata().apply { contentType = "application/json" }
+        }
+        every { s3test.getObject(any()) } returns updateObject
+        every { s3test.copyObject(any(), any()) } just Runs
+        every { s3test.upload(any(), any(), any()) } just Runs
+        val service = DataExportService(
+            exportBucket,
+            athenaOutputBucket,
+            s3test,
+            allFinishedSource("agnostic"),
+            queueClient,
+            events,
+            clock
+        )
+
+        service.triggerExport()
+        expectThat(events).containsExactly(DueDateFileUpdated::class)
+    }
+
+    @Test
+    fun `due dates file not found`() {
+        val s3test = mockk<AwsS3>()
+
+        every { s3test.getObject(any()) } returns null
+        every { s3test.copyObject(any(), any()) } just Runs
+        every { s3test.upload(any(), any(), any()) } just Runs
+        val service = DataExportService(
+            exportBucket,
+            athenaOutputBucket,
+            s3test,
+            allFinishedSource("agnostic"),
+            queueClient,
+            events,
+            clock
+        )
+
+        service.triggerExport()
+        expectThat(events).containsExactly(DueDateFileNotFound::class)
+    }
+
+    @Test
     fun `finished agnostic export is copied to data bucket`() {
         val service = DataExportService(
             exportBucket,
@@ -54,7 +133,8 @@ class DataExportServiceTest {
             s3Storage,
             allFinishedSource("agnostic"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("agnostic", Dataset.Agnostic))
 
@@ -79,7 +159,8 @@ class DataExportServiceTest {
             s3Storage,
             allWaitingSource("agnostic"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("agnostic", Dataset.Agnostic))
 
@@ -97,7 +178,8 @@ class DataExportServiceTest {
             s3Storage,
             allFailedSource("agnostic"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("agnostic", Dataset.Agnostic))
 
@@ -115,7 +197,8 @@ class DataExportServiceTest {
             s3Storage,
             allFinishedSource("country"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("country", Dataset.Country))
 
@@ -135,7 +218,8 @@ class DataExportServiceTest {
             s3Storage,
             allWaitingSource("country"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("country", Dataset.Country))
 
@@ -153,7 +237,8 @@ class DataExportServiceTest {
             s3Storage,
             allFailedSource("country"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("country", Dataset.Country))
 
@@ -171,7 +256,8 @@ class DataExportServiceTest {
             s3Storage,
             allFinishedSource("local-auth"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("local-auth", Dataset.LocalAuthority))
 
@@ -191,7 +277,8 @@ class DataExportServiceTest {
             s3Storage,
             allWaitingSource("local-auth"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("local-auth", Dataset.LocalAuthority))
 
@@ -209,7 +296,8 @@ class DataExportServiceTest {
             s3Storage,
             allFailedSource("local-auth"),
             queueClient,
-            events
+            events,
+            clock
         )
         service.export(queueMessage("local-auth", Dataset.LocalAuthority))
 

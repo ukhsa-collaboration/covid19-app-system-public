@@ -19,7 +19,7 @@ class DataExportHandler(
     environment: Environment = Environment.fromSystem(),
     clock: Clock = CLOCK,
     events: Events = PrintingJsonEvents(clock),
-    private val service: DataExportService = dataExportService(environment, events)
+    private val service: DataExportService = dataExportService(environment, events, clock)
 ) : QueuedHandler(events) {
 
     override fun handler() = Handler<SQSEvent, Event> { event, _ ->

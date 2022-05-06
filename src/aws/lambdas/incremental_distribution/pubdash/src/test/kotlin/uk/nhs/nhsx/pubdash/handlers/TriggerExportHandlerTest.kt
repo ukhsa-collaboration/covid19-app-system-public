@@ -21,7 +21,7 @@ class TriggerExportHandlerTest {
     private val events = RecordingEvents()
 
     private val service = mockk<DataExportService> {
-        every { triggerAllQueries() } just Runs
+        every { triggerExport() } just Runs
     }
 
     private val handler = TriggerExportHandler(
@@ -35,7 +35,7 @@ class TriggerExportHandlerTest {
         val response = handler.handleRequest(mockk(), TestContext())
 
         expectThat(response).isEqualTo(ExportTriggered.toString())
-        verify(exactly = 1) { service.triggerAllQueries() }
+        verify(exactly = 1) { service.triggerExport() }
 
         expectThat(events).containsExactly(
             ScheduledEventStarted::class,

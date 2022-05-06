@@ -68,6 +68,7 @@ module NHSx
     # All the fixed (named) public dashboard target environments per account: {"account"=>[target_environments]}
     PUBDASH_TARGET_ENVIRONMENTS = {
       "dev" => ["ci"],
+      "staging" => ["staging"],
       "prod" => ["prod"],
       "aa-dev" => ["aa-ci"],
       "aa-staging" => ["aa-staging"],

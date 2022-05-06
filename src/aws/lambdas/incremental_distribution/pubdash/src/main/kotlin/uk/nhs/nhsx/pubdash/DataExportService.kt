@@ -2,12 +2,16 @@ package uk.nhs.nhsx.pubdash
 
 import com.amazonaws.services.athena.AmazonAthenaClient
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
+import uk.nhs.nhsx.core.Clock
+import uk.nhs.nhsx.core.ContentType
 import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.Environment.EnvironmentKey.Companion.string
 import uk.nhs.nhsx.core.Environment.EnvironmentKey.Companion.value
+import uk.nhs.nhsx.core.Json
 import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.BucketName
+import uk.nhs.nhsx.core.aws.s3.ByteArraySource
 import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Events
@@ -15,8 +19,16 @@ import uk.nhs.nhsx.pubdash.Dataset.Agnostic
 import uk.nhs.nhsx.pubdash.Dataset.Country
 import uk.nhs.nhsx.pubdash.Dataset.LocalAuthority
 import uk.nhs.nhsx.pubdash.datasets.AnalyticsSource
+import uk.nhs.nhsx.pubdash.handlers.DueDateFileUpdated
+import uk.nhs.nhsx.pubdash.handlers.DueDateNotReached
+import uk.nhs.nhsx.pubdash.handlers.DueDateFileNotFound
 import uk.nhs.nhsx.pubdash.persistence.AnalyticsDao
 import uk.nhs.nhsx.pubdash.persistence.AthenaAsyncDbClient
+import java.time.Duration
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.temporal.ChronoUnit.DAYS
+
 
 class DataExportService(
     private val exportBucketName: BucketName,
@@ -24,8 +36,42 @@ class DataExportService(
     private val awsS3: AwsS3,
     private val analyticsSource: AnalyticsSource,
     private val queueClient: QueueClient,
-    private val events: Events
+    private val events: Events,
+    private val clock: Clock
 ) {
+
+    fun triggerExport() {
+        val locator = Locator.of(exportBucketName, ObjectKey.of("data/due_date_export.json"))
+        when (val dueDateFile = awsS3.getObject(locator)) {
+            null -> {
+                events(DueDateFileNotFound)
+            }
+            else -> {
+                val today = clock()
+                val nextUpdateDate = today.plus(Duration.ofDays(14))
+
+                dueDateFile.objectContent.use {
+                    val jsonObject = Json.readJsonOrThrow<UpdateDueDates>(it)
+                    val scheduledDate = jsonObject.nextUpdate.toInstant().truncatedTo(DAYS)
+                    val todayDate = today.truncatedTo(DAYS)
+                    if (scheduledDate == todayDate) {
+                        triggerAllQueries()
+                        val updateDueDates = UpdateDueDates(nextUpdateDate.atOffset(ZoneOffset.UTC), today.atOffset(ZoneOffset.UTC))
+                        val json = Json.toJson(updateDueDates)
+                        awsS3.upload(
+                            Locator.of(exportBucketName, ObjectKey.of("data/due_date_export.json")),
+                            ContentType.APPLICATION_JSON,
+                            ByteArraySource.fromUtf8String(json)
+                        )
+                        events(DueDateFileUpdated)
+                    }
+                    else {
+                        events(DueDateNotReached)
+                    }
+                }
+            }
+        }
+    }
 
     fun triggerAllQueries() {
         sendToSqs(QueueMessage(analyticsSource.startAgnosticDatasetQueryAsync(), Agnostic))
@@ -76,7 +122,8 @@ class DataExportService(
 
 fun dataExportService(
     environment: Environment,
-    events: Events
+    events: Events,
+    clock : Clock
 ) = DataExportService(
     exportBucketName = environment.access.required(value("export_bucket_name", BucketName)),
     athenaOutputBucketName = environment.access.required(value("athena_output_bucket_name", BucketName)),
@@ -95,5 +142,11 @@ fun dataExportService(
         sqsClient = AmazonSQSClientBuilder.defaultClient(),
         events = events
     ),
-    events = events
+    events = events,
+    clock = clock
+)
+
+data class UpdateDueDates(
+    val nextUpdate : OffsetDateTime,
+    val lastUpdated : OffsetDateTime
 )
