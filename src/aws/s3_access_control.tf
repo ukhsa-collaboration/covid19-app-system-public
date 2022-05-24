@@ -91,9 +91,11 @@ module "empty_submission_v2_distribution_access" {
 # other bucket types (submission, repository, etc.) have default secure access
 
 module "analytics_events_submission_access" {
-  source        = "./modules/s3_access_policies"
-  policy_type   = "default"
-  s3_bucket_arn = module.analytics_events_submission.store_arn
+  source                 = "./modules/s3_access_policies"
+  policy_type            = "cross_account_readonly"
+  prefix                 = "analytics-events"
+  principal_aws_accounts = var.analytics_aws_accounts
+  s3_bucket_arn          = module.analytics_events_submission.store_arn
 }
 
 module "diagnosis_keys_submission_access" {

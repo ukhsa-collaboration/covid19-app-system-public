@@ -47,6 +47,14 @@ module "mobile_analytics" {
   analytics_submission_store_consolidated_parquet_bucket_id = var.analytics_submission_store_consolidated_parquet_bucket_id
 }
 
+module "mobile_events_analytics" {
+  source                                = "./modules/mobile_events_analytics"
+  analytics_submission_events_bucket_id = var.analytics_submission_events_bucket_id
+  glue_db_name                          = aws_glue_catalog_database.this.name
+  glue_table_name                       = "${terraform.workspace}_analytics_mobile_events"
+  workgroup_name                        = module.workgroup.name
+}
+
 module "app_store_qr_posters" {
   source                     = "./modules/app_store_qr_posters"
   service                    = local.service

@@ -2,6 +2,7 @@ package smoke
 
 import assertions.IsolationPaymentAssertions.hasValidIpcToken
 import org.http4k.cloudnative.env.Environment
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
 import smoke.actors.SIPGateway
@@ -29,7 +30,7 @@ class IsolationPaymentSmokeTest {
     private val riskyEncounterDate = Instant.now().minus(ofDays(4)).truncatedTo(SECONDS)
     private val isolationPeriodEndDate = Instant.now().plus(ofDays(4)).truncatedTo(SECONDS)
 
-    @Test
+    @Test @Disabled
     fun `happy path - submit isolation payment, update, verify and consume ipcToken`() {
         val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
@@ -37,7 +38,7 @@ class IsolationPaymentSmokeTest {
         consumeValidToken(ipcToken)
     }
 
-    @Test
+    @Test @Disabled
     fun `isolation payment order creation is not enabled for non whitelisted countries`() {
         val createIsolationToken = mobileApp.createNonWhiteListedIsolationToken(Country.of("Switzerland"))
 
@@ -46,12 +47,12 @@ class IsolationPaymentSmokeTest {
             .isFalse()
     }
 
-    @Test
+    @Test @Disabled
     fun `update isolation token returns website URL even when an non-existing token is passed`() {
         mobileApp.updateIsolationToken(IpcTokenId.of("1".repeat(64)), riskyEncounterDate, isolationPeriodEndDate)
     }
 
-    @Test
+    @Test @Disabled
     fun `cannot consume ipcToken more than one time`() {
         val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
@@ -60,7 +61,7 @@ class IsolationPaymentSmokeTest {
         consumeInvalidToken(ipcToken)
     }
 
-    @Test
+    @Test @Disabled
     fun `verify fails if token is unknown or not updated yet`() {
         verifyInvalidToken(IpcTokenId.of("Z".repeat(64)))
         val ipcToken = createValidToken()
@@ -70,7 +71,7 @@ class IsolationPaymentSmokeTest {
         verifyValidToken(ipcToken)
     }
 
-    @Test
+    @Test @Disabled
     fun `update has no effect if token is already verified`() {
         val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)

@@ -4,6 +4,7 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.services.athena.AmazonAthenaClient
 import com.amazonaws.services.s3.AmazonS3Client
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Disabled
 import strikt.api.expectThat
 import strikt.assertions.isEqualTo
 import uk.nhs.nhsx.sanity.BaseSanityCheck.Companion.account
@@ -32,7 +33,7 @@ class AthenaSanityTest {
         .withCredentials(profileCredentialsProvider)
         .build()
 
-    @Test
+    @Test @Disabled
     fun `athena sanity checks`() {
         val showTablesQueryId = athenaDbClient.submitQuery("SHOW TABLES")
 

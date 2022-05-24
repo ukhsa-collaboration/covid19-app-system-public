@@ -180,17 +180,11 @@ class AnalyticsSubmissionServiceTest {
             isIsolatingForTestedPositiveBackgroundTick = counter++.toInt(),
             receivedRiskyContactNotification = counter++.toInt(),
             startedIsolation = counter++.toInt(),
-            receivedPositiveTestResultWhenIsolatingDueToRiskyContact = counter++.toInt(),
             receivedActiveIpcToken = counter++.toInt(),
             haveActiveIpcTokenBackgroundTick = counter++.toInt(),
             selectedIsolationPaymentsButton = counter++.toInt(),
             launchedIsolationPaymentsApplication = counter++.toInt(),
-            receivedPositiveLFDTestResultViaPolling = counter++.toInt(),
-            receivedNegativeLFDTestResultViaPolling = counter++.toInt(),
-            receivedVoidLFDTestResultViaPolling = counter++.toInt(),
             receivedPositiveLFDTestResultEnteredManually = counter++.toInt(),
-            receivedNegativeLFDTestResultEnteredManually = counter++.toInt(),
-            receivedVoidLFDTestResultEnteredManually = counter++.toInt(),
             hasTestedLFDPositiveBackgroundTick = counter++.toInt(),
             isIsolatingForTestedLFDPositiveBackgroundTick = counter++.toInt(),
             totalExposureWindowsNotConsideredRisky = counter++.toInt(),
@@ -203,19 +197,11 @@ class AnalyticsSubmissionServiceTest {
             didHaveSymptomsBeforeReceivedTestResult = counter++.toInt(),
             didRememberOnsetSymptomsDateBeforeReceivedTestResult = counter++.toInt(),
             didAskForSymptomsOnPositiveTestEntry = counter++.toInt(),
-            declaredNegativeResultFromDCT = counter++.toInt(),
-            receivedPositiveSelfRapidTestResultViaPolling = counter++.toInt(),
-            receivedNegativeSelfRapidTestResultViaPolling = counter++.toInt(),
-            receivedVoidSelfRapidTestResultViaPolling = counter++.toInt(),
             receivedPositiveSelfRapidTestResultEnteredManually = counter++.toInt(),
-            receivedNegativeSelfRapidTestResultEnteredManually = counter++.toInt(),
-            receivedVoidSelfRapidTestResultEnteredManually = counter++.toInt(),
             isIsolatingForTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
             hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
             totalAlarmManagerBackgroundTasks = counter++.toInt(),
             missingPacketsLast7Days = counter++.toInt(),
-            consentedToShareVenueHistory = counter++.toInt(),
-            askedToShareVenueHistory = counter++.toInt(),
             askedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
             consentedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
             totalShareExposureKeysReminderNotifications = counter++.toInt(),
@@ -235,10 +221,13 @@ class AnalyticsSubmissionServiceTest {
             optedOutForContactIsolationBackgroundTick = counter++.toInt(),
             appIsUsableBackgroundTick = counter++.toInt(),
             appIsContactTraceableBackgroundTick = counter++.toInt(),
-            appIsUsableBluetoothOffBackgroundTick = counter.toInt()
+            appIsUsableBluetoothOffBackgroundTick = counter++.toInt(),
+            completedV2SymptomsQuestionnaire = counter++.toInt(),
+            completedV2SymptomsQuestionnaireAndStayAtHome = counter++.toInt(),
+            hasCompletedV2SymptomsQuestionnaireBackgroundTick = counter++.toInt(),
+            hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick = counter.toInt()
         )
         val flattenedNonNull = removeNullValues(analyticsPayload)
-
         expectThat(exportedMap).isEqualTo(flattenedNonNull)
         expectThat(events).containsExactly(AnalyticsSubmissionUploaded::class)
     }

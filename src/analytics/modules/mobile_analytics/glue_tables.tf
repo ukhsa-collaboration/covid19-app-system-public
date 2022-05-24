@@ -207,10 +207,6 @@ resource "aws_glue_catalog_table" "this" {
       type = "int"
     }
     columns {
-      name = "receivedPositiveTestResultWhenIsolatingDueToRiskyContact"
-      type = "int"
-    }
-    columns {
       name = "receivedActiveIpcToken"
       type = "int"
     }
@@ -227,27 +223,7 @@ resource "aws_glue_catalog_table" "this" {
       type = "int"
     }
     columns {
-      name = "receivedPositiveLFDTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeLFDTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidLFDTestResultViaPolling"
-      type = "int"
-    }
-    columns {
       name = "receivedPositiveLFDTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeLFDTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidLFDTestResultEnteredManually"
       type = "int"
     }
     columns {
@@ -303,31 +279,7 @@ resource "aws_glue_catalog_table" "this" {
       type = "int"
     }
     columns {
-      name = "declaredNegativeResultFromDCT"
-      type = "int"
-    }
-    columns {
-      name = "receivedPositiveSelfRapidTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeSelfRapidTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidSelfRapidTestResultViaPolling"
-      type = "int"
-    }
-    columns {
       name = "receivedPositiveSelfRapidTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeSelfRapidTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidSelfRapidTestResultEnteredManually"
       type = "int"
     }
     columns {
@@ -356,14 +308,6 @@ resource "aws_glue_catalog_table" "this" {
     }
     columns {
       name = "missingPacketsLast7Days"
-      type = "int"
-    }
-    columns {
-      name = "consentedToShareVenueHistory"
-      type = "int"
-    }
-    columns {
-      name = "askedToShareVenueHistory"
       type = "int"
     }
     columns {
@@ -476,6 +420,22 @@ resource "aws_glue_catalog_table" "this" {
     }
     columns {
       name = "appIsUsableBluetoothOffBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedV2SymptomsQuestionnaire"
+      type = "int"
+    }
+    columns {
+      name = "completedV2SymptomsQuestionnaireAndStayAtHome"
+      type = "int"
+    }
+    columns {
+      name = "hasCompletedV2SymptomsQuestionnaireBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick"
       type = "int"
     }
   }
@@ -684,10 +644,6 @@ resource "aws_glue_catalog_table" "this_consolidated" {
       type = "int"
     }
     columns {
-      name = "receivedPositiveTestResultWhenIsolatingDueToRiskyContact"
-      type = "int"
-    }
-    columns {
       name = "receivedActiveIpcToken"
       type = "int"
     }
@@ -704,27 +660,7 @@ resource "aws_glue_catalog_table" "this_consolidated" {
       type = "int"
     }
     columns {
-      name = "receivedPositiveLFDTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeLFDTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidLFDTestResultViaPolling"
-      type = "int"
-    }
-    columns {
       name = "receivedPositiveLFDTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeLFDTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidLFDTestResultEnteredManually"
       type = "int"
     }
     columns {
@@ -780,31 +716,7 @@ resource "aws_glue_catalog_table" "this_consolidated" {
       type = "int"
     }
     columns {
-      name = "declaredNegativeResultFromDCT"
-      type = "int"
-    }
-    columns {
-      name = "receivedPositiveSelfRapidTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeSelfRapidTestResultViaPolling"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidSelfRapidTestResultViaPolling"
-      type = "int"
-    }
-    columns {
       name = "receivedPositiveSelfRapidTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedNegativeSelfRapidTestResultEnteredManually"
-      type = "int"
-    }
-    columns {
-      name = "receivedVoidSelfRapidTestResultEnteredManually"
       type = "int"
     }
     columns {
@@ -833,14 +745,6 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "missingPacketsLast7Days"
-      type = "int"
-    }
-    columns {
-      name = "consentedToShareVenueHistory"
-      type = "int"
-    }
-    columns {
-      name = "askedToShareVenueHistory"
       type = "int"
     }
     columns {
@@ -953,6 +857,22 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "appIsUsableBluetoothOffBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedV2SymptomsQuestionnaire"
+      type = "int"
+    }
+    columns {
+      name = "completedV2SymptomsQuestionnaireAndStayAtHome"
+      type = "int"
+    }
+    columns {
+      name = "hasCompletedV2SymptomsQuestionnaireBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick"
       type = "int"
     }
   }

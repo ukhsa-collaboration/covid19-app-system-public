@@ -31,17 +31,11 @@ public class AnalyticsMetrics {
     public Integer isIsolatingForTestedPositiveBackgroundTick;
     public Integer receivedRiskyContactNotification;
     public Integer startedIsolation;
-    public Integer receivedPositiveTestResultWhenIsolatingDueToRiskyContact;
     public Integer receivedActiveIpcToken;
     public Integer haveActiveIpcTokenBackgroundTick;
     public Integer selectedIsolationPaymentsButton;
     public Integer launchedIsolationPaymentsApplication;
-    public Integer receivedPositiveLFDTestResultViaPolling;
-    public Integer receivedNegativeLFDTestResultViaPolling;
-    public Integer receivedVoidLFDTestResultViaPolling;
     public Integer receivedPositiveLFDTestResultEnteredManually;
-    public Integer receivedNegativeLFDTestResultEnteredManually;
-    public Integer receivedVoidLFDTestResultEnteredManually;
     public Integer hasTestedLFDPositiveBackgroundTick;
     public Integer isIsolatingForTestedLFDPositiveBackgroundTick;
     public Integer totalExposureWindowsNotConsideredRisky;
@@ -54,19 +48,11 @@ public class AnalyticsMetrics {
     public Integer didHaveSymptomsBeforeReceivedTestResult;
     public Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult;
     public Integer didAskForSymptomsOnPositiveTestEntry;
-    public Integer declaredNegativeResultFromDCT;
-    public Integer receivedPositiveSelfRapidTestResultViaPolling;
-    public Integer receivedNegativeSelfRapidTestResultViaPolling;
-    public Integer receivedVoidSelfRapidTestResultViaPolling;
     public Integer receivedPositiveSelfRapidTestResultEnteredManually;
-    public Integer receivedNegativeSelfRapidTestResultEnteredManually;
-    public Integer receivedVoidSelfRapidTestResultEnteredManually;
     public Integer isIsolatingForTestedSelfRapidPositiveBackgroundTick;
     public Integer hasTestedSelfRapidPositiveBackgroundTick;
     public Integer totalAlarmManagerBackgroundTasks;
     public Integer missingPacketsLast7Days;
-    public Integer consentedToShareVenueHistory;
-    public Integer askedToShareVenueHistory;
     public Integer askedToShareExposureKeysInTheInitialFlow;
     public Integer consentedToShareExposureKeysInTheInitialFlow;
     public Integer totalShareExposureKeysReminderNotifications;
@@ -87,6 +73,11 @@ public class AnalyticsMetrics {
     public Integer appIsUsableBackgroundTick;
     public Integer appIsContactTraceableBackgroundTick;
     public Integer appIsUsableBluetoothOffBackgroundTick;
+    public Integer completedV2SymptomsQuestionnaire;
+    public Integer completedV2SymptomsQuestionnaireAndStayAtHome;
+    public Integer hasCompletedV2SymptomsQuestionnaireBackgroundTick;
+    public Integer hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick;
+
 
     public AnalyticsMetrics() {
     }

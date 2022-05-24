@@ -4,6 +4,7 @@ import assertions.IsolationPaymentAssertions.hasValidIpcToken
 import org.http4k.cloudnative.env.Environment
 import org.http4k.core.Status
 import org.http4k.filter.debug
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import smoke.actors.MobileApp
 import smoke.actors.WelshSIPGateway
@@ -29,7 +30,7 @@ class IsolationPaymentApiSmokeTest {
     private val riskyEncounterDate = Instant.now().minus(Duration.ofDays(4)).truncatedTo(SECONDS)
     private val isolationPeriodEndDate = Instant.now().plus(Duration.ofDays(4)).truncatedTo(SECONDS)
 
-    @Test
+    @Test @Disabled
     fun `Consume token successfully via endpoint`() {
         val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
@@ -41,7 +42,7 @@ class IsolationPaymentApiSmokeTest {
         }
     }
 
-    @Test
+    @Test @Disabled
     fun `Verify token successfully via endpoint`() {
         val ipcToken = createValidToken()
         mobileApp.updateIsolationToken(ipcToken, riskyEncounterDate, isolationPeriodEndDate)
@@ -53,7 +54,7 @@ class IsolationPaymentApiSmokeTest {
         }
     }
 
-    @Test
+    @Test @Disabled
     fun `Consume token returns 422 when unknown via endpoint`() {
         val ipcToken = IpcTokenId.of("Y".repeat(64))
         val isolationConsumeResponse = welshSIPGateway.consumeToken(ipcToken, Status.UNPROCESSABLE_ENTITY)
@@ -64,7 +65,7 @@ class IsolationPaymentApiSmokeTest {
         }
     }
 
-    @Test
+    @Test @Disabled
     fun `Verify token returns 422 when unknown via endpoint`() {
         val ipcToken = IpcTokenId.of("Z".repeat(64))
         val isolationVerifyResponse: IsolationResponse = welshSIPGateway.verifyToken(ipcToken, Status.UNPROCESSABLE_ENTITY)
