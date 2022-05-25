@@ -36,7 +36,7 @@ module NHS
       lokalise_messages.each do |key|
         message_key = key.key_name["web"]
         # download and check the schema
-        valid_translations, validation_errors = extract_local_message_translations(key, project_id, system_config)
+        valid_translations, validation_errors = extract_local_message_translations(api_key, key, project_id, system_config)
         error_messages += validation_errors
         voc_messages[message_key] = valid_translations
       end
@@ -45,12 +45,12 @@ module NHS
       return voc_messages
     end
 
-    def extract_local_message_translations(lokalise_key, lokalise_project, system_config)
+    def extract_local_message_translations(api_key, lokalise_key, lokalise_project, system_config)
       valid_translations = {}
       missing_translations = []
       error_messages = []
       schema = Nokogiri::XML::Schema(File.read(File.join(system_config.base, "tools/lokalise/message.xsd")))
-      lokalise_client = Lokalise.client lokalise_key
+      lokalise_client = Lokalise.client api_key
 
       lokalise_translations = lokalise_client.key(lokalise_project, lokalise_key.key_id, {}).translations
 

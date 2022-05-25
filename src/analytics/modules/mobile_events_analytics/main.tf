@@ -53,32 +53,3 @@ resource "aws_athena_named_query" "analytics_mobile_events_query" {
     SELECT * FROM "${var.glue_table_name}"
   EOF
 }
-
-# {
-#   "metadata": {
-#     "operatingSystemVersion": "85e9fa27-16ba-4e90-8cb4-09f8e6df0b2f",
-#     "latestApplicationVersion": "3.0",
-#     "deviceModel": "iPhone11,2",
-#     "postalDistrict": "DOES NOT EXIST",
-#     "localAuthority": null
-#   },
-#   "events": [
-#     {
-#       "type": "exposure_window",
-#       "version": 1,
-#       "payload": {
-#         "date": "2020-08-24T21:59:00Z",
-#         "infectiousness": "high|none|standard",
-#         "scanInstances": [
-#           {
-#             "minimumAttenuation": 1,
-#             "secondsSinceLastScan": 5,
-#             "typicalAttenuation": 2
-#            }
-#         ],
-#         "riskScore": "FIXME: sample int value (range?) or string value (enum?)"
-#       }
-#     }
-#   ],
-#   "uuid": "ef265991-2bf5-4d4e-8539-3b97e633ee50"
-# }

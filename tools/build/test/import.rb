@@ -62,6 +62,7 @@ class ImportTests < Test::Unit::TestCase
     EOT
     lokalise_client = mock
     Lokalise.expects(:client).returns(lokalise_client)
+    api_key = "dummy_api_key"
     lokalise_key = mock
     lokalise_key.expects(:key_id).returns("dummy_key")
     lokalise_key.expects(:key_name).returns("dummy_key")
@@ -70,7 +71,7 @@ class ImportTests < Test::Unit::TestCase
     lokalise_client.expects(:key).returns(translations_mock)
     system_config = mock
     system_config.expects(:base).returns(File.join(File.dirname(__FILE__), "../../.."))
-    translations, errors = extract_local_message_translations(lokalise_key, "dummy_project", system_config)
+    translations, errors = extract_local_message_translations(api_key, lokalise_key, "dummy_project", system_config)
     assert_equal(1, translations.size)
     assert(errors.empty?)
   end
