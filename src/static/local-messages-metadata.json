@@ -2001,278 +2001,290 @@
       "contentVersion": 1,
       "translations": {
         "zh": {
-          "head": "自我隔离和检测建议已变更",
-          "body": "阅读最新指示",
+          "head": "保持应用更新，获取最新健康指导意见",
+          "body": "检查最新更新",
           "content": [
             {
               "type": "para",
-              "text": "如有 COVID-19 症状或呼吸道感染，并伴有发烧或不适，请尽量居家隔离并避免与他人接触。请遵循针对 COVID-19 症状者的相关指南。"
+              "text": "请访问应用商店中的 NHS COVID-19 应用，检查是否需要更新应用。如有需要，其将显示“更新”按钮。"
             },
             {
               "type": "para",
-              "text": "针对无症状阳性者，请尽量居家隔离，并避免 5 天内与他人接触。若在应用中输入阳性检测结果，该应用会显示倒计时，提醒应该遵循本指南的时间。"
+              "text": "我们已在应用中更新症状指导意见。"
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "COVID-19 安全生活指南"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "查看 App Store"
             },
             {
               "type": "para",
-              "text": "请使用本应用的最新版本，以接收最新的 COVID-19 防疫指南。"
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "查看 Google Play Store"
             }
           ]
         },
         "en": {
-          "head": " Self-isolation and testing advice has changed ",
-          "body": "Read updated guidance",
+          "head": "Keep your app updated for the latest health guidance ",
+          "body": "Check the latest update",
           "content": [
             {
               "type": "para",
-              "text": " If you have COVID-19 symptoms or a respiratory infection, and have a high temperature or feel unwell, try to stay at home and avoid contact with others. Follow the guidance for people who have COVID-19 symptoms."
+              "text": "To check if you need to update your app, go to the NHS COVID-19 app in your app store. It will show you an ‘update’ button if you need to do this."
             },
             {
               "type": "para",
-              "text": " If you test positive and do not have symptoms you should try to stay at home and avoid contact with others for 5 days. If you enter a positive test result into the app, you will see the app countdown timer to remind you of the period you should follow this guidance for."
+              "text": "We have updated symptom guidance in the app. "
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19/",
-              "linkText": "Guidance on living safely with COVID-19"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "Check the App Store "
             },
             {
               "type": "para",
-              "text": "Please keep this app updated to the latest version to receive the most recent COVID-19 guidance."
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "Check the Google Play Store"
             }
           ]
         },
         "ar": {
-          "head": " تغيرت نصائح العزل الذاتي والأختبار",
-          "body": "رجاء قراءة الإرشادات الحديثة",
+          "head": "حافظ على تحديث تطبيقك للحصول على أحدث الإرشادات الصحية",
+          "body": "تحقق من آخر تحديث",
           "content": [
             {
               "type": "para",
-              "text": "إذا كانت لديك أعراض COVID-19 أو عدوى في الجهاز التنفسي، ودرجة حرارتك مرتفعة أو تشعر بالمرض، حاول البقاء في المنزل وتجنب الاختلاط بالأخرين. أتبع الإرشادات الخاصة بالأشخاص الذين لديهم أعراض COVID-19."
+              "text": "للتحقق مما إذا كنت في حاجة إلى تحديث تطبيقك، انتقل إلى تطبيق NHS COVID-19 في متجر التطبيقات الخاص بك. سيُظهر لك زر \"تحديث\" إذا كنت بحاجة إلى القيام بذلك.  "
             },
             {
               "type": "para",
-              "text": "إذا كانت نتيجة اختبارك إيجابية ولكن ليس لديك أعراض، يجب أن تحاول البقاء في المنزل وتجنب الأختلاط بالأخرين لمدة 5 أيام. إذا أدخلت نتيجة اختبار إيجابية في التطبيق، سترى مؤقت العد التنازلي للتطبيق يعمل على تذكيرك بالمدة التي يجب عليك اتباع هذه الإرشادات خلالها."
+              "text": "لقد قمنا بتحديث إرشادات الأعراض في التطبيق."
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " إرشادات حول التعايش بأمان مع COVID-19"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "تحقق من متجر التطبيقات (App Store)"
             },
             {
               "type": "para",
-              "text": "رجاء تحديث هذا التطبيق إلى احدث اصدار لتلقي أحدث الإرشادات المتعلقة بـــــ COVID-19."
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "تحقق من متجر جوجل بلاي (Google Play Store)"
             }
           ]
         },
         "tr": {
-          "head": "Karantina ve testlerle ile ilgili tavsiyelerde değişiklik yapılmıştır.",
-          "body": "Güncellenmiş yönergeyi okuyun",
+          "head": "Sağlıkla ilgili en son yönerge ve tavsiyeler için uygulamayı güncel tutun",
+          "body": "En son güncellemeyi kontrol et",
           "content": [
             {
               "type": "para",
-              "text": "COVID-19 belirtileriniz veya solunum yolu enfeksiyonunuz varsa ve ateşiniz var ya da kendinizi iyi hissetmiyorsanız evde kalmaya çalışın ve başkalarıyla temastan kaçının. COVID-19 belirtileri taşıyanlara yönelik tavsiyeleri uygulayın."
+              "text": "Uygulamayı güncellemeniz gerekip gerekmediğini kontrol etmek için App Store'daki NHS COVID-19 uygulamasına gidin. Uygulamanın üzerinde 'güncelle' seçeneğini görürseniz güncellemeniz gerekiyor demektir."
             },
             {
               "type": "para",
-              "text": "Test sonucunuz pozitif çıkarsa ve belirtileriniz yoksa, 5 gün boyunca evde kalmaya çalışmalı ve başkalarıyla temastan kaçınmalısınız. Pozitif test sonucunu uygulamaya girerseniz, uygulamanın geri sayım sayacının bu tavsiyeye uymanız gereken süreyi size hatırlattığını göreceksiniz."
+              "text": "Uygulama içerisindeki belirtilerle ilgili tavsiyeler güncellenmiştir."
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "COVID-19'la güvenli bir şekilde yaşama rehberi"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "App Store'u kontrol et"
             },
             {
               "type": "para",
-              "text": "En güncel COVID-19 yönergesine erişmek için uygulamayı düzenli olarak güncellediğinizden emin olun. "
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "Google Play Store'u kontrol et"
             }
           ]
         },
         "pl": {
-          "head": "Zmieniły się zalecenia dotyczące testów i samoizolacji",
-          "body": "Przeczytaj zaktualizowane wytyczne",
+          "head": "Aktualizuj aplikację, aby dysponować najnowszymi wskazówkami w zakresie zdrowia",
+          "body": "Sprawdź najnowszą aktualizację",
           "content": [
             {
               "type": "para",
-              "text": "Jeśli masz objawy COVID-19 lub infekcję dróg oddechowych i masz wysoką temperaturę lub źle się czujesz, staraj się zostać w domu i unikać kontaktu z innymi. Postępuj zgodnie ze wskazówkami dla osób, które mają objawy COVID-19."
+              "text": "Aby sprawdzić, czy trzeba zaktualizować aplikację, przejdź do aplikacji NHS COVID-19 w swoim sklepie z aplikacjami. Jeśli będzie to potrzebne, pojawi się przycisk „aktualizuj”."
             },
             {
               "type": "para",
-              "text": "Jeśli wynik testu jest pozytywny i nie masz objawów, należy starać się pozostać w domu i unikać kontaktu z innymi przez 5 dni. Jeśli zgłosisz w aplikacji pozytywny wynik testu, zobaczysz licznik czasu, przypominający o okresie, w którym należy postępować zgodnie z tymi wskazówkami."
+              "text": "Zaktualizowaliśmy w aplikacji wskazówki dotyczące objawów. "
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "Wskazówki dotyczące bezpiecznego życia z COVID-19"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "Sprawdź w App Store\n"
             },
             {
               "type": "para",
-              "text": "Aktualizuj tę aplikację do najnowszej wersji, aby otrzymywać najnowsze wytyczne dotyczące COVID-19. "
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "Sprawdź w Google Play"
             }
           ]
         },
         "ro": {
-          "head": "Instrucțiunile privind autoizolarea și testarea s-au modificat",
-          "body": "Citiți recomandările actualizate",
+          "head": "Păstrați-vă aplicația actualizată pentru a primi cele mai noi instrucțiuni privind sănătatea",
+          "body": "Verificați care sunt cele mai recente actualizări\n",
           "content": [
             {
               "type": "para",
-              "text": "Dacă aveți simptome de COVID-19 sau o infecție respiratorie și faceți temperatură sau vă simțiți rău, încercați să stați acasă și să evitați contactul cu alte persoane. Respectați instrucțiunile privind persoanele care au simptome de COVID-19."
+              "text": "Pentru a vedea dacă trebuie să vă actualizați aplicația, accesați aplicația NHS COVID-19 din App Store. Dacă trebuie actualizată, veți vedea un buton pe care scrie \"actualizare\"."
             },
             {
               "type": "para",
-              "text": "Dacă sunteți testați pozitiv și nu aveți simptome, trebuie să încercați să stați acasă și să evitați contactul cu alte persoane timp de 5 zile. Dacă introduceți un rezultat de test pozitiv în aplicație, veți vedea contorul cu numărătoarea inversă care vă va reaminti perioada în care trebuie să urmați aceste instrucțiuni."
+              "text": "Am actualizat informațiile privind simptomele în aplicație."
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "Instrucțiuni privind viața în condiții de siguranță cu COVID-19"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "Verificați în App Store"
             },
             {
               "type": "para",
-              "text": "Actualizați întotdeauna această aplicația la cea mai recentă versiune a sa pentru a primi cele mai recente instrucțiuni privind COVID-19. "
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "Verificați în Google Play Store"
             }
           ]
         },
         "pa": {
-          "head": "ਖੁਦ ਨੂੰ ਅਲੱਗ ਰੱਖਣ ਅਤੇ ਟੈਸਟ ਕਰਾਉਣ ਬਾਰੇ ਸਲਾਹ ਬਦਲ ਗਈ ਹੈ",
-          "body": "ਅੱਪਡੇਟ ਕੀਤੀ ਸੇਧ ਪੜ੍ਹੋ",
+          "head": "ਸਿਹਤ ਬਾਰੇ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਲਈ ਆਪਣੀ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਰੱਖੋ",
+          "body": "ਨਵੀਨਤਮ ਅੱਪਡੇਟ ਬਾਰੇ ਦੇਖੋ",
           "content": [
             {
               "type": "para",
-              "text": "ਜੇਕਰ ਤੁਹਾਨੂੰ COVID-19 ਦੇ ਲੱਛਣ ਹਨ ਜਾਂ ਸਾਹ ਦੀ ਲਾਗ ਹੈ, ਅਤੇ ਤੁਹਾਨੂੰ ਤੇਜ਼ ਬੁਖ਼ਾਰ ਹੈ ਜਾਂ ਤੁਸੀਂ ਬਿਮਾਰ ਮਹਿਸੂਸ ਕਰਦੇ ਹੋ, ਤਾਂ ਘਰ ਵਿੱਚ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰੋ ਅਤੇ ਦੂਜਿਆਂ ਨਾਲ ਸੰਪਰਕ ਤੋਂ ਬਚੋ। COVID-19 ਦੇ ਲੱਛਣਾਂ ਵਾਲੇ ਲੋਕਾਂ ਲਈ ਸੇਧ ਦੀ ਪਾਲਣਾ ਕਰੋ।"
+              "text": "ਇਹ ਦੇਖਣ ਲਈ ਕਿ ਕੀ ਤੁਹਾਨੂੰ ਆਪਣੀ ਐਪ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ, ਆਪਣੇ ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ। ਜੇਕਰ ਤੁਹਾਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ ਤਾਂ ਇਹ ਤੁਹਾਨੂੰ ‘ਅੱਪਡੇਟ’ ਬਟਨ ਦਿਖਾਏਗਾ।"
             },
             {
               "type": "para",
-              "text": "ਜੇਕਰ ਤੁਹਾਡਾ ਟੈਸਟ ਪਾਜ਼ਿਟਿਵ ਆਉਂਦਾ ਹੈ ਅਤੇ ਤੁਹਾਡੇ ਵਿੱਚ ਲੱਛਣ ਨਹੀਂ ਹਨ ਤਾਂ ਤੁਹਾਨੂੰ 5 ਦਿਨਾਂ ਲਈ ਘਰ ਵਿੱਚ ਰਹਿਣ ਦੀ ਕੋਸ਼ਿਸ਼ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ ਅਤੇ ਦੂਜਿਆਂ ਨਾਲ ਸੰਪਰਕ ਤੋਂ ਬਚਣਾ ਚਾਹੀਦਾ ਹੈ। ਜੇਕਰ ਤੁਸੀਂ ਐਪ ਵਿੱਚ ਟੈਸਟ ਦਾ ਪਾਜ਼ਿਟਿਵ ਨਤੀਜਾ ਦਾਖਲ ਕਰਦੇ ਹੋ, ਤਾਂ ਤੁਹਾਨੂੰ ਐਪ ਵਿੱਚ ਉਲਟੀ ਗਿਣਤੀ ਟਾਈਮਰ ਦਿਖਾਈ ਦੇਵੇਗਾ ਜੋ ਤੁਹਾਨੂੰ ਉਸ ਸਮੇਂ ਦੀ ਯਾਦ ਦਿਵਾਉਂਦਾ ਹੈ ਜਿਸ ਦੌਰਾਨ ਤੁਹਾਨੂੰ ਇਸ ਸੇਧ ਦੀ ਪਾਲਣਾ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ।"
+              "text": "ਅਸੀਂ ਐਪ ਵਿੱਚ ਲੱਛਣਾਂ ਬਾਰੇ ਮਾਰਗਦਰਸ਼ਨ ਨੂੰ ਅੱਪਡੇਟ ਕੀਤਾ ਹੈ।"
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": " COVID-19 ਨਾਲ ਸੁਰੱਖਿਅਤ ਢੰਗ ਨਾਲ ਰਹਿਣ ਬਾਰੇ ਸੇਧ"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "ਐਪ ਸਟੋਰ (App Store) ਦੇਖੋ"
             },
             {
               "type": "para",
-              "text": "COVID-19 ਬਾਰੇ ਸਭ ਤੋਂ ਤਾਜ਼ਾ ਸੇਧ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਇਸ ਐਪ ਨੂੰ ਨਵੀਨਤਮ ਸੰਸਕਰਣ 'ਤੇ ਅੱਪਡੇਟ ਰੱਖੋ। "
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "ਗੂਗਲ ਪਲੇ ਸਟੋਰ (Google Play Store) ਦੇਖੋ"
             }
           ]
         },
         "bn": {
-          "head": "নিজেকে আলাদা রাখা এবং পরীক্ষা করার পরামর্শ পরিবর্তিত হয়েছে",
-          "body": "আপডেট করা নির্দেশনা পড়ুন",
+          "head": "সর্বশেষ স্বাস্থ্য নির্দেশের জন্য আপনার অ্যাপ হালনাগাদ রাখুন",
+          "body": "সর্বশেষ হালনাগাদ যাচাই করুন",
           "content": [
             {
               "type": "para",
-              "text": "আপনার যদি COVID-19 এর উপসর্গ বা শ্বাসযন্ত্রের কোনও সংক্রমণ থাকে এবং উচ্চ তাপমাত্রা থাকে বা অসুস্থ বোধ করেন, তাহলে বাসায় থাকার চেষ্টা করুন এবং অন্যদের সাথে সংস্পর্শ এড়িয়ে চলুন। যে ব্যক্তিদের COVID-19 এর উপসর্গ আছে তাদের জন্য নির্দেশনাটি অনুসরণ করুন।"
+              "text": "আপনার অ্যাপ হালনাগাদ করা দরকার কী না যাচাই করার জন্য, আপনার অ্যাপ স্টোরে NHS COVID-19 অ্যাপ দেখুন। হালনাগাদ করতে হলে অ্যাপ আপনাকে একটি ‘আপডেট’ বোতাম দেখাবে।"
             },
             {
               "type": "para",
-              "text": "যদি আপনার পরীক্ষার ফলাফল পজিটিভ হয় এবং উপসর্গ না থাকে, তাহলে আপনার বাসায় থাকার চেষ্টা করা উচিত এবং 5 দিনের জন্য অন্যদের সাথে সংস্পর্শ এড়িয়ে চলা উচিত। আপনি যদি অ্যাপটিতে একটি পরীক্ষার পজিটিভ ফলাফল প্রবেশ করান, তাহলে আপনি অ্যাপ কাউন্টডাউন টাইমার দেখতে পাবেন যা আপনাকে সেই সময়কালের কথা মনে করিয়ে দেবে যখন আপনার এই নির্দেশনাটি অনুসরণ করা উচিত।"
+              "text": "আমরা অ্যাপে উপসর্গের নির্দেশ হালনাগাদ করেছি।"
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "COVID-19 এর সাথে নিরাপদে জীবনযাপনের নির্দেশনা"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "অ্যাপ স্টোর (App Store) যাচাই করুন"
             },
             {
               "type": "para",
-              "text": "COVID-19 সংক্রান্ত সাম্প্রতিকতম নির্দেশিকা পেতে, অনুগ্রহ করে এই অ্যাপটিকে সর্বশেষ সংস্করণে আপডেট করে রাখুন। "
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "গুগল প্লে স্টোর (Google Play Store) যাচাই করুন"
             }
           ]
         },
         "gu": {
-          "head": "સેલ્ફ-આઇસોલેશન અને ટેસ્ટિંગ સલાહમાં ફેરબદલ થયા છે",
-          "body": "અપડેટ કરાયેલ માર્ગદર્શન વાંચો",
+          "head": "સ્વાસ્થ્ય અંગેના છેલ્લામાં છેલ્લા નિર્દેશો માટે તમારી ઍપ અપડેટેડ રાખો",
+          "body": "નવીનતમ અપડેટ ચેક કરો",
           "content": [
             {
               "type": "para",
-              "text": "જો તમને COVID-19નાં લક્ષણો હોય અથવા શ્વસન સાથે સંબંધિત ચેપ હોય અને ભારે તાપમાન હોય કે અસુખ અનુભવાતું હોય તો ઘરે રહેવાનો પ્રયત્ન કરો અને અન્યો સાથેનો સંપર્ક ટાળો. જેઓને COVID-19નાં લક્ષણો હોય એવા લોકો માટેના નિર્દેશોનું પાલન કરો."
+              "text": "તમારે તમારી ઍપ અપડેટ કરવાની જરૂર છે કે કેમ તે ચેક કરવા માટે તમારા ઍપ સ્ટોરમાં NHS COVID-19 ઍપમાં જાઓ. જો તમારે અપડેટ કરવાની જરૂર હશે તો  તે તમને એક 'અપડેટ' બટન બતાવશે."
             },
             {
               "type": "para",
-              "text": "જો તમારો ટેસ્ટ પૉઝિટિવ આવે અને તમને કોઈ લક્ષણો ન હોય તો તમારે ઘરે રહેવાનો પ્રયત્ન કરવો જોઈએ અને 5 દિવસો માટે અન્યો સાથેનો સંપર્ક ટાળવો જોઈએ. જો તમે ઍપમાં પૉઝિટિવ ટેસ્ટ પરિણામ ઍન્ટર કરો તો તમારે જેટલા સમયગાળા માટે આ નિર્દેશોનું પાલન કરવું જોઈએ તે અંગે તમને યાદ કરાવવા માટે તમે ઍપ કાઉન્ટડાઉન ટાઇમર જોશો."
+              "text": "અમે ઍપમાં લક્ષણના નિર્દેશો અપડેટ કર્યા છે."
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "COVID-19 સાથે સુરક્ષિત રીતે જીવવા અંગેના નિર્દેશો"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "ઍપ સ્ટોર (App Store) ચેક કરો"
             },
             {
               "type": "para",
-              "text": "સૌથી તાજેતરનું COVID-19 માર્ગદર્શન મેળવવા માટે કૃપા કરીને આ એપ્લિકેશનને નવીનતમ સંસ્કરણ પર અપડેટ કરાયેલ રાખો."
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "ગૂગલ પ્લે સ્ટોર (Google Play Store) ચેક કરો"
             }
           ]
         },
         "cy": {
-          "head": "Mae’r cyngor hunanynysu a phrofi wedi newid",
-          "body": "Darllenwch y canllawiau diweddaraf",
+          "head": "Cadwch eich ap yn gyfredol i gael y canllawiau iechyd diweddaraf",
+          "body": "Gwiriwch y diweddariad diwethaf",
           "content": [
             {
               "type": "para",
-              "text": "Os oes gennych chi symptomau COVID-19 neu haint resbiradol, a bod gennych chi dymheredd uchel neu'n teimlo'n sâl, ceisiwch aros gartref ac osgoi cyswllt gydag eraill. Dilynwch y canllawiau ar gyfer pobl sydd â symptomau COVID-19."
+              "text": "I weld a oes angen i chi ddiweddaru eich ap, ewch i ap COVID-19 y GIG yn eich siop apiau. Bydd yn dangos botwm ‘diweddaru’ os oes angen i chi wneud hyn."
             },
             {
               "type": "para",
-              "text": "Os byddwch yn profi'n bositif ac nad oes gennych symptomau, dylech geisio aros gartref ac osgoi cyswllt gydag eraill am 5 niwrnod. Os byddwch yn cofnodi canlyniad prawf positif yn yr ap, byddwch yn gweld amserydd cyfrif i lawr yr ap i’ch atgoffa am ba gyfnod ddylech chi ddilyn y canllaw hwn."
+              "text": "Rydym wedi diweddaru’r canllawiau ar symptomau yn yr ap."
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "Canllaw ar fyw’n ddiogel gyda COVID-19"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "Gwiriwch yr App Store"
             },
             {
               "type": "para",
-              "text": "Cadwch yr ap yma wedi ei ddiweddaru i’r fersiwn ddiweddaraf er mwyn derbyn y canllawiau COVID-19 mwyaf diweddar. "
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "Gwiriwch Google Play Store"
             }
           ]
         },
         "so": {
-          "head": "Talada is-gooniyeelida iyo baaritaanka ayaa isbedeshay",
-          "body": "Akhri tilmaanta la cusboonaysiiyay",
+          "head": "Ku cusbooneysii abkaaga hagitaanka caafimaad ee ugu dambeeyay",
+          "body": "Eeg wararkii ugu dambeeyay",
           "content": [
             {
               "type": "para",
-              "text": "Haddii aad qabtid aastaamaha COVID-19 ama caabuqa neefta, oo aad qabtid heerkulka sareeyo ama aadan fiicneyn, isku day inaad guriga joogtid oo aad ka fogaatid taabashada dadka kale. Raac tilmaanta dadka qabo aastaamaha COVID-19."
+              "text": "Si aad u hubiso haddii aad u baahan tahay inaad cusboonaysiiso abkaaga, aad abka NHS ee COVID-19 ku jira keydiyaha abka (app store). Waxay ku tusi doontaa badhanka 'cusbooneysiita' haddii aad u baahan tahay inaad midaan sameyso."
             },
             {
               "type": "para",
-              "text": "Haddii lagaa helo baaritaanka oo aadan laheyn aastaamaha waa inaad isku daydaa inaad guriga joogtid oo ka fagow taabashada dadka kale oo 5 maalmood. Haddii aad gelisid natiijada baaritaanka laga helay cudurka app-ka, waxaad arkeysaa xisaabiyaha waqtiga app-ka si ay kuu xasuusiyaan muddada waa inaad raacdaa tilmaantaan oo."
+              "text": "Waxaan ku cusboonaysiinay hagidda calaamadaha gudaha abka."
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "Tilmaanta ula noolaanshaha si badqab ah COVID-19"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "Eeg Keydiyaha Abka (App Store)\n"
             },
             {
               "type": "para",
-              "text": "Fadlan ku cusboonaysii app-kan noocii ugu dambeeyay si aad u hesho hagitaankii ugu dambeeyay ee COVID-19."
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "Eeg Google Play Store-ka"
             }
           ]
         },
         "ur": {
-          "head": "خود کو الگ تھلگ رکھنے اور جانچ سے متعلق صلاح تبدیل ہو گئی ہے",
-          "body": "اپ ڈیٹ شدہ رہنمائی پڑھیں",
+          "head": "صحت سے متعلق تازہ ترین رہنمائی کے لیے اپنے ایپ کو اپڈیٹ رکھیں",
+          "body": "تازہ ترین اپڈیٹ دیکھیں",
           "content": [
             {
               "type": "para",
-              "text": "اگر آپ میں COVID-19 کی علامات پائی جاتی ہیں یا آپ کو تنفسی انفیکشن ہے، اور آپ کا درجۂ حرارت بڑھا ہوا ہے یا آپ بیمار محسوس کرتے ہیں تو گھر پر رہنے کی کوشش کریں اور دوسروں سے رابطہ کرنے سے گریز کریں۔ ان لوگوں کے لیے فراہم کردہ رہنمائی پر عمل کریں جن میں COVID-19 کی علامات پائی جاتی ہیں۔"
+              "text": "یہ دیکھنے کے لیے کہ آیا آپ کو اپنا ایپ اپڈیٹ کرنے کی ضرورت ہے، اپنے ایپ اسٹور میں NHS COVID-19 ایپ میں جائیں۔ اگر آپ کو ایسا کرنے کی ضرورت ہے تو یہ آپ کو ایک 'اپڈیٹ' بٹن دکھائے گا۔"
             },
             {
               "type": "para",
-              "text": "اگر آپ کی جانچ مثبت آتی ہے اور علامات نہیں پائی جاتی ہیں تو آپ کو چاہیے کہ 5 دنوں تک گھر پر رہیں اور دوسروں سے رابطہ کرنے سے گریز کریں۔ اگر آپ جانچ کا مثبت نتیجہ اس ایپ میں داخل کرتے ہیں تو آپ دیکھیں گے کہ ایپ کا کاؤنٹ ڈاؤن ٹائمر آپ کو اس مدت کی یاددہانی کراتا ہے جب تک آپ کو اس رہنمائی پر عمل کرنا چاہیے۔"
+              "text": "ہم نے ایپ میں علامات سے متعلق رہنمائی اپڈیٹ کی ہے۔"
             },
             {
               "type": "para",
-              "link": "https://www.nhs.uk/conditions/coronavirus-covid-19/how-to-avoid-catching-and-spreading-coronavirus-covid-19",
-              "linkText": "COVID-19 کے ساتھ بحفاظت زندگی گزارنے سے متعلق رہنمائی"
+              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "ایپ اسٹور (App Store) دیکھیں"
             },
             {
               "type": "para",
-              "text": "COVID-19 سے متعلق بالکل حالیہ رہنمائی وصول کرنے کے لیے برائے مہربانی اس ایپ کو تازہ ترین ورژن میں اپڈیٹ رکھیں۔ "
+              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
+              "linkText": "گوگل پلے اسٹور (Google Play Store) دیکھیں"
             }
           ]
         }
