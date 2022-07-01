@@ -27,12 +27,12 @@
     "testResultPollingTokenRetentionPeriod": 28
   },
   "wales_v2": {
-    "indexCaseSinceSelfDiagnosisOnset": 6,
-    "indexCaseSinceSelfDiagnosisUnknownOnset": 6,
+    "indexCaseSinceSelfDiagnosisOnset": 5,
+    "indexCaseSinceSelfDiagnosisUnknownOnset": 5,
     "contactCase": 11,
     "maxIsolation": 16,
     "pendingTasksRetentionPeriod": 14,
-    "indexCaseSinceTestResultEndDate": 6,
+    "indexCaseSinceTestResultEndDate": 5,
     "testResultPollingTokenRetentionPeriod": 28
   }
 }

@@ -13,9 +13,7 @@ public class AnalyticsMetrics {
     public int hasHadRiskyContactBackgroundTick;
     public int receivedPositiveTestResult;
     public int receivedNegativeTestResult;
-    public int completedQuestionnaireAndStartedIsolation;
     public int encounterDetectionPausedBackgroundTick;
-    public int completedQuestionnaireButDidNotStartIsolation;
     public int totalBackgroundTasks;
     public int runningNormallyBackgroundTick;
     public int completedOnboarding;
@@ -27,7 +25,6 @@ public class AnalyticsMetrics {
     public Integer receivedNegativeTestResultViaPolling;
     public Integer hasSelfDiagnosedBackgroundTick;
     public Integer hasTestedPositiveBackgroundTick;
-    public Integer isIsolatingForSelfDiagnosedBackgroundTick;
     public Integer isIsolatingForTestedPositiveBackgroundTick;
     public Integer receivedRiskyContactNotification;
     public Integer startedIsolation;
@@ -47,7 +44,6 @@ public class AnalyticsMetrics {
     public Integer launchedTestOrdering;
     public Integer didHaveSymptomsBeforeReceivedTestResult;
     public Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult;
-    public Integer didAskForSymptomsOnPositiveTestEntry;
     public Integer receivedPositiveSelfRapidTestResultEnteredManually;
     public Integer isIsolatingForTestedSelfRapidPositiveBackgroundTick;
     public Integer hasTestedSelfRapidPositiveBackgroundTick;

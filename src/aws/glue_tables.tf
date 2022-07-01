@@ -115,15 +115,7 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       type = "int"
     }
     columns {
-      name = "completedQuestionnaireAndStartedIsolation"
-      type = "int"
-    }
-    columns {
       name = "encounterDetectionPausedBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
     columns {
@@ -172,10 +164,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
     }
     columns {
       name = "hasTestedPositiveBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "isIsolatingForSelfDiagnosedBackgroundTick"
       type = "int"
     }
     columns {
@@ -260,10 +248,6 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
     }
     columns {
       name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
-      type = "int"
-    }
-    columns {
-      name = "didAskForSymptomsOnPositiveTestEntry"
       type = "int"
     }
     columns {
@@ -540,15 +524,7 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       type = "int"
     }
     columns {
-      name = "completedQuestionnaireAndStartedIsolation"
-      type = "int"
-    }
-    columns {
       name = "encounterDetectionPausedBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
     columns {
@@ -597,10 +573,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "hasTestedPositiveBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "isIsolatingForSelfDiagnosedBackgroundTick"
       type = "int"
     }
     columns {
@@ -685,10 +657,6 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
-      type = "int"
-    }
-    columns {
-      name = "didAskForSymptomsOnPositiveTestEntry"
       type = "int"
     }
     columns {

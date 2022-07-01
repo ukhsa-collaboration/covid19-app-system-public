@@ -127,15 +127,7 @@ resource "aws_glue_catalog_table" "this" {
       type = "int"
     }
     columns {
-      name = "completedQuestionnaireAndStartedIsolation"
-      type = "int"
-    }
-    columns {
       name = "encounterDetectionPausedBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
     columns {
@@ -184,10 +176,6 @@ resource "aws_glue_catalog_table" "this" {
     }
     columns {
       name = "hasTestedPositiveBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "isIsolatingForSelfDiagnosedBackgroundTick"
       type = "int"
     }
     columns {
@@ -272,10 +260,6 @@ resource "aws_glue_catalog_table" "this" {
     }
     columns {
       name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
-      type = "int"
-    }
-    columns {
-      name = "didAskForSymptomsOnPositiveTestEntry"
       type = "int"
     }
     columns {
@@ -564,15 +548,7 @@ resource "aws_glue_catalog_table" "this_consolidated" {
       type = "int"
     }
     columns {
-      name = "completedQuestionnaireAndStartedIsolation"
-      type = "int"
-    }
-    columns {
       name = "encounterDetectionPausedBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
     columns {
@@ -621,10 +597,6 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "hasTestedPositiveBackgroundTick"
-      type = "int"
-    }
-    columns {
-      name = "isIsolatingForSelfDiagnosedBackgroundTick"
       type = "int"
     }
     columns {
@@ -709,10 +681,6 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
-      type = "int"
-    }
-    columns {
-      name = "didAskForSymptomsOnPositiveTestEntry"
       type = "int"
     }
     columns {
