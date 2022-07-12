@@ -7,6 +7,7 @@ import java.net.URL
 import java.util.*
 
 interface AwsS3 {
+    val enabled: Boolean
     fun upload(
         locator: Locator,
         contentType: ContentType,

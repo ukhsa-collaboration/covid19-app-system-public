@@ -53,6 +53,10 @@ namespace :validate do
 
     fields_file_location = File.join($configuration.base, "/src/aws/analytics_fields/fields.json")
     analytics_fields = JSON.parse(File.read(fields_file_location), { :object_class => DuplicateCheckingHash })
-    validate_fields(analytics_fields)
+    validate_fields(analytics_fields["mobile_analytics"])
+    validate_fields(
+      analytics_fields["mobile_events_analytics"],
+      additional_allowed_types: ["double", "array<struct<secondsSinceLastScan:int,minimumAttenuation:int,typicalAttenuation:int>>"]
+    )
   end
 end

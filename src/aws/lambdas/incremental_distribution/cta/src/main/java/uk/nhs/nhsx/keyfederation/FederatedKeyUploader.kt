@@ -35,13 +35,11 @@ class FederatedKeyUploader(
     private val dateStringProvider = { DATE_TIME_FORMATTER.format(clock()) }
 
     fun acceptKeysFromFederatedServer(payload: DiagnosisKeysDownloadResponse) =
-        filterByReportTypeAndGroupByOrigin(payload).forEach { (origin, keys) -> handleOriginKeys(payload.batchTag, origin, keys) }
+        groupByOrigin(payload).forEach { (origin, keys) -> handleOriginKeys(payload.batchTag, origin, keys) }
 
-    fun filterByReportTypeAndGroupByOrigin(payload: DiagnosisKeysDownloadResponse): Map<String, List<ExposureDownload>> =
+    fun groupByOrigin(payload: DiagnosisKeysDownloadResponse): Map<String, List<ExposureDownload>> =
         payload.exposures
-            .filter { (it.testType === TestType.LAB_RESULT ||
-                       it.testType === TestType.RAPID_RESULT ||
-                       it.testType === TestType.RAPID_SELF_REPORTED) && it.reportType === ReportType.CONFIRMED_TEST }
+            .filter { it.testType === TestType.LAB_RESULT && it.reportType === ReportType.CONFIRMED_TEST }
             .groupBy(ExposureDownload::origin)
 
     private fun handleOriginKeys(batchTag: BatchTag, origin: String, exposureDownloads: List<ExposureDownload>) {

@@ -30,7 +30,7 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       }
     }
 
-    <% columns.each do |name, type|  %>
+    <% columns["mobile_analytics"].each do |name, type|  %>
     columns {
       name = "<%= name %>"
       type = "<%= type %>"
@@ -65,7 +65,41 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       }
     }
 
-    <% columns.each do |name, type|  %>
+    <% columns["mobile_analytics"].each do |name, type|  %>
+    columns {
+      name = "<%= name %>"
+      type = "<%= type %>"
+    }
+    <% end %>
+  }
+}
+
+resource "aws_glue_catalog_table" "mobile_events_analytics" {
+  name          = "${terraform.workspace}_analytics_events"
+  database_name = aws_glue_catalog_database.mobile_analytics.name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL              = "TRUE"
+    "parquet.compression" = "SNAPPY"
+  }
+
+  storage_descriptor {
+    location      = "s3://${module.analytics_events_submission_store_parquet.bucket_id}/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    <% columns["mobile_events_analytics"].each do |name, type|  %>
     columns {
       name = "<%= name %>"
       type = "<%= type %>"

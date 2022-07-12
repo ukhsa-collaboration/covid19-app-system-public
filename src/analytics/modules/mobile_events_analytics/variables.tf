@@ -11,5 +11,9 @@ variable "workgroup_name" {
 }
 
 variable "analytics_submission_events_bucket_id" {
-  description = "The name of the S3 bucket the stores mobile events analytics"
+  description = "The name of the S3 bucket that stores mobile events analytics"
+}
+
+variable "analytics_submission_events_parquet_bucket_id" {
+  description = "The name of the S3 bucket that stores mobile events analytics in parquet format"
 }

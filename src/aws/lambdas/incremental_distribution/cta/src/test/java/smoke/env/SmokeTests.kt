@@ -32,7 +32,11 @@ object SmokeTests {
     private inline fun <reified T : Any> deserializeOrThrow(value: String): T = try {
         Moshi.asA(value)
     } catch (e: Exception) {
-        error("Unable to deserialize configuration file, check generated config file against ${EnvConfig::class.simpleName} class")
+        error(
+            "Unable to deserialize configuration file, check generated config file against"
+                + " ${EnvConfig::class.simpleName} class\n"
+            + "\tCause: ${e}"
+        )
     }
 }
 

@@ -1,4 +1,6 @@
 {
+  "mobile_analytics":
+  {
     "startDate": "string",
     "endDate": "string",
     "postalDistrict": "string",
@@ -20,7 +22,9 @@
     "receivedPositiveTestResult": "int",
     "receivedNegativeTestResult": "int",
     "hasSelfDiagnosedPositiveBackgroundTick": "int",
+    "completedQuestionnaireAndStartedIsolation": "int",
     "encounterDetectionPausedBackgroundTick": "int",
+    "completedQuestionnaireButDidNotStartIsolation": "int",
     "totalBackgroundTasks": "int",
     "runningNormallyBackgroundTick": "int",
     "completedOnboarding": "int",
@@ -33,6 +37,7 @@
     "receivedNegativeTestResultViaPolling": "int",
     "hasSelfDiagnosedBackgroundTick": "int",
     "hasTestedPositiveBackgroundTick": "int",
+    "isIsolatingForSelfDiagnosedBackgroundTick": "int",
     "isIsolatingForTestedPositiveBackgroundTick": "int",
     "isIsolatingForHadRiskyContactBackgroundTick": "int",
     "receivedRiskyContactNotification": "int",
@@ -54,6 +59,7 @@
     "launchedTestOrdering": "int",
     "didHaveSymptomsBeforeReceivedTestResult": "int",
     "didRememberOnsetSymptomsDateBeforeReceivedTestResult": "int",
+    "didAskForSymptomsOnPositiveTestEntry": "int",
     "receivedPositiveSelfRapidTestResultEnteredManually": "int",
     "isIsolatingForTestedSelfRapidPositiveBackgroundTick": "int",
     "hasTestedSelfRapidPositiveBackgroundTick": "int",
@@ -94,4 +100,22 @@
     "completedV2SymptomsQuestionnaireAndStayAtHome": "int",
     "hasCompletedV2SymptomsQuestionnaireBackgroundTick": "int",
     "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick": "int"
+  },
+  "mobile_events_analytics":
+  {
+    "type": "string",
+    "version":  "int",
+    "riskScore": "double",
+    "riskCalculationVersion": "int",
+    "infectiousness": "string",
+    "isConsideredRisky": "boolean",
+    "scanInstances": "array<struct<secondsSinceLastScan:int,minimumAttenuation:int,typicalAttenuation:int>>",
+    "date": "string",
+    "operatingSystemVersion": "string",
+    "localAuthority": "string",
+    "latestApplicationVersion": "string",
+    "deviceModel": "string",
+    "postalDistrict": "string",
+    "uuid": "string"
+  }
 }

@@ -64,5 +64,14 @@ module NHSx
       raise GaudiError, "The following are not valid local authority IDs in the LAD20CD format #{las_not_exists}" unless las_not_exists.empty?
 
     end
+
+    def generate_from_template(dest:, template:, columns:)
+        quicksight_glue_file = File.join($configuration.base, dest)
+        quicksight_glue_template_file = File.join($configuration.base, template)
+        write_file(
+          quicksight_glue_file,
+          from_template(quicksight_glue_template_file, { :columns => columns, :template_file => template })
+        )
+    end
   end
 end

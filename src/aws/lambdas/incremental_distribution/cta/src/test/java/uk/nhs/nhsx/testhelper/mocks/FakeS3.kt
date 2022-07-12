@@ -23,6 +23,7 @@ import java.time.Instant
 import java.util.*
 
 open class FakeS3(val clock: Clock = { java.time.Clock.systemUTC().instant() }) : AwsS3 {
+    override val enabled: Boolean = true
 
     private val summaries: MutableMap<BucketName, MutableList<S3ObjectSummary>> = mutableMapOf()
     val objects: MutableMap<BucketName, MutableList<S3Object>> = mutableMapOf()

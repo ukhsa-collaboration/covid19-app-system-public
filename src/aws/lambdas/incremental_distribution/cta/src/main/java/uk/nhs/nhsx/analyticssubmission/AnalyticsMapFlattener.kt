@@ -11,6 +11,8 @@ object AnalyticsMapFlattener {
 
     fun flattenRecursively(input: Any) = AppServicesJson.mapper.convertValue(input, mapReference).flatten()
 
+    fun flattenRecursively(input: Map<String, Any?>) = input.flatten()
+
     private fun Map<String, Any?>.flatten(): Map<String, Any?> {
         val target = mutableMapOf<String, Any?>()
 

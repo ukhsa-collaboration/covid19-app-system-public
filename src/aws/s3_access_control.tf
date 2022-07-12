@@ -126,6 +126,14 @@ module "analytics_submission_store_parquet_access_consolidated" {
   s3_bucket_arn          = module.analytics_submission_store_parquet_consolidated.bucket_arn
 }
 
+module "analytics_events_submission_store_parquet_access" {
+  source                 = "./modules/s3_access_policies"
+  policy_type            = "cross_account_readonly"
+  prefix                 = "analytics"
+  principal_aws_accounts = var.analytics_aws_accounts
+  s3_bucket_arn          = module.analytics_events_submission_store_parquet.bucket_arn
+}
+
 module "virology_tokens_bucket_access" {
   source        = "./modules/s3_access_policies"
   policy_type   = "default"

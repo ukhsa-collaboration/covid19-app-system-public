@@ -149,17 +149,27 @@ namespace :gen do
   desc "Generate analytics fields in terraform source"
   task :"analytics-fields" => :"validate:analytics-fields" do
     include Zuehlke::Templates
+    include NHSx::Generate
+
     analytics_fields = File.join($configuration.base, "src/aws/analytics_fields/fields.json")
     columns = JSON.parse(File.read(analytics_fields))
 
-    kinesis_glue_file = File.join($configuration.base, "src/aws/glue_tables.tf")
-    kinesis_glue_template_file = "tools/templates/glue_tables_kinesis.tf.erb"
-    kinesis_glue_template = File.join($configuration.base, kinesis_glue_template_file)
-    write_file(kinesis_glue_file, from_template(kinesis_glue_template, { :columns => columns, :template_file => kinesis_glue_template_file }))
+    generate_from_template(
+        dest: "src/aws/glue_tables.tf",
+        template: "tools/templates/glue_tables_kinesis.tf.erb",
+        columns: columns
+    )
 
-    quicksight_glue_file = File.join($configuration.base, "src/analytics/modules/mobile_analytics/glue_tables.tf")
-    quicksight_glue_template_file = "tools/templates/glue_tables_quicksight.tf.erb"
-    quicksight_glue_template = File.join($configuration.base, quicksight_glue_template_file)
-    write_file(quicksight_glue_file, from_template(quicksight_glue_template, { :columns => columns, :template_file => quicksight_glue_template_file }))
+    generate_from_template(
+        dest: "src/analytics/modules/mobile_analytics/glue_tables.tf",
+        template: "tools/templates/glue_tables_quicksight.tf.erb",
+        columns: columns["mobile_analytics"]
+    )
+
+    generate_from_template(
+        dest: "src/analytics/modules/mobile_events_analytics/glue_tables.tf",
+        template: "tools/templates/glue_tables_events_quicksight.tf.erb",
+        columns: columns["mobile_events_analytics"]
+    )
   end
 end

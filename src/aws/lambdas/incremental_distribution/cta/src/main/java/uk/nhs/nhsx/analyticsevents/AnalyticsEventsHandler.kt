@@ -19,6 +19,7 @@ import uk.nhs.nhsx.core.aws.s3.AwsS3
 import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
 import uk.nhs.nhsx.core.aws.s3.PartitionedObjectKeyNameProvider
+import uk.nhs.nhsx.core.aws.s3.createAwsS3Client
 import uk.nhs.nhsx.core.aws.ssm.AwsSsmParameters
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.core.events.PrintingJsonEvents
@@ -40,9 +41,10 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
         AwsSsmParameters(),
         AWSKMSClientBuilder.defaultClient()
     ).signResponseWithKeyGivenInSsm(environment, events),
-    awsS3: AwsS3 = AwsS3Client(events),
+    awsS3: AwsS3 = createAwsS3Client(events, environment),
     objectKeyNameProvider: ObjectKeyNameProvider = PartitionedObjectKeyNameProvider(clock, RandomUUID),
-    healthAuthenticator: Authenticator = awsAuthentication(Health, events)
+    healthAuthenticator: Authenticator = awsAuthentication(Health, events),
+    firehoseClient: FirehoseClient = FirehoseClient.from(environment),
 ) : RoutingHandler() {
 
     private val handler = withSignedResponses(
@@ -53,7 +55,7 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
             authorisedBy(
                 authenticator,
                 path(POST, "/submission/mobile-analytics-events",
-                    ApiGatewayHandler { request, _ ->
+                    ApiGatewayHandler { request, context ->
                         when {
                             environment.access.required(Environment.EnvironmentKey.bool("ACCEPT_REQUESTS_ENABLED")) -> {
                                 val payload = PayloadValidator().maybeValidPayload(request.body)
@@ -62,7 +64,8 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
                                         awsS3,
                                         objectKeyNameProvider,
                                         environment.access.required(EnvironmentKeys.SUBMISSION_STORE),
-                                        events
+                                        events,
+                                        firehoseClient,
                                     ).accept(payload)
                                     ok()
                                 } ?: badRequest()

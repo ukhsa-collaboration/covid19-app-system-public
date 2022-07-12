@@ -115,7 +115,15 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       type = "int"
     }
     columns {
+      name = "completedQuestionnaireAndStartedIsolation"
+      type = "int"
+    }
+    columns {
       name = "encounterDetectionPausedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
     columns {
@@ -164,6 +172,10 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
     }
     columns {
       name = "hasTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForSelfDiagnosedBackgroundTick"
       type = "int"
     }
     columns {
@@ -248,6 +260,10 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
     }
     columns {
       name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didAskForSymptomsOnPositiveTestEntry"
       type = "int"
     }
     columns {
@@ -524,7 +540,15 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
       type = "int"
     }
     columns {
+      name = "completedQuestionnaireAndStartedIsolation"
+      type = "int"
+    }
+    columns {
       name = "encounterDetectionPausedBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedQuestionnaireButDidNotStartIsolation"
       type = "int"
     }
     columns {
@@ -573,6 +597,10 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "hasTestedPositiveBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "isIsolatingForSelfDiagnosedBackgroundTick"
       type = "int"
     }
     columns {
@@ -657,6 +685,10 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "didRememberOnsetSymptomsDateBeforeReceivedTestResult"
+      type = "int"
+    }
+    columns {
+      name = "didAskForSymptomsOnPositiveTestEntry"
       type = "int"
     }
     columns {
@@ -818,6 +850,90 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     columns {
       name = "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick"
       type = "int"
+    }
+  }
+}
+
+resource "aws_glue_catalog_table" "mobile_events_analytics" {
+  name          = "${terraform.workspace}_analytics_events"
+  database_name = aws_glue_catalog_database.mobile_analytics.name
+
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL              = "TRUE"
+    "parquet.compression" = "SNAPPY"
+  }
+
+  storage_descriptor {
+    location      = "s3://${module.analytics_events_submission_store_parquet.bucket_id}/"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    columns {
+      name = "type"
+      type = "string"
+    }
+    columns {
+      name = "version"
+      type = "int"
+    }
+    columns {
+      name = "riskScore"
+      type = "double"
+    }
+    columns {
+      name = "riskCalculationVersion"
+      type = "int"
+    }
+    columns {
+      name = "infectiousness"
+      type = "string"
+    }
+    columns {
+      name = "isConsideredRisky"
+      type = "boolean"
+    }
+    columns {
+      name = "scanInstances"
+      type = "array<struct<secondsSinceLastScan:int,minimumAttenuation:int,typicalAttenuation:int>>"
+    }
+    columns {
+      name = "date"
+      type = "string"
+    }
+    columns {
+      name = "operatingSystemVersion"
+      type = "string"
+    }
+    columns {
+      name = "localAuthority"
+      type = "string"
+    }
+    columns {
+      name = "latestApplicationVersion"
+      type = "string"
+    }
+    columns {
+      name = "deviceModel"
+      type = "string"
+    }
+    columns {
+      name = "postalDistrict"
+      type = "string"
+    }
+    columns {
+      name = "uuid"
+      type = "string"
     }
   }
 }

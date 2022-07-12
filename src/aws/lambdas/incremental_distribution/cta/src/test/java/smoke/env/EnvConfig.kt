@@ -6,6 +6,8 @@ data class EnvConfig(
     val analytics_events_submission_function_name: String,
     val analytics_events_submission_health_endpoint: String,
     val analytics_events_submission_store: String,
+    val analytics_events_submission_parquet_store: String,
+    val analytics_events_submission_ingestion_interval: String,
     val analytics_submission_ingestion_interval: String,
     val analytics_submission_endpoint: String,
     val analytics_submission_health_endpoint: String,

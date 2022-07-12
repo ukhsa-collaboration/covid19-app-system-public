@@ -20,7 +20,6 @@ import uk.nhs.nhsx.domain.ReportType.CONFIRMED_TEST
 import uk.nhs.nhsx.domain.ReportType.UNKNOWN
 import uk.nhs.nhsx.domain.TestType.LAB_RESULT
 import uk.nhs.nhsx.domain.TestType.RAPID_RESULT
-import uk.nhs.nhsx.domain.TestType.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.keyfederation.client.DiagnosisKeysDownloadResponse
 import uk.nhs.nhsx.keyfederation.download.ExposureDownload
 import uk.nhs.nhsx.testhelper.assertions.S3ObjectAssertions.asString
@@ -166,7 +165,7 @@ class FederatedKeyUploaderTest {
             exposures = listOf(federatedKey1, federatedKey2, federatedKey3)
         )
 
-        expectThat(uploader.filterByReportTypeAndGroupByOrigin(payload)) {
+        expectThat(uploader.groupByOrigin(payload)) {
             containsKeys("NI", "IE")
             getValue("NI").containsExactlyInAnyOrder(federatedKey1, federatedKey2)
             getValue("IE").containsExactlyInAnyOrder(federatedKey3)
@@ -380,7 +379,7 @@ class FederatedKeyUploaderTest {
     }
 
     @Test
-    fun `accept non-PCR exposures grouped by origin`() {
+    fun `reject non-PCR exposures`() {
         val payload = DiagnosisKeysDownloadResponse(
             batchTag = BatchTag.of("batchTag"),
             exposures = listOf(
@@ -402,7 +401,7 @@ class FederatedKeyUploaderTest {
                     rollingPeriod = 144,
                     origin = "NI",
                     regions = listOf("NI"),
-                    testType = RAPID_SELF_REPORTED,
+                    testType = RAPID_RESULT,
                     reportType = CONFIRMED_TEST,
                     daysSinceOnset = 0
                 ),
@@ -422,7 +421,7 @@ class FederatedKeyUploaderTest {
 
         uploader.acceptKeysFromFederatedServer(payload)
 
-        expectThat(awsS3).getBucket(bucketName).hasSize(2)
+        expectThat(awsS3).getBucket(bucketName).hasSize(1)
     }
 
     @Test

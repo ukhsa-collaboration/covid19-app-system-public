@@ -9,14 +9,22 @@ import com.amazonaws.services.s3.model.PutObjectRequest
 import com.amazonaws.services.s3.model.S3Object
 import com.amazonaws.services.s3.model.S3ObjectSummary
 import uk.nhs.nhsx.core.ContentType
+import uk.nhs.nhsx.core.Environment
 import uk.nhs.nhsx.core.events.Events
 import java.io.IOException
+import java.net.URL
 import java.util.*
+
+// default to enabled=true -- we should keep the original behaviour unless explicitly requested otherwise
+// This will help prevent accidental data loss
+private val ENABLED_KEY = Environment.EnvironmentKey.bool("firehose_ingest_enabled")
+private val ENABLED_DEFAULT = true
 
 class AwsS3Client @JvmOverloads constructor(
     private val events: Events,
     private val client: AmazonS3 = AmazonS3ClientBuilder.defaultClient()
 ) : AwsS3 {
+    override val enabled: Boolean = true
 
     override fun upload(
         locator: Locator,
@@ -81,3 +89,43 @@ class AwsS3Client @JvmOverloads constructor(
 
     private fun AmazonS3Exception.isNot404() = !(statusCode == 404 && errorCode == "NoSuchKey")
 }
+
+
+class DisabledAwsS3Client  : AwsS3 {
+    override val enabled: Boolean = false
+
+    override fun upload(
+        locator: Locator,
+        contentType: ContentType,
+        bytes: ByteArraySource,
+        metaHeaders: List<MetaHeader>
+    ) {
+        throw IllegalStateException("client is disabled")
+    }
+
+    override fun getObjectSummaries(bucketName: BucketName): List<S3ObjectSummary> {
+        throw IllegalStateException("client is disabled")
+    }
+
+    override fun getObject(locator: Locator): S3Object? {
+        throw IllegalStateException("client is disabled")
+    }
+
+    override fun deleteObject(locator: Locator) {
+        throw IllegalStateException("client is disabled")
+    }
+
+    override fun copyObject(from: Locator, to: Locator) {
+        throw IllegalStateException("client is disabled")
+    }
+
+    override fun getSignedURL(locator: Locator, expiration: Date): URL? {
+        throw IllegalStateException("client is disabled")
+    }
+}
+
+fun createAwsS3Client(events: Events, enabled: Boolean)
+    = if (enabled) AwsS3Client(events) else DisabledAwsS3Client()
+
+fun createAwsS3Client(events: Events, environment: Environment): AwsS3
+    = createAwsS3Client(events, environment.access.defaulted(ENABLED_KEY) { ENABLED_DEFAULT })

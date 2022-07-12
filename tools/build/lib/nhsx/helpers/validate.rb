@@ -153,9 +153,10 @@ module NHSx
       puts "The following messages are missing translations:\nLanguages provided by lokalise import: \n#{diff_lang.join("\n")}\nValid languages: #{LANGUAGES}" unless diff_lang.empty?
     end
 
-    def validate_fields(fields)
+    def validate_fields(fields, additional_allowed_types: [])
+      allowed_types = %w[string int boolean] + additional_allowed_types
       invalid_fields = fields.filter_map do |field, type|
-        field unless %w[string int boolean].include?(type)
+        field unless allowed_types.include?(type)
       end
 
       raise GaudiError, "Invalid fields found: #{invalid_fields}" unless invalid_fields.empty?

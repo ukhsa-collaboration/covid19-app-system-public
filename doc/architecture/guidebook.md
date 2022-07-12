@@ -57,12 +57,6 @@ Only the app and system analytics uses anonymised usage or installation related 
 - Import of area risk levels depends on corresponding CV19 related data sources from PHE, JBC and Local Authorities
 - Isolation payment claims depend on SIP gateway web sites to check eligibility, authenticate and make the payment claim.
 
-### Data Model
-
-The following data model provides a black box view on the system's data model. It uses the payload specifications of our [API contracts](#system-apis-and-interfaces).
-
-![Figure: Data Model](diagrams/img/cv19-app-system-domain-model-data-model-2021-04-19.png "Figure: Data Model")
-
 ### GAEN Framework
 
 Our concepts make use of terminology from the [Google and Apple Exposure Notification (GAEN)](https://www.google.com/covid19/exposurenotifications/) framework. See the [GAEN API](https://developers.google.com/android/exposure-notifications/exposure-notifications-api) for detailed data models and concept definitions.
@@ -73,7 +67,7 @@ Our use of the GAEN framework and it's versions and core behaviour is described 
 
 The NHS COVID-19 App and Cloud Services (COVID-19 App System) has five major parts: Mobile apps, Cloud backend with API services, Infrastructure, Exposure Notification (EN) configuration and algorithm, and Dependent systems.
 
-![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2021-12-06.png "Figure: Overview")
+![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2022-07-05.png "Figure: Overview")
 
 ### Principles
 
@@ -97,7 +91,7 @@ The system architecture diagram below specifies the complete system showing the 
 - As part of Operations, web clients for smaller internal user groups and stakeholders are implemented as SPAs (single page applications), predominantly React, which could be hosted on S3.
 - Security and operations are built on AWS cloud-native components.
 
-![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2021-12-06.png "Figure: System Architecture")
+![Figure: System Architecture](diagrams/img/cv19-app-system-architecture-2022-07-05.png "Figure: System Architecture")
 
 The port names in the system architecture are usually defined by `API Group/API Name`, e.g. `Submission/Diagnosis Key`.
 
@@ -162,4 +156,4 @@ The COVID-19 App System infrastructure and operations uses AWS cloud-native comp
 - Operations
 - CDOC integration
 
-![Figure: Cloud Infrastructure](diagrams/img/cv19-app-system-cloud-infrastructure-2021-12-06.png "Figure: Cloud Infrastructure")
+![Figure: Cloud Infrastructure](diagrams/img/cv19-app-system-cloud-infrastructure-2022-07-05.png "Figure: Cloud Infrastructure")

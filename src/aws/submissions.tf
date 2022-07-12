@@ -27,6 +27,9 @@ module "analytics_events_submission" {
     SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
     ACCEPT_REQUESTS_ENABLED   = true
     custom_oai                = random_uuid.submission-custom-oai.result
+    firehose_stream_name      = aws_kinesis_firehose_delivery_stream.analytics_events_stream.name
+    firehose_ingest_enabled   = "true"
+    json_ingest_enabled       = "true"
   }
   burst_limit              = var.burst_limit
   rate_limit               = var.rate_limit
@@ -55,6 +58,16 @@ module "analytics_submission_store_parquet_consolidated" {
   logs_bucket_id           = null
   force_destroy_s3_buckets = var.force_destroy_s3_buckets
   policy_document          = module.analytics_submission_store_parquet_access_consolidated.policy_document
+  tags                     = var.tags
+}
+
+module "analytics_events_submission_store_parquet" {
+  source                   = "./libraries/submission_s3"
+  name                     = "analytics-events"
+  service                  = "submission-parquet"
+  logs_bucket_id           = null
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  policy_document          = module.analytics_events_submission_store_parquet_access.policy_document
   tags                     = var.tags
 }
 
@@ -97,9 +110,11 @@ resource "aws_iam_role_policy_attachment" "firehose_glue" {
 }
 
 locals {
-  env_analytics_submission                = lookup(var.analytics_submission, terraform.workspace, var.analytics_submission["default"])
-  analytics_submission_ingestion_interval = tonumber(local.env_analytics_submission["ingestion_interval"])
-  virology_submission_config              = lookup(var.virology_submission, terraform.workspace, var.virology_submission["default"])
+  env_analytics_submission                       = lookup(var.analytics_submission, terraform.workspace, var.analytics_submission["default"])
+  analytics_submission_ingestion_interval        = tonumber(local.env_analytics_submission["ingestion_interval"])
+  analytics_events_submission_ingestion_interval = tonumber(local.env_analytics_submission["events_ingestion_interval"])
+  analytics_events_submission_buffer_size        = tonumber(local.env_analytics_submission["buffer_size"])
+  virology_submission_config                     = lookup(var.virology_submission, terraform.workspace, var.virology_submission["default"])
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
@@ -144,6 +159,41 @@ resource "aws_kinesis_firehose_delivery_stream" "analytics_stream" {
 
         # [PARQUET CONSOLIDATION] FIXME below: the following configuration must be activated before the delta migration (parquet consolidation) is started
         # table_name = aws_glue_catalog_table.mobile_analytics_consolidated.name
+      }
+    }
+  }
+}
+
+resource "aws_kinesis_firehose_delivery_stream" "analytics_events_stream" {
+  name        = "${terraform.workspace}-analytics-events"
+  destination = "extended_s3"
+
+  tags = var.tags
+
+  extended_s3_configuration {
+    role_arn = aws_iam_role.firehose_role.arn
+
+    bucket_arn      = module.analytics_events_submission_store_parquet.bucket_arn
+    buffer_interval = local.analytics_events_submission_ingestion_interval
+    buffer_size     = local.analytics_events_submission_buffer_size
+
+    data_format_conversion_configuration {
+      input_format_configuration {
+        deserializer {
+          open_x_json_ser_de {}
+        }
+      }
+
+      output_format_configuration {
+        serializer {
+          parquet_ser_de {}
+        }
+      }
+
+      schema_configuration {
+        database_name = aws_glue_catalog_table.mobile_events_analytics.database_name
+        role_arn      = aws_iam_role.firehose_role.arn
+        table_name    = aws_glue_catalog_table.mobile_events_analytics.name
       }
     }
   }
@@ -296,8 +346,17 @@ module "submission_apis" {
 output "analytics_submission_parquet_store" {
   value = module.analytics_submission_store_parquet.bucket_name
 }
+output "analytics_events_submission_parquet_store" {
+  value = module.analytics_events_submission_store_parquet.bucket_name
+}
 output "analytics_submission_ingestion_interval" {
   value = local.analytics_submission_ingestion_interval
+}
+output "analytics_events_submission_ingestion_interval" {
+  value = local.analytics_events_submission_ingestion_interval
+}
+output "analytics_events_submission_buffer_size" {
+  value = local.analytics_events_submission_buffer_size
 }
 output "analytics_events_submission_store" {
   value = module.analytics_events_submission.store
