@@ -172,8 +172,6 @@ class AnalyticsSubmissionServiceTest {
             receivedVoidTestResultViaPolling = counter++.toInt(),
             receivedPositiveTestResultViaPolling = counter++.toInt(),
             receivedNegativeTestResultViaPolling = counter++.toInt(),
-            hasSelfDiagnosedBackgroundTick = counter++.toInt(),
-            hasTestedPositiveBackgroundTick = counter++.toInt(),
             isIsolatingForTestedPositiveBackgroundTick = counter++.toInt(),
             receivedRiskyContactNotification = counter++.toInt(),
             startedIsolation = counter++.toInt(),
@@ -182,7 +180,6 @@ class AnalyticsSubmissionServiceTest {
             selectedIsolationPaymentsButton = counter++.toInt(),
             launchedIsolationPaymentsApplication = counter++.toInt(),
             receivedPositiveLFDTestResultEnteredManually = counter++.toInt(),
-            hasTestedLFDPositiveBackgroundTick = counter++.toInt(),
             isIsolatingForTestedLFDPositiveBackgroundTick = counter++.toInt(),
             totalExposureWindowsNotConsideredRisky = counter++.toInt(),
             totalExposureWindowsConsideredRisky = counter++.toInt(),
@@ -195,7 +192,6 @@ class AnalyticsSubmissionServiceTest {
             didRememberOnsetSymptomsDateBeforeReceivedTestResult = counter++.toInt(),
             receivedPositiveSelfRapidTestResultEnteredManually = counter++.toInt(),
             isIsolatingForTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
-            hasTestedSelfRapidPositiveBackgroundTick = counter++.toInt(),
             totalAlarmManagerBackgroundTasks = counter++.toInt(),
             missingPacketsLast7Days = counter++.toInt(),
             askedToShareExposureKeysInTheInitialFlow = counter++.toInt(),
@@ -219,9 +215,7 @@ class AnalyticsSubmissionServiceTest {
             appIsContactTraceableBackgroundTick = counter++.toInt(),
             appIsUsableBluetoothOffBackgroundTick = counter++.toInt(),
             completedV2SymptomsQuestionnaire = counter++.toInt(),
-            completedV2SymptomsQuestionnaireAndStayAtHome = counter++.toInt(),
-            hasCompletedV2SymptomsQuestionnaireBackgroundTick = counter++.toInt(),
-            hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick = counter.toInt()
+            completedV2SymptomsQuestionnaireAndStayAtHome = counter.toInt()
         )
         val flattenedNonNull = removeNullValues(analyticsPayload)
         expectThat(exportedMap).isEqualTo(flattenedNonNull)

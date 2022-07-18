@@ -154,8 +154,6 @@ private fun additionalMetrics(
         "receivedVoidTestResultViaPolling" to if (useCounter) counter++ else 1,
         "receivedPositiveTestResultViaPolling" to if (useCounter) counter++ else 1,
         "receivedNegativeTestResultViaPolling" to if (useCounter) counter++ else 1,
-        "hasSelfDiagnosedBackgroundTick" to if (useCounter) counter++ else 1,
-        "hasTestedPositiveBackgroundTick" to if (useCounter) counter++ else 1,
         "isIsolatingForTestedPositiveBackgroundTick" to if (useCounter) counter++ else 1,
         "receivedRiskyContactNotification" to if (useCounter) counter++ else 1,
         "startedIsolation" to if (useCounter) counter++ else 1,
@@ -164,7 +162,6 @@ private fun additionalMetrics(
         "selectedIsolationPaymentsButton" to if (useCounter) counter++ else 1,
         "launchedIsolationPaymentsApplication" to if (useCounter) counter++ else 1,
         "receivedPositiveLFDTestResultEnteredManually" to if (useCounter) counter++ else 1,
-        "hasTestedLFDPositiveBackgroundTick" to if (useCounter) counter++ else 1,
         "isIsolatingForTestedLFDPositiveBackgroundTick" to if (useCounter) counter++ else 1,
         "totalExposureWindowsNotConsideredRisky" to if (useCounter) counter++ else 1,
         "totalExposureWindowsConsideredRisky" to if (useCounter) counter++ else 1,
@@ -177,7 +174,6 @@ private fun additionalMetrics(
         "didRememberOnsetSymptomsDateBeforeReceivedTestResult" to if (useCounter) counter++ else 1,
         "receivedPositiveSelfRapidTestResultEnteredManually" to if (useCounter) counter++ else 1,
         "isIsolatingForTestedSelfRapidPositiveBackgroundTick" to if (useCounter) counter++ else 1,
-        "hasTestedSelfRapidPositiveBackgroundTick" to if (useCounter) counter++ else 1,
         "receivedRiskyVenueM1Warning" to if (useCounter) counter else 1,
         "receivedRiskyVenueM2Warning" to if (useCounter) counter else 1,
         "hasReceivedRiskyVenueM2WarningBackgroundTick" to if (useCounter) counter else 1,
@@ -211,9 +207,7 @@ private fun additionalMetrics(
         "appIsContactTraceableBackgroundTick" to if (useCounter) counter++ else 1,
         "appIsUsableBluetoothOffBackgroundTick" to if (useCounter) counter++ else 1,
         "completedV2SymptomsQuestionnaire" to if (useCounter) counter++ else 1,
-        "completedV2SymptomsQuestionnaireAndStayAtHome" to if (useCounter) counter++ else 1,
-        "hasCompletedV2SymptomsQuestionnaireBackgroundTick" to if (useCounter) counter++ else 1,
-        "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick" to if (useCounter) counter else 1
+        "completedV2SymptomsQuestionnaireAndStayAtHome" to if (useCounter) counter else 1
     )
 }
 
@@ -247,8 +241,6 @@ fun analyticsStoredPayload(
     receivedVoidTestResultViaPolling: Int? = null,
     receivedPositiveTestResultViaPolling: Int? = null,
     receivedNegativeTestResultViaPolling: Int? = null,
-    hasSelfDiagnosedBackgroundTick: Int? = null,
-    hasTestedPositiveBackgroundTick: Int? = null,
     isIsolatingForTestedPositiveBackgroundTick: Int? = null,
     receivedRiskyContactNotification: Int? = null,
     startedIsolation: Int? = null,
@@ -257,7 +249,6 @@ fun analyticsStoredPayload(
     selectedIsolationPaymentsButton: Int? = null,
     launchedIsolationPaymentsApplication: Int? = null,
     receivedPositiveLFDTestResultEnteredManually: Int? = null,
-    hasTestedLFDPositiveBackgroundTick: Int? = null,
     isIsolatingForTestedLFDPositiveBackgroundTick: Int? = null,
     totalExposureWindowsNotConsideredRisky: Int? = null,
     totalExposureWindowsConsideredRisky: Int? = null,
@@ -270,7 +261,6 @@ fun analyticsStoredPayload(
     didRememberOnsetSymptomsDateBeforeReceivedTestResult: Int? = null,
     receivedPositiveSelfRapidTestResultEnteredManually: Int? = null,
     isIsolatingForTestedSelfRapidPositiveBackgroundTick: Int? = null,
-    hasTestedSelfRapidPositiveBackgroundTick: Int? = null,
     totalAlarmManagerBackgroundTasks: Int? = null,
     missingPacketsLast7Days: Int? = null,
     askedToShareExposureKeysInTheInitialFlow: Int? = null,
@@ -294,9 +284,7 @@ fun analyticsStoredPayload(
     appIsContactTraceableBackgroundTick: Int? = null,
     appIsUsableBluetoothOffBackgroundTick: Int? = null,
     completedV2SymptomsQuestionnaire: Int? = null,
-    completedV2SymptomsQuestionnaireAndStayAtHome: Int? = null,
-    hasCompletedV2SymptomsQuestionnaireBackgroundTick: Int? = null,
-    hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick: Int? = null
+    completedV2SymptomsQuestionnaireAndStayAtHome: Int? = null
 ) = mapOf(
     "startDate" to "$eventStartDate",
     "endDate" to "$eventEndDate",
@@ -327,8 +315,6 @@ fun analyticsStoredPayload(
     "receivedVoidTestResultViaPolling" to receivedVoidTestResultViaPolling,
     "receivedPositiveTestResultViaPolling" to receivedPositiveTestResultViaPolling,
     "receivedNegativeTestResultViaPolling" to receivedNegativeTestResultViaPolling,
-    "hasSelfDiagnosedBackgroundTick" to hasSelfDiagnosedBackgroundTick,
-    "hasTestedPositiveBackgroundTick" to hasTestedPositiveBackgroundTick,
     "isIsolatingForTestedPositiveBackgroundTick" to isIsolatingForTestedPositiveBackgroundTick,
     "receivedRiskyContactNotification" to receivedRiskyContactNotification,
     "startedIsolation" to startedIsolation,
@@ -337,7 +323,6 @@ fun analyticsStoredPayload(
     "selectedIsolationPaymentsButton" to selectedIsolationPaymentsButton,
     "launchedIsolationPaymentsApplication" to launchedIsolationPaymentsApplication,
     "receivedPositiveLFDTestResultEnteredManually" to receivedPositiveLFDTestResultEnteredManually,
-    "hasTestedLFDPositiveBackgroundTick" to hasTestedLFDPositiveBackgroundTick,
     "isIsolatingForTestedLFDPositiveBackgroundTick" to isIsolatingForTestedLFDPositiveBackgroundTick,
     "totalExposureWindowsNotConsideredRisky" to totalExposureWindowsNotConsideredRisky,
     "totalExposureWindowsConsideredRisky" to totalExposureWindowsConsideredRisky,
@@ -350,7 +335,6 @@ fun analyticsStoredPayload(
     "didRememberOnsetSymptomsDateBeforeReceivedTestResult" to didRememberOnsetSymptomsDateBeforeReceivedTestResult,
     "receivedPositiveSelfRapidTestResultEnteredManually" to receivedPositiveSelfRapidTestResultEnteredManually,
     "isIsolatingForTestedSelfRapidPositiveBackgroundTick" to isIsolatingForTestedSelfRapidPositiveBackgroundTick,
-    "hasTestedSelfRapidPositiveBackgroundTick" to hasTestedSelfRapidPositiveBackgroundTick,
     "totalAlarmManagerBackgroundTasks" to totalAlarmManagerBackgroundTasks,
     "missingPacketsLast7Days" to missingPacketsLast7Days,
     "askedToShareExposureKeysInTheInitialFlow" to askedToShareExposureKeysInTheInitialFlow,
@@ -375,6 +359,4 @@ fun analyticsStoredPayload(
     "appIsUsableBluetoothOffBackgroundTick" to appIsUsableBluetoothOffBackgroundTick,
     "completedV2SymptomsQuestionnaire" to completedV2SymptomsQuestionnaire,
     "completedV2SymptomsQuestionnaireAndStayAtHome" to completedV2SymptomsQuestionnaireAndStayAtHome,
-    "hasCompletedV2SymptomsQuestionnaireBackgroundTick" to hasCompletedV2SymptomsQuestionnaireBackgroundTick,
-    "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick" to hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick,
 )

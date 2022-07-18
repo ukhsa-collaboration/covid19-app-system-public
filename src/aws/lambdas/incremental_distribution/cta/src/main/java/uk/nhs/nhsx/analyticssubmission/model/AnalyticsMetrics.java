@@ -23,8 +23,6 @@ public class AnalyticsMetrics {
     public Integer receivedVoidTestResultViaPolling;
     public Integer receivedPositiveTestResultViaPolling;
     public Integer receivedNegativeTestResultViaPolling;
-    public Integer hasSelfDiagnosedBackgroundTick;
-    public Integer hasTestedPositiveBackgroundTick;
     public Integer isIsolatingForTestedPositiveBackgroundTick;
     public Integer receivedRiskyContactNotification;
     public Integer startedIsolation;
@@ -33,7 +31,6 @@ public class AnalyticsMetrics {
     public Integer selectedIsolationPaymentsButton;
     public Integer launchedIsolationPaymentsApplication;
     public Integer receivedPositiveLFDTestResultEnteredManually;
-    public Integer hasTestedLFDPositiveBackgroundTick;
     public Integer isIsolatingForTestedLFDPositiveBackgroundTick;
     public Integer totalExposureWindowsNotConsideredRisky;
     public Integer totalExposureWindowsConsideredRisky;
@@ -46,7 +43,6 @@ public class AnalyticsMetrics {
     public Integer didRememberOnsetSymptomsDateBeforeReceivedTestResult;
     public Integer receivedPositiveSelfRapidTestResultEnteredManually;
     public Integer isIsolatingForTestedSelfRapidPositiveBackgroundTick;
-    public Integer hasTestedSelfRapidPositiveBackgroundTick;
     public Integer totalAlarmManagerBackgroundTasks;
     public Integer missingPacketsLast7Days;
     public Integer askedToShareExposureKeysInTheInitialFlow;
@@ -71,8 +67,6 @@ public class AnalyticsMetrics {
     public Integer appIsUsableBluetoothOffBackgroundTick;
     public Integer completedV2SymptomsQuestionnaire;
     public Integer completedV2SymptomsQuestionnaireAndStayAtHome;
-    public Integer hasCompletedV2SymptomsQuestionnaireBackgroundTick;
-    public Integer hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick;
 
 
     public AnalyticsMetrics() {
