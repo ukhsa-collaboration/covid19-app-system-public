@@ -261,9 +261,11 @@ class KeyFederationDownloadHandlerTest(private val wireMock: WireMockServer) {
                         .containsExactly(
                             "9m008UTn46C32jsWEw1Dnw==",
                             "p05ot/jyF58G/95CkujQYQ==",
-                            "ViRF6pOEFdVnk73aBrEwcA=="
-                        )
+                            "ViRF6pOEFdVnk73aBrEwcA==",
+                            //"6X8NHosmohtYiMbqHrdaJA==", // filtered out due to report type
+                            "Y4cQpuB6Jyhs6fKn2GjCEw=="
 
+                        )
                 }
             }
         }

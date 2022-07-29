@@ -46,6 +46,8 @@ class Environment private constructor(val name: EnvironmentName, val type: Envir
 
             fun integer(name: String) = define(name, String::toInt)
 
+            fun long(name: String) = define(name, String::toLong)
+
             fun strings(name: String) = define(name) { it.split(",").map(String::trim).filter(String::isNotBlank) }
 
             fun localDate(name: String) = define(name, LocalDate::parse)

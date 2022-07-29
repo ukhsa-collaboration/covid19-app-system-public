@@ -89,7 +89,7 @@ module Gaudi
       def test_result
         test_result = ENV.fetch("TEST_RESULT", "POSITIVE")
 
-        raise GaudiError, "Invalid TEST_RESULT" unless ["POSITIVE", "NEGATIVE", "VOID"].include?(test_result)
+        raise GaudiError, "Invalid TEST_RESULT" unless ["POSITIVE", "NEGATIVE", "VOID", "PLOD"].include?(test_result)
 
         return test_result
       end
@@ -134,6 +134,15 @@ module Gaudi
         raise GaudiError, "Invalid NUMBER_OF_DAYS" unless number_of_days
 
         return number_of_days
+      end
+
+      # Pass input file to a task
+      #
+      # Eg: INPUT_FILE=path/to/file
+      def input_file
+        input_file = mandatory("INPUT_FILE")
+        raise GaudiError, "Missing INPUT_FILE" unless input_file
+        return input_file
       end
 
       # Pass the batch number for the subscription (it can be 1, 2 or 3)

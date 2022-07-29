@@ -29,6 +29,8 @@ module "analytics_events_submission" {
     custom_oai                = random_uuid.submission-custom-oai.result
     firehose_stream_name      = aws_kinesis_firehose_delivery_stream.analytics_events_stream.name
     firehose_ingest_enabled   = "true"
+    firehose_retry_times      = "50"
+    firehose_retry_delay      = "100" // millis -- in total keep retrying for 5 seconds (50 * 100).
     json_ingest_enabled       = "true"
   }
   burst_limit              = var.burst_limit

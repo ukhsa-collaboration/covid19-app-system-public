@@ -207,7 +207,8 @@ private fun additionalMetrics(
         "appIsContactTraceableBackgroundTick" to if (useCounter) counter++ else 1,
         "appIsUsableBluetoothOffBackgroundTick" to if (useCounter) counter++ else 1,
         "completedV2SymptomsQuestionnaire" to if (useCounter) counter++ else 1,
-        "completedV2SymptomsQuestionnaireAndStayAtHome" to if (useCounter) counter else 1
+        "completedV2SymptomsQuestionnaireAndStayAtHome" to if (useCounter) counter++ else 1,
+        "completedV3SymptomsQuestionnaireAndHasSymptoms" to if (useCounter) counter else 1
     )
 }
 
@@ -284,7 +285,8 @@ fun analyticsStoredPayload(
     appIsContactTraceableBackgroundTick: Int? = null,
     appIsUsableBluetoothOffBackgroundTick: Int? = null,
     completedV2SymptomsQuestionnaire: Int? = null,
-    completedV2SymptomsQuestionnaireAndStayAtHome: Int? = null
+    completedV2SymptomsQuestionnaireAndStayAtHome: Int? = null,
+    completedV3SymptomsQuestionnaireAndHasSymptoms: Int? = null
 ) = mapOf(
     "startDate" to "$eventStartDate",
     "endDate" to "$eventEndDate",
@@ -359,4 +361,5 @@ fun analyticsStoredPayload(
     "appIsUsableBluetoothOffBackgroundTick" to appIsUsableBluetoothOffBackgroundTick,
     "completedV2SymptomsQuestionnaire" to completedV2SymptomsQuestionnaire,
     "completedV2SymptomsQuestionnaireAndStayAtHome" to completedV2SymptomsQuestionnaireAndStayAtHome,
+    "completedV3SymptomsQuestionnaireAndHasSymptoms" to completedV3SymptomsQuestionnaireAndHasSymptoms,
 )

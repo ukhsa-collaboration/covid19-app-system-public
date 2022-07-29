@@ -438,6 +438,10 @@ resource "aws_glue_catalog_table" "this" {
       name = "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "completedV3SymptomsQuestionnaireAndHasSymptoms"
+      type = "int"
+    }
   }
 }
 
@@ -873,6 +877,10 @@ resource "aws_glue_catalog_table" "this_consolidated" {
     }
     columns {
       name = "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedV3SymptomsQuestionnaireAndHasSymptoms"
       type = "int"
     }
   }

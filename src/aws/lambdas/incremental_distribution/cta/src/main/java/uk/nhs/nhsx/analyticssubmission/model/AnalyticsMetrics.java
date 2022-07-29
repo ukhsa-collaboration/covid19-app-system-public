@@ -67,7 +67,7 @@ public class AnalyticsMetrics {
     public Integer appIsUsableBluetoothOffBackgroundTick;
     public Integer completedV2SymptomsQuestionnaire;
     public Integer completedV2SymptomsQuestionnaireAndStayAtHome;
-
+    public Integer completedV3SymptomsQuestionnaireAndHasSymptoms;
 
     public AnalyticsMetrics() {
     }

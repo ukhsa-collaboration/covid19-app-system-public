@@ -1,4 +1,5 @@
 require 'zip'
+require 'csv'
 
 module NHSx
   module Virology
@@ -89,20 +90,77 @@ module NHSx
     end
 
     def generate_single(config_file, system_config)
+      _generate(
+        target_env: config_file['target_environment_name'],
+        test_kit: system_config.test_kit,
+        test_result: system_config.test_result,
+        test_end_date: system_config.test_end_date,
+        number_of_tokens: system_config.number_of_tokens,
+        lambda_function: config_file["virology_tokens_processing_function"],
+        s3_bucket:config_file["virology_tokens_processing_output_store"],
+        system_config: system_config,
+      )
+     end
+
+    def generate_batch(config_file, system_config)
+      # expect an env var INPUT_FILE set, which points to a CSV with headers:
+      #     test_kit, test result, test end date, number_of_tokens
+      input_file = system_config.input_file
+      batches = CSV.open(
+          input_file, "r",
+          strip: true,
+          headers: true, return_headers: true,
+          header_converters: proc {|header| header.strip.to_sym },
+      ) do |csv|
+        header = csv.shift
+        expected_headers = %w[test_kit test_result test_end_date number_of_tokens]
+        if !header || header.fields.sort != expected_headers.sort
+          raise GaudiError, "input csv does not have expected headers: #{expected_headers.join(', ')}"
+        end
+
+        csv.each do |row|
+          _generate(
+            target_env: config_file['target_environment_name'],
+            lambda_function: config_file["virology_tokens_processing_function"],
+            s3_bucket:config_file["virology_tokens_processing_output_store"],
+            system_config: system_config,
+            **row
+          )
+        end
+      end
+    end
+
+    def _generate(
+      target_env:,
+      test_kit:,
+      test_result:,
+      test_end_date:,
+      number_of_tokens:,
+      lambda_function:,
+      s3_bucket:,
+      system_config:
+    )
       # virology out dir (format: YYYYmmdd)
-      date = Time.iso8601(system_config.test_end_date).strftime("%Y%m%d")
+      date = Time.iso8601(test_end_date).strftime("%Y%m%d")
       virology_out_dir = File.join(system_config.out, "gen/virology/#{date}")
 
       # if virology exists for input test end date then raise
-      raise GaudiError, "Local virology dir for #{system_config.test_end_date} already exists #{virology_out_dir}" unless !File.exist?(virology_out_dir)
+      output_file = File.join(
+        virology_out_dir,
+        "#{date}-#{target_env}-#{test_kit}-#{test_result}.csv".downcase
+       )
+       raise GaudiError, (
+         "Local virology file for date: #{test_end_date} and target env:" +
+         " #{target_env} and test kit: #{test_kit} already exists --" +
+         " #{output_file}"
+       ) unless !File.exist?(output_file)
 
       # lambda and payload
-      lambda_function = config_file["virology_tokens_processing_function"]
       payload = {
-        "testResult" => system_config.test_result,
-        "testEndDate" => system_config.test_end_date,
-        "testKit" => system_config.test_kit,
-        "numberOfTokens" => system_config.number_of_tokens
+        "testResult" => test_result,
+        "testEndDate" => test_end_date,
+        "testKit" => test_kit,
+        "numberOfTokens" => number_of_tokens
       }
       payload_json = "#{JSON.dump(payload)}"
 
@@ -118,7 +176,6 @@ module NHSx
       zip_filename = response_json["filename"]
 
       # download zip from s3 bucket
-      s3_bucket = config_file["virology_tokens_processing_output_store"]
       object_name = "#{s3_bucket}/#{zip_filename}"
       zip_file_path = File.join(virology_out_dir, "#{zip_filename}")
       run_command("Download zip file", NHSx::AWS::Commandlines.download_from_s3(object_name, zip_file_path), system_config)
@@ -126,7 +183,14 @@ module NHSx
       # unzip to virology out dir
       run_command("Unzip archive", "unzip #{zip_file_path} -d #{virology_out_dir}", system_config)
       csv_filename = zip_filename.sub(".zip", ".csv")
-      File.rename(File.join(virology_out_dir, "#{csv_filename}"), File.join(virology_out_dir, "#{date}.csv"))
+      File.rename(File.join(virology_out_dir, "#{csv_filename}"), output_file)
+
+      new_columns = [
+        # we prepend a space to keep the formatting of the csv as is
+        {'name' => ' environment', 'index' => 1, 'value' => ' ' + target_env.downcase},
+        {'name' => ' test_kit', 'index' => 2, 'value' => ' ' + test_kit},
+      ]
+      append_columns_to_csv(output_file, new_columns)
 
       # remove downloaded s3 zip file
       File.delete(zip_file_path)
@@ -138,6 +202,7 @@ module NHSx
       # get TEST_RESULT and NUMBER_OF_TOKENS from env
       number_of_tokens = system_config.number_of_tokens
       test_result = system_config.test_result
+      test_kit = system_config.test_kit
 
       # get START_DATE and NUMBER_OF_DAYS from env and validate
       start_date = Time.iso8601(system_config.start_date)
@@ -155,9 +220,10 @@ module NHSx
         raise GaudiError, "Local virology dir for #{local_test_end_date_dir} already exists #{virology_out_dir}" unless !File.exist?(virology_single_day_dir)
 
         {
-          'TEST_END_DATE' => test_end_date_time.strftime('%Y-%m-%dT00:00:00Z'),
-          'NUMBER_OF_TOKENS' => number_of_tokens,
-          'TEST_RESULT' => test_result
+          :test_kit => test_kit,
+          :test_end_date => test_end_date_time.strftime('%Y-%m-%dT00:00:00Z'),
+          :number_of_tokens => number_of_tokens,
+          :test_result => test_result
         }
       }
 
@@ -170,11 +236,14 @@ module NHSx
       raise GaudiError, "Aborted" unless ["yes"].include?(answer.downcase)
 
       # generate tokens for each TEST_END_DATE
-      virology_gen_args.each { |e|
-        ENV['TEST_END_DATE'] = e['TEST_END_DATE']
-        ENV['NUMBER_OF_TOKENS'] = e['NUMBER_OF_TOKENS']
-        ENV['TEST_RESULT'] = e['TEST_RESULT']
-        generate_single(config_file, system_config)
+      virology_gen_args.each { |args|
+        _generate(
+          target_env: config_file['target_environment_name'],
+          lambda_function: config_file["virology_tokens_processing_function"],
+          s3_bucket:config_file["virology_tokens_processing_output_store"],
+          system_config: system_config,
+          **args
+        )
       }
 
       # generate random pwd and store it
@@ -258,6 +327,36 @@ module NHSx
       cmd = run_command("Getting the list of attributes to check the filter policy ", cmdline, system_config)      
       attributes = JSON.parse(cmd.output)["Attributes"]
       return attributes
+    end
+
+    def append_columns_to_csv(output_file, new_columns)
+      # prefetch csv to prevent concurrent reading and writing
+      in_csv_arr = CSV.open(
+        output_file, "r",
+        headers: true, return_headers: true,
+      ).to_a
+
+      CSV.open(
+        output_file, "w",
+        headers: true, write_headers: true,
+      ) do |csv|
+        in_csv_arr.each do |row|
+          csv << append_columns_to_row(row, new_columns)
+        end
+      end
+    end
+
+    def append_columns_to_row(row, new_columns)
+      new_row = row.fields()
+      new_columns.each do |column|
+        if row.header_row?
+          value = column["name"]
+        else
+          value = column["value"]
+        end
+        new_row.insert(column["index"], value)
+      end
+      return new_row
     end
   end
 end

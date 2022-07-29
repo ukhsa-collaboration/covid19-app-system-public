@@ -99,7 +99,8 @@
     "completedV2SymptomsQuestionnaire": "int",
     "completedV2SymptomsQuestionnaireAndStayAtHome": "int",
     "hasCompletedV2SymptomsQuestionnaireBackgroundTick": "int",
-    "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick": "int"
+    "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick": "int",
+    "completedV3SymptomsQuestionnaireAndHasSymptoms" : "int"
   },
   "mobile_events_analytics":
   {

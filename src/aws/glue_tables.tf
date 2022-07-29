@@ -426,6 +426,10 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick"
       type = "int"
     }
+    columns {
+      name = "completedV3SymptomsQuestionnaireAndHasSymptoms"
+      type = "int"
+    }
   }
 }
 
@@ -849,6 +853,10 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "hasCompletedV2SymptomsQuestionnaireAndStayAtHomeBackgroundTick"
+      type = "int"
+    }
+    columns {
+      name = "completedV3SymptomsQuestionnaireAndHasSymptoms"
       type = "int"
     }
   }

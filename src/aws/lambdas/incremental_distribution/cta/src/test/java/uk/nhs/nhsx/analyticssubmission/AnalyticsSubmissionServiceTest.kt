@@ -215,7 +215,8 @@ class AnalyticsSubmissionServiceTest {
             appIsContactTraceableBackgroundTick = counter++.toInt(),
             appIsUsableBluetoothOffBackgroundTick = counter++.toInt(),
             completedV2SymptomsQuestionnaire = counter++.toInt(),
-            completedV2SymptomsQuestionnaireAndStayAtHome = counter.toInt()
+            completedV2SymptomsQuestionnaireAndStayAtHome = counter++.toInt(),
+            completedV3SymptomsQuestionnaireAndHasSymptoms = counter.toInt()
         )
         val flattenedNonNull = removeNullValues(analyticsPayload)
         expectThat(exportedMap).isEqualTo(flattenedNonNull)
