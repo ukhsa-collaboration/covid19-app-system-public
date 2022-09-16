@@ -16,7 +16,6 @@ import uk.nhs.nhsx.core.auth.Authenticator
 import uk.nhs.nhsx.core.auth.ResponseSigner
 import uk.nhs.nhsx.core.auth.StandardAuthentication.awsAuthentication
 import uk.nhs.nhsx.core.aws.s3.AwsS3
-import uk.nhs.nhsx.core.aws.s3.AwsS3Client
 import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
 import uk.nhs.nhsx.core.aws.s3.PartitionedObjectKeyNameProvider
 import uk.nhs.nhsx.core.aws.s3.createAwsS3Client
@@ -45,6 +44,7 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
     objectKeyNameProvider: ObjectKeyNameProvider = PartitionedObjectKeyNameProvider(clock, RandomUUID),
     healthAuthenticator: Authenticator = awsAuthentication(Health, events),
     firehoseClient: FirehoseClient = FirehoseClient.from(environment),
+    retrier: Retrier = Retrier.from(environment),
 ) : RoutingHandler() {
 
     private val handler = withSignedResponses(
@@ -66,6 +66,7 @@ class AnalyticsEventsHandler @JvmOverloads constructor(
                                         environment.access.required(EnvironmentKeys.SUBMISSION_STORE),
                                         events,
                                         firehoseClient,
+                                        retrier,
                                     ).accept(payload)
                                     ok()
                                 } ?: badRequest()

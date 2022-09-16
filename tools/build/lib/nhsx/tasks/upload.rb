@@ -13,7 +13,7 @@ namespace :upload do
 
         raise GaudiError, "Failed to upload post district data with #{status}" if status != 202
 
-        puts "Post district data succesfully completed"
+        puts "Post district data successfully completed"
       end
 
       desc "Upload data to mobile analytics #{tgt_env}"

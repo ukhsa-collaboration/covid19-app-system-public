@@ -24,14 +24,14 @@ module "analytics_events_submission" {
   lambda_object_key        = module.artifact_repository.lambda_object_key
   lambda_handler_class     = "uk.nhs.nhsx.analyticsevents.AnalyticsEventsHandler"
   lambda_environment_variables = {
-    SSM_KEY_ID_PARAMETER_NAME = "/app/kms/ContentSigningKeyArn"
-    ACCEPT_REQUESTS_ENABLED   = true
-    custom_oai                = random_uuid.submission-custom-oai.result
-    firehose_stream_name      = aws_kinesis_firehose_delivery_stream.analytics_events_stream.name
-    firehose_ingest_enabled   = "true"
-    firehose_retry_times      = "50"
-    firehose_retry_delay      = "100" // millis -- in total keep retrying for 5 seconds (50 * 100).
-    json_ingest_enabled       = "true"
+    SSM_KEY_ID_PARAMETER_NAME        = "/app/kms/ContentSigningKeyArn"
+    ACCEPT_REQUESTS_ENABLED          = true
+    custom_oai                       = random_uuid.submission-custom-oai.result
+    firehose_stream_name             = aws_kinesis_firehose_delivery_stream.analytics_events_stream.name
+    firehose_ingest_enabled          = "true"
+    analytics_events_sub_retry_times = "50"
+    analytics_events_sub_retry_delay = "100" // millis -- in total keep retrying for 5 seconds (50 * 100).
+    json_ingest_enabled              = "true"
   }
   burst_limit              = var.burst_limit
   rate_limit               = var.rate_limit

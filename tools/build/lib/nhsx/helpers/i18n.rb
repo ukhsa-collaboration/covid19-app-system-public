@@ -88,6 +88,28 @@ module NHS
         tier_metadata[tier_label]["linkUrl"] = translations["#{tier_label}.LinkURL"]
         tier_metadata[tier_label]["linkTitle"] = translations["#{tier_label}.LinkTitle"]
 
+        tier_external_links = {}
+        tier_external_links_data = translations.keys.select { |v| v.start_with?("#{tier_label}.ExternalUrls.") }
+          .map { |v| v.gsub("#{tier_label}.ExternalUrls.", "").split(".").first }
+
+        tier_external_links_data.each do |links|
+          if links != "title"
+            tier_external_links[links] = {
+              "title" => translations["#{tier_label}.ExternalUrls.#{links}.Title"],
+              "url" => translations["#{tier_label}.ExternalUrls.#{links}.Url"],
+            }
+          end
+        end
+
+        if tier_external_links.empty?
+          puts "No external links for #{tier_label}"
+        else
+          tier_metadata[tier_label]["externalUrls"] = {
+            "title" => translations["#{tier_label}.ExternalUrls.title"],
+            "urls" => tier_external_links.map { |_, v| v },
+          }
+        end
+
         tier_policies = {}
         tier_policy_data = translations.keys.select { |v| v.start_with?("#{tier_label}.PolicyData.Policies.") }
           .map { |v| v.gsub("#{tier_label}.PolicyData.Policies.", "").split(".").first }

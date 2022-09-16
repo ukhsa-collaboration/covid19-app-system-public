@@ -7,7 +7,7 @@ module NHS
     def import_translations(api_key, project_id, system_config)
       lokalise_client = Lokalise.client api_key
 
-      lokalise_messages = lokalise_client.keys(project_id, { :limit => 5000 }).collection.select { |e| e.tags.include? "backend" }
+      lokalise_messages = retrieve_all_lokalise_keys(lokalise_client, project_id, "backend", 500)
       lokalise_export = {}
       lokalise_messages.each do |key|
         key_name = key.key_name["web"]
@@ -32,7 +32,7 @@ module NHS
       voc_messages = {}
       error_messages = []
 
-      lokalise_messages = lokalise_client.keys(project_id, { :limit => 5000 }).collection.select { |e| e.tags.include? "message" }
+      lokalise_messages = retrieve_all_lokalise_keys(lokalise_client, project_id, "message", 500)
       lokalise_messages.each do |key|
         message_key = key.key_name["web"]
         # download and check the schema
@@ -43,6 +43,14 @@ module NHS
       raise GaudiError, "schema validation error\n#{error_messages.join("\n")}" unless error_messages.empty?
 
       return voc_messages
+    end
+
+    def retrieve_all_lokalise_keys(lokalise_client, project_id, filter_tag, limit)
+      lokalise_all_keys = []
+        for i in 1..lokalise_client.keys(project_id, { :limit => limit }).total_pages
+          lokalise_all_keys.concat(lokalise_client.keys(project_id, { :limit => limit, :page => i }).collection)
+        end
+      return lokalise_all_keys.select { |e| e.tags.include? filter_tag }
     end
 
     def extract_local_message_translations(api_key, lokalise_key, lokalise_project, system_config)

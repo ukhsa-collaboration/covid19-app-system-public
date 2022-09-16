@@ -54,7 +54,7 @@ class DataExportService(
                     val jsonObject = Json.readJsonOrThrow<UpdateDueDates>(it)
                     val scheduledDate = jsonObject.nextUpdate.toInstant().truncatedTo(DAYS)
                     val todayDate = today.truncatedTo(DAYS)
-                    if (scheduledDate == todayDate) {
+                    if (scheduledDate <= todayDate) {
                         triggerAllQueries()
                         val updateDueDates = UpdateDueDates(nextUpdateDate.atOffset(ZoneOffset.UTC), today.atOffset(ZoneOffset.UTC))
                         val json = Json.toJson(updateDueDates)

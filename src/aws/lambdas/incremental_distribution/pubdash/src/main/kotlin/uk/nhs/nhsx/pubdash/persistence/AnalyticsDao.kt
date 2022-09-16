@@ -133,13 +133,14 @@ class AnalyticsDao(
             SUM(totalCheckIns) AS "Check-ins (Cofrestriadau)",
             SUM(countUsersCompletedQuestionnaireAndStartedIsolation) AS "v1 Symptoms reported (v1 Symptomau a adroddwyd)", /* wer 17-05-2022 updated to refer to column as v1 symptom checker measure */
 			SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) AS "v2 Symptoms reported (v2 Symptomau a adroddwyd)", /* wer 17-05-2022 added v2 symptom checker measure */
+			SUM(countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms) AS "v3 Symptoms reported (v3 Symptomau a adroddwyd)", /* yb 09-08-2022 added v3 symptom checker measure */
             SUM(countUsersReceivedPositiveTestResult) AS "Positive test results linked to app (Canlyniadau prawf positif)",
             SUM(countUsersReceivedNegativeTestResult) AS "Negative test results linked to app (Canlyniadau prawf negatif)",
             SUM(countUsersReceivedRiskyContactNotification) AS "Contact tracing alert (Hysbysiadau olrhain cyswllt)",
             
             /* Cumulative Measures */
             SUM(SUM(totalCheckIns)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative check-ins (Cofrestriadau cronnus)",
-            SUM(SUM(countUsersCompletedQuestionnaireAndStartedIsolation + countUserscompletedV2SymptomsQuestionnaireAndStayAtHome)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative symptoms reported (Symptomau a adroddwyd cronnus)", /* wer 17-05-2022 added v2 symptom checker measure */
+            SUM(SUM(countUsersCompletedQuestionnaireAndStartedIsolation + countUserscompletedV2SymptomsQuestionnaireAndStayAtHome + countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative symptoms reported (Symptomau a adroddwyd cronnus)", /* wer 17-05-2022 added v2 symptom checker measure */
             SUM(SUM(countUsersReceivedPositiveTestResult)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative positive test results linked to app (Canlyniadau prawf positif cronnus)",
             SUM(SUM(countUsersReceivedNegativeTestResult)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative negative test results linked to app (Canlyniadau prawf negatif cronnus)",
             SUM(SUM(countUsersReceivedRiskyContactNotification)) OVER (PARTITION BY country ORDER BY lastDayReportingWeek) AS "Cumulative contact tracing alert (Hysbysiadau olrhain cyswllt cronnus)"
@@ -177,7 +178,8 @@ class AnalyticsDao(
                 SUM(countUsersReceivedPositiveTestResult) AS countUsersReceivedPositiveTestResult,
                 SUM(countUsersReceivedNegativeTestResult) AS countUsersReceivedNegativeTestResult,
                 SUM(countUsersCompletedQuestionnaireAndStartedIsolation) AS countUsersCompletedQuestionnaireAndStartedIsolation,
-				SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) AS countUserscompletedV2SymptomsQuestionnaireAndStayAtHome /* wer 17-05-2022 added v2 symptom checker measure */
+				SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) AS countUserscompletedV2SymptomsQuestionnaireAndStayAtHome, /* wer 17-05-2022 added v2 symptom checker measure */
+				SUM(countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms) AS countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms /* yb 09-08-2022 added v3 symptom checker measure */
         
             FROM(
                 SELECT
@@ -187,7 +189,8 @@ class AnalyticsDao(
                     SUM(checkedin) AS totalCheckIns,
                     SUM(completedQuestionnaireAndStartedIsolationInd) AS countUsersCompletedQuestionnaireAndStartedIsolation,
 					SUM(completedV2SymptomsQuestionnaireAndStayAtHomeInd) as countUserscompletedV2SymptomsQuestionnaireAndStayAtHome, /* wer 17-05-2022 added v2 symptom checker measure */
-                    SUM(receivedPositiveTestResultInd) AS countUsersReceivedPositiveTestResult,
+                    SUM(completedV3SymptomsQuestionnaireAndHasSymptomsInd) as countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms, /* yb 09-08-2022 added v3 symptom checker measure */
+					SUM(receivedPositiveTestResultInd) AS countUsersReceivedPositiveTestResult,
                     SUM(receivedNegativeTestResultInd) AS countUsersReceivedNegativeTestResult,
                     SUM(receivedRiskyContactNotificationInd) AS countUsersReceivedRiskyContactNotification
                 FROM(
@@ -201,6 +204,7 @@ class AnalyticsDao(
                         CASE WHEN date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2022-02-24') THEN NULL ELSE (aad.checkedin - aad.canceledcheckin) END AS checkedin, /*wer 17-02-2022 Updated to null values following ending of checkins and risky venue*/
                         CASE WHEN aad.completedquestionnaireandstartedisolation > 0 THEN 1 ELSE 0 END AS completedQuestionnaireAndStartedIsolationInd,
 						CASE WHEN aad.completedV2SymptomsQuestionnaireAndStayAtHome > 0 THEN 1 ELSE 0 END AS completedV2SymptomsQuestionnaireAndStayAtHomeInd, /* wer 17-05-2022 added v2 symptom checker measure */
+						CASE WHEN aad.completedV3SymptomsQuestionnaireAndHasSymptoms > 0 THEN 1 ELSE 0 END AS completedV3SymptomsQuestionnaireAndHasSymptomsInd, /* yb 09-08-2022 added v3 symptom checker measure */
                         CASE WHEN aad.receivedpositivetestresult > 0 THEN 1 ELSE 0 END AS receivedPositiveTestResultInd,
                         CASE WHEN aad.receivednegativetestresult > 0 THEN 1 ELSE 0 END AS receivedNegativeTestResultInd,
                         CASE
@@ -304,14 +308,15 @@ class AnalyticsDao(
             /* Measures */
             SUM(totalCheckIns) AS "Check-ins (Cofrestriadau)",
             SUM(countUsersCompletedQuestionnaireAndStartedIsolation) AS "v1 Symptoms reported (v1 Symptomau a adroddwyd)", /* wer 17-05-2022 updated to refer to column as v1 symptom checker measure */
-			SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) AS "v2 Symptoms reported (v2 Symptomau a adroddwyd)", /* wer 17-05-2022 added v2 symptom checker measure */
+            SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) AS "v2 Symptoms reported (v2 Symptomau a adroddwyd)", /* wer 17-05-2022 added v2 symptom checker measure */
+            SUM(countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms) AS "v3 Symptoms reported (v3 Symptomau a adroddwyd)", /* yb 09-08-2022 added v3 symptom checker measure */
             SUM(countUsersReceivedPositiveTestResult) AS "Positive test results linked to app (Canlyniadau prawf positif)",
             SUM(countUsersReceivedNegativeTestResult) AS "Negative test results linked to app (Canlyniadau prawf negatif)",
             SUM(countUsersReceivedRiskyContactNotification) AS "Contact tracing alert (Hysbysiadau olrhain cyswllt)",
             
             /* Cumulative Measures */
             SUM(SUM(totalCheckIns)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative check-ins (Cofrestriadau cronnus)",
-            SUM(SUM(countUsersCompletedQuestionnaireAndStartedIsolation + countUserscompletedV2SymptomsQuestionnaireAndStayAtHome)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative symptoms reported (Symptomau a adroddwyd cronnus)", /* wer 17-05-2022 added v2 symptom checker measure */
+            SUM(SUM(countUsersCompletedQuestionnaireAndStartedIsolation + countUserscompletedV2SymptomsQuestionnaireAndStayAtHome + countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative symptoms reported (Symptomau a adroddwyd cronnus)", /* wer 17-05-2022 added v2 symptom checker measure */
             SUM(SUM(countUsersReceivedPositiveTestResult)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative positive test results linked to app (Canlyniadau prawf positif cronnus)",
             SUM(SUM(countUsersReceivedNegativeTestResult)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative negative test results linked to app (Canlyniadau prawf negatif cronnus)",
             SUM(SUM(countUsersReceivedRiskyContactNotification)) OVER (PARTITION BY localAuthority ORDER BY lastDayReportingWeek) AS "Cumulative contact tracing alert (Hysbysiadau olrhain cyswllt cronnus)"
@@ -382,11 +387,15 @@ class AnalyticsDao(
                     SUM(countUsersCompletedQuestionnaireAndStartedIsolation) < 5 AND SUM(countUsersCompletedQuestionnaireAndStartedIsolation) > 0 THEN 5
                     ELSE SUM(countUsersCompletedQuestionnaireAndStartedIsolation) 
                 END AS countUsersCompletedQuestionnaireAndStartedIsolation,
-				CASE WHEN 
-					SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) < 5 AND SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) > 0 THEN 5
-					ELSE SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome)
-				END AS countUserscompletedV2SymptomsQuestionnaireAndStayAtHome /* wer 17-05-2022 added v2 symptom checker measure */
-					
+                CASE WHEN 
+                    SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) < 5 AND SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome) > 0 THEN 5
+                    ELSE SUM(countUserscompletedV2SymptomsQuestionnaireAndStayAtHome)
+                END AS countUserscompletedV2SymptomsQuestionnaireAndStayAtHome, /* wer 17-05-2022 added v2 symptom checker measure */
+                CASE WHEN
+                    SUM(countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms) < 5 AND SUM(countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms) > 0 THEN 5 
+                    ELSE SUM(countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms)
+                END AS countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms /* yb 09-08-2022 added v3 symptom checker measure */
+        
         
             FROM(
                 SELECT
@@ -395,7 +404,8 @@ class AnalyticsDao(
                     lad20cd,
                     SUM(checkedin) AS totalCheckIns,
                     SUM(completedQuestionnaireAndStartedIsolationInd) AS countUsersCompletedQuestionnaireAndStartedIsolation,
-					SUM(completedV2SymptomsQuestionnaireAndStayAtHomeInd) as countUserscompletedV2SymptomsQuestionnaireAndStayAtHome, /* wer 17-05-2022 added v2 symptom checker measure */
+                    SUM(completedV2SymptomsQuestionnaireAndStayAtHomeInd) as countUserscompletedV2SymptomsQuestionnaireAndStayAtHome, /* wer 17-05-2022 added v2 symptom checker measure */
+                    SUM(completedV3SymptomsQuestionnaireAndHasSymptomsInd) as countUserscompletedV3SymptomsQuestionnaireAndHasSymptoms, /* yb 09-08-2022 added v3 symptom checker measure */
                     SUM(receivedPositiveTestResultInd) AS countUsersReceivedPositiveTestResult,
                     SUM(receivedNegativeTestResultInd) AS countUsersReceivedNegativeTestResult,
                     SUM(receivedRiskyContactNotificationInd) AS countUsersReceivedRiskyContactNotification
@@ -410,7 +420,8 @@ class AnalyticsDao(
                         CASE WHEN date_parse(substring(aad.startdate,1,10), '%Y-%c-%d') >= date('2022-02-24') THEN NULL ELSE (aad.checkedin - aad.canceledcheckin) END AS checkedin, /*wer 17-02-2022 Updated to null values following ending of checkins and risky venue*/
                         CASE WHEN aad.completedquestionnaireandstartedisolation > 0 THEN 1 ELSE 0 END AS completedQuestionnaireAndStartedIsolationInd,
                         CASE WHEN aad.completedV2SymptomsQuestionnaireAndStayAtHome > 0 THEN 1 ELSE 0 END AS completedV2SymptomsQuestionnaireAndStayAtHomeInd, /* wer 17-05-2022 added v2 symptom checker measure */
-						CASE WHEN aad.receivedpositivetestresult > 0 THEN 1 ELSE 0 END AS receivedPositiveTestResultInd,
+                        CASE WHEN aad.completedV3SymptomsQuestionnaireAndHasSymptoms > 0 THEN 1 ELSE 0 END AS completedV3SymptomsQuestionnaireAndHasSymptomsInd, /* yb 09-08-2022 added v3 symptom checker measure */
+                        CASE WHEN aad.receivedpositivetestresult > 0 THEN 1 ELSE 0 END AS receivedPositiveTestResultInd,
                         CASE WHEN aad.receivednegativetestresult > 0 THEN 1 ELSE 0 END AS receivedNegativeTestResultInd,
                         CASE
                             WHEN

@@ -1,10 +1,10 @@
 package uk.nhs.nhsx.analyticsevents
 
+import com.amazonaws.AmazonClientException
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder
 import com.amazonaws.services.kinesisfirehose.model.PutRecordRequest
 import com.amazonaws.services.kinesisfirehose.model.Record
-import com.amazonaws.services.kinesisfirehose.model.ServiceUnavailableException
 import uk.nhs.nhsx.analyticssubmission.AnalyticsMapFlattener
 import uk.nhs.nhsx.analyticssubmission.PostDistrictLaReplacer
 import uk.nhs.nhsx.core.ContentType.Companion.APPLICATION_JSON
@@ -18,7 +18,6 @@ import uk.nhs.nhsx.core.aws.s3.ObjectKeyNameProvider
 import uk.nhs.nhsx.core.events.Events
 import java.nio.ByteBuffer
 import java.util.*
-import kotlin.reflect.KClass
 
 class AnalyticsEventsSubmissionService(
     private val awsS3: AwsS3,
@@ -26,14 +25,16 @@ class AnalyticsEventsSubmissionService(
     private val bucketName: BucketName,
     private val events: Events,
     private val firehoseClient: FirehoseClient,
+    private val retrier: Retrier = Retrier(1, 0),
 ) {
     fun accept(payload: Map<String, Any>) {
         val transformedPayload = transformPayload(payload)
-        uploadToS3(toJson(transformedPayload))
+        retrier.retryAmazonClient { uploadToS3(toJson(transformedPayload)) }
 
         if (firehoseClient.enabled) {
-            val flattenedPayloads = flattenPayload(transformedPayload)
-            flattenedPayloads.forEach { firehoseClient.uploadWithRetry(toJson(it)) }
+            flattenPayload(transformedPayload).map(::toJson).forEach {
+                    retrier.retryAmazonClient { firehoseClient.upload(it) }
+                }
         }
     }
 
@@ -43,9 +44,7 @@ class AnalyticsEventsSubmissionService(
         val currentPostalDistrict = metadata["postalDistrict"] as String
         val currentLocalAuthority = metadata["localAuthority"] as String?
         val mappedPostDistrict = PostDistrictLaReplacer(
-            currentPostalDistrict,
-            currentLocalAuthority,
-            events
+            currentPostalDistrict, currentLocalAuthority, events
         )
 
         return payload.toMutableMap().apply {
@@ -71,10 +70,7 @@ class AnalyticsEventsSubmissionService(
         // not enforce this, thus when we flatten the data structure we should be prepared to handle cases where events
         // contains multiple requirements
         val events = payload["events"]
-        val payloadCopy =
-            AnalyticsMapFlattener.flattenRecursively(
-                payload.filter { (key, _value) -> key != "events" }
-            )
+        val payloadCopy = AnalyticsMapFlattener.flattenRecursively(payload.filter { (key, _value) -> key != "events" })
         if (events !is List<*>) {
             throw IllegalArgumentException("events is not a list")
         }
@@ -90,32 +86,23 @@ class FirehoseClient(
     val enabled: Boolean,
     private val streamName: String,
     private val client: AmazonKinesisFirehose,
-    private val retrier: Retrier = Retrier(1, 0)
 ) {
     fun upload(json: String) {
         if (!enabled) {
             throw IllegalStateException("upload is disabled")
         }
         val record = Record().withData(ByteBuffer.wrap(json.toByteArray()))
-        val putRecordRequest = PutRecordRequest()
-            .withRecord(record)
-            .withDeliveryStreamName(streamName)
+        val putRecordRequest = PutRecordRequest().withRecord(record).withDeliveryStreamName(streamName)
         client.putRecord(putRecordRequest)
     }
-
-    fun uploadWithRetry(json: String) = retrier.retry(cause = ServiceUnavailableException::class) { upload(json) }
 
     companion object {
         private val ENABLED = Environment.EnvironmentKey.bool("firehose_ingest_enabled")
         private val STREAM_NAME = Environment.EnvironmentKey.string("firehose_stream_name")
-        private val RETRY_TIMES = Environment.EnvironmentKey.integer("firehose_retry_times")
-        private val RETRY_DELAY = Environment.EnvironmentKey.long("firehose_retry_delay")
 
         fun from(env: Environment): FirehoseClient {
             val enabled = env.access.optional(ENABLED).orElse(false)
             val streamName = env.access.optional(STREAM_NAME).orElse("")
-            val retryTimes = env.access.optional(RETRY_TIMES).orElse(1)
-            val retryDelay = env.access.optional(RETRY_DELAY).orElse(0)
             if (enabled && streamName == "") {
                 throw IllegalStateException("firehose ingestion is enabled, but no stream name was provided")
             }
@@ -124,38 +111,60 @@ class FirehoseClient(
                 enabled,
                 streamName,
                 AmazonKinesisFirehoseClientBuilder.defaultClient(),
-                Retrier(retryTimes, retryDelay),
             )
         }
     }
 }
 
 class Retrier(
-    private val times: Int = 1, // total number of times to try something -- 1 means no retrying
-    private val delayMillis: Long = 0,
+    private val times: Int = DEFAULT_RETRY_TIMES, // total number of times to try something -- 1 means no retrying
+    private val delayMillis: Long = DEFAULT_RETRY_DELAY,
 ) {
     init {
         assert(times >= 1)
         assert(delayMillis >= 0)
     }
 
-    fun <T> retry(cause: KClass<out Exception>, block: () -> T) = retry(times, delayMillis, cause, block)
-
-    fun <T> retry(times: Int, delayMillis: Long, cause: KClass<out Exception>, block: () -> T): T {
+    fun <T> retry(block: () -> T, handler: (Exception) -> Outcome): T {
         for (i in 1 until times) {
             try {
                 return block()
             } catch (ex: Exception) {
-                if (!cause.isInstance(ex)) {
-                    // unknown exception: rethrow
-                    throw ex
-                }
-                if (delayMillis > 0) {
-                    Thread.sleep(delayMillis)
+                when (handler(ex)) {
+                    Outcome.FAIL -> throw ex
+                    Outcome.RETRY -> sleep(delayMillis)
                 }
             }
         }
         // final attempt: do not catch any errors
         return block()
+    }
+
+    fun <T> retryAmazonClient(block: () -> T) = retry(block, ::amazonClientHandler)
+
+    private fun sleep(delayMillis: Long) {
+        if (delayMillis > 0) {
+            Thread.sleep(delayMillis)
+        }
+    }
+
+    enum class Outcome {
+        RETRY, FAIL
+    }
+
+    fun amazonClientHandler(ex: Exception) =
+        if (ex is AmazonClientException && ex.isRetryable) Outcome.RETRY else Outcome.FAIL
+
+    companion object {
+        private val RETRY_TIMES = Environment.EnvironmentKey.integer("analytics_events_sub_retry_times")
+        private val RETRY_DELAY = Environment.EnvironmentKey.long("analytics_events_sub_retry_delay")
+        private const val DEFAULT_RETRY_TIMES = 1
+        private const val DEFAULT_RETRY_DELAY = 0L
+
+        fun from(env: Environment): Retrier {
+            val times = env.access.optional(RETRY_TIMES).orElse(DEFAULT_RETRY_TIMES)
+            val delay = env.access.optional(RETRY_DELAY).orElse(DEFAULT_RETRY_DELAY)
+            return Retrier(times, delay)
+        }
     }
 }
