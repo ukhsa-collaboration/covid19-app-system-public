@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.virology.policy
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
@@ -86,6 +87,7 @@ class VirologyPolicyConfigTest {
 
     @ParameterizedTest
     @MethodSource("requiresConfirmatoryTestForCertainCases")
+    @Disabled
     fun `confirmatory test is required for RAPID_RESULT, RAPID_SELF_REPORTED test kit on specific mobile versions`(
         criteria: VirologyCriteria,
         version: MobileAppVersion

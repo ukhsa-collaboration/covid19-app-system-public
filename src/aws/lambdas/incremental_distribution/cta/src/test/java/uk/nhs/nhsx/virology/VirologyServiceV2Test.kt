@@ -257,7 +257,7 @@ class VirologyServiceV2Test {
     }
 
     @ParameterizedTest
-    @CsvSource("England,true", "Wales,false", "random,false")
+    @CsvSource("England,false", "Wales,false", "random,false")
     fun `exchanges cta token requesting confirmatory test for each country`(country: String, expectedFlag: Boolean) {
         val testOrder = TestOrder(
             ctaToken,

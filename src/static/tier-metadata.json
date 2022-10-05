@@ -417,7 +417,7 @@
     "colorSchemeV2": "amber",
     "name": {
       "ar": "يقع [postcode] في المستوى الثاني (تحذير مرتفع)",
-      "bn": "[postcode] টায়ার টুয়ৈর (উচ্চ সতর্কতার) মধ্যে পড়েছে",
+      "bn": "[postcode] টায়ার টু-এর (উচ্চ সতর্কতার) মধ্যে পড়েছে",
       "cy": "Mae [postcode] yn Haen Dau (rhybudd uchel)",
       "en": "[postcode] is in Tier Two (High Alert)",
       "gu": "[postcode] એ ટિયર ટૂ  (હાય કે વધું જોખમ)",
@@ -820,6 +820,84 @@
             "tr": "Bu mekanlar açık kalacaktır, ancak oradayken altıdan fazla kişiyle etkileşime girmeyiniz.",
             "ur": "یہ کھلے رہیں گے، لیکن وہاں ہونے پر اپنے گھرانے یا دائرے سے باہر کے لوگوں کے ساتھ بات چیت مت کریں۔",
             "zh": "这些地方保持开放，但不要在那里与家人或泡沫以外的人互动。  "
+          }
+        }
+      ]
+    },
+    "externalUrls": {
+      "title": {
+        "ar": "",
+        "bn": "",
+        "cy": "",
+        "en": "Tier2 External title for external urls",
+        "gu": "",
+        "pa": "",
+        "pl": "",
+        "ro": "",
+        "so": "",
+        "tr": "",
+        "ur": "",
+        "zh": ""
+      },
+      "urls": [
+        {
+          "title": {
+            "ar": "",
+            "bn": "",
+            "cy": "",
+            "en": "Tier2 Url1 title",
+            "gu": "",
+            "pa": "",
+            "pl": "",
+            "ro": "",
+            "so": "",
+            "tr": "",
+            "ur": "",
+            "zh": ""
+          },
+          "url": {
+            "ar": "",
+            "bn": "",
+            "cy": "",
+            "en": "Tier2 Url1 Url",
+            "gu": "",
+            "pa": "",
+            "pl": "",
+            "ro": "",
+            "so": "",
+            "tr": "",
+            "ur": "",
+            "zh": ""
+          }
+        },
+        {
+          "title": {
+            "ar": "",
+            "bn": "",
+            "cy": "",
+            "en": "Tier2 Url2 title",
+            "gu": "",
+            "pa": "",
+            "pl": "",
+            "ro": "",
+            "so": "",
+            "tr": "",
+            "ur": "",
+            "zh": ""
+          },
+          "url": {
+            "ar": "",
+            "bn": "",
+            "cy": "",
+            "en": "Tier2 Url2 Url",
+            "gu": "",
+            "pa": "",
+            "pl": "",
+            "ro": "",
+            "so": "",
+            "tr": "",
+            "ur": "",
+            "zh": ""
           }
         }
       ]
@@ -4397,7 +4475,7 @@
       "pa": "ਨਵੀਨਤਮ ਸਲਾਹ ਪੜ੍ਹੋ",
       "pl": "Zapoznaj się z najnowszymi wytycznymi",
       "ro": "Citiți ultimele sfaturi",
-      "so": "Akhri talooyinka ugu dambeeya",
+      "so": "Akhri talooyinka ugu dambeeyay",
       "tr": "En güncel tavsiyeleri okuyun",
       "ur": "تازہ ترین مشورہ پڑھیں",
       "zh": "阅读最新建议"
@@ -4471,7 +4549,7 @@
       "pa": "ਨਵੀਨਤਮ ਸਲਾਹ ਪੜ੍ਹੋ",
       "pl": "Zapoznaj się z najnowszymi wytycznymi",
       "ro": "Citiți ultimele sfaturi",
-      "so": "Akhri talooyinka ugu dambeeya",
+      "so": "Akhri talooyinka ugu dambeeyay",
       "tr": "En güncel tavsiyeleri okuyun",
       "ur": "تازہ ترین مشورہ پڑھیں",
       "zh": "阅读最新建议"
@@ -4747,7 +4825,7 @@
     "linkUrl": {
       "ar": "https://gov.wales/coronavirus",
       "bn": "https://gov.wales/coronavirus",
-      "cy": "https://llyw.cymru/coronafeirws",
+      "cy": "https://gov.wales/coronavirus",
       "en": "https://gov.wales/coronavirus",
       "gu": "https://gov.wales/coronavirus",
       "pa": "https://gov.wales/coronavirus",
@@ -4780,7 +4858,7 @@
       "ar": "تظل جائحة فيروس كورونا خطرًا داهمًا على الصحة. من الأهمية بمكان توخي الحذر على الدوام والمساعدة في حماية أنفسكم والآخرين.",
       "bn": "করোনাভাইরাস এখনও একটি গুরুতর স্বাস্থ্যঝুঁকি হিসাবে রয়ে গেছে। তাই সতর্ক থাকা এবং নিজেকে ও অন্যদের সুরক্ষিত রাখতে সহায়তা করা গুরুত্বপূর্ণ।",
       "cy": "Mae Coronafeirws yn parhau i fod yn risg ddifrifol i iechyd. Mae hi'n bwysig parhau i fod yn ochelgar a helpu i'ch diogelu eich hun ac eraill.",
-      "en": "Coronavirus remains a serious health risk. It's important to stay cautious and help protect yourself and others",
+      "en": "Coronavirus remains a serious health risk. It’s important to stay cautious and help protect yourself and others",
       "gu": "કોરોનાવાયરસ એ આરોગ્ય માટે ગંભીર જોખમ રહેવાનું ચાલુ રહે છે.",
       "pa": "ਕੋਰੋਨਾਵਾਇਰਸ ਸਿਹਤ ਲਈ ਇੱਕ ਗੰਭੀਰ ਜੋਖਮ ਬਣਿਆ ਹੋਇਆ ਹੈ। ਸਾਵਧਾਨ ਰਹਿਣਾ ਅਤੇ ਆਪਣੀ ਅਤੇ ਦੂਜਿਆਂ ਦੀ ਰੱਖਿਆ ਕਰਨ ਵਿੱਚ ਸਹਾਇਤਾ ਕਰਨਾ ਮਹੱਤਵਪੂਰਨ ਹੈ।",
       "pl": "'Koronawirus nadal stanowi poważne ryzyko dla zdrowia. Zachowywanie ostrożności jest istotne, aby chronić siebie i innych.",
@@ -4841,7 +4919,7 @@
       "pa": "ਨਵੀਨਤਮ ਸਲਾਹ ਪੜ੍ਹੋ",
       "pl": "Zapoznaj się z najnowszymi wytycznymi",
       "ro": "Citiți ultimele sfaturi",
-      "so": "Akhri talooyinka ugu dambeeya",
+      "so": "Akhri talooyinka ugu dambeeyay",
       "tr": "En güncel tavsiyeleri okuyun",
       "ur": "تازہ ترین مشورہ پڑھیں",
       "zh": "阅读最新建议"
@@ -4967,18 +5045,18 @@
       "zh": "这包括在某些环境下NHS COVID通行证的强制使用、在大多数室内公共环境下佩戴口罩的法律要求，以及居家办公的新指南（若可行）。\n\n我们都可以通过遵循最新的建议来帮助降低风险。"
     },
     "linkUrl": {
-      "ar": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "bn": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "cy": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "en": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "gu": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "pa": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "pl": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "ro": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "so": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "tr": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "ur": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "zh": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/"
+      "ar": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "bn": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "cy": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "en": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "gu": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "pa": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "pl": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "ro": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "so": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "tr": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "ur": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "zh": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19"
     },
     "linkTitle": {
       "ar": "قراءة آخر النصائح المتوفرة",
@@ -5115,18 +5193,18 @@
       "zh": "继续遵循更安全的行为来保护自己和他人： \n-接种疫苗，并且接种加强针\n-室内会面时请保持室内通风，我们建议室外会面\n-进行检测，必要时进行自我隔离\n-相关法律已不再强制要求您佩戴口罩。然而，政府建议在拥挤和封闭的空间佩戴口罩，我们在此会接触到陌生人\n\n让我们遵循最新的建议，从而帮助降低相关风险。"
     },
     "linkUrl": {
-      "ar": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "bn": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "cy": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "en": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "gu": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "pa": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "pl": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "ro": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "so": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "tr": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "ur": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "zh": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/"
+      "ar": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "bn": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "cy": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "en": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "gu": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "pa": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "pl": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "ro": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "so": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "tr": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "ur": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "zh": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19"
     },
     "linkTitle": {
       "ar": "قراءة آخر النصائح المتوفرة",
@@ -5179,7 +5257,7 @@
       "bn": "COVID-19 এ আক্রান্ত হওয়া এবং তা ছড়িয়ে পড়ার ঝুঁকি কমাতে আপনি এখনও কিছু পদক্ষেপ নিতে পারেন:\n\n-টিকা নিন\n-জনবহুল, চারদিক ঘেরা জায়গায় মুখ ঢাকার আবরণ পরার কথা বিবেচনা করুন\n-আপনি বাড়ির ভিতরে দেখা করলে তাজা বাতাস প্রবেশ করতে দিন, অথবা বাইরে দেখা করুন\n\nআমরা সবাই সর্বশেষ পরামর্শ অনুসরণ করে ঝুঁকি কমাতে সাহায্য করতে পারি।",
       "cy": "Mae yna gamau y gallwch dal i’w cymryd i leihau'r risg o ddal a lledaenu COVID-19:\n\n-Cael brechlyn\n-Ystyried gwisgo gorchudd wyneb mewn lleoliadau prysur, amgaeedig\n-Gadael awyr iach i mewn os byddwch chi'n cwrdd da do, neu gwrdd tu allan\n\nGall pawb ohonom helpu lleihau'r risgiau trwy ddilyn y cyngor diweddaraf.",
       "en": "There are still steps you can take to reduce the risk of catching and spreading COVID-19:\n\n-Get vaccinated\n-Consider wearing a face covering in crowded, enclosed spaces\n-Let fresh air in if you meet indoors, or meet outside\n\nWe can all help to reduce risks by following the latest advice.",
-      "gu": "હજીયે એવાં પગલાં છે જે લઈને તમે COVID-19 થવાના કે તેનો ફેલાવો કરવાના જોખમને ઘટાડી શકો છો:\n\n-રસી લો\n-ગીચ, બંધ જગ્યાઓમાં માસ્ક પહેરવા વિશે વિચાર કરો\n-જો તમે ઘરની અંદર મળો તો તાજી હવા આવવા દો અથવા બહાર મળો\n\nનવીનતમ સલાહને અનુસરીને આપણે સૌ જોખમોને ઘટાડવામાં મદદ કરી શકીએ છીએ.",
+      "gu": "હજીયે એવાં પગલાં છે જે લઈને તમે COVID-19 થવાના કે તેનો ફેલાવો કરવાના જોખમને ઘટાડી શકો છો:\n\n-રસી લો\n-ગીચ, બંધ જગ્યાઓમાં માસ્ક પહેરવા વિશે વિચાર કરો\n-જો તમે ઘરની અંદર મળો તો તાજી હવા આવવા દો, અથવા બહાર મળો\n\nનવીનતમ સલાહને અનુસરીને આપણે સૌ જોખમોને ઘટાડવામાં મદદ કરી શકીએ છીએ.",
       "pa": "ਹਾਲੇ ਵੀ ਅਜਿਹੇ ਕਦਮ ਹਨ ਜੋ ਤੁਸੀਂ COVID-19 ਦੀ ਪਕੜ ਵਿੱਚ ਆਉਣ ਅਤੇ ਇਸ ਨੂੰ ਫੈਲਾਉਣ ਦੇ ਜੋਖਮ ਨੂੰ ਘਟਾਉਣ ਲਈ ਚੁੱਕ ਸਕਦੇ ਹੋ:\n\n-ਟੀਕਾ ਲਗਵਾਓ\n-ਭੀੜ-ਭੜੱਕੇ ਵਾਲੀਆਂ, ਬੰਦ ਥਾਵਾਂ 'ਤੇ ਚਿਹਰਾ ਢੱਕਣ ਬਾਰੇ ਵਿਚਾਰ ਕਰੋ\n-ਜੇ ਤੁਸੀਂ ਅੰਦਰ ਮਿਲਦੇ ਹੋ ਤਾਂ ਤਾਜ਼ੀ ਹਵਾ ਨੂੰ ਅੰਦਰ ਆਉਣ ਦਿਓ ਜਾਂ ਬਾਹਰ ਮਿਲੋ\n\nਅਸੀਂ ਸਾਰੇ ਤਾਜ਼ਾ ਸਲਾਹ ਦੀ ਪਾਲਣਾ ਕਰਕੇ ਜੋਖਮਾਂ ਨੂੰ ਘਟਾਉਣ ਵਿੱਚ ਮਦਦ ਕਰ ਸਕਦੇ ਹਾਂ।",
       "pl": "Nadal jednak możesz podejmować kroki zmniejszające ryzyko zarażenia się wirusem COVID-19 i rozprzestrzenianie go:\n\n-Zaszczep się\n-Rozważ zakrywanie twarzy w zatłoczonych, zamkniętych pomieszczeniach\n-Przewietrz pomieszczenie przed spotkaniem z innymi lub spotkajcie się na świeżym powietrzu\n\nKażdy z nas może przyczynić się do ograniczenia ryzyka stosując się do aktualnych zaleceń.",
       "ro": "Puteți respecta în continuare anumiți pași pentru reducerea riscului de îmbolnăvire și răspândire a virusului COVID-19:\n\n-Vaccinați-vă\n-Purtați masca de protecție în spațiile aglomerate închise\n-Ventilați bine încăperea în timpul întâlnirilor în interior sau întâlniți-vă în spații deschise\n\nCu toții putem ajuta la reducerea riscurilor prin respectarea celor mai recente recomandări.",
@@ -5189,18 +5267,18 @@
       "zh": "您仍然可以采取一些措施来降低感染和传播 COVID-19 的风险：\n\n-接种疫苗\n-在拥挤、封闭的空间内佩戴面罩\n-室内会面时请保持室内通风，或者请考虑室外会面\n\n让我们遵循最新的建议，共同降低相关风险。"
     },
     "linkUrl": {
-      "ar": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "bn": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "cy": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "en": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "gu": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "pa": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "pl": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "ro": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "so": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "tr": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "ur": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/",
-      "zh": "https://www.gov.uk/guidance/covid-19-coronavirus-restrictions-what-you-can-and-cannot-do/"
+      "ar": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "bn": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "cy": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "en": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "gu": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "pa": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "pl": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "ro": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "so": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "tr": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "ur": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19",
+      "zh": "https://www.gov.uk/guidance/living-safely-with-respiratory-infections-including-covid-19"
     },
     "linkTitle": {
       "ar": "قراءة آخر النصائح المتوفرة",

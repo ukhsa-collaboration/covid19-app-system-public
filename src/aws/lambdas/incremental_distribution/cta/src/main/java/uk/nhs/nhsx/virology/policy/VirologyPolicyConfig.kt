@@ -17,10 +17,7 @@ class VirologyPolicyConfig(
 
     private val shouldOfferFollowUpTest: Map<VirologyCriteria, MobileVersionChecker> = mapOf(),
 
-    private val requireConfirmatoryTest: Map<VirologyCriteria, MobileVersionChecker> = mapOf(
-        VirologyCriteria(CtaExchange, England, RAPID_SELF_REPORTED, Positive) to FromMinimumInclusive(Version(4, 26)),
-        VirologyCriteria(CtaExchange, England, RAPID_RESULT, Positive) to FromMinimumInclusive(Version(4, 26)),
-    ),
+    private val requireConfirmatoryTest: Map<VirologyCriteria, MobileVersionChecker> = mapOf(),
 
     private val diagnosisKeySubmissionSupported: Set<VirologyCriteria> = setOf(
         VirologyCriteria(Lookup, England, LAB_RESULT, Positive),

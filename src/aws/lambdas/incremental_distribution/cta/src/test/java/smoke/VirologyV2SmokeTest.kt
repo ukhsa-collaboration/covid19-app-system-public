@@ -330,7 +330,7 @@ class VirologyV2SmokeTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = ["4, 26, true", "4, 25, false"])
+    @CsvSource(value = ["4, 26, false", "4, 25, false"])
     fun `cta exchange available for specific app versions which require confirmatory test`(
         majorAppVersion: Int,
         minorAppVersion: Int,
