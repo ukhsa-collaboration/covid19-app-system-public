@@ -34,6 +34,10 @@ variable "analytics_submission_events_parquet_bucket_id" {
   description = "The name of the S3 bucket that stores mobile events analytics in parquet format"
 }
 
+variable "epi_metric_data_bucket_id" {
+  description = "The name of the S3 bucket that stores Epi Metric data in CSV format"
+}
+
 variable "tags" {
   description = "A map of key-value labels used to tag AWS resources"
   type        = map(string)

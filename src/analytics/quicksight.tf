@@ -206,6 +206,15 @@ module "local_authorities_ethnicity_lookup" {
   tags                     = var.tags
 }
 
+module "epi_report_data" {
+  source                   = "./modules/epi_report_data"
+  service                  = local.service
+  force_destroy_s3_buckets = var.force_destroy_s3_buckets
+  logs_bucket_id           = var.logs_bucket_id
+  database_name            = aws_glue_catalog_database.this.name
+  tags                     = var.tags
+}
+
 module "england_deprivation_lookup" {
   source                   = "./modules/england_deprivation_lookup_table"
   service                  = local.service

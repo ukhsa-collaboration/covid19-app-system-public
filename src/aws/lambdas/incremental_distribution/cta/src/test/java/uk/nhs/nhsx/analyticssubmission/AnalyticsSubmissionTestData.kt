@@ -361,5 +361,5 @@ fun analyticsStoredPayload(
     "appIsUsableBluetoothOffBackgroundTick" to appIsUsableBluetoothOffBackgroundTick,
     "completedV2SymptomsQuestionnaire" to completedV2SymptomsQuestionnaire,
     "completedV2SymptomsQuestionnaireAndStayAtHome" to completedV2SymptomsQuestionnaireAndStayAtHome,
-    "completedV3SymptomsQuestionnaireAndHasSymptoms" to completedV3SymptomsQuestionnaireAndHasSymptoms,
+    "completedV3SymptomsQuestionnaireAndHasSymptoms" to completedV3SymptomsQuestionnaireAndHasSymptoms
 )

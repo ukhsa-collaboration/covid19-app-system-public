@@ -30,7 +30,7 @@ resource "aws_cloudwatch_metric_alarm" "dlq" {
   period              = "120"
   statistic           = "Sum"
   threshold           = "1"
-  alarm_description   = "This metric monitors whether any events are sent to the ${var.name} dead letter queue. Refer to runbook (<https://github.com/nihp-public/covid19-app-system-public/blob/master/doc/ops/run_books/RBK015-dead-letter-queue-alarm.adoc|RBK015>) for resolution details."
+  alarm_description   = "This metric monitors whether any events are sent to the ${var.name} dead letter queue. Refer to runbook (<https://github.com/nihp-public/COVID19-app-system/blob/master/doc/ops/run_books/RBK015-dead-letter-queue-alarm.adoc|RBK015>) for resolution details."
   alarm_actions       = [var.dead_letter_queue_alarm_topic_arn]
   treat_missing_data  = "notBreaching"
   tags                = var.tags

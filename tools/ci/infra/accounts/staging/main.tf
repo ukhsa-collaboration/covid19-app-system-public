@@ -16,5 +16,5 @@ module "app-system-ci" {
   target_environments  = var.target_environments
   allow_dev_pipelines  = false
   allow_prod_pipelines = true
-  repository_url       = "https://github.com/nihp-public/covid19-app-system-public.git"
+  repository_url       = "https://github.com/nihp-public/COVID19-app-system.git"
 }
