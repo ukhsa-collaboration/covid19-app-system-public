@@ -4,6 +4,7 @@ import uk.nhs.nhsx.core.events.Event
 import uk.nhs.nhsx.core.events.EventCategory.Info
 import uk.nhs.nhsx.core.events.EventCategory.Warning
 import uk.nhs.nhsx.domain.BatchTag
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestType
 import uk.nhs.nhsx.keyfederation.domain.FederationBatch
 import java.time.Instant
@@ -43,6 +44,8 @@ data class InvalidOriginKeys(
 data class InvalidTemporaryExposureKey(val key: String?) : Event(Info)
 data class InvalidRollingPeriod(val isRollingPeriod: Int) : Event(Info)
 data class InvalidTransmissionRiskLevel(val transmissionRiskLevel: Int) : Event(Info)
+data class InvalidTestKitInPayload(val testKit: TestKit?) : Event(Info)
+
 
 data class InvalidRollingStartNumber(
     val now: Instant,

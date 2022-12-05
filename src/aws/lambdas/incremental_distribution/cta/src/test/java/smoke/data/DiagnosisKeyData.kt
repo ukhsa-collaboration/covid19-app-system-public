@@ -4,6 +4,7 @@ import uk.nhs.nhsx.core.random.crockford.CrockfordDammRandomStringGenerator
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKey
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ClientTemporaryExposureKeysPayload
 import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
+import uk.nhs.nhsx.domain.TestKit
 import java.security.SecureRandom
 import java.time.Clock
 import java.time.Duration
@@ -50,6 +51,21 @@ object DiagnosisKeyData {
             exposureKeys()
         )
     }
+
+    fun createKeysPayloadInPrivateJourney(
+                          encodedKeyData: List<String>,
+                          clock: Clock,
+                          privateJourney: Boolean,
+                          testKit: TestKit): ClientTemporaryExposureKeysPayload =
+        ClientTemporaryExposureKeysPayload(
+            UUID.fromString("00000000-0000-0000-0000-000000000000"),
+            encodedKeyData.map {
+                ClientTemporaryExposureKey(it, rollingStartNumber(clock), 144)
+            },
+            privateJourney,
+            testKit
+        )
+
 
     private fun rollingStartNumber(clock: Clock): Int {
         val utcDateTime = utcDateTime(clock).minusHours(1).toInstant(ZoneOffset.UTC)

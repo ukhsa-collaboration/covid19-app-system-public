@@ -430,6 +430,26 @@ resource "aws_glue_catalog_table" "mobile_analytics" {
       name = "completedV3SymptomsQuestionnaireAndHasSymptoms"
       type = "int"
     }
+    columns {
+      name = "selfReportedVoidSelfLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "selfReportedNegativeSelfLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "isPositiveSelfLFDFree"
+      type = "int"
+    }
+    columns {
+      name = "selfReportedPositiveSelfLFDOnGov"
+      type = "int"
+    }
+    columns {
+      name = "completedSelfReportingTestFlow"
+      type = "int"
+    }
   }
 }
 
@@ -857,6 +877,26 @@ resource "aws_glue_catalog_table" "mobile_analytics_consolidated" {
     }
     columns {
       name = "completedV3SymptomsQuestionnaireAndHasSymptoms"
+      type = "int"
+    }
+    columns {
+      name = "selfReportedVoidSelfLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "selfReportedNegativeSelfLFDTestResultEnteredManually"
+      type = "int"
+    }
+    columns {
+      name = "isPositiveSelfLFDFree"
+      type = "int"
+    }
+    columns {
+      name = "selfReportedPositiveSelfLFDOnGov"
+      type = "int"
+    }
+    columns {
+      name = "completedSelfReportingTestFlow"
       type = "int"
     }
   }

@@ -199,6 +199,114 @@ class DiagnosisKeysSubmissionServiceTest {
     }
 
     @Test
+    fun `accept if diagnosis token is null in private journey`() {
+        awsDynamoClient.willDeleteAny().willReturnVirologyRecord()
+
+        val payload = ClientTemporaryPrivateExposureKeysPayload(
+            ClientTemporaryExposureKey(
+                key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = rollingStartNumberLastKey,
+                rollingPeriod = 144
+            ),
+            ClientTemporaryExposureKey(
+                key = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                rollingStartNumber = rollingStartNumberFirstKey,
+                rollingPeriod = 144
+            ),
+            privateJourney = true,
+            testKit = TestKit.LAB_RESULT
+        )
+
+        service.acceptTemporaryExposureKeys(payload)
+
+        expect {
+            that(awsS3)
+                .getBucket(bucketName)
+                .getObject("mobile/LAB_RESULT/my-object-key.json")
+                .content
+                .asString()
+                .isEqualTo(STORED_KEYS_PAYLOAD_SUBMISSION)
+        }
+    }
+
+    @Test
+    fun `accept if self-reported test from private journey`() {
+        awsDynamoClient.willDeleteAny().willReturnVirologyRecord()
+
+        val payload = ClientTemporaryPrivateExposureKeysPayload(
+            ClientTemporaryExposureKey(
+                key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = rollingStartNumberLastKey,
+                rollingPeriod = 144
+            ),
+            ClientTemporaryExposureKey(
+                key = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                rollingStartNumber = rollingStartNumberFirstKey,
+                rollingPeriod = 144
+            ),
+            privateJourney = true,
+            testKit = TestKit.RAPID_SELF_REPORTED
+        )
+
+        service.acceptTemporaryExposureKeys(payload)
+
+        expect {
+            that(awsS3)
+                .getBucket(bucketName)
+                .getObject("mobile/RAPID_SELF_REPORTED/my-object-key.json")
+                .content
+                .asString()
+                .isEqualTo(STORED_KEYS_PAYLOAD_SUBMISSION)
+        }
+    }
+
+    @Test
+    fun `reject if diagnosis key is null and private journey is false`() {
+        val payload = ClientTemporaryPrivateExposureKeysPayload(
+            ClientTemporaryExposureKey(
+                key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = rollingStartNumberLastKey,
+                rollingPeriod = 144
+            ),
+            ClientTemporaryExposureKey(
+                key = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                rollingStartNumber = rollingStartNumberFirstKey,
+                rollingPeriod = 144
+            ),
+            privateJourney = false,
+            testKit = TestKit.LAB_RESULT
+        )
+
+        awsDynamoClient.willDeleteAny().willReturnNull(payload.diagnosisKeySubmissionToken)
+
+        service.acceptTemporaryExposureKeys(payload)
+
+        expectThat(awsS3).isEmpty()
+    }
+
+    @Test
+    fun `reject if test kit is not valid in private journey`() {
+        val payload = ClientTemporaryPrivateExposureKeysPayload(
+            ClientTemporaryExposureKey(
+                key = "W2zb3BeMWt6Xr2u0ABG32Q==",
+                rollingStartNumber = rollingStartNumberLastKey,
+                rollingPeriod = 144
+            ),
+            ClientTemporaryExposureKey(
+                key = "kzQt9Lf3xjtAlMtm7jkSqw==",
+                rollingStartNumber = rollingStartNumberFirstKey,
+                rollingPeriod = 144
+            ),
+            privateJourney = true,
+            testKit = null
+        )
+
+        service.acceptTemporaryExposureKeys(payload)
+
+        expectThat(awsS3).isEmpty()
+    }
+
+    @Test
     fun `reject if no valid keys`() {
         val payload = ClientTemporaryExposureKeysPayload(
             ClientTemporaryExposureKey(
@@ -393,7 +501,7 @@ class DiagnosisKeysSubmissionServiceTest {
         }
     }
 
-    private fun AwsDynamoClient.willReturnNull(id: UUID) = apply {
+    private fun AwsDynamoClient.willReturnNull(id: UUID?) = apply {
         every { getItem(tableName, "diagnosisKeySubmissionToken", id.toString()) } returns null
     }
 
@@ -403,6 +511,9 @@ class DiagnosisKeysSubmissionServiceTest {
 
     private fun ClientTemporaryExposureKeysPayload(vararg keys: ClientTemporaryExposureKey) =
         ClientTemporaryExposureKeysPayload(UUID.randomUUID(), keys.toList())
+
+    private fun ClientTemporaryPrivateExposureKeysPayload(vararg keys: ClientTemporaryExposureKey, privateJourney: Boolean, testKit: TestKit?) =
+        ClientTemporaryExposureKeysPayload(null, keys.toList(), privateJourney, testKit)
 
     private fun Assertion.Builder<AwsDynamoClient>.hasBeenCalledWith(payload: ClientTemporaryExposureKeysPayload) =
         apply {

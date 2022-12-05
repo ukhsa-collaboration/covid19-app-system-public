@@ -246,6 +246,17 @@ class TempExpKeysBatchSmokeTest {
     }
 
     @Test
+    fun `single submission batch processing within private journey`() {
+        val scenario = TempExpKeysScenario(config)
+        assumeTrue(scenario.isInsideProcessingWindow())
+
+        val encodedSubmissionKeys = scenario.submitKeysWithPrivateJourney(true, LAB_RESULT)
+
+        val tekExport = scenario.invokeBatchProcessingAndGetLatestTekExport()
+        scenario.checkTekExportContentsContains(encodedSubmissionKeys, tekExport)
+    }
+
+    @Test
     fun `gets all yesterdays two hourly exports and decodes contents`() {
         val scenario = TempExpKeysScenario(config)
         val exports: List<TemporaryExposureKeyExport> = scenario.getAllYesterdaysTwoHourlyExports()
@@ -371,6 +382,19 @@ class TempExpKeysBatchSmokeTest {
                 diagnosisKeySubmissionToken,
                 generateDiagnosisKeyData(2)
             )
+
+        fun submitKeysWithPrivateJourney(
+            privateJourney: Boolean,
+            testKit: TestKit
+        ): List<String>{
+            val encodedSubmissionKeys = generateDiagnosisKeyData(2)
+            mobileApp.submitKeysWithPrivateJourney(
+                encodedSubmissionKeys,
+                privateJourney,
+                testKit
+            )
+            return encodedSubmissionKeys
+        }
 
         fun invokeBatchProcessingAndGetLatestTekExport(): TemporaryExposureKeyExport {
             backgroundActivities.invokesBatchProcessing()

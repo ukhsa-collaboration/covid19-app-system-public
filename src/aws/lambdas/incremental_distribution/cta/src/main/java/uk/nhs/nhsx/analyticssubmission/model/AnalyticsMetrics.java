@@ -68,6 +68,11 @@ public class AnalyticsMetrics {
     public Integer completedV2SymptomsQuestionnaire;
     public Integer completedV2SymptomsQuestionnaireAndStayAtHome;
     public Integer completedV3SymptomsQuestionnaireAndHasSymptoms;
+    public Integer selfReportedVoidSelfLFDTestResultEnteredManually;
+    public Integer selfReportedNegativeSelfLFDTestResultEnteredManually;
+    public Integer isPositiveSelfLFDFree;
+    public Integer selfReportedPositiveSelfLFDOnGov;
+    public Integer completedSelfReportingTestFlow;
 
     public AnalyticsMetrics() {
     }

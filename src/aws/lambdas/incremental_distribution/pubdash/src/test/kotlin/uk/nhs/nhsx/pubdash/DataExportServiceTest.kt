@@ -36,6 +36,7 @@ class DataExportServiceTest {
         override fun startAgnosticDatasetQueryAsync(): QueryId = QueryId(queryId)
         override fun startCountryDatasetQueryAsync(): QueryId = QueryId(queryId)
         override fun startLocalAuthorityDatasetQueryAsync(): QueryId = QueryId(queryId)
+        override fun startNumberOfAppUsersQueryAsync(): QueryId = QueryId(queryId)
     }
 
     private fun allWaitingSource(queryId: String) = object : AnalyticsSource {
@@ -43,6 +44,7 @@ class DataExportServiceTest {
         override fun startAgnosticDatasetQueryAsync(): QueryId = QueryId(queryId)
         override fun startCountryDatasetQueryAsync(): QueryId = QueryId(queryId)
         override fun startLocalAuthorityDatasetQueryAsync(): QueryId = QueryId(queryId)
+        override fun startNumberOfAppUsersQueryAsync(): QueryId = QueryId(queryId)
     }
 
     private fun allFailedSource(queryId: String) = object : AnalyticsSource {
@@ -50,6 +52,7 @@ class DataExportServiceTest {
         override fun startAgnosticDatasetQueryAsync(): QueryId = QueryId(queryId)
         override fun startCountryDatasetQueryAsync(): QueryId = QueryId(queryId)
         override fun startLocalAuthorityDatasetQueryAsync(): QueryId = QueryId(queryId)
+        override fun startNumberOfAppUsersQueryAsync(): QueryId = QueryId(queryId)
     }
 
     private fun queueMessage(queryId: String, dataset: Dataset) = QueueMessage(QueryId(queryId), dataset)
@@ -300,6 +303,65 @@ class DataExportServiceTest {
             clock
         )
         service.export(queueMessage("local-auth", Dataset.LocalAuthority))
+
+        verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
+        verify(exactly = 0) { queueClient.sendMessage(any()) }
+
+        expectThat(events).containsExactly(QueryErrorEvent::class)
+    }
+
+    @Test
+    fun `finished app users export is copied to data bucket`() {
+        val service = DataExportService(
+            exportBucket,
+            athenaOutputBucket,
+            s3Storage,
+            allFinishedSource("app-users"),
+            queueClient,
+            events,
+            clock
+        )
+        service.export(queueMessage("app-users", Dataset.AppUsers))
+
+        val from = Locator.of(athenaOutputBucket, ObjectKey.of("app-users.csv"))
+        val to = Locator.of(exportBucket, ObjectKey.of("data/covid19_app_data_on_number_of_app_users.csv"))
+        verify(exactly = 1) { s3Storage.copyObject(from, to) }
+        verify(exactly = 0) { queueClient.sendMessage(any()) }
+
+        expectThat(events).containsExactly(QueryFinishedEvent::class)
+    }
+
+    @Test
+    fun `waiting app users export is re-scheduled`() {
+        val service = DataExportService(
+            exportBucket,
+            athenaOutputBucket,
+            s3Storage,
+            allWaitingSource("app-users"),
+            queueClient,
+            events,
+            clock
+        )
+        service.export(queueMessage("app-users", Dataset.AppUsers))
+
+        verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
+        verify(exactly = 1) { queueClient.sendMessage(QueueMessage(QueryId("app-users"), Dataset.AppUsers)) }
+
+        expectThat(events).containsExactly(QueryStillRunning::class)
+    }
+
+    @Test
+    fun `failed app users export`() {
+        val service = DataExportService(
+            exportBucket,
+            athenaOutputBucket,
+            s3Storage,
+            allFailedSource("app-users"),
+            queueClient,
+            events,
+            clock
+        )
+        service.export(queueMessage("app-users", Dataset.AppUsers))
 
         verify(exactly = 0) { s3Storage.copyObject(any(), any()) }
         verify(exactly = 0) { queueClient.sendMessage(any()) }

@@ -17,6 +17,7 @@ import org.http4k.filter.ResilienceFilters
 import smoke.actors.ApiVersion.V1
 import smoke.actors.ApiVersion.V2
 import smoke.data.DiagnosisKeyData.createKeysPayload
+import smoke.data.DiagnosisKeyData.createKeysPayloadInPrivateJourney
 import smoke.data.DiagnosisKeyData.createKeysPayloadWithOnsetDays
 import smoke.env.EnvConfig
 import strikt.api.expectThat
@@ -41,6 +42,7 @@ import uk.nhs.nhsx.domain.Country.Companion.England
 import uk.nhs.nhsx.domain.CtaToken
 import uk.nhs.nhsx.domain.DiagnosisKeySubmissionToken
 import uk.nhs.nhsx.domain.IpcTokenId
+import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestResultPollingToken
 import uk.nhs.nhsx.highriskvenuesupload.model.HighRiskVenues
 import uk.nhs.nhsx.isolationpayment.model.TokenGenerationRequest
@@ -175,6 +177,16 @@ class MobileApp(
         encodedSubmissionKeys: List<String>
     ): ClientTemporaryExposureKeysPayload {
         val payload = createKeysPayloadWithOnsetDays(diagnosisKeySubmissionToken, encodedSubmissionKeys, clock)
+        sendTempExposureKeys(payload)
+        return payload
+    }
+
+    fun submitKeysWithPrivateJourney(
+        encodedSubmissionKeys: List<String>,
+        privateJourney: Boolean,
+        testKit: TestKit
+    ): ClientTemporaryExposureKeysPayload {
+        val payload =  createKeysPayloadInPrivateJourney(encodedSubmissionKeys, clock, privateJourney, testKit)
         sendTempExposureKeys(payload)
         return payload
     }

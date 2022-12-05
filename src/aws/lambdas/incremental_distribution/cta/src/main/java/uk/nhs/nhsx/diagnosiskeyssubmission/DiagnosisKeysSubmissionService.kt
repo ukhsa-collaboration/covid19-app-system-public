@@ -20,9 +20,11 @@ import uk.nhs.nhsx.diagnosiskeyssubmission.model.StoredTemporaryExposureKeyPaylo
 import uk.nhs.nhsx.diagnosiskeyssubmission.model.ValidatedTemporaryExposureKeysPayload
 import uk.nhs.nhsx.domain.TestKit
 import uk.nhs.nhsx.domain.TestKit.LAB_RESULT
+import uk.nhs.nhsx.domain.TestKit.RAPID_SELF_REPORTED
 import uk.nhs.nhsx.keyfederation.InvalidRollingPeriod
 import uk.nhs.nhsx.keyfederation.InvalidRollingStartNumber
 import uk.nhs.nhsx.keyfederation.InvalidTemporaryExposureKey
+import uk.nhs.nhsx.keyfederation.InvalidTestKitInPayload
 import uk.nhs.nhsx.keyfederation.InvalidTransmissionRiskLevel
 import java.util.*
 
@@ -47,12 +49,14 @@ class DiagnosisKeysSubmissionService(
             .map(::asStoredKey)
 
         val invalidKeysCount = payload.temporaryExposureKeys.size - validKeys.size
-        events(DownloadedTemporaryExposureKeys(validKeys.size, invalidKeysCount))
+        events(DownloadedTemporaryExposureKeys(validKeys.size, invalidKeysCount, payload.isPrivateJourney == true))
 
         return when {
             validKeys.isNotEmpty() -> ValidatedTemporaryExposureKeysPayload(
                 diagnosisKeySubmissionToken = payload.diagnosisKeySubmissionToken,
-                temporaryExposureKeys = validKeys
+                temporaryExposureKeys = validKeys,
+                isPrivateJourney = payload.isPrivateJourney,
+                testKit = payload.testKit
             )
             else -> {
                 events(EmptyTemporaryExposureKeys())
@@ -104,14 +108,20 @@ class DiagnosisKeysSubmissionService(
     }
 
     private fun acceptPayload(payload: ValidatedTemporaryExposureKeysPayload) {
-        matchDiagnosisToken(payload.diagnosisKeySubmissionToken)
-            ?.let(::testkitFrom)
-            ?.also { storeKeysAndDeleteToken(it, payload) }
+        if (payload.isPrivateJourney == true) {
+            if (payload.testKit == LAB_RESULT || payload.testKit == RAPID_SELF_REPORTED) uploadToS3(payload.testKit, payload)
+            else events(InvalidTestKitInPayload(payload.testKit))
+        }
+        else {
+            matchDiagnosisToken(payload.diagnosisKeySubmissionToken)
+                ?.let(::testkitFrom)
+                ?.also { storeKeysAndDeleteToken(it, payload) }
+        }
     }
 
     private fun testkitFrom(item: Item) = item.getString("testKit")?.let { TestKit.valueOf(it) } ?: LAB_RESULT
 
-    private fun matchDiagnosisToken(token: UUID): Item? {
+    private fun matchDiagnosisToken(token: UUID?): Item? {
         val item = awsDynamoClient.getItem(
             tableName = tableName,
             hashKeyName = SUBMISSION_TOKENS_HASH_KEY,
@@ -130,7 +140,7 @@ class DiagnosisKeysSubmissionService(
     }
 
     private fun uploadToS3(
-        testKit: TestKit,
+        testKit: TestKit?,
         payload: ValidatedTemporaryExposureKeysPayload
     ) {
         val uploadPayload = StoredTemporaryExposureKeyPayload(payload.temporaryExposureKeys)
@@ -152,7 +162,7 @@ class DiagnosisKeysSubmissionService(
             daysSinceOnsetOfSymptoms = it.daysSinceOnsetOfSymptoms
         )
 
-    private fun deleteToken(diagnosisKeySubmissionToken: UUID) =
+    private fun deleteToken(diagnosisKeySubmissionToken: UUID?) =
         awsDynamoClient.deleteItem(
             tableName = tableName,
             hashKeyName = SUBMISSION_TOKENS_HASH_KEY,

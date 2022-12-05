@@ -216,7 +216,12 @@ class AnalyticsSubmissionServiceTest {
             appIsUsableBluetoothOffBackgroundTick = counter++.toInt(),
             completedV2SymptomsQuestionnaire = counter++.toInt(),
             completedV2SymptomsQuestionnaireAndStayAtHome = counter++.toInt(),
-            completedV3SymptomsQuestionnaireAndHasSymptoms = counter.toInt()
+            completedV3SymptomsQuestionnaireAndHasSymptoms = counter++.toInt(),
+            selfReportedVoidSelfLFDTestResultEnteredManually = counter++.toInt(),
+            selfReportedNegativeSelfLFDTestResultEnteredManually = counter++.toInt(),
+            isPositiveSelfLFDFree = counter++.toInt(),
+            selfReportedPositiveSelfLFDOnGov = counter++.toInt(),
+            completedSelfReportingTestFlow = counter.toInt(),
         )
         val flattenedNonNull = removeNullValues(analyticsPayload)
         expectThat(exportedMap).isEqualTo(flattenedNonNull)

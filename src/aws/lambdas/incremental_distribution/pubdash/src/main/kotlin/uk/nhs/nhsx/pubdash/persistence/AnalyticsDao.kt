@@ -530,6 +530,177 @@ class AnalyticsDao(
         """
     )
 
+    override fun startNumberOfAppUsersQueryAsync() : QueryId = asyncDbClient.submitQuery(
+            """
+            SELECT
+              DATE_FORMAT(truncatedstartdate, '%Y-%m-%d')  AS "Date (Dyddiad)",
+              SUM(NumberofRecords) AS "Users with app installed (Defnyddwyr gyda ap wedi'i osod)",
+              SUM(contact_traceable_part_or_whole + contact_traceable_part_or_whole_approx
+                ) AS "Users with contact tracing enabled (Defnyddwyr ag olrhain cyswllt wedi'u galluogi)"
+            FROM 
+              (
+                SELECT 
+                  truncatedstartdate, 
+                  local_authority, 
+                  platform, 
+            
+                  SUM(onboardedusersind) AS onboardedusersind, 
+                  COUNT(*) AS NumberofRecords,
+                  SUM(contact_traceable_part_or_whole) AS contact_traceable_part_or_whole, 
+                  SUM(contact_traceable_part_or_whole_approx) AS contact_traceable_part_or_whole_approx, 
+                  SUM(app_working_part_or_whole) AS app_working_part_or_whole, 
+                  SUM(app_working_part_or_whole_approx) AS app_working_part_or_whole_approx,
+                  SUM(hasriskycontactnotificationsenablebgttickind) AS hasriskycontactnotificationsenablebgttickind
+             
+                FROM 
+                  (
+                    SELECT 
+                      date_parse(
+                        substring(aad.startdate, 1, 10), 
+                        '%Y-%c-%d'
+                      ) AS truncatedstartdate,
+                      CASE WHEN Upper(devicemodel) LIKE '%IPHONE%' THEN 'Apple' ELSE 'Android' END AS platform, 
+                      CASE WHEN aad.completedonboarding > 0 THEN 1 ELSE 0 END AS onboardedusersind, 
+                      COALESCE(
+                        pdgl.local_authority, pdgl2.local_authority
+                      ) AS local_authority,
+            
+            CASE 
+            WHEN latestApplicationVersion NOT IN ('4.6', '32', '3.7', '4.4', '36', '3.6.1', '3.6-internal', '30', '4.1.1', '3.10', '3.0.1', '3.10.1',
+            '4.6.1', '4.0', '29', '35', '4.3', '3.12.2', '3.8', '4.10', '4.8', '3.4-internal', '42', '3.1.1',
+            '3.4', '4.0.1', '39', '4.9', '3.5', '3.1.2', '3.12', '4.16', '3.1', '4.5', '3.6.2-internal', '4.15',
+            '4.14', '4.12', '3.0', '3.3', '3.5-internal', '3.6', '3.6.2', '3.10.2', '4.7', '4.7.1', '3.11',
+            '4.2', '3.7-internal', '4.13.1', '3.7.1', '41', '4.1', '4.13', '3.12.1', '3.7.2', '4.14.1',
+            '3.3-internal', '4.2.1', '4.11', '3.9-internal', '3.9', '3.2') AND
+                appiscontacttraceablebackgroundtick > 0 AND
+                appisusablebackgroundtick > 0 AND
+                totalBackgroundTasks > 0 AND
+                appisusablebluetoothoffbackgroundtick is NULL
+                
+                or 
+                latestApplicationVersion NOT IN ('4.6', '32', '3.7', '4.4', '36', '3.6.1', '3.6-internal', '30', '4.1.1', '3.10', '3.0.1', '3.10.1',
+            '4.6.1', '4.0', '29', '35', '4.3', '3.12.2', '3.8', '4.10', '4.8', '3.4-internal', '42', '3.1.1',
+            '3.4', '4.0.1', '39', '4.9', '3.5', '3.1.2', '3.12', '4.16', '3.1', '4.5', '3.6.2-internal', '4.15',
+            '4.14', '4.12', '3.0', '3.3', '3.5-internal', '3.6', '3.6.2', '3.10.2', '4.7', '4.7.1', '3.11',
+            '4.2', '3.7-internal', '4.13.1', '3.7.1', '41', '4.1', '4.13', '3.12.1', '3.7.2', '4.14.1',
+            '3.3-internal', '4.2.1', '4.11', '3.9-internal', '3.9', '3.2') AND
+                appisusablebluetoothoffbackgroundtick is NOT NULL AND
+                appiscontacttraceablebackgroundtick > 0 AND
+                appisusablebackgroundtick + appisusablebluetoothoffbackgroundtick > 0 AND
+                totalBackgroundTasks > 0
+                THEN 1
+               
+              ELSE 0 
+              
+              END as contact_traceable_part_or_whole,
+            
+            CASE
+            
+            WHEN /* runningnormallybackgroundtick is not equal to totalBackgroundTasks (unexpected behaviour in the below android app versions). */
+             latestApplicationVersion IN ('4.2.1','4.2','4.1.1','4.1','4.0.1','4.0','3.12.2','3.12.1','3.12','3.10','3.9','3.7.2','3.7.1','3.7','3.6.2','3.6.1','3.6','35','41')
+            AND Upper(devicemodel) NOT LIKE '%IPHONE%'
+            AND runningnormallybackgroundtick != totalBackgroundTasks
+            THEN 0
+            
+            WHEN latestApplicationVersion IN ('4.6', '32', '3.7', '4.4', '36', '3.6.1', '3.6-internal', '30', '4.1.1', '3.10', '3.0.1', '3.10.1',
+            '4.6.1', '4.0', '29', '35', '4.3', '3.12.2', '3.8', '4.10', '4.8', '3.4-internal', '42', '3.1.1',
+            '3.4', '4.0.1', '39', '4.9', '3.5', '3.1.2', '3.12', '4.16', '3.1', '4.5', '3.6.2-internal', '4.15',
+            '4.14', '4.12', '3.0', '3.3', '3.5-internal', '3.6', '3.6.2', '3.10.2', '4.7', '4.7.1', '3.11',
+            '4.2', '3.7-internal', '4.13.1', '3.7.1', '41', '4.1', '4.13', '3.12.1', '3.7.2', '4.14.1',
+            '3.3-internal', '4.2.1', '4.11', '3.9-internal', '3.9', '3.2') 
+                AND  totalBackgroundTasks > 0
+                AND  encounterdetectionpausedbackgroundtick < totalBackgroundTasks
+                AND  runningnormallybackgroundtick > 0
+              THEN 1
+               
+              ELSE 0 
+              
+              END as contact_traceable_part_or_whole_approx,
+            
+            CASE 
+            WHEN latestApplicationVersion NOT IN ('4.6', '32', '3.7', '4.4', '36', '3.6.1', '3.6-internal', '30', '4.1.1', '3.10', '3.0.1', '3.10.1',
+            '4.6.1', '4.0', '29', '35', '4.3', '3.12.2', '3.8', '4.10', '4.8', '3.4-internal', '42', '3.1.1',
+            '3.4', '4.0.1', '39', '4.9', '3.5', '3.1.2', '3.12', '4.16', '3.1', '4.5', '3.6.2-internal', '4.15',
+            '4.14', '4.12', '3.0', '3.3', '3.5-internal', '3.6', '3.6.2', '3.10.2', '4.7', '4.7.1', '3.11',
+            '4.2', '3.7-internal', '4.13.1', '3.7.1', '41', '4.1', '4.13', '3.12.1', '3.7.2', '4.14.1',
+            '3.3-internal', '4.2.1', '4.11', '3.9-internal', '3.9', '3.2') AND
+            appisusablebackgroundtick + appisusablebluetoothoffbackgroundtick > 0 AND
+            totalBackgroundTasks > 0
+            
+            OR 
+            
+            latestApplicationVersion NOT IN ('4.6', '32', '3.7', '4.4', '36', '3.6.1', '3.6-internal', '30', '4.1.1', '3.10', '3.0.1', '3.10.1',
+            '4.6.1', '4.0', '29', '35', '4.3', '3.12.2', '3.8', '4.10', '4.8', '3.4-internal', '42', '3.1.1',
+            '3.4', '4.0.1', '39', '4.9', '3.5', '3.1.2', '3.12', '4.16', '3.1', '4.5', '3.6.2-internal', '4.15',
+            '4.14', '4.12', '3.0', '3.3', '3.5-internal', '3.6', '3.6.2', '3.10.2', '4.7', '4.7.1', '3.11',
+            '4.2', '3.7-internal', '4.13.1', '3.7.1', '41', '4.1', '4.13', '3.12.1', '3.7.2', '4.14.1',
+            '3.3-internal', '4.2.1', '4.11', '3.9-internal', '3.9', '3.2') AND
+            appisusablebackgroundtick > 0 AND
+            totalBackgroundTasks > 0 AND
+            appisusablebluetoothoffbackgroundtick is NULL
+            THEN 1
+            
+            ELSE 0 END AS app_working_part_or_whole,
+            
+            CASE
+            /* runningnormallybackgroundtick is not equal to totalBackgroundTasks (unexpected behaviour in the below app versions). */
+            WHEN latestApplicationVersion IN ('4.2.1','4.2','4.1.1','4.1','4.0.1','4.0','3.12.2','3.12.1','3.12','3.10','3.9','3.7.2','3.7.1','3.7','3.6.2','3.6.1','3.6','35','41')
+            AND runningnormallybackgroundtick != totalBackgroundTasks
+            THEN 0 
+            
+            WHEN latestApplicationVersion IN ('4.6', '32', '3.7', '4.4', '36', '3.6.1', '3.6-internal', '30', '4.1.1', '3.10', '3.0.1', '3.10.1',
+            '4.6.1', '4.0', '29', '35', '4.3', '3.12.2', '3.8', '4.10', '4.8', '3.4-internal', '42', '3.1.1',
+            '3.4', '4.0.1', '39', '4.9', '3.5', '3.1.2', '3.12', '4.16', '3.1', '4.5', '3.6.2-internal', '4.15',
+            '4.14', '4.12', '3.0', '3.3', '3.5-internal', '3.6', '3.6.2', '3.10.2', '4.7', '4.7.1', '3.11',
+            '4.2', '3.7-internal', '4.13.1', '3.7.1', '41', '4.1', '4.13', '3.12.1', '3.7.2', '4.14.1',
+            '3.3-internal', '4.2.1', '4.11', '3.9-internal', '3.9', '3.2') AND
+            totalBackgroundTasks > 0 AND
+            runningnormallybackgroundtick > 0 
+            THEN 1 
+            
+            ELSE 0 END AS app_working_part_or_whole_approx,
+            
+                        CASE WHEN aad.hasRiskyContactNotificationsEnabledBackgroundTick  > 0 THEN 1 ELSE 0 END AS hasriskycontactnotificationsenablebgttickind
+
+                    FROM 
+                      "${workspace}_analytics_db"."analytics_mobile_clean" aad 
+                      LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl ON (
+                        aad.localauthority <> '' 
+                        AND aad.postaldistrict = pdgl.postcode 
+                        AND aad.localauthority = pdgl.lad20cd 
+                        AND (
+                          pdgl.country NOT IN ('Scotland', 'Northern Ireland') 
+                          OR pdgl.country IS NULL
+                        )
+                      ) 
+                      LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_postcode_demographic_geographic_lookup" AS pdgl2 ON (
+                        (
+                          aad.localauthority = '' 
+                          OR aad.localauthority IS NULL
+                        ) 
+                        AND aad.postaldistrict = pdgl2.postcode 
+                        AND pdgl2.lad20cd = '' 
+                        AND (
+                          pdgl2.country NOT IN ('Scotland', 'Northern Ireland') 
+                          OR pdgl2.country IS NULL
+                        )
+                      )
+                  WHERE ("date_parse"("substring"(aad.startdate, 1, 10), '%Y-%c-%d') >= "date"('2020-09-24'))
+                  ) 
+                GROUP BY 
+                  truncatedstartdate, 
+                  local_authority,
+                  platform
+              ) aggaad 
+              LEFT JOIN "${workspace}_analytics_db"."${workspace}_analytics_local_authorities_demographic_geographic_lookup" AS lagl ON aggaad.local_authority = lagl.local_authority 
+            WHERE 
+              country NOT IN ('Scotland', 'Northern Ireland') 
+              OR country IS NULL
+            GROUP BY DATE_FORMAT(truncatedstartdate, '%Y-%m-%d')
+            ORDER BY DATE_FORMAT(truncatedstartdate, '%Y-%m-%d')
+        """
+        )
+
     override fun checkQueryState(queryId: QueryId): QueryResult<Unit> = asyncDbClient.queryResults(queryId)
 
 }

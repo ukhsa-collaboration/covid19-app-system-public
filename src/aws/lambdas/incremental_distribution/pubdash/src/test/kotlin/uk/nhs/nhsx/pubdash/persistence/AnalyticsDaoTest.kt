@@ -59,6 +59,18 @@ class AnalyticsDaoTest {
         expectThat(sql).contains(sqlFrom(tablePostcodeLookup))
     }
 
+    @Test
+    fun `async app users dataset sql contains correct workspace and returns queryId`() {
+        val dbClient = FakeDbClient(listOf(queryId))
+        val dao = AnalyticsDao(workspace, dbClient,tableAnalyticsMobile)
+
+        expectThat(dao.startNumberOfAppUsersQueryAsync()).isEqualTo(queryId)
+        expectThat(dbClient.submittedSqlQueries()).hasSize(1)
+
+        val sql = dbClient.lastSubmittedSqlQuery()
+        expectThat(sql).contains(sqlFrom(tablePostcodeLookup))
+    }
+
     private fun sqlFrom(table: String): String = """"some-workspace_$schema"."some-workspace_$table""""
 
     @Test

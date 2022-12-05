@@ -67,7 +67,7 @@ Our use of the GAEN framework and it's versions and core behaviour is described 
 
 The NHS COVID-19 App and Cloud Services (COVID-19 App System) has five major parts: Mobile apps, Cloud backend with API services, Infrastructure, Exposure Notification (EN) configuration and algorithm, and Dependent systems.
 
-![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2022-07-15.png "Figure: Overview")
+![Figure: Overview](diagrams/img/cv19-app-system-architecture-sys-overview-2022-10-07.png "Figure: Overview")
 
 ### Principles
 

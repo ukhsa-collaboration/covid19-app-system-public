@@ -208,7 +208,12 @@ private fun additionalMetrics(
         "appIsUsableBluetoothOffBackgroundTick" to if (useCounter) counter++ else 1,
         "completedV2SymptomsQuestionnaire" to if (useCounter) counter++ else 1,
         "completedV2SymptomsQuestionnaireAndStayAtHome" to if (useCounter) counter++ else 1,
-        "completedV3SymptomsQuestionnaireAndHasSymptoms" to if (useCounter) counter else 1
+        "completedV3SymptomsQuestionnaireAndHasSymptoms" to if (useCounter) counter++ else 1,
+        "selfReportedVoidSelfLFDTestResultEnteredManually" to if (useCounter) counter++ else 1,
+        "selfReportedNegativeSelfLFDTestResultEnteredManually" to if (useCounter) counter++ else 1,
+        "isPositiveSelfLFDFree" to if (useCounter) counter++ else 1,
+        "selfReportedPositiveSelfLFDOnGov" to if (useCounter) counter++ else 1,
+        "completedSelfReportingTestFlow" to if (useCounter) counter else 1,
     )
 }
 
@@ -286,7 +291,12 @@ fun analyticsStoredPayload(
     appIsUsableBluetoothOffBackgroundTick: Int? = null,
     completedV2SymptomsQuestionnaire: Int? = null,
     completedV2SymptomsQuestionnaireAndStayAtHome: Int? = null,
-    completedV3SymptomsQuestionnaireAndHasSymptoms: Int? = null
+    completedV3SymptomsQuestionnaireAndHasSymptoms: Int? = null,
+    selfReportedVoidSelfLFDTestResultEnteredManually: Int? = null,
+    selfReportedNegativeSelfLFDTestResultEnteredManually: Int? = null,
+    isPositiveSelfLFDFree: Int? = null,
+    selfReportedPositiveSelfLFDOnGov: Int? = null,
+    completedSelfReportingTestFlow: Int? = null
 ) = mapOf(
     "startDate" to "$eventStartDate",
     "endDate" to "$eventEndDate",
@@ -361,5 +371,10 @@ fun analyticsStoredPayload(
     "appIsUsableBluetoothOffBackgroundTick" to appIsUsableBluetoothOffBackgroundTick,
     "completedV2SymptomsQuestionnaire" to completedV2SymptomsQuestionnaire,
     "completedV2SymptomsQuestionnaireAndStayAtHome" to completedV2SymptomsQuestionnaireAndStayAtHome,
-    "completedV3SymptomsQuestionnaireAndHasSymptoms" to completedV3SymptomsQuestionnaireAndHasSymptoms
+    "completedV3SymptomsQuestionnaireAndHasSymptoms" to completedV3SymptomsQuestionnaireAndHasSymptoms,
+    "selfReportedVoidSelfLFDTestResultEnteredManually" to selfReportedVoidSelfLFDTestResultEnteredManually,
+    "selfReportedNegativeSelfLFDTestResultEnteredManually" to selfReportedNegativeSelfLFDTestResultEnteredManually,
+    "isPositiveSelfLFDFree" to isPositiveSelfLFDFree,
+    "selfReportedPositiveSelfLFDOnGov" to selfReportedPositiveSelfLFDOnGov,
+    "completedSelfReportingTestFlow" to completedSelfReportingTestFlow
 )

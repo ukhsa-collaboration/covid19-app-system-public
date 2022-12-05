@@ -12,9 +12,10 @@ data class TemporaryExposureKeysSubmissionOverflow(
 
 class EmptyTemporaryExposureKeys : Event(Warning)
 
-data class DiagnosisTokenNotFound(val token: UUID) : Event(Warning)
+data class DiagnosisTokenNotFound(val token: UUID?) : Event(Warning)
 
 data class DownloadedTemporaryExposureKeys(
     val validKeys: Int,
-    val invalidKeys: Int
+    val invalidKeys: Int,
+    val isPrivateJourney: Boolean
 ) : Event(Info)

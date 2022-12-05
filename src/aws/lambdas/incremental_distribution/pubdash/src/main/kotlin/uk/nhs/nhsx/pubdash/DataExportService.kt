@@ -16,6 +16,7 @@ import uk.nhs.nhsx.core.aws.s3.Locator
 import uk.nhs.nhsx.core.aws.s3.ObjectKey
 import uk.nhs.nhsx.core.events.Events
 import uk.nhs.nhsx.pubdash.Dataset.Agnostic
+import uk.nhs.nhsx.pubdash.Dataset.AppUsers
 import uk.nhs.nhsx.pubdash.Dataset.Country
 import uk.nhs.nhsx.pubdash.Dataset.LocalAuthority
 import uk.nhs.nhsx.pubdash.datasets.AnalyticsSource
@@ -77,6 +78,7 @@ class DataExportService(
         sendToSqs(QueueMessage(analyticsSource.startAgnosticDatasetQueryAsync(), Agnostic))
         sendToSqs(QueueMessage(analyticsSource.startCountryDatasetQueryAsync(), Country))
         sendToSqs(QueueMessage(analyticsSource.startLocalAuthorityDatasetQueryAsync(), LocalAuthority))
+        sendToSqs(QueueMessage(analyticsSource.startNumberOfAppUsersQueryAsync(), AppUsers))
     }
 
     fun export(message: QueueMessage) {
@@ -103,6 +105,7 @@ class DataExportService(
             Agnostic -> ObjectKey.of("data/covid19_app_country_agnostic_dataset.csv")
             Country -> ObjectKey.of("data/covid19_app_country_specific_dataset.csv")
             LocalAuthority -> ObjectKey.of("data/covid19_app_data_by_local_authority.csv")
+            AppUsers -> ObjectKey.of("data/covid19_app_data_on_number_of_app_users.csv")
         }
 
     private fun onError(queueMessage: QueueMessage, message: String) {

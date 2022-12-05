@@ -94,7 +94,7 @@ class DiagnosisKeySubmissionHandlerTest {
     )
 
     @Test
-    fun `accepts payload and returns 200`() {
+    fun `accepts non-private journey payload and returns 200`() {
         awsDynamoClient.willDeleteAny().willReturnVirologyRecord()
 
         val responseEvent = callHandlerWith(
@@ -113,6 +113,35 @@ class DiagnosisKeySubmissionHandlerTest {
                       "rollingPeriod": 144
                     }
                   ]
+                }
+                """.trimIndent()
+        )
+
+        verifyScenario(responseEvent, STORED_KEYS_PAYLOAD_SUBMISSION)
+    }
+
+    @Test
+    fun `accepts private journey payload and returns 200`() {
+        awsDynamoClient.willDeleteAny().willReturnVirologyRecord()
+
+        val responseEvent = callHandlerWith(
+            """
+                {
+                  "diagnosisKeySubmissionToken": "00000000-0000-0000-0000-000000000000",
+                  "temporaryExposureKeys": [
+                    {
+                      "key": "W2zb3BeMWt6Xr2u0ABG32Q==",
+                      "rollingStartNumber": 2666736,
+                      "rollingPeriod": 144
+                    },
+                    {
+                      "key": "kzQt9Lf3xjtAlMtm7jkSqw==",
+                      "rollingStartNumber": 2664864,
+                      "rollingPeriod": 144
+                    }
+                  ],
+                  "isPrivateJourney": true,
+                  "testKit": "LAB_RESULT"
                 }
                 """.trimIndent()
         )

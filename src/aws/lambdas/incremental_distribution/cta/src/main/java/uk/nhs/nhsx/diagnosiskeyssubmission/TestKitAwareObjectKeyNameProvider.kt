@@ -6,8 +6,8 @@ import uk.nhs.nhsx.domain.TestKit
 
 class TestKitAwareObjectKeyNameProvider(
     private val rootDelegate: ObjectKeyNameProvider,
-    private val testKit: TestKit
+    private val testKit: TestKit?
 ) : ObjectKeyNameProvider {
     override fun generateObjectKeyName() =
-        ObjectKey.of("""mobile/${testKit.name}/${rootDelegate.generateObjectKeyName()}""")
+        ObjectKey.of("""mobile/${testKit?.name}/${rootDelegate.generateObjectKeyName()}""")
 }
