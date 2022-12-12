@@ -1193,242 +1193,434 @@
       "contentVersion": 1,
       "translations": {
         "zh": {
-          "head": "保持应用更新，获取最新健康指导意见",
-          "body": "阅读更多",
+          "head": "您现在可以输入付费检测结果",
+          "body": "更新最新版应用后，您可以添加任何 COVID-19 阳性检测结果。点触查看详情。",
           "content": [
             {
               "type": "para",
-              "text": "请访问应用商店中的 NHS COVID-19 应用，检查是否需要更新应用。如有需要，其将显示“更新”(update) 按钮。"
+              "text": "更新为最新版应用后，您可以输入任何 COVID-19 阳性检测结果（NHS 或付费检测皆可），以便进行接触者追踪。"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "查看 App Store"
+              "text": "您在输入阳性检测结果时，可以选择匿名通知曾到过您附近的其他应用用户，告知其可能存在风险。这将有助于防止 COVID-19 的传播。"
+            },
+            {
+              "type": "para",
+              "text": "基于所提供的信息，您还将获得对应的最新健康建议。"
+            },
+            {
+              "type": "para",
+              "text": "如需使用此功能，您需要最新版本的应用。"
+            },
+            {
+              "type": "para",
+              "text": "请访问应用商店中的 NHS COVID-19 应用，检查是否需要更新应用。如有“更新”(Update) 按钮，请点触其进行更新。"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "查看 Google Play Store"
+              "linkText": "在安卓手机上检查更新（打开 Google Play Store）"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "在 iPhone 上检查更新（打开 App Store）"
             }
           ]
         },
         "en": {
-          "head": "Keep your app updated for the latest health guidance",
-          "body": "Read more",
+          "head": "You can now enter paid-for test results",
+          "body": "The latest app update lets you enter any positive COVID-19 result. Tap for details.",
           "content": [
             {
               "type": "para",
-              "text": "To check if you need to update your app, go to the NHS COVID-19 app in your app store. It will show you an ‘update’ button if you need to do this."
+              "text": "The latest app update lets you enter any positive COVID-19 result for contact tracing, whether it's from an NHS or paid-for test."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Check the App Store "
+              "text": "When you enter a positive result, you can choose to anonymously notify other app users who were near you that they might be at risk. This helps prevent the spread of COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "You’ll also get the latest health advice based on the information you’ve given."
+            },
+            {
+              "type": "para",
+              "text": "To use this feature you need the latest version of the app."
+            },
+            {
+              "type": "para",
+              "text": "To check if you need to update the app, go to the NHS COVID-19 app in the app store. If there's an Update button, tap it to update."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Check the Google Play Store"
+              "linkText": "Check for updates on an Android phone (opens Google Play Store)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Check for updates on iPhone (opens the App Store)"
             }
           ]
         },
         "ar": {
-          "head": "حافظ على تحديث تطبيقك للحصول على أحدث الإرشادات الصحية",
-          "body": "قراءة المزيد",
+          "head": "يمكنك الآن إدخال نتائج الاختبار المدفوع",
+          "body": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19. انقر للحصول على التفاصيل.",
           "content": [
             {
               "type": "para",
-              "text": "للتأكد ما إذا كنت في حاجة إلى تحديث تطبيقك، يمكنك زيارة التطبيق NHS COVID-19  في متجر التطبيقات الخاص بك. سيظهر لك زر \"تحديث\" (update) إذا كنت تحتاج إلى القيام بالتحديث."
+              "text": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19 لتتبع المخالطين، سواء كانت من NHS أو الاختبارالمدفوع."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "تحقق من متجر التطبيقات (App Store)"
+              "text": "عندما تدخل نتيجة إيجابية، يمكنك اختيار إخطار مستخدمي التطبيق الآخرين الذين كانوا بالقرب منك بشكل مجهول بأنهم قد يكونون في خطر. يساعد هذا في منع انتشار COVID-19.\n"
+            },
+            {
+              "type": "para",
+              "text": "ستحصل أيضًا على أحدث الاستشارات الصحية بناءً على المعلومات التي قدمتها."
+            },
+            {
+              "type": "para",
+              "text": "لاستخدام هذه الميزة، تحتاج إلى أحدث إصدار من التطبيق."
+            },
+            {
+              "type": "para",
+              "text": "للتحقق مما إذا كنت بحاجة إلى تحديث التطبيق، انتقل إلى تطبيق NHS COVID-19 في متجر التطبيقات. إذا كان هناك زر تحديث، انقر عليه للتحديث."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "تحقق من متجر جوجل بلاي (Google Play Store)"
+              "linkText": "تحقق من التحديثات على هاتف Android (يفتح متجر Google Play)"
+            },
+            {
+              "type": "para",
+              "link": " https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "تحقق من التحديثات على iPhone (يفتح متجر التطبيقات)"
             }
           ]
         },
         "tr": {
-          "head": "Sağlıkla ilgili en son yönerge ve tavsiyeler için uygulamayı güncel tutun",
-          "body": "Daha fazla bilgi",
+          "head": "Artık ücretli yaptırdığınız testlerin sonuçlarını girebilirsiniz",
+          "body": "Uygulamanın son güncellemesi bütün pozitif COVID-19 test sonuçlarının girilmesine izin veriyor. Ayrıntılar için tıklayın.",
           "content": [
             {
               "type": "para",
-              "text": "Uygulamayı güncellemeniz gerekip gerekmediğini kontrol etmek için App Store'daki NHS COVID-19 uygulamasına gidin. Uygulamanın üzerinde 'güncelle' (update) seçeneğini görürseniz güncelleme yapmanız gerekiyor demektir. "
+              "text": "Uygulamanın son güncellemesi ister NHS testi ister ücretli olsun temaslı takibi amacıyla bütün pozitif COVID-19 testi sonuçlarının girilmesine izin veriyor."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "App Store'u kontrol et"
+              "text": "Pozitif sonuç girdiğinizde yakınınızda olup risk altında olabilecek diğer uygulama kullanıcılarına isimsiz olarak bilgilendirme mesajı gönderilmesini seçebilirsiniz. Bu işlem COVID-19'un yayılmasını önlemeye yardımcı olacaktır."
+            },
+            {
+              "type": "para",
+              "text": "Aynı zamanda verdiğiniz bilgilere dayanarak sağlıkla ilgili en son tavsiyeleri de alacaksınız. "
+            },
+            {
+              "type": "para",
+              "text": "Bu özelliği kullanabilmek için uygulamanın en son sürümüne ihtiyacınız olacak."
+            },
+            {
+              "type": "para",
+              "text": "Uygulamayı güncellemeniz gerekip gerekmediğini kontrol etmek için App Store'daki NHS COVID-19 uygulamasına gidin. Güncelle seçeneğini görürseniz güncellemek için tıklayın."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Google Play Store'u kontrol et"
+              "linkText": "Android telefon için güncellemeleri kontrol et (Google Play Store açılır)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone için güncellemeleri kontrol et (App Store açılır)"
             }
           ]
         },
         "pl": {
-          "head": "Aktualizuj aplikację, aby dysponować najnowszymi wskazówkami w zakresie zdrowia",
-          "body": "Dowiedz się więcej",
+          "head": "Możesz już wprowadzać wyniki płatnych testów",
+          "body": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku testu na COVID-19. Stuknij, aby poznać więcej informacji.",
           "content": [
             {
               "type": "para",
-              "text": "Aby sprawdzić, czy trzeba zaktualizować aplikację, przejdź do aplikacji NHS COVID-19 w swoim sklepie z aplikacjami. Jeśli będzie to potrzebne, pojawi się przycisk „aktualizuj” (update)."
+              "text": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku COVID-19 na potrzeby śledzenia kontaktów, niezależnie od tego, czy wynik pochodzi z NHS, czy z płatnego testu."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Sprawdź w App Store\n"
+              "text": "Kiedy wprowadzisz pozytywny wynik, możesz wybrać, czy chcesz poinformować anonimowo innych użytkowników aplikacji, którzy byli w Twoim pobliżu, o potencjalnym narażeniu. Pomaga to w zapobieganiu rozprzestrzenianiu wirusa COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Otrzymasz również najnowsze porady zdrowotne oparte na podanych przez Ciebie informacjach."
+            },
+            {
+              "type": "para",
+              "text": "Aby korzystać z tej funkcji, musisz zainstalować najnowszą wersję aplikacji."
+            },
+            {
+              "type": "para",
+              "text": "Aby sprawdzić, czy aplikacja wymaga aktualizacji, przejdź do aplikacji NHS COVID-19 w swoim sklepie z aplikacjami. Jeśli dostępny jest przycisk Aktualizuj, stuknij go, aby zaktualizować."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Sprawdź w Google Play"
+              "linkText": "Sprawdź dostępność aktualizacji na telefonie z systemem Android (otwiera Sklep Google Play)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Sprawdź dostępność aktualizacji na iPhonie (otwiera App Store)"
             }
           ]
         },
         "ro": {
-          "head": "Pentru cele mai recente instrucțiuni privind sănătatea, actualizați-vă permanent aplicația",
-          "body": "Aflați mai multe",
+          "head": "Acum puteți introduce rezultatele testelor cumpărate",
+          "body": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19. Atingeți pentru detalii.",
           "content": [
             {
               "type": "para",
-              "text": "Pentru a verifica dacă aveți nevoie de actualizarea aplicației dvs., mergeți la aplicația NHS COVID-19 din magazinul dvs. de aplicații. Acesta vă va arăta un buton de actualizare (update) dacă este necesară actualizarea."
+              "text": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19 în vederea urmăririi contactelor, indiferent dacă testul este de la NHS sau cumpărat."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Verificați în App Store"
+              "text": "Dacă introduceți un rezultat pozitiv, puteți alege să notificați alți utilizatori ai aplicației care s-au aflat în apropierea dvs. că au fost expuși riscului de contractare a bolii, în mod anonim. Astfel veți ajuta la prevenirea răspândirii COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "De asemenea, pe baza informațiilor oferite de dvs., veți primi și cele mai recente sfaturi de sănătate."
+            },
+            {
+              "type": "para",
+              "text": "Pentru utilizarea acestei caracteristici aveți nevoie de cea mai recentă versiune a aplicației."
+            },
+            {
+              "type": "para",
+              "text": "Pentru a verifica dacă trebuie actualizată, mergeți la aplicația NHS COVID-19 din magazinul de aplicații. Dacă există butonul Update (Actualizare), atingeți-l pentru a efectua actualizarea."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Verificați în Google Play Store"
+              "linkText": "Căutați actualizări pe un telefon Android (va deschide Magazinul Google Play)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Căutați actualizări pe un iPhone (va deschide App Store)"
             }
           ]
         },
         "pa": {
-          "head": "ਸਿਹਤ ਬਾਰੇ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਲਈ ਆਪਣੀ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਰੱਖੋ",
-          "body": "ਹੋਰ ਪੜ੍ਹੋ",
+          "head": "ਤੁਸੀਂ ਹੁਣ ਭੁਗਤਾਨ ਕੀਤੇ ਟੈਸਟ ਦੇ ਨਤੀਜੇ ਦਾਖਲ ਕਰ ਸਕਦੇ ਹੋ",
+          "body": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ। ਵੇਰਵਿਆਂ ਲਈ ਟੈਪ ਕਰੋ।",
           "content": [
             {
               "type": "para",
-              "text": "ਇਹ ਦੇਖਣ ਲਈ ਕਿ ਕੀ ਤੁਹਾਨੂੰ ਆਪਣੀ ਐਪ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ, ਆਪਣੇ ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ। ਜੇਕਰ ਤੁਹਾਨੂੰ ਅੱਪਡੇਟ ਦੀ ਲੋੜ ਹੈ ਤਾਂ ਇਹ ਤੁਹਾਨੂੰ ‘ਅੱਪਡੇਟ’ (update) ਬਟਨ ਦਿਖਾਏਗਾ।"
+              "text": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਸੰਪਰਕ ਟ੍ਰੇਸਿੰਗ ਲਈ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ, ਭਾਵੇਂ ਇਹ NHS ਜਾਂ ਭੁਗਤਾਨ ਕੀਤਾ ਗਿਆ ਟੈਸਟ ਤੋਂ ਹੋਵੇ।"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "ਐਪ ਸਟੋਰ (App Store) ਦੇਖੋ"
+              "text": "ਜਦੋਂ ਤੁਸੀਂ ਇੱਕ ਪਾਜ਼ਿਟਿਵ ਨਤੀਜਾ ਦਾਖਲ ਕਰਦੇ ਹੋ, ਤਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੂਜੇ ਐਪ ਵਰਤੋਂਕਾਰਾਂ ਨੂੰ ਅਗਿਆਤ ਰੂਪ ਵਿੱਚ ਸੂਚਿਤ ਕਰਨ ਦੀ ਚੋਣ ਕਰ ਸਕਦੇ ਹੋ ਜੋ ਤੁਹਾਡੇ ਨੇੜੇ ਸਨ ਕਿ ਉਹਨਾਂ ਨੂੰ ਜੋਖਮ ਹੋ ਸਕਦਾ ਹੈ। ਇਸ ਨਾਲ COVID-19 ਦੇ ਫੈਲਣ ਨੂੰ ਰੋਕਣ ਵਿੱਚ ਮਦਦ ਮਿਲਦੀ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਵੱਲੋਂ ਦਿੱਤੀ ਗਈ ਜਾਣਕਾਰੀ ਦੇ ਆਧਾਰ 'ਤੇ ਨਵੀਨਤਮ ਸਿਹਤ ਸੰਬੰਧੀ ਸਲਾਹ ਵੀ ਮਿਲੇਗੀ।"
+            },
+            {
+              "type": "para",
+              "text": "ਇਸ ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਐਪ ਦੇ ਨਵੀਨਤਮ ਸੰਸਕਰਣ ਦੀ ਲੋੜ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਇਹ ਦੇਖਣ ਲਈ ਕਿ ਕੀ ਤੁਹਾਨੂੰ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ, ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ। ਜੇਕਰ ਕੋਈ ਅੱਪਡੇਟ ਬਟਨ ਹੈ, ਤਾਂ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਇਸਨੂੰ ਟੈਪ ਕਰੋ।"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "ਗੂਗਲ ਪਲੇ ਸਟੋਰ (Google Play Store) ਦੇਖੋ"
+              "linkText": "Android ਫੋਨ 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (Google Play Store ਖੋਲ੍ਹਦਾ ਹੈ)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (App Store ਖੋਲ੍ਹਦਾ ਹੈ)"
             }
           ]
         },
         "bn": {
-          "head": "সর্বশেষ স্বাস্থ্য নির্দেশিকার জন্য আপনার অ্যাপ আপডেট রাখুন",
-          "body": "আরো পড়ুন",
+          "head": "আপনি এখন অর্থপ্রদানের বিনিময়ে পরীক্ষার ফলাফলগুলি প্রবেশ করাতে পারেন",
+          "body": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়। বিশদ বিবরণের জন্য ট্যাপ করুন।",
           "content": [
             {
               "type": "para",
-              "text": "আপনার অ্যাপ আপডেট করা দরকার কী না যাচাই করার জন্য, আপনার অ্যাপ স্টোরে NHS COVID-19 অ্যাপ দেখুন। আপনাকে আপডেট করতে হলে অ্যাপ আপনাকে একটি 'আপডেট' (update) বোতাম দেখাবে।"
+              "text": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে কন্ট্যাক্ট ট্রেসিংয়ের জন্য COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়, তা NHS থেকেই হোক বা অর্থপ্রদত্ত পরীক্ষাই হোক।\n"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "অ্যাপ স্টোর (App Store) যাচাই করুন"
+              "text": "আপনি যখন একটি পজিটিভ ফলাফল প্রবেশ করাবেন, তখন অন্যান্য যে সকল অ্যাপ ব্যবহারকারী আপনার কাছাকাছি ছিলেন আপনি তাদেরকে নামহীনভাবে জানানো বেছে নিতে পারেন যে তাদের ঝুঁকি থাকতে পারে।এটি COVID-19 এর বিস্তার রোধ করতে সাহায্য করে।"
+            },
+            {
+              "type": "para",
+              "text": "আপনি যে তথ্য দিয়েছেন তার উপর ভিত্তি করে আপনি সর্বশেষ স্বাস্থ্য পরামর্শও পাবেন।"
+            },
+            {
+              "type": "para",
+              "text": "এই বৈশিষ্ট্যটি ব্যবহার করতে আপনার অ্যাপটির সর্বশেষ সংস্করণ প্রয়োজন।"
+            },
+            {
+              "type": "para",
+              "text": "আপনাকে অ্যাপটি আপডেট করতে হবে কিনা তা পরীক্ষা করতে, App Store-এর NHS COVID-19 অ্যাপে যান। যদি একটি আপডেট বোতাম থাকে, তাহলে আপডেট করতে এটি ট্যাপ করুন।"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "গুগল প্লে স্টোর (Google Play Store) যাচাই করুন"
+              "linkText": "একটি Android ফোনে আপডেট আছে কিনা চেক করুন (Google Play Store খোলে)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone এ আপডেট আছে কিনা চেক করুন (App Store খোলে)"
             }
           ]
         },
         "gu": {
-          "head": "સ્વાસ્થ્યના છેલ્લામાં છેલ્લા નિર્દેશો માટે તમારી ઍપ અપડેટેડ રાખો",
-          "body": "વધુ વાંચો",
+          "head": "તમે હવે ચૂકવણી કરેલાં પરીક્ષણનાં પરિણામોમાં પ્રવેશી શકો છો",
+          "body": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે. વિગતો માટે ટેપ કરો.",
           "content": [
             {
               "type": "para",
-              "text": "તમારે તમારી ઍપ અપડેટ કરવી જરૂરી છે કે નહિ તે ચેક કરવા માટે તમારા ઍપ સ્ટોરમાં NHS COVID-19 ઍપ પર જાઓ. જો તમને તેની જરૂર હોય તો તે તમને 'અપડેટ' (update) બટન બતાવશે."
+              "text": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને સંપર્કના સગડ મેળવવા માટે કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે, પછી ભલે તે NHS તરફથી હોય કે ચૂકવણી સાથેનું પરીક્ષણ હોય."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "ઍપ સ્ટોર (App Store) ચેક કરો"
+              "text": "જ્યારે તમે પૉઝિટિવ પરિણામમાં પ્રવેશો છો ત્યારે તમે જે તમારી નજીક હતા અને જેમના પર જોખમ હોઈ શકે એવા ઍપના અન્ય વપરાશકર્તાઓને તમે ગુપ્તપણે જાણ કરવાનું પસંદ કરી શકો છો. આનાથી COVID-19 ફેલાતો અટકાવવામાં મદદ મળે છે."
+            },
+            {
+              "type": "para",
+              "text": "તમે આપેલી માહિતીના આધારે તમે સ્વાસ્થ્યની છેલ્લામાં છેલ્લી સલાહ પણ મેળવશો."
+            },
+            {
+              "type": "para",
+              "text": "આ ફીચરનો ઉપયોગ કરવા માટે તમને ઍપના લેટેસ્ટ વર્ઝનની જરૂર પડશે."
+            },
+            {
+              "type": "para",
+              "text": "તમારે ઍપ અપડેટ કરવી જરૂરી છે કે નહિ તે ચેક કરવા માટે App Storeમાં NHS COVID-19 ઍપ પર જાઓ. જો અપડેટ બટન હોય તો તેને અપડેટ કરવા માટે ટેપ કરો."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "ગૂગલ પ્લે સ્ટોર (Google Play Store) ચેક કરો"
+              "linkText": "Android ફોન પર અપડેટ્સ માટે ચેક કરો (તેનાથી Google Play Store ખૂલે છે)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone પર અપડેટ્સ માટે ચેક કરો (App Store ખૂલે છે)"
             }
           ]
         },
         "cy": {
-          "head": "Cadwch eich ap yn gyfredol i gael y canllawiau iechyd diweddaraf",
-          "body": "Darllen mwy",
+          "head": "Gallwch nawr nodi canlyniadau profion y talwyd amdanynt",
+          "body": "Mae'r diweddariad ap diweddaraf yn caniatáu ichi nodi unrhyw ganlyniad COVID-19 positif. Tapiwch am fanylion.",
           "content": [
             {
               "type": "para",
-              "text": "I weld a oes angen i chi ddiweddaru eich ap, ewch i ap COVID-19 y GIG yn eich siop apiau. Bydd yn dangos botwm ‘diweddaru’ (update) os oes angen i chi wneud hyn."
+              "text": "Mae'r diweddariad ap diweddaraf yn gadael i chi nodi unrhyw ganlyniad COVID-19 positif ar gyfer olrhain cyswllt, boed o brawf GIG neu brawf y telir amdano."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Gwiriwch yr App Store"
+              "text": "Pan fyddwch chi'n nodi canlyniad cadarnhaol, gallwch ddewis hysbysu defnyddwyr ap eraill a oedd yn agos atoch chi yn ddienw y gallent fod mewn perygl. Mae hyn yn helpu i atal lledaeniad COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Byddwch hefyd yn cael y cyngor iechyd diweddaraf yn seiliedig ar y wybodaeth a roddwyd gennych."
+            },
+            {
+              "type": "para",
+              "text": "I ddefnyddio'r nodwedd hon mae angen y fersiwn diweddaraf o'r ap arnoch chi."
+            },
+            {
+              "type": "para",
+              "text": "I weld a oes angen i chi ddiweddaru'r ap, ewch i ap NHS COVID-19 yn y siop apiau. Os oes botwm Diweddaru, tapiwch ef i'w ddiweddaru."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Gwiriwch Google Play Store"
+              "linkText": "Gwiriwch am ddiweddariadau ar ffôn Android (yn agor Google Play Store)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Gwiriwch am ddiweddariadau ar iPhone (yn agor yr App Store)"
             }
           ]
         },
         "so": {
-          "head": "Ka dhig abkaaga mid lagu cusboonaysiiyay tilmaanta caafimaad ee ugu dambeeysay",
-          "body": "Akhri wax dheeraad ah",
+          "head": "Waxaad hadda gelin kartaa natiijooyinka baaritaanka lacagta lagu bixiyay.",
+          "body": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah. Taabo wixii faahfaahin ah.",
           "content": [
             {
               "type": "para",
-              "text": "Si aad u hubiso in aad u baahan tahay inaad cusboonaysiiso abkaaga, aad abka NHS COVID-19 ee ku jira keydiyaha abkaaga (app store). Wuxuu ku tusi doonaa badhan 'cusbooneysii' ah (update) haddii aad u baahan tahay inaad midaan sameyso."
+              "text": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah loogu talagalay raadraaca xiriirka, hadday tahay mid ka timid NHS ama baaritaan lacag lagu bixiyo."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Eeg Keydiyaha Abka (App Store)"
+              "text": "Markaad geliso natiijo togan, waxaad dooran kartaa inaad si qarsoodi ah u ogaysiiso isticmaalayaasha kale abka ee kuu dhowaa inay halis ku jiri kareen. Tani waxay kaa caawinaysaa inay ka hortagto faafitaanka COVID-19."
+            },
+            {
+              "type": "para",
+              "text": "Waxaad sidoo kale heli doontaa talada caafimaad ee ugu dambeysay oo ku saleysan macluumaadka aad bixisay."
+            },
+            {
+              "type": "para",
+              "text": "Si aad u isticmaasho aaladaan waxaad u baahan tahay abka noociisa u casriga ah."
+            },
+            {
+              "type": "para",
+              "text": "Si aad u hubiso inaad u baahan tahay inaad cusboonaysiiso abka, aad abka NHS COVID-19 ee ku jira dukaanka abka (app store). Haddii uu jiro badhanka Cusbooneysii, taabo si aad u cusboonaysiiso."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Eeg Google Play Store-ka"
+              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka Android (wuxuu furaa Google Play Store)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka iphone (wuxuu furaa App Store)"
             }
           ]
         },
         "ur": {
-          "head": "صحت سے متعلق تازہ ترین رہنمائی کے لیے اپنے ایپ کو اپڈیٹ رکھیں",
-          "body": "مزید پڑھیں",
+          "head": "اب آپ بامعاوضہ جانچ کے نتائج درج کر سکتے ہیں",
+          "body": "تازہ ترین ایپ کا اپڈیٹ آپ کو COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے۔ تفصیلات کے لیے ٹیپ کریں۔",
           "content": [
             {
               "type": "para",
-              "text": "یہ دیکھنے کے لیے کہ آیا آپ کو اپنا ایپ اپڈیٹ کرنے کی ضرورت ہے، اپنے ایپ اسٹور میں NHS COVID-19 ایپ کی طرف جائیں۔ اگر آپ کو ایسا کرنے کی ضرورت ہے تو یہاں آپ کو ایک 'اپڈیٹ' (update) بٹن نظر آئے گا۔"
+              "text": "تازہ ترین ایپ کا اپڈیٹ آپ کو کنٹیکٹ ٹریسنگ کے لیے COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے، خواہ یہ NHS کی طرف سے ہو یا بامعاوضہ جانچ ہو۔"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "ایپ اسٹور (App Store) دیکھیں"
+              "text": "جب آپ کوئی مثبت نتیجہ درج کرتے ہیں تو آپ ایپ کے ان دیگر صارفین کو جو آپ کے قریب تھے گمنام طور پر اطلاع دینے کا انتخاب کر سکتے ہیں کہ انہیں خطرہ لاحق ہو سکتا ہے۔ اس سے COVID-19 کے پھیلاؤ کو روکنے میں مدد ملتی ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "آپ کو اس معلومات کی بنیاد پر صحت سے متعلق تازہ ترین صلاح بھی موصول ہوگی جو آپ نے فراہم کی ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "اس فیچر کا استعمال کرنے کے لیے آپ کو اس ایپ کے تازہ ترین ورژن کی ضرورت ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "یہ معلوم کرنے کے لیے کہ آیا آپ کو یہ ایپ اپڈیٹ کرنے کی ضرورت ہے، ایپ اسٹور میں NHS COVID-19 ایپ پر جائیں۔ اگر وہاں اپڈیٹ کا کوئی بٹن ہے تو اپڈیٹ کرنے کے لیے اسے ٹیپ کریں۔"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "گوگل پلے اسٹور (Google Play Store) دیکھیں"
+              "linkText": "کسی Android فون پر اپڈیٹس کی جانچ کریں (Google Play اسٹور میں کھلتا ہے)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone پر اپڈیٹس کی جانچ کریں (App اسٹور میں کھلتا ہے)"
             }
           ]
         }
@@ -1797,290 +1989,434 @@
       "contentVersion": 1,
       "translations": {
         "zh": {
-          "head": "保持应用更新，获取最新健康指导意见",
-          "body": "阅读更多",
+          "head": "您现在可以输入付费检测结果",
+          "body": "更新最新版应用后，您可以添加任何 COVID-19 阳性检测结果。点触查看详情。",
           "content": [
             {
               "type": "para",
-              "text": "请访问应用商店中的 NHS COVID-19 应用，检查是否需要更新应用。如有需要，其将显示“更新”按钮。"
+              "text": "更新为最新版应用后，您可以输入任何 COVID-19 阳性检测结果（NHS 或付费检测皆可），以便进行接触者追踪。"
             },
             {
               "type": "para",
-              "text": "我们已在应用中更新症状指导意见。"
+              "text": "您在输入阳性检测结果时，可以选择匿名通知曾到过您附近的其他应用用户，告知其可能存在风险。这将有助于防止 COVID-19 的传播。"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "查看 App Store"
+              "text": "基于所提供的信息，您还将获得对应的最新健康建议。"
+            },
+            {
+              "type": "para",
+              "text": "如需使用此功能，您需要最新版本的应用。"
+            },
+            {
+              "type": "para",
+              "text": "请访问应用商店中的 NHS COVID-19 应用，检查是否需要更新应用。如有“更新”(Update) 按钮，请点触其进行更新。"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "查看 Google Play Store"
+              "linkText": "在安卓手机上检查更新（打开 Google Play Store）"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "在 iPhone 上检查更新（打开 App Store）"
             }
           ]
         },
         "en": {
-          "head": "Keep your app updated for the latest health guidance ",
-          "body": "Read more",
+          "head": "You can now enter paid-for test results",
+          "body": "The latest app update lets you enter any positive COVID-19 result. Tap for details.",
           "content": [
             {
               "type": "para",
-              "text": "To check if you need to update your app, go to the NHS COVID-19 app in your app store. It will show you an ‘update’ button if you need to do this."
+              "text": "The latest app update lets you enter any positive COVID-19 result for contact tracing, whether it's from an NHS or paid-for test."
             },
             {
               "type": "para",
-              "text": "We have updated symptom guidance in the app. "
+              "text": "When you enter a positive result, you can choose to anonymously notify other app users who were near you that they might be at risk. This helps prevent the spread of COVID-19."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Check the App Store "
+              "text": "You’ll also get the latest health advice based on the information you’ve given."
+            },
+            {
+              "type": "para",
+              "text": "To use this feature you need the latest version of the app."
+            },
+            {
+              "type": "para",
+              "text": "To check if you need to update the app, go to the NHS COVID-19 app in the app store. If there's an Update button, tap it to update."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Check the Google Play Store"
+              "linkText": "Check for updates on an Android phone (opens Google Play Store)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Check for updates on iPhone (opens the App Store)"
             }
           ]
         },
         "ar": {
-          "head": "حافظ على تحديث تطبيقك للحصول على أحدث الإرشادات الصحية",
-          "body": "تحقق من آخر تحديث",
+          "head": "يمكنك الآن إدخال نتائج الاختبار المدفوع",
+          "body": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19. انقر للحصول على التفاصيل.",
           "content": [
             {
               "type": "para",
-              "text": "للتحقق مما إذا كنت في حاجة إلى تحديث تطبيقك، انتقل إلى تطبيق NHS COVID-19 في متجر التطبيقات الخاص بك. سيُظهر لك زر \"تحديث\" إذا كنت بحاجة إلى القيام بذلك.  "
+              "text": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19 لتتبع المخالطين، سواء كانت من NHS أو الاختبارالمدفوع."
             },
             {
               "type": "para",
-              "text": "لقد قمنا بتحديث إرشادات الأعراض في التطبيق."
+              "text": "عندما تدخل نتيجة إيجابية، يمكنك اختيار إخطار مستخدمي التطبيق الآخرين الذين كانوا بالقرب منك بشكل مجهول بأنهم قد يكونون في خطر. يساعد هذا في منع انتشار COVID-19.\n"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "تحقق من متجر التطبيقات (App Store)"
+              "text": "ستحصل أيضًا على أحدث الاستشارات الصحية بناءً على المعلومات التي قدمتها."
+            },
+            {
+              "type": "para",
+              "text": "لاستخدام هذه الميزة، تحتاج إلى أحدث إصدار من التطبيق."
+            },
+            {
+              "type": "para",
+              "text": "للتحقق مما إذا كنت بحاجة إلى تحديث التطبيق، انتقل إلى تطبيق NHS COVID-19 في متجر التطبيقات. إذا كان هناك زر تحديث، انقر عليه للتحديث."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "تحقق من متجر جوجل بلاي (Google Play Store)"
+              "linkText": "تحقق من التحديثات على هاتف Android (يفتح متجر Google Play)"
+            },
+            {
+              "type": "para",
+              "link": " https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
+              "linkText": "تحقق من التحديثات على iPhone (يفتح متجر التطبيقات)"
             }
           ]
         },
         "tr": {
-          "head": "Sağlıkla ilgili en son yönerge ve tavsiyeler için uygulamayı güncel tutun",
-          "body": "Daha fazla bilgi",
+          "head": "Artık ücretli yaptırdığınız testlerin sonuçlarını girebilirsiniz",
+          "body": "Uygulamanın son güncellemesi bütün pozitif COVID-19 test sonuçlarının girilmesine izin veriyor. Ayrıntılar için tıklayın.",
           "content": [
             {
               "type": "para",
-              "text": "Uygulamayı güncellemeniz gerekip gerekmediğini kontrol etmek için App Store'daki NHS COVID-19 uygulamasına gidin. Uygulamanın üzerinde 'güncelle' seçeneğini görürseniz güncellemeniz gerekiyor demektir."
+              "text": "Uygulamanın son güncellemesi ister NHS testi ister ücretli olsun temaslı takibi amacıyla bütün pozitif COVID-19 testi sonuçlarının girilmesine izin veriyor."
             },
             {
               "type": "para",
-              "text": "Uygulama içerisindeki belirtilerle ilgili tavsiyeler güncellenmiştir."
+              "text": "Pozitif sonuç girdiğinizde yakınınızda olup risk altında olabilecek diğer uygulama kullanıcılarına isimsiz olarak bilgilendirme mesajı gönderilmesini seçebilirsiniz. Bu işlem COVID-19'un yayılmasını önlemeye yardımcı olacaktır."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "App Store'u kontrol et"
+              "text": "Aynı zamanda verdiğiniz bilgilere dayanarak sağlıkla ilgili en son tavsiyeleri de alacaksınız. "
+            },
+            {
+              "type": "para",
+              "text": "Bu özelliği kullanabilmek için uygulamanın en son sürümüne ihtiyacınız olacak."
+            },
+            {
+              "type": "para",
+              "text": "Uygulamayı güncellemeniz gerekip gerekmediğini kontrol etmek için App Store'daki NHS COVID-19 uygulamasına gidin. Güncelle seçeneğini görürseniz güncellemek için tıklayın."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Google Play Store'u kontrol et"
+              "linkText": "Android telefon için güncellemeleri kontrol et (Google Play Store açılır)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone için güncellemeleri kontrol et (App Store açılır)"
             }
           ]
         },
         "pl": {
-          "head": "Aktualizuj aplikację, aby dysponować najnowszymi wskazówkami w zakresie zdrowia",
-          "body": "Dowiedz się więcej",
+          "head": "Możesz już wprowadzać wyniki płatnych testów",
+          "body": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku testu na COVID-19. Stuknij, aby poznać więcej informacji.",
           "content": [
             {
               "type": "para",
-              "text": "Aby sprawdzić, czy trzeba zaktualizować aplikację, przejdź do aplikacji NHS COVID-19 w swoim sklepie z aplikacjami. Jeśli będzie to potrzebne, pojawi się przycisk „aktualizuj”."
+              "text": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku COVID-19 na potrzeby śledzenia kontaktów, niezależnie od tego, czy wynik pochodzi z NHS, czy z płatnego testu."
             },
             {
               "type": "para",
-              "text": "Zaktualizowaliśmy w aplikacji wskazówki dotyczące objawów. "
+              "text": "Kiedy wprowadzisz pozytywny wynik, możesz wybrać, czy chcesz poinformować anonimowo innych użytkowników aplikacji, którzy byli w Twoim pobliżu, o potencjalnym narażeniu. Pomaga to w zapobieganiu rozprzestrzenianiu wirusa COVID-19."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Sprawdź w App Store\n"
+              "text": "Otrzymasz również najnowsze porady zdrowotne oparte na podanych przez Ciebie informacjach."
+            },
+            {
+              "type": "para",
+              "text": "Aby korzystać z tej funkcji, musisz zainstalować najnowszą wersję aplikacji."
+            },
+            {
+              "type": "para",
+              "text": "Aby sprawdzić, czy aplikacja wymaga aktualizacji, przejdź do aplikacji NHS COVID-19 w swoim sklepie z aplikacjami. Jeśli dostępny jest przycisk Aktualizuj, stuknij go, aby zaktualizować."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Sprawdź w Google Play"
+              "linkText": "Sprawdź dostępność aktualizacji na telefonie z systemem Android (otwiera Sklep Google Play)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Sprawdź dostępność aktualizacji na iPhonie (otwiera App Store)"
             }
           ]
         },
         "ro": {
-          "head": "Păstrați-vă aplicația actualizată pentru a primi cele mai noi instrucțiuni privind sănătatea",
-          "body": "Aflați mai multe\n",
+          "head": "Acum puteți introduce rezultatele testelor cumpărate",
+          "body": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19. Atingeți pentru detalii.",
           "content": [
             {
               "type": "para",
-              "text": "Pentru a vedea dacă trebuie să vă actualizați aplicația, accesați aplicația NHS COVID-19 din App Store. Dacă trebuie actualizată, veți vedea un buton pe care scrie \"actualizare\"."
+              "text": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19 în vederea urmăririi contactelor, indiferent dacă testul este de la NHS sau cumpărat."
             },
             {
               "type": "para",
-              "text": "Am actualizat informațiile privind simptomele în aplicație."
+              "text": "Dacă introduceți un rezultat pozitiv, puteți alege să notificați alți utilizatori ai aplicației care s-au aflat în apropierea dvs. că au fost expuși riscului de contractare a bolii, în mod anonim. Astfel veți ajuta la prevenirea răspândirii COVID-19."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Verificați în App Store"
+              "text": "De asemenea, pe baza informațiilor oferite de dvs., veți primi și cele mai recente sfaturi de sănătate."
+            },
+            {
+              "type": "para",
+              "text": "Pentru utilizarea acestei caracteristici aveți nevoie de cea mai recentă versiune a aplicației."
+            },
+            {
+              "type": "para",
+              "text": "Pentru a verifica dacă trebuie actualizată, mergeți la aplicația NHS COVID-19 din magazinul de aplicații. Dacă există butonul Update (Actualizare), atingeți-l pentru a efectua actualizarea."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Verificați în Google Play Store"
+              "linkText": "Căutați actualizări pe un telefon Android (va deschide Magazinul Google Play)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Căutați actualizări pe un iPhone (va deschide App Store)"
             }
           ]
         },
         "pa": {
-          "head": "ਸਿਹਤ ਬਾਰੇ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਲਈ ਆਪਣੀ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਰੱਖੋ",
-          "body": "ਹੋਰ ਪੜ੍",
+          "head": "ਤੁਸੀਂ ਹੁਣ ਭੁਗਤਾਨ ਕੀਤੇ ਟੈਸਟ ਦੇ ਨਤੀਜੇ ਦਾਖਲ ਕਰ ਸਕਦੇ ਹੋ",
+          "body": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ। ਵੇਰਵਿਆਂ ਲਈ ਟੈਪ ਕਰੋ।",
           "content": [
             {
               "type": "para",
-              "text": "ਇਹ ਦੇਖਣ ਲਈ ਕਿ ਕੀ ਤੁਹਾਨੂੰ ਆਪਣੀ ਐਪ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ, ਆਪਣੇ ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ। ਜੇਕਰ ਤੁਹਾਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ ਤਾਂ ਇਹ ਤੁਹਾਨੂੰ ‘ਅੱਪਡੇਟ’ ਬਟਨ ਦਿਖਾਏਗਾ।"
+              "text": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਸੰਪਰਕ ਟ੍ਰੇਸਿੰਗ ਲਈ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ, ਭਾਵੇਂ ਇਹ NHS ਜਾਂ ਭੁਗਤਾਨ ਕੀਤਾ ਗਿਆ ਟੈਸਟ ਤੋਂ ਹੋਵੇ।"
             },
             {
               "type": "para",
-              "text": "ਅਸੀਂ ਐਪ ਵਿੱਚ ਲੱਛਣਾਂ ਬਾਰੇ ਮਾਰਗਦਰਸ਼ਨ ਨੂੰ ਅੱਪਡੇਟ ਕੀਤਾ ਹੈ।"
+              "text": "ਜਦੋਂ ਤੁਸੀਂ ਇੱਕ ਪਾਜ਼ਿਟਿਵ ਨਤੀਜਾ ਦਾਖਲ ਕਰਦੇ ਹੋ, ਤਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੂਜੇ ਐਪ ਵਰਤੋਂਕਾਰਾਂ ਨੂੰ ਅਗਿਆਤ ਰੂਪ ਵਿੱਚ ਸੂਚਿਤ ਕਰਨ ਦੀ ਚੋਣ ਕਰ ਸਕਦੇ ਹੋ ਜੋ ਤੁਹਾਡੇ ਨੇੜੇ ਸਨ ਕਿ ਉਹਨਾਂ ਨੂੰ ਜੋਖਮ ਹੋ ਸਕਦਾ ਹੈ। ਇਸ ਨਾਲ COVID-19 ਦੇ ਫੈਲਣ ਨੂੰ ਰੋਕਣ ਵਿੱਚ ਮਦਦ ਮਿਲਦੀ ਹੈ।"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "ਐਪ ਸਟੋਰ (App Store) ਦੇਖੋ"
+              "text": "ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਵੱਲੋਂ ਦਿੱਤੀ ਗਈ ਜਾਣਕਾਰੀ ਦੇ ਆਧਾਰ 'ਤੇ ਨਵੀਨਤਮ ਸਿਹਤ ਸੰਬੰਧੀ ਸਲਾਹ ਵੀ ਮਿਲੇਗੀ।"
+            },
+            {
+              "type": "para",
+              "text": "ਇਸ ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਐਪ ਦੇ ਨਵੀਨਤਮ ਸੰਸਕਰਣ ਦੀ ਲੋੜ ਹੈ।"
+            },
+            {
+              "type": "para",
+              "text": "ਇਹ ਦੇਖਣ ਲਈ ਕਿ ਕੀ ਤੁਹਾਨੂੰ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ, ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ। ਜੇਕਰ ਕੋਈ ਅੱਪਡੇਟ ਬਟਨ ਹੈ, ਤਾਂ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਇਸਨੂੰ ਟੈਪ ਕਰੋ।"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "ਗੂਗਲ ਪਲੇ ਸਟੋਰ (Google Play Store) ਦੇਖੋ"
+              "linkText": "Android ਫੋਨ 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (Google Play Store ਖੋਲ੍ਹਦਾ ਹੈ)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (App Store ਖੋਲ੍ਹਦਾ ਹੈ)"
             }
           ]
         },
         "bn": {
-          "head": "সর্বশেষ স্বাস্থ্য নির্দেশের জন্য আপনার অ্যাপ হালনাগাদ রাখুন",
-          "body": "আরো পড়ুন",
+          "head": "আপনি এখন অর্থপ্রদানের বিনিময়ে পরীক্ষার ফলাফলগুলি প্রবেশ করাতে পারেন",
+          "body": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়। বিশদ বিবরণের জন্য ট্যাপ করুন।",
           "content": [
             {
               "type": "para",
-              "text": "আপনার অ্যাপ হালনাগাদ করা দরকার কী না যাচাই করার জন্য, আপনার অ্যাপ স্টোরে NHS COVID-19 অ্যাপ দেখুন। হালনাগাদ করতে হলে অ্যাপ আপনাকে একটি ‘আপডেট’ বোতাম দেখাবে।"
+              "text": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে কন্ট্যাক্ট ট্রেসিংয়ের জন্য COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়, তা NHS থেকেই হোক বা অর্থপ্রদত্ত পরীক্ষাই হোক।\n"
             },
             {
               "type": "para",
-              "text": "আমরা অ্যাপে উপসর্গের নির্দেশ হালনাগাদ করেছি।"
+              "text": "আপনি যখন একটি পজিটিভ ফলাফল প্রবেশ করাবেন, তখন অন্যান্য যে সকল অ্যাপ ব্যবহারকারী আপনার কাছাকাছি ছিলেন আপনি তাদেরকে নামহীনভাবে জানানো বেছে নিতে পারেন যে তাদের ঝুঁকি থাকতে পারে।এটি COVID-19 এর বিস্তার রোধ করতে সাহায্য করে।"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "অ্যাপ স্টোর (App Store) যাচাই করুন"
+              "text": "আপনি যে তথ্য দিয়েছেন তার উপর ভিত্তি করে আপনি সর্বশেষ স্বাস্থ্য পরামর্শও পাবেন।"
+            },
+            {
+              "type": "para",
+              "text": "এই বৈশিষ্ট্যটি ব্যবহার করতে আপনার অ্যাপটির সর্বশেষ সংস্করণ প্রয়োজন।"
+            },
+            {
+              "type": "para",
+              "text": "আপনাকে অ্যাপটি আপডেট করতে হবে কিনা তা পরীক্ষা করতে, App Store-এর NHS COVID-19 অ্যাপে যান। যদি একটি আপডেট বোতাম থাকে, তাহলে আপডেট করতে এটি ট্যাপ করুন।"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "গুগল প্লে স্টোর (Google Play Store) যাচাই করুন"
+              "linkText": "একটি Android ফোনে আপডেট আছে কিনা চেক করুন (Google Play Store খোলে)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone এ আপডেট আছে কিনা চেক করুন (App Store খোলে)"
             }
           ]
         },
         "gu": {
-          "head": "સ્વાસ્થ્યના છેલ્લામાં છેલ્લા નિર્દેશો માટે તમારી ઍપ અપડેટેડ રાખો",
-          "body": "વધુ વાંચો",
+          "head": "તમે હવે ચૂકવણી કરેલાં પરીક્ષણનાં પરિણામોમાં પ્રવેશી શકો છો",
+          "body": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે. વિગતો માટે ટેપ કરો.",
           "content": [
             {
               "type": "para",
-              "text": "તમારે તમારી ઍપ અપડેટ કરવાની જરૂર છે કે કેમ તે ચેક કરવા માટે તમારા ઍપ સ્ટોરમાં NHS COVID-19 ઍપમાં જાઓ. જો તમારે અપડેટ કરવાની જરૂર હશે તો  તે તમને એક 'અપડેટ' બટન બતાવશે."
+              "text": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને સંપર્કના સગડ મેળવવા માટે કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે, પછી ભલે તે NHS તરફથી હોય કે ચૂકવણી સાથેનું પરીક્ષણ હોય."
             },
             {
               "type": "para",
-              "text": "અમે ઍપમાં લક્ષણના નિર્દેશો અપડેટ કર્યા છે."
+              "text": "જ્યારે તમે પૉઝિટિવ પરિણામમાં પ્રવેશો છો ત્યારે તમે જે તમારી નજીક હતા અને જેમના પર જોખમ હોઈ શકે એવા ઍપના અન્ય વપરાશકર્તાઓને તમે ગુપ્તપણે જાણ કરવાનું પસંદ કરી શકો છો. આનાથી COVID-19 ફેલાતો અટકાવવામાં મદદ મળે છે."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "ઍપ સ્ટોર (App Store) ચેક કરો"
+              "text": "તમે આપેલી માહિતીના આધારે તમે સ્વાસ્થ્યની છેલ્લામાં છેલ્લી સલાહ પણ મેળવશો."
+            },
+            {
+              "type": "para",
+              "text": "આ ફીચરનો ઉપયોગ કરવા માટે તમને ઍપના લેટેસ્ટ વર્ઝનની જરૂર પડશે."
+            },
+            {
+              "type": "para",
+              "text": "તમારે ઍપ અપડેટ કરવી જરૂરી છે કે નહિ તે ચેક કરવા માટે App Storeમાં NHS COVID-19 ઍપ પર જાઓ. જો અપડેટ બટન હોય તો તેને અપડેટ કરવા માટે ટેપ કરો."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "ગૂગલ પ્લે સ્ટોર (Google Play Store) ચેક કરો"
+              "linkText": "Android ફોન પર અપડેટ્સ માટે ચેક કરો (તેનાથી Google Play Store ખૂલે છે)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone પર અપડેટ્સ માટે ચેક કરો (App Store ખૂલે છે)"
             }
           ]
         },
         "cy": {
-          "head": "Cadwch eich ap yn gyfredol i gael y canllawiau iechyd diweddaraf",
-          "body": "Darllen mwy",
+          "head": "Gallwch nawr nodi canlyniadau profion y talwyd amdanynt",
+          "body": "Mae'r diweddariad ap diweddaraf yn caniatáu ichi nodi unrhyw ganlyniad COVID-19 positif. Tapiwch am fanylion.",
           "content": [
             {
               "type": "para",
-              "text": "I weld a oes angen i chi ddiweddaru eich ap, ewch i ap COVID-19 y GIG yn eich siop apiau. Bydd yn dangos botwm ‘diweddaru’ os oes angen i chi wneud hyn."
+              "text": "Mae'r diweddariad ap diweddaraf yn gadael i chi nodi unrhyw ganlyniad COVID-19 positif ar gyfer olrhain cyswllt, boed o brawf GIG neu brawf y telir amdano."
             },
             {
               "type": "para",
-              "text": "Rydym wedi diweddaru’r canllawiau ar symptomau yn yr ap."
+              "text": "Pan fyddwch chi'n nodi canlyniad cadarnhaol, gallwch ddewis hysbysu defnyddwyr ap eraill a oedd yn agos atoch chi yn ddienw y gallent fod mewn perygl. Mae hyn yn helpu i atal lledaeniad COVID-19."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Gwiriwch yr App Store"
+              "text": "Byddwch hefyd yn cael y cyngor iechyd diweddaraf yn seiliedig ar y wybodaeth a roddwyd gennych."
+            },
+            {
+              "type": "para",
+              "text": "I ddefnyddio'r nodwedd hon mae angen y fersiwn diweddaraf o'r ap arnoch chi."
+            },
+            {
+              "type": "para",
+              "text": "I weld a oes angen i chi ddiweddaru'r ap, ewch i ap NHS COVID-19 yn y siop apiau. Os oes botwm Diweddaru, tapiwch ef i'w ddiweddaru."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Gwiriwch Google Play Store"
+              "linkText": "Gwiriwch am ddiweddariadau ar ffôn Android (yn agor Google Play Store)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Gwiriwch am ddiweddariadau ar iPhone (yn agor yr App Store)"
             }
           ]
         },
         "so": {
-          "head": "Ku cusbooneysii abkaaga hagitaanka caafimaad ee ugu dambeeyay",
-          "body": "Akhri wax dheeraad ah",
+          "head": "Waxaad hadda gelin kartaa natiijooyinka baaritaanka lacagta lagu bixiyay.",
+          "body": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah. Taabo wixii faahfaahin ah.",
           "content": [
             {
               "type": "para",
-              "text": "Si aad u hubiso haddii aad u baahan tahay inaad cusboonaysiiso abkaaga, aad abka NHS ee COVID-19 ku jira keydiyaha abka (app store). Waxay ku tusi doontaa badhanka 'cusbooneysiita' haddii aad u baahan tahay inaad midaan sameyso."
+              "text": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah loogu talagalay raadraaca xiriirka, hadday tahay mid ka timid NHS ama baaritaan lacag lagu bixiyo."
             },
             {
               "type": "para",
-              "text": "Waxaan ku cusboonaysiinay hagidda calaamadaha gudaha abka."
+              "text": "Markaad geliso natiijo togan, waxaad dooran kartaa inaad si qarsoodi ah u ogaysiiso isticmaalayaasha kale abka ee kuu dhowaa inay halis ku jiri kareen. Tani waxay kaa caawinaysaa inay ka hortagto faafitaanka COVID-19."
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "Eeg Keydiyaha Abka (App Store)\n"
+              "text": "Waxaad sidoo kale heli doontaa talada caafimaad ee ugu dambeysay oo ku saleysan macluumaadka aad bixisay."
+            },
+            {
+              "type": "para",
+              "text": "Si aad u isticmaasho aaladaan waxaad u baahan tahay abka noociisa u casriga ah."
+            },
+            {
+              "type": "para",
+              "text": "Si aad u hubiso inaad u baahan tahay inaad cusboonaysiiso abka, aad abka NHS COVID-19 ee ku jira dukaanka abka (app store). Haddii uu jiro badhanka Cusbooneysii, taabo si aad u cusboonaysiiso."
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Eeg Google Play Store-ka"
+              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka Android (wuxuu furaa Google Play Store)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka iphone (wuxuu furaa App Store)"
             }
           ]
         },
         "ur": {
-          "head": "صحت سے متعلق تازہ ترین رہنمائی کے لیے اپنے ایپ کو اپڈیٹ رکھیں",
-          "body": "مزید پڑھیں",
+          "head": "اب آپ بامعاوضہ جانچ کے نتائج درج کر سکتے ہیں",
+          "body": "تازہ ترین ایپ کا اپڈیٹ آپ کو COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے۔ تفصیلات کے لیے ٹیپ کریں۔",
           "content": [
             {
               "type": "para",
-              "text": "یہ دیکھنے کے لیے کہ آیا آپ کو اپنا ایپ اپڈیٹ کرنے کی ضرورت ہے، اپنے ایپ اسٹور میں NHS COVID-19 ایپ میں جائیں۔ اگر آپ کو ایسا کرنے کی ضرورت ہے تو یہ آپ کو ایک 'اپڈیٹ' بٹن دکھائے گا۔"
+              "text": "تازہ ترین ایپ کا اپڈیٹ آپ کو کنٹیکٹ ٹریسنگ کے لیے COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے، خواہ یہ NHS کی طرف سے ہو یا بامعاوضہ جانچ ہو۔"
             },
             {
               "type": "para",
-              "text": "ہم نے ایپ میں علامات سے متعلق رہنمائی اپڈیٹ کی ہے۔"
+              "text": "جب آپ کوئی مثبت نتیجہ درج کرتے ہیں تو آپ ایپ کے ان دیگر صارفین کو جو آپ کے قریب تھے گمنام طور پر اطلاع دینے کا انتخاب کر سکتے ہیں کہ انہیں خطرہ لاحق ہو سکتا ہے۔ اس سے COVID-19 کے پھیلاؤ کو روکنے میں مدد ملتی ہے۔"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "ایپ اسٹور (App Store) دیکھیں"
+              "text": "آپ کو اس معلومات کی بنیاد پر صحت سے متعلق تازہ ترین صلاح بھی موصول ہوگی جو آپ نے فراہم کی ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "اس فیچر کا استعمال کرنے کے لیے آپ کو اس ایپ کے تازہ ترین ورژن کی ضرورت ہے۔"
+            },
+            {
+              "type": "para",
+              "text": "یہ معلوم کرنے کے لیے کہ آیا آپ کو یہ ایپ اپڈیٹ کرنے کی ضرورت ہے، ایپ اسٹور میں NHS COVID-19 ایپ پر جائیں۔ اگر وہاں اپڈیٹ کا کوئی بٹن ہے تو اپڈیٹ کرنے کے لیے اسے ٹیپ کریں۔"
             },
             {
               "type": "para",
               "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "گوگل پلے اسٹور (Google Play Store) دیکھیں"
+              "linkText": "کسی Android فون پر اپڈیٹس کی جانچ کریں (Google Play اسٹور میں کھلتا ہے)"
+            },
+            {
+              "type": "para",
+              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
+              "linkText": "iPhone پر اپڈیٹس کی جانچ کریں (App اسٹور میں کھلتا ہے)"
             }
           ]
         }
