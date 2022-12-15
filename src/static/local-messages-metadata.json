@@ -1190,7 +1190,7 @@
     },
     "Notification.Wales.SelfIsolation": {
       "type": "notification",
-      "contentVersion": 1,
+      "contentVersion": 2,
       "translations": {
         "zh": {
           "head": "您现在可以输入付费检测结果",
@@ -1986,7 +1986,7 @@
     },
     "Notification.England.SelfIsolation": {
       "type": "notification",
-      "contentVersion": 1,
+      "contentVersion": 2,
       "translations": {
         "zh": {
           "head": "您现在可以输入付费检测结果",
