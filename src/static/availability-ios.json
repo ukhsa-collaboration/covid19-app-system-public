@@ -65,34 +65,34 @@
     }
   },
   "recommendedAppVersion": {
-    "value": "4.29",
+    "value": "5.00",
     "title": {
-      "ar": "قم بتحديث تطبيق NHS COVID-19 الخاص بك إلى أحدث إصدار",
-      "bn": "আপনার NHS COVID-19 অ্যাপ সর্বশেষ সংস্করণে হালনাগাদ করুন",
-      "cy": "Diweddarwch eich ap COVID-19 y GIG i'r fersiwn diweddaraf",
-      "en": "Update your NHS COVID-19 app to the latest version",
-      "gu": "તમારી NHS COVID-19 ઍપ નવીનતમ સંસ્કરણ પર અપડેટ કરો",
-      "pa": "ਆਪਣੀ NHS COVID-19 ਐਪ ਨੂੰ ਨਵੀਨਤਮ ਸੰਸਕਰਣ 'ਤੇ ਅੱਪਡੇਟ ਕਰੋ",
-      "pl": "Zaktualizuj aplikację NHS COVID-19 do najnowszej wersji",
-      "ro": "Actualizați-vă aplicația NHS COVID-19 la ultima sa versiune",
-      "so": "Ku cusbooneysii abkaaga NHS ee COVID-19 noocii ugu dambeeyay",
-      "tr": "NHS COVID-19 uygulamasının en son sürümünü indirin",
-      "ur": "اپنی NHS COVID-19 ایپ کو تازہ ترین ورژن میں اپ ڈیٹ کریں",
-      "zh": "将 NHS COVID-19 应用更新至最新版本"
+      "ar": "حدث تطبيقك إلى أحدث إصدار",
+      "bn": "আপনার অ্যাপকে সর্বশেষ সংস্করণে আপডেট করুন",
+      "cy": "Diweddarwch eich ap i'r fersiwn diweddaraf",
+      "en": "Update your app to the latest version",
+      "gu": "કૃપા કરી તમારી ઍપને લેટેસ્ટ વર્ઝન પર અપડેટ કરો",
+      "pa": "ਆਪਣੀ ਐਪ ਨੂੰ ਨਵੀਨਤਮ ਸੰਸਕਰਣ 'ਤੇ ਅੱਪਡੇਟ ਕਰੋ",
+      "pl": "Zaktualizuj aplikację do najnowszej wersji",
+      "ro": "Actualizați aplicația la cea mai recentă versiune",
+      "so": "Ku cusbooneysii app-kaaga nooci ugu dambeeyay",
+      "tr": "Uygulamanın en son sürümünü yükleyin",
+      "ur": "اپنے ایپ کو تازہ ترین ورژن میں اپڈیٹ کریں",
+      "zh": "将应用更新至最新版本"
     },
     "description": {
-      "ar": "يتوفر إصدار أحدث من هذا التطبيق.\nولدى هذا الإصدار تغييرات هامة و أحدث الإرشادات الصحية.\nلتحديث التطبيق الخاص بك، انتقل إلى تطبيق NHS COVID-19 في متجر التطبيقات الخاص بك وأختر \"تحديث\".",
-      "bn": "এই অ্যাপের একটি নতুন সংস্করণ পাওয়া যাচ্ছে। \nএতে গুরুত্বপূর্ণ পরিবর্তন এবং সর্বশেষ স্বাস্থ্য নির্দেশ আছে।\nআপনার অ্যাপ হালনাগাদ করার জন্য, আপনার অ্যাপ স্টোরে NHS COVID-19 অ্যাপে গিয়ে 'আপডেট' নির্বাচন করুন।",
-      "cy": "Mae fersiwn mwy diweddar o'r ap hwn ar gael. \nMae ganddo newidiadau pwysig a'r canllawiau iechyd diweddaraf.\nI ddiweddaru eich ap, ewch i ap COVID-19 y GIG yn eich siop apiau a dewiswch 'diweddaru'.",
-      "en": "There is a newer version of this app available.\nIt has important changes and the latest health guidance.\nTo update your app, go to the NHS COVID-19 app in your app store and select 'update'.",
-      "gu": "આ ઍપનું નવું સંસ્કરણ ઉપલબ્ધ છે. \nતેમાં અગત્યના ફેરફારો છે અને સ્વાસ્થ્ય વિશે છેલ્લામાં છેલ્લા નિર્દેશો છે.\nતમારી ઍપ અપડેટ કરવા માટે તમારા ઍપ સ્ટોરમાં NHS COVID-19 ઍપ પર જાઓ અને ‘અપડેટ’ પસંદ કરો.",
-      "pa": "ਇਸ ਐਪ ਦਾ ਇੱਕ ਨਵਾਂ ਸੰਸਕਰਣ ਉਪਲਬਧ ਹੈ। \nਇਸ ਵਿੱਚ ਮਹੱਤਵਪੂਰਨ ਤਬਦੀਲੀਆਂ ਅਤੇ ਨਵੀਨਤਮ ਸਿਹਤ ਮਾਰਗਦਰਸ਼ਨ ਹਨ।\nਆਪਣੀ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ, ਆਪਣੇ ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ ਅਤੇ 'ਅੱਪਡੇਟ' ਚੁਣੋ।",
-      "pl": "Dostępna jest nowsza wersja tej aplikacji. \nZawiera ona ważne zmiany i najnowsze wskazówki dotyczące zdrowia.\nAby aktualizować tę aplikację przejdź do aplikacji NHS COVID-19 w sklepie z aplikacjami i wybierz „aktualizuj”.",
-      "ro": "Este disponibilă o versiune mai nouă a acestei aplicații. \nAceasta include modificări importante și cele mai recente instrucțiuni privind sănătatea.\nPentru a vă actualiza aplicația, mergeți la aplicația NHS COVID-19 din magazinul dvs. de aplicații și selectați \"update\" (actualizare).",
-      "so": "Waxaa jira nooc ka casrisan abkan oo la heli karo. \nWuxuu leeyahay isbeddello muhiim ah iyo timaamaha caafimaadka ugu dambeeyay. \nSi aad u cusboonaysiiso abkaaga, ka aad abka NHS ee COVID-19 keydiyahaaga abka (app store) oo dooro 'cusboonaysiin'.",
-      "tr": "Bu uygulamanın daha yeni bir sürümü mevcuttur. \nBu sürüm önemli değişiklikler ve sağlıkla ilgili en son yönerge ve tavsiyeler içermektedir.\nUygulamayı güncellemek için App Store'daki NHS COVID-19 uygulamasına gidin ve 'güncelle' seçeneğini seçin'.",
-      "ur": "اس ایپ کا ایک جدید تر ورژن دستیاب ہے۔ \nاس میں اہم تبدیلیاں ہیں اور صحت کی تازہ ترین رہنمائی ہے۔\nاپنی ایپ اپ ڈیٹ کرنے کے لیے، اپنے ایپ اسٹور میں NHS COVID-19 ایپ پر جائیں اور 'اپ ڈیٹ' کو منتخب کریں۔",
-      "zh": "将 NHS COVID-19 应用更新至最新版本。\n此应用有更新版本可供使用，其提供重要的变化和最新的健康指导。\n如需更新应用，请前往 App Store 中的 NHS COVID-19 应用并选择“更新”(update)。"
+      "ar": "يتوفر إصدار أحدث لهذا التطبيق.\n\nوهو يشمل تغييرات هامة. حيث يمكنك الآن إدخال نتيجة إيجابية من اختبار مدفوع. ويمكنك اختيار إخطار مستخدمي التطبيق الآخرين القريبين منك بشكل مجهول أنهم قد يكونوا في خطر.\n\nلاستخدام هذه الميزة، أنت بحاجة إلى أحدث نسخة من هذا التطبيق.\n\nلتحديث تطبيقك، اذهب إلى تطبيق NHS COVID-19 في متجر التطبيقات واختر \"تحديث\" (Update).",
+      "bn": "এই অ্যাপটির একটি নতুন সংস্করণ উপলভ্য।\n\nগুরুত্বপূর্ণ পরিবর্তনগুলি এর মধ্যে অন্তর্ভুক্ত। আপনি এখন মূল্যপ্রদত্ত পরীক্ষা থেকে একটি পজিটিভ ফলাফল প্রবেশ করাতে পারেন। অ্যাপের অন্যান্য যে ব্যবহারকারীরা আপনার কাছাকাছি ছিলেন তাদেরকে আপনি নামহীনভাবে অবহিত করতে চাইতে পারেন যে তাদের ঝুঁকি থাকতে পারে।\n\nএই বৈশিষ্ট্যটি ব্যবহার করতে, আপনার অ্যাপটির সর্বশেষ সংস্করণ প্রয়োজন।\n\nআপনার অ্যাপ আপডেট করতে, App Store-এ NHS COVID-19 অ্যাপে যান এবং 'আপডেট' (Update) নির্বাচন করুন।",
+      "cy": "Mae fersiwn mwy newydd o'r ap ar gael.\n\nMae’n cynnwys newidiadau pwysig. Gallwch nawr nodi canlyniad positif o brawf y talwyd amdani. Gallwch ddewis hysbysu defnyddwyr ap eraill a oedd yn agos atoch chi yn ddienw y gallent fod mewn perygl.\n\nI ddefnyddio'r nodwedd hon, mae angen y fersiwn diweddaraf o'r ap arnoch chi.\n\nI ddiweddaru eich ap, ewch i ap COVID-19 y GIG yn y Siop Apiau a dewiswch 'Diweddaru'.",
+      "en": "A newer version of this app is available.\n\nIt includes important changes. You can now enter a positive result from a paid-for test. You can choose to anonymously notify other app users who were near you that they might be at risk.\n\nTo use this feature, you need the latest version of the app.\n\nTo update your app, go to the NHS COVID-19 app in the App Store and select 'Update'.",
+      "gu": "આ ઍપનું નવું વર્ઝન ઉપલબ્ધ છે.\n\nતેમાં અગત્યના ફેરફારોનો સમાવેશ થાય છે. તમે હવે ચૂકવણી કરેલાં પરીક્ષણનાં પૉઝિટિવ પરિણામ દાખલ કરી શકો છો. તમે જે તમારી નજીક હતા અને જેમના પર જોખમ હોઈ શકે એવા ઍપના અન્ય વપરાશકર્તાઓને ગુપ્તપણે જાણ કરવાનું પસંદ કરી શકો છો.\n\nઆ ફીચરનો ઉપયોગ કરવા માટે તમને ઍપના લેટેસ્ટ વર્ઝનની જરૂર પડશે.\n\nતમારી ઍપને અપડેટ કરવા માટે ઍપ સ્ટોર પર NHS COVID-19 ઍપ પર જાઓ અને 'અપડેટ કરો' (Update) પસંદ કરો.",
+      "pa": "ਇਸ ਐਪ ਦਾ ਇੱਕ ਨਵਾਂ ਸੰਸਕਰਣ ਉਪਲਬਧ ਹੈ।\n\nਇਸ ਵਿੱਚ ਮਹੱਤਵਪੂਰਨ ਤਬਦੀਲੀਆਂ ਸ਼ਾਮਲ ਹਨ। ਤੁਸੀਂ ਹੁਣ ਭੁਗਤਾਨ ਕੀਤੇ ਗਏ ਟੈਸਟ ਤੋਂ ਪਾਜ਼ਿਟਿਵ ਨਤੀਜਾ ਦਾਖਲ ਕਰ ਸਕਦੇ ਹੋ। ਤੁਸੀਂ ਉਹਨਾਂ ਦੂਜੇ ਐਪ ਵਰਤੋਂਕਾਰਾਂ ਨੂੰ ਅਗਿਆਤ ਰੂਪ ਵਿੱਚ ਸੂਚਿਤ ਕਰਨ ਦੀ ਚੋਣ ਕਰ ਸਕਦੇ ਹੋ ਜੋ ਤੁਹਾਡੇ ਨੇੜੇ ਸਨ ਕਿ ਉਹਨਾਂ ਨੂੰ ਜੋਖਮ ਹੋ ਸਕਦਾ ਹੈ।\n\nਇਸ ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ, ਤੁਹਾਨੂੰ ਐਪ ਦੇ ਨਵੀਨਤਮ ਸੰਸਕਰਣ ਦੀ ਲੋੜ ਹੈ।\n\nਆਪਣੀ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਲਈ, ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ ਅਤੇ 'ਅੱਪਡੇਟ ਕਰੋ’ (Update) ਚੁਣੋ।",
+      "pl": "Dostępna jest nowsza wersja tej aplikacji.\n\nWprowadza ona ważne zmiany. Można już wprowadzać wyniki płatnych testów. Możesz też zdecydować czy chcesz informować anonimowo innych użytkowników aplikacji, którzy byli w Twoim pobliżu, o potencjalnym narażeniu.\n\nAby korzystać z tej funkcji, musisz zainstalować najnowszą wersję aplikacji.\n\nAby zaktualizować tę aplikację przejdź do aplikacji NHS COVID-19 w sklepie z aplikacjami i wybierz „aktualizuj” (Update).",
+      "ro": "Este disponibilă o versiune mai nouă a acestei aplicații.\n\nInclude schimbări importante. Acum puteți introduce un rezultat pozitiv de la un test cumpărat. Puteți alege să notificați anonim alți utilizatori ai aplicației care s-au aflat în apropierea dvs. că pot fi expuși riscului de contractare a bolii.\n\nPentru utilizarea acestei caracteristici, aveți nevoie de cea mai recentă versiune a aplicației.\n\nPentru actualizarea aplicației dvs., mergeți la aplicația NHS COVID-19 din magazinul de aplicații și selectați ”Actualizează” (Update).",
+      "so": "Nooc cusub oo app-kan ayaa jira.\n\nWaxaa ka mid ah isbedellada muhiimka ah. Hadda waxaad gelin kadhaa natiijo togan oo ka timid baadhitaanka lacag-bixinta ah. Waxaad dooran kadhaa inaad si qarsoodi ah u ogaysiiso isticmaalayaasha kale app-ka ee adiga kuu dhowaa ee halis ku jiri karo.\n\nSi aad u isticmaasho astaantan, waxaad u baahan tahay nooci ugu dambeeyay ee app-ka.\n\nSi aad u cusbooneysiiso app-kaaga, ka booqo app-ka NHS COVID-19 gudaha App Store oo dooro 'Cusbooneysii' (Update).",
+      "tr": "Bu uygulamanın yeni bir sürümü mevcuttur.\n\nYeni sürüm önemli değişiklikler içermektedir. Artık ücretli yaptırdığınız testlerin pozitif sonuçlarını girebileceksiniz. Yakınınızda olup risk altında olabilecek diğer uygulama kullanıcılarına isimsiz olarak bilgilendirme mesajı gönderilmesini seçebilirsiniz. \n\nBu özellikten yararlanabilmek için uygulamanın en son sürümüne ihtiyacınız olacak.\n\nUygulamayı güncellemek için App Store'daki NHS COVID-19 uygulamasına gidip 'Güncelle' (Update) seçeneğini tıklayın.",
+      "ur": "اس ایپ کا ایک تازہ ترین ورژن دستیاب ہے۔\n\nاس میں اہم تبدیلیاں شامل ہیں۔ اب آپ کسی بامعاوضہ جانچ کا مثبت نتیجہ داخل کر سکتے ہیں۔ آپ اس ایپ کے ان دیگر صارفین کو جو آپ کے قریب تھے گمنام طور پر یہ اطلاع دینے کا انتخاب کر سکتے ہیں کہ ان کے لیے خطرہ ہو سکتا ہے۔\n\nیہ فیچر استعمال کرنے کے لیے، آپ کو اس ایپ کے تازہ ترین ورژن کی ضرورت ہے۔\n\nاپنے ایپ کو اپڈیٹ کرنے کے لیے، ایپ اسٹور میں NHS COVID-19 ایپ کی طرف جائیں اور 'اپڈیٹ' (Update) کا انتخاب کریں۔",
+      "zh": "此应用有更新版本可供使用。\n\n其包含一些重要变更。您现在可以输入付费检测的阳性结果。您可以选择匿名通知曾到过您附近的其他应用用户，告知其可能存在风险。\n\n如需使用此功能，您需要最新版本的应用。\n\n如需更新应用，请前往 App Store 中的 NHS COVID-19 应用并选择“更新”(Update)。"
     }
   }
 }
