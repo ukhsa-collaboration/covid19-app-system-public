@@ -1190,437 +1190,557 @@
     },
     "Notification.Wales.SelfIsolation": {
       "type": "notification",
-      "contentVersion": 2,
+      "contentVersion": 3,
       "translations": {
         "zh": {
-          "head": "您现在可以输入付费检测结果",
-          "body": "更新最新版应用后，您可以添加任何 COVID-19 阳性检测结果。点触查看详情。",
+          "head": "应用很快将下架",
+          "body": "NHS COVID-19 应用将在 2023 年 4 月 27 日下架。点击了解详情。",
           "content": [
             {
               "type": "para",
-              "text": "更新为最新版应用后，您可以输入任何 COVID-19 阳性检测结果（NHS 或付费检测皆可），以便进行接触者追踪。"
+              "text": "在 2023 年 4 月 27 日，NHS COVID-19 应用将下架。"
             },
             {
               "type": "para",
-              "text": "您在输入阳性检测结果时，可以选择匿名通知曾到过您附近的其他应用用户，告知其可能存在风险。这将有助于防止 COVID-19 的传播。"
+              "text": "在该日期之前，您可以使用所有应用功能。"
             },
             {
               "type": "para",
-              "text": "基于所提供的信息，您还将获得对应的最新健康建议。"
+              "text": "请继续按照最新指南操作，保护您自己和他人。这包括在 GOV.UK 上报告 NHS（国民保健服务）侧流检测结果。"
             },
             {
               "type": "para",
-              "text": "如需使用此功能，您需要最新版本的应用。"
+              "text": "如果您符合 COVID-19 治疗的标准，必须报告结果，这样 NHS（国民保健服务）可以联系您商定治疗事宜。"
             },
             {
               "type": "para",
-              "text": "请访问应用商店中的 NHS COVID-19 应用，检查是否需要更新应用。如有“更新”(Update) 按钮，请点触其进行更新。"
+              "text": "感谢使用应用。"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "在安卓手机上检查更新（打开 Google Play Store）"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19.zh",
+              "linkText": "为什么 NHS COVID-19 应用会下架（在应用外部 GOV.UK 上打开）"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "在 iPhone 上检查更新（打开 App Store）"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "英格兰 - 最新 COVID-19 指南和服务（在应用外部 NHS.UK 上打开）"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "威尔士 - 最新 COVID-19 指南和服务（在应用外部 GOV.WALES 上打开）"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "在 GOV.UK 上报告 NHS（国民保健服务）侧流检测结果（在应用外部打开）"
             }
           ]
         },
         "en": {
-          "head": "You can now enter paid-for test results",
-          "body": "The latest app update lets you enter any positive COVID-19 result. Tap for details.",
+          "head": "The app is closing down soon",
+          "body": "The NHS COVID-19 app will close down on 27 April 2023. Tap for details.",
           "content": [
             {
               "type": "para",
-              "text": "The latest app update lets you enter any positive COVID-19 result for contact tracing, whether it's from an NHS or paid-for test."
+              "text": "On 27 April 2023, the NHS COVID-19 app will close down."
             },
             {
               "type": "para",
-              "text": "When you enter a positive result, you can choose to anonymously notify other app users who were near you that they might be at risk. This helps prevent the spread of COVID-19."
+              "text": "You can use all the app features until that date."
             },
             {
               "type": "para",
-              "text": "You’ll also get the latest health advice based on the information you’ve given."
+              "text": "Please continue to follow the latest guidance to protect yourself and others. This includes reporting NHS lateral flow test results on GOV.UK."
             },
             {
               "type": "para",
-              "text": "To use this feature you need the latest version of the app."
+              "text": "If you're eligible for COVID-19 treatment, you must report your result so the NHS can contact you about treatment."
             },
             {
               "type": "para",
-              "text": "To check if you need to update the app, go to the NHS COVID-19 app in the app store. If there's an Update button, tap it to update."
+              "text": "Thank you for using the app."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Check for updates on an Android phone (opens Google Play Store)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19-app",
+              "linkText": "Why the NHS COVID-19 app is closing down (opens outside the app on GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Check for updates on iPhone (opens the App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "England - latest COVID-19 guidance and services (opens outside the app on NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Wales - latest COVID-19 guidance and services (opens outside the app on GOV.WALES)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Report an NHS lateral flow test result on GOV.UK (opens outside the app)"
             }
           ]
         },
         "ar": {
-          "head": "يمكنك الآن إدخال نتائج الاختبار المدفوع",
-          "body": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19. انقر للحصول على التفاصيل.",
+          "head": "سيتم إيقاف التطبيق قريبًا",
+          "body": "سيتم إيقاف تطبيق  NHS COVID-19 في 27 أبريل 2023. اضغط للحصول على التفاصيل.  ",
           "content": [
             {
               "type": "para",
-              "text": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19 لتتبع المخالطين، سواء كانت من NHS أو الاختبارالمدفوع."
+              "text": "سيتم إيقاف تطبيق NHS COVID-19 في 27 أبريل 2023."
             },
             {
               "type": "para",
-              "text": "عندما تدخل نتيجة إيجابية، يمكنك اختيار إخطار مستخدمي التطبيق الآخرين الذين كانوا بالقرب منك بشكل مجهول بأنهم قد يكونون في خطر. يساعد هذا في منع انتشار COVID-19.\n"
+              "text": "يمكنك استخدام جميع ميزات التطبيق حتى ذلك التاريخ."
             },
             {
               "type": "para",
-              "text": "ستحصل أيضًا على أحدث الاستشارات الصحية بناءً على المعلومات التي قدمتها."
+              "text": "يُرجى مواصلة اتباع أحدث الإرشادات لحماية نفسك والأشخاص الآخرين. ويشمل ذلك تقديم تقرير بشأن نتائج اختبار  التدفق الجانبي الخاصة بـ NHS إلى GOV.UK."
             },
             {
               "type": "para",
-              "text": "لاستخدام هذه الميزة، تحتاج إلى أحدث إصدار من التطبيق."
+              "text": "إذا كنت مؤهلاً لتلقّي علاج COVID-19، فعليك الإبلاغ عن النتيحة، حتى تتمكن NHS من التواصل معك بشأن العلاج."
             },
             {
               "type": "para",
-              "text": "للتحقق مما إذا كنت بحاجة إلى تحديث التطبيق، انتقل إلى تطبيق NHS COVID-19 في متجر التطبيقات. إذا كان هناك زر تحديث، انقر عليه للتحديث."
+              "text": "نشكرك على استخدامك للتطبيق."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "تحقق من التحديثات على هاتف Android (يفتح متجر Google Play)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--30.ar",
+              "linkText": "سبب إيقاف تطبيق NHS COVID-19 (يُفتح خارج التطبيق على GOV.UK)"
             },
             {
               "type": "para",
-              "link": " https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "تحقق من التحديثات على iPhone (يفتح متجر التطبيقات)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "إنجلترا - إرشادات ﺟﺎﺋﺤﺔ COVID-19 الأخيرة والخدمات الخاصة بها (يُفتح خارج التطبيق على  NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ويلز - إرشادات ﺟﺎﺋﺤﺔ COVID-19 الأخيرة والخدمات الخاصة بها (يُفتح خارج التطبيق على GOV.WALES) "
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "تقديم تقرير بشأن نتيجة اختبار التدفق الخاص بـ NHS إلى GOV.UK (يُفتح خارج التطبيق)"
             }
           ]
         },
         "tr": {
-          "head": "Artık ücretli yaptırdığınız testlerin sonuçlarını girebilirsiniz",
-          "body": "Uygulamanın son güncellemesi bütün pozitif COVID-19 test sonuçlarının girilmesine izin veriyor. Ayrıntılar için tıklayın.",
+          "head": "Uygulama yakında kapatılıyor",
+          "body": "NHS COVID-19 uygulaması 27 Nisan 2023 tarihinde kapatılacaktır. Ayrıntılar için dokunun.",
           "content": [
             {
               "type": "para",
-              "text": "Uygulamanın son güncellemesi ister NHS testi ister ücretli olsun temaslı takibi amacıyla bütün pozitif COVID-19 testi sonuçlarının girilmesine izin veriyor."
+              "text": "27 Nisan 2023 tarihinde NHS COVID-19 uygulaması kapatılacaktır."
             },
             {
               "type": "para",
-              "text": "Pozitif sonuç girdiğinizde yakınınızda olup risk altında olabilecek diğer uygulama kullanıcılarına isimsiz olarak bilgilendirme mesajı gönderilmesini seçebilirsiniz. Bu işlem COVID-19'un yayılmasını önlemeye yardımcı olacaktır."
+              "text": "Bu tarihe kadar uygulamanın tüm özelliklerini kullanabilirsiniz."
             },
             {
               "type": "para",
-              "text": "Aynı zamanda verdiğiniz bilgilere dayanarak sağlıkla ilgili en son tavsiyeleri de alacaksınız. "
+              "text": "Lütfen kendinizi ve başkalarını korumak için en son kılavuzları takip etmeye devam edin. Buna NHS yanal akış testi sonuçlarının GOV.UK'de bildirilmesi de dahildir."
             },
             {
               "type": "para",
-              "text": "Bu özelliği kullanabilmek için uygulamanın en son sürümüne ihtiyacınız olacak."
+              "text": "COVID-19 tedavisi için uygunsanız, NHS'nin tedavi hakkında sizinle iletişime geçebilmesi için sonucunuzu bildirmelisiniz."
             },
             {
               "type": "para",
-              "text": "Uygulamayı güncellemeniz gerekip gerekmediğini kontrol etmek için App Store'daki NHS COVID-19 uygulamasına gidin. Güncelle seçeneğini görürseniz güncellemek için tıklayın."
+              "text": "Uygulamayı kullandığınız için teşekkür ederiz."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Android telefon için güncellemeleri kontrol et (Google Play Store açılır)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19-uygulamasi.tr",
+              "linkText": "NHS COVID-19 uygulaması neden kapatılıyor (uygulamanın dışında GOV.UK'de açılır)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone için güncellemeleri kontrol et (App Store açılır)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "İngiltere - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında NHS.UK'de açılır)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Galler - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında GOV.WALES'de açılır)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "GOV.UK'de bir NHS yanal akış testi sonucunu bildirin (uygulamanın dışında açılır)"
             }
           ]
         },
         "pl": {
-          "head": "Możesz już wprowadzać wyniki płatnych testów",
-          "body": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku testu na COVID-19. Stuknij, aby poznać więcej informacji.",
+          "head": "Aplikacja wkrótce zostanie wycofana z eksploatacji",
+          "body": "Aplikacja NHS COVID-19 zostanie wycofana z eksploatacji 27 kwietnia 2023 r. Stuknij, aby poznać więcej informacji.",
           "content": [
             {
               "type": "para",
-              "text": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku COVID-19 na potrzeby śledzenia kontaktów, niezależnie od tego, czy wynik pochodzi z NHS, czy z płatnego testu."
+              "text": "W dniu 27 kwietnia 2023 r. aplikacja NHS COVID-19 zostanie  wycofana z eksploatacji."
             },
             {
               "type": "para",
-              "text": "Kiedy wprowadzisz pozytywny wynik, możesz wybrać, czy chcesz poinformować anonimowo innych użytkowników aplikacji, którzy byli w Twoim pobliżu, o potencjalnym narażeniu. Pomaga to w zapobieganiu rozprzestrzenianiu wirusa COVID-19."
+              "text": "Do tego czasu można korzystać ze wszystkich funkcji aplikacji."
             },
             {
               "type": "para",
-              "text": "Otrzymasz również najnowsze porady zdrowotne oparte na podanych przez Ciebie informacjach."
+              "text": "Należy nadal stosować się do aktualnych wytycznych, aby chronić siebie i innych. Obejmuje to zgłaszanie wyników testu przepływu bocznego NHS na witrynie GOV.UK."
             },
             {
               "type": "para",
-              "text": "Aby korzystać z tej funkcji, musisz zainstalować najnowszą wersję aplikacji."
+              "text": "Jeśli kwalifikujesz się do leczenia COVID-19, musisz zgłosić swój wynik, aby NHS mogło skontaktować się z Tobą w sprawie leczenia."
             },
             {
               "type": "para",
-              "text": "Aby sprawdzić, czy aplikacja wymaga aktualizacji, przejdź do aplikacji NHS COVID-19 w swoim sklepie z aplikacjami. Jeśli dostępny jest przycisk Aktualizuj, stuknij go, aby zaktualizować."
+              "text": "Dziękujemy za korzystanie z aplikacji."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Sprawdź dostępność aktualizacji na telefonie z systemem Android (otwiera Sklep Google Play)"
+              "link": "https://www.gov.uk/government/collections/aplikacja-nhs-covid-19.pl",
+              "linkText": "Dlaczego aplikacja NHS COVID-19 zostanie wycofana (otwiera witrynę na GOV.UK poza aplikacją)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Sprawdź dostępność aktualizacji na iPhonie (otwiera App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Anglia – najnowsze wskazówki i usługi związane z COVID-19 (otwiera witrynę NHS.UK poza aplikacją)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Walia – najnowsze wskazówki i usługi związane z COVID-19 (otwiera witrynę GOV.WALES poza aplikacją)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Zgłoś wynik testu bocznego przepływu NHS na GOV.UK (otwiera się poza aplikacją)"
             }
           ]
         },
         "ro": {
-          "head": "Acum puteți introduce rezultatele testelor cumpărate",
-          "body": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19. Atingeți pentru detalii.",
+          "head": "Aplicația se va închide în curând",
+          "body": "Aplicația NHS COVID-19 se va închide pe 27.04.2023. Atingeți pentru detalii suplimentare.",
           "content": [
             {
               "type": "para",
-              "text": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19 în vederea urmăririi contactelor, indiferent dacă testul este de la NHS sau cumpărat."
+              "text": "Aplicația NHS COVID-19 se va închide pe 27.04.2023."
             },
             {
               "type": "para",
-              "text": "Dacă introduceți un rezultat pozitiv, puteți alege să notificați alți utilizatori ai aplicației care s-au aflat în apropierea dvs. că au fost expuși riscului de contractare a bolii, în mod anonim. Astfel veți ajuta la prevenirea răspândirii COVID-19."
+              "text": "Până la această dată, veți putea utiliza toate funcțiile aplicației."
             },
             {
               "type": "para",
-              "text": "De asemenea, pe baza informațiilor oferite de dvs., veți primi și cele mai recente sfaturi de sănătate."
+              "text": "Respectați în continuare cele mai recente indicații pentru a vă proteja pe dvs. și pe cei din jur. Acest lucru include și raportarea rezultatelor testelor NHS cu flux lateral pe GOV.UK."
             },
             {
               "type": "para",
-              "text": "Pentru utilizarea acestei caracteristici aveți nevoie de cea mai recentă versiune a aplicației."
+              "text": "Dacă sunteți eligibil(ă) pentru tratamentul COVID-19, trebuie să raportați rezultatele pentru ca NHS să vă poată contacta în privința tratamentului."
             },
             {
               "type": "para",
-              "text": "Pentru a verifica dacă trebuie actualizată, mergeți la aplicația NHS COVID-19 din magazinul de aplicații. Dacă există butonul Update (Actualizare), atingeți-l pentru a efectua actualizarea."
+              "text": "Vă mulțumim pentru utilizarea aplicației."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Căutați actualizări pe un telefon Android (va deschide Magazinul Google Play)"
+              "link": "https://www.gov.uk/government/collections/aplica-ia-nhs-covid-19.ro",
+              "linkText": "De ce se închide aplicația NHS COVID-19 (se va deschide în afara aplicației, pe GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Căutați actualizări pe un iPhone (va deschide App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Anglia - cele mai recente indicații și servicii pentru COVID-19 (se va deschide în afara aplicației, pe NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Țara Galilor - cele mai recente indicații și servicii pentru COVID-19 (se va deschide în afara aplicației, pe GOV.WALES)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Raportați rezultatul unui test NHS cu flux lateral pe GOV.UK (se va deschide în afara aplicației)"
             }
           ]
         },
         "pa": {
-          "head": "ਤੁਸੀਂ ਹੁਣ ਭੁਗਤਾਨ ਕੀਤੇ ਟੈਸਟ ਦੇ ਨਤੀਜੇ ਦਾਖਲ ਕਰ ਸਕਦੇ ਹੋ",
-          "body": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ। ਵੇਰਵਿਆਂ ਲਈ ਟੈਪ ਕਰੋ।",
+          "head": "ਐਪ ਜਲਦੀ ਹੀ ਬੰਦ ਹੋ ਰਹੀ ਹੈ",
+          "body": "NHS COVID-19 ਐਪ 27 ਅਪ੍ਰੈਲ 2023 ਨੂੰ ਬੰਦ ਹੋ ਜਾਵੇਗੀ। ਵੇਰਵਿਆਂ ਲਈ ਟੈਪ ਕਰੋ।",
           "content": [
             {
               "type": "para",
-              "text": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਸੰਪਰਕ ਟ੍ਰੇਸਿੰਗ ਲਈ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ, ਭਾਵੇਂ ਇਹ NHS ਜਾਂ ਭੁਗਤਾਨ ਕੀਤਾ ਗਿਆ ਟੈਸਟ ਤੋਂ ਹੋਵੇ।"
+              "text": "27 ਅਪ੍ਰੈਲ 2023 ਨੂੰ, NHS COVID-19 ਐਪ ਬੰਦ ਹੋ ਜਾਵੇਗੀ।"
             },
             {
               "type": "para",
-              "text": "ਜਦੋਂ ਤੁਸੀਂ ਇੱਕ ਪਾਜ਼ਿਟਿਵ ਨਤੀਜਾ ਦਾਖਲ ਕਰਦੇ ਹੋ, ਤਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੂਜੇ ਐਪ ਵਰਤੋਂਕਾਰਾਂ ਨੂੰ ਅਗਿਆਤ ਰੂਪ ਵਿੱਚ ਸੂਚਿਤ ਕਰਨ ਦੀ ਚੋਣ ਕਰ ਸਕਦੇ ਹੋ ਜੋ ਤੁਹਾਡੇ ਨੇੜੇ ਸਨ ਕਿ ਉਹਨਾਂ ਨੂੰ ਜੋਖਮ ਹੋ ਸਕਦਾ ਹੈ। ਇਸ ਨਾਲ COVID-19 ਦੇ ਫੈਲਣ ਨੂੰ ਰੋਕਣ ਵਿੱਚ ਮਦਦ ਮਿਲਦੀ ਹੈ।"
+              "text": "ਤੁਸੀਂ ਉਸ ਮਿਤੀ ਤੱਕ ਐਪ ਦੀਆਂ ਸਾਰੀਆਂ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਵਰਤ ਸਕਦੇ ਹੋ।"
             },
             {
               "type": "para",
-              "text": "ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਵੱਲੋਂ ਦਿੱਤੀ ਗਈ ਜਾਣਕਾਰੀ ਦੇ ਆਧਾਰ 'ਤੇ ਨਵੀਨਤਮ ਸਿਹਤ ਸੰਬੰਧੀ ਸਲਾਹ ਵੀ ਮਿਲੇਗੀ।"
+              "text": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਅਤੇ ਦੂਜਿਆਂ ਦੀ ਰੱਖਿਆ ਕਰਨ ਲਈ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਦੀ ਪਾਲਣਾ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ। ਇਸ ਵਿੱਚ NHS ਲੇਟਰਲ ਫਲੋ ਟੈਸਟ ਦੇ ਨਤੀਜਿਆਂ ਦੀ GOV.UK 'ਤੇ ਰਿਪੋਰਟ ਕਰਨਾ ਸ਼ਾਮਲ ਹੈ।"
             },
             {
               "type": "para",
-              "text": "ਇਸ ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਐਪ ਦੇ ਨਵੀਨਤਮ ਸੰਸਕਰਣ ਦੀ ਲੋੜ ਹੈ।"
+              "text": "ਜੇ ਤੁਸੀਂ COVID-19 ਦੇ ਇਲਾਜ ਲਈ ਯੋਗ ਹੋ, ਤਾਂ ਤੁਹਾਨੂੰ ਆਪਣੇ ਨਤੀਜੇ ਦੀ ਲਾਜ਼ਮੀ ਰਿਪੋਰਟ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ ਤਾਂ ਜੋ NHS ਤੁਹਾਡੇ ਨਾਲ ਇਲਾਜ ਬਾਰੇ ਸੰਪਰਕ ਕਰ ਸਕੇ।"
             },
             {
               "type": "para",
-              "text": "ਇਹ ਦੇਖਣ ਲਈ ਕਿ ਕੀ ਤੁਹਾਨੂੰ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ, ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ। ਜੇਕਰ ਕੋਈ ਅੱਪਡੇਟ ਬਟਨ ਹੈ, ਤਾਂ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਇਸਨੂੰ ਟੈਪ ਕਰੋ।"
+              "text": "ਐਪ ਨੂੰ ਵਰਤਣ ਲਈ ਤੁਹਾਡਾ ਧੰਨਵਾਦ।"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Android ਫੋਨ 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (Google Play Store ਖੋਲ੍ਹਦਾ ਹੈ)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--29.pa",
+              "linkText": "NHS COVID-19 ਐਪ ਕਿਉਂ ਬੰਦ ਹੋ ਰਹੀ ਹੈ (ਐਪ ਦੇ ਬਾਹਰ GOV.UK 'ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (App Store ਖੋਲ੍ਹਦਾ ਹੈ)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "ਇੰਗਲੈਂਡ - COVID-19 ਬਾਰੇ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਅਤੇ ਸੇਵਾਵਾਂ (ਐਪ ਤੋਂ ਬਾਹਰ NHS.UK 'ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ਵੇਲਜ਼ - COVID-19 ਬਾਰੇ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਅਤੇ ਸੇਵਾਵਾਂ (ਐਪ ਤੋਂ ਬਾਹਰ GOV.WALES 'ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "NHS ਲੇਟਰਲ ਫਲੋ ਟੈਸਟ ਦੇ ਨਤੀਜੇ ਦੀ GOV.UK 'ਤੇ ਰਿਪੋਰਟ ਕਰੋ (ਐਪ ਤੋਂ ਬਾਹਰ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
             }
           ]
         },
         "bn": {
-          "head": "আপনি এখন অর্থপ্রদানের বিনিময়ে পরীক্ষার ফলাফলগুলি প্রবেশ করাতে পারেন",
-          "body": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়। বিশদ বিবরণের জন্য ট্যাপ করুন।",
+          "head": "অ্যাপটি শীঘ্রই বন্ধ হয়ে যাচ্ছে",
+          "body": "NHS COVID-19 অ্যাপটি 27 এপ্রিল 2023-এ বন্ধ হয়ে যাবে। বিশদ বিবরণের জন্য ট্যাপ করুন।",
           "content": [
             {
               "type": "para",
-              "text": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে কন্ট্যাক্ট ট্রেসিংয়ের জন্য COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়, তা NHS থেকেই হোক বা অর্থপ্রদত্ত পরীক্ষাই হোক।\n"
+              "text": "27 এপ্রিল 2023-এ, NHS COVID-19 অ্যাপটি বন্ধ হয়ে যাবে।"
             },
             {
               "type": "para",
-              "text": "আপনি যখন একটি পজিটিভ ফলাফল প্রবেশ করাবেন, তখন অন্যান্য যে সকল অ্যাপ ব্যবহারকারী আপনার কাছাকাছি ছিলেন আপনি তাদেরকে নামহীনভাবে জানানো বেছে নিতে পারেন যে তাদের ঝুঁকি থাকতে পারে।এটি COVID-19 এর বিস্তার রোধ করতে সাহায্য করে।"
+              "text": "আপনি সেই তারিখ পর্যন্ত অ্যাপটির সমস্ত বৈশিষ্ট্য ব্যবহার করতে পারেন।"
             },
             {
               "type": "para",
-              "text": "আপনি যে তথ্য দিয়েছেন তার উপর ভিত্তি করে আপনি সর্বশেষ স্বাস্থ্য পরামর্শও পাবেন।"
+              "text": "নিজেকে এবং অন্যদের রক্ষা করার জন্য অনুগ্রহ করে সর্বশেষ নির্দেশিকা অনুসরণ করা চালিয়ে যান। এর মধ্যে NHS ল্যাটারাল ফ্লো পরীক্ষার ফলাফল GOV.UK-এ রিপোর্ট করা অন্তর্ভুক্ত।"
             },
             {
               "type": "para",
-              "text": "এই বৈশিষ্ট্যটি ব্যবহার করতে আপনার অ্যাপটির সর্বশেষ সংস্করণ প্রয়োজন।"
+              "text": "আপনি যদি COVID-19 চিকিৎসার জন্য যোগ্য হন, তাহলে আপনাকে অবশ্যই আপনার ফলাফল রিপোর্ট করতে হবে যাতে NHS চিকিৎসার বিষয়ে আপনার সাথে যোগাযোগ করতে পারে।"
             },
             {
               "type": "para",
-              "text": "আপনাকে অ্যাপটি আপডেট করতে হবে কিনা তা পরীক্ষা করতে, App Store-এর NHS COVID-19 অ্যাপে যান। যদি একটি আপডেট বোতাম থাকে, তাহলে আপডেট করতে এটি ট্যাপ করুন।"
+              "text": "অ্যাপটি ব্যবহার করার জন্য আপনাকে ধন্যবাদ।"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "একটি Android ফোনে আপডেট আছে কিনা চেক করুন (Google Play Store খোলে)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--28.bn",
+              "linkText": "NHS COVID-19 অ্যাপটি কেন বন্ধ হয়ে যাচ্ছে (অ্যাপটির বাইরে GOV.UK এ খোলে)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone এ আপডেট আছে কিনা চেক করুন (App Store খোলে)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "ইংল্যান্ড - COVID-19 সংক্রান্ত সর্বশেষ নির্দেশিকা ও পরিষেবা (অ্যাপটির বাইরে NHS.UK এ খোলে)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ওয়েলস - COVID-19 সংক্রান্ত সর্বশেষ নির্দেশিকা ও পরিষেবা (অ্যাপটির বাইরে GOV.WALES এ খোলে)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "NHS ল্যাটারাল ফ্লো পরীক্ষার ফলাফল GOV.UK এ রিপোর্ট করুন (অ্যাপটির বাইরে খোলে)"
             }
           ]
         },
         "gu": {
-          "head": "તમે હવે ચૂકવણી કરેલાં પરીક્ષણનાં પરિણામોમાં પ્રવેશી શકો છો",
-          "body": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે. વિગતો માટે ટેપ કરો.",
+          "head": "ઍપ ટૂંક સમયમાં બંધ થઈ રહી છે",
+          "body": "NHS COVID-19 ઍપ 27 ઍપ્રિલ 2023ના રોજ બંધ થશે. વિગતો માટે ટેપ કરો.",
           "content": [
             {
               "type": "para",
-              "text": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને સંપર્કના સગડ મેળવવા માટે કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે, પછી ભલે તે NHS તરફથી હોય કે ચૂકવણી સાથેનું પરીક્ષણ હોય."
+              "text": "NHS COVID-19 ઍપ 27 ઍપ્રિલ 2023ના રોજ બંધ થશે."
             },
             {
               "type": "para",
-              "text": "જ્યારે તમે પૉઝિટિવ પરિણામમાં પ્રવેશો છો ત્યારે તમે જે તમારી નજીક હતા અને જેમના પર જોખમ હોઈ શકે એવા ઍપના અન્ય વપરાશકર્તાઓને તમે ગુપ્તપણે જાણ કરવાનું પસંદ કરી શકો છો. આનાથી COVID-19 ફેલાતો અટકાવવામાં મદદ મળે છે."
+              "text": "તમે તે તારીખ સુધી ઍપનાં બધાં ફીચર્સનો ઉપયોગ કરી શકશો."
             },
             {
               "type": "para",
-              "text": "તમે આપેલી માહિતીના આધારે તમે સ્વાસ્થ્યની છેલ્લામાં છેલ્લી સલાહ પણ મેળવશો."
+              "text": "કૃપા કરીને પોતાનું અને અન્યોનું રક્ષણ કરવા માટે નવીનતમ નિર્દેશોનું પાલન કરવાનું ચાલુ રાખો. તેમાં GOV.UK પર NHS લેટરલ ફ્લો ટેસ્ટનાં પરિણામો અંગે રિપોર્ટ કરવાનો સમાવેશ થાય છે."
             },
             {
               "type": "para",
-              "text": "આ ફીચરનો ઉપયોગ કરવા માટે તમને ઍપના લેટેસ્ટ વર્ઝનની જરૂર પડશે."
+              "text": "જો તમે COVID-19 સારવાર માટે લાયક હો તો તમારે તમારું પરિણામ રિપોર્ટ કરવાનું રહેશે, જેથી NHS સારવાર વિશે તમારો સંપર્ક કરી શકે."
             },
             {
               "type": "para",
-              "text": "તમારે ઍપ અપડેટ કરવી જરૂરી છે કે નહિ તે ચેક કરવા માટે App Storeમાં NHS COVID-19 ઍપ પર જાઓ. જો અપડેટ બટન હોય તો તેને અપડેટ કરવા માટે ટેપ કરો."
+              "text": "ઍપનો ઉપયોગ કરવા બદલ તમારો આભાર."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Android ફોન પર અપડેટ્સ માટે ચેક કરો (તેનાથી Google Play Store ખૂલે છે)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--27.gu",
+              "linkText": "શા માટે NHS COVID-19 ઍપ બંધ થઈ રહી છે (GOV.UK પર ઍપની બહાર ખૂલે છે)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone પર અપડેટ્સ માટે ચેક કરો (App Store ખૂલે છે)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "ઇંગ્લૅન્ડ - COVID-19 અંગેના નવીનતમ નિર્દેશો અને સેવાઓ (NHS.UK પર ઍપની બહાર ખૂલે છે)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "વેલ્સ - COVID-19ના નવીનતમ નિર્દેશો અને સેવાઓ (GOV.WALES પર ઍપની બહાર ખૂલે છે)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "GOV.UK પર NHS લેટરલ ફ્લો ટેસ્ટ પરિણામ રિપોર્ટ કરો (ઍપની બહાર ખૂલે છે)"
             }
           ]
         },
         "cy": {
-          "head": "Gallwch nawr nodi canlyniadau profion y talwyd amdanynt",
-          "body": "Mae'r diweddariad ap diweddaraf yn caniatáu ichi nodi unrhyw ganlyniad COVID-19 positif. Tapiwch am fanylion.",
+          "head": "Mae'r ap yn cau yn fuan",
+          "body": "Bydd ap COVID-19 y GIG yn cau ar 27 Ebrill 2023. Tapiwch am fanylion.",
           "content": [
             {
               "type": "para",
-              "text": "Mae'r diweddariad ap diweddaraf yn gadael i chi nodi unrhyw ganlyniad COVID-19 positif ar gyfer olrhain cyswllt, boed o brawf GIG neu brawf y telir amdano."
+              "text": "Ar 27 Ebrill 2023, bydd ap COVID-19 y GIG yn cau."
             },
             {
               "type": "para",
-              "text": "Pan fyddwch chi'n nodi canlyniad cadarnhaol, gallwch ddewis hysbysu defnyddwyr ap eraill a oedd yn agos atoch chi yn ddienw y gallent fod mewn perygl. Mae hyn yn helpu i atal lledaeniad COVID-19."
+              "text": "Gallwch ddefnyddio holl nodweddion yr ap tan y dyddiad hwnnw."
             },
             {
               "type": "para",
-              "text": "Byddwch hefyd yn cael y cyngor iechyd diweddaraf yn seiliedig ar y wybodaeth a roddwyd gennych."
+              "text": "Parhewch i ddilyn y canllawiau diweddaraf i amddiffyn eich hun ac eraill. Mae hyn yn cynnwys adrodd ar ganlyniadau profion llif unffordd y GIG ar GOV.UK."
             },
             {
               "type": "para",
-              "text": "I ddefnyddio'r nodwedd hon mae angen y fersiwn diweddaraf o'r ap arnoch chi."
+              "text": "Os ydych yn gymwys ar gyfer triniaeth COVID-19, rhaid i chi adrodd eich canlyniad fel y gall y GIG gysylltu â chi ynglŷn â thriniaeth."
             },
             {
               "type": "para",
-              "text": "I weld a oes angen i chi ddiweddaru'r ap, ewch i ap NHS COVID-19 yn y siop apiau. Os oes botwm Diweddaru, tapiwch ef i'w ddiweddaru."
+              "text": "Diolch am ddefnyddio'r ap."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Gwiriwch am ddiweddariadau ar ffôn Android (yn agor Google Play Store)"
+              "link": "https://www.gov.uk/government/collections/ap-covid-19-y-gig.cy",
+              "linkText": "Pam mae ap GIG COVID-19 yn cau (yn agor y tu allan i'r ap ar GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Gwiriwch am ddiweddariadau ar iPhone (yn agor yr App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Lloegr - canllawiau a gwasanaethau COVID-19 diweddaraf (yn agor y tu allan i'r ap ar NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Cymru - canllawiau a gwasanaethau COVID-19 diweddaraf (yn agor y tu allan i'r ap ar LLYW.CYMRU)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Rhoi gwybod am ganlyniad prawf llif unffordd y GIG ar GOV.UK (yn agor y tu allan i'r ap)"
             }
           ]
         },
         "so": {
-          "head": "Waxaad hadda gelin kartaa natiijooyinka baaritaanka lacagta lagu bixiyay.",
-          "body": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah. Taabo wixii faahfaahin ah.",
+          "head": "App-ku wuu xidhmayaa dhawaan",
+          "body": "App-ka COVID-19 ee NHS waxa uu xidhamayaa 27-ka Abriil 2023. Taabo wixii faahfaahin ah.",
           "content": [
             {
               "type": "para",
-              "text": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah loogu talagalay raadraaca xiriirka, hadday tahay mid ka timid NHS ama baaritaan lacag lagu bixiyo."
+              "text": "27-ka Abriil, 2023, app-ka COVID-19 ee NHS wuu xidhamayaa."
             },
             {
               "type": "para",
-              "text": "Markaad geliso natiijo togan, waxaad dooran kartaa inaad si qarsoodi ah u ogaysiiso isticmaalayaasha kale abka ee kuu dhowaa inay halis ku jiri kareen. Tani waxay kaa caawinaysaa inay ka hortagto faafitaanka COVID-19."
+              "text": "Waxa aad isticmaali kartaa daaqad walba ilaa taariikhdaas."
             },
             {
               "type": "para",
-              "text": "Waxaad sidoo kale heli doontaa talada caafimaad ee ugu dambeysay oo ku saleysan macluumaadka aad bixisay."
+              "text": "Fadlan waxa aad weli raacdaa tilmaamaha ugu danbeeyay si aad naftaada iyo dadka kale u ilaaliyo. Waxaa kamid ah in aad gaadhsiiso ku NHS natiijada ugu danbaysa GOV.UK."
             },
             {
               "type": "para",
-              "text": "Si aad u isticmaasho aaladaan waxaad u baahan tahay abka noociisa u casriga ah."
+              "text": "Hadii aad u qalanto daawaynta COVID-19, waa inaad gaadhsiisaa natiijadaada si NHS ay kuula soo xidhiidho daawaynta."
             },
             {
               "type": "para",
-              "text": "Si aad u hubiso inaad u baahan tahay inaad cusboonaysiiso abka, aad abka NHS COVID-19 ee ku jira dukaanka abka (app store). Haddii uu jiro badhanka Cusbooneysii, taabo si aad u cusboonaysiiso."
+              "text": "Waad ku mahadsan tahay inaad isticmaasho App-ka."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka Android (wuxuu furaa Google Play Store)"
+              "link": "https://www.gov.uk/government/collections/abka-nhs-ee-covid-19.so",
+              "linkText": "Sababta app-ka COVID-19 ee NHS u xidhmato (fur daaqada ka baxsan app-ka oo ku jirta GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka iphone (wuxuu furaa App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Ingiriiska - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Wales - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta GOV.WALES)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Gaadhsii NHS natiijada ugu danbeya oo gal GOV.UK (Ku furma wax ka baxsan app-ka)"
             }
           ]
         },
         "ur": {
-          "head": "اب آپ بامعاوضہ جانچ کے نتائج درج کر سکتے ہیں",
-          "body": "تازہ ترین ایپ کا اپڈیٹ آپ کو COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے۔ تفصیلات کے لیے ٹیپ کریں۔",
+          "head": "ایپ جلد ہی بند ہو رہی ہے",
+          "body": "NHS COVID-19 ایپ 27 اپریل 2023 کو بند ہو جائے گی۔ تفصیلات کے لیے ٹیپ کریں۔",
           "content": [
             {
               "type": "para",
-              "text": "تازہ ترین ایپ کا اپڈیٹ آپ کو کنٹیکٹ ٹریسنگ کے لیے COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے، خواہ یہ NHS کی طرف سے ہو یا بامعاوضہ جانچ ہو۔"
+              "text": "27 اپریل 2023 کو، NHS COVID-19 ایپ بند ہو جائے گی۔"
             },
             {
               "type": "para",
-              "text": "جب آپ کوئی مثبت نتیجہ درج کرتے ہیں تو آپ ایپ کے ان دیگر صارفین کو جو آپ کے قریب تھے گمنام طور پر اطلاع دینے کا انتخاب کر سکتے ہیں کہ انہیں خطرہ لاحق ہو سکتا ہے۔ اس سے COVID-19 کے پھیلاؤ کو روکنے میں مدد ملتی ہے۔"
+              "text": "آپ اس تاریخ تک ایپ کی تمام خصوصیات استعمال کر سکتے ہیں۔"
             },
             {
               "type": "para",
-              "text": "آپ کو اس معلومات کی بنیاد پر صحت سے متعلق تازہ ترین صلاح بھی موصول ہوگی جو آپ نے فراہم کی ہے۔"
+              "text": "براہ کرم خود کا اور دوسروں کا تحفظ کرنے کے لیے تازہ ترین رہنمائی پر عمل کرتے رہیں۔ اس میں GOV.UK پر NHS کے لیٹرل فلو ٹیسٹ کے نتائج کی رپورٹ کرنا شامل ہے۔"
             },
             {
               "type": "para",
-              "text": "اس فیچر کا استعمال کرنے کے لیے آپ کو اس ایپ کے تازہ ترین ورژن کی ضرورت ہے۔"
+              "text": "اگر آپ COVID-19 کے علاج کے لیے اہل ہیں تو، آپ پر اپنے نتیجے کی رپورٹ کرنا لازم ہے تاکہ NHS آپ کے علاج کے بارے میں آپ سے رابطہ کر سکے۔"
             },
             {
               "type": "para",
-              "text": "یہ معلوم کرنے کے لیے کہ آیا آپ کو یہ ایپ اپڈیٹ کرنے کی ضرورت ہے، ایپ اسٹور میں NHS COVID-19 ایپ پر جائیں۔ اگر وہاں اپڈیٹ کا کوئی بٹن ہے تو اپڈیٹ کرنے کے لیے اسے ٹیپ کریں۔"
+              "text": "ایپ استعمال کرنے کا شکریہ۔"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "کسی Android فون پر اپڈیٹس کی جانچ کریں (Google Play اسٹور میں کھلتا ہے)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--31.ur",
+              "linkText": "NHS COVID-19 ایپ کیوں بند ہو رہی ہے (GOV.UK پر ایپ سے باہر کھلتی ہے)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone پر اپڈیٹس کی جانچ کریں (App اسٹور میں کھلتا ہے)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "انگلینڈ - تازہ ترین COVID-19 کی رہنمائی اور خدمات (NHS.UK پر ایپ سے باہر کھلتی ہے)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ویلز - تازہ ترین COVID-19 کی رہنمائی اور خدمات (GOV.WALES پر ایپ سے باہر کھلتی ہے)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "NHS کے لیٹرل فلو ٹیسٹ کے نتائج کی رپورٹ GOV.UK پر کریں (ایپ سے باہر کھلتی ہے)"
             }
           ]
         }
@@ -1986,437 +2106,557 @@
     },
     "Notification.England.SelfIsolation": {
       "type": "notification",
-      "contentVersion": 2,
+      "contentVersion": 3,
       "translations": {
         "zh": {
-          "head": "您现在可以输入付费检测结果",
-          "body": "更新最新版应用后，您可以添加任何 COVID-19 阳性检测结果。点触查看详情。",
+          "head": "应用很快将下架",
+          "body": "NHS COVID-19 应用将在 2023 年 4 月 27 日下架。点击了解详情。",
           "content": [
             {
               "type": "para",
-              "text": "更新为最新版应用后，您可以输入任何 COVID-19 阳性检测结果（NHS 或付费检测皆可），以便进行接触者追踪。"
+              "text": "在 2023 年 4 月 27 日，NHS COVID-19 应用将下架。"
             },
             {
               "type": "para",
-              "text": "您在输入阳性检测结果时，可以选择匿名通知曾到过您附近的其他应用用户，告知其可能存在风险。这将有助于防止 COVID-19 的传播。"
+              "text": "在该日期之前，您可以使用所有应用功能。"
             },
             {
               "type": "para",
-              "text": "基于所提供的信息，您还将获得对应的最新健康建议。"
+              "text": "请继续按照最新指南操作，保护您自己和他人。这包括在 GOV.UK 上报告 NHS（国民保健服务）侧流检测结果。"
             },
             {
               "type": "para",
-              "text": "如需使用此功能，您需要最新版本的应用。"
+              "text": "如果您符合 COVID-19 治疗的标准，必须报告结果，这样 NHS（国民保健服务）可以联系您商定治疗事宜。"
             },
             {
               "type": "para",
-              "text": "请访问应用商店中的 NHS COVID-19 应用，检查是否需要更新应用。如有“更新”(Update) 按钮，请点触其进行更新。"
+              "text": "感谢使用应用。"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "在安卓手机上检查更新（打开 Google Play Store）"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19.zh",
+              "linkText": "为什么 NHS COVID-19 应用会下架（在应用外部 GOV.UK 上打开）"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "在 iPhone 上检查更新（打开 App Store）"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "英格兰 - 最新 COVID-19 指南和服务（在应用外部 NHS.UK 上打开）"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "威尔士 - 最新 COVID-19 指南和服务（在应用外部 GOV.WALES 上打开）"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "在 GOV.UK 上报告 NHS（国民保健服务）侧流检测结果（在应用外部打开）"
             }
           ]
         },
         "en": {
-          "head": "You can now enter paid-for test results",
-          "body": "The latest app update lets you enter any positive COVID-19 result. Tap for details.",
+          "head": "The app is closing down soon",
+          "body": "The NHS COVID-19 app will close down on 27 April 2023. Tap for details.",
           "content": [
             {
               "type": "para",
-              "text": "The latest app update lets you enter any positive COVID-19 result for contact tracing, whether it's from an NHS or paid-for test."
+              "text": "On 27 April 2023, the NHS COVID-19 app will close down."
             },
             {
               "type": "para",
-              "text": "When you enter a positive result, you can choose to anonymously notify other app users who were near you that they might be at risk. This helps prevent the spread of COVID-19."
+              "text": "You can use all the app features until that date."
             },
             {
               "type": "para",
-              "text": "You’ll also get the latest health advice based on the information you’ve given."
+              "text": "Please continue to follow the latest guidance to protect yourself and others. This includes reporting NHS lateral flow test results on GOV.UK."
             },
             {
               "type": "para",
-              "text": "To use this feature you need the latest version of the app."
+              "text": "If you're eligible for COVID-19 treatment, you must report your result so the NHS can contact you about treatment."
             },
             {
               "type": "para",
-              "text": "To check if you need to update the app, go to the NHS COVID-19 app in the app store. If there's an Update button, tap it to update."
+              "text": "Thank you for using the app."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Check for updates on an Android phone (opens Google Play Store)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19-app",
+              "linkText": "Why the NHS COVID-19 app is closing down (opens outside the app on GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Check for updates on iPhone (opens the App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "England - latest COVID-19 guidance and services (opens outside the app on NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Wales - latest COVID-19 guidance and services (opens outside the app on GOV.WALES)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Report an NHS lateral flow test result on GOV.UK (opens outside the app)"
             }
           ]
         },
         "ar": {
-          "head": "يمكنك الآن إدخال نتائج الاختبار المدفوع",
-          "body": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19. انقر للحصول على التفاصيل.",
+          "head": "سيتم إيقاف التطبيق قريبًا",
+          "body": "سيتم إيقاف تطبيق  NHS COVID-19 في 27 أبريل 2023. اضغط للحصول على التفاصيل.  ",
           "content": [
             {
               "type": "para",
-              "text": "يتيح لك آخر تحديث للتطبيق إدخال أي نتيجة إيجابية لـ COVID-19 لتتبع المخالطين، سواء كانت من NHS أو الاختبارالمدفوع."
+              "text": "سيتم إيقاف تطبيق NHS COVID-19 في 27 أبريل 2023."
             },
             {
               "type": "para",
-              "text": "عندما تدخل نتيجة إيجابية، يمكنك اختيار إخطار مستخدمي التطبيق الآخرين الذين كانوا بالقرب منك بشكل مجهول بأنهم قد يكونون في خطر. يساعد هذا في منع انتشار COVID-19.\n"
+              "text": "يمكنك استخدام جميع ميزات التطبيق حتى ذلك التاريخ."
             },
             {
               "type": "para",
-              "text": "ستحصل أيضًا على أحدث الاستشارات الصحية بناءً على المعلومات التي قدمتها."
+              "text": "يُرجى مواصلة اتباع أحدث الإرشادات لحماية نفسك والأشخاص الآخرين. ويشمل ذلك تقديم تقرير بشأن نتائج اختبار  التدفق الجانبي الخاصة بـ NHS إلى GOV.UK."
             },
             {
               "type": "para",
-              "text": "لاستخدام هذه الميزة، تحتاج إلى أحدث إصدار من التطبيق."
+              "text": "إذا كنت مؤهلاً لتلقّي علاج COVID-19، فعليك الإبلاغ عن النتيحة، حتى تتمكن NHS من التواصل معك بشأن العلاج."
             },
             {
               "type": "para",
-              "text": "للتحقق مما إذا كنت بحاجة إلى تحديث التطبيق، انتقل إلى تطبيق NHS COVID-19 في متجر التطبيقات. إذا كان هناك زر تحديث، انقر عليه للتحديث."
+              "text": "نشكرك على استخدامك للتطبيق."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "تحقق من التحديثات على هاتف Android (يفتح متجر Google Play)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--30.ar",
+              "linkText": "سبب إيقاف تطبيق NHS COVID-19 (يُفتح خارج التطبيق على GOV.UK)"
             },
             {
               "type": "para",
-              "link": " https://apps.apple.com/us/app/nhs-covid-19/id1520427663",
-              "linkText": "تحقق من التحديثات على iPhone (يفتح متجر التطبيقات)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "إنجلترا - إرشادات ﺟﺎﺋﺤﺔ COVID-19 الأخيرة والخدمات الخاصة بها (يُفتح خارج التطبيق على  NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ويلز - إرشادات ﺟﺎﺋﺤﺔ COVID-19 الأخيرة والخدمات الخاصة بها (يُفتح خارج التطبيق على GOV.WALES) "
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "تقديم تقرير بشأن نتيجة اختبار التدفق الخاص بـ NHS إلى GOV.UK (يُفتح خارج التطبيق)"
             }
           ]
         },
         "tr": {
-          "head": "Artık ücretli yaptırdığınız testlerin sonuçlarını girebilirsiniz",
-          "body": "Uygulamanın son güncellemesi bütün pozitif COVID-19 test sonuçlarının girilmesine izin veriyor. Ayrıntılar için tıklayın.",
+          "head": "Uygulama yakında kapatılıyor",
+          "body": "NHS COVID-19 uygulaması 27 Nisan 2023 tarihinde kapatılacaktır. Ayrıntılar için dokunun.",
           "content": [
             {
               "type": "para",
-              "text": "Uygulamanın son güncellemesi ister NHS testi ister ücretli olsun temaslı takibi amacıyla bütün pozitif COVID-19 testi sonuçlarının girilmesine izin veriyor."
+              "text": "27 Nisan 2023 tarihinde NHS COVID-19 uygulaması kapatılacaktır."
             },
             {
               "type": "para",
-              "text": "Pozitif sonuç girdiğinizde yakınınızda olup risk altında olabilecek diğer uygulama kullanıcılarına isimsiz olarak bilgilendirme mesajı gönderilmesini seçebilirsiniz. Bu işlem COVID-19'un yayılmasını önlemeye yardımcı olacaktır."
+              "text": "Bu tarihe kadar uygulamanın tüm özelliklerini kullanabilirsiniz."
             },
             {
               "type": "para",
-              "text": "Aynı zamanda verdiğiniz bilgilere dayanarak sağlıkla ilgili en son tavsiyeleri de alacaksınız. "
+              "text": "Lütfen kendinizi ve başkalarını korumak için en son kılavuzları takip etmeye devam edin. Buna NHS yanal akış testi sonuçlarının GOV.UK'de bildirilmesi de dahildir."
             },
             {
               "type": "para",
-              "text": "Bu özelliği kullanabilmek için uygulamanın en son sürümüne ihtiyacınız olacak."
+              "text": "COVID-19 tedavisi için uygunsanız, NHS'nin tedavi hakkında sizinle iletişime geçebilmesi için sonucunuzu bildirmelisiniz."
             },
             {
               "type": "para",
-              "text": "Uygulamayı güncellemeniz gerekip gerekmediğini kontrol etmek için App Store'daki NHS COVID-19 uygulamasına gidin. Güncelle seçeneğini görürseniz güncellemek için tıklayın."
+              "text": "Uygulamayı kullandığınız için teşekkür ederiz."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Android telefon için güncellemeleri kontrol et (Google Play Store açılır)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19-uygulamasi.tr",
+              "linkText": "NHS COVID-19 uygulaması neden kapatılıyor (uygulamanın dışında GOV.UK'de açılır)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone için güncellemeleri kontrol et (App Store açılır)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "İngiltere - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında NHS.UK'de açılır)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Galler - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında GOV.WALES'de açılır)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "GOV.UK'de bir NHS yanal akış testi sonucunu bildirin (uygulamanın dışında açılır)"
             }
           ]
         },
         "pl": {
-          "head": "Możesz już wprowadzać wyniki płatnych testów",
-          "body": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku testu na COVID-19. Stuknij, aby poznać więcej informacji.",
+          "head": "Aplikacja wkrótce zostanie wycofana z eksploatacji",
+          "body": "Aplikacja NHS COVID-19 zostanie wycofana z eksploatacji 27 kwietnia 2023 r. Stuknij, aby poznać więcej informacji.",
           "content": [
             {
               "type": "para",
-              "text": "Najnowsza aktualizacja aplikacji umożliwia wprowadzenie dowolnego pozytywnego wyniku COVID-19 na potrzeby śledzenia kontaktów, niezależnie od tego, czy wynik pochodzi z NHS, czy z płatnego testu."
+              "text": "W dniu 27 kwietnia 2023 r. aplikacja NHS COVID-19 zostanie  wycofana z eksploatacji."
             },
             {
               "type": "para",
-              "text": "Kiedy wprowadzisz pozytywny wynik, możesz wybrać, czy chcesz poinformować anonimowo innych użytkowników aplikacji, którzy byli w Twoim pobliżu, o potencjalnym narażeniu. Pomaga to w zapobieganiu rozprzestrzenianiu wirusa COVID-19."
+              "text": "Do tego czasu można korzystać ze wszystkich funkcji aplikacji."
             },
             {
               "type": "para",
-              "text": "Otrzymasz również najnowsze porady zdrowotne oparte na podanych przez Ciebie informacjach."
+              "text": "Należy nadal stosować się do aktualnych wytycznych, aby chronić siebie i innych. Obejmuje to zgłaszanie wyników testu przepływu bocznego NHS na witrynie GOV.UK."
             },
             {
               "type": "para",
-              "text": "Aby korzystać z tej funkcji, musisz zainstalować najnowszą wersję aplikacji."
+              "text": "Jeśli kwalifikujesz się do leczenia COVID-19, musisz zgłosić swój wynik, aby NHS mogło skontaktować się z Tobą w sprawie leczenia."
             },
             {
               "type": "para",
-              "text": "Aby sprawdzić, czy aplikacja wymaga aktualizacji, przejdź do aplikacji NHS COVID-19 w swoim sklepie z aplikacjami. Jeśli dostępny jest przycisk Aktualizuj, stuknij go, aby zaktualizować."
+              "text": "Dziękujemy za korzystanie z aplikacji."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Sprawdź dostępność aktualizacji na telefonie z systemem Android (otwiera Sklep Google Play)"
+              "link": "https://www.gov.uk/government/collections/aplikacja-nhs-covid-19.pl",
+              "linkText": "Dlaczego aplikacja NHS COVID-19 zostanie wycofana (otwiera witrynę na GOV.UK poza aplikacją)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Sprawdź dostępność aktualizacji na iPhonie (otwiera App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Anglia – najnowsze wskazówki i usługi związane z COVID-19 (otwiera witrynę NHS.UK poza aplikacją)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Walia – najnowsze wskazówki i usługi związane z COVID-19 (otwiera witrynę GOV.WALES poza aplikacją)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Zgłoś wynik testu bocznego przepływu NHS na GOV.UK (otwiera się poza aplikacją)"
             }
           ]
         },
         "ro": {
-          "head": "Acum puteți introduce rezultatele testelor cumpărate",
-          "body": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19. Atingeți pentru detalii.",
+          "head": "Aplicația se va închide în curând",
+          "body": "Aplicația NHS COVID-19 se va închide pe 27.04.2023. Atingeți pentru detalii suplimentare.",
           "content": [
             {
               "type": "para",
-              "text": "Cea mai recentă actualizare a aplicației vă permite să introduceți orice rezultat pozitiv pentru COVID-19 în vederea urmăririi contactelor, indiferent dacă testul este de la NHS sau cumpărat."
+              "text": "Aplicația NHS COVID-19 se va închide pe 27.04.2023."
             },
             {
               "type": "para",
-              "text": "Dacă introduceți un rezultat pozitiv, puteți alege să notificați alți utilizatori ai aplicației care s-au aflat în apropierea dvs. că au fost expuși riscului de contractare a bolii, în mod anonim. Astfel veți ajuta la prevenirea răspândirii COVID-19."
+              "text": "Până la această dată, veți putea utiliza toate funcțiile aplicației."
             },
             {
               "type": "para",
-              "text": "De asemenea, pe baza informațiilor oferite de dvs., veți primi și cele mai recente sfaturi de sănătate."
+              "text": "Respectați în continuare cele mai recente indicații pentru a vă proteja pe dvs. și pe cei din jur. Acest lucru include și raportarea rezultatelor testelor NHS cu flux lateral pe GOV.UK."
             },
             {
               "type": "para",
-              "text": "Pentru utilizarea acestei caracteristici aveți nevoie de cea mai recentă versiune a aplicației."
+              "text": "Dacă sunteți eligibil(ă) pentru tratamentul COVID-19, trebuie să raportați rezultatele pentru ca NHS să vă poată contacta în privința tratamentului."
             },
             {
               "type": "para",
-              "text": "Pentru a verifica dacă trebuie actualizată, mergeți la aplicația NHS COVID-19 din magazinul de aplicații. Dacă există butonul Update (Actualizare), atingeți-l pentru a efectua actualizarea."
+              "text": "Vă mulțumim pentru utilizarea aplicației."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Căutați actualizări pe un telefon Android (va deschide Magazinul Google Play)"
+              "link": "https://www.gov.uk/government/collections/aplica-ia-nhs-covid-19.ro",
+              "linkText": "De ce se închide aplicația NHS COVID-19 (se va deschide în afara aplicației, pe GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Căutați actualizări pe un iPhone (va deschide App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Anglia - cele mai recente indicații și servicii pentru COVID-19 (se va deschide în afara aplicației, pe NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Țara Galilor - cele mai recente indicații și servicii pentru COVID-19 (se va deschide în afara aplicației, pe GOV.WALES)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Raportați rezultatul unui test NHS cu flux lateral pe GOV.UK (se va deschide în afara aplicației)"
             }
           ]
         },
         "pa": {
-          "head": "ਤੁਸੀਂ ਹੁਣ ਭੁਗਤਾਨ ਕੀਤੇ ਟੈਸਟ ਦੇ ਨਤੀਜੇ ਦਾਖਲ ਕਰ ਸਕਦੇ ਹੋ",
-          "body": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ। ਵੇਰਵਿਆਂ ਲਈ ਟੈਪ ਕਰੋ।",
+          "head": "ਐਪ ਜਲਦੀ ਹੀ ਬੰਦ ਹੋ ਰਹੀ ਹੈ",
+          "body": "NHS COVID-19 ਐਪ 27 ਅਪ੍ਰੈਲ 2023 ਨੂੰ ਬੰਦ ਹੋ ਜਾਵੇਗੀ। ਵੇਰਵਿਆਂ ਲਈ ਟੈਪ ਕਰੋ।",
           "content": [
             {
               "type": "para",
-              "text": "ਨਵੀਨਤਮ ਐਪ ਅੱਪਡੇਟ ਤੁਹਾਨੂੰ ਸੰਪਰਕ ਟ੍ਰੇਸਿੰਗ ਲਈ ਕੋਈ ਵੀ ਪਾਜ਼ਿਟਿਵ COVID-19 ਨਤੀਜਾ ਦਾਖਲ ਕਰਨ ਦੀ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ, ਭਾਵੇਂ ਇਹ NHS ਜਾਂ ਭੁਗਤਾਨ ਕੀਤਾ ਗਿਆ ਟੈਸਟ ਤੋਂ ਹੋਵੇ।"
+              "text": "27 ਅਪ੍ਰੈਲ 2023 ਨੂੰ, NHS COVID-19 ਐਪ ਬੰਦ ਹੋ ਜਾਵੇਗੀ।"
             },
             {
               "type": "para",
-              "text": "ਜਦੋਂ ਤੁਸੀਂ ਇੱਕ ਪਾਜ਼ਿਟਿਵ ਨਤੀਜਾ ਦਾਖਲ ਕਰਦੇ ਹੋ, ਤਾਂ ਤੁਸੀਂ ਉਹਨਾਂ ਦੂਜੇ ਐਪ ਵਰਤੋਂਕਾਰਾਂ ਨੂੰ ਅਗਿਆਤ ਰੂਪ ਵਿੱਚ ਸੂਚਿਤ ਕਰਨ ਦੀ ਚੋਣ ਕਰ ਸਕਦੇ ਹੋ ਜੋ ਤੁਹਾਡੇ ਨੇੜੇ ਸਨ ਕਿ ਉਹਨਾਂ ਨੂੰ ਜੋਖਮ ਹੋ ਸਕਦਾ ਹੈ। ਇਸ ਨਾਲ COVID-19 ਦੇ ਫੈਲਣ ਨੂੰ ਰੋਕਣ ਵਿੱਚ ਮਦਦ ਮਿਲਦੀ ਹੈ।"
+              "text": "ਤੁਸੀਂ ਉਸ ਮਿਤੀ ਤੱਕ ਐਪ ਦੀਆਂ ਸਾਰੀਆਂ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਵਰਤ ਸਕਦੇ ਹੋ।"
             },
             {
               "type": "para",
-              "text": "ਤੁਹਾਨੂੰ ਤੁਹਾਡੇ ਵੱਲੋਂ ਦਿੱਤੀ ਗਈ ਜਾਣਕਾਰੀ ਦੇ ਆਧਾਰ 'ਤੇ ਨਵੀਨਤਮ ਸਿਹਤ ਸੰਬੰਧੀ ਸਲਾਹ ਵੀ ਮਿਲੇਗੀ।"
+              "text": "ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੀ ਅਤੇ ਦੂਜਿਆਂ ਦੀ ਰੱਖਿਆ ਕਰਨ ਲਈ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਦੀ ਪਾਲਣਾ ਕਰਨਾ ਜਾਰੀ ਰੱਖੋ। ਇਸ ਵਿੱਚ NHS ਲੇਟਰਲ ਫਲੋ ਟੈਸਟ ਦੇ ਨਤੀਜਿਆਂ ਦੀ GOV.UK 'ਤੇ ਰਿਪੋਰਟ ਕਰਨਾ ਸ਼ਾਮਲ ਹੈ।"
             },
             {
               "type": "para",
-              "text": "ਇਸ ਵਿਸ਼ੇਸ਼ਤਾ ਦੀ ਵਰਤੋਂ ਕਰਨ ਲਈ ਤੁਹਾਨੂੰ ਐਪ ਦੇ ਨਵੀਨਤਮ ਸੰਸਕਰਣ ਦੀ ਲੋੜ ਹੈ।"
+              "text": "ਜੇ ਤੁਸੀਂ COVID-19 ਦੇ ਇਲਾਜ ਲਈ ਯੋਗ ਹੋ, ਤਾਂ ਤੁਹਾਨੂੰ ਆਪਣੇ ਨਤੀਜੇ ਦੀ ਲਾਜ਼ਮੀ ਰਿਪੋਰਟ ਕਰਨੀ ਚਾਹੀਦੀ ਹੈ ਤਾਂ ਜੋ NHS ਤੁਹਾਡੇ ਨਾਲ ਇਲਾਜ ਬਾਰੇ ਸੰਪਰਕ ਕਰ ਸਕੇ।"
             },
             {
               "type": "para",
-              "text": "ਇਹ ਦੇਖਣ ਲਈ ਕਿ ਕੀ ਤੁਹਾਨੂੰ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰਨ ਦੀ ਲੋੜ ਹੈ, ਐਪ ਸਟੋਰ ਵਿੱਚ NHS COVID-19 ਐਪ 'ਤੇ ਜਾਓ। ਜੇਕਰ ਕੋਈ ਅੱਪਡੇਟ ਬਟਨ ਹੈ, ਤਾਂ ਅੱਪਡੇਟ ਕਰਨ ਲਈ ਇਸਨੂੰ ਟੈਪ ਕਰੋ।"
+              "text": "ਐਪ ਨੂੰ ਵਰਤਣ ਲਈ ਤੁਹਾਡਾ ਧੰਨਵਾਦ।"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Android ਫੋਨ 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (Google Play Store ਖੋਲ੍ਹਦਾ ਹੈ)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--29.pa",
+              "linkText": "NHS COVID-19 ਐਪ ਕਿਉਂ ਬੰਦ ਹੋ ਰਹੀ ਹੈ (ਐਪ ਦੇ ਬਾਹਰ GOV.UK 'ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone 'ਤੇ ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (App Store ਖੋਲ੍ਹਦਾ ਹੈ)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "ਇੰਗਲੈਂਡ - COVID-19 ਬਾਰੇ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਅਤੇ ਸੇਵਾਵਾਂ (ਐਪ ਤੋਂ ਬਾਹਰ NHS.UK 'ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ਵੇਲਜ਼ - COVID-19 ਬਾਰੇ ਨਵੀਨਤਮ ਮਾਰਗਦਰਸ਼ਨ ਅਤੇ ਸੇਵਾਵਾਂ (ਐਪ ਤੋਂ ਬਾਹਰ GOV.WALES 'ਤੇ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "NHS ਲੇਟਰਲ ਫਲੋ ਟੈਸਟ ਦੇ ਨਤੀਜੇ ਦੀ GOV.UK 'ਤੇ ਰਿਪੋਰਟ ਕਰੋ (ਐਪ ਤੋਂ ਬਾਹਰ ਖੁੱਲ੍ਹਦਾ ਹੈ)"
             }
           ]
         },
         "bn": {
-          "head": "আপনি এখন অর্থপ্রদানের বিনিময়ে পরীক্ষার ফলাফলগুলি প্রবেশ করাতে পারেন",
-          "body": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়। বিশদ বিবরণের জন্য ট্যাপ করুন।",
+          "head": "অ্যাপটি শীঘ্রই বন্ধ হয়ে যাচ্ছে",
+          "body": "NHS COVID-19 অ্যাপটি 27 এপ্রিল 2023-এ বন্ধ হয়ে যাবে। বিশদ বিবরণের জন্য ট্যাপ করুন।",
           "content": [
             {
               "type": "para",
-              "text": "অ্যাপের সর্বশেষ আপডেটগুলি আপনাকে কন্ট্যাক্ট ট্রেসিংয়ের জন্য COVID-19 এর যে কোনও পজিটিভ ফলাফল প্রবেশ করাতে দেয়, তা NHS থেকেই হোক বা অর্থপ্রদত্ত পরীক্ষাই হোক।\n"
+              "text": "27 এপ্রিল 2023-এ, NHS COVID-19 অ্যাপটি বন্ধ হয়ে যাবে।"
             },
             {
               "type": "para",
-              "text": "আপনি যখন একটি পজিটিভ ফলাফল প্রবেশ করাবেন, তখন অন্যান্য যে সকল অ্যাপ ব্যবহারকারী আপনার কাছাকাছি ছিলেন আপনি তাদেরকে নামহীনভাবে জানানো বেছে নিতে পারেন যে তাদের ঝুঁকি থাকতে পারে।এটি COVID-19 এর বিস্তার রোধ করতে সাহায্য করে।"
+              "text": "আপনি সেই তারিখ পর্যন্ত অ্যাপটির সমস্ত বৈশিষ্ট্য ব্যবহার করতে পারেন।"
             },
             {
               "type": "para",
-              "text": "আপনি যে তথ্য দিয়েছেন তার উপর ভিত্তি করে আপনি সর্বশেষ স্বাস্থ্য পরামর্শও পাবেন।"
+              "text": "নিজেকে এবং অন্যদের রক্ষা করার জন্য অনুগ্রহ করে সর্বশেষ নির্দেশিকা অনুসরণ করা চালিয়ে যান। এর মধ্যে NHS ল্যাটারাল ফ্লো পরীক্ষার ফলাফল GOV.UK-এ রিপোর্ট করা অন্তর্ভুক্ত।"
             },
             {
               "type": "para",
-              "text": "এই বৈশিষ্ট্যটি ব্যবহার করতে আপনার অ্যাপটির সর্বশেষ সংস্করণ প্রয়োজন।"
+              "text": "আপনি যদি COVID-19 চিকিৎসার জন্য যোগ্য হন, তাহলে আপনাকে অবশ্যই আপনার ফলাফল রিপোর্ট করতে হবে যাতে NHS চিকিৎসার বিষয়ে আপনার সাথে যোগাযোগ করতে পারে।"
             },
             {
               "type": "para",
-              "text": "আপনাকে অ্যাপটি আপডেট করতে হবে কিনা তা পরীক্ষা করতে, App Store-এর NHS COVID-19 অ্যাপে যান। যদি একটি আপডেট বোতাম থাকে, তাহলে আপডেট করতে এটি ট্যাপ করুন।"
+              "text": "অ্যাপটি ব্যবহার করার জন্য আপনাকে ধন্যবাদ।"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "একটি Android ফোনে আপডেট আছে কিনা চেক করুন (Google Play Store খোলে)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--28.bn",
+              "linkText": "NHS COVID-19 অ্যাপটি কেন বন্ধ হয়ে যাচ্ছে (অ্যাপটির বাইরে GOV.UK এ খোলে)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone এ আপডেট আছে কিনা চেক করুন (App Store খোলে)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "ইংল্যান্ড - COVID-19 সংক্রান্ত সর্বশেষ নির্দেশিকা ও পরিষেবা (অ্যাপটির বাইরে NHS.UK এ খোলে)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ওয়েলস - COVID-19 সংক্রান্ত সর্বশেষ নির্দেশিকা ও পরিষেবা (অ্যাপটির বাইরে GOV.WALES এ খোলে)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "NHS ল্যাটারাল ফ্লো পরীক্ষার ফলাফল GOV.UK এ রিপোর্ট করুন (অ্যাপটির বাইরে খোলে)"
             }
           ]
         },
         "gu": {
-          "head": "તમે હવે ચૂકવણી કરેલાં પરીક્ષણનાં પરિણામોમાં પ્રવેશી શકો છો",
-          "body": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે. વિગતો માટે ટેપ કરો.",
+          "head": "ઍપ ટૂંક સમયમાં બંધ થઈ રહી છે",
+          "body": "NHS COVID-19 ઍપ 27 ઍપ્રિલ 2023ના રોજ બંધ થશે. વિગતો માટે ટેપ કરો.",
           "content": [
             {
               "type": "para",
-              "text": "ઍપનો છેલ્લામાં છેલ્લો અપડેટ તમને સંપર્કના સગડ મેળવવા માટે કોઈ પણ પૉઝિટિવ COVID-19 પરિણામમાં પ્રવેશવા દે છે, પછી ભલે તે NHS તરફથી હોય કે ચૂકવણી સાથેનું પરીક્ષણ હોય."
+              "text": "NHS COVID-19 ઍપ 27 ઍપ્રિલ 2023ના રોજ બંધ થશે."
             },
             {
               "type": "para",
-              "text": "જ્યારે તમે પૉઝિટિવ પરિણામમાં પ્રવેશો છો ત્યારે તમે જે તમારી નજીક હતા અને જેમના પર જોખમ હોઈ શકે એવા ઍપના અન્ય વપરાશકર્તાઓને તમે ગુપ્તપણે જાણ કરવાનું પસંદ કરી શકો છો. આનાથી COVID-19 ફેલાતો અટકાવવામાં મદદ મળે છે."
+              "text": "તમે તે તારીખ સુધી ઍપનાં બધાં ફીચર્સનો ઉપયોગ કરી શકશો."
             },
             {
               "type": "para",
-              "text": "તમે આપેલી માહિતીના આધારે તમે સ્વાસ્થ્યની છેલ્લામાં છેલ્લી સલાહ પણ મેળવશો."
+              "text": "કૃપા કરીને પોતાનું અને અન્યોનું રક્ષણ કરવા માટે નવીનતમ નિર્દેશોનું પાલન કરવાનું ચાલુ રાખો. તેમાં GOV.UK પર NHS લેટરલ ફ્લો ટેસ્ટનાં પરિણામો અંગે રિપોર્ટ કરવાનો સમાવેશ થાય છે."
             },
             {
               "type": "para",
-              "text": "આ ફીચરનો ઉપયોગ કરવા માટે તમને ઍપના લેટેસ્ટ વર્ઝનની જરૂર પડશે."
+              "text": "જો તમે COVID-19 સારવાર માટે લાયક હો તો તમારે તમારું પરિણામ રિપોર્ટ કરવાનું રહેશે, જેથી NHS સારવાર વિશે તમારો સંપર્ક કરી શકે."
             },
             {
               "type": "para",
-              "text": "તમારે ઍપ અપડેટ કરવી જરૂરી છે કે નહિ તે ચેક કરવા માટે App Storeમાં NHS COVID-19 ઍપ પર જાઓ. જો અપડેટ બટન હોય તો તેને અપડેટ કરવા માટે ટેપ કરો."
+              "text": "ઍપનો ઉપયોગ કરવા બદલ તમારો આભાર."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Android ફોન પર અપડેટ્સ માટે ચેક કરો (તેનાથી Google Play Store ખૂલે છે)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--27.gu",
+              "linkText": "શા માટે NHS COVID-19 ઍપ બંધ થઈ રહી છે (GOV.UK પર ઍપની બહાર ખૂલે છે)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone પર અપડેટ્સ માટે ચેક કરો (App Store ખૂલે છે)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "ઇંગ્લૅન્ડ - COVID-19 અંગેના નવીનતમ નિર્દેશો અને સેવાઓ (NHS.UK પર ઍપની બહાર ખૂલે છે)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "વેલ્સ - COVID-19ના નવીનતમ નિર્દેશો અને સેવાઓ (GOV.WALES પર ઍપની બહાર ખૂલે છે)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "GOV.UK પર NHS લેટરલ ફ્લો ટેસ્ટ પરિણામ રિપોર્ટ કરો (ઍપની બહાર ખૂલે છે)"
             }
           ]
         },
         "cy": {
-          "head": "Gallwch nawr nodi canlyniadau profion y talwyd amdanynt",
-          "body": "Mae'r diweddariad ap diweddaraf yn caniatáu ichi nodi unrhyw ganlyniad COVID-19 positif. Tapiwch am fanylion.",
+          "head": "Mae'r ap yn cau yn fuan",
+          "body": "Bydd ap COVID-19 y GIG yn cau ar 27 Ebrill 2023. Tapiwch am fanylion.",
           "content": [
             {
               "type": "para",
-              "text": "Mae'r diweddariad ap diweddaraf yn gadael i chi nodi unrhyw ganlyniad COVID-19 positif ar gyfer olrhain cyswllt, boed o brawf GIG neu brawf y telir amdano."
+              "text": "Ar 27 Ebrill 2023, bydd ap COVID-19 y GIG yn cau."
             },
             {
               "type": "para",
-              "text": "Pan fyddwch chi'n nodi canlyniad cadarnhaol, gallwch ddewis hysbysu defnyddwyr ap eraill a oedd yn agos atoch chi yn ddienw y gallent fod mewn perygl. Mae hyn yn helpu i atal lledaeniad COVID-19."
+              "text": "Gallwch ddefnyddio holl nodweddion yr ap tan y dyddiad hwnnw."
             },
             {
               "type": "para",
-              "text": "Byddwch hefyd yn cael y cyngor iechyd diweddaraf yn seiliedig ar y wybodaeth a roddwyd gennych."
+              "text": "Parhewch i ddilyn y canllawiau diweddaraf i amddiffyn eich hun ac eraill. Mae hyn yn cynnwys adrodd ar ganlyniadau profion llif unffordd y GIG ar GOV.UK."
             },
             {
               "type": "para",
-              "text": "I ddefnyddio'r nodwedd hon mae angen y fersiwn diweddaraf o'r ap arnoch chi."
+              "text": "Os ydych yn gymwys ar gyfer triniaeth COVID-19, rhaid i chi adrodd eich canlyniad fel y gall y GIG gysylltu â chi ynglŷn â thriniaeth."
             },
             {
               "type": "para",
-              "text": "I weld a oes angen i chi ddiweddaru'r ap, ewch i ap NHS COVID-19 yn y siop apiau. Os oes botwm Diweddaru, tapiwch ef i'w ddiweddaru."
+              "text": "Diolch am ddefnyddio'r ap."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Gwiriwch am ddiweddariadau ar ffôn Android (yn agor Google Play Store)"
+              "link": "https://www.gov.uk/government/collections/ap-covid-19-y-gig.cy",
+              "linkText": "Pam mae ap GIG COVID-19 yn cau (yn agor y tu allan i'r ap ar GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Gwiriwch am ddiweddariadau ar iPhone (yn agor yr App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Lloegr - canllawiau a gwasanaethau COVID-19 diweddaraf (yn agor y tu allan i'r ap ar NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Cymru - canllawiau a gwasanaethau COVID-19 diweddaraf (yn agor y tu allan i'r ap ar LLYW.CYMRU)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Rhoi gwybod am ganlyniad prawf llif unffordd y GIG ar GOV.UK (yn agor y tu allan i'r ap)"
             }
           ]
         },
         "so": {
-          "head": "Waxaad hadda gelin kartaa natiijooyinka baaritaanka lacagta lagu bixiyay.",
-          "body": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah. Taabo wixii faahfaahin ah.",
+          "head": "App-ku wuu xidhmayaa dhawaan",
+          "body": "App-ka COVID-19 ee NHS waxa uu xidhamayaa 27-ka Abriil 2023. Taabo wixii faahfaahin ah.",
           "content": [
             {
               "type": "para",
-              "text": "Cusbooneysiinta abka ee ugu dambeysay waxay kuu ogolaaneysaa inaad geliso natiijo kasta oo togan oo COVID-19 ah loogu talagalay raadraaca xiriirka, hadday tahay mid ka timid NHS ama baaritaan lacag lagu bixiyo."
+              "text": "27-ka Abriil, 2023, app-ka COVID-19 ee NHS wuu xidhamayaa."
             },
             {
               "type": "para",
-              "text": "Markaad geliso natiijo togan, waxaad dooran kartaa inaad si qarsoodi ah u ogaysiiso isticmaalayaasha kale abka ee kuu dhowaa inay halis ku jiri kareen. Tani waxay kaa caawinaysaa inay ka hortagto faafitaanka COVID-19."
+              "text": "Waxa aad isticmaali kartaa daaqad walba ilaa taariikhdaas."
             },
             {
               "type": "para",
-              "text": "Waxaad sidoo kale heli doontaa talada caafimaad ee ugu dambeysay oo ku saleysan macluumaadka aad bixisay."
+              "text": "Fadlan waxa aad weli raacdaa tilmaamaha ugu danbeeyay si aad naftaada iyo dadka kale u ilaaliyo. Waxaa kamid ah in aad gaadhsiiso ku NHS natiijada ugu danbaysa GOV.UK."
             },
             {
               "type": "para",
-              "text": "Si aad u isticmaasho aaladaan waxaad u baahan tahay abka noociisa u casriga ah."
+              "text": "Hadii aad u qalanto daawaynta COVID-19, waa inaad gaadhsiisaa natiijadaada si NHS ay kuula soo xidhiidho daawaynta."
             },
             {
               "type": "para",
-              "text": "Si aad u hubiso inaad u baahan tahay inaad cusboonaysiiso abka, aad abka NHS COVID-19 ee ku jira dukaanka abka (app store). Haddii uu jiro badhanka Cusbooneysii, taabo si aad u cusboonaysiiso."
+              "text": "Waad ku mahadsan tahay inaad isticmaasho App-ka."
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka Android (wuxuu furaa Google Play Store)"
+              "link": "https://www.gov.uk/government/collections/abka-nhs-ee-covid-19.so",
+              "linkText": "Sababta app-ka COVID-19 ee NHS u xidhmato (fur daaqada ka baxsan app-ka oo ku jirta GOV.UK)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "Ka fiiri cusboonaysiinta ku saabsan taleefanka iphone (wuxuu furaa App Store)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "Ingiriiska - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta NHS.UK)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "Wales - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta GOV.WALES)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "Gaadhsii NHS natiijada ugu danbeya oo gal GOV.UK (Ku furma wax ka baxsan app-ka)"
             }
           ]
         },
         "ur": {
-          "head": "اب آپ بامعاوضہ جانچ کے نتائج درج کر سکتے ہیں",
-          "body": "تازہ ترین ایپ کا اپڈیٹ آپ کو COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے۔ تفصیلات کے لیے ٹیپ کریں۔",
+          "head": "ایپ جلد ہی بند ہو رہی ہے",
+          "body": "NHS COVID-19 ایپ 27 اپریل 2023 کو بند ہو جائے گی۔ تفصیلات کے لیے ٹیپ کریں۔",
           "content": [
             {
               "type": "para",
-              "text": "تازہ ترین ایپ کا اپڈیٹ آپ کو کنٹیکٹ ٹریسنگ کے لیے COVID-19 سے متعلق کوئی بھی مثبت نتیجہ درج کرنے کا موقع فراہم کرتا ہے، خواہ یہ NHS کی طرف سے ہو یا بامعاوضہ جانچ ہو۔"
+              "text": "27 اپریل 2023 کو، NHS COVID-19 ایپ بند ہو جائے گی۔"
             },
             {
               "type": "para",
-              "text": "جب آپ کوئی مثبت نتیجہ درج کرتے ہیں تو آپ ایپ کے ان دیگر صارفین کو جو آپ کے قریب تھے گمنام طور پر اطلاع دینے کا انتخاب کر سکتے ہیں کہ انہیں خطرہ لاحق ہو سکتا ہے۔ اس سے COVID-19 کے پھیلاؤ کو روکنے میں مدد ملتی ہے۔"
+              "text": "آپ اس تاریخ تک ایپ کی تمام خصوصیات استعمال کر سکتے ہیں۔"
             },
             {
               "type": "para",
-              "text": "آپ کو اس معلومات کی بنیاد پر صحت سے متعلق تازہ ترین صلاح بھی موصول ہوگی جو آپ نے فراہم کی ہے۔"
+              "text": "براہ کرم خود کا اور دوسروں کا تحفظ کرنے کے لیے تازہ ترین رہنمائی پر عمل کرتے رہیں۔ اس میں GOV.UK پر NHS کے لیٹرل فلو ٹیسٹ کے نتائج کی رپورٹ کرنا شامل ہے۔"
             },
             {
               "type": "para",
-              "text": "اس فیچر کا استعمال کرنے کے لیے آپ کو اس ایپ کے تازہ ترین ورژن کی ضرورت ہے۔"
+              "text": "اگر آپ COVID-19 کے علاج کے لیے اہل ہیں تو، آپ پر اپنے نتیجے کی رپورٹ کرنا لازم ہے تاکہ NHS آپ کے علاج کے بارے میں آپ سے رابطہ کر سکے۔"
             },
             {
               "type": "para",
-              "text": "یہ معلوم کرنے کے لیے کہ آیا آپ کو یہ ایپ اپڈیٹ کرنے کی ضرورت ہے، ایپ اسٹور میں NHS COVID-19 ایپ پر جائیں۔ اگر وہاں اپڈیٹ کا کوئی بٹن ہے تو اپڈیٹ کرنے کے لیے اسے ٹیپ کریں۔"
+              "text": "ایپ استعمال کرنے کا شکریہ۔"
             },
             {
               "type": "para",
-              "link": "https://play.google.com/store/apps/details?id=uk.nhs.covid19.production",
-              "linkText": "کسی Android فون پر اپڈیٹس کی جانچ کریں (Google Play اسٹور میں کھلتا ہے)"
+              "link": "https://www.gov.uk/government/collections/nhs-covid-19--31.ur",
+              "linkText": "NHS COVID-19 ایپ کیوں بند ہو رہی ہے (GOV.UK پر ایپ سے باہر کھلتی ہے)"
             },
             {
               "type": "para",
-              "link": "https://apps.apple.com/gb/app/nhs-covid-19/id1520427663",
-              "linkText": "iPhone پر اپڈیٹس کی جانچ کریں (App اسٹور میں کھلتا ہے)"
+              "link": "https://www.nhs.uk/covid-19-advice-and-services/",
+              "linkText": "انگلینڈ - تازہ ترین COVID-19 کی رہنمائی اور خدمات (NHS.UK پر ایپ سے باہر کھلتی ہے)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
+              "linkText": "ویلز - تازہ ترین COVID-19 کی رہنمائی اور خدمات (GOV.WALES پر ایپ سے باہر کھلتی ہے)"
+            },
+            {
+              "type": "para",
+              "link": "https://www.gov.uk/report-covid19-result",
+              "linkText": "NHS کے لیٹرل فلو ٹیسٹ کے نتائج کی رپورٹ GOV.UK پر کریں (ایپ سے باہر کھلتی ہے)"
             }
           ]
         }
