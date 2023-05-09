@@ -122,7 +122,7 @@ Base principles for communicating over the internet are described in [api-founda
 
 ## Tech Stacks and Repositories
 
-The [system repository](https://github.com/nihp-public/COVID19-app-system) includes the implementation of all services required to collect data and interact with the mobile devices and external systems
+The [system repository](https://github.com/ukhsa-collaboration/COVID19-app-system) includes the implementation of all services required to collect data and interact with the mobile devices and external systems
 and the code to automate build, deployment and test of the services. The **APIs and Cloud Services** are implemented using
 
 - Run: AWS, Java and Kotlin
@@ -135,14 +135,14 @@ Note that our build system and deployment architecture is currently used only in
 
 The **iOS app** only uses standard Apple tooling, all bundled within Xcode.
 
-- [Application source code](https://github.com/nihp-public/COVID-19-app-iOS-AG)
-- [Architecture and module definitions](https://github.com/nihp-public/COVID-19-app-iOS-AG/blob/master/Docs/AppArchitecture.md)
-- [Internal and external dependencies](https://github.com/nihp-public/COVID-19-app-iOS-AG#dependencies)
+- [Application source code](https://github.com/ukhsa-collaboration/COVID-19-app-iOS-AG)
+- [Architecture and module definitions](https://github.com/ukhsa-collaboration/COVID-19-app-iOS-AG/blob/master/Docs/AppArchitecture.md)
+- [Internal and external dependencies](https://github.com/ukhsa-collaboration/COVID-19-app-iOS-AG#dependencies)
 
 The **Android app** uses standard Android tooling, Kotlin and Android SDK. The build uses Gradle with a couple of third party Gradle plugins for publishing and protobuf (only for field test).
 
-- [Application source code](https://github.com/nihp-public/covid-19-app-android-ag)
-- [Internal and external dependencies](https://github.com/nihp-public/covid-19-app-android-ag/blob/master/app/build.gradle)
+- [Application source code](https://github.com/ukhsa-collaboration/covid-19-app-android-ag)
+- [Internal and external dependencies](https://github.com/ukhsa-collaboration/covid-19-app-android-ag/blob/master/app/build.gradle)
 
 The **Web apps** use React SPA hosted on S3, delivered by CDN. However, note that the current system does not provide any public available web client.  Once there is a public web client, a section will be added.
 

@@ -1302,7 +1302,7 @@
             },
             {
               "type": "para",
-              "text": "إذا كنت مؤهلاً لتلقّي علاج COVID-19، فعليك الإبلاغ عن النتيحة، حتى تتمكن NHS من التواصل معك بشأن العلاج."
+              "text": "إذا كنت مستحقًا لتلقّي علاج COVID-19، فعليك الإبلاغ عن النتيحة، حتى تتمكن NHS من التواصل معك بشأن العلاج."
             },
             {
               "type": "para",
@@ -1336,7 +1336,7 @@
           "content": [
             {
               "type": "para",
-              "text": "27 Nisan 2023 tarihinde NHS COVID-19 uygulaması kapatılacaktır."
+              "text": "NHS COVID-19 uygulaması 27 Nisan 2023 tarihinde kapatılacaktır."
             },
             {
               "type": "para",
@@ -1344,11 +1344,11 @@
             },
             {
               "type": "para",
-              "text": "Lütfen kendinizi ve başkalarını korumak için en son kılavuzları takip etmeye devam edin. Buna NHS yanal akış testi sonuçlarının GOV.UK'de bildirilmesi de dahildir."
+              "text": "Lütfen kendinizi ve başkalarını korumak için en son yönergeleri takip etmeye devam edin. Buna NHS yanal akış testi sonuçlarının GOV.UK üzerinden bildirilmesi de dahildir."
             },
             {
               "type": "para",
-              "text": "COVID-19 tedavisi için uygunsanız, NHS'nin tedavi hakkında sizinle iletişime geçebilmesi için sonucunuzu bildirmelisiniz."
+              "text": "COVID-19 tedavisi görmek için gerekli koşulları karşılıyorsanız, NHS'nin tedavi hakkında sizinle iletişime geçebilmesi için sonucunuzu bildirmelisiniz."
             },
             {
               "type": "para",
@@ -1362,17 +1362,17 @@
             {
               "type": "para",
               "link": "https://www.nhs.uk/covid-19-advice-and-services/",
-              "linkText": "İngiltere - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında NHS.UK'de açılır)"
+              "linkText": "İngiltere - en son COVID-19 yönergeleri ve hizmetleri (uygulamanın dışında NHS.UK'de açılır)"
             },
             {
               "type": "para",
               "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
-              "linkText": "Galler - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında GOV.WALES'de açılır)"
+              "linkText": "Galler - en son COVID-19 yönergeleri ve hizmetleri (uygulamanın dışında GOV.WALES'de açılır)"
             },
             {
               "type": "para",
               "link": "https://www.gov.uk/report-covid19-result",
-              "linkText": "GOV.UK'de bir NHS yanal akış testi sonucunu bildirin (uygulamanın dışında açılır)"
+              "linkText": "NHS hızlı antijen testi sonucunu GOV.UK üzerinden bildirin (uygulamanın dışında açılır)"
             }
           ]
         },
@@ -1666,11 +1666,11 @@
             },
             {
               "type": "para",
-              "text": "Fadlan waxa aad weli raacdaa tilmaamaha ugu danbeeyay si aad naftaada iyo dadka kale u ilaaliyo. Waxaa kamid ah in aad gaadhsiiso ku NHS natiijada ugu danbaysa GOV.UK."
+              "text": "Fadlan sii wad inaad raacdo tilmaantii ugu dambeysay si aad u ilaaliso naftaada iyo dadka kale. Tani waxaa ka mid ah ku warbixinta natiijooyinka baaritaanka qulqulka geeska NHS ee GOV.UK."
             },
             {
               "type": "para",
-              "text": "Hadii aad u qalanto daawaynta COVID-19, waa inaad gaadhsiisaa natiijadaada si NHS ay kuula soo xidhiidho daawaynta."
+              "text": "Hadii aad u qalanto daawaynta COVID-19, waa inaad ka warbixisaa natiijadaada si NHS ay kula soo xiriirto wax ku saabsan daawaynta."
             },
             {
               "type": "para",
@@ -1679,28 +1679,28 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/government/collections/abka-nhs-ee-covid-19.so",
-              "linkText": "Sababta app-ka COVID-19 ee NHS u xidhmato (fur daaqada ka baxsan app-ka oo ku jirta GOV.UK)"
+              "linkText": "Sababta app-ka COVID-19 ee NHS u xidhmato (ku furmaa daaqada ka baxsan app-ka oo ku jirta GOV.UK)"
             },
             {
               "type": "para",
               "link": "https://www.nhs.uk/covid-19-advice-and-services/",
-              "linkText": "Ingiriiska - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta NHS.UK)"
+              "linkText": "Ingiriiska - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (ku furmaa daaqada ka baxsan app-ka oo ku jirta NHS.UK)"
             },
             {
               "type": "para",
               "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
-              "linkText": "Wales - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta GOV.WALES)"
+              "linkText": "Wales - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (ku furmaa daaqada ka baxsan app-ka oo ku jirta GOV.WALES)"
             },
             {
               "type": "para",
               "link": "https://www.gov.uk/report-covid19-result",
-              "linkText": "Gaadhsii NHS natiijada ugu danbeya oo gal GOV.UK (Ku furma wax ka baxsan app-ka)"
+              "linkText": "Gaadhsii NHS natiijada ugu danbeya oo gal GOV.UK (ku furmaa wax ka baxsan app-ka)"
             }
           ]
         },
         "ur": {
           "head": "ایپ جلد ہی بند ہو رہی ہے",
-          "body": "NHS COVID-19 ایپ 27 اپریل 2023 کو بند ہو جائے گی۔ تفصیلات کے لیے ٹیپ کریں۔",
+          "body": "ایپ 27 اپریل 2023 کو بند ہو جائے گی۔ NHS COVID-19\nتفصیلات کے لیے ٹیپ کریں۔",
           "content": [
             {
               "type": "para",
@@ -2218,7 +2218,7 @@
             },
             {
               "type": "para",
-              "text": "إذا كنت مؤهلاً لتلقّي علاج COVID-19، فعليك الإبلاغ عن النتيحة، حتى تتمكن NHS من التواصل معك بشأن العلاج."
+              "text": "إذا كنت ممستحقًا لتلقّي علاج COVID-19، فعليك الإبلاغ عن النتيحة، حتى تتمكن NHS من التواصل معك بشأن العلاج."
             },
             {
               "type": "para",
@@ -2252,7 +2252,7 @@
           "content": [
             {
               "type": "para",
-              "text": "27 Nisan 2023 tarihinde NHS COVID-19 uygulaması kapatılacaktır."
+              "text": "NHS COVID-19 uygulaması 27 Nisan 2023 tarihinde kapatılacaktır."
             },
             {
               "type": "para",
@@ -2260,11 +2260,11 @@
             },
             {
               "type": "para",
-              "text": "Lütfen kendinizi ve başkalarını korumak için en son kılavuzları takip etmeye devam edin. Buna NHS yanal akış testi sonuçlarının GOV.UK'de bildirilmesi de dahildir."
+              "text": "Lütfen kendinizi ve başkalarını korumak için en son yönergeleri takip etmeye devam edin. Buna NHS yanal akış testi sonuçlarının GOV.UK üzerinden bildirilmesi de dahildir."
             },
             {
               "type": "para",
-              "text": "COVID-19 tedavisi için uygunsanız, NHS'nin tedavi hakkında sizinle iletişime geçebilmesi için sonucunuzu bildirmelisiniz."
+              "text": "COVID-19 tedavisi görmek için gerekli koşulları karşılıyorsanız, NHS'nin tedavi hakkında sizinle iletişime geçebilmesi için sonucunuzu bildirmelisiniz."
             },
             {
               "type": "para",
@@ -2278,17 +2278,17 @@
             {
               "type": "para",
               "link": "https://www.nhs.uk/covid-19-advice-and-services/",
-              "linkText": "İngiltere - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında NHS.UK'de açılır)"
+              "linkText": "İngiltere - en son COVID-19 yönergeleri ve hizmetleri (uygulamanın dışında NHS.UK'de açılır)"
             },
             {
               "type": "para",
               "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
-              "linkText": "Galler - en son COVID-19 kılavuzları ve hizmetleri (uygulamanın dışında GOV.WALES'de açılır)"
+              "linkText": "Galler - en son COVID-19 yönergeleri ve hizmetleri (uygulamanın dışında GOV.WALES'de açılır)"
             },
             {
               "type": "para",
               "link": "https://www.gov.uk/report-covid19-result",
-              "linkText": "GOV.UK'de bir NHS yanal akış testi sonucunu bildirin (uygulamanın dışında açılır)"
+              "linkText": "NHS hızlı antijen testi sonucunu GOV.UK üzerinden bildirin (uygulamanın dışında açılır)"
             }
           ]
         },
@@ -2582,11 +2582,11 @@
             },
             {
               "type": "para",
-              "text": "Fadlan waxa aad weli raacdaa tilmaamaha ugu danbeeyay si aad naftaada iyo dadka kale u ilaaliyo. Waxaa kamid ah in aad gaadhsiiso ku NHS natiijada ugu danbaysa GOV.UK."
+              "text": "Fadlan sii wad inaad raacdo tilmaantii ugu dambeysay si aad u ilaaliso naftaada iyo dadka kale. Tani waxaa ka mid ah ku warbixinta natiijooyinka baaritaanka qulqulka geeska NHS ee GOV.UK."
             },
             {
               "type": "para",
-              "text": "Hadii aad u qalanto daawaynta COVID-19, waa inaad gaadhsiisaa natiijadaada si NHS ay kuula soo xidhiidho daawaynta."
+              "text": "Hadii aad u qalanto daawaynta COVID-19, waa inaad ka warbixisaa natiijadaada si NHS ay kula soo xiriirto wax ku saabsan daawaynta."
             },
             {
               "type": "para",
@@ -2595,28 +2595,28 @@
             {
               "type": "para",
               "link": "https://www.gov.uk/government/collections/abka-nhs-ee-covid-19.so",
-              "linkText": "Sababta app-ka COVID-19 ee NHS u xidhmato (fur daaqada ka baxsan app-ka oo ku jirta GOV.UK)"
+              "linkText": "Sababta app-ka COVID-19 ee NHS u xidhmato (ku furmaa daaqada ka baxsan app-ka oo ku jirta GOV.UK)"
             },
             {
               "type": "para",
               "link": "https://www.nhs.uk/covid-19-advice-and-services/",
-              "linkText": "Ingiriiska - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta NHS.UK)"
+              "linkText": "Ingiriiska - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (ku furmaa daaqada ka baxsan app-ka oo ku jirta NHS.UK)"
             },
             {
               "type": "para",
               "link": "https://www.gov.wales/guidance-people-symptoms-respiratory-infection-including-covid-19",
-              "linkText": "Wales - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (fur daaqada ka baxsan app-ka oo ku jirta GOV.WALES)"
+              "linkText": "Wales - tilmaamaha COVID-19 ugu danbeeyay iyo adeegyada (ku furmaa daaqada ka baxsan app-ka oo ku jirta GOV.WALES)"
             },
             {
               "type": "para",
               "link": "https://www.gov.uk/report-covid19-result",
-              "linkText": "Gaadhsii NHS natiijada ugu danbeya oo gal GOV.UK (Ku furma wax ka baxsan app-ka)"
+              "linkText": "Gaadhsii NHS natiijada ugu danbeya oo gal GOV.UK (ku furmaa wax ka baxsan app-ka)"
             }
           ]
         },
         "ur": {
           "head": "ایپ جلد ہی بند ہو رہی ہے",
-          "body": "NHS COVID-19 ایپ 27 اپریل 2023 کو بند ہو جائے گی۔ تفصیلات کے لیے ٹیپ کریں۔",
+          "body": "ایپ 27 اپریل 2023 کو بند ہو جائے گی۔ NHS COVID-19\nتفصیلات کے لیے ٹیپ کریں۔",
           "content": [
             {
               "type": "para",
